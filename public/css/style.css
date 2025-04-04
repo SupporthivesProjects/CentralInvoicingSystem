@@ -1,12 +1,4 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome to Central Invoice System</title>
-    <style>
-        body {
+body {
             margin: 0;
             padding: 0;
             display: flex;
@@ -61,30 +53,4 @@
             75% { transform: translate(40px, 60px) rotate(10deg); }
             100% { transform: translate(-40px, -60px) rotate(-10deg); }
         }
-    </style>
-</head>
-<body>
-    <div class="emoji-animation" style="top: 10%; left: 20%;">📄</div>
-    <div class="emoji-animation" style="top: 30%; left: 60%;">💰</div>
-    <div class="emoji-animation" style="top: 50%; left: 10%;">🖊️</div>
-    <div class="emoji-animation" style="top: 70%; left: 80%;">📊</div>
-    <div class="emoji-animation" style="top: 90%; left: 50%;">💳</div>
-    <div class="emoji-animation" style="top: 40%; left: 30%;">🧾</div>
-    <div class="emoji-animation" style="top: 20%; left: 75%;">📂</div>
-    <div class="emoji-animation" style="top: 60%; left: 15%;">💼</div>
-    
-    <div class="container" id="welcome-container">
-        <h1>🎉 Welcome to Central Invoice System 🎉</h1>
-        <p>📢 Manage your invoices with ease and efficiency! 🚀</p>
-        <button class="button">✨ Get Started ✨</button>
-    </div>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            setTimeout(function() {
-                document.getElementById("welcome-container").classList.add("show");
-            }, 1000);
-        });
-    </script>
-</body>
-</html>
+   
