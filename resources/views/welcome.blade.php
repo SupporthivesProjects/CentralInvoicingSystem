@@ -76,6 +76,7 @@
     <div class="container" id="welcome-container">
         <h1>🎉 Welcome to Central Invoice System 🎉</h1>
         <p>📢 Manage Your Invoices With Ease and Efficiency 🚀</p>
+        <p>📢 Its easy and very simple to use 🚀</p>
         <button class="button">✨ Get Started ✨</button>
     </div>
 
