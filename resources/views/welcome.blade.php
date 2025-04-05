@@ -77,7 +77,7 @@
         <h1>🎉 Welcome to Central Invoice System 🎉</h1>
         <p>📢 Manage Your Invoices With Ease and Efficiency 🚀</p>
         <p>📢 Its easy and very simple to use and its very good and nice🚀</p>
-        <p>Hello this is very Easy to use and very good. We shall work on it</p>
+        <p>Hello this is very Easy to use and very good. We shall work on it from today</p>
         <button class="button">✨ Get Started ✨</button>
     </div>
 
