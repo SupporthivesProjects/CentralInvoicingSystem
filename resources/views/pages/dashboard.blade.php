@@ -2,16 +2,18 @@
 
 @section('title', 'Dashboard | Central Invoice System')
 
+@push('styles')
+<link rel="stylesheet" href="{{ asset('libs/jsvectormap/css/jsvectormap.min.css') }}">
+<link rel="stylesheet" href="{{ asset('libs/swiper/swiper-bundle.min.css') }}">
+@endpush
+
 @section('content')
-@include("partials/mainhead")
+    @include("partials/mainhead")
     @include("partials/switcher")
     @include("partials/loader")
     @include("partials/header")
     @include("partials/sidebar")
-
-
-    <link rel="stylesheet" href="{{ asset('libs/jsvectormap/css/jsvectormap.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('libs/swiper/swiper-bundle.min.css') }}">
+   
 
     <div class="page">
         <!-- Start::app-content -->
@@ -814,17 +816,15 @@
 
     @include("partials/commonjs")
 
-<!-- JSVector Maps JS -->
-<script src="{{ asset('libs/jsvectormap/js/jsvectormap.min.js') }}"></script>
-<!-- JSVector Maps MapsJS -->
-<script src="{{ asset('libs/jsvectormap/maps/world-merc.js') }}"></script>
-<!-- Apex Charts JS -->
-<script src="{{ asset('libs/apexcharts/apexcharts.min.js') }}"></script>
-<!-- Main-Dashboard -->
-<script src="{{ asset('js/index.js') }}"></script>
+    <@push('scripts')
+    <script src="{{ asset('libs/jsvectormap/js/jsvectormap.min.js') }}"></script>
+    <script src="{{ asset('libs/jsvectormap/maps/world-merc.js') }}"></script>
+    <script src="{{ asset('libs/apexcharts/apexcharts.min.js') }}"></script>
+    <script src="{{ asset('js/index.js') }}"></script>
+    <script src="{{ asset('js/custom.js') }}"></script>
+    @endpush
 
     @include("partials/custom_switcherjs")
 
-<!-- Custom JS -->
-<script src="{{ asset('js/custom.js') }}"></script>
+
 @endsection

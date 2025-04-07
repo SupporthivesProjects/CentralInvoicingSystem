@@ -33,27 +33,21 @@
 
     <!-- Choices CSS -->
     <link rel="stylesheet" href="{{ asset('libs/choices.js/public/assets/styles/choices.min.css') }}">
-   
-    <!-- Add this in your <head> -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 
-    <!-- Add this before </body> -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> <!-- if not already included -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <!-- JSVectorMap CSS -->
     <link rel="stylesheet" href="{{ asset('libs/jsvectormap/css/jsvectormap.min.css') }}">
+
+    <!-- Swiper CSS -->
     <link rel="stylesheet" href="{{ asset('libs/swiper/swiper-bundle.min.css') }}">
-    <!-- Toastr CSS -->
+
+    <!-- Toastr CSS (CDN) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
-
-
-   
-
 
     @stack('styles')
 </head>
 
 <body>
-    @unless(Route::is('login'))
+    @unless(in_array(Route::currentRouteName(), ['login', 'password.request']))
         @include('partials.topbar')
     @endunless
 
@@ -61,8 +55,16 @@
 
     @include('partials.footer')
 
-    <!-- Scripts -->
+    <!-- jQuery (CDN) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <!-- Toastr JS (CDN) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    <!-- Choices JS -->
     <script src="{{ asset('libs/choices.js/public/assets/scripts/choices.min.js') }}"></script>
+
+    <!-- Your Custom JS -->
     <script src="{{ asset('js/main.js') }}"></script>
     <script src="{{ asset('js/script.js') }}" defer></script>
 
