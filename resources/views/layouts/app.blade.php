@@ -43,10 +43,8 @@
     <!-- Choices Css -->
     <link rel="stylesheet" href="{{ asset('libs/choices.js/public/assets/styles/choices.min.css') }}">
 
-
-
-
   
+
 </head>
 <body>
 
