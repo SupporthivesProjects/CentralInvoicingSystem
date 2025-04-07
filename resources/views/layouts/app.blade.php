@@ -47,9 +47,10 @@
 </head>
 
 <body>
-    @unless(in_array(Route::currentRouteName(), ['login', 'password.request']))
+    @unless(in_array(Route::currentRouteName(), ['login', 'password.request', 'password.reset']))
         @include('partials.topbar')
     @endunless
+
 
     @yield('content')
 

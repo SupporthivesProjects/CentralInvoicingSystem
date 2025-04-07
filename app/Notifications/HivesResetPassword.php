@@ -6,9 +6,8 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use App\Notifications\HivesResetPassword;
 
-class ResetPasswordNotification extends Notification
+class HivesResetPassword extends Notification
 {
     use Queueable;
 
@@ -36,16 +35,15 @@ class ResetPasswordNotification extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->subject('Reset Your Password - Central Invoice System')
-            ->greeting('Hello Admin!')
-            ->line('We received a request to reset your password for your Admin Panel account.')
-            ->action('Reset Password', url(route('password.reset', [
-                'token' => $this->token,
-                'email' => $notifiable->getEmailForPasswordReset(),
-            ], false)))
-            ->line('This link will expire in 60 minutes.')
-            ->line('If you did not request a password reset, please ignore this email.');
+            ->subject('Reset Your Password – Central Invoice System')
+            ->line('You are receiving this email because we received a password reset request for your account on Central Invoice System.')
+            ->action('Reset Password', url(route('password.reset', ['token' => $this->token, 'email' => $notifiable->getEmailForPasswordReset()], false)))
+            ->line('This password reset link will expire in 60 minutes.')
+            ->line('If you did not request a password reset, no further action is required.')
+            ->line('Regards,')
+            ->line('Central Invoice System Team');
     }
+
 
     /**
      * Get the array representation of the notification.

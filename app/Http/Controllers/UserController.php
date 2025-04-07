@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Exception;
 
 class UserController extends Controller
@@ -36,13 +38,14 @@ class UserController extends Controller
         }
     }
 
-        public function showResetForm($token)
-        {
-            return view('pages.reset_password', [
-                'token' => $token,
-                'email' => $request->email
-            ]);
-        }
+
+    public function showResetForm(Request $request, $token)
+    {
+        return view('pages.reset_password', [
+            'token' => $token,
+            'email' => $request->email
+        ]);
+    }
 
         public function resetPassword(Request $request)
         {
