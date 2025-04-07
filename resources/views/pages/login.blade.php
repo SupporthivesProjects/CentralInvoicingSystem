@@ -2,18 +2,14 @@
 
 @section('title', 'Login | Central Invoice System')
 
-@section('content')
-
-
-
+@push('styles')
     <link rel="stylesheet" href="{{ asset('libs/jsvectormap/css/jsvectormap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('libs/swiper/swiper-bundle.min.css') }}">
+    
+@endpush
 
-
-<body class="error-1">
-
-   
-    <div class="page main-signin-wrapper">
+@section('content')
+<div class="page main-signin-wrapper">
 
         <!-- Start::row-1 -->
         <div class="row signpages text-center">
@@ -27,26 +23,16 @@
                                 </a>
                                 <div class="clearfix"></div>
                                 <img src="{{ asset('images/svgs/user.svg') }}" class="ht-100 mb-0" alt="user">
-                                <h5 class="mt-4">Create Your Account</h5>
-                                <span class="text-white-6 fs-13 mb-5 mt-xl-0">Signup to create, discover and connect with the global community</span>
+                                <h5 class="mt-4 text-white">Welcome Back, Admin!</h5>
+                                <span class="text-white-6 fs-13 mb-5 mt-xl-0">Sign in to access the Central Invoice System admin panel</span>
+
                             </div>
                         </div>
                         <div class="col-lg-6 col-xl-7 col-xs-12 col-sm-12 login_form ">
                             <div class="main-container container-fluid">
                                 <div class="row row-sm">
                                     <div class="card-body mt-2 mb-2">
-                                    @if (session('success'))
-                                        <div class="alert alert-success badge-notify mb-3">
-                                            {{ session('success') }}
-                                        </div>
-                                    @endif
-
-                                    @if (session('error'))
-                                        <div class="alert alert-danger badge-notify mb-3">
-                                            {{ session('error') }}
-                                        </div>
-                                    @endif
-
+                                   
                                         <div class="clearfix"></div>
                                         <form method="POST" action="{{ route('login.submit') }}">
                                         @csrf
@@ -79,29 +65,37 @@
         <!-- End::row-1 -->
 
     </div>
+    <!-- Toastr JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
-    <!-- Custom-Switcher JS -->
-    <script src="../assets/js/custom-switcher.min.js"></script>
+    <!-- Toast Messages -->
+    <script>
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "timeOut": "4000"
+        };
 
-    <!-- Bootstrap JS -->
-    <script src="../assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
-    @include("partials/commonjs")
+        @if(session('success'))
+            toastr.success("{{ session('success') }}");
+        @endif
 
-<!-- JSVector Maps JS -->
-<script src="{{ asset('libs/jsvectormap/js/jsvectormap.min.js') }}"></script>
-<!-- JSVector Maps MapsJS -->
-<script src="{{ asset('libs/jsvectormap/maps/world-merc.js') }}"></script>
-<!-- Apex Charts JS -->
-<script src="{{ asset('libs/apexcharts/apexcharts.min.js') }}"></script>
-<!-- Main-Dashboard -->
-<script src="{{ asset('js/index.js') }}"></script>
+        @if(session('error'))
+            toastr.error("{{ session('error') }}");
+        @endif
+    </script>
+@endsection
 
-    @include("partials/custom_switcherjs")
+@push('scripts')
+    <script src="{{ asset('libs/jsvectormap/js/jsvectormap.min.js') }}"></script>
+    <script src="{{ asset('libs/jsvectormap/maps/world-merc.js') }}"></script>
+    <script src="{{ asset('libs/apexcharts/apexcharts.min.js') }}"></script>
+    <script src="{{ asset('js/index.js') }}"></script>
+    <script src="{{ asset('js/custom.js') }}"></script>
 
-<!-- Custom JS -->
-<script src="{{ asset('js/custom.js') }}"></script>
-    
-
-</body>
-
-</html>
+    <!-- Include common JS and custom switcher JS -->
+    @include("partials.commonjs")
+    @include("partials.custom_switcherjs")
+@endpush
