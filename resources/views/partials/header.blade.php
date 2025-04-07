@@ -625,8 +625,8 @@
                     <li><a class="dropdown-item d-flex border-bottom" href="chat.html"><i class="fe fe-headphones fs-16 align-middle me-2"></i>Support</a></li>
                     <li><a class="dropdown-item d-flex" href="{{  route('logout')}}"><i class="fe fe-power fs-16 align-middle me-2"></i>Log Out</a></li>
                 </ul>
-            </div>  
-            <!-- End::header-element -->    
+            </div>
+            <!-- End::header-element -->
 
             <!-- Start::header-element -->
             <div class="header-element right-sidebar d-xl-flex d-none">

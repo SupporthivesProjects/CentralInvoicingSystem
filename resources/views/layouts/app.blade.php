@@ -33,20 +33,21 @@
 
     <!-- Choices CSS -->
     <link rel="stylesheet" href="{{ asset('libs/choices.js/public/assets/styles/choices.min.css') }}">
-   
+
     <!-- Add this in your <head> -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 
     <!-- Add this before </body> -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> <!-- if not already included -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js') }}></script> <!-- if not already included -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js') }}></script>
     <link rel="stylesheet" href="{{ asset('libs/jsvectormap/css/jsvectormap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('libs/swiper/swiper-bundle.min.css') }}">
     <!-- Toastr CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <!-- Prism CSS -->
+    <link rel="stylesheet" href="{{ asset('libs/prismjs/themes/prism-coy.min.css') }}">
 
 
-   
 
 
     @stack('styles')
@@ -57,11 +58,49 @@
         @include('partials.topbar')
     @endunless
 
+    @include("partials.mainhead")
+    @include("partials.switcher")
+    @include("partials.loader")
+    @include("partials.header")
+
+    @include("partials.sidebar")
     @yield('content')
 
     @include('partials.footer')
 
     <!-- Scripts -->
+    <script src="{{ asset('libs/@popperjs/core/umd/popper.min.js') }}></script>
+
+    <!-- Bootstrap JS -->
+    <script src="{{ asset('libs/bootstrap/js/bootstrap.bundle.min.js') }}></script>
+
+    <!-- Defaultmenu JS -->
+    <script src="{{ asset('js/defaultmenu.min.js') }}"></script>
+
+    <!-- Node Waves JS-->
+    <script src="{{ asset('libs/node-waves/waves.min.js') }}></script>
+
+    <!-- Sticky JS -->
+    <script src="{{ asset('js/sticky.js') }}"></script>
+
+    <!-- Simplebar JS -->
+    <script src="{{ asset('libs/simplebar/simplebar.min.js') }}></script>
+    <script src="{{ asset('js/simplebar.js') }}"></script>
+
+    <!-- Color Picker JS -->
+    <script src="{{ asset('libs/@simonwep/pickr/pickr.es5.min.js') }}></script>
+
+
+
+    <!-- Custom-Switcher JS -->
+    <script src="{{ asset('js/custom-switcher.min.js') }}"></script>
+
+    <!-- Prism JS -->
+    <script src="{{ asset('libs/prismjs/prism.js') }}></script>
+    <script src="{{ asset('js/prism-custom.js') }}"></script>
+
+    <!-- Custom JS -->
+    <script src="{{ asset('js/custom.js') }}"></script>
     <script src="{{ asset('libs/choices.js/public/assets/scripts/choices.min.js') }}"></script>
     <script src="{{ asset('js/main.js') }}"></script>
     <script src="{{ asset('js/script.js') }}" defer></script>
