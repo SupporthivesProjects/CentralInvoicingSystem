@@ -43,16 +43,15 @@
     <!-- Choices Css -->
     <link rel="stylesheet" href="{{ asset('libs/choices.js/public/assets/styles/choices.min.css') }}">
 
-  
-
 </head>
 <body>
-
+@unless(Route::is('login'))
     @include('partials.topbar')
+@endunless
 
-        @yield('content')
-   
-    @include('partials.footer')
+@yield('content')
+
+@include('partials.footer')
 
 </body>
 </html>
