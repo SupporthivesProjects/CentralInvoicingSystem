@@ -812,7 +812,7 @@
 
     </div>
 
-    @include("partials/commonjs")
+    @include("partials.commonjs")
 
 <!-- JSVector Maps JS -->
 <script src="{{ asset('libs/jsvectormap/js/jsvectormap.min.js') }}"></script>
@@ -823,7 +823,7 @@
 <!-- Main-Dashboard -->
 <script src="{{ asset('js/index.js') }}"></script>
 
-    @include("partials/custom_switcherjs")
+    @include("partials.custom_switcherjs")
 
 <!-- Custom JS -->
 <script src="{{ asset('js/custom.js') }}"></script>

@@ -1,7 +1,8 @@
+{{--
 @extends('layouts.app')
 
 @section('content')
-{{--
+
 <div class="container">
     <h2>Add New User</h2>
 
@@ -37,7 +38,7 @@
         <div class="mb-3">
             <label>Select Roles</label>
             <select name="roles[]" class="form-control" multiple required>
-                @foreach($roles as $role)
+                @foreach ($roles as $role)
                     <option value="{{ $role->id }}">{{ $role->name }}</option>
                 @endforeach
             </select>
@@ -49,34 +50,151 @@
 
 
 </div>
+
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-header justify-content-between">
+            <div class="card-title">Vertical Forms</div>
+        </div>
+
+        <div class="card-body">
+            <form action="{{ route('users.store') }}" method="POST">
+                @csrf
+                <div class="mb-3">
+                    <label class="form-label">Enter Name</label>
+                    <input type="text" class="form-control" name="name" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Enter Email</label>
+                    <input type="email" class="form-control" name="email" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Enter Password</label>
+                    <input type="password" class="form-control" name="password" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+@endsection
 --}}
 
-<div class="card-header justify-content-between">
-    <div class="card-title">
-        Vertical Forms
-    </div>
-    <div class="prism-toggle">
-        <button class="btn btn-sm btn-primary-light">Show Code<i class="ri-eye-line ms-2 d-inline-block align-middle fs-14"></i></button>
-    </div>
-</div>
-<div class="card-body">
-    <div class="mb-3">
-        <label for="form-text" class="form-label fs-14 text-dark">Enter name</label>
-        <input type="text" class="form-control" id="form-text" placeholder="">
-    </div>
-    <div class="mb-3">
-        <label for="form-password" class="form-label fs-14 text-dark">Enter
-            Password</label>
-        <input type="password" class="form-control" id="form-password" placeholder="">
-    </div>
-    <div class="form-check mb-3">
-        <input class="form-check-input" type="checkbox" value="" id="invalidCheck"
-            required="">
-        <label class="form-check-label" for="invalidCheck">
-            Accept Policy
-        </label>
-    </div>
-    <button class="btn btn-primary" type="submit">Submit</button>
-</div>
+@extends('layouts.app')
 
+@section('title', 'Dashboard | Central Invoice System')
+
+@section('content')
+
+
+    <link rel="stylesheet" href="{{ asset('libs/jsvectormap/css/jsvectormap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('libs/swiper/swiper-bundle.min.css') }}">
+
+    <div class="page">
+
+        <div class="main-content app-content">
+            <div class="container-fluid">
+
+                <!-- Page Header -->
+
+                <div class="d-md-flex d-block align-items-center justify-content-between page-header-breadcrumb">
+                    <div>
+                        <h2 class="main-content-title fs-24 mb-1">Add Users</h2>
+                        <ol class="breadcrumb mb-0">
+                            <li class="breadcrumb-item"><a href="javascript:void(0)">Users</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Add</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Page Header Close -->
+
+
+
+
+
+
+
+
+
+
+
+                <div class="col-xl-12">
+                    <div class="card custom-card">
+
+                        <div class="card-body">
+                            <form class="row g-3 mt-0">
+                                <div class="col-md-6">
+                                    <label class="form-label">Full Name</label>
+                                    <input type="text" class="form-control" placeholder="First name"
+                                        aria-label="First name">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Email</label>
+                                    <input type="email" class="form-control" placeholder="Last name"
+                                        aria-label="Last name">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="inputEmail4" class="form-label">Password</label>
+                                    <input type="password" class="form-control" id="inputEmail4">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="inputPassword4" class="form-label">Confirm Password</label>
+                                    <input type="password" class="form-control" id="inputPassword4">
+                                </div>
+                                <div class="col-12">
+                                    <label for="inputState" class="form-label">Role</label>
+                                    <select id="inputState" class="form-select form-select-lg">
+                                        <option selected>Choose Role</option>
+                                        <option>...</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-12">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="gridCheck3">
+                                        <label class="form-check-label" for="gridCheck3">
+                                            Active
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <button type="submit" class="btn btn-primary">Add User</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="card-footer d-none border-top-0">
+
+                            <!-- Prism Code -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End:: row-6 -->
+
+        </div>
+    </div>
+
+
+    @include('partials.commonjs')
+
+    <!-- JSVector Maps JS -->
+    <script src="{{ asset('libs/jsvectormap/js/jsvectormap.min.js') }}"></script>
+    <!-- JSVector Maps MapsJS -->
+    <script src="{{ asset('libs/jsvectormap/maps/world-merc.js') }}"></script>
+    <!-- Apex Charts JS -->
+    <script src="{{ asset('libs/apexcharts/apexcharts.min.js') }}"></script>
+    <!-- Main-Dashboard -->
+    <script src="{{ asset('js/index.js') }}"></script>
+
+    @include('partials.custom_switcherjs')
+
+    <!-- Custom JS -->
+    <script src="{{ asset('js/custom.js') }}"></script>
 @endsection
