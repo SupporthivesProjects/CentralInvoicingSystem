@@ -116,58 +116,57 @@
                 <!-- Page Header Close -->
 
 
-
-
-
-
-
-
-
-
-
                 <div class="col-xl-12">
                     <div class="card custom-card">
 
                         <div class="card-body">
-                            <form class="row g-3 mt-0">
+                            <form class="row g-3 mt-0" action="{{ route('users.store') }}" method="POST">
+                                @csrf
+
                                 <div class="col-md-6">
                                     <label class="form-label">Full Name</label>
-                                    <input type="text" class="form-control" placeholder="First name"
-                                        aria-label="First name">
+                                    <input type="text" class="form-control" name="name" value="{{ old('name') }}" placeholder="Enter full name" required>
                                 </div>
+
                                 <div class="col-md-6">
                                     <label class="form-label">Email</label>
-                                    <input type="email" class="form-control" placeholder="Last name"
-                                        aria-label="Last name">
+                                    <input type="email" class="form-control" name="email" value="{{ old('email') }}" placeholder="Enter email" required>
                                 </div>
+
                                 <div class="col-md-6">
-                                    <label for="inputEmail4" class="form-label">Password</label>
-                                    <input type="password" class="form-control" id="inputEmail4">
+                                    <label class="form-label">Password</label>
+                                    <input type="password" class="form-control" name="password" required>
                                 </div>
+
                                 <div class="col-md-6">
-                                    <label for="inputPassword4" class="form-label">Confirm Password</label>
-                                    <input type="password" class="form-control" id="inputPassword4">
+                                    <label class="form-label">Confirm Password</label>
+                                    <input type="password" class="form-control" name="password_confirmation" required>
                                 </div>
+
                                 <div class="col-12">
-                                    <label for="inputState" class="form-label">Role</label>
-                                    <select id="inputState" class="form-select form-select-lg">
-                                        <option selected>Choose Role</option>
-                                        <option>...</option>
+                                    <label class="form-label">Role</label>
+                                    <select name="role" class="form-select form-select-lg" required>
+                                        <option disabled>Select Roles</option>
+                                        @foreach($roles as $role)
+                                            <option value="{{ $role->id }}" {{ (collect(old('roles'))->contains($role->id)) ? 'selected' : '' }}>
+                                                {{ $role->name }}
+                                            </option>
+                                        @endforeach
                                     </select>
                                 </div>
 
                                 <div class="col-12">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="gridCheck3">
-                                        <label class="form-check-label" for="gridCheck3">
-                                            Active
-                                        </label>
+                                        <input class="form-check-input" type="checkbox" id="gridCheck3" name="status" value="1" checked>
+                                        <label class="form-check-label" for="gridCheck3">Active</label>
                                     </div>
                                 </div>
+
                                 <div class="col-12">
                                     <button type="submit" class="btn btn-primary">Add User</button>
                                 </div>
                             </form>
+
                         </div>
                         <div class="card-footer d-none border-top-0">
 

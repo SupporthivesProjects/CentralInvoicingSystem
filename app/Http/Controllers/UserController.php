@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Role;
 use App\Models\User;
 use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Hash;
+
 
 class UserController extends Controller
 {
@@ -20,20 +22,25 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name'     => 'required|string|max:255',
-            'email'    => 'required|email|unique:users,email',
-            'password' => 'required|min:6|confirmed',
-            'roles'    => 'required|array'
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|string|min:6|confirmed',
+            //'roles' => 'required|array',
+            'role'     => 'required|exists:roles,id',
         ]);
 
+        // Create the user
         $user = User::create([
-            'name'     => $request->name,
-            'email'    => $request->email,
+            'name' => $request->name,
+            'email' => $request->email,
             'password' => Hash::make($request->password),
+            'status' => $request->has('status') ? 1 : 0,
         ]);
 
-        $user->roles()->attach($request->roles); // Assign roles
+        // Attach roles to the user via pivot table
+        $user->roles()->attach($request->role);
 
-        return redirect()->route('users.index')->with('success', 'User created successfully!');
+        //return redirect()->route('users.index')->with('success', 'User created successfully with assigned roles.');
+        return back()->with('success', 'New user added');
     }
 }
