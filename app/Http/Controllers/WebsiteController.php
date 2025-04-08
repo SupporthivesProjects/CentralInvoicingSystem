@@ -22,11 +22,13 @@ class WebsiteController extends Controller
             // Validate input
             $request->validate([
                 'name' => 'required|string|max:255',
+                'icon_class' => 'nullable|string|max:255',
             ]);
 
             // Create the BusinessModel
             BusinessModel::create([
-                'name' => $request->name
+                'name' => $request->name,
+                'icon_class' => $request->icon_class
             ]);
 
             // Redirect with success message

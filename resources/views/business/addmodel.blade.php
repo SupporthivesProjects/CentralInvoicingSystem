@@ -50,16 +50,24 @@
                     @endif
                     <div class="card custom-card">
                         <div class="card-body">
-                            <form method="POST" action="{{ route('businessmodel.store') }}">
+                        <form method="POST" action="{{ route('businessmodel.store') }}">
                                 @csrf
                                 <div class="mb-3">
                                     <label class="form-label">Business Model Name</label>
                                     <input type="text" name="name" class="form-control" placeholder="Enter Business Model Name" required>
                                 </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Icon Class <small class="text-muted">(optional)</small></label>
+                                    <input type="text" name="icon_class" class="form-control" placeholder="e.g., fe fe-shopping-cart">
+                                    <small class="form-text text-muted">Use icon class like <code>fe fe-shopping-cart</code>, <code>fe fe-globe</code>, etc.</small>
+                                </div>
+
                                 <div class="text-center">
                                     <button type="submit" class="btn btn-primary">Add Business Model</button>
                                 </div>
                             </form>
+
                         </div>
                         <div class="card-footer d-none border-top-0">
                             <!-- Optional Code Section -->
