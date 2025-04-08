@@ -157,7 +157,7 @@
 
                                 <div class="col-12">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="gridCheck3" name="status" value="1" checked>
+                                        <input class="form-check-input" type="checkbox" id="gridCheck3" name="status" value="1" {{ old('status') ? 'checked' : '' }}>
                                         <label class="form-check-label" for="gridCheck3">Active</label>
                                     </div>
                                 </div>
