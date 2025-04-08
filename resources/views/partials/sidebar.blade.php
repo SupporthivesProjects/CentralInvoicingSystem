@@ -54,14 +54,27 @@
                             <a href="javascript:void(0)">Manage Sites</a>
                         </li>
                         <li class="slide">
-                            <a href="ecommerce-create-invoice.html" class="side-menu__item">
+                            <a href="{{ route('businessmodel.create') }}" class="side-menu__item">
+                                Add Business Model 
+                            </a>
+                        </li>
+                        <li class="slide">
+                            <a href="{{ route('website.create') }}" class="side-menu__item">
                                 Connect New Site 
                             </a>
                         </li>
                         <li class="slide">
-                            <a href="ecommerce-invoice-history.html" class="side-menu__item d-flex align-items-center justify-content-between">
+                            <a href="{{ route('businessmodels') }}" class="side-menu__item d-flex align-items-center justify-content-between">
                                 <div>
-                                    <span>All Connected Sites</span>
+                                    <span>Business models</span>
+                                </div>
+                                <span class="badge bg-success">23</span>
+                            </a>
+                        </li>
+                        <li class="slide">
+                            <a href="{{ route('connectedwebsites') }}" class="side-menu__item d-flex align-items-center justify-content-between">
+                                <div>
+                                    <span>Connected Sites</span>
                                 </div>
                                 <span class="badge bg-success">546</span>
                             </a>
