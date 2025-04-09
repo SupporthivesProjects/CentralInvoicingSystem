@@ -32,7 +32,7 @@
             <div class="col-xl-12">
                 <div class="card custom-card">
                     <div class="card-body">
-                    <form method="POST" action="{{ route('website.update', $website->id) }}" class="row g-3 mt-0">
+                    <form method="POST" action="{{ route('website.update', $website->id) }}" enctype="multipart/form-data" class="row g-3 mt-0">
                             @csrf
                             @method('PATCH')
 
@@ -100,6 +100,58 @@
                                 <label class="form-label">Remark</label>
                                 <input type="text" name="remark" class="form-control" placeholder="Enter Remark here in case"
                                     value="{{ old('remark', $website->remark) }}">
+                            </div>
+                            <!-- Company Details Section -->
+                            <div class="col-12">
+                                <hr>
+                                <h5 class="text-left">Company Details (Optional)</h5>
+                                <hr>
+                            </div>
+
+                            <!-- Company Logo -->
+                            <div class="col-md-6 mx-auto">
+                                <label class="form-label">Company Logo</label>
+                                <input type="file" name="company_logo" class="form-control">
+                                @if ($website->company_logo)
+                                    <small class="text-muted">Current: {{ $website->company_logo }}</small>
+                                  @endif
+                            </div>
+
+                            <!-- Invoice Header Image -->
+                            <div class="col-md-6 mx-auto">
+                                <label class="form-label">Invoice Header Image</label>
+                                <input type="file" name="invoice_header_image" class="form-control">
+                                @if ($website->invoice_header_image)
+                                    <small class="text-muted">Current: {{ $website->invoice_header_image }}</small>
+                                @endif
+                            </div>
+
+                            <!-- Invoice Footer Image -->
+                            <div class="col-md-6 mx-auto">
+                                <label class="form-label">Invoice Footer Image</label>
+                                <input type="file" name="invoice_footer_image" class="form-control">
+                                @if ($website->invoice_footer_image)
+                                    <small class="text-muted">Current: {{ $website->invoice_footer_image }}</small>
+                                @endif
+                            </div>
+
+                            <!-- Invoice Signature -->
+                            <div class="col-md-6 mx-auto">
+                                <label class="form-label">Invoice Signature</label>
+                                <input type="file" name="invoice_signature" class="form-control">
+                                @if ($website->invoice_signature)
+                                    <small class="text-muted">Current: {{ $website->invoice_signature }}</small>
+                                @endif
+                            </div>
+
+                            <!-- Invoice Template (HTML only) -->
+                            <div class="col-md-6 mx-auto">
+                                <label class="form-label">Invoice Template (HTML only)</label>
+                                <input type="file" name="invoice_template" class="form-control" accept=".html">
+                                <small class="form-text text-muted">Please upload an HTML file only. Max size: 2MB.</small>
+                                @if ($website->invoice_template)
+                                    <small class="text-muted">Current: {{ $website->invoice_template }}</small>
+                                @endif
                             </div>
 
                             <div class="col-12 text-center">

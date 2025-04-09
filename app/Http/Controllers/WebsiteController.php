@@ -98,33 +98,76 @@ class WebsiteController extends Controller
     public function updateWebsite(Request $request, $id)
     {
         $request->validate([
-            'business_model_id' => 'required|exists:business_models,id',
-            'site_name' => 'required|string|max:255',
-            'db_host' => 'required|string|max:255',
-            'db_port' => 'required|numeric',
-            'db_name' => 'required|string|max:255',
-            'db_username' => 'required|string|max:255',
-            'db_password' => 'required|string|max:255',
-            'site_description' => 'nullable|string',
-            'site_link' => 'nullable|url',
-            'remark' => 'nullable|string',
+                'business_model_id' => 'required|exists:business_models,id',
+                'site_name' => 'required|string|max:255',
+                'site_description' => 'nullable|string|max:500',
+                'db_host' => 'required|string|max:255',
+                'db_port' => 'required|numeric',
+                'db_name' => 'required|string|max:255',
+                'db_username' => 'required|string|max:255',
+                'db_password' => 'required|string|max:255',
+                'site_link' => 'nullable|url|max:255',
+                'remark' => 'nullable|string|max:1000',
+                'company_name' => 'nullable|string|max:255',
+                'company_email' => 'nullable|email|max:255',
+                'company_mobile' => 'nullable|string|max:20',
+                'company_address' => 'nullable|string|max:1000',
+
+                'company_logo' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
+                'invoice_header_image' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
+                'invoice_footer_image' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
+                'invoice_signature' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
+                'invoice_template' => 'nullable|file|mimes:html|max:2048',
         ]);
 
         try {
             $website = Website::findOrFail($id);
 
-            $website->update([
-                'business_model_id' => $request->business_model_id,
-                'site_name' => $request->site_name,
-                'site_description' => $request->site_description,
-                'db_host' => $request->db_host,
-                'db_port' => $request->db_port,
-                'db_name' => $request->db_name,
-                'db_username' => $request->db_username,
-                'db_password' => $request->db_password,
-                'site_link' => $request->site_link,
-                'remark' => $request->remark,
-            ]);
+             // File upload handling
+                $uploadPathBase = public_path("websites/{$website->id}/");
+
+                // Helper to upload file
+                $uploadFile = function ($field, $subfolder) use ($request, $uploadPathBase, $website) {
+                    if ($request->hasFile($field)) {
+                        $file = $request->file($field);
+                        $filename = $field . '_' . time() . '.' . $file->getClientOriginalExtension();
+                        $path = $uploadPathBase . $subfolder;
+
+                        if (!file_exists($path)) {
+                            mkdir($path, 0755, true);
+                        }
+
+                        $file->move($path, $filename);
+                        $website->$field = "websites/{$website->id}/{$subfolder}/{$filename}";
+                    }
+                };
+
+                $uploadFile('company_logo', 'companylogos');
+                $uploadFile('invoice_header_image', 'invoice_headers');
+                $uploadFile('invoice_footer_image', 'invoice_footers');
+                $uploadFile('invoice_signature', 'invoice_signatures');
+                $uploadFile('invoice_template', 'invoice_templates'); // Allow only HTML in validation
+
+                // Update fields
+                $website->update([
+                    'business_model_id' => $request->business_model_id,
+                    'site_name' => $request->site_name,
+                    'site_description' => $request->site_description,
+                    'db_host' => $request->db_host,
+                    'db_port' => $request->db_port,
+                    'db_name' => $request->db_name,
+                    'db_username' => $request->db_username,
+                    'db_password' => $request->db_password,
+                    'site_link' => $request->site_link,
+                    'remark' => $request->remark,
+                    'company_name' => $request->company_name,
+                    'company_email' => $request->company_email,
+                    'company_mobile' => $request->company_mobile,
+                    'company_address' => $request->company_address,
+                ]);
+
+                // Save uploaded paths
+                $website->save();
 
             return redirect()->route('connectedwebsites')->with('success', 'Website updated successfully!');
         } catch (\Exception $e) {
@@ -147,7 +190,18 @@ class WebsiteController extends Controller
                 'db_password' => 'required|string|max:255',
                 'site_link' => 'nullable|url|max:255',
                 'remark' => 'nullable|string|max:1000',
-            ]);
+                'company_name' => 'nullable|string|max:255',
+                'company_email' => 'nullable|email|max:255',
+                'company_mobile' => 'nullable|string|max:20',
+                'company_address' => 'nullable|string|max:1000',
+
+                'company_logo' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
+                'invoice_header_image' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
+                'invoice_footer_image' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
+                'invoice_signature' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
+                'invoice_template' => 'nullable|file|mimes:html|max:2048',
+            ]
+            );
             $errors = $validator->errors()->all();
             $firstError = $errors[0] ?? 'Validation failed.';
             if ($validator->fails()) {
@@ -157,7 +211,52 @@ class WebsiteController extends Controller
                     ->with('error', $firstError);
             }
     
-            Website::create($request->all());
+            // First, create the website record without files
+            $website = Website::create([
+                'business_model_id' => $request->business_model_id,
+                'site_name' => $request->site_name,
+                'site_description' => $request->site_description,
+                'db_host' => $request->db_host,
+                'db_port' => $request->db_port,
+                'db_name' => $request->db_name,
+                'db_username' => $request->db_username,
+                'db_password' => $request->db_password,
+                'site_link' => $request->site_link,
+                'remark' => $request->remark,
+                'company_name' => $request->company_name,
+                'company_email' => $request->company_email,
+                'company_mobile' => $request->company_mobile,
+                'company_address' => $request->company_address,
+            ]);
+
+            // File upload path base
+            $uploadPathBase = public_path("websites/{$website->id}/");
+
+            // Helper function for file upload
+            $uploadFile = function ($field, $subfolder) use ($request, $uploadPathBase, $website) {
+                if ($request->hasFile($field)) {
+                    $file = $request->file($field);
+                    $filename = $field . '_' . time() . '.' . $file->getClientOriginalExtension();
+                    $path = $uploadPathBase . $subfolder;
+
+                    if (!file_exists($path)) {
+                        mkdir($path, 0755, true);
+                    }
+
+                    $file->move($path, $filename);
+                    $website->$field = "websites/{$website->id}/{$subfolder}/{$filename}";
+                }
+            };
+
+            // Upload each file
+            $uploadFile('company_logo', 'companylogos');
+            $uploadFile('invoice_header_image', 'invoice_headers');
+            $uploadFile('invoice_footer_image', 'invoice_footers');
+            $uploadFile('invoice_signature', 'invoice_signatures');
+            $uploadFile('invoice_template', 'invoice_templates');
+
+            // Save the uploaded paths
+            $website->save();
     
             return redirect()->back()->with('success', 'Website added successfully.');
         } catch (\Exception $e) {

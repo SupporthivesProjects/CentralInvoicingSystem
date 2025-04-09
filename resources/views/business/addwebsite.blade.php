@@ -32,7 +32,7 @@
             <div class="col-xl-12">
                 <div class="card custom-card">
                     <div class="card-body">
-                        <form method="POST" action="{{ route('website.store') }}" class="row g-3 mt-0">
+                        <form method="POST" action="{{ route('website.store') }}" enctype="multipart/form-data" class="row g-3 mt-0">
                             @csrf
 
                             <div class="col-md-6 mx-auto">
@@ -88,6 +88,62 @@
                                 <label class="form-label">Remark</label>
                                 <input type="text" name="remark" class="form-control" placeholder="Enter Remark here in case">
                             </div>
+                            <!-- Company Details Section -->
+                            <div class="col-12">
+                                <hr>
+                                <h5 class="text-left">Company Details (Optional)</h5>
+                                <hr>
+                            </div>
+
+                            <div class="col-md-6 mx-auto">
+                                <label class="form-label">Company Name</label>
+                                <input type="text" name="company_name" class="form-control" placeholder="Enter Company Name">
+                            </div>
+
+                            <div class="col-md-6 mx-auto">
+                                <label class="form-label">Company Email</label>
+                                <input type="email" name="company_email" class="form-control" placeholder="Enter Company Email">
+                            </div>
+
+                            <div class="col-md-6 mx-auto">
+                                <label class="form-label">Company Mobile</label>
+                                <input type="text" name="company_mobile" class="form-control" placeholder="Enter Company Mobile">
+                            </div>
+
+                            <div class="col-md-6 mx-auto">
+                                <label class="form-label">Company Address</label>
+                                <textarea name="company_address" class="form-control" rows="2" placeholder="Enter Company Address"></textarea>
+                            </div>
+
+                            <div class="col-md-6 mx-auto">
+                                <label class="form-label">Company Logo</label>
+                                <input type="file" name="company_logo" class="form-control">
+                            </div>
+
+                            <!-- Invoice Header Image -->
+                            <div class="col-md-6 mx-auto">
+                                <label class="form-label">Invoice Header Image</label>
+                                <input type="file" name="invoice_header_image" class="form-control">
+                            </div>
+
+                            <!-- Invoice Footer Image -->
+                            <div class="col-md-6 mx-auto">
+                                <label class="form-label">Invoice Footer Image</label>
+                                <input type="file" name="invoice_footer_image" class="form-control">
+                            </div>
+
+                            <!-- Invoice Signature -->
+                            <div class="col-md-6 mx-auto">
+                                <label class="form-label">Invoice Signature</label>
+                                <input type="file" name="invoice_signature" class="form-control">
+                            </div>
+                            <!-- Invoice Template (HTML file only) -->
+                            <div class="col-md-6 mx-auto">
+                                <label class="form-label">Invoice Template</label>
+                                <input type="file" name="invoice_template" class="form-control" accept=".html">
+                                <small class="form-text text-muted">Please upload an HTML file only. Max size: 2MB.</small>
+                            </div>
+                            
 
                             <div class="col-12 text-center">
                                 <button type="submit" class="btn btn-primary mt-2">Add Website</button>
