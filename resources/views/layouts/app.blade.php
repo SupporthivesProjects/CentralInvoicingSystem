@@ -65,13 +65,6 @@
         @include('partials.topbar')
     @endunless
 
-    @include("partials.mainhead")
-    @include("partials.switcher")
-    @include("partials.loader")
-    @include("partials.header")
-
-    @include("partials.sidebar")
-
     @yield('content')
 
     @include('partials.footer')

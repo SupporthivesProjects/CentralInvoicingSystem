@@ -9,7 +9,6 @@ use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Exception;
 
