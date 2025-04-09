@@ -62,15 +62,16 @@
                                                     <td><a href="{{ $site->site_link }}" target="_blank" >{{ $site->site_link }}</a></td>
                                                     <td>{{ $site->created_at->format('Y-m-d') }}</td>
                                                     <td>
-                                                        <a href="#" class="btn btn-sm btn-primary">
-                                                            <i class="fas fa-edit"></i> Edit
-                                                        </a>
-                                                        <a href="#" class="btn btn-sm btn-info">
-                                                            <i class="fas fa-eye"></i> View
-                                                        </a>
-                                                        <a href="#" class="btn btn-sm btn-warning">
+                                                     
+                                                        <a href="{{ route('site.connect.db', $site->id) }}" class="btn btn-sm btn-warning">
                                                             <i class="fas fa-file-invoice"></i> Generate Invoice
                                                         </a>
+                                                        <a href="{{ route('website.edit', $site->id) }}" class="btn btn-sm btn-primary">
+                                                            <i class="fas fa-edit"></i> Edit
+                                                        </a>
+                                                        <button class="btn btn-sm btn-danger delete-btn" data-id="{{ $site->id }}">
+                                                            <i class="fas fa-trash-alt"></i> Delete
+                                                        </button>
                                                     </td>
 
                                                 </tr>
@@ -94,7 +95,7 @@
 
     @include("partials/commonjs")
 
-<@push('scripts')
+@push('scripts')
 <script src="{{ asset('libs/jsvectormap/js/jsvectormap.min.js') }}"></script>
 <script src="{{ asset('libs/jsvectormap/maps/world-merc.js') }}"></script>
 <script src="{{ asset('libs/apexcharts/apexcharts.min.js') }}"></script>
@@ -110,9 +111,51 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-
     <!-- Internal Datatables JS -->
     <script src="{{ asset('js/datatables.js') }}"></script>
+    <script>
+            $(document).on('click', '.delete-btn', function () {
+                const id = $(this).data('id');
+
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: 'This action cannot be undone!',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, delete it!',
+                    showLoaderOnConfirm: true,
+                    preConfirm: () => {
+                        return fetch(`/website/${id}`, {
+                            method: 'DELETE',
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                'Accept': 'application/json'
+                            }
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error(response.statusText);
+                            }
+                            return response.json();
+                        })
+                        .catch(error => {
+                            Swal.showValidationMessage(`Delete failed: ${error}`);
+                        });
+                    },
+                    allowOutsideClick: () => !Swal.isLoading()
+                }).then((result) => {
+                    if (result.isConfirmed && result.value?.success) {
+                        toastr.success(result.value.message || "Deleted successfully!");
+                        setTimeout(() => {
+                            location.reload(); // Optional: reload if needed
+                        }, 1500);
+                    } else if (result.value && !result.value.success) {
+                        toastr.error(result.value.message || "Failed to delete!");
+                    }
+                });
+            });
+        </script>
+   
 @endpush
 
 @include("partials/custom_switcherjs")

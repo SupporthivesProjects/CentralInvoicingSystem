@@ -10,13 +10,51 @@ use Illuminate\Support\Facades\Validator;
 class WebsiteController extends Controller
 {
    
-    public function addbusinessmodel()
+    public function addBusinessModel()
     {
         return view('business.addmodel');
     }
 
-    // Store Business Model
-    public function createBusinessModel(Request $request)
+    public function editBusinessModel($id)
+    {
+        $businessmodel = BusinessModel::findOrFail($id);
+        return view('business.editmodel', compact('businessmodel'));
+    }
+
+    public function updateBusinessModel(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'icon_class' => 'nullable|string|max:255',
+        ]); 
+
+        $model = BusinessModel::findOrFail($id);
+        $model->update($request->all());
+
+        return redirect()->route('businessmodels')->with('success', 'Business model updated!');
+    }
+
+    public function deleteBusinessModel($id)
+    {
+        try {
+            $businessModel = BusinessModel::findOrFail($id);
+            $businessModel->delete();
+    
+            return response()->json([
+                'success' => true,
+                'message' => 'Business Model Deleted Successfully!'
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Error deleting business model: ' . $e->getMessage());
+    
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong! Please try again.'
+            ], 500);
+        }
+    }
+ 
+ public function createBusinessModel(Request $request)
     {
         try {
             // Validate input
@@ -48,6 +86,51 @@ class WebsiteController extends Controller
     {
         $businessModels = BusinessModel::all();
         return view('business.addwebsite', compact('businessModels'));
+    }
+
+    public function editwebsite($id)
+    {
+        $website = Website::findOrFail($id);
+        $businessModels = BusinessModel::all();
+        return view('business.editwebsite', compact('website', 'businessModels'));
+    }
+
+    public function updateWebsite(Request $request, $id)
+    {
+        $request->validate([
+            'business_model_id' => 'required|exists:business_models,id',
+            'site_name' => 'required|string|max:255',
+            'db_host' => 'required|string|max:255',
+            'db_port' => 'required|numeric',
+            'db_name' => 'required|string|max:255',
+            'db_username' => 'required|string|max:255',
+            'db_password' => 'required|string|max:255',
+            'site_description' => 'nullable|string',
+            'site_link' => 'nullable|url',
+            'remark' => 'nullable|string',
+        ]);
+
+        try {
+            $website = Website::findOrFail($id);
+
+            $website->update([
+                'business_model_id' => $request->business_model_id,
+                'site_name' => $request->site_name,
+                'site_description' => $request->site_description,
+                'db_host' => $request->db_host,
+                'db_port' => $request->db_port,
+                'db_name' => $request->db_name,
+                'db_username' => $request->db_username,
+                'db_password' => $request->db_password,
+                'site_link' => $request->site_link,
+                'remark' => $request->remark,
+            ]);
+
+            return redirect()->route('connectedwebsites')->with('success', 'Website updated successfully!');
+        } catch (\Exception $e) {
+            Log::error('Website Update Error: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Something went wrong. Please try again.');
+        }
     }
 
     public function createWebsite(Request $request)
@@ -86,6 +169,25 @@ class WebsiteController extends Controller
         }
     }
 
+    public function deleteWebsite($id)
+    {
+        try {
+            $website = Website::findOrFail($id);
+            $website->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Website deleted successfully!'
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error deleting website: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong while deleting the website.'
+            ], 500);
+        }
+    }
+
 
     public function connectedwebsites(Request $request){
         try {
@@ -108,4 +210,23 @@ class WebsiteController extends Controller
             return redirect()->back()->with('error', 'Something went wrong while fetching business models.');
         }
     }
+
+    public function websitesByBusinessModel($id)
+    {
+        try {
+            $businessModel = BusinessModel::findOrFail($id);
+            $websites = Website::where('business_model_id', $id)->get();
+    
+            return view('business.modelwebsites', compact('businessModel', 'websites'));
+    
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            // Specific error if BusinessModel not found
+            return redirect()->back()->with('error', 'Business Model not found.');
+        } catch (\Exception $e) {
+            // Any other unexpected error
+            \Log::error('Error fetching websites by business model: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Something went wrong. Please try again.');
+        }
+    }
+    
 }

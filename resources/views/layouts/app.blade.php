@@ -36,6 +36,9 @@
     <!-- JSVectorMap CSS -->
     <link rel="stylesheet" href="{{ asset('libs/jsvectormap/css/jsvectormap.min.css') }}">
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<
+
     <!-- Swiper CSS -->
     <link rel="stylesheet" href="{{ asset('libs/swiper/swiper-bundle.min.css') }}">
     <!-- Toastr CSS (CDN) -->

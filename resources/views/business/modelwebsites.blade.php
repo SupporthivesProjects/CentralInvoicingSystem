@@ -22,14 +22,16 @@
     <div class="main-content app-content">
             <div class="container-fluid">
                   <!-- Page Header -->
-            <div class="d-md-flex d-block align-items-center justify-content-between page-header-breadcrumb">
-                <div>
-                    <h2 class="main-content-title fs-24 mb-1">Business Models</h2>
-                    <ol class="breadcrumb mb-0">
-                        <li class="breadcrumb-item active" aria-current="page">Models</li>
-                    </ol>
+                  <div class="d-md-flex d-block align-items-center justify-content-between page-header-breadcrumb">
+                    <div>
+                        <h2 class="main-content-title fs-24 mb-1">Model Wise Websites</h2>
+                        <ol class="breadcrumb mb-0">
+                            <li class="breadcrumb-item"><a href="{{ route('businessmodels') }}">Business Models</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">{{ $businessModel->name }}</li>
+                        </ol>
+                    </div>
                 </div>
-            </div>
+
             <!-- Page Header Close -->
 
 
@@ -38,7 +40,7 @@
                     <div class="col-xl-12">
                         <div class="card custom-card">
                             <div class="card-header">
-                                <div class="card-title">Business Models</div>
+                                <div class="card-title">Connected Websites</div>
                             </div>
                             <div class="card-body">
                                 <div class="table-responsive">
@@ -47,30 +49,33 @@
                                             <tr>
                                                 <th>#</th>
                                                 <th>Business Model</th>
-                                                <th>Model Icon</th>
+                                                <th>Site Name</th>
+                                                <th>Site live link</th>
                                                 <th>Created At</th>
                                                 <th>Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($businessModels as $index => $model)
+                                            @foreach ($websites as $index => $site)
                                                 <tr>
                                                     <td>{{ $index + 1 }}</td>
-                                                    <td>{{ $model->name ?? '-' }}</td>
-                                                    <td> <i class="{{ !empty($model->icon_class) ? $model->icon_class : 'ti-wallet' }}  side-menu__icon"></i></td>
-                                                    <td>{{ $model->created_at->format('Y-m-d') }}</td>
+                                                    <td>{{ $site->businessModel->name ?? '-' }}</td>
+                                                    <td>{{ $site->site_name }}</td>
+                                                    <td><a href="{{ $site->site_link }}" target="_blank" >{{ $site->site_link }}</a></td>
+                                                    <td>{{ $site->created_at->format('Y-m-d') }}</td>
                                                     <td>
-                                                    <a href="{{ route('businessmodel.websites', $model->id) }}" target="_blank" class="btn btn-sm btn-info">
-                                                        <i class="fas fa-globe"></i> View sites ({{ count($model->websites) }})
-                                                    </a>
-                                                        <a href="{{ route('businessmodel.edit', $model->id) }}" class="btn btn-sm btn-primary">
+                                                     
+                                                        <a href="#" class="btn btn-sm btn-warning">
+                                                            <i class="fas fa-file-invoice"></i> Generate Invoice
+                                                        </a>
+                                                        <a href="{{ route('website.edit', $site->id) }}" class="btn btn-sm btn-primary">
                                                             <i class="fas fa-edit"></i> Edit
                                                         </a>
-                                                        <button class="btn btn-sm btn-danger delete-btn" data-id="{{ $model->id }}">
+                                                        <button class="btn btn-sm btn-danger delete-btn" data-id="{{ $site->id }}">
                                                             <i class="fas fa-trash-alt"></i> Delete
                                                         </button>
-                                                        
                                                     </td>
+
                                                 </tr>
                                             @endforeach
                                         </tbody>
@@ -92,7 +97,7 @@
 
     @include("partials/commonjs")
 
-@push('scripts')
+<@push('scripts')
 <script src="{{ asset('libs/jsvectormap/js/jsvectormap.min.js') }}"></script>
 <script src="{{ asset('libs/jsvectormap/maps/world-merc.js') }}"></script>
 <script src="{{ asset('libs/apexcharts/apexcharts.min.js') }}"></script>
@@ -108,52 +113,51 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-
     <!-- Internal Datatables JS -->
     <script src="{{ asset('js/datatables.js') }}"></script>
     <script>
-    $(document).on('click', '.delete-btn', function () {
-        const id = $(this).data('id');
+            $(document).on('click', '.delete-btn', function () {
+                const id = $(this).data('id');
 
-        Swal.fire({
-            title: 'Are you sure?',
-            text: 'This action cannot be undone!',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Yes, delete it!',
-            showLoaderOnConfirm: true,
-            preConfirm: () => {
-                return fetch(`/businessmodel/${id}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Accept': 'application/json'
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: 'This action cannot be undone!',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, delete it!',
+                    showLoaderOnConfirm: true,
+                    preConfirm: () => {
+                        return fetch(`/website/${id}`, {
+                            method: 'DELETE',
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                'Accept': 'application/json'
+                            }
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error(response.statusText);
+                            }
+                            return response.json();
+                        })
+                        .catch(error => {
+                            Swal.showValidationMessage(`Delete failed: ${error}`);
+                        });
+                    },
+                    allowOutsideClick: () => !Swal.isLoading()
+                }).then((result) => {
+                    if (result.isConfirmed && result.value?.success) {
+                        toastr.success(result.value.message || "Deleted successfully!");
+                        setTimeout(() => {
+                            location.reload(); // Optional: reload if needed
+                        }, 1500);
+                    } else if (result.value && !result.value.success) {
+                        toastr.error(result.value.message || "Failed to delete!");
                     }
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(response.statusText);
-                    }
-                    return response.json();
-                })
-                .catch(error => {
-                    Swal.showValidationMessage(`Delete failed: ${error}`);
                 });
-            },
-            allowOutsideClick: () => !Swal.isLoading()
-        }).then((result) => {
-            if (result.isConfirmed && result.value?.success) {
-                toastr.success(result.value.message || "Deleted successfully!");
-                setTimeout(() => {
-                    location.reload(); // Optional: reload if needed
-                }, 1500);
-            } else if (result.value && !result.value.success) {
-                toastr.error(result.value.message || "Failed to delete!");
-            }
-        });
-    });
-</script>
-
+            });
+        </script>
+   
 @endpush
 
 @include("partials/custom_switcherjs")
