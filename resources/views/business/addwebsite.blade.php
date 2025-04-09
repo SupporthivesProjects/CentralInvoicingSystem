@@ -20,29 +20,14 @@
             <!-- Page Header -->
             <div class="d-md-flex d-block align-items-center justify-content-between page-header-breadcrumb">
                 <div>
-                    <h2 class="main-content-title fs-24 mb-1">Add Website</h2>
+                    <h2 class="main-content-title fs-24 mb-1">Manage Sites</h2>
                     <ol class="breadcrumb mb-0">
-                        <li class="breadcrumb-item"><a href="javascript:void(0)">Websites</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Add</li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Connect New Website</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Enter Details</li>
                     </ol>
                 </div>
             </div>
             <!-- Page Header Close -->
-
-            <!-- Alerts -->
-            @if(session('success'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <strong>Success!</strong> {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
-
-            @if(session('error'))
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <strong>Error!</strong> {{ session('error') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
             <!-- Form -->
             <div class="col-xl-12">
                 <div class="card custom-card">
@@ -51,7 +36,7 @@
                             @csrf
 
                             <div class="col-md-6 mx-auto">
-                                <label class="form-label">Business Model</label>
+                                <label class="form-label">Business Model <span style="color:red">*</span></label>
                                 <select name="business_model_id" class="form-select" required>
                                     <option selected disabled>Choose Business Model</option>
                                     @foreach ($businessModels as $model)
@@ -61,7 +46,7 @@
                             </div>
 
                             <div class="col-md-6 mx-auto">
-                                <label class="form-label">Site Name</label>
+                                <label class="form-label">Site Name <span style="color:red">*</span></label>
                                 <input type="text" name="site_name" class="form-control" required placeholder="Enter Site Name">
                             </div>
 
@@ -71,27 +56,27 @@
                             </div>
 
                             <div class="col-md-6 mx-auto">
-                                <label class="form-label">Database Host</label>
+                                <label class="form-label">Database Host <span style="color:red">*</span></label>
                                 <input type="text" name="db_host" class="form-control" placeholder="Enter Database Host" required>
                             </div>
 
                             <div class="col-md-6 mx-auto">
-                                <label class="form-label">Database Port</label>
+                                <label class="form-label">Database Port <span style="color:red">*</span></label>
                                 <input type="text" name="db_port" class="form-control" placeholder="Enter Database Port" value="3306"  required>
                             </div>
 
                             <div class="col-md-6 mx-auto">
-                                <label class="form-label">Database Name</label>
+                                <label class="form-label">Database Name <span style="color:red">*</span></label>
                                 <input type="text" name="db_name" class="form-control" placeholder="Enter Database Name" required>
                             </div>
 
                             <div class="col-md-6 mx-auto">
-                                <label class="form-label">Database Username</label>
+                                <label class="form-label">Database Username <span style="color:red">*</span></label>
                                 <input type="text" name="db_username" class="form-control" placeholder="Enter Database Username" required>
                             </div>
 
                             <div class="col-md-6 mx-auto">
-                                <label class="form-label">Database Password</label>
+                                <label class="form-label">Database Password <span style="color:red">*</span></label>
                                 <input type="password" name="db_password" class="form-control" placeholder="Enter Database Password" required>
                             </div>
                             <div class="col-md-6 mx-auto">

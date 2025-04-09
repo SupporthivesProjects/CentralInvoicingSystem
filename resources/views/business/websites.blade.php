@@ -48,7 +48,7 @@
                                                 <th>#</th>
                                                 <th>Business Model</th>
                                                 <th>Site Name</th>
-                                                <th>DB Host</th>
+                                                <th>Site live link</th>
                                                 <th>Created At</th>
                                                 <th>Actions</th>
                                             </tr>
@@ -59,13 +59,20 @@
                                                     <td>{{ $index + 1 }}</td>
                                                     <td>{{ $site->businessModel->name ?? '-' }}</td>
                                                     <td>{{ $site->site_name }}</td>
-                                                    <td>{{ $site->db_host }}</td>
+                                                    <td><a href="{{ $site->site_link }}" target="_blank" >{{ $site->site_link }}</a></td>
                                                     <td>{{ $site->created_at->format('Y-m-d') }}</td>
                                                     <td>
-                                                        <a href="{{ $site->site_link}}" target="_blank"  class="btn btn-sm btn-info">View site</a>
-                                                        <a href="#" class="btn btn-sm btn-primary">Edit</a>
-                                                        <a href="#" class="btn btn-sm btn-warning">Generate Invoice</a>
+                                                        <a href="#" class="btn btn-sm btn-primary">
+                                                            <i class="fas fa-edit"></i> Edit
+                                                        </a>
+                                                        <a href="#" class="btn btn-sm btn-info">
+                                                            <i class="fas fa-eye"></i> View
+                                                        </a>
+                                                        <a href="#" class="btn btn-sm btn-warning">
+                                                            <i class="fas fa-file-invoice"></i> Generate Invoice
+                                                        </a>
                                                     </td>
+
                                                 </tr>
                                             @endforeach
                                         </tbody>

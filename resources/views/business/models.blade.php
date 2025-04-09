@@ -47,6 +47,7 @@
                                             <tr>
                                                 <th>#</th>
                                                 <th>Business Model</th>
+                                                <th>Model Icon</th>
                                                 <th>Created At</th>
                                                 <th>Actions</th>
                                             </tr>
@@ -56,13 +57,18 @@
                                                 <tr>
                                                     <td>{{ $index + 1 }}</td>
                                                     <td>{{ $model->name ?? '-' }}</td>
-                                                   
+                                                    <td> <i class="{{ !empty($model->icon_class) ? $model->icon_class : 'ti-wallet' }}  side-menu__icon"></i></td>
                                                     <td>{{ $model->created_at->format('Y-m-d') }}</td>
                                                     <td>
-                                                        <a href="{{ $model->id}}" target="_blank"  class="btn btn-sm btn-info">View sites ({{ count($model->websites)}})</a>
-                                                        <a href="#" class="btn btn-sm btn-primary">Edit</a>
-                                                        <a href="#" class="btn btn-sm btn-danger">Delete</a>
-            
+                                                        <a href="{{ $model->id }}" target="_blank" class="btn btn-sm btn-info">
+                                                            <i class="fas fa-globe"></i> View sites ({{ count($model->websites) }})
+                                                        </a>
+                                                        <a href="#" class="btn btn-sm btn-primary">
+                                                            <i class="fas fa-edit"></i> Edit
+                                                        </a>
+                                                        <a href="#" class="btn btn-sm btn-danger">
+                                                            <i class="fas fa-trash-alt"></i> Delete
+                                                        </a>
                                                     </td>
                                                 </tr>
                                             @endforeach

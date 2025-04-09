@@ -39,9 +39,23 @@
 
     <!-- Swiper CSS -->
     <link rel="stylesheet" href="{{ asset('libs/swiper/swiper-bundle.min.css') }}">
-
     <!-- Toastr CSS (CDN) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
+    <style>
+        #toast-container > .toast {
+            color: #fff;
+            background-color: #333; /* dark background */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+        #toast-container > .toast-success {
+            background-color: #51A351; /* green */
+        }
+        #toast-container > .toast-error {
+            background-color: #BD362F; /* red */
+    }
+    </style>
+
 
     @stack('styles')
 </head>
@@ -56,11 +70,28 @@
 
     @include('partials.footer')
 
-    <!-- jQuery (CDN) -->
+    <!-- jQuery (required for Toastr) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-
     <!-- Toastr JS (CDN) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    <!-- Toast Messages -->
+    <script>
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "timeOut": "4000"
+        };
+
+        @if(session('success'))
+            toastr.success("{{ session('success') }}");
+        @endif
+
+        @if(session('error'))
+            toastr.error("{{ session('error') }}");
+        @endif
+    </script>
 
     <!-- Choices JS -->
     <script src="{{ asset('libs/choices.js/public/assets/scripts/choices.min.js') }}"></script>
