@@ -81,7 +81,7 @@
                             </div>
                             <div class="col-md-6 mx-auto">
                                 <label class="form-label">Website Link</label>
-                                <input type="password" name="site_link" class="form-control" placeholder="Enter Website link">
+                                <input type="text" name="site_link" class="form-control" placeholder="Enter Website link">
                             </div>
 
                             <div class="col-md-6 mx-auto">
