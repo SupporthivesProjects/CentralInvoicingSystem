@@ -4,7 +4,11 @@
 
 @section('content')
 
-
+    @include('partials.mainhead')
+    @include('partials.switcher')
+    @include('partials.loader')
+    @include('partials.header')
+    @include('partials.sidebar')
     <link rel="stylesheet" href="{{ asset('libs/jsvectormap/css/jsvectormap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('libs/swiper/swiper-bundle.min.css') }}">
 

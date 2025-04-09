@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Role;
 use App\Models\User;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ProfileController;
+use App\Models\Profile;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Log;
@@ -47,6 +49,21 @@ class UserController extends Controller
         ]);
 
         $user->roles()->attach($request->role);
+
+        Profile::create([
+            'user_id' => $user->id,
+            'bio' => null,
+            'experience' => null,
+            'location' => null,
+            'mobile' => null,
+            'slack' => null,
+            'portfolio' => null,
+            'github' => null,
+            'twitter' => null,
+            'linkedin' => null,
+            'profile_image' => 'images/defaults/profile/profilephoto/default.png', // Default profile image
+            'cover_image' => 'images/defaults/profile/coverphoto/default.webp',
+        ]);
         return back()->with('success', 'New user added');
     }
     public function edit(User $user)
@@ -139,6 +156,6 @@ class UserController extends Controller
                 return back()->with('error', __($status));
             }
         }
-   
+
 }
 

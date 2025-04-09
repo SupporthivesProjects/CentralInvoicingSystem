@@ -2,6 +2,8 @@
 
 use App\Models\Website;
 use App\Models\BusinessModel;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 if (!function_exists('getWebsiteCountByModel')) {
     function getWebsiteCountByModel($modelId)
@@ -27,5 +29,17 @@ if (!function_exists('getModelsCount')) {
     function getModelsCount()
     {
         return BusinessModel::count();
+    }
+}
+if (!function_exists('userCount')) {
+    function userCount()
+    {
+        return User::count();
+    }
+}
+if (!function_exists('currentUserName')) {
+    function currentUserName()
+    {
+        return Auth::check() ? Auth::user()->name : 'Guest';
     }
 }

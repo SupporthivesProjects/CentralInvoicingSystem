@@ -2,7 +2,7 @@
 <aside class="app-sidebar sticky" id="sidebar">
 
     <!-- Start::main-sidebar-header -->
-    
+
     <div class="main-sidebar-header">
         <a href="{{ route('dashboard') }}" class="header-logo text-white text-2xl font-bold">
             <span class="text-logo">Central Invoice System</span>
@@ -55,12 +55,12 @@
                         </li>
                         <li class="slide">
                             <a href="{{ route('businessmodel.create') }}" class="side-menu__item">
-                                Add Business Model 
+                                Add Business Model
                             </a>
                         </li>
                         <li class="slide">
                             <a href="{{ route('website.create') }}" class="side-menu__item">
-                                Connect New Site 
+                                Connect New Site
                             </a>
                         </li>
                         <li class="slide">
@@ -112,7 +112,7 @@
                     </ul>
                 </li>
                 @endforeach
-              
+
                 <!-- End::slide -->
 
 
@@ -135,10 +135,11 @@
                             <a href="javascript:void(0)">User Management</a>
                         </li>
                         <li class="slide">
-                            <a href="users-list.html" class="side-menu__item">User List</a> <!-- updated text -->
+                            <a href="{{ route('users.index') }}" class="side-menu__item">User List</a> <!-- updated text -->
+                            <span class="badge bg-success">{{ userCount() }}</span>
                         </li>
                         <li class="slide">
-                            <a href="user-create.html" class="side-menu__item">Add New User</a> <!-- updated text -->
+                            <a href="{{ route('users.create') }}" class="side-menu__item">Add New User</a> <!-- updated text -->
                         </li>
                     </ul>
                 </li>
