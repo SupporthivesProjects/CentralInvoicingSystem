@@ -8,6 +8,7 @@
 @endpush
 
 @section('content')
+
     @include("partials/mainhead")
     @include("partials/switcher")
     @include("partials/loader")
@@ -148,7 +149,7 @@
                             </div>
                         </div>
                         <!-- End::row -->
-                        
+
                         <!-- Start::row -->
                         <div class="row">
                             <div class="col-sm-12 col-lg-12 col-xl-12">
@@ -172,7 +173,7 @@
                                     <div class="card-body">
                                         <div class="card-header border-bottom-0 pt-0 ps-0 pe-0 pb-2 d-flex">
                                             <div>
-                                                <div class="card-title">Tasks</div> 
+                                                <div class="card-title">Tasks</div>
                                                 <p class="mb-0 fs-12 mb-3 text-muted">A task is accomplished by
                                                     a set deadline, and must contribute toward work-related
                                                     objectives.</p>
@@ -388,7 +389,7 @@
 
     </div>
 
-    @include("partials/commonjs")
+    @include("partials.commonjs")
 
     <@push('scripts')
     <script src="{{ asset('libs/jsvectormap/js/jsvectormap.min.js') }}"></script>
@@ -398,7 +399,7 @@
     <script src="{{ asset('js/custom.js') }}"></script>
     @endpush
 
-    @include("partials/custom_switcherjs")
+    @include("partials.custom_switcherjs")
 
 
 @endsection
