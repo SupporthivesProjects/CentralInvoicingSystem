@@ -2,16 +2,19 @@
 
 @section('title', 'Dashboard | Central Invoice System')
 
+@push('styles')
+<link rel="stylesheet" href="{{ asset('libs/jsvectormap/css/jsvectormap.min.css') }}">
+<link rel="stylesheet" href="{{ asset('libs/swiper/swiper-bundle.min.css') }}">
+@endpush
+
 @section('content')
-{{-- @include("partials/mainhead")
+
+    @include("partials/mainhead")
     @include("partials/switcher")
     @include("partials/loader")
     @include("partials/header")
-    @include("partials/sidebar") --}}
-
-
-    <link rel="stylesheet" href="{{ asset('libs/jsvectormap/css/jsvectormap.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('libs/swiper/swiper-bundle.min.css') }}">
+    @include("partials/sidebar")
+   
 
     <div class="page">
         <!-- Start::app-content -->
@@ -25,17 +28,11 @@
                         <h2 class="main-content-title fs-24 mb-1">Welcome To Dashboard</h2>
                         <ol class="breadcrumb mb-0">
                             <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">Project Dashboard</li>
+                            <li class="breadcrumb-item active" aria-current="page">Central Invoice System</li>
                         </ol>
                     </div>
                     <div class="d-flex">
                         <div class="justify-content-center">
-                            <button type="button" class="btn btn-white btn-icon-text my-2 me-2 d-inline-flex align-items-center">
-                              <i class="fe fe-download me-2 fs-14"></i> Import
-                            </button>
-                            <button type="button" class="btn btn-white btn-icon-text my-2 me-2 d-inline-flex align-items-center">
-                              <i class="fe fe-filter me-2 fs-14"></i> Filter
-                            </button>
                             <button type="button" class="btn btn-primary my-2 btn-icon-text d-inline-flex align-items-center">
                               <i class="fe fe-download-cloud me-2 fs-14"></i> Download Report
                             </button>
@@ -47,30 +44,8 @@
 
                 <!-- Start::row-1 -->
                 <div class="row row-sm">
-                    <div class="col-sm-12 col-lg-12 col-xl-8">
-                        <!-- Start::row -->
-                        <div class="row row-sm banner-img">
-                            <div class="col-sm-12 col-lg-12 col-xl-12">
-                                <div class="card bg-primary custom-card card-box">
-                                    <div class="card-body p-4">
-                                        <div class="row align-items-center">
-                                            <div class="offset-xl-3 offset-sm-6 col-xl-8 col-sm-6 col-12 img-bg ">
-                                                <h4 class="d-flex mb-3">
-                                                    <span class="fw-bold text-fixed-white ">Sonia Taylor!</span>
-                                                </h4>
-                                                <p class="tx-white-7 mb-1">You have two projects to finish, you had
-                                                    completed <b class="text-warning">57%</b> from your montly
-                                                    level,
-                                                    Keep going to your level
-                                            </div>
-                                            <img src="{{ asset('images/pngs/29.png') }}" alt="user-img">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- End::row -->
-
+                    <div class="col-sm-12 col-lg-12 col-xl-12">
+                       
                         <!-- Start::row -->
                         <div class="row row-sm">
                             <div class="col-sm-12 col-md-6 col-lg-6 col-xl-4">
@@ -98,8 +73,7 @@
                                                 </svg>
                                             </div>
                                             <div class="card-item-title mb-2">
-                                                <label class="main-content-label fs-13 fw-bold mb-1">Total
-                                                    Revenue</label>
+                                                <label class="main-content-label fs-13 fw-bold mb-1">Busines Models</label>
                                                 <span class="d-block fs-12 mb-0 text-muted">Previous month vs this
                                                     months</span>
                                             </div>
@@ -129,8 +103,7 @@
                                                 </svg>
                                             </div>
                                             <div class="card-item-title mb-2">
-                                                <label class="main-content-label fs-13 fw-bold mb-1">New
-                                                    Employees</label>
+                                                <label class="main-content-label fs-13 fw-bold mb-1">Connected Sites</label>
                                                 <span class="d-block fs-12 mb-0 text-muted">Employees joined this
                                                     month</span>
                                             </div>
@@ -160,8 +133,7 @@
                                                 </svg>
                                             </div>
                                             <div class="card-item-title  mb-2">
-                                                <label class="main-content-label fs-13 fw-bold mb-1">Total
-                                                    Expenses</label>
+                                                <label class="main-content-label fs-13 fw-bold mb-1">User List</label>
                                                 <span class="d-block fs-12 mb-0 text-muted">Previous month vs this
                                                     months</span>
                                             </div>
@@ -184,7 +156,7 @@
                                 <div class="card custom-card overflow-hidden">
                                     <div class="card-header border-bottom-0">
                                         <div>
-                                            <label class="card-title">Project Budget</label> <span
+                                            <label class="card-title">Invoice Creation</label> <span
                                                 class="d-block fs-12 mb-0 text-muted">The Project Budget is a tool
                                                 used by project managers to estimate the total cost of a
                                                 project</span>
@@ -195,110 +167,7 @@
                                     </div>
                                 </div>
                             </div><!-- col end -->
-                            <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                <div class="card custom-card overflow-hidden">
-                                    <div class="card-header d-block border-bottom-0 pb-0">
-                                        <div>
-                                            <div class="d-md-flex">
-                                                <label class="main-content-label my-auto pt-2">Today tasks</label>
-                                                <div class="ms-auto mt-3 d-flex">
-                                                    <div class="me-3 d-flex text-muted fs-13"><span
-                                                            class="legend bg-primary rounded-circle"></span>Project
-                                                    </div>
-                                                    <div class="d-flex text-muted fs-13"><span
-                                                            class="legend bg-light rounded-circle"></span>Inprogress
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <span class="d-block fs-12 mt-2 mb-0 text-muted"> UX UI & Backend
-                                                Developement. </span>
-                                        </div>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-sm-6 my-auto">
-                                                <h6 class="mb-3 fs-14 fw-normal">Project-Budget</h6>
-                                                <div class="text-start">
-                                                    <h3 class="fw-bold me-3 mb-2 text-primary">$5,240</h3>
-                                                    <p class="fs-13 my-auto text-muted">May 28 - June 01 (2018)</p>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6 my-auto">
-                                                <div id="todaytask"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div><!-- col end -->
-                            <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                <div class="card custom-card">
-                                    <div class="card-header  border-bottom-0 pb-0">
-                                        <div>
-                                            <div class="d-flex">
-                                                <label class="main-content-label my-auto pt-2">Top Inquiries</label>
-                                            </div>
-                                            <span class="d-block fs-12 mt-2 mb-0 text-muted"> project work involves
-                                                a group of students investigating . </span>
-                                        </div>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="row mt-1">
-                                            <div class="col-5">
-                                                <span class="">Brand identity</span>
-                                            </div>
-                                            <div class="col-3 my-auto">
-                                                <div class="progress ht-6 my-auto progress-animate">
-                                                    <div class="progress-bar ht-6 wd-80p" role="progressbar"
-                                                        aria-valuenow="15" aria-valuemin="0" aria-valuemax="100">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-4">
-                                                <div class="d-flex">
-                                                    <span class="fs-13"><i
-                                                            class="text-success fe fe-arrow-up"></i><b>24.75%</b></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row mt-4">
-                                            <div class="col-5">
-                                                <span class="">UI & UX design</span>
-                                            </div>
-                                            <div class="col-3 my-auto">
-                                                <div class="progress ht-6 my-auto progress-animate">
-                                                    <div class="progress-bar ht-6 wd-70p" role="progressbar"
-                                                        aria-valuenow="15" aria-valuemin="0" aria-valuemax="100">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-4">
-                                                <div class="d-flex">
-                                                    <span class="fs-13"><i
-                                                            class="text-danger fe fe-arrow-down"></i><b>12.34%</b></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row mt-4">
-                                            <div class="col-5">
-                                                <span class="">Product design</span>
-                                            </div>
-                                            <div class="col-3 my-auto">
-                                                <div class="progress ht-6 my-auto progress-animate">
-                                                    <div class="progress-bar ht-6 wd-40p" role="progressbar"
-                                                        aria-valuenow="15" aria-valuemin="0" aria-valuemax="100">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-4">
-                                                <div class="d-flex">
-                                                    <span class="fs-13"><i
-                                                            class="text-success  fe fe-arrow-up"></i><b>12.75%</b></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div><!-- col end -->
+                           
                             <div class="col-lg-12">
                                 <div class="card custom-card mg-b-20 tasks">
                                     <div class="card-body">
@@ -506,299 +375,7 @@
 
                     </div><!-- col end -->
 
-                    <div class="col-sm-12 col-lg-12 col-xl-4 banner-img">
-                        <div class="card custom-card card-dashboard-calendar">
-                            <label class="main-content-label mb-2 pt-1">Recent transactions</label>
-                            <span class="d-block fs-12 mb-2 text-muted">Projects where development work is on
-                                completion</span>
-                            <table class="table m-b-0 transcations mt-2">
-                                <tbody>
-                                    <tr>
-                                        <td class="wd-5p">
-                                            <div class="main-img-user avatar-md">
-                                                <img alt="avatar" class="rounded-circle me-3"
-                                                    src="{{ asset('images/faces/5.jpg') }}">
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="d-flex align-middle ms-3">
-                                                <div class="d-inline-block">
-                                                    <h6 class="mb-1">Flicker</h6>
-                                                    <p class="mb-0 fs-13 text-muted">App improvement</p>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="text-end">
-                                            <div class="d-inline-block">
-                                                <h6 class="mb-2 fs-15 fw-semibold">$45.234<i
-                                                        class="fas fa-level-up-alt ms-2 text-success m-l-10"></i>
-                                                </h6>
-                                                <p class="mb-0 tx-11 text-muted">12 Jan 2020</p>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="wd-5p">
-                                            <div class="main-img-user avatar-md">
-                                                <img alt="avatar" class="rounded-circle me-3"
-                                                    src="{{ asset('images/faces/6.jpg') }}">
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="d-flex align-middle ms-3">
-                                                <div class="d-inline-block">
-                                                    <h6 class="mb-1">Intoxica</h6>
-                                                    <p class="mb-0 fs-13 text-muted">Milestone</p>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="text-end">
-                                            <div class="d-inline-block">
-                                                <h6 class="mb-2 fs-15 fw-semibold">$23.452<i
-                                                        class="fas fa-level-down-alt ms-2 text-danger m-l-10"></i>
-                                                </h6>
-                                                <p class="mb-0 tx-11 text-muted">23 Jan 2020</p>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="wd-5p">
-                                            <div class="main-img-user avatar-md">
-                                                <img alt="avatar" class="rounded-circle me-3"
-                                                    src="{{ asset('images/faces/7.jpg') }}">
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="d-flex align-middle ms-3">
-                                                <div class="d-inline-block">
-                                                    <h6 class="mb-1">Digiwatt</h6>
-                                                    <p class="mb-0 fs-13 text-muted">Sales executive</p>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="text-end">
-                                            <div class="d-inline-block">
-                                                <h6 class="mb-2 fs-15 fw-semibold">$78.001<i
-                                                        class="fas fa-level-down-alt ms-2 text-danger m-l-10"></i>
-                                                </h6>
-                                                <p class="mb-0 tx-11 text-muted">4 Apr 2020</p>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="wd-5p">
-                                            <div class="main-img-user avatar-md">
-                                                <img alt="avatar" class="rounded-circle me-3"
-                                                    src="{{ asset('images/faces/8.jpg') }}">
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="d-flex align-middle ms-3">
-                                                <div class="d-inline-block">
-                                                    <h6 class="mb-1">Flicker</h6>
-                                                    <p class="mb-0 fs-13 text-muted">Milestone2</p>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="text-end">
-                                            <div class="d-inline-block">
-                                                <h6 class="mb-2 fs-15 fw-semibold">$37.285<i
-                                                        class="fas fa-level-up-alt ms-2 text-success m-l-10"></i>
-                                                </h6>
-                                                <p class="mb-0 tx-11 text-muted">4 Apr 2020</p>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="wd-5p pb-0">
-                                            <div class="main-img-user avatar-md">
-                                                <img alt="avatar" class="rounded-circle me-3"
-                                                    src="{{ asset('images/faces/4.jpg') }}">
-                                            </div>
-                                        </td>
-                                        <td class="pb-0">
-                                            <div class="d-flex align-middle ms-3">
-                                                <div class="d-inline-block">
-                                                    <h6 class="mb-1">Flicker</h6>
-                                                    <p class="mb-0 fs-13 text-muted">App improvement</p>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="text-end pb-0">
-                                            <div class="d-inline-block">
-                                                <h6 class="mb-2 fs-15 fw-semibold">$25.341<i
-                                                        class="fas fa-level-down-alt ms-2 text-danger m-l-10"></i>
-                                                </h6>
-                                                <p class="mb-0 tx-11 text-muted">4 Apr 2020</p>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="card custom-card">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-6">
-                                        <div class="card-item-title">
-                                            <label class="main-content-label fs-13 fw-bold mb-2">Project
-                                                Launch</label>
-                                            <span class="d-block fs-12 mb-0 text-muted">the project is going to
-                                                launch</span>
-                                        </div>
-                                        <p class="mb-0 fs-24 mt-2"><b class="text-primary">145 days</b></p>
-                                        <a href="javascript:void(0)" class="text-muted">12 Monday, Oct 2020 </a>
-                                    </div>
-                                    <div class="col-6">
-                                        <img src="{{ asset('images/pngs/28.png') }}" alt="image" class="best-emp">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card custom-card">
-                            <div class="card-header d-flex">
-                                <div>
-                                    <label class="main-content-label mb-2 pt-2">On going projects</label>
-                                    <span class="d-block fs-12 mb-2 text-muted">Projects where development work is
-                                        on completion</span>
-                                </div>
-                            </div>
-                            <div class="card-body pt-2 mt-0">
-                                <div class="list-card">
-                                    <div class="d-flex">
-                                        <div class="avatar-list-stacked d-flex align-items-center">
-                                            <div class="avatar avatar-rounded avatar-xs">
-                                                <img alt="avatar" class="rounded-circle"
-                                                    src="{{ asset('images/faces/1.jpg') }}">
-                                            </div>
-                                            <div class="avatar avatar-rounded avatar-xs">
-                                                <img alt="avatar" class="rounded-circle"
-                                                    src="{{ asset('images/faces/2.jpg') }}">
-                                            </div>
-                                            <div class="avatar avatar-rounded avatar-xs">
-                                                <img alt="avatar" class="rounded-circle"
-                                                    src="{{ asset('images/faces/3.jpg') }}">
-                                            </div>
-                                            <div class="avatar avatar-rounded avatar-xs">
-                                                <img alt="avatar" class="rounded-circle"
-                                                    src="{{ asset('images/faces/4.jpg') }}">
-                                            </div>
-                                            <div class="ms-3">Design team</div>
-                                        </div>
-                                        <div class="ms-auto float-end">
-                                            <div class="">
-                                                <a href="javascript:void(0)" class="option-dots" data-bs-toggle="dropdown"
-                                                    aria-haspopup="true" aria-expanded="false"><i
-                                                        class="fe fe-more-horizontal"></i></a>
-                                                <div class="dropdown-menu dropdown-menu-end">
-                                                    <a class="dropdown-item" href="javascript:void(0)">Today</a>
-                                                    <a class="dropdown-item" href="javascript:void(0)">Last Week</a>
-                                                    <a class="dropdown-item" href="javascript:void(0)">Last Month</a>
-                                                    <a class="dropdown-item" href="javascript:void(0)">Last Year</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="card-item mt-2">
-                                        <div class="card-item-body">
-                                            <div class="card-item-stat">
-                                                <small class="fs-10 text-primary fw-semibold">25 August
-                                                    2020</small>
-                                                <h6 class=" mt-2">Mobile app design</h6>
-                                            </div>
-                                            <div id="ongoingprojects"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="list-card mb-0">
-                                    <div class="d-flex">
-                                        <div class="avatar-list-stacked d-flex align-items-center">
-                                            <div class="avatar avatar-rounded avatar-xs">
-                                                <img alt="avatar" class="rounded-circle"
-                                                    src="{{ asset('images/faces/5.jpg') }}">
-                                            </div>
-                                            <div class="avatar avatar-rounded avatar-xs">
-                                                <img alt="avatar" class="rounded-circle"
-                                                    src="{{ asset('images/faces/6.jpg') }}">
-                                            </div>
-                                            <div class="avatar avatar-rounded avatar-xs">
-                                                <img alt="avatar" class="rounded-circle"
-                                                    src="{{ asset('images/faces/7.jpg') }}">
-                                            </div>
-                                            <div class="avatar avatar-rounded avatar-xs">
-                                                <img alt="avatar" class="rounded-circle"
-                                                    src="{{ asset('images/faces/8.jpg') }}">
-                                            </div>
-                                            <div class="ms-3">Design team</div>
-                                        </div>
-                                        <div class="ms-auto float-end">
-                                            <div class="">
-                                                <a href="javascript:void(0)" class="option-dots" data-bs-toggle="dropdown"
-                                                    aria-haspopup="true" aria-expanded="false"><i
-                                                        class="fe fe-more-horizontal"></i></a>
-                                                <div class="dropdown-menu dropdown-menu-end">
-                                                    <a class="dropdown-item" href="javascript:void(0)">Today</a>
-                                                    <a class="dropdown-item" href="javascript:void(0)">Last Week</a>
-                                                    <a class="dropdown-item" href="javascript:void(0)">Last Month</a>
-                                                    <a class="dropdown-item" href="javascript:void(0)">Last Year</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="card-item mt-2">
-                                        <div class="card-item-body">
-                                            <div class="card-item-stat">
-                                                <small class="fs-10 text-primary fw-semibold">12 JUNE
-                                                    2020</small>
-                                                <h6 class=" mt-2">Website Redesign</h6>
-                                            </div>
-                                            <div id="ongoingprojects2"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card custom-card">
-                            <div class="card-body">
-                                <div class="d-flex">
-                                    <label class="main-content-label my-auto">Website Design</label>
-                                    <div class="ms-auto  d-flex">
-                                        <div class="me-3 d-flex text-muted fs-13">Running</div>
-                                    </div>
-                                </div>
-                                <div class="mt-1">
-                                    <div>
-                                        <span class="fs-15 text-muted">Task completed : 7/10</span>
-                                    </div>
-                                    <div id="websitedesign"></div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <div class="mt-4">
-                                            <div class="d-flex mb-2">
-                                                <h5 class="fs-15 my-auto text-muted fw-normal">Client :
-                                                </h5>
-                                                <h5 class="fs-15 my-auto ms-3">John Deo</h5>
-                                            </div>
-                                            <div class="d-flex mb-0">
-                                                <h5 class="fs-13 my-auto text-muted fw-normal">Deadline :
-                                                </h5>
-                                                <h5 class="fs-13 my-auto text-muted ms-2">25 Dec 2020</h5>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col col-auto">
-                                        <div class="mt-3">
-                                            <div class="">
-                                                <img alt="" class="ht-50"
-                                                    src="{{ asset('images/pngs/21.png') }}">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div><!-- col end -->
+                  
                 </div>
                 <!-- End::row-1 -->
 
@@ -814,17 +391,15 @@
 
     @include("partials.commonjs")
 
-<!-- JSVector Maps JS -->
-<script src="{{ asset('libs/jsvectormap/js/jsvectormap.min.js') }}"></script>
-<!-- JSVector Maps MapsJS -->
-<script src="{{ asset('libs/jsvectormap/maps/world-merc.js') }}"></script>
-<!-- Apex Charts JS -->
-<script src="{{ asset('libs/apexcharts/apexcharts.min.js') }}"></script>
-<!-- Main-Dashboard -->
-<script src="{{ asset('js/index.js') }}"></script>
+    <@push('scripts')
+    <script src="{{ asset('libs/jsvectormap/js/jsvectormap.min.js') }}"></script>
+    <script src="{{ asset('libs/jsvectormap/maps/world-merc.js') }}"></script>
+    <script src="{{ asset('libs/apexcharts/apexcharts.min.js') }}"></script>
+    <script src="{{ asset('js/index.js') }}"></script>
+    <script src="{{ asset('js/custom.js') }}"></script>
+    @endpush
 
     @include("partials.custom_switcherjs")
 
-<!-- Custom JS -->
-<script src="{{ asset('js/custom.js') }}"></script>
+
 @endsection

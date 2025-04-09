@@ -33,28 +33,35 @@
 
     <!-- Choices CSS -->
     <link rel="stylesheet" href="{{ asset('libs/choices.js/public/assets/styles/choices.min.css') }}">
-
-    <!-- Add this in your <head> -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
-
-    <!-- Add this before </body> -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> <!-- if not already included -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <!-- JSVectorMap CSS -->
     <link rel="stylesheet" href="{{ asset('libs/jsvectormap/css/jsvectormap.min.css') }}">
+
+    <!-- Swiper CSS -->
     <link rel="stylesheet" href="{{ asset('libs/swiper/swiper-bundle.min.css') }}">
-    <!-- Toastr CSS -->
+    <!-- Toastr CSS (CDN) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <!-- Prism CSS -->
     <link rel="stylesheet" href="{{ asset('libs/prismjs/themes/prism-coy.min.css') }}">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">
 
-
-
+    <style>
+        #toast-container > .toast {
+            color: #fff;
+            background-color: #333; /* dark background */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+        #toast-container > .toast-success {
+            background-color: #51A351; /* green */
+        }
+        #toast-container > .toast-error {
+            background-color: #BD362F; /* red */
+    }
+    </style>
     @stack('styles')
 </head>
 
 <body>
-    @unless(Route::is('login'))
+    @unless(in_array(Route::currentRouteName(), ['login', 'password.request', 'password.reset']))
         @include('partials.topbar')
     @endunless
 
@@ -64,9 +71,11 @@
     @include("partials.header")
 
     @include("partials.sidebar")
+
     @yield('content')
 
     @include('partials.footer')
+
 
     <!-- Scripts -->
 
@@ -116,7 +125,33 @@
 
     <!-- Custom JS -->
     <script src="{{ asset('js/custom.js') }}"></script>
+    <!-- jQuery (required for Toastr) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- Toastr JS (CDN) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    <!-- Toast Messages -->
+    <script>
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "timeOut": "4000"
+        };
+
+        @if(session('success'))
+            toastr.success("{{ session('success') }}");
+        @endif
+
+        @if(session('error'))
+            toastr.error("{{ session('error') }}");
+        @endif
+    </script>
+
+    <!-- Choices JS -->
     <script src="{{ asset('libs/choices.js/public/assets/scripts/choices.min.js') }}"></script>
+
+    <!-- Your Custom JS -->
     <script src="{{ asset('js/main.js') }}"></script>
     <script src="{{ asset('js/script.js') }}" defer></script>
 

@@ -18,9 +18,6 @@
                     <div class="row row-sm">
                         <div class="col-lg-6 col-xl-5 d-none d-lg-block text-center bg-primary details">
                             <div class="mt-5 pt-4 p-2 position-absolute">
-                                <a href="index.html">
-                                    <img src="{{ asset('images/brand-logos/desktop-white.png') }}" class="header-brand-img mb-4" alt="logo">
-                                </a>
                                 <div class="clearfix"></div>
                                 <img src="{{ asset('images/svgs/user.svg') }}" class="ht-100 mb-0" alt="user">
                                 <h5 class="mt-4 text-white">Welcome Back, Admin!</h5>
@@ -37,7 +34,7 @@
                                         <form method="POST" action="{{ route('login.submit') }}">
                                         @csrf
                                             <h5 class="text-start mb-2">Signin to Your Account</h5>
-                                            <p class="mb-4 text-muted fs-13 ms-0 text-start">Signin to create, discover and connect with the global community</p>
+                                            <p class="mb-4 text-muted fs-13 ms-0 text-start">Sign in to access the Admin and Staff Dashboard</p>
                                             <div class="form-group text-start">
                                                 <label class="form-label">Email</label>
                                                 <input class="form-control" placeholder="Enter your email" type="email" name="email" required>
@@ -51,8 +48,11 @@
                                             </div>
                                         </form>
                                         <div class="text-start mt-5 ms-0">
-                                            <div class="mb-1"><a href="forgot.html">Forgot password?</a></div>
-                                            <div>Don't have an account? <a href="signup.html">Register Here</a></div>
+                                        <div class="mb-1">
+                                            <small class="text-muted">Can't remember your password?</small><br>
+                                            <a href="{{ route('password.request') }}">Forgot password?</a>
+                                        </div>
+
                                         </div>
                                     </div>
                                 </div>
@@ -65,27 +65,7 @@
         <!-- End::row-1 -->
 
     </div>
-    <!-- Toastr JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-
-    <!-- Toast Messages -->
-    <script>
-        toastr.options = {
-            "closeButton": true,
-            "progressBar": true,
-            "positionClass": "toast-top-right",
-            "timeOut": "4000"
-        };
-
-        @if(session('success'))
-            toastr.success("{{ session('success') }}");
-        @endif
-
-        @if(session('error'))
-            toastr.error("{{ session('error') }}");
-        @endif
-    </script>
+    
 @endsection
 
 @push('scripts')
