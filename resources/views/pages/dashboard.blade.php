@@ -369,11 +369,6 @@
             </div>
         </div>
         <!-- End::app-content -->
-
-        @include("partials/headersearch_modal")
-        @include("partials/footer")
-        @@include("partials/right-sidebar")
-
     </div>
 @endsection
 
