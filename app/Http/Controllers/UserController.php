@@ -91,6 +91,13 @@ class UserController extends Controller
 
         return redirect()->route('users.index')->with('success', 'User updated successfully!');
     }
+    public function toggleStatus(User $user)
+    {
+        $user->status = !$user->status;
+        $user->save();
+
+        return back()->with('success', 'User status updated successfully!');
+    }
     public function destroy(User $user)
     {
         $user->delete();

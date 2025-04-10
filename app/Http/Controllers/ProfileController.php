@@ -43,7 +43,7 @@ class ProfileController extends Controller
             'twitter' => 'nullable|url|max:255',
             'linkedin' => 'nullable|url|max:255',
             'profile_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-            'cover_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'cover_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
         $profile = $user->profile ?? new Profile(['user_id' => $user->id]);
@@ -70,7 +70,7 @@ class ProfileController extends Controller
 
             $request->file('profile_image')->move(public_path($folder), $filename);
             $profile->profile_image = '/' . $folder . '/' . $filename;
-            $profile->save();
+            //$profile->save();
         }
 
         // === Cover Image ===
@@ -89,7 +89,7 @@ class ProfileController extends Controller
             }
 
             $request->file('cover_image')->move(public_path($folder), $filename);
-            $profile->cover_image = $folder . '/' . $filename;
+            $profile->cover_image = '/' . $folder . '/' . $filename;
         }
 
         // $profile->fill($validated);
