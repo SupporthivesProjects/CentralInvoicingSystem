@@ -602,7 +602,7 @@
                 <a href="javascript:void(0);" class="header-link dropdown-toggle" id="mainHeaderProfile" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
                     <div class="d-flex align-items-center">
                         <div class="header-link-icon">
-                            <img src="{{ asset('images/faces/1.jpg') }}" alt="img" width="32" height="32" class="rounded-circle">
+                            <img src="{{ Auth::user()->profile->profile_image }}" alt="img" width="32" height="32" class="rounded-circle">
                         </div>
                         <div class="d-none">
                             <p class="fw-semibold mb-0">Angelica</p>
@@ -614,15 +614,15 @@
                 <ul class="main-header-dropdown dropdown-menu pt-0 overflow-hidden header-profile-dropdown dropdown-menu-end" aria-labelledby="mainHeaderProfile">
                     <Li>
                         <div class="header-navheading border-bottom">
-                            <h6 class="main-notification-title">Sonia Taylor</h6>
-                            <p class="main-notification-text mb-0">Web Designer</p>
+                            <h6 class="main-notification-title">{{ Auth::user()->name }}</h6>
+                            <p class="main-notification-text mb-0">{{ Auth::user()->profile->experience }}</p>
                         </div>
                     </Li>
-                    <li><a class="dropdown-item d-flex border-bottom" href="profile.html"><i class="fe fe-user fs-16 align-middle me-2"></i>Profile</a></li>
-                    <li><a class="dropdown-item d-flex border-bottom" href="mail-inbox.html"><i class="fe fe-inbox fs-16 align-middle me-2"></i>Inbox <span class="badge bg-success ms-auto">25</span></a></li>
+                    <li><a class="dropdown-item d-flex border-bottom" href="{{ route('myprofile') }}"><i class="fe fe-user fs-16 align-middle me-2"></i>Profile</a></li>
+                    {{-- <li><a class="dropdown-item d-flex border-bottom" href="mail-inbox.html"><i class="fe fe-inbox fs-16 align-middle me-2"></i>Inbox <span class="badge bg-success ms-auto">25</span></a></li>
                     <li><a class="dropdown-item d-flex border-bottom border-block-end" href="notifications-list.html"><i class="fe fe-compass fs-16 align-middle me-2"></i>Activity</a></li>
                     <li><a class="dropdown-item d-flex border-bottom" href="settings.html"><i class="fe fe-settings fs-16 align-middle me-2"></i>Settings</a></li>
-                    <li><a class="dropdown-item d-flex border-bottom" href="chat.html"><i class="fe fe-headphones fs-16 align-middle me-2"></i>Support</a></li>
+                    <li><a class="dropdown-item d-flex border-bottom" href="chat.html"><i class="fe fe-headphones fs-16 align-middle me-2"></i>Support</a></li> --}}
                     <li><a class="dropdown-item d-flex" href="{{  route('logout')}}"><i class="fe fe-power fs-16 align-middle me-2"></i>Log Out</a></li>
                 </ul>
             </div>

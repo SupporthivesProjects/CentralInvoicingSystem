@@ -5,6 +5,8 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\WebsiteController;
+use App\Http\Middleware\RoleMiddleware;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\InvoiceController;
 
 // // Guest-only routes (not logged in)
@@ -25,6 +27,12 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [AuthController::class, 'dashboard'])->name('dashboard');
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+    //Profile Routes
+    Route::get('/my-profile', [ProfileController::class, 'index'])->name('myprofile');
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+
+ 
     //Users Routes
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
@@ -52,6 +60,21 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/site/connect/{site_id}', [InvoiceController::class, 'getCustomerDetails'])->name('site.connect.db');
     
+});
+
+
+// Admin only routes
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
+    Route::post('/users', [UserController::class, 'store'])->name('users.store');
+    Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
+    Route::patch('/users/{user}', [UserController::class, 'update'])->name('users.update');
+    Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+});
+
+// Staff routes (accessible by both admin and staff)
+Route::middleware(['auth', 'role:admin,staff'])->group(function () {
+    Route::get('/users', [UserController::class, 'index'])->name('users.index');
 });
 
 // Redirect root to login or dashboard based on auth status
