@@ -2,20 +2,7 @@
 
 @section('title', 'Dashboard | Central Invoice System')
 
-@push('styles')
-<link rel="stylesheet" href="{{ asset('libs/jsvectormap/css/jsvectormap.min.css') }}">
-<link rel="stylesheet" href="{{ asset('libs/swiper/swiper-bundle.min.css') }}">
-@endpush
-
 @section('content')
-
-    @include("partials/mainhead")
-    @include("partials/switcher")
-    @include("partials/loader")
-    @include("partials/header")
-    @include("partials/sidebar")
-   
-
     <div class="page">
         <!-- Start::app-content -->
         <div class="main-content app-content">
@@ -34,7 +21,7 @@
                     <div class="d-flex">
                         <div class="justify-content-center">
                             <button type="button" class="btn btn-primary my-2 btn-icon-text d-inline-flex align-items-center">
-                              <i class="fe fe-download-cloud me-2 fs-14"></i> Download Report
+                                <i class="fe fe-download-cloud me-2 fs-14"></i> Download Report
                             </button>
                         </div>
                     </div>
@@ -45,7 +32,7 @@
                 <!-- Start::row-1 -->
                 <div class="row row-sm">
                     <div class="col-sm-12 col-lg-12 col-xl-12">
-                       
+                        
                         <!-- Start::row -->
                         <div class="row row-sm">
                             <div class="col-sm-12 col-md-6 col-lg-6 col-xl-4">
@@ -167,7 +154,7 @@
                                     </div>
                                 </div>
                             </div><!-- col end -->
-                           
+                            
                             <div class="col-lg-12">
                                 <div class="card custom-card mg-b-20 tasks">
                                     <div class="card-body">
@@ -375,7 +362,7 @@
 
                     </div><!-- col end -->
 
-                  
+                    
                 </div>
                 <!-- End::row-1 -->
 
@@ -388,18 +375,10 @@
         @@include("partials/right-sidebar")
 
     </div>
+@endsection
 
-    @include("partials.commonjs")
-
-    <@push('scripts')
-    <script src="{{ asset('libs/jsvectormap/js/jsvectormap.min.js') }}"></script>
-    <script src="{{ asset('libs/jsvectormap/maps/world-merc.js') }}"></script>
-    <script src="{{ asset('libs/apexcharts/apexcharts.min.js') }}"></script>
-    <script src="{{ asset('js/index.js') }}"></script>
-    <script src="{{ asset('js/custom.js') }}"></script>
-    @endpush
-
-    @include("partials.custom_switcherjs")
+@section('scripts')
 
 
 @endsection
+
