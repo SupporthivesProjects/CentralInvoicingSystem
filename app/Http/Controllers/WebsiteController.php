@@ -169,7 +169,7 @@ class WebsiteController extends Controller
                 // Save uploaded paths
                 $website->save();
 
-            return redirect()->route('connectedwebsites')->with('success', 'Website updated successfully!');
+                return redirect()->back()->with('success', 'Website updated successfully!');
         } catch (\Exception $e) {
             Log::error('Website Update Error: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Something went wrong. Please try again.');
@@ -258,7 +258,8 @@ class WebsiteController extends Controller
             // Save the uploaded paths
             $website->save();
     
-            return redirect()->back()->with('success', 'Website added successfully.');
+            return redirect()->route('website.edit', $website->id)->with('success', 'Website added successfully.');
+            
         } catch (\Exception $e) {
             Log::error('Website creation error: ' . $e->getMessage());
     

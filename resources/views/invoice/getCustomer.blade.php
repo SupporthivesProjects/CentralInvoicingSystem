@@ -41,7 +41,7 @@
                                 <div class="mb-3">
                                     <label class="form-label">
                                         Selected Website 
-                                        <a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-sm btn-outline-primary ms-2">
+                                        <a href="#" data-bs-toggle="modal" data-bs-target="#sitechangemodel" class="btn btn-sm btn-outline-primary ms-2">
                                             Change Site
                                         </a>
                                     </label>
@@ -97,7 +97,7 @@
     </div>
     </div>
 
-    <div class="modal fade" id="exampleModal" data-bs-backdrop="static"
+    <div class="modal fade" id="sitechangemodel" data-bs-backdrop="static"
     data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
     aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -107,19 +107,20 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                         aria-label="Close"></button>
                 </div>
-                <form method="GET" action="">
+                <form method="GET" action="{{ route('site.connect.db', ['site_id' => request('site_id')]) }}">
                     @csrf
                     <div class="modal-body">
                         <div class="mb-3">
                             <label for="site_id" class="form-label">Choose a site</label>
-                            <select name="site_id" id="site_id" class="form-select" required>
+                            <select name="site_id" id="site_id" class="form-select select2" required>
                                 <option value="">-- Select Site --</option>
                                 @foreach($sites as $s)
                                     <option value="{{ $s->id }}">{{ $s->site_name }}</option>
                                 @endforeach
                             </select>
+
                         </div>
-                        <p class="text-muted small">Selecting a different site will reload the database connection.</p>
+                        <p class="text-muted small">Selecting another site will refresh the page to re-establish the database connection.</p>
                     </div>
                     <div class="modal-footer justify-content-center">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -138,7 +139,23 @@
 <script src="{{ asset('libs/jsvectormap/maps/world-merc.js') }}"></script>
 <script src="{{ asset('libs/apexcharts/apexcharts.min.js') }}"></script>
 <script src="{{ asset('js/index.js') }}"></script>
-<script src="{{ asset('js/custom.js') }}"></script>
+<script src="{{ asset('js/custom.js') }}"></script> 
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+ <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+ <script>
+    $('#sitechangemodel').on('shown.bs.modal', function () {
+        $('#site_id').select2({
+            dropdownParent: $('#sitechangemodel'),
+            placeholder: "-- Select Site --",
+            allowClear: true,
+            width: '100%'
+        });
+       
+    });
+</script>
+
+
 @endpush
 
 @include("partials/custom_switcherjs")

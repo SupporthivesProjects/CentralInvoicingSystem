@@ -51,7 +51,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/businessmodel/{id}/websites', [WebsiteController::class, 'websitesByBusinessModel'])->name('businessmodel.websites');
 
     Route::get('/site/connect/{site_id}', [InvoiceController::class, 'getCustomerDetails'])->name('site.connect.db');
-
+    
 });
 
 // Redirect root to login or dashboard based on auth status

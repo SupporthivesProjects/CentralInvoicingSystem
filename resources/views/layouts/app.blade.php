@@ -37,8 +37,6 @@
     <link rel="stylesheet" href="{{ asset('libs/jsvectormap/css/jsvectormap.min.css') }}">
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<
-
     <!-- Swiper CSS -->
     <link rel="stylesheet" href="{{ asset('libs/swiper/swiper-bundle.min.css') }}">
     <!-- Toastr CSS (CDN) -->
@@ -89,26 +87,26 @@
     <!-- Internal Datatables JS -->
     <script src="{{ asset('js/datatables.js') }}"></script>
 
-    <script src="{{ asset('libs/@popperjs/core/umd/popper.min.js') }}></script>
+    <script src="{{ asset('libs/@popperjs/core/umd/popper.min.js') }}"></script>
 
     <!-- Bootstrap JS -->
-    <script src="{{ asset('libs/bootstrap/js/bootstrap.bundle.min.js') }}></script>
+    <script src="{{ asset('libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 
     <!-- Defaultmenu JS -->
     <script src="{{ asset('js/defaultmenu.min.js') }}"></script>
 
     <!-- Node Waves JS-->
-    <script src="{{ asset('libs/node-waves/waves.min.js') }}></script>
+    <script src="{{ asset('libs/node-waves/waves.min.js') }}"></script>
 
     <!-- Sticky JS -->
     <script src="{{ asset('js/sticky.js') }}"></script>
 
     <!-- Simplebar JS -->
-    <script src="{{ asset('libs/simplebar/simplebar.min.js') }}></script>
+    <script src="{{ asset('libs/simplebar/simplebar.min.js') }}"></script>
     <script src="{{ asset('js/simplebar.js') }}"></script>
 
     <!-- Color Picker JS -->
-    <script src="{{ asset('libs/@simonwep/pickr/pickr.es5.min.js') }}></script>
+    <script src="{{ asset('libs/@simonwep/pickr/pickr.es5.min.js') }}"></script>
 
 
 
@@ -116,7 +114,7 @@
     <script src="{{ asset('js/custom-switcher.min.js') }}"></script>
 
     <!-- Prism JS -->
-    <script src="{{ asset('libs/prismjs/prism.js') }}></script>
+    <script src="{{ asset('libs/prismjs/prism.js') }}"></script>
     <script src="{{ asset('js/prism-custom.js') }}"></script>
 
     <!-- Custom JS -->
