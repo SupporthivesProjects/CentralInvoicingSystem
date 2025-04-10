@@ -53,33 +53,38 @@
                         <li class="slide side-menu__label1">
                             <a href="javascript:void(0)">Manage Sites</a>
                         </li>
+
                         <li class="slide">
                             <a href="{{ route('businessmodel.create') }}" class="side-menu__item">
                                 Add Business Model
                             </a>
                         </li>
+
                         <li class="slide">
                             <a href="{{ route('website.create') }}" class="side-menu__item">
                                 Connect New Site
                             </a>
                         </li>
+
                         <li class="slide">
                             <a href="{{ route('businessmodels') }}" class="side-menu__item d-flex align-items-center justify-content-between">
                                 <div>
-                                    <span>Business models</span>
+                                    <span>All Business Models</span>
                                 </div>
                                 <span class="badge bg-success">{{ getModelsCount() }}</span>
                             </a>
                         </li>
+
                         <li class="slide">
                             <a href="{{ route('connectedwebsites') }}" class="side-menu__item d-flex align-items-center justify-content-between">
                                 <div>
-                                    <span>Connected Sites</span>
+                                    <span>All Connected Websites</span>
                                 </div>
                                 <span class="badge bg-success">{{ getAllWebsites() }}</span>
                             </a>
                         </li>
                     </ul>
+
                 </li>
                 <!-- End::Sites Menu -->
 
@@ -100,9 +105,8 @@
                     </a>
                     <ul class="slide-menu child1">
                         <li class="slide side-menu__label1"><a href="javascript:void(0)">{{ $model->name }} </a></li>
-                        <li class="slide"><a href="ecommerce-create-invoice.html" class="side-menu__item">Generate Invoice</a></li>
                         <li class="slide">
-                            <a href="ecommerce-invoice-history.html" class="side-menu__item d-flex align-items-center justify-content-between">
+                            <a href="{{ route('businessmodel.websites', $model->id) }}" class="side-menu__item d-flex align-items-center justify-content-between">
                                 <div>
                                     <span>Connected Sites</span>
                                 </div>

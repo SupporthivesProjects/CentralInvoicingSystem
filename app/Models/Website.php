@@ -20,6 +20,15 @@ class Website extends Model
         'db_password',
         'site_link',
         'remark',
+        'company_name',
+        'company_email',
+        'company_mobile',
+        'company_address',
+        'invoice_header_image',
+        'invoice_footer_image',
+        'invoice_signature',
+        'company_logo',
+        'invoice_template',
     ];
 
     /**
