@@ -2,11 +2,7 @@
 
 @section('title', 'Forgot Password | Central Invoice System')
 
-@push('styles')
-    <link rel="stylesheet" href="{{ asset('libs/jsvectormap/css/jsvectormap.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('libs/swiper/swiper-bundle.min.css') }}">
-    
-@endpush
+
 
 @section('content')
 
@@ -58,37 +54,7 @@
     <!-- End::row-1 -->
 
 </div>
-<!-- Toastr JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-
-    <!-- Toast Messages -->
-    <script>
-        toastr.options = {
-            "closeButton": true,
-            "progressBar": true,
-            "positionClass": "toast-top-right",
-            "timeOut": "4000"
-        };
-
-        @if(session('success'))
-            toastr.success("{{ session('success') }}");
-        @endif
-
-        @if(session('error'))
-            toastr.error("{{ session('error') }}");
-        @endif
-    </script>
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('libs/jsvectormap/js/jsvectormap.min.js') }}"></script>
-    <script src="{{ asset('libs/jsvectormap/maps/world-merc.js') }}"></script>
-    <script src="{{ asset('libs/apexcharts/apexcharts.min.js') }}"></script>
-    <script src="{{ asset('js/index.js') }}"></script>
-    <script src="{{ asset('js/custom.js') }}"></script>
-
-    <!-- Include common JS and custom switcher JS -->
-    @include("partials.commonjs")
-    @include("partials.custom_switcherjs")
 @endpush

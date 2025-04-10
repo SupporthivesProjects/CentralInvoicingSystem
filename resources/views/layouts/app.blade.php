@@ -61,6 +61,11 @@
     <!-- Main Theme JS -->
     <script src="{{ asset('js/main.js') }}"></script>
 
+    <!-- Datatable CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.3.0/css/responsive.bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.3/css/buttons.bootstrap5.min.css">
+
     <!-- Custom Toast Style -->
     <style>
         #toast-container > .toast {
@@ -91,7 +96,10 @@
             <img src="{{ asset('images/media/media-79.svg') }}" alt="">
         </div>
         <!-- Loader -->
+        @unless(in_array(Route::currentRouteName(), ['login', 'password.request', 'password.reset']))
         @include("partials/header")
+        @endunless
+        
         @include('partials.footer')
     <!-- Scroll To Top -->
         <div class="scrollToTop">
@@ -168,6 +176,19 @@
         <!-- Your Custom JS -->
         <script src="{{ asset('js/main.js') }}"></script>
         <script src="{{ asset('js/script.js') }}" defer></script>
+
+         <!-- Datatable JS -->
+        <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
+        <script src="https://cdn.datatables.net/responsive/2.3.0/js/dataTables.responsive.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/2.2.3/js/dataTables.buttons.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.print.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.6/pdfmake.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+        <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+        <!-- Internal Datatables JS -->
+        <script src="{{ asset('js/datatables.js') }}"></script>
     @stack('scripts')
 </body>
 </html>

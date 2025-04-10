@@ -2,22 +2,8 @@
 
 @section('title', 'Dashboard | Central Invoice System')
 
-@push('styles')
-<link rel="stylesheet" href="{{ asset('libs/jsvectormap/css/jsvectormap.min.css') }}">
-<link rel="stylesheet" href="{{ asset('libs/swiper/swiper-bundle.min.css') }}">
-<link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">
- <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.3.0/css/responsive.bootstrap.min.css">
-<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.3/css/buttons.bootstrap5.min.css">
-@endpush
 
 @section('content')
-    @include("partials/mainhead")
-    @include("partials/switcher")
-    @include("partials/loader")
-    @include("partials/header")
-    @include("partials/sidebar")
-
-
 
     <div class="main-content app-content">
             <div class="container-fluid">
@@ -94,28 +80,11 @@
             </div>
         </div>
     
-
-    @include("partials/commonjs")
-
-<@push('scripts')
-<script src="{{ asset('libs/jsvectormap/js/jsvectormap.min.js') }}"></script>
-<script src="{{ asset('libs/jsvectormap/maps/world-merc.js') }}"></script>
-<script src="{{ asset('libs/apexcharts/apexcharts.min.js') }}"></script>
-<script src="{{ asset('js/index.js') }}"></script>
-<script src="{{ asset('js/custom.js') }}"></script>
-  <!-- Datatables Cdn -->
-  <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
-    <script src="https://cdn.datatables.net/responsive/2.3.0/js/dataTables.responsive.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.2.3/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.print.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.6/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    <!-- Internal Datatables JS -->
-    <script src="{{ asset('js/datatables.js') }}"></script>
-    <script>
+   
+   
+@endsection
+@push('scripts')
+<script>
             $(document).on('click', '.delete-btn', function () {
                 const id = $(this).data('id');
 
@@ -156,11 +125,5 @@
                     }
                 });
             });
-        </script>
-   
+    </script>
 @endpush
-
-@include("partials/custom_switcherjs")
-
-
-@endsection
