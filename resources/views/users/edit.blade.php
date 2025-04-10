@@ -73,6 +73,7 @@
                                 </div>
 
                                 <div class="col-12">
+                                    {{-- <input type="hidden" name="status" value="0"> --}}
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" id="gridCheck3" name="status" value="1" {{ old('status', $user->status) ? 'checked' : '' }}>
                                         <label class="form-check-label" for="gridCheck3">Active</label>
