@@ -4,9 +4,14 @@
     <!-- Start::main-sidebar-header -->
 
     <div class="main-sidebar-header">
-        <a href="{{ route('dashboard') }}" class="header-logo text-white text-2xl font-bold">
-            <span class="text-logo">Central Invoice System</span>
-        </a>
+     <a href="{{  route('dashboard') }}" class="header-logo">
+        <img src="{{ asset('images/brand-logos/desktop-logo.png') }}" alt="logo" class="desktop-logo">
+        <img src="{{ asset('images/brand-logos/toggle-logo.png') }}" alt="logo" class="toggle-logo">
+        <img src="{{ asset('images/brand-logos/desktop-dark.png') }}" alt="logo" class="desktop-dark">
+        <img src="{{ asset('images/brand-logos/toggle-dark.png') }}" alt="logo" class="toggle-dark">
+        <img src="{{ asset('images/brand-logos/desktop-white.png') }}" alt="logo" class="desktop-white">
+        <img src="{{ asset('images/brand-logos/toggle-white.png') }}" alt="logo" class="toggle-white">
+        </a> 
     </div>
     <!-- End::main-sidebar-header -->
 

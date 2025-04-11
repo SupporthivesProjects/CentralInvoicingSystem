@@ -148,5 +148,5 @@
     </div>
 
 @endsection
-@push]('scripts')
+@push('scripts')
 @endpush

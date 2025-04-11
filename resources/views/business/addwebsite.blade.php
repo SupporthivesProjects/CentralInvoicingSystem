@@ -69,6 +69,13 @@
                                 <label class="form-label">Website Link <span style="color:red">*</span></label>
                                 <input type="text" name="site_link" class="form-control" placeholder="Enter Website link">
                             </div>
+                           
+                            <!-- Company Details Section -->
+                            <div class="col-12">
+                                <hr>
+                                <h5 class="text-left">Company Details (Optional)</h5>
+                                <hr>
+                            </div>
                             <div class="col-md-6 mx-auto">
                                 <label class="form-label">Site Description</label>
                                 <input type="text" name="site_description" class="form-control" placeholder="Enter Site Description (optional)">
@@ -76,12 +83,6 @@
                             <div class="col-md-6 mx-auto">
                                 <label class="form-label">Remark</label>
                                 <input type="text" name="remark" class="form-control" placeholder="Enter Remark here in case">
-                            </div>
-                            <!-- Company Details Section -->
-                            <div class="col-12">
-                                <hr>
-                                <h5 class="text-left">Company Details (Optional)</h5>
-                                <hr>
                             </div>
 
                             <div class="col-md-6 mx-auto">

@@ -59,6 +59,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/businessmodel/{id}/websites', [WebsiteController::class, 'websitesByBusinessModel'])->name('businessmodel.websites');
 
     Route::get('/site/connect/{site_id}', [InvoiceController::class, 'getCustomerDetails'])->name('site.connect.db');
+    Route::get('/invoice/product-selection', [InvoiceController::class, 'productSelection'])->name('product.selection');
     
 });
 

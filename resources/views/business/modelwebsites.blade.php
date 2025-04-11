@@ -51,7 +51,7 @@
                                                     <td>{{ $site->created_at->format('Y-m-d') }}</td>
                                                     <td>
                                                      
-                                                        <a href="#" class="btn btn-sm btn-warning">
+                                                        <a href="{{ route('site.connect.db', $site->id) }}" class="btn btn-sm btn-warning">
                                                             <i class="fas fa-file-invoice"></i> Generate Invoice
                                                         </a>
                                                         <a href="{{ route('website.edit', $site->id) }}" class="btn btn-sm btn-primary">

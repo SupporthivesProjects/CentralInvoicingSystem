@@ -44,7 +44,7 @@
                                                     <td> <i class="{{ !empty($model->icon_class) ? $model->icon_class : 'ti-wallet' }}  side-menu__icon"></i></td>
                                                     <td>{{ $model->created_at->format('Y-m-d') }}</td>
                                                     <td>
-                                                    <a href="{{ route('businessmodel.websites', $model->id) }}" target="_blank" class="btn btn-sm btn-info">
+                                                    <a href="{{ route('businessmodel.websites', $model->id) }}" class="btn btn-sm btn-info">
                                                         <i class="fas fa-globe"></i> View sites ({{ count($model->websites) }})
                                                     </a>
                                                         <a href="{{ route('businessmodel.edit', $model->id) }}" class="btn btn-sm btn-primary">
