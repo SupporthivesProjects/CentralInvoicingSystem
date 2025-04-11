@@ -3,6 +3,7 @@
 @section('title', 'Product Selection | Central Invoice System')
 
 @section('content')
+
 <div class="page">
     <div class="main-content app-content">
         <div class="container-fluid">
@@ -29,48 +30,54 @@
                 <div class="card-body">
                     <form method="GET" action="#"> {{-- route('products.query') --}}
                         @csrf
-
                         <!-- Row 1: Selected Website (Full Width) -->
                         <div class="row">
                             <div class="col-md-12 mb-3">
                                 <label class="form-label">Selected Website <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" value="example.com" readonly>
+                                <input type="text" class="form-control" 
+                                    value="{{ $customer['site_name'] ?? 'N/A' }}" 
+                                    readonly>
                             </div>
                         </div>
 
-                        <!-- Row 2: Invoice Amount, Invoice Number, Customer Name -->
+                        <!-- Row 2: Invoice Amount, Invoice Number, Invoice Date -->
                         <div class="row">
                             <div class="col-md-4 mb-3">
                                 <label class="form-label">Invoice Amount <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" value="$500.00">
+                                <input type="text" name="invoice_amount" class="form-control" 
+                                    value="{{ $invoice['invoice_amount'] ?? '' }}" readonly>
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label class="form-label">Invoice Number <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" value="INV-20250410-01" >
+                                <input type="text" name="invoice_number" class="form-control" 
+                                    value="{{ $invoice['invoice_number'] ?? '' }}">
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label class="form-label">Invoice Date</label>
-                                <input type="date" class="form-control" value="2025-04-10" >
+                                <input type="date" name="invoice_date" class="form-control" 
+                                    value="{{ $invoice['invoice_date'] ?? now()->toDateString() }}">
                             </div>
-                            
                         </div>
 
-                        <!-- Row 3: Email, Phone, Invoice Date -->
+                        <!-- Row 3: Customer Details -->
                         <div class="row">
-                        <div class="col-md-4 mb-3">
+                            <div class="col-md-4 mb-3">
                                 <label class="form-label">Customer Name </label>
-                                <input type="text" class="form-control" value="John Doe" readonly>
+                                <input type="text" class="form-control" 
+                                    value="{{ $customer['name'] ?? '' }}" readonly>
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label class="form-label">Customer Email</label>
-                                <input type="email" class="form-control" value="john@example.com" readonly>
+                                <input type="email" class="form-control" 
+                                    value="{{ $customer['email'] ?? '' }}" readonly>
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label class="form-label">Customer Phone</label>
-                                <input type="text" class="form-control" value="9876543210" readonly>
+                                <input type="text" class="form-control" 
+                                    value="{{ $customer['phone'] ?? '' }}" readonly>
                             </div>
-                           
                         </div>
+
 
                     </form>
                 </div>
@@ -114,33 +121,32 @@
                                     <tr>
                                         <th><input type="checkbox" id="selectAll"></th>
                                         <th>ID</th>
-                                        <th>Image</th>
                                         <th>Name</th>
-                                        <th>Price</th>
+                                        <th>Unit Price</th>
                                         <th>Source</th>
                                         <th>Edit Price</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <!-- Sample Rows -->
+                                    @php
+                                    $current_total =0;
+                                    @endphp
+
+                                   @foreach($selectedProducts as $product)
+                                   @php
+                                    $current_total = $current_total + $product->unit_price;
+                                    @endphp
                                     <tr data-source="custom">
                                         <td><input type="checkbox"></td>
-                                        <td>1</td>
-                                        <td><img src="https://via.placeholder.com/40" class="img-thumbnail" alt=""></td>
-                                        <td><a href="#">Marketing Toolkit</a></td>
-                                        <td>$150</td>
-                                        <td><span class="badge bg-primary">Custom</span></td>
-                                        <td><input type="number" class="form-control form-control-sm" value="150"></td>
+                                        <td>{{ $product->id }}</td>
+                                         <td><a href="#">{{ $product->name }}</a></td>
+                                        <td>${{ number_format($product->unit_price, 2) }}</td>
+                                        <td><span class="badge bg-success">Custom</span></td>
+                                        <td><input type="number" class="form-control form-control-sm" value="{{ $product->unit_price }}"></td>
                                     </tr>
-                                    <tr data-source="random">
-                                        <td><input type="checkbox"></td>
-                                        <td>2</td>
-                                        <td><img src="https://via.placeholder.com/40" class="img-thumbnail" alt=""></td>
-                                        <td><a href="#">Design Bundle</a></td>
-                                        <td>$200</td>
-                                        <td><span class="badge bg-warning text-dark">Random</span></td>
-                                        <td><input type="number" class="form-control form-control-sm" value="200"></td>
-                                    </tr>
+        
+                                    @endforeach
+                                    
                                 </tbody>
                             </table>
                         </div>
@@ -152,11 +158,11 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Target Value</label>
-                            <input type="text" class="form-control" value="$500.00" readonly>
+                            <input type="text" class="form-control" value="{{ $invoice['invoice_amount'] ?? 'N/A' }}"  readonly>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Current Value</label>
-                            <input type="text" class="form-control" value="$465.00" readonly>
+                            <input type="text" class="form-control" value="{{ $current_total  ?? '00.00'}}" readonly>
                         </div>
                     </div>
                     <div class="row">
@@ -188,69 +194,6 @@
 
 @endsection
 @push('scripts')
-<script>
-const productTable = document.querySelector("#productTable tbody");
-
-// Sample data pool for random selection
-const allProducts = [
-    { id: 1, name: "Logo Kit", price: 100, image: "https://via.placeholder.com/40" },
-    { id: 2, name: "Social Bundle", price: 200, image: "https://via.placeholder.com/40" },
-    { id: 3, name: "Video Pack", price: 150, image: "https://via.placeholder.com/40" },
-    { id: 4, name: "Template Pack", price: 250, image: "https://via.placeholder.com/40" },
-    { id: 5, name: "Growth Tools", price: 300, image: "https://via.placeholder.com/40" },
-];
-
-// Set your invoice total (you can fetch dynamically)
-const invoiceTotal = 900;
-
-function setCustomOnly() {
-    const rows = productTable.querySelectorAll("tr");
-    rows.forEach(row => {
-        if (row.dataset.source === "random") {
-            row.remove(); // remove random rows
-        } else {
-            row.style.display = '';
-        }
-    });
-}
-
-function clearAllProducts() {
-    productTable.innerHTML = "";
-}
-
-function generateRandomProducts() {
-    clearAllProducts();
-
-    let remaining = invoiceTotal;
-    let selected = [];
-
-    // Shuffle products
-    const shuffled = [...allProducts].sort(() => 0.5 - Math.random());
-
-    for (let i = 0; i < shuffled.length && remaining > 0; i++) {
-        const p = shuffled[i];
-        if (p.price <= remaining) {
-            selected.push(p);
-            remaining -= p.price;
-        }
-    }
-
-    selected.forEach((p, index) => {
-        const row = document.createElement("tr");
-        row.setAttribute("data-source", "random");
-        row.innerHTML = `
-            <td><input type="checkbox"></td>
-            <td>${p.id}</td>
-            <td><img src="${p.image}" class="img-thumbnail" alt=""></td>
-            <td><a href="#">${p.name}</a></td>
-            <td>$${p.price}</td>
-            <td><span class="badge bg-warning text-dark">Random</span></td>
-            <td><input type="number" class="form-control form-control-sm" value="${p.price}"></td>
-        `;
-        productTable.appendChild(row);
-    });
-}
-</script>
 
 <script>
    var priceSlider = document.getElementById('price-slider');

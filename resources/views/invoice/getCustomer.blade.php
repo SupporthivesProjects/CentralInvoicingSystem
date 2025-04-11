@@ -23,8 +23,17 @@
                 <div class="col-md-12">
                     <div class="card custom-card">
                         <div class="card-body">
+                        @if ($errors->any())
+                            <div class="alert alert-danger">
+                                <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                                </ul>
+                            </div>
+                        @endif
                         
-                            <form method="POST" action="{{ route('businessmodel.store') }}">
+                            <form method="POST" action="{{ route('customerdetails.store') }}">
                                 @csrf
 
                                 <div class="mb-3">
@@ -34,7 +43,8 @@
                                             Change Site
                                         </a>
                                     </label>
-                                    <input type="text" class="form-control" value="{{ $site->site_name ?? 'N/A' }}" readonly>
+                                    <input type="text" class="form-control" name="site_name" id="site_name"  value="{{ $site->site_name ?? 'N/A' }}" readonly>
+                                    <input type="hidden" class="form-control" name="site_id" id="site_id"  value="{{ $site->id ?? 'N/A' }}" readonly>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
