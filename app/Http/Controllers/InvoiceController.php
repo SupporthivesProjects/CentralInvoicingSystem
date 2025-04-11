@@ -80,9 +80,10 @@ class InvoiceController extends Controller
     
         try {
             $site = Website::findOrFail($site_id);
-    
-            // Only proceed if business_model_id == 1 (eCommerce)
-            if ($site->business_model_id == 1) {
+
+            $modelType = $site->businessModel?->model_type;
+
+            if ($modelType == "ecommerce") {
     
                 // Connect to dynamic DB
                 DynamicDatabaseService::connect($site);
@@ -137,49 +138,116 @@ class InvoiceController extends Controller
             return redirect()->route('product.selection')->with('error', 'Database connection failed: ' . $e->getMessage());
         }
     }
-    
-    
-    public function FilterProducts(Request $request)
+
+    public function randomProducts(Request $request)
     {
-        $site_id = $request->site_id ?? session('invoice.site_id');
-        $total = $request->total ?? session('invoice.total');
+        $site_id = $request->get('site_id');
+        $invoiceAmount = floatval($request->get('invoice_amount'));
+
+        // 1–2% tolerance
+        $minTotal = $invoiceAmount;
+        $maxTotal = $invoiceAmount * 1.02;
 
         $site = Website::findOrFail($site_id);
+
         DynamicDatabaseService::connect($site);
 
-        $query = DB::connection('dynamic')->table('products');
+        $allProducts = DB::connection('dynamic')->table('products')
+            ->select('id', 'name', 'unit_price')
+            ->get();
 
-        if ($request->randomize) {
-            $allProducts = $query->inRandomOrder()->get();
+        $bestMatch = null;
+        $bestTotal = 0;
+
+        // Try 10 random shuffles to increase chances
+        for ($i = 0; $i < 10; $i++) {
+            $shuffled = $allProducts->shuffle();
             $selected = [];
-            $sum = 0;
+            $currentTotal = 0;
 
-            foreach ($allProducts as $product) {
-                if (($sum + $product->unit_price) <= $total) {
+            foreach ($shuffled as $product) {
+                $price = floatval($product->unit_price);
+                if (($currentTotal + $price) <= $maxTotal) {
+                    $product->source = 'Random';
                     $selected[] = $product;
-                    $sum += $product->unit_price;
+                    $currentTotal += $price;
+
+                    if ($currentTotal >= $minTotal && $currentTotal <= $maxTotal) {
+                        $bestMatch = $selected;
+                        $bestTotal = $currentTotal;
+                        break;
+                    }
                 }
             }
 
-            $products = collect($selected);
-        } else {
-            if ($request->name) {
-                $query->where('name', 'LIKE', '%' . $request->name . '%');
-            }
-            if ($request->min_unit_price) {
-                $query->where('unit_price', '>=', $request->min_unit_price);
-            }
-            if ($request->max_unit_price) {
-                $query->where('unit_price', '<=', $request->max_unit_price);
-            }
-
-            $products = $query->get();
+            // Break early if good match found
+            if ($bestMatch) break;
         }
 
-        $html = view('partials.productSelection', compact('products'))->render();
+        if (!$bestMatch) {
+        
+            return response()->json([
+                'tableRows' => '',
+                'total' => 0,
+                'message' => 'No matching combination found'
+            ]);
+        }
 
-        return response()->json(['html' => $html]);
+        $tableRows = view('invoice.product_rows', ['products' => $bestMatch])->render();
+
+        return response()->json([
+            'tableRows' => $tableRows,
+            'total' => $bestTotal,
+        ]);
     }
 
-}
+    
+  
+    public function filterProducts(Request $request)
+    {
+        $site_id = $request->get('site_id');
+        $site = Website::findOrFail($site_id);
+        DynamicDatabaseService::connect($site);
 
+        $hasKeyword = $request->filled('keyword');
+        $hasPriceRange = $request->filled('price_from') && $request->filled('price_to');
+
+        if (!$hasKeyword && !$hasPriceRange) {
+            return response()->json([
+                'tableRows' => '<tr><td colspan="6" class="text-center text-muted">Please enter a keyword or price range to search.</td></tr>'
+            ]);
+        }
+
+        $query = DB::connection('dynamic')->table('products')
+            ->select('id', 'name', 'unit_price');
+
+        if ($hasKeyword) {
+            $query->where('name', 'like', '%' . $request->keyword . '%');
+        }
+
+        if ($hasPriceRange) {
+            $query->whereBetween('unit_price', [
+                (float) $request->price_from,
+                (float) $request->price_to
+            ]);
+        }
+        
+        // Add LIMIT to top 10 matches
+        $products = $query->orderBy('name')->limit(5)->get();
+
+        if ($products->isEmpty()) {
+            return response()->json([
+                'tableRows' => '<tr><td colspan="6" class="text-center text-muted"> No results found. Try randomizing or use a different keyword.</td></tr>'
+            ]);
+        }
+
+        $tableRows = view('invoice.product_rows', ['products' => $products])->render();
+
+        return response()->json([
+            'tableRows' => $tableRows
+        ]);
+    }
+
+
+        
+}

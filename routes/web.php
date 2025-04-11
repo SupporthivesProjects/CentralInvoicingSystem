@@ -62,6 +62,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/invoice/save-customerdetails', [InvoiceController::class, 'saveCustomerDetails'])->name('customerdetails.store');
     Route::get('/invoice/product-selection', [InvoiceController::class, 'productSelection'])->name('product.selection');
 
+    Route::get('/random-products', [InvoiceController::class, 'randomProducts']);
+    Route::get('/filter-products', [InvoiceController::class, 'filterProducts']);
 
     
     

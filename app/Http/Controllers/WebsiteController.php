@@ -26,6 +26,7 @@ class WebsiteController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'icon_class' => 'nullable|string|max:255',
+            'model_type' => 'nullable|string|max:255',
         ]); 
 
         $model = BusinessModel::findOrFail($id);
@@ -61,6 +62,7 @@ class WebsiteController extends Controller
             $request->validate([
                 'name' => 'required|string|max:255',
                 'icon_class' => 'nullable|string|max:255',
+                'model_type' => 'nullable|string|max:255',
             ]);
 
             // Create the BusinessModel

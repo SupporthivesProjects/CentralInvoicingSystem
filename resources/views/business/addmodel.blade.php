@@ -30,6 +30,13 @@
                                     <label class="form-label">Business Model Name <span style="color:red">*</span></label>
                                     <input type="text" name="name" class="form-control" placeholder="Enter Business Model Name" required>
                                 </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Business Type <span style="color:red">*</span></label>
+                                    <input type="text" name="model_type" class="form-control" placeholder="Enter Model type" required>
+                                    <small class="form-text text-muted">
+                                        Use only lowercase letters and underscores (no spaces or capital letters).
+                                    </small>
+                                </div>
 
                                 <div class="mb-3">
                                     <label class="form-label">Icon Class <span style="color:red">*</span></label>

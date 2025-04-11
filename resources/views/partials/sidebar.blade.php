@@ -83,7 +83,7 @@
                         <li class="slide">
                             <a href="{{ route('connectedwebsites') }}" class="side-menu__item d-flex align-items-center justify-content-between">
                                 <div>
-                                    <span>All Connected Websites</span>
+                                    <span>All  Websites</span>
                                 </div>
                                 <span class="badge bg-success">{{ getAllWebsites() }}</span>
                             </a>
