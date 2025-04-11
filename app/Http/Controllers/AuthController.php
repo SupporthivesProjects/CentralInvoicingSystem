@@ -13,6 +13,21 @@ class AuthController extends Controller
     }
 
     // Handle login submit
+    // public function login(Request $request)
+    // {
+    //     $request->validate([
+    //         'email' => 'required|email',
+    //         'password' => 'required'
+    //     ]);
+
+    //     if (Auth::attempt($request->only('email', 'password'))) {
+    //         return redirect()->route('dashboard')->with('success', 'Login successful!');
+    //     }
+
+    //     return back()->with('error', 'Invalid credentials');
+
+    // }
+
     public function login(Request $request)
     {
         $request->validate([
@@ -20,13 +35,26 @@ class AuthController extends Controller
             'password' => 'required'
         ]);
 
+        // Fetch user by email
+        $user = \App\Models\User::where('email', $request->email)->first();
+
+        if (!$user) {
+            return back()->with('error', 'Invalid credentials');
+        }
+
+        // Check if user is active
+        if ($user->status != 1) {
+            return back()->with('error', 'Account is inactive. Please contact support.');
+        }
+
+        // Attempt login
         if (Auth::attempt($request->only('email', 'password'))) {
             return redirect()->route('dashboard')->with('success', 'Login successful!');
         }
 
         return back()->with('error', 'Invalid credentials');
-
     }
+
 
     // Show dashboard (only for authenticated users)
     public function dashboard()

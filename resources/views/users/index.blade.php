@@ -48,42 +48,71 @@
                                </div>
                            </div>
                            <div class="card-body">
-                               <table id="responsivemodal-DataTable" class="table table-bordered text-nowrap" style="width:100%">
-                                   <thead>
-                                       <tr>
-                                           <th>Name</th>
-                                           <th>Email</th>
-                                           <th>Assigned Role</th>
-                                           @if(auth()->user()->roles->contains('name', 'admin'))
-                                                <th>Action</th>
-                                           @endif
-                                       </tr>
-                                   </thead>
-                                   <tbody>
+                            <table id="responsivemodal-DataTable" class="table table-bordered text-nowrap" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th class="text-center">Assigned Role</th>
+                                        <th>Status</th>
+                                        @if(auth()->user()->roles->contains('name', 'admin'))
+                                            <th class="text-center">Action</th>
+                                        @endif
+                                    </tr>
+                                </thead>
+                                <tbody>
                                     @foreach ($users as $user)
                                         <tr>
                                             <td>{{ $user->name }}</td>
                                             <td>{{ $user->email }}</td>
-                                            <td>
+
+                                            <!-- Assigned Role Centered -->
+                                            <td class="text-center">
                                                 @foreach ($user->roles as $role)
                                                     <span class="badge bg-primary">{{ $role->name }}</span>
                                                 @endforeach
                                             </td>
+
+                                            <td class="text-center">
+                                                @if ($user->status)
+                                                    <span class="badge bg-success">Active</span>
+                                                @else
+                                                    <span class="badge bg-danger">Inactive</span>
+                                                @endif
+                                            </td>
+
                                             @if(auth()->user()->roles->contains('name', 'admin'))
-                                            <td>
-                                                <a href="{{ route('users.edit', $user->id) }}" class="btn btn-sm btn-warning">Edit</a>
-                                                <form action="{{ route('users.destroy', $user->id) }}" method="POST" class="d-inline">
+                                            <!-- Action Buttons Centered -->
+                                            <td class="text-center">
+                                                <a href="{{ route('users.edit', $user->id) }}" class="btn btn-sm btn-warning mb-1">
+                                                    <i class="fas fa-edit"></i> Edit
+                                                </a>
+
+                                                <form action="{{ route('users.destroy', $user->id) }}" method="POST" class="d-inline mb-1">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                                                    <button class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">
+                                                        <i class="fas fa-trash"></i> Delete
+                                                    </button>
+                                                </form>
+
+                                                <form action="{{ route('users.toggleStatus', $user->id) }}" method="POST" class="d-inline">
+                                                    @csrf
+                                                    @method('PATCH')
+                                                    <button class="btn btn-sm {{ $user->status ? 'btn-secondary' : 'btn-success' }}">
+                                                        <i class="fas {{ $user->status ? 'fa-user-slash' : 'fa-user-check' }}"></i>
+                                                        {{ $user->status ? 'Make Inactive' : 'Make Active' }}
+                                                    </button>
                                                 </form>
                                             </td>
                                             @endif
                                         </tr>
                                     @endforeach
                                 </tbody>
+                            </table>
 
-                               </table>
+
+
                            </div>
                        </div>
                    </div>
