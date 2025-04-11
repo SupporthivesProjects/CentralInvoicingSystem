@@ -2,12 +2,6 @@
 
 @section('title', 'Reset Password | Central Invoice System')
 
-@push('styles')
-    <link rel="stylesheet" href="{{ asset('libs/jsvectormap/css/jsvectormap.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('libs/swiper/swiper-bundle.min.css') }}">
-    
-@endpush
-
 @section('content')
 
 <div class="page main-signin-wrapper">
@@ -65,13 +59,4 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('libs/jsvectormap/js/jsvectormap.min.js') }}"></script>
-    <script src="{{ asset('libs/jsvectormap/maps/world-merc.js') }}"></script>
-    <script src="{{ asset('libs/apexcharts/apexcharts.min.js') }}"></script>
-    <script src="{{ asset('js/index.js') }}"></script>
-    <script src="{{ asset('js/custom.js') }}"></script>
-
-    <!-- Include common JS and custom switcher JS -->
-    @include("partials.commonjs")
-    @include("partials.custom_switcherjs")
 @endpush

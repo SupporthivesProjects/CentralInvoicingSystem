@@ -2,17 +2,8 @@
 
 @section('title', 'Edit Website | Central Invoice System')
 
-@push('styles')
-<link rel="stylesheet" href="{{ asset('libs/jsvectormap/css/jsvectormap.min.css') }}">
-<link rel="stylesheet" href="{{ asset('libs/swiper/swiper-bundle.min.css') }}">
-@endpush
-
 @section('content')
-    @include("partials/mainhead")
-    @include("partials/switcher")
-    @include("partials/loader")
-    @include("partials/header")
-    @include("partials/sidebar")
+   
     <div class="page">
     <div class="main-content app-content">
         <div class="container-fluid">
@@ -156,18 +147,6 @@
         </div>
     </div>
 
-
-@include("partials/commonjs")
-
-<@push('scripts')
-<script src="{{ asset('libs/jsvectormap/js/jsvectormap.min.js') }}"></script>
-<script src="{{ asset('libs/jsvectormap/maps/world-merc.js') }}"></script>
-<script src="{{ asset('libs/apexcharts/apexcharts.min.js') }}"></script>
-<script src="{{ asset('js/index.js') }}"></script>
-<script src="{{ asset('js/custom.js') }}"></script>
-@endpush
-
-@include("partials/custom_switcherjs")
-
-
 @endsection
+@push('scripts')
+@endpush

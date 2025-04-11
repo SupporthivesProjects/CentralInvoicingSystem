@@ -14,19 +14,26 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 class InvoiceController extends Controller
 {
 
-    public function getCustomerDetails($site_id)
+    public function getCustomerDetails($site_id_from_url)
     {
         try {
+            // Check if site_id is passed via query string
+            $site_id = request()->get('site_id', $site_id_from_url); // fallback to URL segment
+
             $site = Website::findOrFail($site_id);
             $sites = Website::all();
-            return view('invoice.getCustomer', compact('site','sites'));
+
+            return view('invoice.getCustomer', compact('site', 'sites'));
         } catch (ModelNotFoundException $e) {
             return redirect()->back()->with('error', 'Website not found!');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Something went wrong: ' . $e->getMessage());
         }
     }
+    public function productSelection(){
 
+        return view('invoice.productSelection');
+    }
     
 }
 

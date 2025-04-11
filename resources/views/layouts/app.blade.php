@@ -61,6 +61,11 @@
     <!-- Main Theme JS -->
     <script src="{{ asset('js/main.js') }}"></script>
 
+    <!-- Datatable CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.3.0/css/responsive.bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.3/css/buttons.bootstrap5.min.css">
+
     <!-- Custom Toast Style -->
     <style>
         #toast-container > .toast {
@@ -91,7 +96,10 @@
             <img src="{{ asset('images/media/media-79.svg') }}" alt="">
         </div>
         <!-- Loader -->
+        @unless(in_array(Route::currentRouteName(), ['login', 'password.request', 'password.reset']))
         @include("partials/header")
+        @endunless
+        
         @include('partials.footer')
     <!-- Scroll To Top -->
         <div class="scrollToTop">
@@ -144,6 +152,16 @@
         <!-- Toastr JS (CDN) -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+       <!-- noUiSlider CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/nouislider@15.7.0/dist/nouislider.min.css" rel="stylesheet">
+        <!-- noUiSlider JS -->
+        <script src="https://cdn.jsdelivr.net/npm/nouislider@15.7.0/dist/nouislider.min.js"></script>
+
+
+
+
         <!-- Toast Messages -->
         <script>
             toastr.options = {
@@ -161,13 +179,106 @@
                 toastr.error("{{ session('error') }}");
             @endif
         </script>
+        <style>
+            #price-slider {
+                margin-top: 6px;
+            }
+
+            .noUi-target {
+                height: 38px !important; /* Match input height */
+                border-radius: 5px;
+                background: #e9ecef;
+                box-shadow: none;
+                border: 1px solid #ced4da;
+            }
+
+            .noUi-horizontal .noUi-handle {
+                width: 18px;
+                height: 38px !important;
+                top: -1px !important; /* Align with track */
+                background: #0d6efd;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+            }
+
+            .noUi-horizontal .noUi-handle:before,
+            .noUi-horizontal .noUi-handle:after {
+                display: none; /* Hide default lines */
+            }
+
+            .noUi-connect {
+                background: #0d6efd; /* Bootstrap primary color */
+            }
+
+            #range-values {
+                margin-top: 10px;
+                display: flex;
+                justify-content: space-between;
+                font-size: 14px;
+            }
+            /* Match slider height to input */
+            #price-slider .noUi-target {
+            height: 38px !important; /* Same as .form-control */
+            border-radius: 0.375rem;
+            border: 1px solid #ced4da;
+            background: #e9ecef;
+            box-shadow: none;
+            }
+
+            .noUi-horizontal .noUi-handle {
+            width: 20px;
+            height: 38px !important;
+            top: -1px !important;
+            background: #0d6efd;
+            border-radius: 4px;
+            box-shadow: none;
+            border: none;
+            }
+
+            .noUi-horizontal .noUi-handle:before,
+            .noUi-horizontal .noUi-handle:after {
+            display: none;
+            }
+
+            .noUi-connect {
+            background: #0d6efd;
+            }
+            .noUi-tooltip {
+            font-size: 14px;
+            font-weight: 500;
+            background: #343a40;
+            color: #fff;
+            border-radius: 4px;
+            padding: 4px 8px;
+            top: -40px !important;
+            }
+
+        </style>
+
 
         <!-- Choices JS -->
         <script src="{{ asset('libs/choices.js/public/assets/scripts/choices.min.js') }}"></script>
 
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
         <!-- Your Custom JS -->
         <script src="{{ asset('js/main.js') }}"></script>
         <script src="{{ asset('js/script.js') }}" defer></script>
+
+         <!-- Datatable JS -->
+        <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
+        <script src="https://cdn.datatables.net/responsive/2.3.0/js/dataTables.responsive.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/2.2.3/js/dataTables.buttons.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.print.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.6/pdfmake.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+        <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+        <!-- Internal Datatables JS -->
+        <script src="{{ asset('js/datatables.js') }}"></script>
     @stack('scripts')
 </body>
 </html>

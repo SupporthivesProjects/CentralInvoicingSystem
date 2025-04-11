@@ -2,23 +2,7 @@
 
 @section('title', 'Dashboard | Central Invoice System')
 
-@push('styles')
-<link rel="stylesheet" href="{{ asset('libs/jsvectormap/css/jsvectormap.min.css') }}">
-<link rel="stylesheet" href="{{ asset('libs/swiper/swiper-bundle.min.css') }}">
-<link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">
- <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.3.0/css/responsive.bootstrap.min.css">
-<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.3/css/buttons.bootstrap5.min.css">
-@endpush
-
 @section('content')
-    @include("partials/mainhead")
-    @include("partials/switcher")
-    @include("partials/loader")
-    @include("partials/header")
-    @include("partials/sidebar")
-
-
-
     <div class="main-content app-content">
             <div class="container-fluid">
                   <!-- Page Header -->
@@ -60,7 +44,7 @@
                                                     <td> <i class="{{ !empty($model->icon_class) ? $model->icon_class : 'ti-wallet' }}  side-menu__icon"></i></td>
                                                     <td>{{ $model->created_at->format('Y-m-d') }}</td>
                                                     <td>
-                                                    <a href="{{ route('businessmodel.websites', $model->id) }}" target="_blank" class="btn btn-sm btn-info">
+                                                    <a href="{{ route('businessmodel.websites', $model->id) }}" class="btn btn-sm btn-info">
                                                         <i class="fas fa-globe"></i> View sites ({{ count($model->websites) }})
                                                     </a>
                                                         <a href="{{ route('businessmodel.edit', $model->id) }}" class="btn btn-sm btn-primary">
@@ -82,39 +66,16 @@
                     </div>
                 </div>
                 <!-- End:: row-4 -->
-
-          
-
-             
             </div>
         </div>
     
 
-    @include("partials/commonjs")
-
+    
+@endsection
 @push('scripts')
-<script src="{{ asset('libs/jsvectormap/js/jsvectormap.min.js') }}"></script>
-<script src="{{ asset('libs/jsvectormap/maps/world-merc.js') }}"></script>
-<script src="{{ asset('libs/apexcharts/apexcharts.min.js') }}"></script>
-<script src="{{ asset('js/index.js') }}"></script>
-<script src="{{ asset('js/custom.js') }}"></script>
-  <!-- Datatables Cdn -->
-  <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
-    <script src="https://cdn.datatables.net/responsive/2.3.0/js/dataTables.responsive.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.2.3/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.print.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.6/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-
-    <!-- Internal Datatables JS -->
-    <script src="{{ asset('js/datatables.js') }}"></script>
-    <script>
+<script>
     $(document).on('click', '.delete-btn', function () {
         const id = $(this).data('id');
-
         Swal.fire({
             title: 'Are you sure?',
             text: 'This action cannot be undone!',
@@ -153,10 +114,4 @@
         });
     });
 </script>
-
 @endpush
-
-@include("partials/custom_switcherjs")
-
-
-@endsection
