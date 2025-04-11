@@ -4,12 +4,6 @@
 
 @section('content')
 
-    @include('partials.mainhead')
-    @include('partials.switcher')
-    @include('partials.loader')
-    @include('partials.header')
-    @include('partials.sidebar')
-
     <style>
         .profile-cover__action {
             display: flex;
@@ -25,9 +19,6 @@
             background-size: cover;
         }
     </style>
-    <link rel="stylesheet" href="{{ asset('libs/jsvectormap/css/jsvectormap.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('libs/swiper/swiper-bundle.min.css') }}">
-
     <div class="page">
 
 
@@ -262,30 +253,28 @@
                                             @method('POST')
 
                                             {{-- Profile Photo --}}
-<div class="form-group">
-    <label class="form-label">Profile Photo</label>
-    <input type="file" name="profile_image" class="form-control">
+                                            <div class="form-group">
+                                                <label class="form-label">Profile Photo</label>
+                                                <input type="file" name="profile_image" class="form-control">
 
-    {{-- Profile Image Preview --}}
-    <div class="mt-2">
-        <img src="{{ $profile->profile_image }}"
-             alt="Profile Image"
-             class="rounded" width="100" height="100">
-    </div>
-</div>
+                                                {{-- Profile Image Preview --}}
+                                                <div class="mt-2">
+                                                    <img src="{{ $profile->profile_image }}" alt="Profile Image"
+                                                        class="rounded" width="100" height="100">
+                                                </div>
+                                            </div>
 
-{{-- Cover Photo --}}
-<div class="form-group">
-    <label class="form-label">Cover Photo</label>
-    <input type="file" name="cover_image" class="form-control">
+                                            {{-- Cover Photo --}}
+                                            <div class="form-group">
+                                                <label class="form-label">Cover Photo</label>
+                                                <input type="file" name="cover_image" class="form-control">
 
-    {{-- Cover Image Preview --}}
-    <div class="mt-2">
-        <img src="{{ $profile->cover_image }}"
-             alt="Cover Image"
-             class="rounded" width="150" height="80">
-    </div>
-</div>
+                                                {{-- Cover Image Preview --}}
+                                                <div class="mt-2">
+                                                    <img src="{{ $profile->cover_image }}" alt="Cover Image"
+                                                        class="rounded" width="150" height="80">
+                                                </div>
+                                            </div>
 
 
                                             {{-- Bio --}}
@@ -746,20 +735,6 @@
 
     </div>
 
-
-    @include('partials.commonjs')
-
-    <!-- JSVector Maps JS -->
-    <script src="{{ asset('libs/jsvectormap/js/jsvectormap.min.js') }}"></script>
-    <!-- JSVector Maps MapsJS -->
-    <script src="{{ asset('libs/jsvectormap/maps/world-merc.js') }}"></script>
-    <!-- Apex Charts JS -->
-    <script src="{{ asset('libs/apexcharts/apexcharts.min.js') }}"></script>
-    <!-- Main-Dashboard -->
-    <script src="{{ asset('js/index.js') }}"></script>
-
-    @include('partials.custom_switcherjs')
-
-    <!-- Custom JS -->
-    <script src="{{ asset('js/custom.js') }}"></script>
 @endsection
+@push('scripts')
+@endpush

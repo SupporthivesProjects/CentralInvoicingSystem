@@ -3,17 +3,7 @@
 @section('title', 'Dashboard | Central Invoice System')
 
 @section('content')
-
-    @include('partials.mainhead')
-    @include('partials.switcher')
-    @include('partials.loader')
-    @include('partials.header')
-    @include('partials.sidebar')
-    <link rel="stylesheet" href="{{ asset('libs/jsvectormap/css/jsvectormap.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('libs/swiper/swiper-bundle.min.css') }}">
-
     <div class="page">
-
         <div class="main-content app-content">
             <div class="container-fluid">
 
@@ -41,12 +31,14 @@
 
                                 <div class="col-md-6">
                                     <label class="form-label">Full Name</label>
-                                    <input type="text" class="form-control" name="name" value="{{ old('name') }}" placeholder="Enter full name" required>
+                                    <input type="text" class="form-control" name="name" value="{{ old('name') }}"
+                                        placeholder="Enter full name" required>
                                 </div>
 
                                 <div class="col-md-6">
                                     <label class="form-label">Email</label>
-                                    <input type="email" class="form-control" name="email" value="{{ old('email') }}" placeholder="Enter email" required>
+                                    <input type="email" class="form-control" name="email" value="{{ old('email') }}"
+                                        placeholder="Enter email" required>
                                 </div>
 
                                 <div class="col-md-6">
@@ -63,8 +55,9 @@
                                     <label class="form-label">Role</label>
                                     <select name="role" class="form-select form-select-lg" required>
                                         <option disabled>Select Roles</option>
-                                        @foreach($roles as $role)
-                                            <option value="{{ $role->id }}" {{ (collect(old('roles'))->contains($role->id)) ? 'selected' : '' }}>
+                                        @foreach ($roles as $role)
+                                            <option value="{{ $role->id }}"
+                                                {{ collect(old('roles'))->contains($role->id) ? 'selected' : '' }}>
                                                 {{ $role->name }}
                                             </option>
                                         @endforeach
@@ -73,7 +66,8 @@
 
                                 <div class="col-12">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="gridCheck3" name="status" value="1" {{ old('status') ? 'checked' : '' }}>
+                                        <input class="form-check-input" type="checkbox" id="gridCheck3" name="status"
+                                            value="1" {{ old('status') ? 'checked' : '' }}>
                                         <label class="form-check-label" for="gridCheck3">Active</label>
                                     </div>
                                 </div>
@@ -95,21 +89,6 @@
 
         </div>
     </div>
-
-
-    @include('partials.commonjs')
-
-    <!-- JSVector Maps JS -->
-    <script src="{{ asset('libs/jsvectormap/js/jsvectormap.min.js') }}"></script>
-    <!-- JSVector Maps MapsJS -->
-    <script src="{{ asset('libs/jsvectormap/maps/world-merc.js') }}"></script>
-    <!-- Apex Charts JS -->
-    <script src="{{ asset('libs/apexcharts/apexcharts.min.js') }}"></script>
-    <!-- Main-Dashboard -->
-    <script src="{{ asset('js/index.js') }}"></script>
-
-    @include('partials.custom_switcherjs')
-
-    <!-- Custom JS -->
-    <script src="{{ asset('js/custom.js') }}"></script>
 @endsection
+@push('scripts')
+@endpush
