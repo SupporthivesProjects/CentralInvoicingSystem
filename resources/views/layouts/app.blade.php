@@ -173,10 +173,12 @@
             };
 
             @if(session('success'))
+                Swal.close();
                 toastr.success("{{ session('success') }}");
             @endif
 
             @if(session('error'))
+                Swal.close();
                 toastr.error("{{ session('error') }}");
             @endif
         </script>

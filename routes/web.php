@@ -64,6 +64,10 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/random-products', [InvoiceController::class, 'randomProducts']);
     Route::get('/filter-products', [InvoiceController::class, 'filterProducts']);
+    Route::post('/invoice/generate/download', [InvoiceController::class, 'generateInvoice'])->name('generate.invoice');
+
+
+    
 
     
     

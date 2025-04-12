@@ -18,9 +18,9 @@
                 </div>
 
                 <div class="mt-3 mt-md-0">
-                    <a href="your-cancel-url-or-js" class="btn btn-outline-danger btn-sm">
-                        ❌ Cancel
-                    </a>
+                <a href="#" class="btn btn-outline-danger btn-sm">
+                    <i class="fas fa-arrow-left"></i> Go back to Site Selection
+                </a>
                 </div>
             </div>
 
@@ -28,53 +28,58 @@
 
             <div class="card custom-card">
                 <div class="card-body">
-                    <form method="GET" action="#"> {{-- route('products.query') --}}
+                    <form method="GET" action="#">
                         @csrf
-                        <!-- Row 1: Selected Website (Full Width) -->
                         <div class="row">
-                            <div class="col-md-12 mb-3">
+                            <div class="col-md-3 mb-3">
                                 <label class="form-label">Selected Website <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" 
                                     value="{{ $customer['site_name'] ?? 'N/A' }}" 
                                     readonly>
                             </div>
-                        </div>
-
-                        <!-- Row 2: Invoice Amount, Invoice Number, Invoice Date -->
-                        <div class="row">
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">Invoice Amount <span class="text-danger">*</span></label>
-                                <input type="text" name="invoice_amount" class="form-control" 
-                                    value="{{ $invoice['invoice_amount'] ?? '' }}" readonly>
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label">Company Email</label>
+                                <input type="text" class="form-control" 
+                                    value="{{ $site->company_email ?? 'N/A' }}">
                             </div>
-                            <div class="col-md-4 mb-3">
+                            <div class="col-md-3 mb-3">
                                 <label class="form-label">Invoice Number <span class="text-danger">*</span></label>
                                 <input type="text" name="invoice_number" class="form-control" 
                                     value="{{ $invoice['invoice_number'] ?? '' }}">
                             </div>
-                            <div class="col-md-4 mb-3">
+                            <div class="col-md-3 mb-3">
                                 <label class="form-label">Invoice Date</label>
                                 <input type="date" name="invoice_date" class="form-control" 
                                     value="{{ $invoice['invoice_date'] ?? now()->toDateString() }}">
                             </div>
                         </div>
 
-                        <!-- Row 3: Customer Details -->
                         <div class="row">
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">Customer Name </label>
-                                <input type="text" class="form-control" 
-                                    value="{{ $customer['name'] ?? '' }}" readonly>
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label">Invoice Amount <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">{{ $currency->symbol ?? '$' }}</span>
+                                    </div>
+                                    <input name="invoice_amount" class="form-control" 
+                                        value="{{ $invoice['invoice_amount'] ?? '' }}" 
+                                        readonly type="number">
+                                </div>
                             </div>
-                            <div class="col-md-4 mb-3">
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label">Customer Name</label>
+                                <input type="text" class="form-control" 
+                                    value="{{ $customer['customer_name'] ?? '' }}" readonly>
+                            </div>
+                            <div class="col-md-3 mb-3">
                                 <label class="form-label">Customer Email</label>
                                 <input type="email" class="form-control" 
-                                    value="{{ $customer['email'] ?? '' }}" readonly>
+                                    value="{{ $customer['customer_email'] ?? '' }}" readonly>
                             </div>
-                            <div class="col-md-4 mb-3">
+                            <div class="col-md-3 mb-3">
                                 <label class="form-label">Customer Phone</label>
                                 <input type="text" class="form-control" 
-                                    value="{{ $customer['phone'] ?? '' }}" readonly>
+                                    value="{{ $customer['customer_mobile'] ?? '' }}" readonly>
                             </div>
                         </div>
 
@@ -82,15 +87,71 @@
                     </form>
                 </div>
             </div>
-
+            <div class="card custom-card mt-4">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">Target Value</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">{{ $currency->symbol ?? '$' }}  </span> 
+                                </div>
+                                <input type="text" class="form-control" value="{{ $invoice['invoice_amount'] ?? 'N/A' }}"  readonly>
+                            </div>
+                            
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">Current Value</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">{{ $currency->symbol ?? '$' }}  </span> 
+                                </div>
+                                <input type="text" id= "current_total" class="form-control" value="{{ $current_total  ?? '00.00'}}" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">Discount Amount</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">$</span> 
+                                </div>
+                                <input type="number" name="discount" class="form-control" placeholder="Enter Discount Amount">
+                            </div>
+                            
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">Final Value</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">{{ $currency->symbol ?? '$' }}  </span> 
+                                </div>
+                                <input type="number" name="finalvalue" class="form-control" placeholder="Enter Final Amount">
+                            </div>
+                            
+                        </div>
+                    </div>
+                   
+                </div>
+            </div>
 
             <div class="card custom-card mt-4 shadow-sm border-0">
                 <div class="card-header bg-light d-flex justify-content-between align-items-center">
-                    <h5 class="card-title mb-0">🛒 Add Products Manually</h5>
+                    <h5 class="card-title mb-0">Search & Filter Products</h5>
                     <div class="mb-3">
-                        <button class="btn btn-outline-secondary btn-sm me-2" onclick="setCustomOnly()">Custom</button>
-                        <button type="button" class="btn btn-outline-secondary btn-sm me-2" onclick="generateRandomProducts('random')">🎲 Randomize</button>
-                        <button type="button" class="btn btn-outline-danger btn-sm" onclick="clearAllProducts()">🗑️ Clear</button>
+                    <button type="button" class="btn btn-primary btn-sm me-2" onclick="setCustomOnly()">
+                    <i class="bi bi-sliders"></i> Custom
+                    </button>
+                    <button type="button" class="btn btn-warning btn-sm me-2" onclick="generateRandomProducts('random')">
+                    <i class="bi bi-dice-5"></i> Randomize
+                    </button>
+                    <button type="button" class="btn btn-danger btn-sm me-2" onclick="clearAllProducts()">
+                    <i class="bi bi-trash"></i> Clear
+                    </button>
+                    <button type="button" class="btn btn-success btn-sm" onclick="generateInvoice(event)">
+                    <i class="bi bi-file-earmark-text" ></i> Generate Invoice
+                    </button>
+
+
                     </div>
                 </div>
 
@@ -118,11 +179,12 @@
                             <thead class="table-light">
                             <tr>
                                 <th>Select</th>
-                                <th>#</th>
+                                <th>Sr. No.</th>
+                                <th>Product ID</th>
                                 <th>Product Name</th>
-                                <th>Unit Price ($)</th>
+                                <th>Unit Price ({{ $currency->symbol ?? '$' }}  )</th>
                                 <th>Source</th>
-                                <th>Edit Price</th>
+                                <th>Total</th>
                             </tr>
                             </thead>
                             <tbody id="product-table-body">
@@ -132,44 +194,16 @@
                     </div>
                 </div>
             </div>
-            <div class="card custom-card mt-4">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Target Value</label>
-                            <input type="text" class="form-control" value="{{ $invoice['invoice_amount'] ?? 'N/A' }}"  readonly>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Current Value</label>
-                            <input type="text" id= "current_total" class="form-control" value="{{ $current_total  ?? '00.00'}}" readonly>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Discount</label>
-                            <input type="number" name="discount" class="form-control" placeholder="Enter Discount Amount">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Final Value</label>
-                            <input type="number" name="finalvalue" class="form-control" placeholder="Enter Final Amount">
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            <div class="text-center mt-4">
-                <form method="POST" action="#"> {{-- route('invoice.generate') --}}
-                    @csrf
-                    <button type="submit" class="btn btn-success">Generate Invoice</button>
-                </form>
-            </div>
-            <br>
         </div>
     </div>
 </div>
 
-{{-- Range Slider Script --}}
-
+<form id="generate-invoice-form" method="POST" action="{{ route('generate.invoice') }}">
+    @csrf
+    <!-- Add your other form fields here -->
+    <button form="generate-invoice-form" type="submit" class="d-none">Generate Invoice</button>
+</form>
 
 @endsection
 @push('scripts')
@@ -198,6 +232,8 @@
             allowOutsideClick: false
         });
 
+        const priceFrom = $('#hidden_price_from_input_id').val();
+        const priceTo = $('#hidden_price_to_input_id').val();
 
         $.ajax({
             url: '/random-products',
@@ -205,10 +241,14 @@
             data: {
                 site_id: "{{ $customer['site_id'] ?? '' }}" ,
                 invoice_amount: "{{ $invoice['invoice_amount'] ?? '' }}",
+                price_from: priceFrom,
+                price_to: priceTo
             },
             success: function (response) {
                 $('#product-table-body').html(response.tableRows);
                 $('#current_total').val(response.total.toFixed(2));
+                $('input[name="product_ids[]"]').prop('checked', true);  
+                $('input[name="product_ids[]"]').prop('disabled', true); 
                 Swal.close();
                 if (response.total === 0) {
                     toastr.info("Oops! No magic combo this time. Try another spin or go custom!");
@@ -258,12 +298,13 @@ function filterProducts() {
     const priceTo = $('#hidden_price_to_input_id').val();
 
     // Don't fetch anything if both fields are empty
-    if (!keyword && (!priceFrom || !priceTo)) {
+    if (!keyword && !priceFrom && !priceTo) {
         $('#product-table-body').html(
             '<tr><td colspan="6" class="text-center text-muted">Please enter a keyword or price range to search.</td></tr>'
         );
         return;
     }
+
 
     Swal.fire({
         title: 'Filtering...',
@@ -278,8 +319,7 @@ function filterProducts() {
         data: {
             keyword: keyword,
             price_from: priceFrom,
-            price_to: priceTo,
-            site_id: SITE_ID
+            price_to: priceTo
         },
         success: function (response) {
             $('#product-table-body').html(response.tableRows);
@@ -308,8 +348,10 @@ function attachCheckboxHandlers() {
 
         // Check if new total exceeds allowed limit
         if (tempTotal > maxAllowed) {
-            $(this).prop('checked', false); // undo the check
-            toastr.info(`Product total exceeds your invoice target of $${invoiceAmount.toFixed(2)}`, 'Limit Reached');
+            //$(this).prop('checked', false); // undo the check
+            toastr.danger(`Product total exceeds your invoice target of $${invoiceAmount.toFixed(2)}`, 'Limit Reached');
+            selectedTotal = tempTotal;
+            updateTotalDisplay();
         } else {
             selectedTotal = tempTotal;
             updateTotalDisplay();
@@ -376,21 +418,63 @@ priceSlider.noUiSlider.on('update', function (values) {
     $('#hidden_price_to_input_id').trigger('input');
 });
 
-
+function clearAllProducts() {
+    $('#product-table-body').empty();
+    selectedTotal = 0;
+    updateTotalDisplay();
+}
 
 </script>
 <script>
-    // Debounce filtering by 2 seconds after typing or slider change
     let filterTimer;
 
     $('#keywordInput, #hidden_price_from_input_id, #hidden_price_to_input_id').on('input change', function () {
-    if (!customMode) return;
+        clearTimeout(filterTimer);
+        const isKeyword = $(this).attr('id') === 'keywordInput';
 
-    clearTimeout(filterTimer);
-    filterTimer = setTimeout(() => {
-        filterProducts();
-    }, 1500);
-});
-    </script>
+        filterTimer = setTimeout(() => {
+            if (customMode) {
+                // Custom mode: filter for both keyword & range
+                filterProducts();
+            } else {
+                // Random mode: only trigger on range filter change
+                if (!isKeyword) {
+                    generateRandomProducts('random');
+                }
+            }
+        }, 1500);
+    });
+</script>
+<script>
+    function generateInvoice(event) {
+        // Prevent the form from submitting
+        event.preventDefault(); 
+
+        const selectedProducts = $('input[name="product_ids[]"]:checked');
+
+        if (selectedProducts.length === 0) {
+            toastr.warning('Please select at least one product to generate an invoice.', 'No Products Selected');
+            return;
+        }
+
+        // Clear any existing hidden inputs to prevent duplicate values
+        $('#generate-invoice-form').find('input[name="product_ids[]"]').remove();
+
+        // Append the selected product IDs to the form as hidden inputs
+        selectedProducts.each(function () {
+            $('#generate-invoice-form').append($('<input>', {
+                type: 'hidden',
+                name: 'product_ids[]',
+                value: $(this).val()
+            }));
+        });
+
+        // Manually submit the form after appending the data
+        $('#generate-invoice-form')[0].submit();
+
+        // Show toast message
+        toastr.success('Invoice is being generated. Please wait...');
+    }
+</script>
 
 @endpush

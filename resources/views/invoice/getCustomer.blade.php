@@ -66,8 +66,13 @@
 
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Invoice Amount <span style="color:red">*</span></label>
-                                        <input type="number" name="invoice_amount" class="form-control" placeholder="Enter Amount" required>
-                                    </div>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">$</span> 
+                                            </div>
+                                            <input type="number" name="invoice_amount" class="form-control" placeholder="Enter Invoice target amount" required>
+                                        </div>
+                                       </div>
                                 </div>
 
                                 <div class="row">

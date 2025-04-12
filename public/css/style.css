@@ -27143,3 +27143,7 @@ h4, .h4 {
     width: 20%;
   }
 }
+.input-group-text {
+  height: 100% !important;
+   /* set by narayan zade */
+}
