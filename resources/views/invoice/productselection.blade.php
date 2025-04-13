@@ -200,7 +200,7 @@
 @push('scripts')
 <script>
     $(document).ready(function () {
-        generateRandomProducts('initial');
+        //generateRandomProducts('initial');
         $('input[name="product_ids[]"]').prop('disabled', true);
     });
 
