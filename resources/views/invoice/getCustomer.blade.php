@@ -61,7 +61,7 @@
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Invoice Number <span style="color:red">*</span></label>
-                                        <input type="text" name="invoice_number" class="form-control" placeholder="Enter Invoice Number" required>
+                                        <input type="text" name="invoice_number" class="form-control font-italic" placeholder="Enter Invoice Number" value="{{ $invoiceNumber ?? '' }}" required readonly>
                                     </div>
 
                                     <div class="col-md-6 mb-3">
@@ -83,7 +83,7 @@
 
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Customer Mobile</label>
-                                        <input type="text" name="customer_mobile" class="form-control" placeholder="Enter Customer Mobile (optional)">
+                                        <input type="phone" name="customer_mobile" class="form-control" placeholder="Enter Customer Mobile (optional)">
                                     </div>
                                 </div>
 

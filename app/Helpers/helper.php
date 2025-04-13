@@ -43,3 +43,26 @@ if (!function_exists('currentUserName')) {
         return Auth::check() ? Auth::user()->name : 'Guest';
     }
 }
+ if(!function_exists('numberToWords')) {
+    function numberToWords($number)
+    {
+        $formatter = new \NumberFormatter('en', \NumberFormatter::SPELLOUT);
+        $words = $formatter->format($number);
+        return strtolower(str_replace(' ', '', $words));
+    }
+
+}
+if (!function_exists('generateInvoiceNumber')) {
+    function generateInvoiceNumber($siteName)
+    {
+        $shortCode = strtoupper(implode('', array_map(
+            fn($word) => strtoupper(substr($word, 0, 1)),
+            preg_split('/\s+/', trim($siteName))
+        )));
+
+        $randomNumber = mt_rand(10000000, 99999999); // 8-digit number
+
+        return 'INV' . $randomNumber . '-' . $shortCode;
+    }
+}
+

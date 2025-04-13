@@ -18,7 +18,7 @@
                 </div>
 
                 <div class="mt-3 mt-md-0">
-                <a href="#" class="btn btn-outline-danger btn-sm">
+                <a href="{{ url()->previous() }}" class="btn btn-outline-danger btn-sm">
                     <i class="fas fa-arrow-left"></i> Go back to Site Selection
                 </a>
                 </div>
@@ -27,7 +27,7 @@
             <!-- Page Header Close -->
 
             <div class="card custom-card">
-                <div class="card-body">
+                <div class="card-body shadow rounded">
                     <form method="GET" action="#">
                         @csrf
                         <div class="row">
@@ -44,7 +44,7 @@
                             </div>
                             <div class="col-md-3 mb-3">
                                 <label class="form-label">Invoice Number <span class="text-danger">*</span></label>
-                                <input type="text" name="invoice_number" class="form-control" 
+                                <input type="text" name="invoice_number" class="form-control font-italic" 
                                     value="{{ $invoice['invoice_number'] ?? '' }}">
                             </div>
                             <div class="col-md-3 mb-3">
@@ -88,44 +88,35 @@
                 </div>
             </div>
             <div class="card custom-card mt-4">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-3 mb-3">
-                            <label class="form-label">Target Value</label>
+                <div class="card-body shadow rounded">
+                    <div class="row ">
+                        
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Current Amount</label>
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">{{ $currency->symbol ?? '$' }}  </span> 
                                 </div>
-                                <input type="text" class="form-control" value="{{ $invoice['invoice_amount'] ?? 'N/A' }}"  readonly>
-                            </div>
-                            
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <label class="form-label">Current Value</label>
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">{{ $currency->symbol ?? '$' }}  </span> 
-                                </div>
-                                <input type="text" id= "current_total" class="form-control" value="{{ $current_total  ?? '00.00'}}" readonly>
+                                <input type="number" id= "current_amount"  name="current_amount" class="form-control bg-white" value="{{ $current_total  ?? '00.00'}}" readonly>
                             </div>
                         </div>
-                        <div class="col-md-3 mb-3">
+                        <div class="col-md-4 mb-3">
                             <label class="form-label">Discount Amount</label>
                             <div class="input-group">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text">$</span> 
+                                    <span class="input-group-text">{{ $currency->symbol ?? '$' }}</span> 
                                 </div>
-                                <input type="number" name="discount" class="form-control" placeholder="Enter Discount Amount">
+                                <input type="number" name="discount_amount" id="discount_amount"  class="form-control bg-white" placeholder="Discount Amount" value="0">
                             </div>
                             
                         </div>
-                        <div class="col-md-3 mb-3">
-                            <label class="form-label">Final Value</label>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Target Amount</label>
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">{{ $currency->symbol ?? '$' }}  </span> 
                                 </div>
-                                <input type="number" name="finalvalue" class="form-control" placeholder="Enter Final Amount">
+                                <input type="number" name="final_amount" id="final_amount" class="form-control bg-white" placeholder="Target Total" value="{{ $invoice['invoice_amount'] ?? '' }}">
                             </div>
                             
                         </div>
@@ -134,20 +125,20 @@
                 </div>
             </div>
 
-            <div class="card custom-card mt-4 shadow-sm border-0">
+            <div class="card custom-card mt-4 border-1 rounded shadow rounded">
                 <div class="card-header bg-light d-flex justify-content-between align-items-center">
                     <h5 class="card-title mb-0">Search & Filter Products</h5>
                     <div class="mb-3">
                     <button type="button" class="btn btn-primary btn-sm me-2" onclick="setCustomOnly()">
                     <i class="bi bi-sliders"></i> Custom
                     </button>
-                    <button type="button" class="btn btn-warning btn-sm me-2" onclick="generateRandomProducts('random')">
+                    <button type="button" class="btn btn-warning btn-sm me-2" >
                     <i class="bi bi-dice-5"></i> Randomize
                     </button>
                     <button type="button" class="btn btn-danger btn-sm me-2" onclick="clearAllProducts()">
                     <i class="bi bi-trash"></i> Clear
                     </button>
-                    <button type="button" class="btn btn-success btn-sm" onclick="generateInvoice(event)">
+                    <button type="button" class="btn btn-success btn-sm" >
                     <i class="bi bi-file-earmark-text" ></i> Generate Invoice
                     </button>
 
@@ -175,8 +166,8 @@
 
                     <!-- Combined Table -->
                     <div class="table-responsive border rounded">
-                    <table class="table table-bordered table-hover table-striped align-middle shadow-sm rounded" id="productTable">
-                            <thead class="table-light">
+                    <table class="table table-hover table-bordered align-middle shadow-sm rounded" id="productTable">
+                            <thead class="table-dark">
                             <tr>
                                 <th>Select</th>
                                 <th>Sr. No.</th>
@@ -245,15 +236,25 @@
                 price_to: priceTo
             },
             success: function (response) {
-                $('#product-table-body').html(response.tableRows);
-                $('#current_total').val(response.total.toFixed(2));
-                $('input[name="product_ids[]"]').prop('checked', true);  
-                $('input[name="product_ids[]"]').prop('disabled', true); 
                 Swal.close();
                 if (response.total === 0) {
+                    $('#product-table-body').html(
+                        '<tr><td colspan="7" class="text-center text-muted">No results found. Try randomizing or use a different keyword.</td></tr>'
+                    );
                     toastr.info("Oops! No magic combo this time. Try another spin or go custom!");
                     return;
+
+                }else{
+
+                    const invoiceAmount = parseFloat("{{ $invoice['invoice_amount'] ?? 0 }}");
+                    const currentAmount = parseFloat(response.total.toFixed(2));
+                    const discountAmount = currentAmount - invoiceAmount;
+                    $('#product-table-body').html(response.tableRows);
+                    $('#current_amount').val(currentAmount.toFixed(2));
+                    $('input[name="product_ids[]"]').prop('checked', true).prop('disabled', true);
+
                 }
+                
             },
             error: function () {
                 toastr.error("Could not fetch random products.");
@@ -281,6 +282,7 @@ function setCustomOnly() {
     $('#product-table-body').empty();
     selectedTotal = 0;
     updateTotalDisplay();
+    attachCheckboxHandlers();
 
     Swal.fire({
         icon: 'info',
@@ -300,7 +302,7 @@ function filterProducts() {
     // Don't fetch anything if both fields are empty
     if (!keyword && !priceFrom && !priceTo) {
         $('#product-table-body').html(
-            '<tr><td colspan="6" class="text-center text-muted">Please enter a keyword or price range to search.</td></tr>'
+            '<tr><td colspan="7" class="text-center text-muted">Please enter a keyword or price range to search.</td></tr>'
         );
         return;
     }
@@ -336,33 +338,37 @@ function filterProducts() {
 
 function attachCheckboxHandlers() {
     $('input[name="product_ids[]"]').off('change').on('change', function () {
-        const row = $(this).closest('tr');
-        const price = parseFloat(row.find('.product-price').val()) || 0;
 
-        // Recalculate fresh total from all checked items
         let tempTotal = 0;
         $('input[name="product_ids[]"]:checked').each(function () {
-            const p = parseFloat($(this).closest('tr').find('.product-price').val()) || 0;
+            const p = parseFloat($(this).data('unit_price')) || 0;
             tempTotal += p;
+        });
+        
+        $('input[name="product_ids[]"]').each(function () {
+            const row = $(this).closest('tr');
+                if ($(this).is(':checked')) {
+                    row.addClass('table-active'); 
+                } else {
+                    row.removeClass('table-active');
+                }
         });
 
         // Check if new total exceeds allowed limit
         if (tempTotal > maxAllowed) {
-            //$(this).prop('checked', false); // undo the check
-            toastr.danger(`Product total exceeds your invoice target of $${invoiceAmount.toFixed(2)}`, 'Limit Reached');
-            selectedTotal = tempTotal;
-            updateTotalDisplay();
-        } else {
-            selectedTotal = tempTotal;
-            updateTotalDisplay();
-        }
+            toastr.error(`Product total exceeds your invoice target of $${invoiceAmount.toFixed(2)}`, 'Limit Reached');
+
+        } 
+        selectedTotal = tempTotal;
+        updateTotalDisplay();
+
     });
 }
 
 
 
 function updateTotalDisplay() {
-    $('#current_total').val(selectedTotal.toFixed(2));
+    $('#current_amount').val(selectedTotal.toFixed(2));
 }
 
 function controlCheckboxLimit() {
@@ -378,7 +384,6 @@ function controlCheckboxLimit() {
 </script>
 
 
-  
 <script>
    var priceSlider = document.getElementById('price-slider');
 
@@ -431,7 +436,6 @@ function clearAllProducts() {
     $('#keywordInput, #hidden_price_from_input_id, #hidden_price_to_input_id').on('input change', function () {
         clearTimeout(filterTimer);
         const isKeyword = $(this).attr('id') === 'keywordInput';
-
         filterTimer = setTimeout(() => {
             if (customMode) {
                 // Custom mode: filter for both keyword & range
@@ -445,22 +449,37 @@ function clearAllProducts() {
         }, 1500);
     });
 </script>
+
+
+
 <script>
     function generateInvoice(event) {
         // Prevent the form from submitting
         event.preventDefault(); 
 
         const selectedProducts = $('input[name="product_ids[]"]:checked');
+        const invoiceAmount = parseFloat($('#final_amount').val()) || 0;
+        const current_amount = parseFloat($('#current_amount').val()) || 0;
+        const discountAmount = parseFloat($('#discount_amount').val()) || 0;
+        const finalAmount = parseFloat($('#final_amount').val()) || 0;
 
         if (selectedProducts.length === 0) {
-            toastr.warning('Please select at least one product to generate an invoice.', 'No Products Selected');
+            toastr.warning('Select combo products to match your invoice amount.', 'No Products Selected');
             return;
         }
 
-        // Clear any existing hidden inputs to prevent duplicate values
+        if (current_amount < invoiceAmount) {
+            toastr.error('Total is less than invoice amount.', 'Mismatch');
+            return;
+        }
+
+        if ((current_amount -discountAmount) !== finalAmount) {
+            const diff = (current_amount - finalAmount).toFixed(2);
+            toastr.error(`Please apply a discount of $${diff} to match the target amount.`, 'Give discount');
+            return;
+        }
         $('#generate-invoice-form').find('input[name="product_ids[]"]').remove();
 
-        // Append the selected product IDs to the form as hidden inputs
         selectedProducts.each(function () {
             $('#generate-invoice-form').append($('<input>', {
                 type: 'hidden',
@@ -468,12 +487,36 @@ function clearAllProducts() {
                 value: $(this).val()
             }));
         });
+        $('#generate-invoice-form').append($('<input>', {
+            type: 'hidden',
+            name: 'current_amount',
+            value: current_amount.toFixed(2)  
+        }));
 
-        // Manually submit the form after appending the data
+        $('#generate-invoice-form').append($('<input>', {
+            type: 'hidden',
+            name: 'discount_amount',
+            value: discountAmount.toFixed(2) 
+        }));
+
+        $('#generate-invoice-form').append($('<input>', {
+            type: 'hidden',
+            name: 'final_amount',
+            value: finalAmount.toFixed(2)  
+        }));
+
         $('#generate-invoice-form')[0].submit();
 
-        // Show toast message
-        toastr.success('Invoice is being generated. Please wait...');
+            Swal.fire({
+            title: 'Preparing Invoice...',
+            text: 'Please wait while we generate your invoice.',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+
+        setTimeout(() => Swal.close(), 3000);
     }
 </script>
 

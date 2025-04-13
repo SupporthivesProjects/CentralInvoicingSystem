@@ -1,12 +1,16 @@
 @forelse($products as $index => $product)
 <tr>
     
-    <td><input type="checkbox" name="product_ids[]" value="{{ $product->id }}"></td>
-       
+<tr class="product-row">
+    <td class="text-center align-middle">
+        <div class="form-check d-flex justify-content-center align-items-center m-0">
+            <input class="form-check-input border border-1 border-primary" type="checkbox" name="product_ids[]" data-unit_price="{{ $product->unit_price }}" value="{{ $product->id }}">
+        </div>    
+    </td>
     <td>{{ $index + 1 }}</td>
     <td>#{{ $product->id }}</td>
     <td>{{ $product->name }}</td>
-    <td>{{ $currency->symbol }} {{ number_format($product->unit_price, 2) }}</td>
+    <td>{{ $currency->symbol }}{{ number_format($product->unit_price, 2) }}</td>
     <td>{{ $product->source ?? 'Manual' }}</td>
     <td>
     <div class="input-group">

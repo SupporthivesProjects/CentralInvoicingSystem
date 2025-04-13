@@ -28,6 +28,9 @@ class Website extends Model
         'invoice_footer_image',
         'invoice_signature',
         'company_logo',
+        'invoice_image1',
+        'invoice_image2',
+        'invoice_image3',
         'invoice_template',
     ];
 
