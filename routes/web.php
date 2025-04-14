@@ -8,6 +8,8 @@ use App\Http\Controllers\WebsiteController;
 use App\Http\Middleware\RoleMiddleware;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\CurrencyController;
+use App\Http\Controllers\BusinessModels\EcommerceController;
 
 // // Guest-only routes (not logged in)
 Route::middleware('guest')->group(function () {
@@ -58,18 +60,24 @@ Route::middleware('auth')->group(function () {
     Route::delete('/website/{id}', [WebsiteController::class, 'deleteWebsite'])->name('website.delete');
     Route::get('/businessmodel/{id}/websites', [WebsiteController::class, 'websitesByBusinessModel'])->name('businessmodel.websites');
 
+
+    // invoice generation Routes by Narayan
     Route::get('/site/connect/{site_id}', [InvoiceController::class, 'getCustomerDetails'])->name('site.connect.db');
     Route::post('/invoice/save-customerdetails', [InvoiceController::class, 'saveCustomerDetails'])->name('customerdetails.store');
     Route::get('/invoice/product-selection', [InvoiceController::class, 'productSelection'])->name('product.selection');
-
     Route::get('/random-products', [InvoiceController::class, 'randomProducts']);
     Route::get('/filter-products', [InvoiceController::class, 'filterProducts']);
     Route::post('/invoice/generate/download', [InvoiceController::class, 'generateInvoice'])->name('generate.invoice');
 
 
     
+    // Currency Routes by Narayan zade
+    Route::get('/currencies', [CurrencyController::class, 'index'])->name('currency.index');
+    Route::post('/currencies/create', [CurrencyController::class, 'add'])->name('currency.add');
+    Route::get('/currency/{id}', [CurrencyController::class, 'getCurrency'])->name('currency.get');
+    Route::post('/currencies/edit', [CurrencyController::class, 'edit'])->name('currency.edit');
+    Route::delete('/currency/delete/{id}', [CurrencyController::class, 'delete'])->name('currency.delete');
 
-    
     
 
 

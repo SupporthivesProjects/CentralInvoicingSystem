@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use App\Models\BusinessModel;
 use App\Models\Website;
 use App\Models\Invoice;
+use App\Models\ProductPriceHistory;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -58,6 +59,7 @@ class InvoiceController extends Controller
             'customer_mobile' => 'nullable',
         ]);
         
+        
         session([
             'customer' => [
                 'site_id' => $request->site_id,
@@ -98,13 +100,16 @@ class InvoiceController extends Controller
                 ->table('currencies')
                 ->where('status', 1)
                 ->first();
-    
-            return view('invoice.productSelection', [
-                'currency' => $currency,
-                'customer' => session('customer'),
-                'invoice' => session('invoice'),
-                'site' => $site,
-            ]);
+
+                $modelType = $site->businessModel->model_type;
+
+                return view("invoice.{$modelType}.productSelection", [
+                    'currency' => $currency,
+                    'customer' => session('customer'),
+                    'invoice' => session('invoice'),
+                    'site' => $site
+                ]);
+                
     
         } catch (\Exception $e) {
             return redirect()->back()
@@ -129,7 +134,7 @@ class InvoiceController extends Controller
     }
     
     public function generateInvoice(Request $request)
-    {
+    {  
         $site = Website::findOrFail(session('customer.site_id'));
         $modelType = $site->businessModel->model_type;
         $modelType = strtolower($modelType); 

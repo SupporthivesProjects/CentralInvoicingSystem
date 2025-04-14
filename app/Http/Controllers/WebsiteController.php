@@ -6,6 +6,8 @@ use App\Models\Website;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 
 class WebsiteController extends Controller
 {
@@ -30,6 +32,18 @@ class WebsiteController extends Controller
         ]); 
 
         $model = BusinessModel::findOrFail($id);
+        $oldFolder = strtolower(str_replace(' ', '', $model->model_type));
+        $oldPath = resource_path("views/invoice/$oldFolder");
+
+        $newFolder = strtolower(str_replace(' ', '', $request->model_type));
+        $newPath = resource_path("views/invoice/$newFolder");
+
+        if ($oldFolder !== $newFolder && File::exists($oldPath)) {
+            File::move($oldPath, $newPath);
+        } elseif (!File::exists($newPath)) {
+            File::makeDirectory($newPath, 0755, true);
+        }
+
         $model->update($request->all());
 
         return redirect()->route('businessmodels')->with('success', 'Business model updated!');
@@ -65,10 +79,16 @@ class WebsiteController extends Controller
                 'model_type' => 'nullable|string|max:255',
             ]);
 
-            // Create the BusinessModel
+            $model_type = strtolower(str_replace(' ', '', $request->model_type)); 
+            $folderPath = resource_path("views/invoice/$model_type");
+
+            if (!File::exists($folderPath)) {
+                File::makeDirectory($folderPath, 0755, true);
+            }
             BusinessModel::create([
                 'name' => $request->name,
-                'icon_class' => $request->icon_class
+                'icon_class' => $request->icon_class,
+                'model_type' => $model_type,
             ]);
 
             // Redirect with success message

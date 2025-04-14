@@ -132,12 +132,13 @@
                     <button type="button" class="btn btn-primary btn-sm me-2" onclick="setCustomOnly()">
                     <i class="bi bi-sliders"></i> Custom
                     </button>
-                    <button type="button" class="btn btn-warning btn-sm me-2" >
-                    <i class="bi bi-dice-5"></i> Randomize
-                    </button>
                     <button type="button" class="btn btn-danger btn-sm me-2" onclick="clearAllProducts()">
                     <i class="bi bi-trash"></i> Clear
                     </button>
+                    <button type="button" class="btn btn-warning btn-sm me-2" >
+                    <i class="bi bi-dice-5"></i> Randomize
+                    </button>
+                    
                     <button type="button" class="btn btn-success btn-sm" >
                     <i class="bi bi-file-earmark-text" ></i> Generate Invoice
                     </button>
@@ -156,7 +157,7 @@
                             </div>
 
                             <div class="col-md-6 text-center">
-                                <label class="form-label d-block">💰 Price Range</label>
+                                <label class="form-label d-block">Price Range</label>
                                 <div id="price-slider" class="w-100 mx-auto"></div>
                                 <input type="hidden" name="price_from" id="hidden_price_from_input_id">
                                 <input type="hidden" name="price_to" id="hidden_price_to_input_id">
@@ -309,8 +310,8 @@ function filterProducts() {
 
 
     Swal.fire({
-        title: 'Filtering...',
-        html: 'Looking for matching products 🧠',
+        title: 'Searching for the Best Matches...',
+        html: 'Finding products that match your filters. Please hold on!',
         allowOutsideClick: false,
         didOpen: () => Swal.showLoading()
     });
@@ -348,13 +349,12 @@ function attachCheckboxHandlers() {
         $('input[name="product_ids[]"]').each(function () {
             const row = $(this).closest('tr');
                 if ($(this).is(':checked')) {
-                    row.addClass('table-active'); 
+                    row.addClass('table-active border border border-light'); 
                 } else {
-                    row.removeClass('table-active');
+                    row.removeClass('table-active border border border-light');
                 }
         });
 
-        // Check if new total exceeds allowed limit
         if (tempTotal > maxAllowed) {
             toastr.error(`Product total exceeds your invoice target of $${invoiceAmount.toFixed(2)}`, 'Limit Reached');
 
@@ -425,8 +425,10 @@ priceSlider.noUiSlider.on('update', function (values) {
 
 function clearAllProducts() {
     $('#product-table-body').empty();
+    $('input[name="manual_keyword"]').val('');
     selectedTotal = 0;
     updateTotalDisplay();
+    toastr.success('Your filter has been reset now', 'Filter Cleared');
 }
 
 </script>
@@ -487,6 +489,7 @@ function clearAllProducts() {
                 value: $(this).val()
             }));
         });
+        
         $('#generate-invoice-form').append($('<input>', {
             type: 'hidden',
             name: 'current_amount',

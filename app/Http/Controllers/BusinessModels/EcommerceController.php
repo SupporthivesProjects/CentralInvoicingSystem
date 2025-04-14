@@ -19,6 +19,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Mpdf\Mpdf; //not used
 use Illuminate\View\ViewException; // optional
 use Illuminate\View\ViewNotFoundException;
+use Carbon\Carbon;
 
 class EcommerceController extends Controller
 {
@@ -90,7 +91,9 @@ class EcommerceController extends Controller
         }
 
         $currency = DB::connection('dynamic')->table('currencies')->where('status', 1)->first();
-        $tableRows = view('invoice.product_rows', ['products' => $bestMatch, 'currency' => $currency])->render();
+
+        $modelType = $site->businessModel->model_type;
+        $tableRows = view("invoice.{$modelType}.product_rows", ['products' => $bestMatch, 'currency' => $currency])->render();
 
         return response()->json([
             'tableRows' => $tableRows,
@@ -138,8 +141,10 @@ class EcommerceController extends Controller
         }
 
         $currency = DB::connection('dynamic')->table('currencies')->where('status', 1)->first();
-        $tableRows = view('invoice.product_rows', ['products' => $products, 'currency' => $currency])->render();
-
+        
+        $modelType = $site->businessModel->model_type;
+        $tableRows = view("invoice.{$modelType}.product_rows", ['products' => $products, 'currency' => $currency])->render();
+        
         return response()->json([
             'tableRows' => $tableRows,
             'currency' => $currency
@@ -189,21 +194,14 @@ class EcommerceController extends Controller
 
         try {
             // Try loading the view
-            $pdf = PDF::loadView($viewPath, compact('products', 'customer', 'site', 'currency'))
-                ->setOptions([
-                    'isRemoteEnabled' => true,
-                    'isHtml5ParserEnabled' => true,
-                    'isPhpEnabled' => false,
-                    'noCompress' => true,     
-                    'dpi' => 150,       
-                ]);
-        
+            $pdf = PDF::loadView($viewPath, compact('products', 'customer', 'site', 'currency'));
+            return $pdf->download('invoice_' . now()->format('Ymd_His') . '.pdf');
         
         } catch (\Illuminate\View\ViewNotFoundException $e) {
             
             abort(500, 'Please set up or upload your invoice template.');
         }
-        return $pdf->download('invoice_' . now()->format('Ymd_His') . '.pdf');
+       
     }
 
 }

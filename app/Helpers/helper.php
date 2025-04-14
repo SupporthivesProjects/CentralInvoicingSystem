@@ -66,3 +66,39 @@ if (!function_exists('generateInvoiceNumber')) {
     }
 }
 
+if (!function_exists('site_currency')) {
+    function site_currency()
+    {
+        $site_id = request()->get('site_id') ?? session('site_id');
+        if (!$site_id) {
+            return '$';
+        }
+        try {
+            $site = \App\Models\Website::findOrFail($site_id);
+            \App\Services\DynamicDatabaseService::connect($site);
+
+            $currency = DB::connection('dynamic')->table('currencies')->where('status', 1)->first();
+            return $currency->symbol ?? '$';
+        } catch (\Exception $e) {
+            
+            return '$';
+        }
+    }
+}
+
+if (!function_exists('admin_currency')) {
+    function admin_currency()
+    {
+        try {
+           
+            $currency = \App\Models\Currency::where('status', 1)->first();
+            
+            return $currency ? $currency->symbol : '$';
+        } catch (\Exception $e) {
+           
+            return '$';
+        }
+    }
+}
+
+
