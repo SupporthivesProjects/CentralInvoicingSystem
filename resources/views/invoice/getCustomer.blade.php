@@ -83,7 +83,7 @@
 
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Customer Mobile</label>
-                                        <input type="phone" name="customer_mobile" class="form-control" placeholder="Enter Customer Mobile (optional)">
+                                        <input type="number" name="customer_mobile" class="form-control" placeholder="Enter Customer Mobile (optional)">
                                     </div>
                                 </div>
 

@@ -40,17 +40,17 @@
                             <div class="col-md-3 mb-3">
                                 <label class="form-label">Company Email</label>
                                 <input type="text" class="form-control" 
-                                    value="{{ $site->company_email ?? 'N/A' }}">
+                                    value="{{ $site->company_email ?? 'N/A' }}" readonly>
                             </div>
                             <div class="col-md-3 mb-3">
                                 <label class="form-label">Invoice Number <span class="text-danger">*</span></label>
                                 <input type="text" name="invoice_number" class="form-control font-italic" 
-                                    value="{{ $invoice['invoice_number'] ?? '' }}">
+                                    value="{{ $invoice['invoice_number'] ?? '' }}" readonly>
                             </div>
                             <div class="col-md-3 mb-3">
                                 <label class="form-label">Invoice Date</label>
                                 <input type="date" name="invoice_date" class="form-control" 
-                                    value="{{ $invoice['invoice_date'] ?? now()->toDateString() }}">
+                                    value="{{ $invoice['invoice_date'] ?? now()->toDateString() }}" readonly>
                             </div>
                         </div>
 
@@ -63,7 +63,7 @@
                                     </div>
                                     <input name="invoice_amount" class="form-control" 
                                         value="{{ $invoice['invoice_amount'] ?? '' }}" 
-                                        readonly type="number">
+                                        readonly type="number" readonly>
                                 </div>
                             </div>
                             <div class="col-md-3 mb-3">
@@ -126,28 +126,26 @@
             </div>
 
             <div class="card custom-card mt-4 border-1 rounded shadow rounded">
-                <div class="card-header bg-light d-flex justify-content-between align-items-center">
-                    <h5 class="card-title mb-0">Search & Filter Products</h5>
-                    <div class="mb-3">
-                    <button type="button" class="btn btn-primary btn-sm me-2" onclick="setCustomOnly()">
-                    <i class="bi bi-sliders"></i> Custom
-                    </button>
-                    <button type="button" class="btn btn-danger btn-sm me-2" onclick="clearAllProducts()">
-                    <i class="bi bi-trash"></i> Clear
-                    </button>
-                    <button type="button" class="btn btn-warning btn-sm me-2" onclick="generateRandomProducts('random')">
-                    <i class="bi bi-dice-5"></i> Randomize
-                    </button>
-                    
-                    <button type="button" class="btn btn-success btn-sm" >
-                    <i class="bi bi-file-earmark-text" ></i> Generate Invoice
-                    </button>
-
-
+                <div class="border-1 rounded shadow rounded card-header bg-light d-flex justify-content-between align-items-center flex-wrap border-bottom pb-3">
+                    <h5 class="mb-2 mb-md-0">Search & Filter Products</h5>
+                    <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
+                        <button type="button" class="btn btn-outline-primary me-1" onclick="setCustomOnly()">
+                            <i class="bi bi-sliders"></i> Custom
+                        </button>
+                        <button type="button" class="btn btn-outline-danger me-1" onclick="clearAllProducts()">
+                            <i class="bi bi-trash"></i> Clear
+                        </button>
+                        <button type="button" class="btn btn-outline-warning me-1" onclick="generateRandomProducts('random')">
+                            <i class="bi bi-dice-5"></i> Randomize
+                        </button>
+                        <button type="button" class="btn btn-outline-success" onclick="generateInvoice(event)">
+                            <i class="bi bi-file-earmark-text"></i> Generate Invoice
+                        </button>
                     </div>
                 </div>
 
-                <div class="card-body">
+
+                <div class="card-body mt-1">
                     <!-- Search Filters -->
                     <form method="GET" action="#" class="mb-4">
                         <div class="row align-items-end g-3">
@@ -175,8 +173,8 @@
                                 <th>Sr. No.</th>
                                 <th>Product ID</th>
                                 <th>Product Name</th>
-                                <th>Unit Price ({{ site_currency() }}  )</th>
-                                <th>Source</th>
+                                <th>Unit Price</th>
+                                <th>filter</th>
                                 <th>Total</th>
                             </tr>
                             </thead>
@@ -194,7 +192,6 @@
 
 <form id="generate-invoice-form" method="POST" action="{{ route('generate.invoice') }}">
     @csrf
-    <!-- Add your other form fields here -->
     <button form="generate-invoice-form" type="submit" class="d-none">Generate Invoice</button>
 </form>
 
@@ -309,13 +306,18 @@ function filterProducts() {
         return;
     }
 
-
     Swal.fire({
         title: 'Searching for the Best Matches...',
-        html: 'Finding products that match your filters. Please hold on!',
-        allowOutsideClick: false,
-        didOpen: () => Swal.showLoading()
+        html: `
+            <div class="d-flex flex-column align-items-center">
+                <div class="spinner-border text-primary" role="status"></div>
+                <small class="mt-2">Finding products that match your filters. Please hold on!</small>
+            </div>
+        `,
+        showConfirmButton: false,
+        allowOutsideClick: false
     });
+
 
     $.ajax({
         url: '/filter-products',
@@ -433,13 +435,13 @@ priceSlider.noUiSlider.on('update', function (values) {
     const min = Math.round(parseFloat(values[0].replace('$', '')));
     const max = Math.round(parseFloat(values[1].replace('$', '')));
 
-    $('#min-val').text(`$${min}`);
-    $('#max-val').text(`$${max}`);
+    $('#min-val').text(`{{ site_currency() }}${min}`);
+    $('#max-val').text(`{{ site_currency() }}${max}`);
+
 
     $('#hidden_price_from_input_id').val(min);
     $('#hidden_price_to_input_id').val(max);
 
-    // Optional: trigger input/change event if needed
     $('#hidden_price_from_input_id').trigger('input');
     $('#hidden_price_to_input_id').trigger('input');
 });
@@ -496,12 +498,17 @@ function clearAllProducts() {
             return;
         }
 
-        if ((current_amount -discountAmount) !== finalAmount) {
+        if ((current_amount - discountAmount) !== finalAmount) {
             const diff = (current_amount - finalAmount).toFixed(2);
-            toastr.error(`Please apply a discount of $${diff} to match the target amount.`, 'Give discount');
+            
+            if (discountAmount > diff) {
+                toastr.error(`The discount amount of $${discountAmount} is more than the expected discount of $${diff}.`, 'Discount Too High');
+            } else {
+                toastr.error(`Please apply a discount of $${diff} to match the target amount.`, 'Give Discount');
+            }
             return;
         }
-        $('#generate-invoice-form').find('input[name="product_ids[]"]').remove();
+        $('#generate-invoice-form').find('input[name="product_data[]"]').remove(); 
 
         selectedProducts.each(function () {
             const productId = $(this).val();
@@ -544,7 +551,7 @@ function clearAllProducts() {
             }
         });
 
-        setTimeout(() => Swal.close(), 3000);
+        setTimeout(() => Swal.close(), 3500);
     }
 </script>
 

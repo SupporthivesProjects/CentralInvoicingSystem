@@ -27,7 +27,7 @@ Route::middleware('guest')->group(function () {
 
 // Authenticated-only routes (logged in)
 Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', [AuthController::class, 'dashboard'])->name('dashboard');
+    Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
     //Profile Routes
     Route::get('/my-profile', [ProfileController::class, 'index'])->name('myprofile');
@@ -77,6 +77,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/currency/{id}', [CurrencyController::class, 'getCurrency'])->name('currency.get');
     Route::post('/currencies/edit', [CurrencyController::class, 'edit'])->name('currency.edit');
     Route::delete('/currency/delete/{id}', [CurrencyController::class, 'delete'])->name('currency.delete');
+
+
+    Route::get('/invoice/chart', [HomeController::class, 'showInvoiceChart'])->name('invoice.chart');
+
 
     
     

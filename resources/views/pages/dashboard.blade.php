@@ -60,14 +60,12 @@
                                                 </svg>
                                             </div>
                                             <div class="card-item-title mb-2">
-                                                <label class="main-content-label fs-13 fw-bold mb-1">Busines Models</label>
-                                                <span class="d-block fs-12 mb-0 text-muted">Previous month vs this
-                                                    months</span>
+                                                <label class="main-content-label fs-13 fw-bold mb-1">Connected Websites</label>
+                                                
                                             </div>
                                             <div class="card-item-body">
                                                 <div class="card-item-stat">
-                                                    <h4 class="fw-bold">$5,900.00</h4>
-                                                    <small><b class="text-success">55%</b> higher</small>
+                                                    <h4 class="fw-bold">{{ getAllWebsites() }} </h4>
                                                 </div>
                                             </div>
                                         </div>
@@ -90,14 +88,13 @@
                                                 </svg>
                                             </div>
                                             <div class="card-item-title mb-2">
-                                                <label class="main-content-label fs-13 fw-bold mb-1">Connected Sites</label>
-                                                <span class="d-block fs-12 mb-0 text-muted">Employees joined this
-                                                    month</span>
+                                                <label class="main-content-label fs-13 fw-bold mb-1">Business Models</label>
+                                               
                                             </div>
                                             <div class="card-item-body">
                                                 <div class="card-item-stat">
-                                                    <h4 class="fw-bold">15</h4>
-                                                    <small><b class="text-success">5%</b> Increased</small>
+                                                    <h4 class="fw-bold">{{ getModelsCount() }}</h4>
+                                                   
                                                 </div>
                                             </div>
                                         </div>
@@ -120,14 +117,13 @@
                                                 </svg>
                                             </div>
                                             <div class="card-item-title  mb-2">
-                                                <label class="main-content-label fs-13 fw-bold mb-1">User List</label>
-                                                <span class="d-block fs-12 mb-0 text-muted">Previous month vs this
-                                                    months</span>
+                                                <label class="main-content-label fs-13 fw-bold mb-1">Invoices Created</label>
+                                               
                                             </div>
                                             <div class="card-item-body">
                                                 <div class="card-item-stat">
-                                                    <h4 class="fw-bold">$8,500</h4>
-                                                    <small><b class="text-danger">12%</b> decrease</small>
+                                                    <h4 class="fw-bold">{{ count($invoices) }}</h4>
+                                                   
                                                 </div>
                                             </div>
                                         </div>
@@ -139,221 +135,60 @@
 
                         <!-- Start::row -->
                         <div class="row">
-                            <div class="col-sm-12 col-lg-12 col-xl-12">
-                                <div class="card custom-card overflow-hidden">
-                                    <div class="card-header border-bottom-0">
-                                        <div>
-                                            <label class="card-title">Invoice Creation</label> <span
-                                                class="d-block fs-12 mb-0 text-muted">The Project Budget is a tool
-                                                used by project managers to estimate the total cost of a
-                                                project</span>
+                        <div class="col-sm-12 col-lg-12 col-xl-12">
+                                    <div class="card custom-card overflow-hidden">
+                                        <div class="card-header border-bottom-0">
+                                            <div class="d-flex justify-content-between w-100">
+                                                <div>
+                                                    <label class="card-title"> Invoice Generation Analytics</label> 
+                                                    <span class="d-block fs-12 mb-0 text-muted">
+                                                        Here is the invoice generations history details chart
+                                                    </span>
+                                                </div>
+                                                
+                                            </div>
+                                        </div>
+                                        <div class="card-body">
+                                            <div id="invoicechart"></div>
                                         </div>
                                     </div>
-                                    <div class="card-body">
-                                        <div id="project"></div>
-                                    </div>
                                 </div>
-                            </div><!-- col end -->
+
                             
                             <div class="col-lg-12">
                                 <div class="card custom-card mg-b-20 tasks">
-                                    <div class="card-body">
-                                        <div class="card-header border-bottom-0 pt-0 ps-0 pe-0 pb-2 d-flex">
-                                            <div>
-                                                <div class="card-title">Tasks</div>
-                                                <p class="mb-0 fs-12 mb-3 text-muted">A task is accomplished by
-                                                    a set deadline, and must contribute toward work-related
-                                                    objectives.</p>
-                                            </div>
-                                            <div class="ms-auto d-flex flex-wrap gap-2">
-                                                <div class="contact-search3 me-3 ">
-                                                    <button type="button" class="btn border-0"><i class="fe fe-search fw-semibold text-muted" aria-hidden="true"></i></button>
-                                                    <input type="text" class="form-control h-6" id="typehead1" placeholder="Search here..." autocomplete="off">
-                                                </div>
-                                                <div class="ms-auto d-flex dropdown">
-                                                    <a href="javascript:void(0);" class="btn dropdown-toggle btn-sm btn-wave waves-effect waves-light btn-primary d-inline-flex align-items-center" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false"><i class="ri-equalizer-line me-1"></i>Sort by</a>
-                                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                                        <li><a class="dropdown-item" href="javascript:void(0);">Task</a></li>
-                                                        <li><a class="dropdown-item" href="javascript:void(0);">Team</a></li>
-                                                        <li><a class="dropdown-item" href="javascript:void(0);">Status</a></li>
-                                                        <li class="dropdown-divider"></li>
-                                                        <li><a class="dropdown-item" href="javascript:void(0);"><i class="fa fa-cog me-2"></i>Settings</a></li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="table-responsive tasks">
-                                            <table class="table card-table table-vcenter text-nowrap mb-0 border">
+                                <div class="card-body">
+                                        <h4 class="mb-4">Invoice Generation History</h4>
+                                        <div class="table-responsive">
+                                            <table id="invoice-history" class="table table-bordered text-nowrap" style="width:100%">
                                                 <thead>
                                                     <tr>
-                                                        <th class="wd-lg-10p">Task</th>
-                                                        <th class="wd-lg-20p text-center">Team</th>
-                                                        <th class="wd-lg-20p text-center">Open task</th>
-                                                        <th class="wd-lg-20p">Priority</th>
-                                                        <th class="wd-lg-20p">Status</th>
+                                                        <th>#</th>
+                                                        <th>Invoice No</th>
+                                                        <th>Model Type</th>
+                                                        <th>Site ID</th>
+                                                        <th>Discount Amount</th>
+                                                        <th>Total Amount</th>
+                                                        <th>Date</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr>
-                                                        <td class="fw-medium">
-                                                            <div class="form-check">
-                                                                <input checked="" type="checkbox" class="form-check-input me-4 rounded">
-                                                                <label class="form-check-label">Evaluating the design</label>
-                                                            </div>
-                                                        </td>
-                                                        <td class="text-nowrap">
-                                                            <div class="avatar-list-stacked my-auto float-end">
-                                                                <div class="avatar avatar-rounded avatar-sm">
-                                                                    <img alt="avatar" class="rounded-circle"
-                                                                        src="{{ asset('images/faces/1.jpg') }}">
-                                                                </div>
-                                                                <div class="avatar avatar-rounded avatar-sm">
-                                                                    <img alt="avatar" class="rounded-circle"
-                                                                        src="{{ asset('images/faces/2.jpg') }}">
-                                                                </div>
-                                                                <div class="avatar avatar-rounded avatar-sm">
-                                                                    <img alt="avatar" class="rounded-circle"
-                                                                        src="{{ asset('images/faces/3.jpg') }}">
-                                                                </div>
-                                                                <div class="avatar avatar-rounded avatar-sm">
-                                                                    <img alt="avatar" class="rounded-circle"
-                                                                        src="{{ asset('images/faces/4.jpg') }}">
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                        <td class="text-center">18<i class=""></i></td>
-                                                        <td class="text-primary">High</td>
-                                                        <td><span
-                                                                class="badge bg-pill rounded-pill bg-primary-transparent">Completed</span>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="fw-medium">
-                                                            <div class="form-check">
-                                                                <input type="checkbox" class="form-check-input me-4 rounded">
-                                                                <label class="form-check-label">Generate ideas for design</label>
-                                                            </div>
-                                                        </td>
-                                                        <td class="text-nowrap">
-                                                            <div class="avatar-list-stacked my-auto float-end">
-                                                                <div class="avatar avatar-rounded avatar-sm">
-                                                                    <img alt="avatar" class="rounded-circle"
-                                                                        src="{{ asset('images/faces/5.jpg') }}">
-                                                                </div>
-                                                                <div class="avatar avatar-rounded avatar-sm">
-                                                                    <img alt="avatar" class="rounded-circle"
-                                                                        src="{{ asset('images/faces/6.jpg') }}">
-                                                                </div>
-                                                                <div class="avatar avatar-rounded avatar-sm">
-                                                                    <img alt="avatar" class="rounded-circle"
-                                                                        src="{{ asset('images/faces/7.jpg') }}">
-                                                                </div>
-                                                                <div class="avatar avatar-rounded avatar-sm">
-                                                                    <img alt="avatar" class="rounded-circle"
-                                                                        src="{{ asset('images/faces/8.jpg') }}">
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                        <td class="text-center">34<i class=""></i></td>
-                                                        <td class="text-secondary">Normal</td>
-                                                        <td><span
-                                                                class="badge bg-pill rounded-pill bg-warning-transparent">Pending</span>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="fw-medium">
-                                                            <div class="form-check">
-                                                                <input type="checkbox" class="form-check-input me-4 rounded" checked>
-                                                                <label class="form-check-label">Define the problem</label>
-                                                            </div>
-                                                        </td>
-                                                        <td class="text-nowrap">
-                                                            <div class="avatar-list-stacked my-auto float-end">
-                                                                <div class="avatar avatar-rounded avatar-sm">
-                                                                    <img alt="avatar" class="rounded-circle"
-                                                                        src="{{ asset('images/faces/11.jpg') }}">
-                                                                </div>
-                                                                <div class="avatar avatar-rounded avatar-sm">
-                                                                    <img alt="avatar" class="rounded-circle"
-                                                                        src="{{ asset('images/faces/12.jpg') }}">
-                                                                </div>
-                                                                <div class="avatar avatar-rounded avatar-sm">
-                                                                    <img alt="avatar" class="rounded-circle"
-                                                                        src="{{ asset('images/faces/9.jpg') }}">
-                                                                </div>
-                                                                <div class="avatar avatar-rounded avatar-sm">
-                                                                    <img alt="avatar" class="rounded-circle"
-                                                                        src="{{ asset('images/faces/10.jpg') }}">
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                        <td class="text-center">25<i class=""></i></td>
-                                                        <td class="text-warning">Low</td>
-                                                        <td><span
-                                                                class="badge bg-pill rounded-pill bg-primary-transparent">Completed</span>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="fw-medium">
-                                                            <div class="form-check">
-                                                                <input type="checkbox" class="form-check-input me-4 rounded">
-                                                                <label class="form-check-label">Empathize with users</label>
-                                                            </div>
-                                                        </td>
-                                                        <td class="text-nowrap">
-                                                            <div class="avatar-list-stacked my-auto float-end">
-                                                                <div class="avatar avatar-rounded avatar-sm">
-                                                                    <img alt="avatar" class="rounded-circle"
-                                                                        src="{{ asset('images/faces/7.jpg') }}">
-                                                                </div>
-                                                                <div class="avatar avatar-rounded avatar-sm">
-                                                                    <img alt="avatar" class="rounded-circle"
-                                                                        src="{{ asset('images/faces/9.jpg') }}">
-                                                                </div>
-                                                                <div class="avatar avatar-rounded avatar-sm">
-                                                                    <img alt="avatar" class="rounded-circle"
-                                                                        src="{{ asset('images/faces/11.jpg') }}">
-                                                                </div>
-                                                                <div class="avatar avatar-rounded avatar-sm">
-                                                                    <img alt="avatar" class="rounded-circle"
-                                                                        src="{{ asset('images/faces/12.jpg') }}">
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                        <td class="text-center">37<i class=""></i></td>
-                                                        <td class="text-primary">High</td>
-                                                        <td><span
-                                                                class="badge bg-pill rounded-pill bg-danger-transparent">Rejected</span>
-                                                        </td>
-                                                    </tr>
+                                                    @foreach ($invoices as $index => $invoice)
+                                                        <tr>
+                                                            <td>{{ $index + 1 }}</td>
+                                                            <td>{{ $invoice->invoice_number }}</td>
+                                                            <td>{{ $invoice->model_type }}</td>
+                                                            <td>{{ $invoice->site_id }}</td>
+                                                            <td>{{ $invoice->currency }} {{ number_format($invoice->discount_amount, 2) }} </td>
+                                                            <td>{{ $invoice->currency }} {{ number_format($invoice->invoice_amount, 2) }}</td>
+                                                            <td>{{ $invoice->created_at->format('Y-m-d') }}</td>
+                                                        </tr>
+                                                    @endforeach
                                                 </tbody>
                                             </table>
                                         </div>
-                                        <div class="float-end mt-3">
-                                            <nav aria-label="Page navigation" class="pagination-style-3">
-                                                <ul class="pagination mb-0 flex-wrap">
-                                                    <li class="page-item disabled">
-                                                        <a class="page-link" href="javascript:void(0);">
-                                                            Prev
-                                                        </a>
-                                                    </li>
-                                                    <li class="page-item active"><a class="page-link" href="javascript:void(0);">1</a></li>
-                                                    <li class="page-item"><a class="page-link" href="javascript:void(0);">2</a></li>
-                                                    <li class="page-item">
-                                                        <a class="page-link" href="javascript:void(0);">
-                                                            <i class="bi bi-three-dots"></i>
-                                                        </a>
-                                                    </li>
-                                                    <li class="page-item"><a class="page-link" href="javascript:void(0);">16</a></li>
-                                                    <li class="page-item">
-                                                        <a class="page-link text-primary" href="javascript:void(0);">
-                                                            next
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </nav>
-                                        </div>
                                     </div>
+
                                 </div>
 
                             </div><!-- col end -->
@@ -371,9 +206,106 @@
         <!-- End::app-content -->
     </div>
 @endsection
-
 @push('scripts')
+<script>
+    const invoiceDates = @json($dates);
+    const invoiceCounts = @json($invoiceCounts);
+    const totalSales = @json($totalSales);
+    const discountAmounts = @json($discountAmounts);
+    const siteCurrency = @json(site_currency());
 
+    var options = {
+        chart: {
+            height: 350,            
+            zoom: { enabled: true },
+            toolbar: { show: false }
+        },
+        series: [
+            {
+                name: "Invoices Created",
+                type: 'line',  
+                data: invoiceCounts,
+                color: "#FF5733",
+                width: 10
+            }
+        ],
+        xaxis: {
+            categories: invoiceDates, 
+            title: {
+                text: 'Date',
+                style: { fontWeight: 600 }
+            }
+        },
+        plotOptions: {
+            bar: {
+                columnWidth: '20%',
+                endingShape: 'rounded'
+            }
+        },
+        yaxis: [
+            {
+              
+                title: {
+                    text: 'Invoices Created',
+                    style: { fontWeight: 600, fontSize: '14px', color: '#333' }
+                },
+                min: 0,
+                labels: {
+                    style: {
+                        colors: '#666',
+                        fontSize: '12px'
+                    }
+                }
+            },
+            {
+                // Right side (amounts) — HIDE
+                show: false
+            }
+        ],
+        stroke: {
+            curve: 'smooth',
+            width: 4
+        },
+        markers: {
+            size: 6,
+            strokeColor: '#fff',
+            strokeWidth: 3
+        },
+        grid: {
+            borderColor: '#f1f1f1',
+            row: {
+                colors: ['#fff', '#f9f9f9'],
+                opacity: 0.5
+            }
+        },
+        tooltip: {
+            theme: 'dark'
+        }
+    };
+
+    var chart = new ApexCharts(document.querySelector("#invoicechart"), options);
+    chart.render();
+</script>
+
+
+<script>
+    $(document).ready(function () {
+    $('#invoice-history').DataTable({
+        responsive: true,
+        dom: 'Bfrtip',  
+        buttons: [
+            'copy',      
+            'csv',       
+            'excel',     
+            'pdf',        
+            {
+                extend: 'print',  
+                text: 'Print Table'
+            }
+        ]
+    });
+});
+
+</script>
 
 @endpush
-

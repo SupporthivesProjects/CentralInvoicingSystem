@@ -1,25 +1,24 @@
 <?php
-
-namespace App\Http\Controllers;
 namespace App\Http\Controllers\BusinessModels;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\InvoiceController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use App\Models\BusinessModel;
 use App\Models\Website;
 use App\Models\Invoice;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Models\ProductPriceHistory;
+use App\Models\InvoiceGenerationHistory;
 use App\Services\DynamicDatabaseService;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Session;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Mpdf\Mpdf; //not used
-use Illuminate\View\ViewException; // optional
 use Illuminate\View\ViewNotFoundException;
 use Carbon\Carbon;
+
 
 class EcommerceController extends Controller
 {
@@ -211,15 +210,30 @@ class EcommerceController extends Controller
 
         try {
 
+            $invoice_data = [
+                'model_type'      => $modelType,
+                'site_id'         => $site->id,
+                'currency'        => $currency->symbol,
+                'invoice_number'  => $customer['invoice_number'],
+                'product_ids'     => $productIds,
+                'current_amount'  => $session_invoice['invoice_amount'],
+                'discount_amount' => $discount_amount ,
+                'invoice_amount'  => $customer['invoice_amount'] ?? 0,
+            ];
+    
+            InvoiceController::createInvoiceHistory($invoice_data); 
+
             $pdf = PDF::loadView($viewPath, compact('products', 'customer', 'site', 'currency'));
-            $pdf->setPaper('A4', 'portrait'); 
+            $pdf->setPaper('A4', 'portrait');
             $filename = 'invoice_' . now()->format('Ymd_His') . '.pdf';
-            return $pdf->download($filename);
+            return $pdf->download($filename); 
     
         } catch (\Illuminate\View\ViewNotFoundException $e) {
+          
             abort(500, 'Please set up or upload your invoice template.');
         }
     }
+
 
 
 }

@@ -1,5 +1,6 @@
 <?php
 namespace App\Http\Controllers;
+use App\Models\InvoiceGenerationHistory;;
 use Illuminate\Http\Request;
 use App\Models\BusinessModel;
 use App\Models\Website;
@@ -56,7 +57,7 @@ class InvoiceController extends Controller
             'invoice_number' => 'required|string|min:1',
             'invoice_amount' => 'required|numeric|min:1',
             'customer_email' => 'nullable|email',
-            'customer_mobile' => 'nullable',
+            'customer_mobile' => 'nullable|string|max:15',
         ]);
         
         
@@ -163,5 +164,20 @@ class InvoiceController extends Controller
             return redirect()->back()->with('error', 'Invalid business model type');
         }
     }
+
+    public static function createInvoiceHistory($invoice_data)
+    {
+        InvoiceGenerationHistory::create([
+            'model_type'      => $invoice_data['model_type'],
+            'site_id'         => $invoice_data['site_id'],
+            'currency'        => $invoice_data['currency'],
+            'invoice_number'  => $invoice_data['invoice_number'],
+            'product_ids'     => json_encode($invoice_data['product_ids']),
+            'current_amount'  => $invoice_data['current_amount'],
+            'discount_amount' => $invoice_data['discount_amount'],
+            'invoice_amount'  => $invoice_data['invoice_amount'],
+        ]);
+    }
+    
             
 }
