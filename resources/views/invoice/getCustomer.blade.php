@@ -23,8 +23,17 @@
                 <div class="col-md-12">
                     <div class="card custom-card">
                         <div class="card-body">
+                        @if ($errors->any())
+                            <div class="alert alert-danger">
+                                <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                                </ul>
+                            </div>
+                        @endif
                         
-                            <form method="POST" action="{{ route('businessmodel.store') }}">
+                            <form method="POST" action="{{ route('customerdetails.store') }}">
                                 @csrf
 
                                 <div class="mb-3">
@@ -34,7 +43,8 @@
                                             Change Site
                                         </a>
                                     </label>
-                                    <input type="text" class="form-control" value="{{ $site->site_name ?? 'N/A' }}" readonly>
+                                    <input type="text" class="form-control" name="site_name" id="site_name"  value="{{ $site->site_name ?? 'N/A' }}" readonly>
+                                    <input type="hidden" class="form-control" name="site_id" id="site_id"  value="{{ $site->id ?? 'N/A' }}" readonly>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
@@ -51,13 +61,18 @@
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Invoice Number <span style="color:red">*</span></label>
-                                        <input type="text" name="invoice_number" class="form-control" placeholder="Enter Invoice Number" required>
+                                        <input type="text" name="invoice_number" class="form-control font-italic" placeholder="Enter Invoice Number" value="{{ $invoiceNumber ?? '' }}" required readonly>
                                     </div>
 
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Invoice Amount <span style="color:red">*</span></label>
-                                        <input type="number" name="invoice_amount" class="form-control" placeholder="Enter Amount" required>
-                                    </div>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">$</span> 
+                                            </div>
+                                            <input type="number" name="invoice_amount" class="form-control" placeholder="Enter Invoice target amount" required>
+                                        </div>
+                                       </div>
                                 </div>
 
                                 <div class="row">
@@ -68,7 +83,7 @@
 
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Customer Mobile</label>
-                                        <input type="text" name="customer_mobile" class="form-control" placeholder="Enter Customer Mobile (optional)">
+                                        <input type="phone" name="customer_mobile" class="form-control" placeholder="Enter Customer Mobile (optional)">
                                     </div>
                                 </div>
 

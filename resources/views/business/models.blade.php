@@ -31,6 +31,7 @@
                                             <tr>
                                                 <th>#</th>
                                                 <th>Business Model</th>
+                                                <th>Model Type</th>
                                                 <th>Model Icon</th>
                                                 <th>Created At</th>
                                                 <th>Actions</th>
@@ -41,6 +42,7 @@
                                                 <tr>
                                                     <td>{{ $index + 1 }}</td>
                                                     <td>{{ $model->name ?? '-' }}</td>
+                                                    <td>{{ $model->model_type ?? '-' }}</td>
                                                     <td> <i class="{{ !empty($model->icon_class) ? $model->icon_class : 'ti-wallet' }}  side-menu__icon"></i></td>
                                                     <td>{{ $model->created_at->format('Y-m-d') }}</td>
                                                     <td>

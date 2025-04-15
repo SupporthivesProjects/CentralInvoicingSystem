@@ -80,14 +80,7 @@
                                 <input type="text" name="site_link" class="form-control" placeholder="Enter Website link"
                                     value="{{ old('site_link', $website->site_link) }}">
                             </div>
-                           
-                            <!-- Company Details Section -->
-                            <div class="col-12">
-                                <hr>
-                                <h5 class="text-left">Company Details (Optional)</h5>
-                                <hr>
-                            </div>
-
+                        
                             <div class="col-md-6 mx-auto">
                                 <label class="form-label">Site Description</label>
                                 <input type="text" name="site_description" class="form-control" placeholder="Enter Site Description (optional)"
@@ -116,24 +109,78 @@
                                 <label class="form-label">Company Address</label>
                                 <input type="text" name="company_address" class="form-control" value="{{ old('company_address', $website->company_address) }}" placeholder="Enter Company Address">
                             </div>
-
-                            <!-- Company Logo -->
-                            <div class="col-md-6 mx-auto">
-                                <label class="form-label">Company Logo</label>
-                                <input type="file" name="company_logo" class="form-control">
-                                @if ($website->company_logo)
-                                    <small class="text-muted">Current: <a href="{{ asset($website->company_logo) }}" target="_blank" rel="noopener noreferrer"> {{ basename($website->company_logo) }}</a></small>
-                                  @endif
+                            <hr>
+                           <!-- First Row for Invoice Template -->
+                            <div class="row mb-4">
+                                <div class="col-md-6 mx-auto">
+                                    <label class="form-label">Invoice Template (HTML/HTM/PHP)</label>
+                                    <input type="file" name="invoice_template" class="form-control" accept=".html,.htm,.php">
+                                    @if ($website->invoice_template)
+                                        <small class="text-muted">Current: <a href="{{ asset($website->invoice_template) }}" target="_blank" rel="noopener noreferrer"> {{ basename($website->invoice_template) }}</a></small>
+                                    @endif
+                                </div>
                             </div>
 
-                            <!-- Invoice Signature -->
-                            <div class="col-md-6 mx-auto">
-                                <label class="form-label">Invoice Signature</label>
-                                <input type="file" name="invoice_signature" class="form-control">
-                                @if ($website->invoice_signature)
-                                    <small class="text-muted">Current: <a href="{{ asset($website->invoice_signature) }}" target="_blank" rel="noopener noreferrer"> {{ basename($website->invoice_signature) }}</a></small>
-                                @endif
+                            <!-- Second Row for Logo, Header, and Footer -->
+                            <div class="row mb-4 mt-1">
+                                <!-- Company Logo -->
+                                <div class="col-md-4 mx-auto">
+                                    <label class="form-label">Company Logo</label>
+                                    <input type="file" name="company_logo" class="form-control" accept=".jpeg,.png,.jpg">
+                                    @if ($website->company_logo)
+                                        <small class="text-muted">Current: <a href="{{ asset($website->company_logo) }}" target="_blank" rel="noopener noreferrer"> {{ basename($website->company_logo) }}</a></small>
+                                    @endif
+                                </div>
+
+                                <!-- Invoice Header Image -->
+                                <div class="col-md-4 mx-auto">
+                                    <label class="form-label">Invoice Header Image</label>
+                                    <input type="file" name="invoice_header_image" class="form-control" accept=".jpeg,.png,.jpg">
+                                    @if ($website->invoice_header_image)
+                                        <small class="text-muted">Current: <a href="{{ asset($website->invoice_header_image) }}" target="_blank" rel="noopener noreferrer"> {{ basename($website->invoice_header_image) }}</a></small>
+                                    @endif
+                                </div>
+
+                                <!-- Invoice Footer Image -->
+                                <div class="col-md-4 mx-auto">
+                                    <label class="form-label">Invoice Footer Image</label>
+                                    <input type="file" name="invoice_footer_image" class="form-control" accept=".jpeg,.png,.jpg">
+                                    @if ($website->invoice_footer_image)
+                                        <small class="text-muted">Current: <a href="{{ asset($website->invoice_footer_image) }}" target="_blank" rel="noopener noreferrer"> {{ basename($website->invoice_footer_image) }}</a></small>
+                                    @endif
+                                </div>
                             </div>
+
+                            <!-- Third Row for Invoice Image 1, Image 2, Image 3 -->
+                            <div class="row mb-4">
+                                <!-- Invoice Image 1 -->
+                                <div class="col-md-4 mx-auto">
+                                    <label class="form-label">Invoice Image 1</label>
+                                    <input type="file" name="invoice_image1" class="form-control" accept=".jpeg,.png,.jpg">
+                                    @if ($website->invoice_image1)
+                                        <small class="text-muted">Current: <a href="{{ asset($website->invoice_image1) }}" target="_blank" rel="noopener noreferrer"> {{ basename($website->invoice_image1) }}</a></small>
+                                    @endif
+                                </div>
+
+                                <!-- Invoice Image 2 -->
+                                <div class="col-md-4 mx-auto">
+                                    <label class="form-label">Invoice Image 2</label>
+                                    <input type="file" name="invoice_image2" class="form-control" accept=".jpeg,.png,.jpg">
+                                    @if ($website->invoice_image2)
+                                        <small class="text-muted">Current: <a href="{{ asset($website->invoice_image2) }}" target="_blank" rel="noopener noreferrer"> {{ basename($website->invoice_image2) }}</a></small>
+                                    @endif
+                                </div>
+
+                                <!-- Invoice Image 3 -->
+                                <div class="col-md-4 mx-auto">
+                                    <label class="form-label">Invoice Image 3</label>
+                                    <input type="file" name="invoice_image3" class="form-control" accept=".jpeg,.png,.jpg">
+                                    @if ($website->invoice_image3)
+                                        <small class="text-muted">Current: <a href="{{ asset($website->invoice_image3) }}" target="_blank" rel="noopener noreferrer"> {{ basename($website->invoice_image3) }}</a></small>
+                                    @endif
+                                </div>
+                            </div>
+
                             <div class="col-12 text-center">
                                 <button type="submit" class="btn btn-primary mt-2">Update Website</button>
                             </div>

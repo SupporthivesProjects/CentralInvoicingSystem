@@ -14,6 +14,7 @@ class BusinessModel extends Model
     protected $fillable = [
         'name',
         'icon_class',
+        'model_type',
     ];
 
     public function websites()

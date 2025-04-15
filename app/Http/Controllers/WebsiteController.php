@@ -6,6 +6,8 @@ use App\Models\Website;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 
 class WebsiteController extends Controller
 {
@@ -26,9 +28,22 @@ class WebsiteController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'icon_class' => 'nullable|string|max:255',
+            'model_type' => 'nullable|string|max:255',
         ]); 
 
         $model = BusinessModel::findOrFail($id);
+        $oldFolder = strtolower(str_replace(' ', '', $model->model_type));
+        $oldPath = resource_path("views/invoice/$oldFolder");
+
+        $newFolder = strtolower(str_replace(' ', '', $request->model_type));
+        $newPath = resource_path("views/invoice/$newFolder");
+
+        if ($oldFolder !== $newFolder && File::exists($oldPath)) {
+            File::move($oldPath, $newPath);
+        } elseif (!File::exists($newPath)) {
+            File::makeDirectory($newPath, 0755, true);
+        }
+
         $model->update($request->all());
 
         return redirect()->route('businessmodels')->with('success', 'Business model updated!');
@@ -38,6 +53,19 @@ class WebsiteController extends Controller
     {
         try {
             $businessModel = BusinessModel::findOrFail($id);
+            $model_type = strtolower(str_replace(' ', '', $businessModel->model_type));
+            $deletingPath = resource_path("views/invoice/$model_type/");
+            $trashPath = resource_path("views/invoice/trash/$model_type/");
+
+            if (File::exists($deletingPath)) {
+                if (!File::exists($trashPath)) {
+                    File::makeDirectory($trashPath, 0755, true);
+                }
+                $files = File::allFiles($deletingPath);
+                foreach ($files as $file) {
+                    File::move($file->getPathname(), $trashPath . $file->getFilename());
+                }
+            }    
             $businessModel->delete();
     
             return response()->json([
@@ -61,12 +89,19 @@ class WebsiteController extends Controller
             $request->validate([
                 'name' => 'required|string|max:255',
                 'icon_class' => 'nullable|string|max:255',
+                'model_type' => 'nullable|string|max:255',
             ]);
 
-            // Create the BusinessModel
+            $model_type = strtolower(str_replace(' ', '', $request->model_type)); 
+            $folderPath = resource_path("views/invoice/$model_type");
+
+            if (!File::exists($folderPath)) {
+                File::makeDirectory($folderPath, 0755, true);
+            }
             BusinessModel::create([
                 'name' => $request->name,
-                'icon_class' => $request->icon_class
+                'icon_class' => $request->icon_class,
+                'model_type' => $model_type,
             ]);
 
             // Redirect with success message
@@ -112,41 +147,68 @@ class WebsiteController extends Controller
                 'company_email' => 'nullable|email|max:255',
                 'company_mobile' => 'nullable|string|max:20',
                 'company_address' => 'nullable|string|max:1000',
-
                 'company_logo' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
                 'invoice_header_image' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
                 'invoice_footer_image' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
                 'invoice_signature' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
-                'invoice_template' => 'nullable|file|mimes:html|max:2048',
+                'invoice_template' => 'nullable|file|mimes:html,htm,php|max:2048',
+                'invoice_image1' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
+                'invoice_image2' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
+                'invoice_image3' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
         ]);
 
         try {
             $website = Website::findOrFail($id);
+            
+            $modelType = strtolower($website->businessModel->model_type);
+            $siteId = $website->id;
+            $siteIdInWords = numberToWords($siteId); 
 
-             // File upload handling
-                $uploadPathBase = public_path("websites/{$website->id}/");
+            $baseUploadPath = public_path("uploads/websites/{$modelType}/{$siteId}/");
 
-                // Helper to upload file
-                $uploadFile = function ($field, $subfolder) use ($request, $uploadPathBase, $website) {
-                    if ($request->hasFile($field)) {
-                        $file = $request->file($field);
-                        $filename = $field . '_' . time() . '.' . $file->getClientOriginalExtension();
-                        $path = $uploadPathBase . $subfolder;
+            // Upload helper function
+            $uploadFile = function ($field, $subfolder, $prefix = null) use ($request, $website, $baseUploadPath, $modelType, $siteId) {
+                if ($request->hasFile($field)) {
+                    $file = $request->file($field);
+                    $prefix = $prefix ?? $field;
+                    $filename = $prefix . '_' . time() . '.' . $file->getClientOriginalExtension();
+                    $path = $baseUploadPath . $subfolder;
 
-                        if (!file_exists($path)) {
-                            mkdir($path, 0755, true);
-                        }
-
-                        $file->move($path, $filename);
-                        $website->$field = "websites/{$website->id}/{$subfolder}/{$filename}";
+                    if (!file_exists($path)) {
+                        mkdir($path, 0755, true);
                     }
-                };
 
-                $uploadFile('company_logo', 'companylogos');
-                $uploadFile('invoice_header_image', 'invoice_headers');
-                $uploadFile('invoice_footer_image', 'invoice_footers');
-                $uploadFile('invoice_signature', 'invoice_signatures');
-                $uploadFile('invoice_template', 'invoice_templates'); // Allow only HTML in validation
+                    $file->move($path, $filename);
+
+                    $website->$field = "uploads/websites/{$modelType}/{$siteId}/{$subfolder}/{$filename}";
+                }
+            };
+
+            // Upload each field
+            $uploadFile('company_logo', 'logos', 'logo');
+            $uploadFile('invoice_header_image', 'headers', 'header');
+            $uploadFile('invoice_footer_image', 'footers', 'footer');
+            $uploadFile('invoice_signature', 'signitures', 'signiture');
+            $uploadFile('invoice_image1', 'images1', 'logo');
+            $uploadFile('invoice_image2', 'images2', 'logo');
+            $uploadFile('invoice_image3', 'images3', 'logo');
+
+            // Special case for invoice_template (blade file)
+            if ($request->hasFile('invoice_template')) {
+                $oldTemplatePath = resource_path("views/websites/{$modelType}/{$siteIdInWords}.blade.php");
+                if (file_exists($oldTemplatePath)) {
+                    unlink($oldTemplatePath);
+                }
+                $file = $request->file('invoice_template');
+                $viewPath = resource_path("views/websites/{$modelType}/");
+
+                if (!file_exists($viewPath)) {
+                    mkdir($viewPath, 0755, true);
+                }
+
+                $file->move($viewPath, "{$siteIdInWords}.blade.php");
+                $website->invoice_template = "views/websites/{$modelType}/{$siteIdInWords}.blade.php";
+            }
 
                 // Update fields
                 $website->update([
@@ -166,7 +228,6 @@ class WebsiteController extends Controller
                     'company_address' => $request->company_address,
                 ]);
 
-                // Save uploaded paths
                 $website->save();
 
                 return redirect()->back()->with('success', 'Website updated successfully!');
@@ -179,6 +240,7 @@ class WebsiteController extends Controller
     public function createWebsite(Request $request)
     {
         try {
+            // Validation rules, including newly added invoice images
             $validator = Validator::make($request->all(), [
                 'business_model_id' => 'required|exists:business_models,id',
                 'site_name' => 'required|string|max:255',
@@ -199,18 +261,22 @@ class WebsiteController extends Controller
                 'invoice_header_image' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
                 'invoice_footer_image' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
                 'invoice_signature' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
-                'invoice_template' => 'nullable|file|mimes:html|max:2048',
-            ]
-            );
-            $errors = $validator->errors()->all();
-            $firstError = $errors[0] ?? 'Validation failed.';
+                'invoice_template' => 'nullable|file|mimes:html,htm,php|max:2048',
+                'invoice_image1' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
+                'invoice_image2' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
+                'invoice_image3' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
+            ]);
+
+            // Handling validation failure
             if ($validator->fails()) {
+                $errors = $validator->errors()->all();
+                $firstError = $errors[0] ?? 'Validation failed.';
                 return redirect()->back()
                     ->withErrors($validator)
                     ->withInput()
                     ->with('error', $firstError);
             }
-    
+
             // First, create the website record without files
             $website = Website::create([
                 'business_model_id' => $request->business_model_id,
@@ -229,45 +295,74 @@ class WebsiteController extends Controller
                 'company_address' => $request->company_address,
             ]);
 
-            // File upload path base
-            $uploadPathBase = public_path("websites/{$website->id}/");
+            // Fetch the website model and business model type
+            $modelType = strtolower($website->businessModel->model_type);
+            $siteId = $website->id;
+            $siteIdInWords = numberToWords($siteId); // Convert site ID to words
 
-            // Helper function for file upload
-            $uploadFile = function ($field, $subfolder) use ($request, $uploadPathBase, $website) {
+            // Set base upload path
+            $baseUploadPath = public_path("uploads/websites/{$modelType}/{$siteId}/");
+
+            // File upload helper function
+            $uploadFile = function ($field, $subfolder, $prefix = null) use ($request, $website, $baseUploadPath, $modelType, $siteId) {
                 if ($request->hasFile($field)) {
                     $file = $request->file($field);
-                    $filename = $field . '_' . time() . '.' . $file->getClientOriginalExtension();
-                    $path = $uploadPathBase . $subfolder;
+                    $prefix = $prefix ?? $field;
+                    $filename = $prefix . '_' . time() . '.' . $file->getClientOriginalExtension();
+                    $path = $baseUploadPath . $subfolder;
 
                     if (!file_exists($path)) {
                         mkdir($path, 0755, true);
                     }
 
                     $file->move($path, $filename);
-                    $website->$field = "websites/{$website->id}/{$subfolder}/{$filename}";
+                    $website->$field = "uploads/websites/{$modelType}/{$siteId}/{$subfolder}/{$filename}";
                 }
             };
 
             // Upload each file
-            $uploadFile('company_logo', 'companylogos');
-            $uploadFile('invoice_header_image', 'invoice_headers');
-            $uploadFile('invoice_footer_image', 'invoice_footers');
-            $uploadFile('invoice_signature', 'invoice_signatures');
-            $uploadFile('invoice_template', 'invoice_templates');
+            $uploadFile('company_logo', 'logos', 'logo');
+            $uploadFile('invoice_header_image', 'headers', 'header');
+            $uploadFile('invoice_footer_image', 'footers', 'footer');
+            $uploadFile('invoice_signature', 'signitures', 'signiture');
+            $uploadFile('invoice_image1', 'images1', 'image1'); // New image field
+            $uploadFile('invoice_image2', 'images2', 'image2'); // New image field
+            $uploadFile('invoice_image3', 'images3', 'image3'); // New image field
 
-            // Save the uploaded paths
-            $website->save();
-    
-            return redirect()->route('website.edit', $website->id)->with('success', 'Website added successfully.');
+            // Special case for invoice_template (blade file)
+            if ($request->hasFile('invoice_template')) {
+                $oldTemplatePath = resource_path("views/websites/{$modelType}/{$siteIdInWords}.blade.php");
+                if (file_exists($oldTemplatePath)) {
+                    unlink($oldTemplatePath);
+                }
+                $file = $request->file('invoice_template');
+                $viewPath = resource_path("views/websites/{$modelType}/");
+
+                if (!file_exists($viewPath)) {
+                    mkdir($viewPath, 0755, true);
+                }
+
+                $file->move($viewPath, "{$siteIdInWords}.blade.php");
+                $website->invoice_template = "views/websites/{$modelType}/{$siteIdInWords}.blade.php";
+            }
+
             
+            $website->save();
+
+            // Redirect to website edit page with success message
+            return redirect()->route('website.edit', $website->id)->with('success', 'Website added successfully.');
+
         } catch (\Exception $e) {
+            // Log any exception that occurs
             Log::error('Website creation error: ' . $e->getMessage());
-    
+
+            // Redirect back with error message
             return redirect()->back()
                 ->withInput()
                 ->with('error', 'Something went wrong. Please try again.');
         }
     }
+
 
     public function deleteWebsite($id)
     {

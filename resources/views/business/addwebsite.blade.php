@@ -70,12 +70,6 @@
                                 <input type="text" name="site_link" class="form-control" placeholder="Enter Website link">
                             </div>
                            
-                            <!-- Company Details Section -->
-                            <div class="col-12">
-                                <hr>
-                                <h5 class="text-left">Company Details (Optional)</h5>
-                                <hr>
-                            </div>
                             <div class="col-md-6 mx-auto">
                                 <label class="form-label">Site Description</label>
                                 <input type="text" name="site_description" class="form-control" placeholder="Enter Site Description (optional)">
@@ -103,16 +97,57 @@
                                 <label class="form-label">Company Address</label>
                                 <input type="text" name="company_address" class="form-control" placeholder="Enter Company Address">
                             </div>
-                            <div class="col-md-6 mx-auto">
-                                <label class="form-label">Company Logo</label>
-                                <input type="file" name="company_logo" class="form-control">
+                            <hr>
+                            <!-- First Row for Invoice Template -->
+                            <div class="row mb-4 mt-1">
+                                <div class="col-md-6 mx-auto">
+                                    <label class="form-label">Invoice Template (HTML/HTM/PHP)</label>
+                                    <input type="file" name="invoice_template" class="form-control" accept=".html,.htm,.php">
+                                </div>
                             </div>
 
-                            <!-- Invoice Signature -->
-                            <div class="col-md-6 mx-auto">
-                                <label class="form-label">Invoice Signature</label>
-                                <input type="file" name="invoice_signature" class="form-control">
+                            <!-- Second Row for Logo, Header, and Footer -->
+                            <div class="row mb-4">
+                                <!-- Company Logo -->
+                                <div class="col-md-4 mx-auto">
+                                    <label class="form-label">Company Logo</label>
+                                    <input type="file" name="company_logo" class="form-control" accept=".jpeg,.png,.jpg">
+                                </div>
+                                
+                                <!-- Invoice Header Image -->
+                                <div class="col-md-4 mx-auto">
+                                    <label class="form-label">Invoice Header Image</label>
+                                    <input type="file" name="invoice_header_image" class="form-control" accept=".jpeg,.png,.jpg">
+                                </div>
+                                
+                                <!-- Invoice Footer Image -->
+                                <div class="col-md-4 mx-auto">
+                                    <label class="form-label">Invoice Footer Image</label>
+                                    <input type="file" name="invoice_footer_image" class="form-control" accept=".jpeg,.png,.jpg">
+                                </div>
                             </div>
+
+                            <!-- Third Row for Invoice Image 1, Image 2, Image 3 -->
+                            <div class="row mb-4">
+                                <!-- Invoice Image 1 -->
+                                <div class="col-md-4 mx-auto">
+                                    <label class="form-label">Invoice Image 1</label>
+                                    <input type="file" name="invoice_image1" class="form-control" accept=".jpeg,.png,.jpg">
+                                </div>
+
+                                <!-- Invoice Image 2 -->
+                                <div class="col-md-4 mx-auto">
+                                    <label class="form-label">Invoice Image 2</label>
+                                    <input type="file" name="invoice_image2" class="form-control" accept=".jpeg,.png,.jpg">
+                                </div>
+
+                                <!-- Invoice Image 3 -->
+                                <div class="col-md-4 mx-auto">
+                                    <label class="form-label">Invoice Image 3</label>
+                                    <input type="file" name="invoice_image3" class="form-control" accept=".jpeg,.png,.jpg">
+                                </div>
+                            </div>
+
                             <div class="col-12 text-center">
                                 <button type="submit" class="btn btn-primary mt-2">Add Website</button>
                             </div>

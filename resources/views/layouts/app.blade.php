@@ -160,6 +160,7 @@
         <script src="https://cdn.jsdelivr.net/npm/nouislider@15.7.0/dist/nouislider.min.js"></script>
 
 
+        <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 
 
         <!-- Toast Messages -->
@@ -172,10 +173,12 @@
             };
 
             @if(session('success'))
+                Swal.close();
                 toastr.success("{{ session('success') }}");
             @endif
 
             @if(session('error'))
+                Swal.close();
                 toastr.error("{{ session('error') }}");
             @endif
         </script>

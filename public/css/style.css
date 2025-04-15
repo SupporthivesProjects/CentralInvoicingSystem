@@ -27143,3 +27143,9 @@ h4, .h4 {
     width: 20%;
   }
 }
+
+/* below css set by narayan zade */
+.input-group-text {
+  height: 100% !important;
+   
+}
