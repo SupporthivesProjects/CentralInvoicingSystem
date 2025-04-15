@@ -59,7 +59,7 @@
                                 <label class="form-label">Invoice Amount <span class="text-danger">*</span></label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text">{{ $currency->symbol ?? '$' }}</span>
+                                        <span class="input-group-text">{{ site_currency() }}</span>
                                     </div>
                                     <input name="invoice_amount" class="form-control" 
                                         value="{{ $invoice['invoice_amount'] ?? '' }}" 
@@ -95,7 +95,7 @@
                             <label class="form-label">Current Amount</label>
                             <div class="input-group">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text">{{ $currency->symbol ?? '$' }}  </span> 
+                                    <span class="input-group-text">{{ site_currency() }}  </span> 
                                 </div>
                                 <input type="number" id= "current_amount"  name="current_amount" class="form-control bg-white" value="{{ $current_total  ?? '00.00'}}" readonly>
                             </div>
@@ -104,7 +104,7 @@
                             <label class="form-label">Discount Amount</label>
                             <div class="input-group">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text">{{ $currency->symbol ?? '$' }}</span> 
+                                    <span class="input-group-text">{{ site_currency() }}</span> 
                                 </div>
                                 <input type="number" name="discount_amount" id="discount_amount"  class="form-control bg-white" placeholder="Discount Amount" value="0">
                             </div>
@@ -114,7 +114,7 @@
                             <label class="form-label">Target Amount</label>
                             <div class="input-group">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text">{{ $currency->symbol ?? '$' }}  </span> 
+                                    <span class="input-group-text">{{ site_currency() }}  </span> 
                                 </div>
                                 <input type="number" name="final_amount" id="final_amount" class="form-control bg-white" placeholder="Target Total" value="{{ $invoice['invoice_amount'] ?? '' }}">
                             </div>
@@ -135,7 +135,7 @@
                     <button type="button" class="btn btn-danger btn-sm me-2" onclick="clearAllProducts()">
                     <i class="bi bi-trash"></i> Clear
                     </button>
-                    <button type="button" class="btn btn-warning btn-sm me-2" >
+                    <button type="button" class="btn btn-warning btn-sm me-2" onclick="generateRandomProducts('random')">
                     <i class="bi bi-dice-5"></i> Randomize
                     </button>
                     
@@ -149,12 +149,13 @@
 
                 <div class="card-body">
                     <!-- Search Filters -->
-                    <form method="GET" action="#" class="mb-4" onsubmit="applyFilter(event)">
+                    <form method="GET" action="#" class="mb-4">
                         <div class="row align-items-end g-3">
-                            <div class="col-md-6">
-                                <label class="form-label">🔍 Keyword</label>
-                                <input type="text" name="manual_keyword" id="keywordInput" class="form-control" placeholder="Enter keyword">
-                            </div>
+                        <div class="col-md-6">
+                            <label for="keywordInput" class="form-label">Search for Products</label>
+                            <input type="text" name="manual_keyword" id="keywordInput" class="form-control" placeholder="Type a keyword and wait for 2 seconds to apply the filter.">
+                        </div>
+
 
                             <div class="col-md-6 text-center">
                                 <label class="form-label d-block">Price Range</label>
@@ -174,7 +175,7 @@
                                 <th>Sr. No.</th>
                                 <th>Product ID</th>
                                 <th>Product Name</th>
-                                <th>Unit Price ({{ $currency->symbol ?? '$' }}  )</th>
+                                <th>Unit Price ({{ site_currency() }}  )</th>
                                 <th>Source</th>
                                 <th>Total</th>
                             </tr>
@@ -201,14 +202,14 @@
 @push('scripts')
 <script>
     $(document).ready(function () {
-        //generateRandomProducts('initial');
+        generateRandomProducts('initial');
         $('input[name="product_ids[]"]').prop('disabled', true);
     });
 
     function generateRandomProducts(mode = 'initial') {
         $('input[name="product_ids[]"]').prop('disabled', true);
         let title = (mode === 'initial') ? 'Cooking Up Combos...' : 'Trying Cool Combos...';
-        let loadingText = (mode === 'initial') 
+        let loadingText = (mode === 'random') 
             ? 'Finding products that match your invoice total...' 
             : 'Trying new combinations of products that match your invoice total...';
 
@@ -342,26 +343,46 @@ function attachCheckboxHandlers() {
 
         let tempTotal = 0;
         $('input[name="product_ids[]"]:checked').each(function () {
-            const p = parseFloat($(this).data('unit_price')) || 0;
-            tempTotal += p;
+            const productId = $(this).val();
+            const price = $(`input[data-product-id="${productId}"]`).val();
+            const unitPrice = parseFloat(price) || 0;
+            tempTotal += unitPrice;
         });
-        
+
         $('input[name="product_ids[]"]').each(function () {
             const row = $(this).closest('tr');
-                if ($(this).is(':checked')) {
-                    row.addClass('table-active border border border-light'); 
-                } else {
-                    row.removeClass('table-active border border border-light');
-                }
+            if ($(this).is(':checked')) {
+                row.addClass('table-active border border border-light');
+            } else {
+                row.removeClass('table-active border border border-light');
+            }
         });
 
         if (tempTotal > maxAllowed) {
             toastr.error(`Product total exceeds your invoice target of $${invoiceAmount.toFixed(2)}`, 'Limit Reached');
+        }
 
-        } 
         selectedTotal = tempTotal;
         updateTotalDisplay();
+    });
 
+    // Listen for price changes and update total
+    $('.product-price').on('input', function () {
+        let tempTotal = 0;
+
+        $('input[name="product_ids[]"]:checked').each(function () {
+            const productId = $(this).val();
+            const price = $(`input[data-product-id="${productId}"]`).val();
+            const unitPrice = parseFloat(price) || 0;
+            tempTotal += unitPrice;
+        });
+
+        if (tempTotal > maxAllowed) {
+            toastr.error(`Product total exceeds your invoice target of $${invoiceAmount.toFixed(2)}`, 'Limit Reached');
+        }
+
+        selectedTotal = tempTotal;
+        updateTotalDisplay();
     });
 }
 
@@ -483,12 +504,16 @@ function clearAllProducts() {
         $('#generate-invoice-form').find('input[name="product_ids[]"]').remove();
 
         selectedProducts.each(function () {
+            const productId = $(this).val();
+            const unitPrice = $(`input[data-product-id="${productId}"]`).val(); 
+
             $('#generate-invoice-form').append($('<input>', {
                 type: 'hidden',
-                name: 'product_ids[]',
-                value: $(this).val()
+                name: 'product_data[]',
+                value: JSON.stringify({ product_id: productId, unit_price: unitPrice }) 
             }));
         });
+
         
         $('#generate-invoice-form').append($('<input>', {
             type: 'hidden',

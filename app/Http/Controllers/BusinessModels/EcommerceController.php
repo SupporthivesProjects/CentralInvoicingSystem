@@ -132,11 +132,11 @@ class EcommerceController extends Controller
             ]);
         }
 
-        $products = $query->orderBy('name')->limit(10)->get();
+        $products = $query->orderBy('name')->limit(15)->get();
 
         if ($products->isEmpty()) {
             return response()->json([
-                'tableRows' => '<tr><td colspan="6" class="text-center text-muted"> No results found. Try randomizing or use a different keyword.</td></tr>'
+                'tableRows' => '<tr><td colspan="7" class="text-center text-muted"> No results found. Try randomizing or use a different keyword.</td></tr>'
             ]);
         }
 
@@ -153,7 +153,8 @@ class EcommerceController extends Controller
 
     public function generateInvoice(Request $request)
     {
-        $productIds = $request->input('product_ids', []);
+        $productDataArray = $request->input('product_data', []);
+        $discount_amount = $request->input('discount_amount', 0);
         $site_id = session('customer.site_id');
         $site = Website::findOrFail($site_id);
 
@@ -162,9 +163,24 @@ class EcommerceController extends Controller
         $session_customer = session('customer');
         $session_invoice = session('invoice');
 
+        $productIds = [];
+        $customPrices = [];
+
+        foreach ($productDataArray as $item) {
+            $data = json_decode($item, true);
+            if (!empty($data['product_id'])) {
+                $productIds[] = $data['product_id'];
+                $customPrices[$data['product_id']] = $data['unit_price'];
+            }
+        }
+
         $products = DB::connection('dynamic')->table('products')
             ->whereIn('id', $productIds)
-            ->get();
+            ->get()
+            ->map(function ($product) use ($customPrices) {
+                $product->unit_price = $customPrices[$product->id] ?? $product->unit_price;
+                return $product;
+            });
 
         $currency = DB::connection('dynamic')->table('currencies')->where('status', 1)->first();
 
@@ -181,6 +197,7 @@ class EcommerceController extends Controller
             'invoice_number'  => $session_invoice['invoice_number'] ?? null,
             'invoice_amount'  => $session_invoice['invoice_amount'] ?? null,
             'invoice_date'    => $session_invoice['invoice_date'] ?? null,
+            'discount_amount' => $discount_amount,
         ];
 
         session([
@@ -193,15 +210,16 @@ class EcommerceController extends Controller
         $viewPath = "websites.{$modelType}.{$siteIdInWords}";
 
         try {
-            // Try loading the view
+
             $pdf = PDF::loadView($viewPath, compact('products', 'customer', 'site', 'currency'));
-            return $pdf->download('invoice_' . now()->format('Ymd_His') . '.pdf');
-        
+            $pdf->setPaper('A4', 'portrait'); 
+            $filename = 'invoice_' . now()->format('Ymd_His') . '.pdf';
+            return $pdf->download($filename);
+    
         } catch (\Illuminate\View\ViewNotFoundException $e) {
-            
             abort(500, 'Please set up or upload your invoice template.');
         }
-       
     }
+
 
 }

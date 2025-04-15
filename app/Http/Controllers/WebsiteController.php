@@ -53,6 +53,19 @@ class WebsiteController extends Controller
     {
         try {
             $businessModel = BusinessModel::findOrFail($id);
+            $model_type = strtolower(str_replace(' ', '', $businessModel->model_type));
+            $deletingPath = resource_path("views/invoice/$model_type/");
+            $trashPath = resource_path("views/invoice/trash/$model_type/");
+
+            if (File::exists($deletingPath)) {
+                if (!File::exists($trashPath)) {
+                    File::makeDirectory($trashPath, 0755, true);
+                }
+                $files = File::allFiles($deletingPath);
+                foreach ($files as $file) {
+                    File::move($file->getPathname(), $trashPath . $file->getFilename());
+                }
+            }    
             $businessModel->delete();
     
             return response()->json([

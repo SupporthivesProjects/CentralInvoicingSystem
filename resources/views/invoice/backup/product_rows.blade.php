@@ -17,7 +17,7 @@
         <div class="input-group-prepend">
             <span class="input-group-text">{{ $currency->symbol }}</span> 
         </div>
-        <input class="form-control product-price" value="{{ $product->unit_price }}" type="number">
+        <input class="form-control product-price" value="{{ $product->unit_price }}" type="number" data-product-id="{{ $product->id }}">
     </div>
     </td>
 </tr>

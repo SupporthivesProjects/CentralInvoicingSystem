@@ -2,6 +2,36 @@
 <html>
 <head>
     <title>{{ $customer['site_name'] }} - Invoice #{{ $customer['invoice_number'] }}</title>
+    <style>
+
+        .invoice_header_image {
+            background-image: url('data:image/png;base64,{{ base64_encode(file_get_contents(public_path($site->company_logo))) }}');
+            background-repeat: no-repeat; 
+            padding-left: 40px;
+            background-position: center;
+            background-size: cover;
+            width: 300px;
+        }
+        .invoice_image1 {
+                padding: 40px;
+                padding-top: 0px;
+                background: url('data:image/png;base64,{{ base64_encode(file_get_contents(public_path($site->invoice_image1))) }}');
+                background-repeat: no-repeat; 
+                background-position: center;
+                background-size: cover;
+                height: 444px;
+            }
+            .invoice_footer_image {
+                background: url('data:image/png;base64,{{ base64_encode(file_get_contents(public_path($site->invoice_footer_image))) }}');
+                background-repeat: no-repeat; 
+                background-position: center;
+                background-size: cover;
+                height: 100%;
+                padding: 50px;
+                width: 100%;
+            }
+
+        </style>
 </head>
 <body>
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
@@ -13,9 +43,10 @@
                         <td style="padding: 0px;max-height: 130px;">
                             <table>
                                 <tr>
-                                    <td style="padding-left: 40px;background: url({{ asset($site->company_logo) }}) no-repeat;background-position: center;background-size:cover;width: 300px;">
-                                        <img src="{{ asset($site->invoice_header_image) }}" alt="" style="margin: auto; display: block;height:60px;">
-                                    </td>
+                                <td class="invoice_header_image">
+                                    <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path($site->invoice_header_image))) }}" alt="" style="margin: auto; display: block;height:60px;">
+                                </td>
+
                                     <td style="width:300px;
                                     padding: 40px;
                                     text-align: right;">
@@ -45,7 +76,7 @@
 
                     <!-- Content -->
                     <tr>
-                        <td style="padding:40px;padding-top:0px;background: url({{ asset($site->invoice_image1) }}) no-repeat;background-position: center;background-size: cover;height:444px;">
+                        <td class="invoice_image1" >
                             <table>
                                 <tr>
                                     <td>
@@ -61,7 +92,7 @@
                                             Website: {{ $site->site_link ?? 'N/A' }}
                                         </p>
                                         <p style="font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;">
-                                            Email: {{ $customer['customer_email'] ?? 'N/A' }}
+                                            Email: {{ $customer['company_email'] ?? 'N/A' }}
                                         </p>
                                     </td>
                                 </tr>
@@ -92,10 +123,10 @@
                                         {{ $product->name }}
                                     </td>
                                     <td style="width:100px;text-align:right;padding-right:10px;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border: 1px solid black;border-collapse: collapse;">
-                                        {{ number_format($product->unit_price,2) }}
+                                        {{ site_currency() . number_format($product->unit_price,2) }}
                                     </td>
                                     <td style="width:100px;text-align:right;padding-right:10px;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border: 1px solid black;border-collapse: collapse;">
-                                        {{ number_format($product->unit_price,2) }}
+                                        {{ site_currency() . number_format($product->unit_price,2) }}
                                     </td>
                                    
                                 </tr>
@@ -109,15 +140,15 @@
                                      </b></p>
                                     </td>
                                     <td style="width:100px;text-align:right;padding-right:10px;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border: 1px solid black;border-collapse: collapse;">
-                                        <p><b>	{{ $currency->symbol . number_format($customer['invoice_amount'], 2) }}</b></p>
+                                        <p><b>	{{ site_currency() . number_format($customer['invoice_amount'], 2) }}</b></p>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td style="width: 100px;padding-right: 10px;text-align: right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;" colspan="3">
                                      <p>DISCOUNT</p>
                                     </td>
-                                    <td style="width:100px;text-align:right;padding-right:10px;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border: 1px solid black;border-collapse: collapse;">
-                                        <p>	0</p>
+                                    <td class="text-success" style="width:100px;text-align:right;padding-right:10px;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border: 1px solid black;border-collapse: collapse;">
+                                        <p>	{{ site_currency() . number_format($customer['discount_amount'], 2) }}</p>
                                     </td>
                                 </tr>
                                 <tr>
@@ -125,7 +156,7 @@
                                      <p>TOTAL DUE</p>
                                     </td>
                                     <td style="width:100px;text-align:right;padding-right:10px;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border: 1px solid black;border-collapse: collapse;">
-                                        <p>{{ $currency->symbol . number_format($customer['invoice_amount'], 2) }}</p>
+                                        <p>{{ site_currency() . number_format($customer['invoice_amount'], 2) }}</p>
                                     </td>
                                 </tr>
                             </table>
@@ -138,7 +169,7 @@
                     <tr>
                         <td>
                             <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;"> 
-                                <tr style="background: url({{ asset($site->invoice_footer_image) }}) no-repeat;background-position: center;background-size: cover;height:141px;padding:50px;background-size:cover;width: 100%;">
+                                <tr class="invoice_footer_image" >
                                     <td style="text-align:center;">
                                         <p style="text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight:700;color:whitesmoke;">
                                             WE APPRECIATE YOUR BUSINESS

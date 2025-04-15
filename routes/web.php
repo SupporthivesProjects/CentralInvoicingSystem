@@ -79,7 +79,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/currency/delete/{id}', [CurrencyController::class, 'delete'])->name('currency.delete');
 
     
-
+    
 
 
 });
