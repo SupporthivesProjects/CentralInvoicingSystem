@@ -23,7 +23,6 @@
     <!-- Main Styles -->
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
     <link href="{{ asset('css/styles.min.css') }}" rel="stylesheet">
-
     <!-- Icons CSS -->
     <link href="{{ asset('css/icons.css') }}" rel="stylesheet">
 
@@ -91,11 +90,12 @@
             <img src="{{ asset('images/media/media-79.svg') }}" alt="">
         </div>
         <!-- Loader -->
-    @unless(in_array(Route::currentRouteName(), ['login', 'password.request', 'password.reset']))
-        @include('partials.sidebar')
-    @endunless
+        @unless(in_array(Route::currentRouteName(), ['login', 'password.request', 'password.reset']))
+            @include('partials.sidebar')
+        @endunless
 
-    @yield('content')
+          @yield('content')
+          
         @include("partials/switcher")
          
         @unless(in_array(Route::currentRouteName(), ['login', 'password.request', 'password.reset']))
@@ -285,5 +285,6 @@
         
 
     @stack('scripts')
+    
 </body>
 </html>

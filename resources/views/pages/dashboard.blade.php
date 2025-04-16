@@ -20,7 +20,7 @@
                     </div>
                     <div class="d-flex">
                         <div class="justify-content-center">
-                            <button type="button" class="btn btn-primary my-2 btn-icon-text d-inline-flex align-items-center">
+                            <button type="button" data-bs-toggle="modal" data-bs-target="#generateReportModal" class="btn btn-primary my-2 btn-icon-text d-inline-flex align-items-center">
                                 <i class="fe fe-download-cloud me-2 fs-14"></i> Download Report
                             </button>
                         </div>
@@ -51,8 +51,8 @@
 
                                             </div>
                                             <div class="card-item-title mb-2">
-                                                <label class="main-content-label fs-13 fw-bold mb-1">Connected Websites</label>
-                                                  <p class="card-text">All connected websites</p>
+                                                <label class="main-content-label fs-13 fw-bold mb-1">Available Websites</label>
+                                                  <p class="card-text">All Available Websites</p>
                                             </div>
                                             <div class="card-item-body">
                                                 <div class="card-item-stat">
@@ -161,21 +161,18 @@
                                     <div class="card custom-card overflow-hidden">
                                         <div class="card-header border-bottom-0">
                                             <div class="d-flex justify-content-between w-100">
-                                                <div>
-                                                    <label class="card-title"> Invoice Generation Analytics</label> 
-                                                    <span class="d-block fs-12 mb-0 text-muted">
-                                                        Here is the invoice generations history details chart
-                                                    </span>
-                                                </div>
-                                                
+                                                <h4 class="mb-1"> Invoice Generation Analytics</h4> 
                                             </div>
-                                        </div>
+                                            <div class="d-flex justify-content-between w-100">
+                                                <p class="text-muted mb-0" style="font-size: 14px;">
+                                                    This chart shows invoice counts (red) and price changes counts (blue) over the last 7 days.
+                                                </p>
+                                            </div>
                                         <div class="card-body">
                                             <div id="invoicechart"></div>
                                         </div>
                                     </div>
                                 </div>
-
                             
                             <div class="col-lg-12">
                                 <div class="card custom-card mg-b-20 tasks">
@@ -227,63 +224,119 @@
         </div>
         <!-- End::app-content -->
     </div>
+</div>
+
+<div class="modal fade" id="generateReportModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" 
+     aria-labelledby="generateReportModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="generateReportModalLabel">Generate Invoice Report</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <form action="{{ route('invoice.report') }}" method="GET">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="business_model_id" class="form-label">Select Business Model</label>
+                        <?php $models = getallModels(); ?>
+                        <select name="business_model_id" id="business_model_id" class="form-select">
+                            <option value="">-- Select Business Model --</option>
+                            @foreach($models as $model)
+                                <option value="{{ $model->id }}" {{ request()->business_model_id == $model->id ? 'selected' : '' }}>
+                                    {{ $model->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="site_id" class="form-label">Select Site</label>
+                        <select name="site_id" id="site_id" class="form-select">
+                            <option value="all" {{ request()->site_id == 'all' ? 'selected' : '' }}>All Sites</option>
+                            @foreach($sites as $site)
+                                <option value="{{ $site->id }}" {{ request()->site_id == $site->id ? 'selected' : '' }}>
+                                    {{ $site->site_name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="start_date" class="form-label">Start Date</label>
+                        <input type="date" name="start_date" id="start_date" class="form-control" value="{{ request()->start_date }}">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="end_date" class="form-label">End Date</label>
+                        <input type="date" name="end_date" id="end_date" class="form-control" value="{{ request()->end_date }}">
+                    </div>
+                </div>
+
+                <div class="modal-footer justify-content-between">
+                    <button type="submit" class="btn btn-primary">View Report</button>
+                    <a href="{{ route('invoice.report', [
+                        'generate_pdf' => true,
+                        'business_model_id' => request()->business_model_id,
+                        'site_id' => request()->site_id,
+                        'start_date' => request()->start_date,
+                        'end_date' => request()->end_date
+                    ]) }}" class="btn btn-danger">Download PDF</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
 @endsection
 @push('scripts')
 <script>
-    const invoiceDates = @json($dates);
-    const invoiceCounts = @json($invoiceCounts);
-    const totalSales = @json($totalSales);
-    const discountAmounts = @json($discountAmounts);
+    const invoiceDates = @json($dates);  // Common dates
+    const invoiceCounts = @json($invoiceCounts);  // Invoice counts per date
+    const priceChangeCounts = @json($priceChanges);  // Price change counts per date
     const siteCurrency = @json(site_currency());
 
     var options = {
         chart: {
-            height: 350,            
+            height: 350,
             zoom: { enabled: true },
             toolbar: { show: false }
         },
         series: [
             {
-                name: "Invoices Created",
+                name: "Invoices Created Count",
                 type: 'line',  
                 data: invoiceCounts,
-                color: "#FF5733",
-                width: 10
+                color: "#FF5733"
+            },
+            {
+                name: "Price Changes Count",
+                type: 'line',  
+                data: priceChangeCounts,
+                color: "#1E90FF"
             }
         ],
         xaxis: {
-            categories: invoiceDates, 
+            categories: invoiceDates,  // Common dates for both series
             title: {
-                text: 'Invoice Date',
+                text: 'Date',
                 style: { fontWeight: 600 }
             }
         },
-        plotOptions: {
-            bar: {
-                columnWidth: '20%',
-                endingShape: 'rounded'
+        yaxis: {
+            title: {
+                text: 'Counts',
+                style: { fontWeight: 600, fontSize: '14px', color: '#333' }
+            },
+            min: 0,
+            labels: {
+                style: {
+                    colors: '#666',
+                    fontSize: '12px'
+                }
             }
         },
-        yaxis: [
-            {
-              
-                title: {
-                    text: 'Invoices Created',
-                    style: { fontWeight: 600, fontSize: '14px', color: '#333' }
-                },
-                min: 0,
-                labels: {
-                    style: {
-                        colors: '#666',
-                        fontSize: '12px'
-                    }
-                }
-            },
-            {
-                // Right side (amounts) — HIDE
-                show: false
-            }
-        ],
         stroke: {
             curve: 'smooth',
             width: 4
@@ -308,6 +361,7 @@
     var chart = new ApexCharts(document.querySelector("#invoicechart"), options);
     chart.render();
 </script>
+
 
 
 <script>

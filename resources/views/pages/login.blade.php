@@ -4,7 +4,6 @@
 
 @section('content')
 <div class="page main-signin-wrapper">
-
         <!-- Start::row-1 -->
         <div class="row signpages text-center">
             <div class="col-md-12">
@@ -25,7 +24,7 @@
                                     <div class="card-body mt-2 mb-2">
                                    
                                         <div class="clearfix"></div>
-                                        <form method="POST" action="{{ route('login.submit') }}">
+                                        <form method="POST" action="{{ route('login.submit') }}" id="loginForm">
                                         @csrf
                                             <h5 class="text-start mb-2">Signin to Your Account</h5>
                                             <p class="mb-4 text-muted fs-13 ms-0 text-start">Sign in to access the Admin and Staff Dashboard</p>
@@ -63,4 +62,19 @@
 @endsection
 
 @push('scripts')
+<script>
+    document.getElementById('loginForm').addEventListener('submit', function () {
+        Swal.fire({
+            title: '🔐 Getting You In!',
+            html: `
+                <div class="d-flex flex-column align-items-center">
+                    <div class="spinner-border text-primary" role="status"></div>
+                    <small class="mt-2">Just a sec — logging you in quicker than your coffee kicks in!</small>
+                </div>
+            `,
+            showConfirmButton: false,
+            allowOutsideClick: false
+        });
+    });
+</script>
 @endpush

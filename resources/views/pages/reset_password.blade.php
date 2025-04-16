@@ -27,7 +27,7 @@
                                 <div class="clearfix"></div>
                                 <h5 class="text-start mb-2">Forgot Password</h5>
                                 <p class="mb-4 text-muted fs-13 ms-0 text-start">Enter your registered email address. We’ll send you a link to reset your password.</p>
-                                <form method="POST" action="{{ route('password.update') }}">
+                                <form method="POST" action="{{ route('password.update') }}" id="resetPasswordForm">
                                     @csrf
 
                                     <input type="hidden" name="token" value="{{ $token }}">
@@ -59,4 +59,20 @@
 @endsection
 
 @push('scripts')
+<script>
+    document.getElementById('resetPasswordForm').addEventListener('submit', function () {
+        Swal.fire({
+            title: 'Resetting your password...',
+            html: `
+                <div class="d-flex flex-column align-items-center">
+                    <div class="spinner-border text-primary" role="status"></div>
+                    <small class="mt-2">Sit tight! Your new password is just moments away."</small>
+                </div>
+            `,
+            showConfirmButton: false,
+            allowOutsideClick: false
+        });
+    });
+</script>
+
 @endpush

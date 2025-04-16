@@ -13,27 +13,37 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 
+
 class HomeController extends Controller
 {
    
     public function index(Request $request)
     {
         
-        list($dates, $invoiceCounts, $totalSales, $discountAmounts) = $this->getInvoiceStats();
+        list($dates, $invoiceCounts, $priceChanges) = $this->getInvoiceChartData();
         $invoices = InvoiceGenerationHistory::latest()->get();
         $businessmodels = BusinessModel::latest()->get();
-        $websites = Website::latest()->get();
+        $sites = Website::latest()->get();
     
-        return view('pages.dashboard', compact('invoices', 'dates', 'invoiceCounts', 'totalSales', 'discountAmounts','businessmodels','websites'));
+        return view('pages.dashboard', compact('invoices', 'dates', 'invoiceCounts','businessmodels','sites', 'priceChanges'));
     }
     
-    private function getInvoiceStats()
+    private function getInvoiceChartData()
     {
-       
-        $sevenDaysAgo = Carbon::now()->subDays(6)->startOfDay();
+        $sevenDaysAgo = Carbon::now()->subDays(7)->startOfDay();
         $today = Carbon::now()->endOfDay();
     
-        
+        // Fetch price change stats
+        $priceHistory = ProductPriceHistory::select(
+            DB::raw('DATE(last_price_changed) as date'),
+            DB::raw('COUNT(*) as price_changes')
+        )
+        ->whereBetween('last_price_changed', [$sevenDaysAgo, $today])
+        ->groupBy('date')
+        ->orderBy('date', 'asc')
+        ->get();
+    
+        // Fetch invoice stats
         $invoiceStats = InvoiceGenerationHistory::select(
                 DB::raw('DATE(created_at) as date'),
                 DB::raw('COUNT(*) as count'),
@@ -46,30 +56,33 @@ class HomeController extends Controller
             ->get();
     
         $dates = [];
+        $priceChangeCounts = [];
         $invoiceCounts = [];
-        $totalSales = [];
-        $discountAmounts = [];
     
-        for ($i = 6; $i >= 0; $i--) {
-            $dates[] = Carbon::now()->subDays($i)->format('Y-m-d');
-            $invoiceCounts[] = 0;
-            $totalSales[] = 0;
-            $discountAmounts[] = 0;
+        // Init values with 0 for both price changes and invoices
+        for ($i = 7; $i >= 0; $i--) {
+            $date = Carbon::now()->subDays($i)->format('Y-m-d');
+            $dates[] = $date;
+            $invoiceCounts[$date] = 0;  // Default to 0 if no invoices
+            $priceChangeCounts[$date] = 0;  // Default to 0 if no price changes
         }
     
+        // Populate invoice counts for each date
         foreach ($invoiceStats as $stat) {
-            $index = array_search($stat->date, $dates);
-            if ($index !== false) {
-                $invoiceCounts[$index] = $stat->count;
-                $totalSales[$index] = $stat->total_sales;
-                $discountAmounts[$index] = $stat->discount_amount;
-            }
+            $invoiceCounts[$stat->date] = $stat->count;
         }
     
-        return [$dates, $invoiceCounts, $totalSales, $discountAmounts];
+        // Populate price change counts for each date
+        foreach ($priceHistory as $stat) {
+            $priceChangeCounts[$stat->date] = $stat->price_changes;
+        }
+    
+        // Convert to indexed arrays
+        $invoiceCounts = array_values($invoiceCounts);
+        $priceChanges = array_values($priceChangeCounts);
+    
+        return [$dates, $invoiceCounts, $priceChanges];
     }
-    
-    
     
     
 }

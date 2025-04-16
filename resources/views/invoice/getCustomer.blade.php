@@ -33,7 +33,7 @@
                             </div>
                         @endif
                         
-                            <form method="POST" action="{{ route('customerdetails.store') }}">
+                            <form method="POST" action="{{ route('customerdetails.store') }}" id="getCustomerForm">
                                 @csrf
 
                                 <div class="mb-3">
@@ -137,6 +137,21 @@
 @endsection
 
 @push('scripts')
+<script>
+    document.getElementById('getCustomerForm').addEventListener('submit', function () {
+        Swal.fire({
+            title: 'Setting Things Up...',
+            html: `
+                <div class="d-flex flex-column align-items-center">
+                    <div class="spinner-border text-primary" role="status"></div>
+                    <small class="mt-2">Initializing connection, syncing data, and getting things ready..."</small>
+                </div>
+            `,
+            showConfirmButton: false,
+            allowOutsideClick: false
+        });
+    });
+</script>
  <script>
     $('#sitechangemodel').on('shown.bs.modal', function () {
         $('#site_id').select2({

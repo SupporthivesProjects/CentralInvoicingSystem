@@ -151,7 +151,7 @@
                         <div class="row align-items-end g-3">
                         <div class="col-md-6">
                             <label for="keywordInput" class="form-label">Search for Products</label>
-                            <input type="text" name="manual_keyword" id="keywordInput" class="form-control" placeholder="Type a keyword and wait for 2 seconds to apply the filter.">
+                            <input type="text" name="manual_keyword" id="keywordInput" class="form-control" placeholder="Type a keyword and wait for 1.5 seconds to apply the filter.">
                         </div>
 
 
@@ -201,10 +201,12 @@
     $(document).ready(function () {
         generateRandomProducts('initial');
         $('input[name="product_ids[]"]').prop('disabled', true);
+        $('input[name="manual_keyword"]').prop('disabled', true);
     });
 
     function generateRandomProducts(mode = 'initial') {
         $('input[name="product_ids[]"]').prop('disabled', true);
+        $('input[name="manual_keyword"]').prop('disabled', true);
         let title = (mode === 'initial') ? 'Cooking Up Combos...' : 'Trying Cool Combos...';
         let loadingText = (mode === 'random') 
             ? 'Finding products that match your invoice total...' 
@@ -278,6 +280,7 @@ const maxAllowed = invoiceAmount * 1.02;
 function setCustomOnly() {
     customMode = true;
     $('input[name="product_ids[]"]').prop('disabled', false);
+    $('input[name="manual_keyword"]').prop('disabled', false);
     $('#product-table-body').empty();
     selectedTotal = 0;
     updateTotalDisplay();
@@ -449,6 +452,8 @@ priceSlider.noUiSlider.on('update', function (values) {
 function clearAllProducts() {
     $('#product-table-body').empty();
     $('input[name="manual_keyword"]').val('');
+    $('#discount_amount').val('');
+    $('#current_amount').val('');
     selectedTotal = 0;
     updateTotalDisplay();
     toastr.success('Your filter has been reset now', 'Filter Cleared');
@@ -463,10 +468,10 @@ function clearAllProducts() {
         const isKeyword = $(this).attr('id') === 'keywordInput';
         filterTimer = setTimeout(() => {
             if (customMode) {
-                // Custom mode: filter for both keyword & range
+
                 filterProducts();
             } else {
-                // Random mode: only trigger on range filter change
+
                 if (!isKeyword) {
                     generateRandomProducts('random');
                 }

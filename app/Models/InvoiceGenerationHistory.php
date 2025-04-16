@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Website;
 
 class InvoiceGenerationHistory extends Model
 {
@@ -25,4 +26,9 @@ class InvoiceGenerationHistory extends Model
         'discount_amount' => 'float',
         'invoice_amount' => 'float',
     ];
+
+    public function website()
+    {
+        return $this->belongsTo(Website::class, 'site_id');
+    }
 }
