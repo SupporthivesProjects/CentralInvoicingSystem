@@ -21,8 +21,10 @@ class HomeController extends Controller
         
         list($dates, $invoiceCounts, $totalSales, $discountAmounts) = $this->getInvoiceStats();
         $invoices = InvoiceGenerationHistory::latest()->get();
+        $businessmodels = BusinessModel::latest()->get();
+        $websites = Website::latest()->get();
     
-        return view('pages.dashboard', compact('invoices', 'dates', 'invoiceCounts', 'totalSales', 'discountAmounts'));
+        return view('pages.dashboard', compact('invoices', 'dates', 'invoiceCounts', 'totalSales', 'discountAmounts','businessmodels','websites'));
     }
     
     private function getInvoiceStats()
