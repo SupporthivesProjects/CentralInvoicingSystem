@@ -176,10 +176,14 @@ class EcommerceController extends Controller
         $products = DB::connection('dynamic')->table('products')
             ->whereIn('id', $productIds)
             ->get()
+            ->sortBy(function ($product) use ($productIds) {
+                return array_search($product->id, $productIds);
+            })
+            ->values() // Reindex the collection
             ->map(function ($product) use ($customPrices) {
                 $product->unit_price = $customPrices[$product->id] ?? $product->unit_price;
                 return $product;
-            });
+         });
 
         $currency = DB::connection('dynamic')->table('currencies')->where('status', 1)->first();
 
