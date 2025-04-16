@@ -1,6 +1,7 @@
 <?php
 use App\Services\DynamicDatabaseService;
 use App\Models\Website;
+use App\Models\Currency;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Log;
@@ -108,3 +109,40 @@ if (!function_exists('admin_currency')) {
         }
     }
 }
+
+
+if (!function_exists('currencies')) {
+    function currencies()
+    {
+        try {
+            $currencies = Currency::latest()->get();
+            return $currencies ?: [];
+        } catch (\Exception $e) {
+            Log::error('Error fetching admin currency: ' . $e->getMessage());
+            return '$';
+        }
+    }
+}
+
+if (!function_exists('base64EncodeImage')) {
+    function base64EncodeImage($path)
+    {
+        if (!$path) return null;
+
+        $fullPath = public_path($path);
+
+        if (file_exists($fullPath)) {
+            $imageData = file_get_contents($fullPath);
+            $base64 = base64_encode($imageData);
+            $mime = mime_content_type($fullPath);
+            return "data:$mime;base64,$base64";
+        }
+
+        return null;
+    }
+}
+
+
+
+
+

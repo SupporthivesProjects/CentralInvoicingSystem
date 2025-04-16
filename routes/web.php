@@ -80,12 +80,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/currency/delete/{id}', [CurrencyController::class, 'delete'])->name('currency.delete');
 
     //generated invoices operations routes
+    Route::get('/generate-new-invoice-number', [InvoiceController::class, 'generateNewInvoiceNumber']);
     Route::get('/invoice/chart', [HomeController::class, 'showInvoiceChart'])->name('invoice.chart');
     Route::get('/report/invoices', [ReportController::class, 'invoiceReport'])->name('invoice.report');
-
-
-    
-    
 
 
 });

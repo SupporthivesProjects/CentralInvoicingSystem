@@ -24,7 +24,6 @@ class HomeController extends Controller
         $invoices = InvoiceGenerationHistory::latest()->get();
         $businessmodels = BusinessModel::latest()->get();
         $sites = Website::latest()->get();
-    
         return view('pages.dashboard', compact('invoices', 'dates', 'invoiceCounts','businessmodels','sites', 'priceChanges'));
     }
     

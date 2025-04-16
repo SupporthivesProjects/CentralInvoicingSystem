@@ -150,21 +150,58 @@ class EcommerceController extends Controller
         ]);
     }
 
+ 
+    public function resolveModelController($modelType, $method, Request $request)
+    {
+        $controllerClass = "App\\Http\\Controllers\\BusinessModels\\" . ucfirst($modelType) . "Controller";
+        if (!class_exists($controllerClass)) {
+            return response()->json(['error' => 'Invalid model type'], 400);
+        }
+
+        $controller = new $controllerClass();
+        if (!method_exists($controller, $method)) {
+            return response()->json(['error' => 'Method not found'], 400);
+        }
+
+        return $controller->$method($request);
+    }
+
     public function generateInvoice(Request $request)
     {
-        $productDataArray = $request->input('product_data', []);
-        $discount_amount = $request->input('discount_amount', 0);
-        $site_id = session('customer.site_id');
+        $site_id = $request->input('site_id');
         $site = Website::findOrFail($site_id);
 
+        $invoice_data['site'] = $site;
+        $invoice_data['invoice_number'] = $request->input('invoice_number');
+        $invoice_data['invoice_date'] = $request->input('invoice_date');
+        $invoice_data['customer_name'] = $request->input('customer_name');
+        $invoice_data['customer_mobile'] = $request->input('customer_mobile');
+        $invoice_data['customer_email'] = $request->input('customer_email');
+        $invoice_data['company_email'] = $request->input('company_email');
+        $invoice_data['invoice_amount'] = $request->input('invoice_amount');
+        $invoice_data['current_amount'] = $request->input('current_amount');
+        $invoice_data['discount_amount'] = $request->input('discount_amount');
+        $invoice_data['final_amount'] = $request->input('final_amount');
+        $invoice_data['company_name'] = $site->company_name;
+        $invoice_data['company_mobile'] = $site->company_mobile;
+        $invoice_data['company_address'] = $site->company_address;
+        $invoice_data['invoice_header_image'] = base64EncodeImage($site->invoice_header_image);
+        $invoice_data['invoice_footer_image'] = base64EncodeImage($site->invoice_footer_image);
+        $invoice_data['invoice_signature'] = base64EncodeImage($site->invoice_signature);
+        $invoice_data['company_logo'] = base64EncodeImage($site->company_logo);
+        $invoice_data['invoice_image1'] = base64EncodeImage($site->invoice_image1);
+        $invoice_data['invoice_image2'] = base64EncodeImage($site->invoice_image2);
+        $invoice_data['invoice_image3'] = base64EncodeImage($site->invoice_image3);
+        $invoice_data['invoice_template'] = $site->invoice_template;
+        $invoice_data['model_type'] = $site->businessModel->model_type;
+        $invoice_data['site_id'] = $site->id;
+    
+        $productDataArray = $request->input('product_data', []);
         DynamicDatabaseService::connect($site);
-
-        $session_customer = session('customer');
-        $session_invoice = session('invoice');
-
+    
         $productIds = [];
         $customPrices = [];
-
+    
         foreach ($productDataArray as $item) {
             $data = json_decode($item, true);
             if (!empty($data['product_id'])) {
@@ -172,72 +209,45 @@ class EcommerceController extends Controller
                 $customPrices[$data['product_id']] = $data['unit_price'];
             }
         }
-
+    
+        
         $products = DB::connection('dynamic')->table('products')
             ->whereIn('id', $productIds)
+            ->select('id', 'name', 'unit_price') 
             ->get()
             ->sortBy(function ($product) use ($productIds) {
                 return array_search($product->id, $productIds);
             })
-            ->values() // Reindex the collection
+            ->values()
             ->map(function ($product) use ($customPrices) {
                 $product->unit_price = $customPrices[$product->id] ?? $product->unit_price;
                 return $product;
-         });
-
+            });
+    
+    
+       
         $currency = DB::connection('dynamic')->table('currencies')->where('status', 1)->first();
-
-        if (!$products || !$session_customer) {
-            return redirect()->back()->with('error', 'No invoice data found.');
-        }
-
-        $customer = [
-            'site_id'         => $session_customer['site_id'] ?? null,
-            'site_name'       => $session_customer['site_name'] ?? null,
-            'customer_name'   => $session_customer['customer_name'] ?? null,
-            'customer_mobile' => $session_customer['customer_mobile'] ?? null,
-            'customer_email'  => $session_customer['customer_email'] ?? null,
-            'invoice_number'  => $session_invoice['invoice_number'] ?? null,
-            'invoice_amount'  => $session_invoice['invoice_amount'] ?? null,
-            'invoice_date'    => $session_invoice['invoice_date'] ?? null,
-            'discount_amount' => $discount_amount,
-        ];
-
-        session([
-            'invoice_products' => $products,
-            'invoice_customer' => $customer,
-        ]);
-
+        $invoice_data['currency'] = $currency ? $currency->symbol : "$";
+    
+        $invoice_data['products'] = $products;
+        $invoice_data['product_ids'] = $productIds;
+    
         $modelType = strtolower($site->businessModel->model_type);
         $siteIdInWords = numberToWords($site->id);
         $viewPath = "websites.{$modelType}.{$siteIdInWords}";
-
+    
+      
         try {
-
-            $invoice_data = [
-                'model_type'      => $modelType,
-                'site_id'         => $site->id,
-                'currency'        => $currency->symbol,
-                'invoice_number'  => $customer['invoice_number'],
-                'product_ids'     => $productIds,
-                'current_amount'  => $session_invoice['invoice_amount'],
-                'discount_amount' => $discount_amount ,
-                'invoice_amount'  => $customer['invoice_amount'] ?? 0,
-            ];
-    
-            InvoiceController::createInvoiceHistory($invoice_data); 
-
-            $pdf = PDF::loadView($viewPath, compact('products', 'customer', 'site', 'currency'));
+           
+            InvoiceController::createInvoiceHistory($invoice_data);
+            $pdf = PDF::loadView($viewPath, $invoice_data);
             $pdf->setPaper('A4', 'portrait');
-            $filename = 'invoice_' . now()->format('Ymd_His') . '.pdf';
-            return $pdf->download($filename); 
-    
+            $filename = $invoice_data['invoice_number'] . '.pdf';
+            return $pdf->download($filename);
         } catch (\Illuminate\View\ViewNotFoundException $e) {
-          
             abort(500, 'Please set up or upload your invoice template.');
         }
     }
-
-
-
+    
+    
 }

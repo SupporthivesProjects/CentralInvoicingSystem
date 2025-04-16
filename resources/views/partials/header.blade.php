@@ -138,70 +138,17 @@
                 </a>
                 <!-- End::header-link|dropdown-toggle -->
                 <ul class="main-header-dropdown dropdown-menu dropdown-menu-end" data-popper-placement="none">
+                    @foreach(currencies() as $currency)
                     <li>
                         <a class="dropdown-item d-flex align-items-center" href="javascript:void(0);">
-                            <span class="avatar avatar-xs lh-1 me-2">
-                                <img src="{{ asset('images/flags/6.jpg') }}" alt="img">
-                            </span>
-                            English
+                            <span>{{ $currency->code }}</span> ({{$currency->symbol}})
                         </a>
                     </li>
-                    <li>
-                        <a class="dropdown-item d-flex align-items-center" href="javascript:void(0);">
-                            <span class="avatar avatar-xs lh-1 me-2">
-                                <img src="{{ asset('images/flags/5.jpg') }}" alt="img" >
-                            </span>
-                            Spanish
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item d-flex align-items-center" href="javascript:void(0);">
-                            <span class="avatar avatar-xs lh-1 me-2">
-                                <img src="{{ asset('images/flags/1.jpg') }}" alt="img" >
-                            </span>
-                            French
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item d-flex align-items-center" href="javascript:void(0);">
-                            <span class="avatar avatar-xs lh-1 me-2">
-                                <img src="{{ asset('images/flags/2.jpg') }}" alt="img" >
-                            </span>
-                            German
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item d-flex align-items-center" href="javascript:void(0);">
-                            <span class="avatar avatar-xs lh-1 me-2">
-                                <img src="{{ asset('images/flags/3.jpg') }}" alt="img" >
-                            </span>
-                            Italian
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item d-flex align-items-center" href="javascript:void(0);">
-                            <span class="avatar avatar-xs lh-1 me-2">
-                                <img src="{{ asset('images/flags/4.jpg') }}" alt="img" >
-                            </span>
-                            Russian
-                        </a>
-                    </li>
+                    @endforeach
+                    
                 </ul>
             </div>
             <!-- End::header-element -->
-
-            <!-- Start::header-element -->
-            <div class="header-element header-fullscreen  d-xl-flex d-none">
-                <!-- Start::header-link -->
-                <a onclick="openFullscreen();" href="javascript:void(0);" class="header-link">
-                    <i class="fe fe-maximize full-screen-open header-link-icon"></i>
-                    <i class="fe fe-minimize full-screen-close header-link-icon d-none"></i>
-                </a>
-                <!-- End::header-link -->
-            </div>
-            <!-- End::header-element -->
-
-           
 
             <!-- Start::header-element -->
             <div class="header-element notifications-dropdown">

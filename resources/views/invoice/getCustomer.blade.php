@@ -23,59 +23,46 @@
                 <div class="col-md-12">
                     <div class="card custom-card">
                         <div class="card-body">
-                        @if ($errors->any())
-                            <div class="alert alert-danger">
-                                <ul>
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                                </ul>
-                            </div>
-                        @endif
-                        
+                            @if ($errors->any())
+                                <div class="alert alert-danger">
+                                    <ul>
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
+
                             <form method="POST" action="{{ route('customerdetails.store') }}" id="getCustomerForm">
                                 @csrf
-
-                                <div class="mb-3">
-                                    <label class="form-label">
-                                        Selected Website 
-                                        <a href="#" data-bs-toggle="modal" data-bs-target="#sitechangemodel" class="btn btn-sm btn-outline-primary ms-2">
-                                            Change Site
-                                        </a>
-                                    </label>
-                                    <input type="text" class="form-control" name="site_name" id="site_name"  value="{{ $site->site_name ?? 'N/A' }}" readonly>
-                                    <input type="hidden" class="form-control" name="site_id" id="site_id"  value="{{ $site->id ?? 'N/A' }}" readonly>
-                                </div>
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
-                                        <label class="form-label">Customer Name <span style="color:red">*</span></label>
+                                        <label class="form-label">
+                                            Selected Website <span class="text-danger">*</span>
+                                            <a href="#" data-bs-toggle="modal" data-bs-target="#sitechangemodel" class="btn btn-sm btn-outline-primary ms-2">
+                                                Change Site
+                                            </a>
+                                        </label>
+                                        <input type="text" class="form-control" name="site_name" id="site_name" value="{{ $site->site_name ?? 'N/A' }}" readonly>
+                                        <input type="hidden" name="site_id" id="site_id" value="{{ $site->id ?? '' }}">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Customer Name <span class="text-danger">*</span></label>
                                         <input type="text" name="customer_name" class="form-control" placeholder="Enter Customer Name" required>
                                     </div>
 
                                     <div class="col-md-6 mb-3">
-                                        <label class="form-label">Invoice Date <span style="color:red">*</span></label>
+                                        <label class="form-label">Invoice Date <span class="text-danger">*</span></label>
                                         <input type="date" name="invoice_date" class="form-control" required>
                                     </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Invoice Number <span style="color:red">*</span></label>
-                                        <input type="text" name="invoice_number" class="form-control font-italic" placeholder="Enter Invoice Number" value="{{ $invoiceNumber ?? '' }}" required readonly>
-                                    </div>
 
                                     <div class="col-md-6 mb-3">
-                                        <label class="form-label">Invoice Amount <span style="color:red">*</span></label>
+                                        <label class="form-label">Invoice Amount <span class="text-danger">*</span></label>
                                         <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text">$</span> 
-                                            </div>
-                                            <input type="number" name="invoice_amount" class="form-control" placeholder="Enter Invoice target amount" required>
+                                            <span class="input-group-text">$</span>
+                                            <input type="number" name="invoice_amount" class="form-control" placeholder="Enter invoice target amount" required>
                                         </div>
-                                       </div>
-                                </div>
-
-                                <div class="row">
+                                    </div>
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Customer Email</label>
                                         <input type="email" name="customer_email" class="form-control" placeholder="Enter Customer Email (optional)">
@@ -85,16 +72,34 @@
                                         <label class="form-label">Customer Mobile</label>
                                         <input type="number" name="customer_mobile" class="form-control" placeholder="Enter Customer Mobile (optional)">
                                     </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Company Mobile</label>
+                                        <input type="text" name="company_mobile" class="form-control" placeholder="Enter Company Mobile" readonly value="{{ $site->company_mobile ?? '' }}">
+                                    </div>
+                                   
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Company Email</label>
+                                        <input type="email" name="company_email" class="form-control" placeholder="Enter Company Email" readonly value="{{ $site->company_email ?? '' }}">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Company Address</label>
+                                        <input type="text" name="company_address" class="form-control" placeholder="Enter Company Address" readonly value="{{ $site->company_address ?? '' }}">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Company Website</label>
+                                        <input type="url" name="site_link" class="form-control" placeholder="Enter Site URL" value="{{ $site->site_link ?? '' }}">
+                                    </div>
                                 </div>
 
                                 <div class="text-center mt-4">
-                                    <button type="submit" class="btn btn-primary">Proceed to Products</button>
+                                    <button type="submit" class="btn btn-primary">Proceed to Products Selection</button>
                                 </div>
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
+
 
 
         </div>
