@@ -23,7 +23,6 @@
     <!-- Main Styles -->
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
     <link href="{{ asset('css/styles.min.css') }}" rel="stylesheet">
-
     <!-- Icons CSS -->
     <link href="{{ asset('css/icons.css') }}" rel="stylesheet">
 
@@ -65,7 +64,7 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.3.0/css/responsive.bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.3/css/buttons.bootstrap5.min.css">
-
+    
     <!-- Custom Toast Style -->
     <style>
         #toast-container > .toast {
@@ -85,17 +84,19 @@
     </head>
 
  <body>
-    @unless(in_array(Route::currentRouteName(), ['login', 'password.request', 'password.reset']))
-        @include('partials.sidebar')
-    @endunless
-
-    @yield('content')
-        @include("partials/switcher")
-            <!-- Loader -->
-        <div id="loader" >
+       <!-- Loader -->
+       <div id="loader" >
             <img src="{{ asset('images/media/media-79.svg') }}" alt="">
         </div>
         <!-- Loader -->
+        @unless(in_array(Route::currentRouteName(), ['login', 'password.request', 'password.reset']))
+            @include('partials.sidebar')
+        @endunless
+
+          @yield('content')
+          
+        @include("partials/switcher")
+         
         @unless(in_array(Route::currentRouteName(), ['login', 'password.request', 'password.reset']))
         @include("partials/header")
         @endunless
@@ -106,8 +107,7 @@
             <span class="arrow"><i class="fe fe-arrow-up"></i></span>
         </div>
         <div id="responsive-overlay"></div>
-        <!-- Scroll To Top -->
-
+     
         <!-- Popper JS -->
         <script src="{{ asset('libs/@popperjs/core/umd/popper.min.js') }}"></script>
 
@@ -138,10 +138,6 @@
         <script src="{{ asset('libs/jsvectormap/maps/world-merc.js') }}"></script>
         <script src="{{ asset('libs/apexcharts/apexcharts.min.js') }}"></script>
 
-        <!-- Index & Custom JS -->
-        <script src="{{ asset('js/index.js') }}"></script>
-        <script src="{{ asset('js/custom.js') }}"></script>
-
         <!-- Prism JS -->
         <script src="{{ asset('libs/prismjs/prism.js') }}"></script>
         <script src="{{ asset('js/prism-custom.js') }}"></script>
@@ -162,7 +158,7 @@
 
         <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 
-
+        <script src="{{ asset('narayan/js/javascripts.js') }}"></script>
         <!-- Toast Messages -->
         <script>
             toastr.options = {
@@ -282,6 +278,12 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
         <!-- Internal Datatables JS -->
         <script src="{{ asset('js/datatables.js') }}"></script>
+        <!-- Index & Custom JS -->
+        <script src="{{ asset('js/index.js') }}"></script>
+        <script src="{{ asset('js/custom.js') }}"></script>
+        
+
     @stack('scripts')
+    
 </body>
 </html>

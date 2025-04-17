@@ -9,6 +9,7 @@ use App\Http\Middleware\RoleMiddleware;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\CurrencyController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\BusinessModels\EcommerceController;
 
 // // Guest-only routes (not logged in)
@@ -27,7 +28,8 @@ Route::middleware('guest')->group(function () {
 
 // Authenticated-only routes (logged in)
 Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
+
+    Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
     //Profile Routes
     Route::get('/my-profile', [ProfileController::class, 'index'])->name('myprofile');
@@ -54,7 +56,7 @@ Route::middleware('auth')->group(function () {
     // Website Routes by Narayan
     Route::get('/website/create', [WebsiteController::class, 'addwebsite'])->name('website.create');
     Route::post('/website', [WebsiteController::class, 'createWebsite'])->name('website.store');
-    Route::get('/connected-websites', [WebsiteController::class, 'connectedwebsites'])->name('connectedwebsites');
+    Route::get('/available-websites', [WebsiteController::class, 'connectedwebsites'])->name('connectedwebsites');
     Route::get('/website/{id}/edit', [WebsiteController::class, 'editwebsite'])->name('website.edit');
     Route::patch('/website/{id}', [WebsiteController::class, 'updateWebsite'])->name('website.update');
     Route::delete('/website/{id}', [WebsiteController::class, 'deleteWebsite'])->name('website.delete');
@@ -79,6 +81,12 @@ Route::middleware('auth')->group(function () {
     Route::delete('/currency/delete/{id}', [CurrencyController::class, 'delete'])->name('currency.delete');
 
 
+    //generated invoices operations routes
+    Route::get('/generate-new-invoice-number', [InvoiceController::class, 'generateNewInvoiceNumber']);
+    Route::get('/invoice/chart', [HomeController::class, 'showInvoiceChart'])->name('invoice.chart');
+    Route::get('/report/invoices', [ReportController::class, 'invoiceReport'])->name('invoice.report');
+
+    Route::get('/internal/search', [HomeController::class, 'internalSearch'])->name('internal.search');
 
 
 
@@ -98,6 +106,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 // Staff routes (accessible by both admin and staff)
 Route::middleware(['auth', 'role:admin,staff'])->group(function () {
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
+
 });
 
 // Redirect root to login or dashboard based on auth status

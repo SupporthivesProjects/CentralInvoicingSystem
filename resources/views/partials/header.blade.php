@@ -32,65 +32,21 @@
 
             <!-- Start::header-element -->
             <div class="main-header-center d-none d-lg-block  header-link">
-                <div class="input-group">
-                    <div class="input-group-btn search-panel">
-                        <select class="js-example-basic-single" name="state" data-trigger>
-                            <option value="s-1">Choose one</option>
-                            <option value="s-2">T-Projects...</option>
-                            <option value="s-3">Microsoft Project</option>
-                            <option value="s-4">Risk Management</option>
-                            <option value="s-5">Team Building</option>
-                        </select>
-                    </div>
-                    <input type="text" class="form-control" id="typehead" placeholder="Search for results..."
-                    autocomplete="off">
+            <div class="input-group">
+                <div class="input-group-btn search-panel">
+                    <select class="js-example-basic-single" name="internalSearchType" id="internalSearchType" data-trigger>
+                        <option value="websites">Websites</option>
+                        <option value="business_models">Business Models</option>
+                    </select>
+                </div>
+                <input type="text" class="form-control" data-url="{{ route('internal.search') }}" id="internalSearchInput" name="internalSearchInput" placeholder="Search for results..." autocomplete="off">
                 <button class="btn btn-primary"><i class="fe fe-search" aria-hidden="true"></i></button>
-                </div>
-                <div id="headersearch" class="header-search">
-                    <div class="p-3">
-                        <div class="">
-                            <p class="fw-semibold text-muted mb-2 fs-13">Recent Searches</p>
-                            <div class="ps-2">
-                                <a  href="javascript:void(0)" class="search-tags"><i class="fe fe-search me-2"></i>People<span></span></a>
-                                <a  href="javascript:void(0)" class="search-tags"><i class="fe fe-search me-2"></i>Pages<span></span></a>
-                                <a  href="javascript:void(0)" class="search-tags"><i class="fe fe-search me-2"></i>Articles<span></span></a>
-                            </div>
-                        </div>
-                         <div class="mt-3">
-                            <p class="fw-semibold text-muted mb-2 fs-13">Apps and pages</p>
-                            <ul class="ps-2 list-unstyled">
-                                <li class="p-1 d-flex align-items-center text-muted mb-2 search-app">
-                                    <a href="full-calendar.html"><span><i class='bx bx-calendar me-2 fs-14 bg-primary-transparent p-2 rounded-circle '></i>Calendar</span></a>
-                                </li>
-                                <li class="p-1 d-flex align-items-center text-muted mb-2 search-app">
-                                    <a href="mail-inbox.html"><span><i class='bx bx-envelope me-2 fs-14 bg-primary-transparent p-2 rounded-circle'></i>Mail</span></a>
-                                </li>
-                                <li class="p-1 d-flex align-items-center text-muted mb-2 search-app">
-                                    <a href="buttons.html"><span><i class='bx bx-dice-1 me-2 fs-14 bg-primary-transparent p-2 rounded-circle '></i>Buttons</span></a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="mt-3">
-                           <p class="fw-semibold text-muted mb-2 fs-13">Links</p>
-                           <ul class="ps-2 list-unstyled">
-                                <li class="p-1 align-items-center text-muted mb-1 search-app">
-                                        <a href="javascript:void(0)" class="text-primary"><u>http://spruko/html/spruko.com</u></a>
-                                </li>
-                                <li class="p-1 align-items-center text-muted mb-1 search-app">
-                                        <a href="javascript:void(0)" class="text-primary"><u>http://spruko/demo/spruko.com</u></a>
-                                </li>
-                            </ul>
-                       </div>
-                    </div>
-                    <div class="py-3 border-top px-0">
-                        <div class="text-center">
-                            <a href="javascript:void(0)" class="text-primary text-decoration-underline fs-15">View all</a>
-                        </div>
-                    </div>
-                </div>
+            </div>
+                <div id="searchspinner" class="text-center my-2" style="display: none;"></div>
+                <div id="searchResults" class="header-search"></div>
             </div>
              <!-- End::header-element -->
-
+             
         </div>
         <!-- End::header-content-left -->
 
@@ -138,70 +94,17 @@
                 </a>
                 <!-- End::header-link|dropdown-toggle -->
                 <ul class="main-header-dropdown dropdown-menu dropdown-menu-end" data-popper-placement="none">
+                    @foreach(currencies() as $currency)
                     <li>
                         <a class="dropdown-item d-flex align-items-center" href="javascript:void(0);">
-                            <span class="avatar avatar-xs lh-1 me-2">
-                                <img src="{{ asset('images/flags/6.jpg') }}" alt="img">
-                            </span>
-                            English
+                            <span>{{ $currency->code }}</span> ({{$currency->symbol}})
                         </a>
                     </li>
-                    <li>
-                        <a class="dropdown-item d-flex align-items-center" href="javascript:void(0);">
-                            <span class="avatar avatar-xs lh-1 me-2">
-                                <img src="{{ asset('images/flags/5.jpg') }}" alt="img" >
-                            </span>
-                            Spanish
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item d-flex align-items-center" href="javascript:void(0);">
-                            <span class="avatar avatar-xs lh-1 me-2">
-                                <img src="{{ asset('images/flags/1.jpg') }}" alt="img" >
-                            </span>
-                            French
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item d-flex align-items-center" href="javascript:void(0);">
-                            <span class="avatar avatar-xs lh-1 me-2">
-                                <img src="{{ asset('images/flags/2.jpg') }}" alt="img" >
-                            </span>
-                            German
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item d-flex align-items-center" href="javascript:void(0);">
-                            <span class="avatar avatar-xs lh-1 me-2">
-                                <img src="{{ asset('images/flags/3.jpg') }}" alt="img" >
-                            </span>
-                            Italian
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item d-flex align-items-center" href="javascript:void(0);">
-                            <span class="avatar avatar-xs lh-1 me-2">
-                                <img src="{{ asset('images/flags/4.jpg') }}" alt="img" >
-                            </span>
-                            Russian
-                        </a>
-                    </li>
+                    @endforeach
+                    
                 </ul>
             </div>
             <!-- End::header-element -->
-
-            <!-- Start::header-element -->
-            <div class="header-element header-fullscreen  d-xl-flex d-none">
-                <!-- Start::header-link -->
-                <a onclick="openFullscreen();" href="javascript:void(0);" class="header-link">
-                    <i class="fe fe-maximize full-screen-open header-link-icon"></i>
-                    <i class="fe fe-minimize full-screen-close header-link-icon d-none"></i>
-                </a>
-                <!-- End::header-link -->
-            </div>
-            <!-- End::header-element -->
-
-           
 
             <!-- Start::header-element -->
             <div class="header-element notifications-dropdown">
@@ -395,7 +298,16 @@
             </div>
             <!-- End::header-element -->
 
-           
+           <style>
+                #searchResults.active-search {
+                    background-color: #ffffff !important;
+                    padding: 20px !important;
+                    border-radius: 8px !important;
+                    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+                    display: block !important;
+                }
+                
+            </style>
 
             <!-- Start::header-element -->
             <div class="header-element">
@@ -412,6 +324,5 @@
 
     </div>
     <!-- End::main-header-container -->
-
 </header>
 <!-- /app-header -->

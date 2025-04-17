@@ -12,21 +12,6 @@ class AuthController extends Controller
         return view('pages.login');
     }
 
-    // Handle login submit
-    // public function login(Request $request)
-    // {
-    //     $request->validate([
-    //         'email' => 'required|email',
-    //         'password' => 'required'
-    //     ]);
-
-    //     if (Auth::attempt($request->only('email', 'password'))) {
-    //         return redirect()->route('dashboard')->with('success', 'Login successful!');
-    //     }
-
-    //     return back()->with('error', 'Invalid credentials');
-
-    // }
 
     public function login(Request $request)
     {
@@ -55,7 +40,7 @@ class AuthController extends Controller
         return back()->with('error', 'Invalid credentials');
     }
 
-    // Handle logout
+
     public function logout()
     {
         Auth::logout();

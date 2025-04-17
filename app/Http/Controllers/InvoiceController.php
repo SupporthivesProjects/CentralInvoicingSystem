@@ -1,5 +1,6 @@
 <?php
 namespace App\Http\Controllers;
+use App\Models\InvoiceGenerationHistory;;
 use Illuminate\Http\Request;
 use App\Models\BusinessModel;
 use App\Models\Website;
@@ -34,18 +35,21 @@ class InvoiceController extends Controller
             $site_id = request()->get('site_id', $site_id_from_url);
             $site = Website::findOrFail($site_id);
             $sites = Website::all();
-
-            $invoiceNumber = generateInvoiceNumber($site->site_name);
-            $transactionNumber = rand(100000, 999999);
-
-            return view('invoice.getCustomer', compact('invoiceNumber','site', 'sites'));
-
+    
+            return view('invoice.getCustomer', [
+                'site' => $site,
+                'sites' => $sites,
+                'customer' => session('customer'),
+                'invoice' => session('invoice'),
+            ]);
+    
         } catch (ModelNotFoundException $e) {
             return redirect()->back()->with('error', 'Website not found!');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Something went wrong: ' . $e->getMessage());
         }
     }
+    
 
     public function saveCustomerDetails(Request $request)
     {
@@ -53,10 +57,9 @@ class InvoiceController extends Controller
             'site_id' => 'required|exists:websites,id',
             'customer_name' => 'required|string|max:255',
             'invoice_date' => 'required|date',
-            'invoice_number' => 'required|string|min:1',
             'invoice_amount' => 'required|numeric|min:1',
             'customer_email' => 'nullable|email',
-            'customer_mobile' => 'nullable',
+            'customer_mobile' => 'nullable|string|max:15',
         ]);
         
         
@@ -69,7 +72,6 @@ class InvoiceController extends Controller
                 'customer_email' => $request->customer_email,
             ],
             'invoice' => [
-                'invoice_number' => $request->invoice_number,
                 'invoice_amount' => $request->invoice_amount,
                 'invoice_date' => $request->invoice_date,
             ],
@@ -163,5 +165,30 @@ class InvoiceController extends Controller
             return redirect()->back()->with('error', 'Invalid business model type');
         }
     }
+
+    public static function createInvoiceHistory($invoice_data)
+    {
+        InvoiceGenerationHistory::create([
+            'model_type'      => $invoice_data['model_type'],
+            'site_id'         => $invoice_data['site_id'],
+            'currency'        => $invoice_data['currency'],
+            'invoice_number'  => $invoice_data['invoice_number'],
+            'product_ids'     => json_encode($invoice_data['product_ids']),
+            'current_amount'  => $invoice_data['current_amount'],
+            'discount_amount' => $invoice_data['discount_amount'],
+            'invoice_amount'  => $invoice_data['invoice_amount'],
+        ]);
+    }
+
+
+    public function generateNewInvoiceNumber(Request $request)
+    {
+        $siteName = $request->input('site_name');
+        $newInvoiceNumber = generateInvoiceNumber($siteName);
+        session(['invoice_number' => $newInvoiceNumber]);
+        return response()->json(['success' => true,'new_invoice_number' => $newInvoiceNumber]);
+    }
+
+    
             
 }
