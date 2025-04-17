@@ -27,7 +27,7 @@ Route::middleware('guest')->group(function () {
 
 // Authenticated-only routes (logged in)
 Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', [AuthController::class, 'dashboard'])->name('dashboard');
+    Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
     //Profile Routes
     Route::get('/my-profile', [ProfileController::class, 'index'])->name('myprofile');
@@ -70,7 +70,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/invoice/generate/download', [InvoiceController::class, 'generateInvoice'])->name('generate.invoice');
 
 
-    
+
     // Currency Routes by Narayan zade
     Route::get('/currencies', [CurrencyController::class, 'index'])->name('currency.index');
     Route::post('/currencies/create', [CurrencyController::class, 'add'])->name('currency.add');
@@ -78,8 +78,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/currencies/edit', [CurrencyController::class, 'edit'])->name('currency.edit');
     Route::delete('/currency/delete/{id}', [CurrencyController::class, 'delete'])->name('currency.delete');
 
-    
-    
+
+
 
 
 });

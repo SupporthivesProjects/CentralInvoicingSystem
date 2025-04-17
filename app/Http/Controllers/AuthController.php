@@ -55,13 +55,6 @@ class AuthController extends Controller
         return back()->with('error', 'Invalid credentials');
     }
 
-
-    // Show dashboard (only for authenticated users)
-    public function dashboard()
-    {
-        return view('pages.dashboard'); // create this Blade file
-    }
-
     // Handle logout
     public function logout()
     {

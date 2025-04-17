@@ -11,7 +11,7 @@
         <img src="{{ asset('images/brand-logos/toggle-dark.png') }}" alt="logo" class="toggle-dark">
         <img src="{{ asset('images/brand-logos/desktop-white.png') }}" alt="logo" class="desktop-white">
         <img src="{{ asset('images/brand-logos/toggle-white.png') }}" alt="logo" class="toggle-white">
-        </a> 
+        </a>
     </div>
     <!-- End::main-sidebar-header -->
 

@@ -32,7 +32,7 @@
                 <!-- Start::row-1 -->
                 <div class="row row-sm">
                     <div class="col-sm-12 col-lg-12 col-xl-12">
-                        
+
                         <!-- Start::row -->
                         <div class="row row-sm">
                             <div class="col-sm-12 col-md-6 col-lg-6 col-xl-4">
@@ -61,13 +61,13 @@
                                             </div>
                                             <div class="card-item-title mb-2">
                                                 <label class="main-content-label fs-13 fw-bold mb-1">Busines Models</label>
-                                                <span class="d-block fs-12 mb-0 text-muted">Previous month vs this
-                                                    months</span>
+                                                {{-- <span class="d-block fs-12 mb-0 text-muted">Previous month vs this
+                                                    months</span> --}}
                                             </div>
                                             <div class="card-item-body">
                                                 <div class="card-item-stat">
-                                                    <h4 class="fw-bold">$5,900.00</h4>
-                                                    <small><b class="text-success">55%</b> higher</small>
+                                                    <h4 class="fw-bold">{{ getModelsCount() }}</h4>
+                                                    {{-- <small><b class="text-success">55%</b> higher</small> --}}
                                                 </div>
                                             </div>
                                         </div>
@@ -91,13 +91,13 @@
                                             </div>
                                             <div class="card-item-title mb-2">
                                                 <label class="main-content-label fs-13 fw-bold mb-1">Connected Sites</label>
-                                                <span class="d-block fs-12 mb-0 text-muted">Employees joined this
-                                                    month</span>
+                                                {{-- <span class="d-block fs-12 mb-0 text-muted">Employees joined this
+                                                    month</span> --}}
                                             </div>
                                             <div class="card-item-body">
                                                 <div class="card-item-stat">
-                                                    <h4 class="fw-bold">15</h4>
-                                                    <small><b class="text-success">5%</b> Increased</small>
+                                                    <h4 class="fw-bold">{{ getAllWebsites() }}</h4>
+                                                    {{-- <small><b class="text-success">5%</b> Increased</small> --}}
                                                 </div>
                                             </div>
                                         </div>
@@ -121,13 +121,13 @@
                                             </div>
                                             <div class="card-item-title  mb-2">
                                                 <label class="main-content-label fs-13 fw-bold mb-1">User List</label>
-                                                <span class="d-block fs-12 mb-0 text-muted">Previous month vs this
-                                                    months</span>
+                                                {{-- <span class="d-block fs-12 mb-0 text-muted">Previous month vs this
+                                                    months</span> --}}
                                             </div>
                                             <div class="card-item-body">
                                                 <div class="card-item-stat">
-                                                    <h4 class="fw-bold">$8,500</h4>
-                                                    <small><b class="text-danger">12%</b> decrease</small>
+                                                    <h4 class="fw-bold">{{ userCount() }}</h4>
+                                                    {{-- <small><b class="text-danger">12%</b> decrease</small> --}}
                                                 </div>
                                             </div>
                                         </div>
@@ -154,7 +154,7 @@
                                     </div>
                                 </div>
                             </div><!-- col end -->
-                            
+
                             <div class="col-lg-12">
                                 <div class="card custom-card mg-b-20 tasks">
                                     <div class="card-body">
@@ -362,7 +362,7 @@
 
                     </div><!-- col end -->
 
-                    
+
                 </div>
                 <!-- End::row-1 -->
 
