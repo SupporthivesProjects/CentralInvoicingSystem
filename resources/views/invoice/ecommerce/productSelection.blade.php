@@ -94,7 +94,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text">{{ site_currency() }}</span>
                                     </div>
-                                    <input form="generate-invoice-form" name="invoice_amount" class="form-control"   value="{{ number_format($invoice['invoice_amount'],2) }}" readonly type="number" readonly>
+                                    <input form="generate-invoice-form" name="invoice_amount" class="form-control"   value="{{ number_format($invoice['invoice_amount'],2) }}" readonly type="number">
                                 </div>
                             </div>
                             
