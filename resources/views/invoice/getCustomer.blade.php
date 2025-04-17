@@ -43,8 +43,8 @@
                                                 Change Site
                                             </a>
                                         </label>
-                                        <input type="text" class="form-control" name="site_name" id="site_name" value="{{ $site->site_name ?? 'N/A' }}" readonly>
-                                        <input type="hidden" name="site_id" id="site_id" value="{{ $site->id ?? '' }}">
+                                        <input type="text" class="form-control" name="site_name" id="site_name" value="{{ $site->site_name ?? 'N/A' }}" readonly autocomplete="off">
+                                        <input type="hidden" name="hidden_site_id" id="hidden_site_id" value="{{ $site->id ?? '' }}">
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Customer Name <span class="text-danger">*</span></label>

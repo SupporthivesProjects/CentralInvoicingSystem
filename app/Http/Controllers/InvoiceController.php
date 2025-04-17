@@ -54,7 +54,7 @@ class InvoiceController extends Controller
     public function saveCustomerDetails(Request $request)
     {
         $validated = $request->validate([
-            'site_id' => 'required|exists:websites,id',
+            'hidden_site_id' => 'required|exists:websites,id',
             'customer_name' => 'required|string|max:255',
             'invoice_date' => 'required|date',
             'invoice_amount' => 'required|numeric|min:1',
@@ -65,7 +65,7 @@ class InvoiceController extends Controller
         
         session([
             'customer' => [
-                'site_id' => $request->site_id,
+                'site_id' => $request->hidden_site_id,
                 'site_name' => $request->site_name,
                 'customer_name' => $request->customer_name,
                 'customer_mobile' => $request->customer_mobile,
