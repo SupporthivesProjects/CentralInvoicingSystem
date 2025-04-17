@@ -35,17 +35,21 @@ class InvoiceController extends Controller
             $site_id = request()->get('site_id', $site_id_from_url);
             $site = Website::findOrFail($site_id);
             $sites = Website::all();
-
-            $invoiceNumber = generateInvoiceNumber($site->site_name);
-
-            return view('invoice.getCustomer', compact('invoiceNumber','site', 'sites'));
-
+    
+            return view('invoice.getCustomer', [
+                'site' => $site,
+                'sites' => $sites,
+                'customer' => session('customer'),
+                'invoice' => session('invoice'),
+            ]);
+    
         } catch (ModelNotFoundException $e) {
             return redirect()->back()->with('error', 'Website not found!');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Something went wrong: ' . $e->getMessage());
         }
     }
+    
 
     public function saveCustomerDetails(Request $request)
     {

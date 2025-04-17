@@ -48,19 +48,19 @@
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Customer Name <span class="text-danger">*</span></label>
-                                        <input type="text" name="customer_name" class="form-control" placeholder="Enter Customer Name" required>
+                                        <input type="text" name="customer_name" class="form-control" placeholder="Enter Customer Name" value="{{ $customer['customer_name'] ?? '' }}" required>
                                     </div>
 
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Invoice Date <span class="text-danger">*</span></label>
-                                        <input type="date" name="invoice_date" class="form-control" required>
+                                        <input type="date" name="invoice_date" class="form-control" value="{{ $invoice['invoice_date'] ?? '' }}" required>
                                     </div>
 
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Invoice Amount <span class="text-danger">*</span></label>
                                         <div class="input-group">
                                             <span class="input-group-text">$</span>
-                                            <input type="number" name="invoice_amount" class="form-control" placeholder="Enter invoice target amount" required>
+                                            <input type="number" name="invoice_amount" class="form-control" value="{{ $invoice['invoice_amount'] ?? '' }}"  placeholder="Enter invoice target amount" required>
                                         </div>
                                     </div>
                                     <div class="col-md-6 mb-3">

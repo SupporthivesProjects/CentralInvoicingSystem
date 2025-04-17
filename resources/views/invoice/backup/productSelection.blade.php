@@ -28,29 +28,26 @@
 
             <div class="card custom-card">
                 <div class="card-body shadow rounded">
-                    <form method="GET" action="#">
+                    <form id="generate-invoice-form" method="POST" action="{{ route('generate.invoice') }}">
                         @csrf
                         <div class="row">
                             <div class="col-md-3 mb-3">
                                 <label class="form-label">Selected Website <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" 
-                                    value="{{ $customer['site_name'] ?? 'N/A' }}" 
-                                    readonly>
+                                <input type="text" form="generate-invoice-form" class="form-control"  value="{{ $customer['site_name'] ?? 'N/A' }}" readonly>
+                                <input type="hidden" form="generate-invoice-form" name="site_id" id="site_id" class="form-control"  value="{{ $customer['site_id'] }}" readonly>
                             </div>
                             <div class="col-md-3 mb-3">
                                 <label class="form-label">Company Email</label>
-                                <input type="text" class="form-control" 
-                                    value="{{ $site->company_email ?? 'N/A' }}" readonly>
+                                <input type="text" form="generate-invoice-form" class="form-control" name="company_email"  value="{{ $site->company_email ?? 'N/A' }}" >
                             </div>
                             <div class="col-md-3 mb-3">
-                                <label class="form-label">Invoice Number <span class="text-danger">*</span></label>
-                                <input type="text" name="invoice_number" class="form-control font-italic" 
-                                    value="{{ $invoice['invoice_number'] ?? '' }}" readonly>
+                                <label class="form-label">Invoice Number <span class="text-info">(Auto Generated)</span></label>
+                                <input type="text" form="generate-invoice-form" name="invoice_number" class="form-control font-italic" value="{{ $invoice['invoice_number'] ?? '' }}" placeholder="Auto-generated invoice number" readonly>
                             </div>
+
                             <div class="col-md-3 mb-3">
                                 <label class="form-label">Invoice Date</label>
-                                <input type="date" name="invoice_date" class="form-control" 
-                                    value="{{ $invoice['invoice_date'] ?? now()->toDateString() }}" readonly>
+                                <input type="date" form="generate-invoice-form" name="invoice_date" class="form-control"  value="{{ $invoice['invoice_date'] ?? now()->toDateString() }}">
                             </div>
                         </div>
 
@@ -61,29 +58,22 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text">{{ site_currency() }}</span>
                                     </div>
-                                    <input name="invoice_amount" class="form-control" 
-                                        value="{{ $invoice['invoice_amount'] ?? '' }}" 
-                                        readonly type="number" readonly>
+                                    <input form="generate-invoice-form" name="invoice_amount" class="form-control"   value="{{ $invoice['invoice_amount'] ?? '' }}" readonly type="number" readonly>
                                 </div>
                             </div>
                             <div class="col-md-3 mb-3">
                                 <label class="form-label">Customer Name</label>
-                                <input type="text" class="form-control" 
-                                    value="{{ $customer['customer_name'] ?? '' }}" readonly>
+                                <input type="text" form="generate-invoice-form" class="form-control" name="customer_name" value="{{ $customer['customer_name'] ?? '' }}" >
                             </div>
                             <div class="col-md-3 mb-3">
                                 <label class="form-label">Customer Email</label>
-                                <input type="email" class="form-control" 
-                                    value="{{ $customer['customer_email'] ?? '' }}" readonly>
+                                <input type="email" form="generate-invoice-form" class="form-control" name="customer_email"  value="{{ $customer['customer_email'] ?? '' }}" >
                             </div>
                             <div class="col-md-3 mb-3">
                                 <label class="form-label">Customer Phone</label>
-                                <input type="text" class="form-control" 
-                                    value="{{ $customer['customer_mobile'] ?? '' }}" readonly>
+                                <input type="text" form="generate-invoice-form" class="form-control" name="customer_mobile"  value="{{ $customer['customer_mobile'] ?? '' }}" >
                             </div>
                         </div>
-
-
                     </form>
                 </div>
             </div>
@@ -97,7 +87,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">{{ site_currency() }}  </span> 
                                 </div>
-                                <input type="number" id= "current_amount"  name="current_amount" class="form-control bg-white" value="{{ $current_total  ?? '00.00'}}" readonly>
+                                <input type="number" form="generate-invoice-form" id= "current_amount"  name="current_amount" class="form-control bg-white" value="{{ $current_total  ?? '00.00'}}" readonly>
                             </div>
                         </div>
                         <div class="col-md-4 mb-3">
@@ -106,7 +96,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">{{ site_currency() }}</span> 
                                 </div>
-                                <input type="number" name="discount_amount" id="discount_amount"  class="form-control bg-white" placeholder="Discount Amount" value="0">
+                                <input type="number" form="generate-invoice-form" name="discount_amount" id="discount_amount"  class="form-control bg-white" placeholder="Discount Amount" value="0">
                             </div>
                             
                         </div>
@@ -116,7 +106,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">{{ site_currency() }}  </span> 
                                 </div>
-                                <input type="number" name="final_amount" id="final_amount" class="form-control bg-white" placeholder="Target Total" value="{{ $invoice['invoice_amount'] ?? '' }}">
+                                <input type="number" form="generate-invoice-form" name="final_amount" id="final_amount" class="form-control bg-white" placeholder="Target Total" value="{{ $invoice['invoice_amount'] ?? '' }}">
                             </div>
                             
                         </div>
@@ -138,7 +128,7 @@
                         <button type="button" class="btn btn-outline-warning me-1" onclick="generateRandomProducts('random')">
                             <i class="bi bi-dice-5"></i> Randomize
                         </button>
-                        <button type="button" class="btn btn-outline-success" onclick="generateInvoice(event)">
+                        <button type="button" class="btn btn-outline-success">
                             <i class="bi bi-file-earmark-text"></i> Generate Invoice
                         </button>
                     </div>
@@ -151,7 +141,7 @@
                         <div class="row align-items-end g-3">
                         <div class="col-md-6">
                             <label for="keywordInput" class="form-label">Search for Products</label>
-                            <input type="text" name="manual_keyword" id="keywordInput" class="form-control" placeholder="Type a keyword and wait for 2 seconds to apply the filter.">
+                            <input type="text" name="manual_keyword" id="keywordInput" class="form-control" placeholder="Type a keyword and wait for 1.5 seconds to apply the filter.">
                         </div>
 
 
@@ -190,21 +180,19 @@
     </div>
 </div>
 
-<form id="generate-invoice-form" method="POST" action="{{ route('generate.invoice') }}">
-    @csrf
-    <button form="generate-invoice-form" type="submit" class="d-none">Generate Invoice</button>
-</form>
-
+<iframe name="hiddenFrame" id="hiddenFrame" style="display:none;"></iframe>
 @endsection
 @push('scripts')
 <script>
     $(document).ready(function () {
         generateRandomProducts('initial');
         $('input[name="product_ids[]"]').prop('disabled', true);
+        $('input[name="manual_keyword"]').prop('disabled', true);
     });
 
     function generateRandomProducts(mode = 'initial') {
         $('input[name="product_ids[]"]').prop('disabled', true);
+        $('input[name="manual_keyword"]').prop('disabled', true);
         let title = (mode === 'initial') ? 'Cooking Up Combos...' : 'Trying Cool Combos...';
         let loadingText = (mode === 'random') 
             ? 'Finding products that match your invoice total...' 
@@ -229,7 +217,7 @@
             url: '/random-products',
             type: 'GET',
             data: {
-                site_id: "{{ $customer['site_id'] ?? '' }}" ,
+                site_id: SITE_ID,
                 invoice_amount: "{{ $invoice['invoice_amount'] ?? '' }}",
                 price_from: priceFrom,
                 price_to: priceTo
@@ -263,21 +251,17 @@
     }
 </script>
 
-
-<script>
-    const INVOICE_TOTAL = parseFloat('{{ $invoice["invoice_amount"] ?? 0 }}');
-    const SITE_ID = {{ session('customer.site_id') ?? 0 }};
-</script>
 <script>
 let selectedTotal = 0;
 let customMode = false;
-const invoiceAmount = INVOICE_TOTAL;
-const maxAllowed = invoiceAmount * 1.02;
+const invoiceAmount = parseFloat('{{ $invoice["invoice_amount"] ?? 0 }}');
+const SITE_ID = {{ session('customer.site_id') ?? 0 }};
 
 // Triggered when custom button is clicked
 function setCustomOnly() {
     customMode = true;
     $('input[name="product_ids[]"]').prop('disabled', false);
+    $('input[name="manual_keyword"]').prop('disabled', false);
     $('#product-table-body').empty();
     selectedTotal = 0;
     updateTotalDisplay();
@@ -360,7 +344,7 @@ function attachCheckboxHandlers() {
             }
         });
 
-        if (tempTotal > maxAllowed) {
+        if (tempTotal > invoiceAmount) {
             toastr.error(`Product total exceeds your invoice target of $${invoiceAmount.toFixed(2)}`, 'Limit Reached');
         }
 
@@ -449,6 +433,8 @@ priceSlider.noUiSlider.on('update', function (values) {
 function clearAllProducts() {
     $('#product-table-body').empty();
     $('input[name="manual_keyword"]').val('');
+    $('#discount_amount').val('');
+    $('#current_amount').val('');
     selectedTotal = 0;
     updateTotalDisplay();
     toastr.success('Your filter has been reset now', 'Filter Cleared');
@@ -463,10 +449,10 @@ function clearAllProducts() {
         const isKeyword = $(this).attr('id') === 'keywordInput';
         filterTimer = setTimeout(() => {
             if (customMode) {
-                // Custom mode: filter for both keyword & range
+
                 filterProducts();
             } else {
-                // Random mode: only trigger on range filter change
+
                 if (!isKeyword) {
                     generateRandomProducts('random');
                 }
@@ -476,83 +462,95 @@ function clearAllProducts() {
 </script>
 
 
-
 <script>
     function generateInvoice(event) {
-        // Prevent the form from submitting
-        event.preventDefault(); 
+        event.preventDefault();
 
-        const selectedProducts = $('input[name="product_ids[]"]:checked');
-        const invoiceAmount = parseFloat($('#final_amount').val()) || 0;
-        const current_amount = parseFloat($('#current_amount').val()) || 0;
-        const discountAmount = parseFloat($('#discount_amount').val()) || 0;
-        const finalAmount = parseFloat($('#final_amount').val()) || 0;
+         Swal.fire({
+                    title: 'Preparing Invoice...',
+                    text: 'Please wait while we generate your invoice.',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
 
-        if (selectedProducts.length === 0) {
-            toastr.warning('Select combo products to match your invoice amount.', 'No Products Selected');
-            return;
-        }
+        $.ajax({
+            url: '/generate-new-invoice-number',
+            method: 'GET',
+            data: { site_name: "{{ $customer['site_name'] ?? 'N/A' }}" },
+            success: function (response) {
 
-        if (current_amount < invoiceAmount) {
-            toastr.error('Total is less than invoice amount.', 'Mismatch');
-            return;
-        }
+                if (!response.success) {
+                    Swal.close();
+                    toastr.error('Failed to generate new invoice number', 'Error');
+                    return;
+                }
 
-        if ((current_amount - discountAmount) !== finalAmount) {
-            const diff = (current_amount - finalAmount).toFixed(2);
-            
-            if (discountAmount > diff) {
-                toastr.error(`The discount amount of $${discountAmount} is more than the expected discount of $${diff}.`, 'Discount Too High');
-            } else {
-                toastr.error(`Please apply a discount of $${diff} to match the target amount.`, 'Give Discount');
+                // Set the invoice number
+                $('input[name="invoice_number"]').val(response.new_invoice_number);
+
+                // Step 2: Continue with validation and form preparation
+                const selectedProducts = $('input[name="product_ids[]"]:checked');
+                const invoiceAmount = parseFloat($('#final_amount').val()) || 0;
+                const current_amount = parseFloat($('#current_amount').val()) || 0;
+                const discountAmount = parseFloat($('#discount_amount').val()) || 0;
+                const finalAmount = parseFloat($('#final_amount').val()) || 0;
+
+                if (selectedProducts.length === 0) {
+                    Swal.close();
+                    toastr.warning('Select combo products to match your invoice amount.', 'No Products Selected');
+                    return;
+                }
+
+                if (current_amount < invoiceAmount) {
+                    Swal.close();
+                    toastr.error('Total is less than invoice amount.', 'Mismatch');
+                    return;
+                }
+
+                if ((current_amount - discountAmount) !== finalAmount) {
+                    const diff = (current_amount - finalAmount).toFixed(2);
+
+                    if (discountAmount > diff) {
+                        Swal.close();
+                        toastr.error(`The discount amount of $${discountAmount} is more than the expected discount of $${diff}.`, 'Discount Too High');
+                    
+                    } else {
+                        Swal.close();
+                        toastr.error(`Please apply a discount of $${diff} to match the target amount.`, 'Give Discount');
+                    }
+                    return;
+                }
+
+                // Remove existing product data
+                $('#generate-invoice-form').find('input[name="product_data[]"]').remove();
+
+                // Add selected product data
+                selectedProducts.each(function () {
+                    const productId = $(this).val();
+                    const unitPrice = $(`input[data-product-id="${productId}"]`).val();
+
+                    $('#generate-invoice-form').append($('<input>', {
+                        type: 'hidden',
+                        name: 'product_data[]',
+                        value: JSON.stringify({ product_id: productId, unit_price: unitPrice })
+                    }));
+                });
+                
+                $('#generate-invoice-form')[0].submit();
+                setTimeout(() => {
+                    Swal.close();
+                    }, 3000);
+                   
+            },
+            error: function () {
+                Swal.close();
+                toastr.error('There was an error generating the invoice number', 'Error');
             }
-            return;
-        }
-        $('#generate-invoice-form').find('input[name="product_data[]"]').remove(); 
-
-        selectedProducts.each(function () {
-            const productId = $(this).val();
-            const unitPrice = $(`input[data-product-id="${productId}"]`).val(); 
-
-            $('#generate-invoice-form').append($('<input>', {
-                type: 'hidden',
-                name: 'product_data[]',
-                value: JSON.stringify({ product_id: productId, unit_price: unitPrice }) 
-            }));
         });
-
-        
-        $('#generate-invoice-form').append($('<input>', {
-            type: 'hidden',
-            name: 'current_amount',
-            value: current_amount.toFixed(2)  
-        }));
-
-        $('#generate-invoice-form').append($('<input>', {
-            type: 'hidden',
-            name: 'discount_amount',
-            value: discountAmount.toFixed(2) 
-        }));
-
-        $('#generate-invoice-form').append($('<input>', {
-            type: 'hidden',
-            name: 'final_amount',
-            value: finalAmount.toFixed(2)  
-        }));
-
-        $('#generate-invoice-form')[0].submit();
-
-            Swal.fire({
-            title: 'Preparing Invoice...',
-            text: 'Please wait while we generate your invoice.',
-            allowOutsideClick: false,
-            didOpen: () => {
-                Swal.showLoading();
-            }
-        });
-
-        setTimeout(() => Swal.close(), 3500);
     }
 </script>
+
 
 @endpush

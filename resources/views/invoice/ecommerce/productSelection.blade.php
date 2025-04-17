@@ -31,45 +31,33 @@
                     <form id="generate-invoice-form" method="POST" action="{{ route('generate.invoice') }}">
                         @csrf
                         <div class="row">
-                            <div class="col-md-3 mb-3">
+                            <div class="col-md-4 mb-3">
                                 <label class="form-label">Selected Website <span class="text-danger">*</span></label>
                                 <input type="text" form="generate-invoice-form" class="form-control"  value="{{ $customer['site_name'] ?? 'N/A' }}" readonly>
                                 <input type="hidden" form="generate-invoice-form" name="site_id" id="site_id" class="form-control"  value="{{ $customer['site_id'] }}" readonly>
                             </div>
-                            <div class="col-md-3 mb-3">
-                                <label class="form-label">Company Email</label>
-                                <input type="text" form="generate-invoice-form" class="form-control" name="company_email"  value="{{ $site->company_email ?? 'N/A' }}" >
-                            </div>
-                            <div class="col-md-3 mb-3">
-                                <label class="form-label">Invoice Number <span class="text-info">(Auto Generated)</span></label>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Invoice Number<span class="text-danger">*</span> <span class="text-info">(Auto Generated)</span></label>
                                 <input type="text" form="generate-invoice-form" name="invoice_number" class="form-control font-italic" value="{{ $invoice['invoice_number'] ?? '' }}" placeholder="Auto-generated invoice number" readonly>
                             </div>
 
-                            <div class="col-md-3 mb-3">
-                                <label class="form-label">Invoice Date</label>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Invoice Date <span class="text-danger">*</span></label>
                                 <input type="date" form="generate-invoice-form" name="invoice_date" class="form-control"  value="{{ $invoice['invoice_date'] ?? now()->toDateString() }}">
                             </div>
                         </div>
 
                         <div class="row">
-                            <div class="col-md-3 mb-3">
-                                <label class="form-label">Invoice Amount <span class="text-danger">*</span></label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">{{ site_currency() }}</span>
-                                    </div>
-                                    <input form="generate-invoice-form" name="invoice_amount" class="form-control"   value="{{ $invoice['invoice_amount'] ?? '' }}" readonly type="number" readonly>
-                                </div>
-                            </div>
-                            <div class="col-md-3 mb-3">
-                                <label class="form-label">Customer Name</label>
+                           
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Customer Name <span class="text-danger">*</span></label>
                                 <input type="text" form="generate-invoice-form" class="form-control" name="customer_name" value="{{ $customer['customer_name'] ?? '' }}" >
                             </div>
-                            <div class="col-md-3 mb-3">
+                            <div class="col-md-4 mb-3">
                                 <label class="form-label">Customer Email</label>
                                 <input type="email" form="generate-invoice-form" class="form-control" name="customer_email"  value="{{ $customer['customer_email'] ?? '' }}" >
                             </div>
-                            <div class="col-md-3 mb-3">
+                            <div class="col-md-4 mb-3">
                                 <label class="form-label">Customer Phone</label>
                                 <input type="text" form="generate-invoice-form" class="form-control" name="customer_mobile"  value="{{ $customer['customer_mobile'] ?? '' }}" >
                             </div>
@@ -100,13 +88,14 @@
                             </div>
                             
                         </div>
-                        <div class="col-md-4 mb-3">
-                            <label class="form-label">Target Amount</label>
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">{{ site_currency() }}  </span> 
+                        <div class="col-md-3 mb-3">
+                                <label class="form-label">Invoice Amount <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">{{ site_currency() }}</span>
+                                    </div>
+                                    <input form="generate-invoice-form" name="invoice_amount" class="form-control"   value="{{ number_format($invoice['invoice_amount'],2) }}" readonly type="number" readonly>
                                 </div>
-                                <input type="number" form="generate-invoice-form" name="final_amount" id="final_amount" class="form-control bg-white" placeholder="Target Total" value="{{ $invoice['invoice_amount'] ?? '' }}">
                             </div>
                             
                         </div>
@@ -188,11 +177,13 @@
         generateRandomProducts('initial');
         $('input[name="product_ids[]"]').prop('disabled', true);
         $('input[name="manual_keyword"]').prop('disabled', true);
+        $('.product-price').prop('readonly', true);
     });
 
     function generateRandomProducts(mode = 'initial') {
         $('input[name="product_ids[]"]').prop('disabled', true);
         $('input[name="manual_keyword"]').prop('disabled', true);
+        $('.product-price').prop('readonly', true);
         let title = (mode === 'initial') ? 'Cooking Up Combos...' : 'Trying Cool Combos...';
         let loadingText = (mode === 'random') 
             ? 'Finding products that match your invoice total...' 
@@ -262,6 +253,7 @@ function setCustomOnly() {
     customMode = true;
     $('input[name="product_ids[]"]').prop('disabled', false);
     $('input[name="manual_keyword"]').prop('disabled', false);
+    $('.product-price').prop('readonly', false);
     $('#product-table-body').empty();
     selectedTotal = 0;
     updateTotalDisplay();
@@ -363,7 +355,7 @@ function attachCheckboxHandlers() {
             tempTotal += unitPrice;
         });
 
-        if (tempTotal > maxAllowed) {
+        if (tempTotal > invoiceAmount) {
             toastr.error(`Product total exceeds your invoice target of $${invoiceAmount.toFixed(2)}`, 'Limit Reached');
         }
 
@@ -372,22 +364,10 @@ function attachCheckboxHandlers() {
     });
 }
 
-
-
 function updateTotalDisplay() {
     $('#current_amount').val(selectedTotal.toFixed(2));
 }
 
-function controlCheckboxLimit() {
-    const checkboxes = $('input[name="product_ids[]"]');
-    const unchecked = checkboxes.not(':checked');
-
-    if (selectedTotal >= invoiceAmount && selectedTotal <= maxAllowed) {
-        unchecked.prop('disabled', true);
-    } else {
-        checkboxes.prop('disabled', false);
-    }
-}
 </script>
 
 
@@ -492,10 +472,9 @@ function clearAllProducts() {
 
                 // Step 2: Continue with validation and form preparation
                 const selectedProducts = $('input[name="product_ids[]"]:checked');
-                const invoiceAmount = parseFloat($('#final_amount').val()) || 0;
+                const invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
                 const current_amount = parseFloat($('#current_amount').val()) || 0;
                 const discountAmount = parseFloat($('#discount_amount').val()) || 0;
-                const finalAmount = parseFloat($('#final_amount').val()) || 0;
 
                 if (selectedProducts.length === 0) {
                     Swal.close();
@@ -509,8 +488,8 @@ function clearAllProducts() {
                     return;
                 }
 
-                if ((current_amount - discountAmount) !== finalAmount) {
-                    const diff = (current_amount - finalAmount).toFixed(2);
+                if ((current_amount - discountAmount) !== invoiceAmount) {
+                    const diff = (current_amount - invoiceAmount).toFixed(2);
 
                     if (discountAmount > diff) {
                         Swal.close();

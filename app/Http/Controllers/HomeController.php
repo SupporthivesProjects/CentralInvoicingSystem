@@ -58,7 +58,6 @@ class HomeController extends Controller
         $priceChangeCounts = [];
         $invoiceCounts = [];
     
-        // Init values with 0 for both price changes and invoices
         for ($i = 7; $i >= 0; $i--) {
             $date = Carbon::now()->subDays($i)->format('Y-m-d');
             $dates[] = $date;
@@ -82,6 +81,47 @@ class HomeController extends Controller
     
         return [$dates, $invoiceCounts, $priceChanges];
     }
+
     
+    public function internalSearch(Request $request)
+    {
+        $keyword = $request->get('keyword', '');
+        $type = $request->get('type', '');
+    
+        if (empty($keyword) || empty($type)) {
+            return response()->json([]);
+        }
+    
+        $output = [];
+    
+        switch ($type) {
+            case 'websites':
+                $results = Website::where('site_name', 'like', '%' . $keyword . '%')->limit(10)->get();
+                foreach ($results as $row) {
+                    $output[] = [
+                        'name' => $row->site_name,
+                        'url' => route('site.connect.db', $row->id), 
+                        'icon' => 'bx-globe',
+                    ];
+                }
+                break;
+    
+            case 'business_models':
+                $results = BusinessModel::where('name', 'like', '%' . $keyword . '%')->limit(10)->get();
+                foreach ($results as $row) {
+                    $output[] = [
+                        'name' => $row->name,
+                        'url' => route('businessmodel.websites', $row->id), 
+                        'icon' => 'bx-briefcase',
+                    ];
+                }
+                break;
+    
+            default:
+                return response()->json([]);
+        }
+    
+        return response()->json($output);
+    }
     
 }

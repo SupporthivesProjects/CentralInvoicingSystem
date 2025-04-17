@@ -34,7 +34,7 @@ class EcommerceController extends Controller
 
         // 1–2% tolerance range for the invoice amount
         $minTotal = $invoiceAmount;
-        $maxTotal = $invoiceAmount * 1.02;
+        $maxTotal = $invoiceAmount * 1.01;
 
         // Find the website data based on site_id
         $site = Website::findOrFail($site_id);
@@ -181,8 +181,8 @@ class EcommerceController extends Controller
         $invoice_data['invoice_amount'] = $request->input('invoice_amount');
         $invoice_data['current_amount'] = $request->input('current_amount');
         $invoice_data['discount_amount'] = $request->input('discount_amount');
-        $invoice_data['final_amount'] = $request->input('final_amount');
         $invoice_data['company_name'] = $site->company_name;
+        $invoice_data['company_email'] = $site->company_email;
         $invoice_data['company_mobile'] = $site->company_mobile;
         $invoice_data['company_address'] = $site->company_address;
         $invoice_data['invoice_header_image'] = base64EncodeImage($site->invoice_header_image);

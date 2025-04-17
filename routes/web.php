@@ -84,6 +84,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/invoice/chart', [HomeController::class, 'showInvoiceChart'])->name('invoice.chart');
     Route::get('/report/invoices', [ReportController::class, 'invoiceReport'])->name('invoice.report');
 
+    Route::get('/internal/search', [HomeController::class, 'internalSearch'])->name('internal.search');
+
 
 });
 
