@@ -14,6 +14,7 @@ function performInternalSearch() {
     const selectedText = $('#internalSearchType option:selected').text();
     const heading = `Search Results for ${selectedText}`;
     if (keyword.length > 1 && type !== '') {
+        $('#searchResults').empty().removeClass('active-search');
         $('#searchspinner')
             .html(`<div class="spinner-border text-primary" role="status">
                 <span class="visually-hidden">Loading...</span>
