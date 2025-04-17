@@ -12,22 +12,7 @@ class AuthController extends Controller
         return view('pages.login');
     }
 
-    // Handle login submit
-    // public function login(Request $request)
-    // {
-    //     $request->validate([
-    //         'email' => 'required|email',
-    //         'password' => 'required'
-    //     ]);
-
-    //     if (Auth::attempt($request->only('email', 'password'))) {
-    //         return redirect()->route('dashboard')->with('success', 'Login successful!');
-    //     }
-
-    //     return back()->with('error', 'Invalid credentials');
-
-    // }
-
+    
     public function login(Request $request)
     {
         $request->validate([
@@ -55,12 +40,6 @@ class AuthController extends Controller
         return back()->with('error', 'Invalid credentials');
     }
 
-
-    // Show dashboard (only for authenticated users)
-    public function dashboard()
-    {
-        return view('pages.dashboard'); // create this Blade file
-    }
 
     // Handle logout
     public function logout()

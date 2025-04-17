@@ -37,30 +37,26 @@
                         <span class="side-menu__label">Dashboard</span>
                     </a>
                 </li>
-
-                <!-- Website Management -->
-                <li class="slide__category"><span class="category-name">Models & Websites</span></li>
+                
                 <li class="slide has-sub">
                     <a href="javascript:void(0);" class="side-menu__item">
                         <span class="shape1"></span>
                         <span class="shape2"></span>
                         <i class="ti-world side-menu__icon"></i>
-                        <span class="side-menu__label">Website Management</span>
+                        <span class="side-menu__label">Models & Websites</span>
                         <i class="fe fe-chevron-right side-menu__angle"></i>
                     </a>
                     <ul class="slide-menu child1">
-                        <li class="slide side-menu__label1"><a href="javascript:void(0)">Website Management</a></li>
-                        <li class="slide"><a href="{{ route('businessmodel.create') }}" class="side-menu__item">Add Model</a></li>
-                        <li class="slide"><a href="{{ route('website.create') }}" class="side-menu__item">Add Website</a></li>
+                        <li class="slide side-menu__label1"><a href="javascript:void(0)">Models & Websites</a></li>
                         <li class="slide">
                             <a href="{{ route('businessmodels') }}" class="side-menu__item d-flex align-items-center justify-content-between">
-                                <span>Models</span>
+                                <span>Business Models</span>
                                 <span class="badge bg-success">{{ getModelsCount() }}</span>
                             </a>
                         </li>
                         <li class="slide">
                             <a href="{{ route('connectedwebsites') }}" class="side-menu__item d-flex align-items-center justify-content-between">
-                                <span>Websites</span>
+                                <span>Available Websites</span>
                                 <span class="badge bg-success">{{ getAllWebsites() }}</span>
                             </a>
                         </li>

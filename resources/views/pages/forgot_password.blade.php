@@ -29,7 +29,7 @@
                                     <div class="clearfix"></div>
                                     <h5 class="text-start mb-2">Forgot Password</h5>
                                     <p class="mb-4 text-muted fs-13 ms-0 text-start">Enter your registered email address. We’ll send you a link to reset your password.</p>
-                                    <form method="POST" action="{{ route('password.email') }}">
+                                    <form method="POST" action="{{ route('password.email') }}" id="forgotPasswordForm">>
                                     @csrf
                                         <div class="form-group text-start">
                                             <label class="form-label">Email</label>
@@ -57,4 +57,20 @@
 @endsection
 
 @push('scripts')
+<script>
+    document.getElementById('forgotPasswordForm').addEventListener('submit', function () {
+        Swal.fire({
+            title: 'Sending reset link...',
+            html: `
+                <div class="d-flex flex-column align-items-center">
+                    <div class="spinner-border text-primary" role="status"></div>
+                    <small class="mt-2">Just a sec! Your reset link is zooming its way to your inbox.</small>
+                </div>
+            `,
+            showConfirmButton: false,
+            allowOutsideClick: false
+        });
+    });
+</script>
+
 @endpush
