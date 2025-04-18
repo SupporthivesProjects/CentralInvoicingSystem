@@ -22,14 +22,24 @@ use Carbon\Carbon;
 
 class EcommerceController extends Controller
 {
+    private $productTable;
+    private $connectionType;
+
+    public function __construct()
+    {
+        $site_id = session('customer.site_id');
+        $site = Website::findOrFail($site_id);
+        $this->productTable = getProductTable($site->technology);
+        $this->connectionType = 'dynamic';
+    }
 
     public function getPriceRange(Request $request)
     {
         $site_id = session('customer.site_id');
         $site = Website::findOrFail($site_id);
         DynamicDatabaseService::connect($site);
-        $min_unit_price = DB::connection('dynamic')->table('products')->where('published', 1)->min('unit_price');
-        $max_unit_price = DB::connection('dynamic')->table('products')->where('published', 1)->max('unit_price');
+        $min_unit_price = DB::connection($this->connectionType)->table($this->productTable)->where('published', 1)->min('unit_price');
+        $max_unit_price = DB::connection($this->connectionType)->table($this->productTable)->where('published', 1)->max('unit_price');
         return response()->json(['minProductPrice' => $min_unit_price, 'maxProductPrice' => $max_unit_price]);
     }
 
@@ -45,12 +55,12 @@ class EcommerceController extends Controller
         $maxTotal = $invoiceAmount * 1.05;
     
         $site = Website::findOrFail($site_id);
-    
+        $productstable = getProductTable($site->technology);
         DynamicDatabaseService::connect($site);
-        $minProductPrice = DB::connection('dynamic')->table('products')->min('unit_price'); 
-        $maxProductPrice = DB::connection('dynamic')->table('products')->max('unit_price');
+        $minProductPrice = DB::connection($this->connectionType)->table($this->productTable)->min('unit_price'); 
+        $maxProductPrice = DB::connection($this->connectionType)->table($this->productTable)->max('unit_price');
     
-        $allProducts = DB::connection('dynamic')->table('products')
+        $allProducts = DB::connection($this->connectionType)->table($this->productTable)
             ->select('id', 'name', 'unit_price','slug')
             ->where('published', 1)
             ->when($priceFrom && $priceTo, function ($query) use ($priceFrom, $priceTo) {
@@ -100,7 +110,7 @@ class EcommerceController extends Controller
             ]);
         }
     
-        $currency = DB::connection('dynamic')->table('currencies')->where('status', 1)->first();
+        $currency = DB::connection($this->connectionType)->table('currencies')->where('status', 1)->first();
     
         $modelType = $site->businessModel->model_type;
         $tableRows = view("invoice.{$modelType}.product_rows", ['products' => $bestMatch, 'currency' => $currency,'site' => $site,'minProductPrice'=> $minProductPrice,'maxProductPrice'=> $maxProductPrice])->render();
@@ -119,9 +129,10 @@ class EcommerceController extends Controller
     {
         $site_id = session('customer.site_id');
         $site = Website::findOrFail($site_id);
+        $productstable = getProductTable($site->technology);
         DynamicDatabaseService::connect($site);
-        $minProductPrice = DB::connection('dynamic')->table('products')->min('unit_price'); 
-        $maxProductPrice = DB::connection('dynamic')->table('products')->max('unit_price');
+        $minProductPrice = DB::connection($this->connectionType)->table($this->productTable)->min('unit_price'); 
+        $maxProductPrice = DB::connection($this->connectionType)->table($this->productTable)->max('unit_price');
 
         $hasKeyword = $request->filled('keyword');
         $hasPriceRange = $request->filled('price_from') && $request->filled('price_to');
@@ -132,7 +143,7 @@ class EcommerceController extends Controller
             ]);
         }
 
-        $query = DB::connection('dynamic')->table('products')
+        $query = DB::connection($this->connectionType)->table($this->productTable)
             ->select('id', 'name', 'unit_price','slug')
             ->where('published', 1);
         
@@ -156,7 +167,7 @@ class EcommerceController extends Controller
             ]);
         }
 
-        $currency = DB::connection('dynamic')->table('currencies')->where('status', 1)->first();
+        $currency = DB::connection($this->connectionType)->table('currencies')->where('status', 1)->first();
         
         $modelType = $site->businessModel->model_type;
         $tableRows = view("invoice.{$modelType}.product_rows", ['products' => $products, 'currency' => $currency,'site' => $site,'minProductPrice'=> $minProductPrice,'maxProductPrice'=> $maxProductPrice])->render();
@@ -230,7 +241,7 @@ class EcommerceController extends Controller
         }
     
         
-        $products = DB::connection('dynamic')->table('products')
+        $products = DB::connection($this->connectionType)->table($this->productTable)
             ->whereIn('id', $productIds)
             ->select('id', 'name', 'unit_price') 
             ->get()
@@ -245,7 +256,7 @@ class EcommerceController extends Controller
     
     
        
-        $currency = DB::connection('dynamic')->table('currencies')->where('status', 1)->first();
+        $currency = DB::connection($this->connectionType)->table('currencies')->where('status', 1)->first();
         $invoice_data['currency'] = $currency ? $currency->symbol : "$";
     
         $invoice_data['products'] = $products;

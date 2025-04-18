@@ -216,6 +216,7 @@
         $('input[name="product_ids[]"]').prop('disabled', true);
         $('input[name="manual_keyword"]').prop('disabled', true);
         $('.product-price').prop('readonly', true);
+        $('#discount_amount').val(0.00);
     });
 
     function generateRandomProducts(mode = 'initial') {
@@ -253,6 +254,7 @@
             },
             success: function (response) {
                 Swal.close();
+                $('#discount_amount').val(0.00);
                 if (response.total === 0) {
                     $('#product-table-body').html(
                         '<tr><td colspan="7" class="text-center text-muted">No results found. Try randomizing or use a different keyword.</td></tr>'
@@ -296,7 +298,7 @@ function setCustomOnly() {
     selectedTotal = 0;
     updateTotalDisplay();
     attachCheckboxHandlers();
-
+    $('#discount_amount').val(0.00);
     toastr.info('Now filter and pick your custom products.','Let’s begin!');
 
 }

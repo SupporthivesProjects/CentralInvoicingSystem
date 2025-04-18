@@ -11,9 +11,21 @@ use Illuminate\Support\Str;
 
 class WebsiteController extends Controller
 {
+    private $productTable;
+    private $connectionType;
+
+    public function __construct()
+    {
+        $site_id = session('customer.site_id');
+        $site = Website::findOrFail($site_id);
+        $this->productTable = getProductTable($site->technology);
+        $this->connectionType = 'dynamic';
+    }
+    
    
     public function addBusinessModel()
     {
+        
         return view('business.addmodel');
     }
 
@@ -120,20 +132,23 @@ class WebsiteController extends Controller
     public function addwebsite()
     {
         $businessModels = BusinessModel::all();
-        return view('business.addwebsite', compact('businessModels'));
+        $technologies = ['html', 'wordpress', 'corephp', 'laravel', 'django', 'other'];
+        return view('business.addwebsite', compact('businessModels','technologies'));
     }
 
     public function editwebsite($id)
     {
         $website = Website::findOrFail($id);
         $businessModels = BusinessModel::all();
-        return view('business.editwebsite', compact('website', 'businessModels'));
+        $technologies = ['html', 'wordpress', 'corephp', 'laravel', 'django', 'other'];
+        return view('business.editwebsite', compact('website', 'businessModels','technologies'));
     }
 
     public function updateWebsite(Request $request, $id)
     {
         $request->validate([
                 'business_model_id' => 'required|exists:business_models,id',
+                'technology' => 'required|in:html,wordpress,corephp,laravel,django,other',
                 'site_name' => 'required|string|max:255',
                 'site_description' => 'nullable|string|max:500',
                 'db_host' => 'required|string|max:255',
@@ -142,7 +157,6 @@ class WebsiteController extends Controller
                 'db_username' => 'required|string|max:255',
                 'db_password' => 'required|string|max:255',
                 'site_link' => 'nullable|url|max:255',
-                'remark' => 'nullable|string|max:1000',
                 'company_name' => 'nullable|string|max:255',
                 'company_email' => 'nullable|email|max:255',
                 'company_mobile' => 'nullable|string|max:20',
@@ -213,6 +227,7 @@ class WebsiteController extends Controller
                 // Update fields
                 $website->update([
                     'business_model_id' => $request->business_model_id,
+                    'technology' => $request->technology,
                     'site_name' => $request->site_name,
                     'site_description' => $request->site_description,
                     'db_host' => $request->db_host,
@@ -221,7 +236,6 @@ class WebsiteController extends Controller
                     'db_username' => $request->db_username,
                     'db_password' => $request->db_password,
                     'site_link' => $request->site_link,
-                    'remark' => $request->remark,
                     'company_name' => $request->company_name,
                     'company_email' => $request->company_email,
                     'company_mobile' => $request->company_mobile,
@@ -243,6 +257,7 @@ class WebsiteController extends Controller
             // Validation rules, including newly added invoice images
             $validator = Validator::make($request->all(), [
                 'business_model_id' => 'required|exists:business_models,id',
+                'technology' => 'required|in:html,wordpress,corephp,laravel,django,other',
                 'site_name' => 'required|string|max:255',
                 'site_description' => 'nullable|string|max:500',
                 'db_host' => 'required|string|max:255',
@@ -251,7 +266,6 @@ class WebsiteController extends Controller
                 'db_username' => 'required|string|max:255',
                 'db_password' => 'required|string|max:255',
                 'site_link' => 'nullable|url|max:255',
-                'remark' => 'nullable|string|max:1000',
                 'company_name' => 'nullable|string|max:255',
                 'company_email' => 'nullable|email|max:255',
                 'company_mobile' => 'nullable|string|max:20',
@@ -280,6 +294,7 @@ class WebsiteController extends Controller
             // First, create the website record without files
             $website = Website::create([
                 'business_model_id' => $request->business_model_id,
+                'technology' => $request->technology,
                 'site_name' => $request->site_name,
                 'site_description' => $request->site_description,
                 'db_host' => $request->db_host,
@@ -288,7 +303,6 @@ class WebsiteController extends Controller
                 'db_username' => $request->db_username,
                 'db_password' => $request->db_password,
                 'site_link' => $request->site_link,
-                'remark' => $request->remark,
                 'company_name' => $request->company_name,
                 'company_email' => $request->company_email,
                 'company_mobile' => $request->company_mobile,
