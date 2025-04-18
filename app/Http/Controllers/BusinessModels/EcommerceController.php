@@ -30,7 +30,6 @@ class EcommerceController extends Controller
         DynamicDatabaseService::connect($site);
         $min_unit_price = DB::connection('dynamic')->table('products')->where('published', 1)->min('unit_price');
         $max_unit_price = DB::connection('dynamic')->table('products')->where('published', 1)->max('unit_price');
-        
         return response()->json(['minProductPrice' => $min_unit_price, 'maxProductPrice' => $max_unit_price]);
     }
 

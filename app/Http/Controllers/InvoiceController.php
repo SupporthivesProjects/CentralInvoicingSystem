@@ -76,8 +76,16 @@ class InvoiceController extends Controller
                 'invoice_date' => $request->invoice_date,
             ],
             'products' => []
-        ]);        
+        ]); 
+
+        if (!$request->invoice_amount) {
+
+            return redirect()->back()->with(['error','Invoice amount is required.']);
+        }
         
+        if (!session('invoice.invoice_amount')) {
+            session()->put('invoice.invoice_amount', $request->invoice_amount);
+        }
         
         return redirect()->route('product.selection')->with('success', 'Database connection established for the selected website.');
     }

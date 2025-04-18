@@ -19,7 +19,7 @@ class HomeController extends Controller
    
     public function index(Request $request)
     {
-        
+
         list($dates, $invoiceCounts, $priceChanges) = $this->getInvoiceChartData();
         $invoices = InvoiceGenerationHistory::latest()->get();
         $businessmodels = BusinessModel::latest()->get();

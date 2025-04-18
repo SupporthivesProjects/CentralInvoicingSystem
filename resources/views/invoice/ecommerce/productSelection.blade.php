@@ -500,14 +500,18 @@ function clearAllProducts() {
 
                 $('#generate-invoice-form')[0].submit();
 
-                setTimeout(() => {
+                    toastr.options = {
+                        timeOut: 15000,
+                        onHidden: function () {
+                            toastr.options = {
+                                timeOut: 4000
+                            };
+                            toastr.success('Invoice is ready. The download will begin shortly.', 'Completed');
+                        
+                        }
+                    };
+
                     toastr.info('Generating invoice PDF file...', 'Processing');
-                }, 4500);
-
-                setTimeout(() => {
-                    toastr.success('Invoice is ready. The download will begin shortly.', 'Completed');
-                }, 12000);
-
 
             },
             error: function () {

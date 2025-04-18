@@ -5,6 +5,11 @@
     <style>
         body, table, td {
             background-color: transparent !important;
+           
+        }
+        .invoice_image1 table td {
+            padding-top:5px !important;
+            padding-bottom:5px !important;
         }
         .invoice_header_image {
             background-image: url('{{ $company_logo }}');
@@ -99,15 +104,16 @@
                                     <td style="width: 10%; text-align: center; font-family: arial; font-size: 10px; font-weight: 400; border: 1px solid black;">
                                         <b>SR. NO.</b>
                                     </td>
+                                    <td style="width: 15%; text-align: center; font-family: arial; font-size: 10px; font-weight: 400; border: 1px solid black;">
+                                        <b>QUANTITY</b>
+                                    </td>
                                     <td style="width: 45%; text-align: center; font-family: arial; font-size: 10px; font-weight: 400; border: 1px solid black;">
                                         <b>DESCRIPTION</b>
                                     </td>
                                     <td style="width: 15%; text-align: center; font-family: arial; font-size: 10px; font-weight: 400; border: 1px solid black;">
                                         <b>UNIT PRICE</b>
                                     </td>
-                                    <td style="width: 15%; text-align: center; font-family: arial; font-size: 10px; font-weight: 400; border: 1px solid black;">
-                                        <b>QUANTITY</b>
-                                    </td>
+                                    
                                     <td style="width: 15%; text-align: center; font-family: arial; font-size: 10px; font-weight: 400; border: 1px solid black;">
                                         <b>TOTAL</b>
                                     </td>
@@ -118,15 +124,16 @@
                                     <td style="width: 10%; text-align: center; font-family: arial; font-size: 10px; border: 1px solid black;">
                                         {{ $loop->iteration }}
                                     </td>
+                                    <td style="width: 15%; text-align: center; font-family: arial; font-size: 10px; border: 1px solid black;">
+                                        1
+                                    </td>
                                     <td style="width: 45%; text-align: left; padding-left: 10px; font-family: arial; font-size: 10px; border: 1px solid black;">
                                         {{ $product->name }}
                                     </td>
                                     <td style="width: 15%; text-align: right; padding-right: 10px; font-family: arial; font-size: 10px; border: 1px solid black;">
                                         {{ site_currency() . number_format($product->unit_price, 2) }}
                                     </td>
-                                    <td style="width: 15%; text-align: center; font-family: arial; font-size: 10px; border: 1px solid black;">
-                                        1
-                                    </td>
+                                    
                                     <td style="width: 15%; text-align: right; padding-right: 10px; font-family: arial; font-size: 10px; border: 1px solid black;">
                                         {{ site_currency() . number_format($product->unit_price, 2) }}
                                     </td>

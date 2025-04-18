@@ -163,7 +163,17 @@
                 Swal.close();
                 toastr.error("{{ session('error') }}");
             @endif
+            @if(session('info'))
+                Swal.close();
+                toastr.info("{{ session('info') }}");
+            @endif
+
+            @if(session('warning'))
+                Swal.close();
+                toastr.warning("{{ session('warning') }}");
+            @endif
         </script>
+
         
 
 
