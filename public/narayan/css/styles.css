@@ -1,0 +1,156 @@
+/* Custom CSS written by Narayan Zade for eCommerce product selection checkbox */
+
+.narayan-checkbox {
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+    width: 22px !important; /* Enforce smaller size */
+    height: 22px !important; /* Enforce smaller size */
+    border-radius: 50% !important; /* Ensure round shape */
+    border: 2px solid #6c757d !important;
+    background-color: #fff !important;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+.narayan-checkbox:checked {
+    background: var(--primary-color) !important; /* Use the primary color defined by CSS variable */
+    border: 2px solid var(--primary-color) !important; /* Use the primary color for border */
+    transform: scale(1.1) !important; /* Slight scaling effect when checked */
+    animation: pulse 0.5s ease-out forwards;
+}
+
+.narayan-checkbox:checked::before {
+    content: '';
+    position: absolute;
+    top: 4px !important; /* Adjust to center vertically */
+    left: 7px !important; /* Adjust to center horizontally */
+    width: 5px !important;
+    height: 9px !important;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    transform: rotate(45deg) !important;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1.1) !important;
+    }
+    50% {
+        transform: scale(1) !important;
+    }
+    100% {
+        transform: scale(1.1) !important;
+    }
+}
+
+.narayan-checkbox:disabled {
+    cursor: not-allowed !important;
+    background-color: #e9ecef !important;
+    border: 2px solid #ced4da !important;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.narayan-checkbox:disabled:checked {
+    background-color: #c6c6c6 !important;
+    border: 2px solid #ced4da !important;
+}
+
+.narayan-checkbox:not(:checked) {
+    background-color: #fff !important;
+    border: 2px solid #6c757d !important;
+    transition: all 0.3s ease !important;
+}
+
+.narayan-checkbox:not(:checked):hover {
+    border-color: #007bff !important;
+    background-color: #f8f9fa !important;
+}
+
+.narayan-checkbox:checked:hover {
+    border-color: var(--primary-color) !important;
+    background-color: #320cbc !important;
+}
+
+
+/* Toast uI changed by narayan xzade */
+
+
+#toast-container > .toast {
+    color: #fff;
+    background-color: #333; /* dark background */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+#toast-container > .toast-success {
+    background-color: #51A351; /* green */
+}
+
+#toast-container > .toast-error {
+    background-color: #BD362F; /* red */
+}
+
+#toast-container > .toast-warning {
+    background-color: #F89406; /* orange */
+}
+
+#toast-container > .toast-info {
+    background-color: #2F96B4; /* blue */
+}
+
+
+/* Custom CSS for ecommerce product selection slider by Narayan Zade */
+
+#price-slider {
+    margin-top: 6px;
+}
+
+.noUi-target {
+    height: 38px !important;
+    border-radius: 5px;
+    background: #e9ecef;
+    box-shadow: none;
+    border: 1px solid #ced4da;
+}
+
+.noUi-horizontal .noUi-handle {
+    width: 18px;
+    height: 38px !important;
+    top: -1px !important;
+    background: #0d6efd;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+}
+
+.noUi-horizontal .noUi-handle:before,
+.noUi-horizontal .noUi-handle:after {
+    display: none;
+}
+
+.noUi-connect {
+    background: #0d6efd;
+}
+
+#range-values {
+    margin-top: 10px !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    font-size: 14px !important;
+}
+
+.noUi-tooltip {
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    background: #343a40 !important;
+    color: #fff !important;
+    border-radius: 4px !important;
+    padding: 4px 8px !important;
+    top: -30px !important;
+}
+
+.noUi-handle {
+    width: 10px !important;
+}

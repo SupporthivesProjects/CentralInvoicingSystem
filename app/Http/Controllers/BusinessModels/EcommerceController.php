@@ -23,51 +23,62 @@ use Carbon\Carbon;
 class EcommerceController extends Controller
 {
 
-    public function randomProducts(Request $request)
+    public function getPriceRange(Request $request)
+    {
+        $site_id = session('customer.site_id');
+        $site = Website::findOrFail($site_id);
+        DynamicDatabaseService::connect($site);
+        $min_unit_price = DB::connection('dynamic')->table('products')->where('published', 1)->min('unit_price');
+        $max_unit_price = DB::connection('dynamic')->table('products')->where('published', 1)->max('unit_price');
+        return response()->json(['minProductPrice' => $min_unit_price, 'maxProductPrice' => $max_unit_price]);
+    }
+
+  public function randomProducts(Request $request)
     {
         $site_id = $request->get('site_id');
         $invoiceAmount = floatval($request->get('invoice_amount'));
-
-        // Get price range from request
+    
         $priceFrom = $request->get('price_from');
         $priceTo = $request->get('price_to');
-
-        // 1–2% tolerance range for the invoice amount
+    
         $minTotal = $invoiceAmount;
-        $maxTotal = $invoiceAmount * 1.01;
-
-        // Find the website data based on site_id
+        $maxTotal = $invoiceAmount * 1.05;
+    
         $site = Website::findOrFail($site_id);
-
-        // Connect to the dynamic database for the selected site
+    
         DynamicDatabaseService::connect($site);
-
-        // Fetch products that are published
+        $minProductPrice = DB::connection('dynamic')->table('products')->min('unit_price'); 
+        $maxProductPrice = DB::connection('dynamic')->table('products')->max('unit_price');
+    
         $allProducts = DB::connection('dynamic')->table('products')
-            ->select('id', 'name', 'unit_price')
+            ->select('id', 'name', 'unit_price','slug')
             ->where('published', 1)
             ->when($priceFrom && $priceTo, function ($query) use ($priceFrom, $priceTo) {
                 return $query->whereBetween('unit_price', [$priceFrom, $priceTo]);
             })
+            ->limit(20) 
+            ->inRandomOrder() 
             ->get();
-
+        
+        $allProducts = $allProducts->shuffle()->take(30);
+    
         $bestMatch = null;
         $bestTotal = 0;
-
-        // Try up to 10 random shuffles to improve the chances of finding a suitable match
+    
         for ($i = 0; $i < 10; $i++) {
             $shuffled = $allProducts->shuffle();
             $selected = [];
             $currentTotal = 0;
-
+    
             foreach ($shuffled as $product) {
                 $price = floatval($product->unit_price);
-
+    
                 if (($currentTotal + $price) <= $maxTotal) {
+                // if (($currentTotal + $price) <= $maxTotal && count($selected) < 10) {
                     $product->source = 'Random';
                     $selected[] = $product;
                     $currentTotal += $price;
-
+    
                     if ($currentTotal >= $minTotal && $currentTotal <= $maxTotal) {
                         $bestMatch = $selected;
                         $bestTotal = $currentTotal;
@@ -75,12 +86,12 @@ class EcommerceController extends Controller
                     }
                 }
             }
-
+    
             if ($bestMatch) {
                 break;
             }
         }
-
+    
         if (!$bestMatch) {
             return response()->json([
                 'tableRows' => '',
@@ -88,24 +99,29 @@ class EcommerceController extends Controller
                 'message' => 'No matching combination found, try again please'
             ]);
         }
-
+    
         $currency = DB::connection('dynamic')->table('currencies')->where('status', 1)->first();
-
+    
         $modelType = $site->businessModel->model_type;
-        $tableRows = view("invoice.{$modelType}.product_rows", ['products' => $bestMatch, 'currency' => $currency])->render();
-
+        $tableRows = view("invoice.{$modelType}.product_rows", ['products' => $bestMatch, 'currency' => $currency,'site' => $site,'minProductPrice'=> $minProductPrice,'maxProductPrice'=> $maxProductPrice])->render();
+        
         return response()->json([
             'tableRows' => $tableRows,
             'total' => $bestTotal,
-            'currency' => $currency
+            'currency' => $currency,
+            'minProductPrice' => $minProductPrice,
+            'maxProductPrice' => $maxProductPrice
         ]);
     }
+    
 
     public function filterProducts(Request $request)
     {
         $site_id = session('customer.site_id');
         $site = Website::findOrFail($site_id);
         DynamicDatabaseService::connect($site);
+        $minProductPrice = DB::connection('dynamic')->table('products')->min('unit_price'); 
+        $maxProductPrice = DB::connection('dynamic')->table('products')->max('unit_price');
 
         $hasKeyword = $request->filled('keyword');
         $hasPriceRange = $request->filled('price_from') && $request->filled('price_to');
@@ -117,9 +133,10 @@ class EcommerceController extends Controller
         }
 
         $query = DB::connection('dynamic')->table('products')
-            ->select('id', 'name', 'unit_price')
+            ->select('id', 'name', 'unit_price','slug')
             ->where('published', 1);
-
+        
+    
         if ($hasKeyword) {
             $query->where('name', 'like', '%' . $request->keyword . '%');
         }
@@ -142,11 +159,13 @@ class EcommerceController extends Controller
         $currency = DB::connection('dynamic')->table('currencies')->where('status', 1)->first();
         
         $modelType = $site->businessModel->model_type;
-        $tableRows = view("invoice.{$modelType}.product_rows", ['products' => $products, 'currency' => $currency])->render();
+        $tableRows = view("invoice.{$modelType}.product_rows", ['products' => $products, 'currency' => $currency,'site' => $site,'minProductPrice'=> $minProductPrice,'maxProductPrice'=> $maxProductPrice])->render();
         
         return response()->json([
             'tableRows' => $tableRows,
-            'currency' => $currency
+            'currency' => $currency,
+            'minProductPrice' => $minProductPrice,
+            'maxProductPrice' => $maxProductPrice
         ]);
     }
 
@@ -248,6 +267,7 @@ class EcommerceController extends Controller
             abort(500, 'Please set up or upload your invoice template.');
         }
     }
+
     
     
 }

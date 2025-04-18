@@ -54,7 +54,7 @@ class InvoiceController extends Controller
     public function saveCustomerDetails(Request $request)
     {
         $validated = $request->validate([
-            'site_id' => 'required|exists:websites,id',
+            'hidden_site_id' => 'required|exists:websites,id',
             'customer_name' => 'required|string|max:255',
             'invoice_date' => 'required|date',
             'invoice_amount' => 'required|numeric|min:1',
@@ -65,7 +65,7 @@ class InvoiceController extends Controller
         
         session([
             'customer' => [
-                'site_id' => $request->site_id,
+                'site_id' => $request->hidden_site_id,
                 'site_name' => $request->site_name,
                 'customer_name' => $request->customer_name,
                 'customer_mobile' => $request->customer_mobile,
@@ -76,8 +76,16 @@ class InvoiceController extends Controller
                 'invoice_date' => $request->invoice_date,
             ],
             'products' => []
-        ]);        
+        ]); 
+
+        if (!$request->invoice_amount) {
+
+            return redirect()->back()->with(['error','Invoice amount is required.']);
+        }
         
+        if (!session('invoice.invoice_amount')) {
+            session()->put('invoice.invoice_amount', $request->invoice_amount);
+        }
         
         return redirect()->route('product.selection')->with('success', 'Database connection established for the selected website.');
     }
