@@ -154,7 +154,7 @@
                                 <th>Product Name</th>
                                 <th>Unit Price</th>
                                 <th>filter</th>
-                                <th>Total</th>
+                                <th>Modify Price</th>
                             </tr>
                             </thead>
                             <tbody id="product-table-body">
@@ -212,13 +212,16 @@
 
 <script>
     $(document).ready(function () {
+        customMode = false;
         generateRandomProducts('initial');
         $('input[name="product_ids[]"]').prop('disabled', true);
         $('input[name="manual_keyword"]').prop('disabled', true);
         $('.product-price').prop('readonly', true);
+        $('#discount_amount').val(0.00);
     });
 
     function generateRandomProducts(mode = 'initial') {
+        customMode = false;
         $('input[name="product_ids[]"]').prop('disabled', true);
         $('input[name="manual_keyword"]').prop('disabled', true);
         $('.product-price').prop('readonly', true);
@@ -241,7 +244,7 @@
 
         const priceFrom = $('#hidden_price_from_input_id').val();
         const priceTo = $('#hidden_price_to_input_id').val();
-
+        if(!customMode){
         $.ajax({
             url: "{{ route('random.products') }}",
             type: 'GET',
@@ -253,6 +256,7 @@
             },
             success: function (response) {
                 Swal.close();
+                $('#discount_amount').val(0.00);
                 if (response.total === 0) {
                     $('#product-table-body').html(
                         '<tr><td colspan="7" class="text-center text-muted">No results found. Try randomizing or use a different keyword.</td></tr>'
@@ -277,6 +281,7 @@
                 Swal.close();
             }
         });
+      }
     }
 </script>
 
@@ -296,7 +301,7 @@ function setCustomOnly() {
     selectedTotal = 0;
     updateTotalDisplay();
     attachCheckboxHandlers();
-
+    $('#discount_amount').val(0.00);
     toastr.info('Now filter and pick your custom products.','Let’s begin!');
 
 }
@@ -441,7 +446,7 @@ function clearAllProducts() {
         }
 
         if (current_amount < invoiceAmount) {
-            $('#current_amount').val(discountAmount).addClass('border border-danger');
+            $('#current_amount').addClass('border border-danger');
                 setTimeout(() => {
                     $('#current_amount').removeClass('border border-danger');
                 }, 2000);
@@ -467,10 +472,21 @@ function clearAllProducts() {
             return;
         }
 
-        $('#discount_amount, #current_amount, #invoice_amount').addClass('border border-success');
-        setTimeout(() => {
-            $('#discount_amount, #current_amount, #invoice_amount').removeClass('border border-success');
-        }, 2000);
+        let blinkCount = 0;
+        const maxBlinkCount = 15;
+        const blinkInterval = 500;
+
+        $('#discount_amount, #current_amount, #invoice_amount').css('transition', 'border-color 0.3s ease');
+
+        (function blinkBorder() {
+            $('#discount_amount, #current_amount, #invoice_amount').toggleClass('border border-success');
+            blinkCount++;
+            if (blinkCount < maxBlinkCount) {
+                setTimeout(blinkBorder, blinkInterval);
+            } else {
+                $('#discount_amount, #current_amount, #invoice_amount').removeClass('border border-success');
+            }
+        })();
         toastr.options.timeOut = 5000;
         toastr.info('Preparing your invoice details...', 'Initializing');
         $.ajax({
@@ -500,14 +516,22 @@ function clearAllProducts() {
 
                 $('#generate-invoice-form')[0].submit();
 
-                setTimeout(() => {
+                    toastr.options = {
+                        timeOut: 15000,
+                        onHidden: function () {
+                            toastr.options = {
+                                timeOut: 4000
+                            };
+                            toastr.success('Invoice is ready and will download shortly. The page will refresh in 30 seconds.', 'Completed');
+                            setInterval(() => {
+                                location.reload();
+                            }, 30000);
+
+                        
+                        }
+                    };
+
                     toastr.info('Generating invoice PDF file...', 'Processing');
-                }, 4500);
-
-                setTimeout(() => {
-                    toastr.success('Invoice is ready. The download will begin shortly.', 'Completed');
-                }, 12000);
-
 
             },
             error: function () {

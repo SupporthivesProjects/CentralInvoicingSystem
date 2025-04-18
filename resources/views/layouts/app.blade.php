@@ -173,9 +173,7 @@
                 toastr.warning("{{ session('warning') }}");
             @endif
         </script>
-
         
-
 
         <!-- Choices JS -->
         <script src="{{ asset('libs/choices.js/public/assets/scripts/choices.min.js') }}"></script>

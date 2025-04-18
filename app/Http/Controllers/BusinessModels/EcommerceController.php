@@ -57,9 +57,7 @@ class EcommerceController extends Controller
         $site = Website::findOrFail($site_id);
         $productstable = getProductTable($site->technology);
         DynamicDatabaseService::connect($site);
-        $minProductPrice = DB::connection($this->connectionType)->table($this->productTable)->min('unit_price'); 
-        $maxProductPrice = DB::connection($this->connectionType)->table($this->productTable)->max('unit_price');
-    
+        
         $allProducts = DB::connection($this->connectionType)->table($this->productTable)
             ->select('id', 'name', 'unit_price','slug')
             ->where('published', 1)
@@ -111,16 +109,20 @@ class EcommerceController extends Controller
         }
     
         $currency = DB::connection($this->connectionType)->table('currencies')->where('status', 1)->first();
+
+        $bestMatch = collect($bestMatch); 
+        $bestMatch->each(function ($product) {
+            $product->can_edit_price = 0;
+            $product->remaining_days = 0;
+        });
     
         $modelType = $site->businessModel->model_type;
-        $tableRows = view("invoice.{$modelType}.product_rows", ['products' => $bestMatch, 'currency' => $currency,'site' => $site,'minProductPrice'=> $minProductPrice,'maxProductPrice'=> $maxProductPrice])->render();
+        $tableRows = view("invoice.{$modelType}.product_rows", ['products' => $bestMatch, 'currency' => $currency,'site' => $site])->render();
         
         return response()->json([
             'tableRows' => $tableRows,
             'total' => $bestTotal,
-            'currency' => $currency,
-            'minProductPrice' => $minProductPrice,
-            'maxProductPrice' => $maxProductPrice
+            'currency' => $currency
         ]);
     }
     
@@ -131,9 +133,7 @@ class EcommerceController extends Controller
         $site = Website::findOrFail($site_id);
         $productstable = getProductTable($site->technology);
         DynamicDatabaseService::connect($site);
-        $minProductPrice = DB::connection($this->connectionType)->table($this->productTable)->min('unit_price'); 
-        $maxProductPrice = DB::connection($this->connectionType)->table($this->productTable)->max('unit_price');
-
+        
         $hasKeyword = $request->filled('keyword');
         $hasPriceRange = $request->filled('price_from') && $request->filled('price_to');
 
@@ -168,33 +168,43 @@ class EcommerceController extends Controller
         }
 
         $currency = DB::connection($this->connectionType)->table('currencies')->where('status', 1)->first();
+
+        $products = collect($products);
+        $products->each(function ($product) {
+            $product->source = 'Custom';
+        });
+
+        $products->each(function ($product) use ($site_id) {
+            $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
+                                             ->where('product_id', $product->id)
+                                             ->orderByDesc('last_price_changed')
+                                             ->first();
+        
+            if ($lastUpdate) {
+
+                $lastPriceChanged = Carbon::parse($lastUpdate->last_price_changed);
+                $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
+                $remainingDays = now()->diffInDays($nextPriceChangeDate, false);
+                $product->remaining_days = round(max($remainingDays, 0));
+                $product->can_edit_price = now()->greaterThanOrEqualTo($nextPriceChangeDate) ? 1 : 0;
+
+            } else {
+                $product->can_edit_price = 1;
+                $product->remaining_days = 0;
+            }
+        });
+        
+        
         
         $modelType = $site->businessModel->model_type;
-        $tableRows = view("invoice.{$modelType}.product_rows", ['products' => $products, 'currency' => $currency,'site' => $site,'minProductPrice'=> $minProductPrice,'maxProductPrice'=> $maxProductPrice])->render();
+        $tableRows = view("invoice.{$modelType}.product_rows", ['products' => $products, 'currency' => $currency,'site' => $site])->render();
         
         return response()->json([
             'tableRows' => $tableRows,
-            'currency' => $currency,
-            'minProductPrice' => $minProductPrice,
-            'maxProductPrice' => $maxProductPrice
+            'currency' => $currency
         ]);
     }
 
- 
-    public function resolveModelController($modelType, $method, Request $request)
-    {
-        $controllerClass = "App\\Http\\Controllers\\BusinessModels\\" . ucfirst($modelType) . "Controller";
-        if (!class_exists($controllerClass)) {
-            return response()->json(['error' => 'Invalid model type'], 400);
-        }
-
-        $controller = new $controllerClass();
-        if (!method_exists($controller, $method)) {
-            return response()->json(['error' => 'Method not found'], 400);
-        }
-
-        return $controller->$method($request);
-    }
 
     public function generateInvoice(Request $request)
     {
@@ -268,7 +278,9 @@ class EcommerceController extends Controller
     
       
         try {
-           
+
+            $this->updateProductPrice($productDataArray); //product price update checking
+
             InvoiceController::createInvoiceHistory($invoice_data);
             $pdf = PDF::loadView($viewPath, $invoice_data);
             $pdf->setPaper('A4', 'portrait');
@@ -279,6 +291,70 @@ class EcommerceController extends Controller
         }
     }
 
+    
+    protected function updateProductPrice(array $productDataArray)
+    {
+        $site_id = session('customer.site_id');
+    
+        foreach ($productDataArray as $item) {
+            $data = json_decode($item, true);
+    
+            if (!empty($data['product_id']) && isset($data['unit_price'])) {
+                $product_id = $data['product_id'];
+                $new_price = floatval($data['unit_price']);
+    
+                $product = DB::connection($this->connectionType)
+                    ->table($this->productTable)
+                    ->where('id', $product_id)
+                    ->first();
+    
+                if (!$product) continue;
+    
+                $current_price = floatval($product->unit_price);
+    
+               
+                if ($current_price == $new_price) continue;
+    
+               
+                $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
+                    ->where('product_id', $product_id)
+                    ->orderByDesc('last_price_changed')
+                    ->first();
+    
+                // If no history, create once and update
+                if (!$lastUpdate) {
+                    DB::connection($this->connectionType)
+                        ->table($this->productTable)
+                        ->where('id', $product_id)
+                        ->update(['unit_price' => $new_price]);
+    
+                    ProductPriceHistory::create([
+                        'site_id' => $site_id,
+                        'product_id' => $product_id,
+                        'unit_price' => $new_price,
+                        'last_price_changed' => now(),
+                    ]);
+                    continue;
+                }
+             
+                // If history exists, only allow update if 3+ months passed
+                if (Carbon::parse($lastUpdate->last_price_changed)->diffInMonths(now()) >= 3) {
+                    DB::connection($this->connectionType)
+                        ->table($this->productTable)
+                        ->where('id', $product_id)
+                        ->update(['unit_price' => $new_price]);
+    
+                    ProductPriceHistory::create([
+                        'site_id' => $site_id,
+                        'product_id' => $product_id,
+                        'unit_price' => $new_price,
+                        'last_price_changed' => now(),
+                    ]);
+                }
+            }
+        }
+    }
+    
     
     
 }
