@@ -180,7 +180,7 @@
                             <tr>
                                 <th>SELECT</th>
                                 <th>SR. NO.</th>
-                                <th>PRODUCT NAME</th>
+                                <th>GAME NAME</th>
                                 <th>GAME CURRENCY</th>
                                 <th>GAME CURRENCY AMOUNT</th>
                                 <th>UNIT PRICE</th>

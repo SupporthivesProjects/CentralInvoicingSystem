@@ -18,8 +18,6 @@
                             <a href="{{ $site->site_link }}/product/{{ $product->slug }}" target="_blank">🔗</a>
                         @endif
                     </td>
-
-                    {{-- ✅ Game Currency Column --}}
                     <td>
                         <span class="badge bg-secondary">
                             {{ $product->game_currency ?? '-' }}
@@ -28,18 +26,13 @@
                     <td>
                         {{ $product->game_currency_amount." ".$product->game_currency }}
                     </td>
-
-                    {{-- ✅ Unit Price --}}
                     <td>{{ $currency->symbol }}{{ number_format($product->unit_price, 2) }}</td>
 
-                    {{-- ✅ Product Source Badge --}}
                     <td>
                         <span class="badge rounded-pill bg-info">
                             {{ $product->source ?? 'Custom' }}
                         </span>
                     </td>
-
-                    {{-- ✅ Price Input with Lock/Edit Icon --}}
                     {{-- <td>
                         <div class="input-group">
                             <span class="input-group-text">{{ $currency->symbol }}</span>
