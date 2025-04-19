@@ -28,20 +28,15 @@ Route::middleware('guest')->group(function () {
 
 // Authenticated-only routes (logged in)
 Route::middleware('auth')->group(function () {
-
-<<<<<<< HEAD
-=======
-    // Dashboard & Auth
->>>>>>> 06987dd228af82bee349a75c2ba9e583c5d5b14e
     Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
-
-    // Profile Routes
+    //Profile Routes
     Route::get('/my-profile', [ProfileController::class, 'index'])->name('myprofile');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 
-    // Users Routes
+
+    //Users Routes
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
     Route::post('/users', [UserController::class, 'store'])->name('users.store');
@@ -66,51 +61,33 @@ Route::middleware('auth')->group(function () {
     Route::delete('/website/{id}', [WebsiteController::class, 'deleteWebsite'])->name('website.delete');
     Route::get('/businessmodel/{id}/websites', [WebsiteController::class, 'websitesByBusinessModel'])->name('businessmodel.websites');
 
-    // Invoice Generation Routes by Narayan
+
+    // invoice generation Routes by Narayan
     Route::get('/site/connect/{site_id}', [InvoiceController::class, 'getCustomerDetails'])->name('site.connect.db');
     Route::post('/invoice/save-customerdetails', [InvoiceController::class, 'saveCustomerDetails'])->name('customerdetails.store');
     Route::get('/invoice/product-selection', [InvoiceController::class, 'productSelection'])->name('product.selection');
-    Route::get('/random-products', [InvoiceController::class, 'randomProducts'])->name('random.products');
-    Route::get('/filter-products', [InvoiceController::class, 'filterProducts'])->name('filter.products');
+    Route::get('/random-products', [InvoiceController::class, 'randomProducts']);
+    Route::get('/filter-products', [InvoiceController::class, 'filterProducts']);
     Route::post('/invoice/generate/download', [InvoiceController::class, 'generateInvoice'])->name('generate.invoice');
 
-<<<<<<< HEAD
 
 
     // Currency Routes by Narayan zade
-=======
-    // Currency Routes by Narayan Zade
->>>>>>> 06987dd228af82bee349a75c2ba9e583c5d5b14e
     Route::get('/currencies', [CurrencyController::class, 'index'])->name('currency.index');
     Route::post('/currencies/create', [CurrencyController::class, 'add'])->name('currency.add');
     Route::get('/currency/{id}', [CurrencyController::class, 'getCurrency'])->name('currency.get');
     Route::post('/currencies/edit', [CurrencyController::class, 'edit'])->name('currency.edit');
     Route::delete('/currency/delete/{id}', [CurrencyController::class, 'delete'])->name('currency.delete');
 
-<<<<<<< HEAD
-
     //generated invoices operations routes
     Route::get('/generate-new-invoice-number', [InvoiceController::class, 'generateNewInvoiceNumber']);
-=======
-    // Generated Invoices & Reporting
-    
-    Route::post('/manage-selected-products', [EcommerceController::class, 'manageSelectedProducts'])->name('manage.selected.products');
-    Route::get('/price-range', [EcommerceController::class, 'getPriceRange'])->name('get.price.range');
-    Route::get('/generate-new-invoice-number', [InvoiceController::class, 'generateNewInvoiceNumber'])->name('generate.invoice.number');
->>>>>>> 06987dd228af82bee349a75c2ba9e583c5d5b14e
     Route::get('/invoice/chart', [HomeController::class, 'showInvoiceChart'])->name('invoice.chart');
     Route::get('/report/invoices', [ReportController::class, 'invoiceReport'])->name('invoice.report');
 
-    // Internal Search
     Route::get('/internal/search', [HomeController::class, 'internalSearch'])->name('internal.search');
 
-<<<<<<< HEAD
 
-
-=======
->>>>>>> 06987dd228af82bee349a75c2ba9e583c5d5b14e
 });
-
 
 
 // Admin only routes
