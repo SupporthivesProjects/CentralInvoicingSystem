@@ -18,171 +18,164 @@
                 </ol>
             </div>
             <!-- Page Header Close -->
+            <form method="POST" action="{{ route('customerdetails.store') }}" id="getCustomerForm">
+                @csrf
 
-            <div class="row justify-content-center">
-                <div class="col-md-12">
-                    <div class="card custom-card">
-                        <div class="card-body">
-                            @if ($errors->any())
-                                <div class="alert alert-danger">
-                                    <ul>
-                                        @foreach ($errors->all() as $error)
-                                            <li>{{ $error }}</li>
-                                        @endforeach
-                                    </ul>
+                <!-- Card 1: First 4 fields -->
+                <div class="card custom-card mb-4">
+                    <div class="card-body">
+                        <h5 class="mb-3">Basic Customer & Invoice Details</h5>
+                        <div class="row">
+                            <!-- Selected Website -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Selected Website <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-globe"></i></span>
+                                    <input type="text" class="form-control" name="site_name" id="site_name" value="{{ $site->site_name ?? 'N/A' }}" readonly autocomplete="off">
+                                    <span class="input-group-text" data-bs-toggle="modal" data-bs-target="#sitechangemodel"><i class="fas fa-sync-alt text-primary" style="cursor: pointer;"></i></span>
+                                    <input type="hidden" name="hidden_site_id" id="hidden_site_id" value="{{ $site->id ?? '' }}">
                                 </div>
-                            @endif
+                            </div>
 
-                            <form method="POST" action="{{ route('customerdetails.store') }}" id="getCustomerForm">
-                                @csrf
-                                <div class="row">
-                                    <!-- Site Name with Prefix and Refresh Icon -->
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Selected Website</label>
-                                        <div class="input-group">
-                                            <span class="input-group-text"><i class="fas fa-globe"></i></span>
-                                            <input type="text" class="form-control" name="site_name" id="site_name" value="{{ $site->site_name ?? 'N/A' }}" readonly autocomplete="off">
-                                            <span class="input-group-text" data-bs-toggle="modal" data-bs-target="#sitechangemodel"><i class="fas fa-sync-alt text-primary" style="cursor: pointer;"></i></span>
-                                            <input type="hidden" name="hidden_site_id" id="hidden_site_id" value="{{ $site->id ?? '' }}">
-                                        </div>
-                                    </div>
-
-                                    <!-- Model Type -->
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Model Type</label>
-                                        <div class="input-group">
-                                            <span class="input-group-text"><i class="fas fa-cogs"></i></span>
-                                            <input type="text" class="form-control" name="model_type" value="{{ $site->businessmodel->name ?? '' }}" readonly>
-                                            <a href="{{ route('website.edit', ['id' => $site->id]) }}" class="input-group-text bg-white text-primary" title="Edit Site Info">
-                                                <i class="fas fa-sync-alt"></i> 
-                                            </a>
-                                        </div>
-                                    </div>
-
-                                    <!-- Technology -->
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Technology</label>
-                                        <div class="input-group">
-                                            <span class="input-group-text"><i class="fas fa-code"></i></span>
-                                            <input type="text" name="technology" class="form-control" placeholder="e.g. Laravel" value="{{ $site->technology ?? '' }}" readonly required>
-                                            <a href="{{ route('website.edit', ['id' => $site->id]) }}" class="input-group-text bg-white text-primary" title="Edit Site Info">
-                                                <i class="fas fa-sync-alt"></i> 
-                                            </a>
-                                        </div>
-                                    </div>
-
-                                    <!-- Customer Name -->
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Customer Name <span class="text-danger">*</span></label>
-                                        <div class="input-group">
-                                            <span class="input-group-text"><i class="fas fa-user"></i></span>
-                                            <input type="text" name="customer_name" class="form-control" placeholder="Enter Customer Name" value="{{ $customer['customer_name'] ?? '' }}" required>
-                                            <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span> 
-                                        </div>
-                                    </div>
-
-                                    <!-- Invoice Date -->
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Invoice Date <span class="text-danger">*</span></label>
-                                        <div class="input-group">
-                                            <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
-                                            <input type="date" name="invoice_date" class="form-control" value="{{ $invoice['invoice_date'] ?? '' }}" required>
-                                            <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span> 
-                                        </div>
-                                    </div>
-
-                                    <!-- Invoice Amount -->
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Invoice Amount <span class="text-danger">*</span></label>
-                                        <div class="input-group">
-                                            <span class="input-group-text">$</span>
-                                            <input type="number" name="invoice_amount" class="form-control" placeholder="Enter invoice target amount" value="{{ $invoice['invoice_amount'] ?? '' }}" required>
-                                            <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span> 
-                                        </div>
-                                    </div>
-
-                                    <!-- Customer Email -->
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Customer Email</label>
-                                        <div class="input-group">
-                                            <span class="input-group-text"><i class="fas fa-envelope"></i></span>
-                                            <input type="email" name="customer_email" class="form-control" placeholder="Enter Customer Email (optional)">
-                                            <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span> 
-                                        </div>
-                                    </div>
-
-                                    <!-- Customer Mobile -->
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Customer Mobile</label>
-                                        <div class="input-group">
-                                            <span class="input-group-text"><i class="fas fa-mobile-alt"></i></span>
-                                            <input type="number" name="customer_mobile" class="form-control" placeholder="Enter Customer Mobile (optional)">
-                                            <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span> 
-                                        </div>
-                                    </div>
-
-                                    <!-- Company Mobile -->
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Company Mobile</label>
-                                        <div class="input-group">
-                                            <span class="input-group-text"><i class="fas fa-phone-alt"></i></span>
-                                            <input type="text" name="company_mobile" class="form-control" readonly value="{{ $site->company_mobile ?? '' }}">
-                                            <a href="{{ route('website.edit', ['id' => $site->id]) }}" class="input-group-text bg-white text-primary" title="Edit Site Info">
-                                                <i class="fas fa-sync-alt"></i> 
-                                            </a>
-                                        </div>
-                                    </div>
-
-                                    <!-- Company Email -->
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Company Email</label>
-                                        <div class="input-group">
-                                            <span class="input-group-text"><i class="fas fa-envelope-open-text"></i></span>
-                                            <input type="email" name="company_email" class="form-control" readonly value="{{ $site->company_email ?? '' }}">
-                                            <a href="{{ route('website.edit', ['id' => $site->id]) }}" class="input-group-text bg-white text-primary" title="Edit Site Info">
-                                                <i class="fas fa-sync-alt"></i> 
-                                            </a>
-                                        </div>
-                                    </div>
-
-                                    <!-- Company Address -->
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Company Address</label>
-                                        <div class="input-group">
-                                            <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
-                                            <input type="text" name="company_address" class="form-control" readonly value="{{ $site->company_address ?? '' }}">
-                                            <a href="{{ route('website.edit', ['id' => $site->id]) }}" class="input-group-text bg-white text-primary" title="Edit Site Info">
-                                                <i class="fas fa-sync-alt"></i> 
-                                            </a>
-                                        </div>
-                                    </div>
-
-                                    <!-- Company Website -->
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Company Website</label>
-                                        <div class="input-group">
-                                            <span class="input-group-text"><i class="fas fa-link"></i></span>
-                                            <input type="url" name="site_link" class="form-control" readonly placeholder="Enter Site URL" value="{{ $site->site_link ?? '' }}">
-                                            <a href="{{ route('website.edit', ['id' => $site->id]) }}" class="input-group-text bg-white text-primary" title="Edit Site Info">
-                                                <i class="fas fa-sync-alt"></i> 
-                                            </a>
-                                        </div>
-                                    </div>
-
+                            <!-- Customer Name -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Customer Name <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                    <input type="text" name="customer_name" class="form-control" placeholder="Enter Customer Name" value="{{ $customer['customer_name'] ?? '' }}" required>
+                                    <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span> 
                                 </div>
+                            </div>
 
-                                <div class="text-center mt-4">
-                                    <button type="submit" class="btn btn-primary">Proceed to Products Selection</button>
+                            <!-- Invoice Date -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Invoice Date <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                                    <input type="date" name="invoice_date" class="form-control" value="{{ $invoice['invoice_date'] ?? '' }}" required>
+                                    <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span> 
                                 </div>
-                            </form>
+                            </div>
 
+                            <!-- Invoice Amount -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Invoice Amount <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" name="invoice_amount" class="form-control" placeholder="Enter invoice target amount" value="{{ $invoice['invoice_amount'] ?? '' }}" required>
+                                    <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span> 
+                                </div>
+                            </div>
 
+                             <!-- Customer Email -->
+                             <div class="col-md-6 mb-3">
+                                <label class="form-label">Customer Email</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                    <input type="email" name="customer_email" class="form-control" placeholder="Enter Customer Email (optional)">
+                                    <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span> 
+                                </div>
+                            </div>
+
+                            <!-- Customer Mobile -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Customer Mobile</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-mobile-alt"></i></span>
+                                    <input type="number" name="customer_mobile" class="form-control" placeholder="Enter Customer Mobile (optional)">
+                                    <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span> 
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
+                <!-- Card 2: Remaining fields -->
+                <div class="card custom-card">
+                    <div class="card-body">
+                        <h5 class="mb-3">Selected Website & Company Details</h5>
+                        <div class="row">
+                           
 
+                            <!-- Model Type -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Model Type</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-cogs"></i></span>
+                                    <input type="text" class="form-control" name="model_type" value="{{ $site->businessmodel->name ?? '' }}" readonly>
+                                    <a href="{{ route('website.edit', ['id' => $site->id]) }}" class="input-group-text bg-white text-primary" title="Edit Site Info">
+                                        <i class="fas fa-sync-alt"></i> 
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Technology -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Technology</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-code"></i></span>
+                                    <input type="text" name="technology" class="form-control" placeholder="e.g. Laravel" value="{{ $site->technology ?? '' }}" readonly required>
+                                    <a href="{{ route('website.edit', ['id' => $site->id]) }}" class="input-group-text bg-white text-primary" title="Edit Site Info">
+                                        <i class="fas fa-sync-alt"></i> 
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Company Mobile -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Company Mobile</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-phone-alt"></i></span>
+                                    <input type="text" name="company_mobile" class="form-control" readonly value="{{ $site->company_mobile ?? '' }}">
+                                    <a href="{{ route('website.edit', ['id' => $site->id]) }}" class="input-group-text bg-white text-primary" title="Edit Site Info">
+                                        <i class="fas fa-sync-alt"></i> 
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Company Email -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Company Email</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-envelope-open-text"></i></span>
+                                    <input type="email" name="company_email" class="form-control" readonly value="{{ $site->company_email ?? '' }}">
+                                    <a href="{{ route('website.edit', ['id' => $site->id]) }}" class="input-group-text bg-white text-primary" title="Edit Site Info">
+                                        <i class="fas fa-sync-alt"></i> 
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Company Address -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Company Address</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+                                    <input type="text" name="company_address" class="form-control" readonly value="{{ $site->company_address ?? '' }}">
+                                    <a href="{{ route('website.edit', ['id' => $site->id]) }}" class="input-group-text bg-white text-primary" title="Edit Site Info">
+                                        <i class="fas fa-sync-alt"></i> 
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Company Website -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Company Website</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-link"></i></span>
+                                    <input type="url" name="site_link" class="form-control" readonly placeholder="Enter Site URL" value="{{ $site->site_link ?? '' }}">
+                                    <a href="{{ route('website.edit', ['id' => $site->id]) }}" class="input-group-text bg-white text-primary" title="Edit Site Info">
+                                        <i class="fas fa-sync-alt"></i> 
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-primary">Proceed to Products Selection</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
 
         </div>
     </div>
