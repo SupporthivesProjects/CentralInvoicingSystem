@@ -154,3 +154,7 @@
 .noUi-handle {
     width: 10px !important;
 }
+
+.input-group-text {
+    height: 38px !important;
+}

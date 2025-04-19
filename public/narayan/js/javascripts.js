@@ -81,3 +81,21 @@ $(document).ready(function () {
         }
     }
 });
+
+ $('#copyInvoicenumber').on('click', function () {
+        const invoiceInput = document.getElementById('invoice_number');
+        if (invoiceInput.value.trim() === '') {
+            toastr.warning('Invoice number has not been generated yet.');
+            return;
+        }
+        const invoiceValue = invoiceInput.value;
+        const tempTextArea = document.createElement('textarea');
+        tempTextArea.value = invoiceValue;
+        document.body.appendChild(tempTextArea);
+        tempTextArea.select();
+        tempTextArea.setSelectionRange(0, 99999); 
+        document.execCommand('copy');
+        document.body.removeChild(tempTextArea);
+        toastr.success('Invoice number copied to clipboard!');
+    });
+

@@ -29,6 +29,23 @@ use App\Http\Controllers\BusinessModels\TranslationController;
 class InvoiceController extends Controller
 {
 
+    protected $productTable = null;
+    protected $connectionType = null;
+
+    public function __construct()
+    {
+        $site_id = session('customer.site_id');
+
+        if ($site_id) {
+            $site = Website::find($site_id);
+
+            if ($site) {
+                $this->productTable = getProductTable($site->technology);
+                $this->connectionType = 'dynamic';
+            }
+        }
+    }
+
     public function getCustomerDetails($site_id_from_url)
     {
         try {
@@ -104,9 +121,9 @@ class InvoiceController extends Controller
             $site = Website::findOrFail($site_id);
             
             DynamicDatabaseService::connect($site);
-            DB::connection('dynamic')->getPdo(); 
+            DB::connection($this->connectionType)->getPdo(); 
     
-            $currency = DB::connection('dynamic')
+            $currency = DB::connection($this->connectionType)
                 ->table('currencies')
                 ->where('status', 1)
                 ->first();
@@ -173,6 +190,7 @@ class InvoiceController extends Controller
             return redirect()->back()->with('error', 'Invalid business model type');
         }
     }
+
 
     public static function createInvoiceHistory($invoice_data)
     {
