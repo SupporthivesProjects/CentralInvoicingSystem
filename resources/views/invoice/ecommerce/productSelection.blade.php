@@ -10,11 +10,10 @@
              <!-- Page Header -->
              <div class="d-md-flex d-block align-items-center justify-content-between page-header-breadcrumb">
              <div>
-                <h2 class="main-content-title fs-24 mb-3">Product Selection for Invoice Generation</h2>
+                <h2 class="main-content-title fs-24 mb-3">Choose Products and Generate Invoice</h2>
                 <ol class="breadcrumb mb-0">
-                    <li class="breadcrumb-item"><a href="javascript:void(0)" class="text-primary">Select Site</a></li>
-                    <li class="breadcrumb-item"><a href="javascript:void(0)" class="text-primary">Invoice Overview</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Choose Products</li>
+                    <li class="breadcrumb-item"><a href="{{ url()->previous() }}" class="text-primary">Select Site</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Choose Products and Generate Invoice</li>
                 </ol>
             </div>
 
@@ -34,73 +33,100 @@
                         <div class="row">
                             <div class="col-md-4 mb-3">
                                 <label class="form-label">Selected Website <span class="text-danger">*</span></label>
-                                <input type="text" form="generate-invoice-form" class="form-control" name="site_name" id="site_name"  value="{{ $customer['site_name'] ?? 'N/A' }}" readonly>
-                                <input type="hidden" form="generate-invoice-form" name="site_id" id="site_id" class="form-control"  value="{{ $customer['site_id'] }}" readonly>
+                                <div class="input-group">
+                                 <span class="input-group-text"><i class="fas fa-globe"></i></span> 
+                                    <input type="text" form="generate-invoice-form" class="form-control" name="site_name" id="site_name" value="{{ $customer['site_name'] ?? 'N/A' }}" readonly>
+                                    <a href="{{ route('website.edit', ['id' => $site->id]) }}" class="input-group-text bg-white" title="Edit Site Info">
+                                        <i class="fas fa-sync-alt"></i> 
+                                    </a>
+                                </div>
+                                <input type="hidden" form="generate-invoice-form" name="site_id" id="site_id" class="form-control" value="{{ $customer['site_id'] }}" readonly>
                             </div>
+                            
                             <div class="col-md-4 mb-3">
                                 <label class="form-label">Invoice Number<span class="text-danger">*</span> <span class="text-info">(Auto Generated)</span></label>
-                                <input type="text" form="generate-invoice-form" id="invoice_number" name="invoice_number" class="form-control font-italic" value="{{ $invoice['invoice_number'] ?? '' }}" placeholder="Auto-generated invoice number" readonly>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-file-invoice"></i></span>
+                                    <input type="text" form="generate-invoice-form" id="invoice_number" name="invoice_number" class="form-control font-italic" value="{{ $invoice['invoice_number'] ?? '' }}" placeholder="Auto-generated invoice number" readonly>
+                                     <span style="cursor: pointer;" class="input-group-text" id="copyInvoicenumber" title="Copy Invoice Number"><i class="fas fa-copy"></i></span>
+                                </div>
                             </div>
 
                             <div class="col-md-4 mb-3">
                                 <label class="form-label">Invoice Date <span class="text-danger">*</span></label>
-                                <input type="date" form="generate-invoice-form" name="invoice_date" name="invoice_date" class="form-control"  value="{{ $invoice['invoice_date'] ?? now()->toDateString() }}">
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                                    <input type="date" form="generate-invoice-form" name="invoice_date" class="form-control" value="{{ $invoice['invoice_date'] ?? now()->toDateString() }}">
+                                    <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span> 
+                                </div>
                             </div>
                         </div>
 
                         <div class="row">
-                           
                             <div class="col-md-4 mb-3">
                                 <label class="form-label">Customer Name <span class="text-danger">*</span></label>
-                                <input type="text" form="generate-invoice-form" class="form-control" id="customer_name" name="customer_name" value="{{ $customer['customer_name'] ?? '' }}" >
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                    <input type="text" form="generate-invoice-form" class="form-control" id="customer_name" name="customer_name" value="{{ $customer['customer_name'] ?? '' }}" placeholder="Enter Customer Name">
+                                    <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span> 
+                                </div>
                             </div>
+                            
                             <div class="col-md-4 mb-3">
                                 <label class="form-label">Customer Email</label>
-                                <input type="email" form="generate-invoice-form" class="form-control" id="customer_email"  name="customer_email"  value="{{ $customer['customer_email'] ?? '' }}" >
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                    <input type="email" form="generate-invoice-form" class="form-control" id="customer_email" name="customer_email" value="{{ $customer['customer_email'] ?? '' }}"  placeholder="Enter Customer email">
+                                    <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span> 
+                                </div>
                             </div>
+                            
                             <div class="col-md-4 mb-3">
                                 <label class="form-label">Customer Phone</label>
-                                <input type="text" form="generate-invoice-form" class="form-control" id="customer_mobile"  name="customer_mobile"  value="{{ $customer['customer_mobile'] ?? '' }}" >
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                                    <input type="text" form="generate-invoice-form" class="form-control" id="customer_mobile" name="customer_mobile" value="{{ $customer['customer_mobile'] ?? '' }}"  placeholder="Enter customer Mobile">
+                                    <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span> 
+                                </div>
                             </div>
                         </div>
+
+
+
                     </form>
                 </div>
             </div>
             <div class="card custom-card mt-4">
                 <div class="card-body shadow rounded">
-                    <div class="row ">
-                        
-                        <div class="col-md-4 mb-3">
-                            <label class="form-label">Current Amount</label>
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">{{ site_currency() }}  </span> 
-                                </div>
-                                <input type="number" form="generate-invoice-form" id= "current_amount"  name="current_amount" class="form-control bg-white" value="{{ $current_total  ?? '00.00'}}" readonly>
-                            </div>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label class="form-label">Discount Amount</label>
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">{{ site_currency() }}</span> 
-                                </div>
-                                <input type="number" form="generate-invoice-form" name="discount_amount" id="discount_amount"  class="form-control bg-white" placeholder="Discount Amount" value="0">
-                            </div>
-                            
-                        </div>
-                        <div class="col-md-3 mb-3">
-                                <label class="form-label">Invoice Amount <span class="text-danger">*</span></label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">{{ site_currency() }}</span>
-                                    </div>
-                                    <input form="generate-invoice-form" name="invoice_amount" id="invoice_amount"  class="form-control"   value="{{ number_format($invoice['invoice_amount'],2) }}" type="number" readonly>
-                                </div>
-                            </div>
-                            
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Current Amount</label>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">{{ site_currency() }}</span>
+                            <input type="number" form="generate-invoice-form" id="current_amount" name="current_amount" class="form-control bg-white" value="{{ $current_total ?? '00.00' }}" readonly>
+                            <span class="input-group-text"><i class="fas fa-money-bill-wave"></i></span> 
                         </div>
                     </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Discount Amount</label>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">{{ site_currency() }}</span>
+                            <input type="number" form="generate-invoice-form" name="discount_amount" id="discount_amount" class="form-control bg-white" placeholder="Discount Amount" value="0">
+                            <span class="input-group-text"><i class="fas fa-tags"></i></span> 
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Invoice Amount <span class="text-danger">*</span></label>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">{{ site_currency() }}</span>
+                            <input form="generate-invoice-form" name="invoice_amount" id="invoice_amount" class="form-control" value="{{ number_format($invoice['invoice_amount'], 2) }}" type="number" readonly>
+                            <span class="input-group-text"><i class="fas fa-file-invoice-dollar"></i></span> 
+                        </div>
+                    </div>
+                </div>
+
                    
                 </div>
             </div>
@@ -131,9 +157,12 @@
                         <div class="row align-items-end g-3">
                         <div class="col-md-6 text-center">
                             <label for="keywordInput" class="form-label">Search for Products</label>
-                            <input type="text" name="manual_keyword" id="keywordInput" class="form-control" placeholder="Type a keyword and wait for 1.5 seconds to apply the filter.">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-search"></i></span> 
+                                <input type="text" name="manual_keyword" id="keywordInput" class="form-control" placeholder="Type a keyword and wait for 1.5 seconds to apply the filter.">
+                                <span class="input-group-text"><i class="fas fa-filter"></i></span> 
+                            </div>
                         </div>
-
 
                             <div class="col-md-6 text-center">
                                 <label class="form-label d-block">Price Range</label>
@@ -363,8 +392,10 @@ function attachCheckboxHandlers() {
             const unitPrice = parseFloat(price) || 0;
             tempTotal += unitPrice;
         });
+
         return tempTotal;
     }
+
 
     $('input[name="product_ids[]"]').off('change').on('change', function () {
         const tempTotal = calculateTotal();
@@ -417,7 +448,6 @@ function clearAllProducts() {
         const isKeyword = $(this).attr('id') === 'keywordInput';
         filterTimer = setTimeout(() => {
             if (customMode) {
-
                 filterProducts();
             } else {
 

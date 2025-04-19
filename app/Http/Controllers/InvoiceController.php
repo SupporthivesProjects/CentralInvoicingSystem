@@ -29,15 +29,21 @@ use App\Http\Controllers\BusinessModels\TranslationController;
 class InvoiceController extends Controller
 {
 
-    private $productTable;
-    private $connectionType;
+    protected $productTable = null;
+    protected $connectionType = null;
 
     public function __construct()
     {
         $site_id = session('customer.site_id');
-        $site = Website::findOrFail($site_id);
-        $this->productTable = getProductTable($site->technology);
-        $this->connectionType = 'dynamic';
+
+        if ($site_id) {
+            $site = Website::find($site_id);
+
+            if ($site) {
+                $this->productTable = getProductTable($site->technology);
+                $this->connectionType = 'dynamic';
+            }
+        }
     }
 
     public function getCustomerDetails($site_id_from_url)

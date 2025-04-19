@@ -45,6 +45,7 @@ class EcommerceController extends Controller
 
   public function randomProducts(Request $request)
     {
+        Session::forget('selected_products');
         $site_id = $request->get('site_id');
         $invoiceAmount = floatval($request->get('invoice_amount'));
     
@@ -64,11 +65,11 @@ class EcommerceController extends Controller
             ->when($priceFrom && $priceTo, function ($query) use ($priceFrom, $priceTo) {
                 return $query->whereBetween('unit_price', [$priceFrom, $priceTo]);
             })
-            ->limit(20) 
-            ->inRandomOrder() 
+            ->orderByDesc('unit_price')
+            //->inRandomOrder() 
             ->get();
         
-        $allProducts = $allProducts->shuffle()->take(30);
+        $allProducts = $allProducts->shuffle()->take(60);
     
         $bestMatch = null;
         $bestTotal = 0;
@@ -193,9 +194,7 @@ class EcommerceController extends Controller
                 $product->remaining_days = 0;
             }
         });
-        
-        
-        
+
         $modelType = $site->businessModel->model_type;
         $tableRows = view("invoice.{$modelType}.product_rows", ['products' => $products, 'currency' => $currency,'site' => $site])->render();
         
@@ -205,6 +204,18 @@ class EcommerceController extends Controller
         ]);
     }
 
+
+    public function manageSelectedProducts(Request $request)
+    {
+        Session::forget('selected_products');
+        $selectedProducts = $request->input('products');
+        Session::put('selected_products', $selectedProducts);
+        return response()->json([
+            'success' => true,
+            'message' => 'Your selected products have been updated successfully.',
+            'data' => $selectedProducts
+        ]);        
+    }
 
     public function generateInvoice(Request $request)
     {

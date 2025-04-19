@@ -79,6 +79,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/currency/delete/{id}', [CurrencyController::class, 'delete'])->name('currency.delete');
 
     // Generated Invoices & Reporting
+    
+    Route::post('/manage-selected-products', [EcommerceController::class, 'manageSelectedProducts'])->name('manage.selected.products');
     Route::get('/price-range', [EcommerceController::class, 'getPriceRange'])->name('get.price.range');
     Route::get('/generate-new-invoice-number', [InvoiceController::class, 'generateNewInvoiceNumber'])->name('generate.invoice.number');
     Route::get('/invoice/chart', [HomeController::class, 'showInvoiceChart'])->name('invoice.chart');

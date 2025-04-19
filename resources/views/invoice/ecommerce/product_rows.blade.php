@@ -1,8 +1,8 @@
-@forelse($products as $index => $product)
+@forelse($products->sortByDesc('unit_price') as $index => $product)
 <tr class="product-row">
     <td class="text-center align-middle">
         <div class="form-check d-flex justify-content-center align-items-center m-0">
-            <input class="form-check-input border narayan-checkbox border-1 border-primary" type="checkbox" name="product_ids[]" data-unit_price="{{ $product->unit_price }}" value="{{ $product->id }}">
+            <input  class="form-check-input border narayan-checkbox border-1 border-primary" type="checkbox" name="product_ids[]" data-unit_price="{{ $product->unit_price }}" value="{{ $product->id }}">
         </div>    
     </td>
     <td>{{ $index + 1 }}</td>

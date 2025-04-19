@@ -11,16 +11,24 @@ use Illuminate\Support\Str;
 
 class WebsiteController extends Controller
 {
-    private $productTable;
-    private $connectionType;
+    
+    protected $productTable = null;
+    protected $connectionType = null;
 
     public function __construct()
     {
         $site_id = session('customer.site_id');
-        $site = Website::findOrFail($site_id);
-        $this->productTable = getProductTable($site->technology);
-        $this->connectionType = 'dynamic';
+
+        if ($site_id) {
+            $site = Website::find($site_id);
+
+            if ($site) {
+                $this->productTable = getProductTable($site->technology);
+                $this->connectionType = 'dynamic';
+            }
+        }
     }
+
     
    
     public function addBusinessModel()
