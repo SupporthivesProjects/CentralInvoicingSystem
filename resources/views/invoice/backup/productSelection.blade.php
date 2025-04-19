@@ -9,13 +9,14 @@
         <div class="container-fluid">
              <!-- Page Header -->
              <div class="d-md-flex d-block align-items-center justify-content-between page-header-breadcrumb">
-                <div>
-                    <h2 class="main-content-title fs-24 mb-1">Generate Invoice</h2>
-                    <ol class="breadcrumb mb-0">
-                        <li class="breadcrumb-item"><a href="javascript:void(0)">Products</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Product Selection</li>
-                    </ol>
-                </div>
+             <div>
+                <h2 class="main-content-title fs-24 mb-3">Product Selection for Invoice Generation</h2>
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a href="javascript:void(0)" class="text-primary">Select Site</a></li>
+                    <li class="breadcrumb-item"><a href="javascript:void(0)" class="text-primary">Invoice Overview</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Choose Products</li>
+                </ol>
+            </div>
 
                 <div class="mt-3 mt-md-0">
                 <a href="{{ url()->previous() }}" class="btn btn-outline-danger btn-sm">
@@ -31,47 +32,35 @@
                     <form id="generate-invoice-form" method="POST" action="{{ route('generate.invoice') }}">
                         @csrf
                         <div class="row">
-                            <div class="col-md-3 mb-3">
+                            <div class="col-md-4 mb-3">
                                 <label class="form-label">Selected Website <span class="text-danger">*</span></label>
-                                <input type="text" form="generate-invoice-form" class="form-control"  value="{{ $customer['site_name'] ?? 'N/A' }}" readonly>
+                                <input type="text" form="generate-invoice-form" class="form-control" name="site_name" id="site_name"  value="{{ $customer['site_name'] ?? 'N/A' }}" readonly>
                                 <input type="hidden" form="generate-invoice-form" name="site_id" id="site_id" class="form-control"  value="{{ $customer['site_id'] }}" readonly>
                             </div>
-                            <div class="col-md-3 mb-3">
-                                <label class="form-label">Company Email</label>
-                                <input type="text" form="generate-invoice-form" class="form-control" name="company_email"  value="{{ $site->company_email ?? 'N/A' }}" >
-                            </div>
-                            <div class="col-md-3 mb-3">
-                                <label class="form-label">Invoice Number <span class="text-info">(Auto Generated)</span></label>
-                                <input type="text" form="generate-invoice-form" name="invoice_number" class="form-control font-italic" value="{{ $invoice['invoice_number'] ?? '' }}" placeholder="Auto-generated invoice number" readonly>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Invoice Number<span class="text-danger">*</span> <span class="text-info">(Auto Generated)</span></label>
+                                <input type="text" form="generate-invoice-form" id="invoice_number" name="invoice_number" class="form-control font-italic" value="{{ $invoice['invoice_number'] ?? '' }}" placeholder="Auto-generated invoice number" readonly>
                             </div>
 
-                            <div class="col-md-3 mb-3">
-                                <label class="form-label">Invoice Date</label>
-                                <input type="date" form="generate-invoice-form" name="invoice_date" class="form-control"  value="{{ $invoice['invoice_date'] ?? now()->toDateString() }}">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Invoice Date <span class="text-danger">*</span></label>
+                                <input type="date" form="generate-invoice-form" name="invoice_date" name="invoice_date" class="form-control"  value="{{ $invoice['invoice_date'] ?? now()->toDateString() }}">
                             </div>
                         </div>
 
                         <div class="row">
-                            <div class="col-md-3 mb-3">
-                                <label class="form-label">Invoice Amount <span class="text-danger">*</span></label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">{{ site_currency() }}</span>
-                                    </div>
-                                    <input form="generate-invoice-form" name="invoice_amount" class="form-control"   value="{{ $invoice['invoice_amount'] ?? '' }}" readonly type="number" readonly>
-                                </div>
+                           
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Customer Name <span class="text-danger">*</span></label>
+                                <input type="text" form="generate-invoice-form" class="form-control" id="customer_name" name="customer_name" value="{{ $customer['customer_name'] ?? '' }}" >
                             </div>
-                            <div class="col-md-3 mb-3">
-                                <label class="form-label">Customer Name</label>
-                                <input type="text" form="generate-invoice-form" class="form-control" name="customer_name" value="{{ $customer['customer_name'] ?? '' }}" >
-                            </div>
-                            <div class="col-md-3 mb-3">
+                            <div class="col-md-4 mb-3">
                                 <label class="form-label">Customer Email</label>
-                                <input type="email" form="generate-invoice-form" class="form-control" name="customer_email"  value="{{ $customer['customer_email'] ?? '' }}" >
+                                <input type="email" form="generate-invoice-form" class="form-control" id="customer_email"  name="customer_email"  value="{{ $customer['customer_email'] ?? '' }}" >
                             </div>
-                            <div class="col-md-3 mb-3">
+                            <div class="col-md-4 mb-3">
                                 <label class="form-label">Customer Phone</label>
-                                <input type="text" form="generate-invoice-form" class="form-control" name="customer_mobile"  value="{{ $customer['customer_mobile'] ?? '' }}" >
+                                <input type="text" form="generate-invoice-form" class="form-control" id="customer_mobile"  name="customer_mobile"  value="{{ $customer['customer_mobile'] ?? '' }}" >
                             </div>
                         </div>
                     </form>
@@ -100,13 +89,14 @@
                             </div>
                             
                         </div>
-                        <div class="col-md-4 mb-3">
-                            <label class="form-label">Target Amount</label>
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">{{ site_currency() }}  </span> 
+                        <div class="col-md-3 mb-3">
+                                <label class="form-label">Invoice Amount <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">{{ site_currency() }}</span>
+                                    </div>
+                                    <input form="generate-invoice-form" name="invoice_amount" id="invoice_amount"  class="form-control"   value="{{ number_format($invoice['invoice_amount'],2) }}" type="number" readonly>
                                 </div>
-                                <input type="number" form="generate-invoice-form" name="final_amount" id="final_amount" class="form-control bg-white" placeholder="Target Total" value="{{ $invoice['invoice_amount'] ?? '' }}">
                             </div>
                             
                         </div>
@@ -128,7 +118,7 @@
                         <button type="button" class="btn btn-outline-warning me-1" onclick="generateRandomProducts('random')">
                             <i class="bi bi-dice-5"></i> Randomize
                         </button>
-                        <button type="button" class="btn btn-outline-success">
+                        <button type="button" class="btn btn-outline-success" onclick="generateInvoice(event)">
                             <i class="bi bi-file-earmark-text"></i> Generate Invoice
                         </button>
                     </div>
@@ -139,7 +129,7 @@
                     <!-- Search Filters -->
                     <form method="GET" action="#" class="mb-4">
                         <div class="row align-items-end g-3">
-                        <div class="col-md-6">
+                        <div class="col-md-6 text-center">
                             <label for="keywordInput" class="form-label">Search for Products</label>
                             <input type="text" name="manual_keyword" id="keywordInput" class="form-control" placeholder="Type a keyword and wait for 1.5 seconds to apply the filter.">
                         </div>
@@ -161,11 +151,10 @@
                             <tr>
                                 <th>Select</th>
                                 <th>Sr. No.</th>
-                                <th>Product ID</th>
                                 <th>Product Name</th>
                                 <th>Unit Price</th>
                                 <th>filter</th>
-                                <th>Total</th>
+                                <th>Modify Price</th>
                             </tr>
                             </thead>
                             <tbody id="product-table-body">
@@ -179,20 +168,63 @@
         </div>
     </div>
 </div>
-
-<iframe name="hiddenFrame" id="hiddenFrame" style="display:none;"></iframe>
 @endsection
 @push('scripts')
 <script>
+    const priceSlider = document.getElementById('price-slider');
+    const defaultMin = 10, defaultMax = 1000;
+    const currency = "{{ site_currency() }}";
+
+    noUiSlider.create(priceSlider, {
+        start: [defaultMin, defaultMax],
+        connect: true,
+        step: 0.1,
+        range: { min: defaultMin, max: defaultMax },
+        tooltips: [true, true],
+        format: {
+            to: v => `${currency}${Math.round(v)}`,
+            from: v => Number(v.replace(currency, ''))
+        }
+    });
+
+    const updateHiddenInputs = (min, max) => {
+        $('#hidden_price_from_input_id').val(min).trigger('input');
+        $('#hidden_price_to_input_id').val(max).trigger('input');
+    };
+
+    $.get("{{ route('get.price.range') }}")
+        .done(res => {
+            const min = parseFloat(res.minProductPrice) || defaultMin;
+            const max = parseFloat(res.maxProductPrice) || defaultMax;
+            priceSlider.noUiSlider.updateOptions({ start: [min, max], range: { min, max } });
+            updateHiddenInputs(min, max);
+        })
+        .fail(() => {
+            updateHiddenInputs(defaultMin, defaultMax);
+        });
+
+    priceSlider.noUiSlider.on('update', function (values) {
+        const [min, max] = values.map(v => Math.round(parseFloat(v.replace('$', ''))));
+        updateHiddenInputs(min, max);
+    });
+</script>
+
+
+<script>
     $(document).ready(function () {
+        customMode = false;
         generateRandomProducts('initial');
         $('input[name="product_ids[]"]').prop('disabled', true);
         $('input[name="manual_keyword"]').prop('disabled', true);
+        $('.product-price').prop('readonly', true);
+        $('#discount_amount').val(0.00);
     });
 
     function generateRandomProducts(mode = 'initial') {
+        customMode = false;
         $('input[name="product_ids[]"]').prop('disabled', true);
         $('input[name="manual_keyword"]').prop('disabled', true);
+        $('.product-price').prop('readonly', true);
         let title = (mode === 'initial') ? 'Cooking Up Combos...' : 'Trying Cool Combos...';
         let loadingText = (mode === 'random') 
             ? 'Finding products that match your invoice total...' 
@@ -212,9 +244,9 @@
 
         const priceFrom = $('#hidden_price_from_input_id').val();
         const priceTo = $('#hidden_price_to_input_id').val();
-
+        if(!customMode){
         $.ajax({
-            url: '/random-products',
+            url: "{{ route('random.products') }}",
             type: 'GET',
             data: {
                 site_id: SITE_ID,
@@ -224,6 +256,7 @@
             },
             success: function (response) {
                 Swal.close();
+                $('#discount_amount').val(0.00);
                 if (response.total === 0) {
                     $('#product-table-body').html(
                         '<tr><td colspan="7" class="text-center text-muted">No results found. Try randomizing or use a different keyword.</td></tr>'
@@ -248,6 +281,7 @@
                 Swal.close();
             }
         });
+      }
     }
 </script>
 
@@ -262,18 +296,14 @@ function setCustomOnly() {
     customMode = true;
     $('input[name="product_ids[]"]').prop('disabled', false);
     $('input[name="manual_keyword"]').prop('disabled', false);
+    $('.product-price').prop('readonly', false);
     $('#product-table-body').empty();
     selectedTotal = 0;
     updateTotalDisplay();
     attachCheckboxHandlers();
+    $('#discount_amount').val(0.00);
+    toastr.info('Now filter and pick your custom products.','Let’s begin!');
 
-    Swal.fire({
-        icon: 'info',
-        title: 'Let’s Begin!',
-        text: 'Now filter and pick your custom products.',
-        timer: 1500,
-        showConfirmButton: false
-    });
 }
 
 
@@ -304,7 +334,7 @@ function filterProducts() {
 
 
     $.ajax({
-        url: '/filter-products',
+        url: "{{ route('filter.products') }}",
         type: 'GET',
         data: {
             keyword: keyword,
@@ -325,8 +355,7 @@ function filterProducts() {
 }
 
 function attachCheckboxHandlers() {
-    $('input[name="product_ids[]"]').off('change').on('change', function () {
-
+    function calculateTotal() {
         let tempTotal = 0;
         $('input[name="product_ids[]"]:checked').each(function () {
             const productId = $(this).val();
@@ -334,102 +363,41 @@ function attachCheckboxHandlers() {
             const unitPrice = parseFloat(price) || 0;
             tempTotal += unitPrice;
         });
+        return tempTotal;
+    }
 
-        $('input[name="product_ids[]"]').each(function () {
-            const row = $(this).closest('tr');
-            if ($(this).is(':checked')) {
-                row.addClass('table-active border border border-light');
-            } else {
-                row.removeClass('table-active border border border-light');
-            }
-        });
+    $('input[name="product_ids[]"]').off('change').on('change', function () {
+        const tempTotal = calculateTotal();
 
         if (tempTotal > invoiceAmount) {
-            toastr.error(`Product total exceeds your invoice target of $${invoiceAmount.toFixed(2)}`, 'Limit Reached');
+            toastr.error(`Product total exceeds your invoice amount of $${invoiceAmount.toFixed(2)}`, 'Limit Reached');
         }
 
         selectedTotal = tempTotal;
         updateTotalDisplay();
     });
 
-    // Listen for price changes and update total
     $('.product-price').on('input', function () {
-        let tempTotal = 0;
+        const tempTotal = calculateTotal();
 
-        $('input[name="product_ids[]"]:checked').each(function () {
-            const productId = $(this).val();
-            const price = $(`input[data-product-id="${productId}"]`).val();
-            const unitPrice = parseFloat(price) || 0;
-            tempTotal += unitPrice;
-        });
-
-        if (tempTotal > maxAllowed) {
-            toastr.error(`Product total exceeds your invoice target of $${invoiceAmount.toFixed(2)}`, 'Limit Reached');
+        if (tempTotal > invoiceAmount) {
+            toastr.error(`Product total exceeds your invoice amount of $${invoiceAmount.toFixed(2)}`, 'Limit Reached');
         }
 
         selectedTotal = tempTotal;
         updateTotalDisplay();
     });
 }
-
 
 
 function updateTotalDisplay() {
     $('#current_amount').val(selectedTotal.toFixed(2));
 }
 
-function controlCheckboxLimit() {
-    const checkboxes = $('input[name="product_ids[]"]');
-    const unchecked = checkboxes.not(':checked');
-
-    if (selectedTotal >= invoiceAmount && selectedTotal <= maxAllowed) {
-        unchecked.prop('disabled', true);
-    } else {
-        checkboxes.prop('disabled', false);
-    }
-}
 </script>
 
 
 <script>
-   var priceSlider = document.getElementById('price-slider');
-
-   noUiSlider.create(priceSlider, {
-    start: [10, 1000],
-    connect: true,
-    step: 10,
-    range: {
-        'min': 10,
-        'max': 1000
-    },
-    tooltips: [true, true], // 👈 This enables tooltips above both handles
-    format: {
-        to: value => `$${Math.round(value)}`,
-        from: value => Number(value.replace('$', ''))
-    }
-});
-
-
-const minVal = document.getElementById('min-val');
-const maxVal = document.getElementById('max-val');
-const priceFrom = document.getElementById('priceFrom');
-const priceTo = document.getElementById('priceTo');
-
-priceSlider.noUiSlider.on('update', function (values) {
-    const min = Math.round(parseFloat(values[0].replace('$', '')));
-    const max = Math.round(parseFloat(values[1].replace('$', '')));
-
-    $('#min-val').text(`{{ site_currency() }}${min}`);
-    $('#max-val').text(`{{ site_currency() }}${max}`);
-
-
-    $('#hidden_price_from_input_id').val(min);
-    $('#hidden_price_to_input_id').val(max);
-
-    $('#hidden_price_from_input_id').trigger('input');
-    $('#hidden_price_to_input_id').trigger('input');
-});
-
 function clearAllProducts() {
     $('#product-table-body').empty();
     $('input[name="manual_keyword"]').val('');
@@ -466,67 +434,75 @@ function clearAllProducts() {
     function generateInvoice(event) {
         event.preventDefault();
 
-         Swal.fire({
-                    title: 'Preparing Invoice...',
-                    text: 'Please wait while we generate your invoice.',
-                    allowOutsideClick: false,
-                    didOpen: () => {
-                        Swal.showLoading();
-                    }
-                });
+        const visibleProducts = $('input[name="product_ids[]"]:visible');
+        const selectedProducts = $('input[name="product_ids[]"]:checked');
+        const invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
+        const current_amount = parseFloat($('#current_amount').val()) || 0;
+        const discountAmount = parseFloat($('#discount_amount').val()) || 0;
 
+        if (selectedProducts.length === 0) {
+            toastr.error('Please select your products combo...', 'No Product Selected');
+            return;
+        }
+
+        if (current_amount < invoiceAmount) {
+            $('#current_amount').addClass('border border-danger');
+                setTimeout(() => {
+                    $('#current_amount').removeClass('border border-danger');
+                }, 2000);
+            toastr.error('Total is less than invoice amount.', 'Mismatch');
+            return;
+        }
+
+        if ((current_amount - discountAmount) !== invoiceAmount) {
+            const diff = (current_amount - invoiceAmount);
+            const diffFixed = diff.toFixed(2);
+        
+            $('#discount_amount').val(discountAmount).addClass('border border-danger');
+            setTimeout(() => {
+                $('#discount_amount').removeClass('border border-danger');
+            }, 2000);
+
+            if (discountAmount > diff) {
+                toastr.error(`The discount amount of $${discountAmount} exceeds the expected discount of $${diffFixed}.`, 'Discount Too High');
+            } else {
+                toastr.error(`Please apply a discount of $${diffFixed} to match the invoice amount.`, 'Give Discount');
+            }
+
+            return;
+        }
+
+        let blinkCount = 0;
+        const maxBlinkCount = 15;
+        const blinkInterval = 500;
+
+        $('#discount_amount, #current_amount, #invoice_amount').css('transition', 'border-color 0.3s ease');
+
+        (function blinkBorder() {
+            $('#discount_amount, #current_amount, #invoice_amount').toggleClass('border border-success');
+            blinkCount++;
+            if (blinkCount < maxBlinkCount) {
+                setTimeout(blinkBorder, blinkInterval);
+            } else {
+                $('#discount_amount, #current_amount, #invoice_amount').removeClass('border border-success');
+            }
+        })();
+        toastr.options.timeOut = 5000;
+        toastr.info('Preparing your invoice details...', 'Initializing');
         $.ajax({
-            url: '/generate-new-invoice-number',
+            url: "{{ route('generate.invoice.number') }}",
             method: 'GET',
             data: { site_name: "{{ $customer['site_name'] ?? 'N/A' }}" },
             success: function (response) {
-
                 if (!response.success) {
                     Swal.close();
                     toastr.error('Failed to generate new invoice number', 'Error');
                     return;
                 }
 
-                // Set the invoice number
                 $('input[name="invoice_number"]').val(response.new_invoice_number);
-
-                // Step 2: Continue with validation and form preparation
-                const selectedProducts = $('input[name="product_ids[]"]:checked');
-                const invoiceAmount = parseFloat($('#final_amount').val()) || 0;
-                const current_amount = parseFloat($('#current_amount').val()) || 0;
-                const discountAmount = parseFloat($('#discount_amount').val()) || 0;
-                const finalAmount = parseFloat($('#final_amount').val()) || 0;
-
-                if (selectedProducts.length === 0) {
-                    Swal.close();
-                    toastr.warning('Select combo products to match your invoice amount.', 'No Products Selected');
-                    return;
-                }
-
-                if (current_amount < invoiceAmount) {
-                    Swal.close();
-                    toastr.error('Total is less than invoice amount.', 'Mismatch');
-                    return;
-                }
-
-                if ((current_amount - discountAmount) !== finalAmount) {
-                    const diff = (current_amount - finalAmount).toFixed(2);
-
-                    if (discountAmount > diff) {
-                        Swal.close();
-                        toastr.error(`The discount amount of $${discountAmount} is more than the expected discount of $${diff}.`, 'Discount Too High');
-                    
-                    } else {
-                        Swal.close();
-                        toastr.error(`Please apply a discount of $${diff} to match the target amount.`, 'Give Discount');
-                    }
-                    return;
-                }
-
-                // Remove existing product data
                 $('#generate-invoice-form').find('input[name="product_data[]"]').remove();
 
-                // Add selected product data
                 selectedProducts.each(function () {
                     const productId = $(this).val();
                     const unitPrice = $(`input[data-product-id="${productId}"]`).val();
@@ -537,12 +513,26 @@ function clearAllProducts() {
                         value: JSON.stringify({ product_id: productId, unit_price: unitPrice })
                     }));
                 });
-                
+
                 $('#generate-invoice-form')[0].submit();
-                setTimeout(() => {
-                    Swal.close();
-                    }, 3000);
-                   
+
+                    toastr.options = {
+                        timeOut: 15000,
+                        onHidden: function () {
+                            toastr.options = {
+                                timeOut: 4000
+                            };
+                            toastr.success('Invoice is ready and will download shortly. The page will refresh in 30 seconds.', 'Completed');
+                            setInterval(() => {
+                                location.reload();
+                            }, 30000);
+
+                        
+                        }
+                    };
+
+                    toastr.info('Generating invoice PDF file...', 'Processing');
+
             },
             error: function () {
                 Swal.close();

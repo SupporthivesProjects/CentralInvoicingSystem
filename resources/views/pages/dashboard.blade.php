@@ -47,16 +47,6 @@
 
                                             </div>
                                             <div class="card-item-title mb-2">
-<<<<<<< HEAD
-                                                <label class="main-content-label fs-13 fw-bold mb-1">Busines Models</label>
-                                                {{-- <span class="d-block fs-12 mb-0 text-muted">Previous month vs this
-                                                    months</span> --}}
-                                            </div>
-                                            <div class="card-item-body">
-                                                <div class="card-item-stat">
-                                                    <h4 class="fw-bold">{{ getModelsCount() }}</h4>
-                                                    {{-- <small><b class="text-success">55%</b> higher</small> --}}
-=======
                                                 <label class="main-content-label fs-13 fw-bold mb-1">Available Websites</label>
                                                   <p class="card-text">All Available Websites</p>
                                             </div>
@@ -68,7 +58,6 @@
                                                         <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 1 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
                                                     </svg>
                                                     </a>
->>>>>>> 7e7a09f8608d3865b911f418b1394f335466a515
                                                 </div>
                                             </div>
                                         </div>
@@ -92,16 +81,6 @@
 
                                             </div>
                                             <div class="card-item-title mb-2">
-<<<<<<< HEAD
-                                                <label class="main-content-label fs-13 fw-bold mb-1">Connected Sites</label>
-                                                {{-- <span class="d-block fs-12 mb-0 text-muted">Employees joined this
-                                                    month</span> --}}
-                                            </div>
-                                            <div class="card-item-body">
-                                                <div class="card-item-stat">
-                                                    <h4 class="fw-bold">{{ getAllWebsites() }}</h4>
-                                                    {{-- <small><b class="text-success">5%</b> Increased</small> --}}
-=======
                                                 <label class="main-content-label fs-13 fw-bold mb-1">Business Models</label>
                                                 <p class="card-text">All business models</p>
                                             </div>
@@ -113,7 +92,6 @@
                                                         <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 1 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
                                                     </svg>
                                                     </a>
->>>>>>> 7e7a09f8608d3865b911f418b1394f335466a515
                                                 </div>
                                             </div>
                                         </div>
@@ -136,7 +114,7 @@
 
 
                                             </div>
-                                           
+
                                             <div class="card-item-title  mb-2">
                                                 <label class="main-content-label fs-13 fw-bold mb-1">Invoices Created</label>
                                                 <p class="card-text">All created invoices</p>
@@ -167,28 +145,19 @@
                                             </svg>
 
                                             </div>
-                                           
+
                                             <div class="card-item-title  mb-2">
                                                 <label class="main-content-label fs-13 fw-bold mb-1">User List</label>
-<<<<<<< HEAD
-                                                {{-- <span class="d-block fs-12 mb-0 text-muted">Previous month vs this
-                                                    months</span> --}}
-=======
                                                 <p class="card-text">All admin and staff users</p>
->>>>>>> 7e7a09f8608d3865b911f418b1394f335466a515
                                             </div>
                                             <div class="card-item-body">
                                                 <div class="card-item-stat">
                                                     <h4 class="fw-bold">{{ userCount() }}</h4>
-<<<<<<< HEAD
-                                                    {{-- <small><b class="text-danger">12%</b> decrease</small> --}}
-=======
                                                     <a href="{{ route('users.index') }}" class="btn btn-sm btn-outline-primary mt-2">View
                                                         <svg xmlns="http://www.w3.org/2000/svg" class="arrow-icon" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                                             <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 1 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
                                                         </svg>
                                                     </a>
->>>>>>> 7e7a09f8608d3865b911f418b1394f335466a515
                                                 </div>
                                             </div>
                                         </div>
@@ -204,7 +173,7 @@
                                     <div class="card custom-card overflow-hidden">
                                         <div class="card-header border-bottom-0">
                                             <div class="d-flex justify-content-between w-100">
-                                                <h4 class="mb-1"> Invoice Generation Analytics</h4> 
+                                                <h4 class="mb-1"> Invoice Generation Analytics</h4>
                                             </div>
                                             <div class="d-flex justify-content-between w-100">
                                                 <p class="text-muted mb-0" style="font-size: 14px;">
@@ -216,14 +185,8 @@
                                         </div>
                                     </div>
                                 </div>
-<<<<<<< HEAD
-                            </div><!-- col end -->
 
-                            <div class="col-lg-12">
-=======
-                            
                             <div class="col-lg-12" id="listinvoices">
->>>>>>> 7e7a09f8608d3865b911f418b1394f335466a515
                                 <div class="card custom-card mg-b-20 tasks">
                                 <div class="card-body">
                                         <h4 class="mb-4">Invoice Generation History</h4>
@@ -275,7 +238,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="generateReportModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" 
+<div class="modal fade" id="generateReportModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
      aria-labelledby="generateReportModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -355,13 +318,13 @@
         series: [
             {
                 name: "Invoices Created Count",
-                type: 'line',  
+                type: 'line',
                 data: invoiceCounts,
                 color: "#FF5733"
             },
             {
                 name: "Price Changes Count",
-                type: 'line',  
+                type: 'line',
                 data: priceChangeCounts,
                 color: "#1E90FF"
             }
@@ -417,14 +380,14 @@
     $(document).ready(function () {
     $('#invoice-history').DataTable({
         responsive: true,
-        dom: 'Bfrtip',  
+        dom: 'Bfrtip',
         buttons: [
-            'copy',      
-            'csv',       
-            'excel',     
-            'pdf',        
+            'copy',
+            'csv',
+            'excel',
+            'pdf',
             {
-                extend: 'print',  
+                extend: 'print',
                 text: 'Print Table'
             }
         ]

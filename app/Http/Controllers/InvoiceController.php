@@ -29,6 +29,23 @@ use App\Http\Controllers\BusinessModels\TranslationController;
 class InvoiceController extends Controller
 {
 
+    protected $productTable = null;
+    protected $connectionType = null;
+
+    public function __construct()
+    {
+        $site_id = session('customer.site_id');
+
+        if ($site_id) {
+            $site = Website::find($site_id);
+
+            if ($site) {
+                $this->productTable = getProductTable($site->technology);
+                $this->connectionType = 'dynamic';
+            }
+        }
+    }
+
     public function getCustomerDetails($site_id_from_url)
     {
         try {
@@ -54,7 +71,7 @@ class InvoiceController extends Controller
     public function saveCustomerDetails(Request $request)
     {
         $validated = $request->validate([
-            'site_id' => 'required|exists:websites,id',
+            'hidden_site_id' => 'required|exists:websites,id',
             'customer_name' => 'required|string|max:255',
             'invoice_date' => 'required|date',
             'invoice_amount' => 'required|numeric|min:1',
@@ -65,7 +82,7 @@ class InvoiceController extends Controller
         
         session([
             'customer' => [
-                'site_id' => $request->site_id,
+                'site_id' => $request->hidden_site_id,
                 'site_name' => $request->site_name,
                 'customer_name' => $request->customer_name,
                 'customer_mobile' => $request->customer_mobile,
@@ -76,8 +93,16 @@ class InvoiceController extends Controller
                 'invoice_date' => $request->invoice_date,
             ],
             'products' => []
-        ]);        
+        ]); 
+
+        if (!$request->invoice_amount) {
+
+            return redirect()->back()->with(['error','Invoice amount is required.']);
+        }
         
+        if (!session('invoice.invoice_amount')) {
+            session()->put('invoice.invoice_amount', $request->invoice_amount);
+        }
         
         return redirect()->route('product.selection')->with('success', 'Database connection established for the selected website.');
     }
@@ -96,9 +121,9 @@ class InvoiceController extends Controller
             $site = Website::findOrFail($site_id);
             
             DynamicDatabaseService::connect($site);
-            DB::connection('dynamic')->getPdo(); 
+            DB::connection($this->connectionType)->getPdo(); 
     
-            $currency = DB::connection('dynamic')
+            $currency = DB::connection($this->connectionType)
                 ->table('currencies')
                 ->where('status', 1)
                 ->first();
@@ -165,6 +190,7 @@ class InvoiceController extends Controller
             return redirect()->back()->with('error', 'Invalid business model type');
         }
     }
+
 
     public static function createInvoiceHistory($invoice_data)
     {

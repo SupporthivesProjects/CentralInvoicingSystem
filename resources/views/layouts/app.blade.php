@@ -36,6 +36,8 @@
     <link rel="stylesheet" href="{{ asset('libs/flatpickr/flatpickr.min.css') }}">
     <link rel="stylesheet" href="{{ asset('libs/@simonwep/pickr/themes/nano.min.css') }}">
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
     <!-- Choices CSS -->
     <link rel="stylesheet" href="{{ asset('libs/choices.js/public/assets/styles/choices.min.css') }}">
 
@@ -48,14 +50,19 @@
     <!-- Toastr CSS (CDN) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 
+     <!-- noUiSlider CSS -->
+     <link href="https://cdn.jsdelivr.net/npm/nouislider@15.7.0/dist/nouislider.min.css" rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <!-- noUiSlider JS -->
+
     <!-- Prism CSS -->
     <link rel="stylesheet" href="{{ asset('libs/prismjs/themes/prism-coy.min.css') }}">
 
+    <link rel="stylesheet" href="{{ asset('narayan/css/styles.css') }}">
+
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    <!-- Choices JS -->
-    <script src="{{ asset('libs/choices.js/public/assets/scripts/choices.min.js') }}"></script>
 
     <!-- Main Theme JS -->
     <script src="{{ asset('js/main.js') }}"></script>
@@ -64,31 +71,11 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.3.0/css/responsive.bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.3/css/buttons.bootstrap5.min.css">
-    
-    <!-- Custom Toast Style -->
-    <style>
-        #toast-container > .toast {
-            color: #fff;
-            background-color: #333; /* dark background */
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-        }
-        #toast-container > .toast-success {
-            background-color: #51A351; /* green */
-        }
-        #toast-container > .toast-error {
-            background-color: #BD362F; /* red */
-        }
-    </style>
 
     @stack('styles')
     </head>
-
- <body>
-       <!-- Loader -->
-       <div id="loader" >
-            <img src="{{ asset('images/media/media-79.svg') }}" alt="">
-        </div>
-        <!-- Loader -->
+  <body>
+     
         @unless(in_array(Route::currentRouteName(), ['login', 'password.request', 'password.reset']))
             @include('partials.sidebar')
         @endunless
@@ -102,6 +89,7 @@
         @endunless
         
         @include('partials.footer')
+
     <!-- Scroll To Top -->
         <div class="scrollToTop">
             <span class="arrow"><i class="fe fe-arrow-up"></i></span>
@@ -148,13 +136,11 @@
         <!-- Toastr JS (CDN) -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
-        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-
-       <!-- noUiSlider CSS -->
-        <link href="https://cdn.jsdelivr.net/npm/nouislider@15.7.0/dist/nouislider.min.css" rel="stylesheet">
-        <!-- noUiSlider JS -->
+      
         <script src="https://cdn.jsdelivr.net/npm/nouislider@15.7.0/dist/nouislider.min.js"></script>
 
+         <!-- Choices JS -->
+        <script src="{{ asset('libs/choices.js/public/assets/scripts/choices.min.js') }}"></script>
 
         <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 
@@ -177,85 +163,17 @@
                 Swal.close();
                 toastr.error("{{ session('error') }}");
             @endif
+            @if(session('info'))
+                Swal.close();
+                toastr.info("{{ session('info') }}");
+            @endif
+
+            @if(session('warning'))
+                Swal.close();
+                toastr.warning("{{ session('warning') }}");
+            @endif
         </script>
-        <style>
-            #price-slider {
-                margin-top: 6px;
-            }
-
-            .noUi-target {
-                height: 38px !important; /* Match input height */
-                border-radius: 5px;
-                background: #e9ecef;
-                box-shadow: none;
-                border: 1px solid #ced4da;
-            }
-
-            .noUi-horizontal .noUi-handle {
-                width: 18px;
-                height: 38px !important;
-                top: -1px !important; /* Align with track */
-                background: #0d6efd;
-                border: none;
-                border-radius: 4px;
-                cursor: pointer;
-                box-shadow: 0 2px 4px rgba(0,0,0,0.15);
-            }
-
-            .noUi-horizontal .noUi-handle:before,
-            .noUi-horizontal .noUi-handle:after {
-                display: none; /* Hide default lines */
-            }
-
-            .noUi-connect {
-                background: #0d6efd; /* Bootstrap primary color */
-            }
-
-            #range-values {
-                margin-top: 10px;
-                display: flex;
-                justify-content: space-between;
-                font-size: 14px;
-            }
-            /* Match slider height to input */
-            #price-slider .noUi-target {
-            height: 38px !important; /* Same as .form-control */
-            border-radius: 0.375rem;
-            border: 1px solid #ced4da;
-            background: #e9ecef;
-            box-shadow: none;
-            }
-
-            .noUi-horizontal .noUi-handle {
-            width: 20px;
-            height: 38px !important;
-            top: -1px !important;
-            background: #0d6efd;
-            border-radius: 4px;
-            box-shadow: none;
-            border: none;
-            }
-
-            .noUi-horizontal .noUi-handle:before,
-            .noUi-horizontal .noUi-handle:after {
-            display: none;
-            }
-
-            .noUi-connect {
-            background: #0d6efd;
-            }
-            .noUi-tooltip {
-            font-size: 14px;
-            font-weight: 500;
-            background: #343a40;
-            color: #fff;
-            border-radius: 4px;
-            padding: 4px 8px;
-            top: -40px !important;
-            }
-
-        </style>
-
+        
 
         <!-- Choices JS -->
         <script src="{{ asset('libs/choices.js/public/assets/scripts/choices.min.js') }}"></script>

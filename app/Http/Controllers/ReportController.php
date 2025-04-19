@@ -15,6 +15,16 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class ReportController extends Controller
 {
+    private $productTable;
+    private $connectionType;
+
+    public function __construct()
+    {
+        $site_id = session('customer.site_id');
+        $site = Website::findOrFail($site_id);
+        $this->productTable = getProductTable($site->technology);
+        $this->connectionType = 'dynamic';
+    }
     
     public function invoiceReport(Request $request)
     {

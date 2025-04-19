@@ -87,9 +87,17 @@
                                     value="{{ old('site_description', $website->site_description) }}">
                             </div>
                             <div class="col-md-6 mx-auto">
-                                <label class="form-label">Remark</label>
-                                <input type="text" name="remark" class="form-control" placeholder="Enter Remark here in case"
-                                    value="{{ old('remark', $website->remark) }}">
+                                <label class="form-label">Technology <span style="color:red">*</span></label>
+                                <select name="technology" class="form-select" required>
+                                    <option selected disabled>Choose Technology</option>
+                                    <option value="wordpress" {{ $website->technology == 'wordpress' ? 'selected' : '' }}>WordPress</option>
+                                    <option value="laravel" {{ $website->technology == 'laravel' ? 'selected' : '' }}>Laravel</option>
+                                    <option value="django" {{ $website->technology == 'django' ? 'selected' : '' }}>Django</option>
+                                    <option value="corephp" {{ $website->technology == 'corephp' ? 'selected' : '' }}>Core PHP</option>
+                                    <option value="static" {{ $website->technology == 'static' ? 'selected' : '' }}>Static</option>
+                                    <option value="joomla" {{ $website->technology == 'joomla' ? 'selected' : '' }}>Joomla</option>
+                                    <option value="other" {{ $website->technology == 'other' ? 'selected' : '' }}>Other</option>
+                                </select>
                             </div>
                             <div class="col-md-6 mx-auto">
                                 <label class="form-label">Company Name</label>

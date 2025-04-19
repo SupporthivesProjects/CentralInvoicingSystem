@@ -31,8 +31,13 @@ class HomeController extends Controller
     {
         $sevenDaysAgo = Carbon::now()->subDays(7)->startOfDay();
         $today = Carbon::now()->endOfDay();
+<<<<<<< HEAD
 
         // Fetch price change stats
+=======
+    
+       
+>>>>>>> 06987dd228af82bee349a75c2ba9e583c5d5b14e
         $priceHistory = ProductPriceHistory::select(
             DB::raw('DATE(last_price_changed) as date'),
             DB::raw('COUNT(*) as price_changes')
@@ -41,8 +46,13 @@ class HomeController extends Controller
         ->groupBy('date')
         ->orderBy('date', 'asc')
         ->get();
+<<<<<<< HEAD
 
         // Fetch invoice stats
+=======
+    
+       
+>>>>>>> 06987dd228af82bee349a75c2ba9e583c5d5b14e
         $invoiceStats = InvoiceGenerationHistory::select(
                 DB::raw('DATE(created_at) as date'),
                 DB::raw('COUNT(*) as count'),
@@ -61,9 +71,10 @@ class HomeController extends Controller
         for ($i = 7; $i >= 0; $i--) {
             $date = Carbon::now()->subDays($i)->format('Y-m-d');
             $dates[] = $date;
-            $invoiceCounts[$date] = 0;  // Default to 0 if no invoices
-            $priceChangeCounts[$date] = 0;  // Default to 0 if no price changes
+            $invoiceCounts[$date] = 0;  
+            $priceChangeCounts[$date] = 0;  
         }
+<<<<<<< HEAD
 
         // Populate invoice counts for each date
         foreach ($invoiceStats as $stat) {
@@ -76,6 +87,20 @@ class HomeController extends Controller
         }
 
         // Convert to indexed arrays
+=======
+    
+       
+        foreach ($invoiceStats as $stat) {
+            $invoiceCounts[$stat->date] = $stat->count;
+        }
+    
+       
+        foreach ($priceHistory as $stat) {
+            $priceChangeCounts[$stat->date] = $stat->price_changes;
+        }
+    
+       
+>>>>>>> 06987dd228af82bee349a75c2ba9e583c5d5b14e
         $invoiceCounts = array_values($invoiceCounts);
         $priceChanges = array_values($priceChangeCounts);
 
