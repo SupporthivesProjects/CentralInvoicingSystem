@@ -575,4 +575,25 @@ function clearAllProducts() {
 </script>
 
 
+
+
+<script>
+function handlePlatformChange(select) {
+    const platform = select.value;
+    const productId = select.getAttribute('data-product-id');
+
+    document.querySelectorAll(`.platform-section[data-product-id="${productId}"]`).forEach(section => {
+        section.style.display = 'none';
+    });
+
+    if (platform) {
+        const selected = document.querySelector(`.platform-section[data-product-id="${productId}"][data-platform="${platform}"]`);
+        if (selected) selected.style.display = 'block';
+    }
+}
+</script>
 @endpush
+
+
+
+

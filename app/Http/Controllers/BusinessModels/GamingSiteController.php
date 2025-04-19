@@ -70,6 +70,7 @@ class GamingSiteController extends Controller
                 'p.game_currency',
                 'p.game_platform',
                 'p.game_server_region',
+                'p.game_need_to_capture',
                 'c.costs'
             )
             ->get();
@@ -102,6 +103,7 @@ class GamingSiteController extends Controller
                         'game_currency_amount' => $bundleAmount,
                         'game_platform'  => $product->game_platform,
                         'game_region'    => $product->game_server_region,
+                        'game_need_to_capture' => $product->game_need_to_capture
                     ]);
                 }
             }
