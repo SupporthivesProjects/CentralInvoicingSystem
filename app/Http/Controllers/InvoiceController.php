@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\BusinessModels\EcommerceController;
 use App\Http\Controllers\BusinessModels\ContentWritingController;
 use App\Http\Controllers\BusinessModels\MarketingController;
-use App\Http\Controllers\BusinessModels\GamingController;
+use App\Http\Controllers\BusinessModels\GamingSiteController;
 use App\Http\Controllers\BusinessModels\GiftCardController;
 use App\Http\Controllers\BusinessModels\ImageStockController;
 use App\Http\Controllers\BusinessModels\TranslationController;
@@ -52,21 +52,21 @@ class InvoiceController extends Controller
             $site_id = request()->get('site_id', $site_id_from_url);
             $site = Website::findOrFail($site_id);
             $sites = Website::all();
-    
+
             return view('invoice.getCustomer', [
                 'site' => $site,
                 'sites' => $sites,
                 'customer' => session('customer'),
                 'invoice' => session('invoice'),
             ]);
-    
+
         } catch (ModelNotFoundException $e) {
             return redirect()->back()->with('error', 'Website not found!');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Something went wrong: ' . $e->getMessage());
         }
     }
-    
+
 
     public function saveCustomerDetails(Request $request)
     {
@@ -78,8 +78,8 @@ class InvoiceController extends Controller
             'customer_email' => 'nullable|email',
             'customer_mobile' => 'nullable|string|max:15',
         ]);
-        
-        
+
+
         session([
             'customer' => [
                 'site_id' => $request->hidden_site_id,
@@ -93,17 +93,17 @@ class InvoiceController extends Controller
                 'invoice_date' => $request->invoice_date,
             ],
             'products' => []
-        ]); 
+        ]);
 
         if (!$request->invoice_amount) {
 
             return redirect()->back()->with(['error','Invoice amount is required.']);
         }
-        
+
         if (!session('invoice.invoice_amount')) {
             session()->put('invoice.invoice_amount', $request->invoice_amount);
         }
-        
+
         return redirect()->route('product.selection')->with('success', 'Database connection established for the selected website.');
     }
 
@@ -111,18 +111,18 @@ class InvoiceController extends Controller
     public function productSelection(Request $request)
     {
         $site_id = session('customer.site_id');
-    
+
         if (!$site_id) {
             return redirect()->back()
                 ->with('error', 'Missing invoice session data. Please try again.');
         }
-    
+
         try {
             $site = Website::findOrFail($site_id);
-            
+
             DynamicDatabaseService::connect($site);
-            DB::connection($this->connectionType)->getPdo(); 
-    
+            DB::connection($this->connectionType)->getPdo();
+
             $currency = DB::connection($this->connectionType)
                 ->table('currencies')
                 ->where('status', 1)
@@ -136,8 +136,8 @@ class InvoiceController extends Controller
                     'invoice' => session('invoice'),
                     'site' => $site
                 ]);
-                
-    
+
+
         } catch (\Exception $e) {
             return redirect()->back()
                 ->with('error', 'Database connection failed: ' . $e->getMessage());
@@ -148,27 +148,27 @@ class InvoiceController extends Controller
     {
         $site = Website::findOrFail(session('customer.site_id'));
         $modelType = $site->businessModel->model_type;
-        $modelType = strtolower($modelType); 
+        $modelType = strtolower($modelType);
         return $this->resolveModelController($modelType, 'randomProducts', $request);
     }
-    
+
     public function filterProducts(Request $request)
     {
         $site = Website::findOrFail(session('customer.site_id'));
         $modelType = $site->businessModel->model_type;
-        $modelType = strtolower($modelType); 
+        $modelType = strtolower($modelType);
         return $this->resolveModelController($modelType, 'filterProducts', $request);
     }
-    
+
     public function generateInvoice(Request $request)
-    {  
+    {
         $site = Website::findOrFail(session('customer.site_id'));
         $modelType = $site->businessModel->model_type;
-        $modelType = strtolower($modelType); 
-    
+        $modelType = strtolower($modelType);
+
         return $this->resolveModelController($modelType, 'generateInvoice', $request);
     }
-    
+
     private function resolveModelController($modelType, $method, $request)
     {
         switch ($modelType) {
@@ -215,6 +215,6 @@ class InvoiceController extends Controller
         return response()->json(['success' => true,'new_invoice_number' => $newInvoiceNumber]);
     }
 
-    
-            
+
+
 }
