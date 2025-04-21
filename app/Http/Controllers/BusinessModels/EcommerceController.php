@@ -45,7 +45,6 @@ class EcommerceController extends Controller
 
   public function randomProducts(Request $request)
     {
-        Session::forget('selected_products');
         $site_id = $request->get('site_id');
         $invoiceAmount = floatval($request->get('invoice_amount'));
     
@@ -60,7 +59,7 @@ class EcommerceController extends Controller
         DynamicDatabaseService::connect($site);
         
         $allProducts = DB::connection($this->connectionType)->table($this->productTable)
-            ->select('id', 'name', 'unit_price','slug')
+            ->select('id','category_id', 'name', 'unit_price','slug')
             ->where('published', 1)
             ->when($priceFrom && $priceTo, function ($query) use ($priceFrom, $priceTo) {
                 return $query->whereBetween('unit_price', [$priceFrom, $priceTo]);
@@ -69,7 +68,7 @@ class EcommerceController extends Controller
             //->inRandomOrder() 
             ->get();
         
-        $allProducts = $allProducts->shuffle()->take(60);
+        $allProducts = $allProducts->shuffle()->take(100);
     
         $bestMatch = null;
         $bestTotal = 0;
@@ -83,7 +82,6 @@ class EcommerceController extends Controller
                 $price = floatval($product->unit_price);
     
                 if (($currentTotal + $price) <= $maxTotal) {
-                // if (($currentTotal + $price) <= $maxTotal && count($selected) < 10) {
                     $product->source = 'Random';
                     $selected[] = $product;
                     $currentTotal += $price;
@@ -110,12 +108,16 @@ class EcommerceController extends Controller
         }
     
         $currency = DB::connection($this->connectionType)->table('currencies')->where('status', 1)->first();
+        
+         $bestMatch = collect($bestMatch); 
+         $bestMatch->each(function ($product) {
 
-        $bestMatch = collect($bestMatch); 
-        $bestMatch->each(function ($product) {
-            $product->can_edit_price = 0;
-            $product->remaining_days = 0;
-        });
+         $product->category_name = DB::connection($this->connectionType)->table('categories')->where('id', $product->category_id)->value('name') ?? '';
+         $product->can_edit_price = 0;
+         $product->remaining_days = 0;   
+         
+         });
+        
     
         $modelType = $site->businessModel->model_type;
         $tableRows = view("invoice.{$modelType}.product_rows", ['products' => $bestMatch, 'currency' => $currency,'site' => $site])->render();
@@ -128,7 +130,7 @@ class EcommerceController extends Controller
     }
     
 
-    public function filterProducts(Request $request)
+  public function filterProducts(Request $request)
     {
         $site_id = session('customer.site_id');
         $site = Website::findOrFail($site_id);
@@ -145,13 +147,26 @@ class EcommerceController extends Controller
         }
 
         $query = DB::connection($this->connectionType)->table($this->productTable)
-            ->select('id', 'name', 'unit_price','slug')
+            ->select('id','category_id', 'name', 'unit_price','slug')
             ->where('published', 1);
         
     
         if ($hasKeyword) {
-            $query->where('name', 'like', '%' . $request->keyword . '%');
+            $keyword = strtolower(str_replace('-', '', $request->keyword));
+            $keyword = preg_replace('/\s+/', ' ', $keyword);
+            
+            $query = DB::connection($this->connectionType)
+            ->table($this->productTable)
+            ->join('categories', 'products.category_id', '=', 'categories.id')
+            ->select('products.id', 'products.category_id', 'products.name', 'products.unit_price', 'products.slug')
+            ->where('products.published', 1)
+            ->where(function ($q) use ($keyword) {
+                $q->whereRaw("REPLACE(LOWER(products.name), '-', '') LIKE ?", ["%{$keyword}%"])
+                ->orWhereRaw("REPLACE(LOWER(categories.name), '-', '') LIKE ?", ["%{$keyword}%"]);
+            });
         }
+            
+            
 
         if ($hasPriceRange) {
             $query->whereBetween('unit_price', [
@@ -169,10 +184,11 @@ class EcommerceController extends Controller
         }
 
         $currency = DB::connection($this->connectionType)->table('currencies')->where('status', 1)->first();
-
         $products = collect($products);
         $products->each(function ($product) {
             $product->source = 'Custom';
+            $product->category_name = DB::connection($this->connectionType)->table('categories')->where('id', $product->category_id)->value('name') ?? 'unknown';
+        
         });
 
         $products->each(function ($product) use ($site_id) {
@@ -202,19 +218,6 @@ class EcommerceController extends Controller
             'tableRows' => $tableRows,
             'currency' => $currency
         ]);
-    }
-
-
-    public function manageSelectedProducts(Request $request)
-    {
-        Session::forget('selected_products');
-        $selectedProducts = $request->input('products');
-        Session::put('selected_products', $selectedProducts);
-        return response()->json([
-            'success' => true,
-            'message' => 'Your selected products have been updated successfully.',
-            'data' => $selectedProducts
-        ]);        
     }
 
     public function generateInvoice(Request $request)
@@ -264,7 +267,7 @@ class EcommerceController extends Controller
         
         $products = DB::connection($this->connectionType)->table($this->productTable)
             ->whereIn('id', $productIds)
-            ->select('id', 'name', 'unit_price') 
+            ->select('id', 'category_id', 'name', 'unit_price') 
             ->get()
             ->sortBy(function ($product) use ($productIds) {
                 return array_search($product->id, $productIds);
@@ -274,8 +277,11 @@ class EcommerceController extends Controller
                 $product->unit_price = $customPrices[$product->id] ?? $product->unit_price;
                 return $product;
             });
-    
-    
+            
+        $products->each(function ($product) {
+            $product->category_name = DB::connection($this->connectionType)->table('categories')->where('id', $product->category_id)->value('name') ?? 'unknown';
+        });
+        
        
         $currency = DB::connection($this->connectionType)->table('currencies')->where('status', 1)->first();
         $invoice_data['currency'] = $currency ? $currency->symbol : "$";

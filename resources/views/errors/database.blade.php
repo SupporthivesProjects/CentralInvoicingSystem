@@ -75,27 +75,27 @@
     @stack('styles')
     </head>
   <body>
-    <div id="loader" class="spinner-border text-primary" role="status" >
-         <span class="visually-hidden">Loading...</span>
+  <div class="page main-signin-wrapper bg-primary construction">
+    <div class="container">
+        <div class="construction1 text-center details text-fixed-white">
+            <div class="">
+                <div class="col-lg-12">
+                    <h1 class="fs-140 mb-0"><i class="fa fa-database"></i></h1>
+                </div>
+                <div class="col-lg-12">
+                    <h1>Oops! We're having database issues.</h1>
+                    <h6 class="fs-15 mt-3 mb-4 text-white-50">
+                        We’re currently unable to connect to our database. Please try again in a few minutes.
+                    </h6>
+                    <a class="btn ripple btn-secondary text-center mb-2" href="{{ url('/') }}">Back to Home</a>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
 
-     
-        @unless(in_array(Route::currentRouteName(), ['login', 'password.request', 'password.reset']))
-            @include('partials.sidebar')
-        @endunless
 
-          @yield('content')
-          
-        @include("partials/switcher")
-         
-        @unless(in_array(Route::currentRouteName(), ['login', 'password.request', 'password.reset']))
-        @include("partials/header")
-        @endunless
-        
-        @include('partials.footer')
-
-    <!-- Scroll To Top -->
-        <div class="scrollToTop">
+    <div class="scrollToTop">
             <span class="arrow"><i class="fe fe-arrow-up"></i></span>
         </div>
         <div id="responsive-overlay"></div>
