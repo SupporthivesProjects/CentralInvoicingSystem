@@ -43,7 +43,6 @@
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="fas fa-user"></i></span>
                                     <input type="text" name="customer_name" class="form-control" placeholder="Enter Customer Name" value="{{ $customer['customer_name'] ?? '' }}" required>
-                                    <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span> 
                                 </div>
                             </div>
 
@@ -53,7 +52,6 @@
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
                                     <input type="date" name="invoice_date" class="form-control" value="{{ $invoice['invoice_date'] ?? '' }}" required>
-                                    <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span> 
                                 </div>
                             </div>
 
@@ -63,7 +61,6 @@
                                 <div class="input-group">
                                     <span class="input-group-text">$</span>
                                     <input type="number" name="invoice_amount" class="form-control" placeholder="Enter invoice target amount" value="{{ $invoice['invoice_amount'] ?? '' }}" required>
-                                    <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span> 
                                 </div>
                             </div>
 
@@ -73,7 +70,6 @@
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="fas fa-envelope"></i></span>
                                     <input type="email" name="customer_email" class="form-control" placeholder="Enter Customer Email (optional)">
-                                    <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span> 
                                 </div>
                             </div>
 
@@ -83,7 +79,6 @@
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="fas fa-mobile-alt"></i></span>
                                     <input type="number" name="customer_mobile" class="form-control" placeholder="Enter Customer Mobile (optional)">
-                                    <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span> 
                                 </div>
                             </div>
                         </div>
@@ -192,7 +187,6 @@
                         aria-label="Close"></button>
                 </div>
                 <form method="GET" action="{{ route('site.connect.db', ['site_id' => request('site_id')]) }}">
-                    @csrf
                     <div class="modal-body">
                         <div class="mb-3">
                             <label for="site_id" class="form-label">Choose a site</label>
@@ -242,5 +236,6 @@
         });
        
     });
+
 </script>
 @endpush

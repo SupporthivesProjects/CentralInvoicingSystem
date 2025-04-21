@@ -65,8 +65,10 @@ Route::middleware('auth')->group(function () {
 
     // Invoice Generation Routes by Narayan
     Route::get('/site/connect/{site_id}', [InvoiceController::class, 'getCustomerDetails'])->name('site.connect.db');
+    Route::post('/site/connect/check-connectivity', [WebsiteController::class, 'checkRemoteDbConnectivity'])->name('check.db.connectivity');
     Route::post('/invoice/save-customerdetails', [InvoiceController::class, 'saveCustomerDetails'])->name('customerdetails.store');
     Route::get('/invoice/product-selection', [InvoiceController::class, 'productSelection'])->name('product.selection');
+    Route::post('/invoice/update-invoice-amount', [InvoiceController::class, 'updateInvoiceAmount'])->name('update.invoice.amount');
     Route::get('/random-products', [InvoiceController::class, 'randomProducts'])->name('random.products');
     Route::get('/filter-products', [InvoiceController::class, 'filterProducts'])->name('filter.products');
     Route::post('/invoice/generate/download', [InvoiceController::class, 'generateInvoice'])->name('generate.invoice');
@@ -79,8 +81,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/currency/delete/{id}', [CurrencyController::class, 'delete'])->name('currency.delete');
 
     // Generated Invoices & Reporting
-    
-    Route::post('/manage-selected-products', [EcommerceController::class, 'manageSelectedProducts'])->name('manage.selected.products');
     Route::get('/price-range', [EcommerceController::class, 'getPriceRange'])->name('get.price.range');
     Route::get('/generate-new-invoice-number', [InvoiceController::class, 'generateNewInvoiceNumber'])->name('generate.invoice.number');
     Route::get('/invoice/chart', [HomeController::class, 'showInvoiceChart'])->name('invoice.chart');

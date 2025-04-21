@@ -11,11 +11,27 @@
             <!-- Page Header -->
             <div class="d-md-flex d-block align-items-center justify-content-between page-header-breadcrumb">
                 <div>
-                    <h2 class="main-content-title fs-24 mb-1">Manage Sites</h2>
+                    <h2 class="main-content-title fs-24 mb-1">Edit Website</h2>
                     <ol class="breadcrumb mb-0">
-                        <li class="breadcrumb-item"><a href="javascript:void(0)">Websites</a></li>
+                        <li class="breadcrumb-item">
+                            <a href="{{ route('dashboard') }}">Dashboard</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a href="">Models & Websites</a>
+                        </li>
                         <li class="breadcrumb-item active" aria-current="page">Edit Website</li>
                     </ol>
+                </div>
+
+                <div class="mt-3 mt-md-0">
+                    <button type="button" id="check-remote-db" class="btn btn-outline-warning">
+                        Check DB Connectivity
+                    </button>
+                </div>
+            </div>
+            <div class="col-xl-12">
+                <div id="db-status-wrapper" class="text-center mt-3 mb-3">
+                    <div id="db-status-message" style="display: none;"></div>
                 </div>
             </div>
             <!-- Page Header Close -->
@@ -47,32 +63,32 @@
 
                             <div class="col-md-6 mx-auto">
                                 <label class="form-label">Database Host <span style="color:red">*</span></label>
-                                <input type="text" name="db_host" class="form-control" placeholder="Enter Database Host" required
-                                    value="{{ old('db_host', $website->db_host) }}">
+                                <input type="text" name="db_host" id="db_host" class="form-control" placeholder="Enter Database Host" required
+                                    value="{{ $website->db_host }}">
                             </div>
 
                             <div class="col-md-6 mx-auto">
                                 <label class="form-label">Database Port <span style="color:red">*</span></label>
-                                <input type="text" name="db_port" class="form-control" placeholder="Enter Database Port" required
-                                    value="{{ old('db_port', $website->db_port ?? '3306') }}">
+                                <input type="text" name="db_port" id="db_port" class="form-control" placeholder="Enter Database Port" required
+                                    value="{{ $website->db_port }}">
                             </div>
 
                             <div class="col-md-6 mx-auto">
                                 <label class="form-label">Database Name <span style="color:red">*</span></label>
-                                <input type="text" name="db_name" class="form-control" placeholder="Enter Database Name" required
-                                    value="{{ old('db_name', $website->db_name) }}">
+                                <input type="text" name="db_name" id="db_name" class="form-control" placeholder="Enter Database Name" required
+                                    value="{{ $website->db_name }}">
                             </div>
 
                             <div class="col-md-6 mx-auto">
                                 <label class="form-label">Database Username <span style="color:red">*</span></label>
-                                <input type="text" name="db_username" class="form-control" placeholder="Enter Database Username" required
-                                    value="{{ old('db_username', $website->db_username) }}">
+                                <input type="text" name="db_username" id="db_username" class="form-control" placeholder="Enter Database Username" required
+                                    value="{{ $website->db_username }}">
                             </div>
 
                             <div class="col-md-6 mx-auto">
                                 <label class="form-label">Database Password <span style="color:red">*</span></label>
-                                <input type="text" name="db_password" class="form-control" placeholder="Enter Database Password" required
-                                    value="{{ old('db_password', $website->db_password) }}">
+                                <input type="text" name="db_password" id="db_password"  class="form-control" placeholder="Enter Database Password" required
+                                    value="{{ $website->db_password }}">
                             </div>
 
                             <div class="col-md-6 mx-auto">
@@ -204,4 +220,81 @@
 
 @endsection
 @push('scripts')
+
+<script>
+    $(document).ready(function() {
+        $('#check-remote-db').click(function () {
+            $('#db-status-message')
+                .html(`<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span><span>Establishing connection...</span>`)
+                .css('color', '#6c757d')
+                .fadeIn(300);
+            $('.field-error').remove();
+
+            var db_host = $('#db_host').val();
+            var db_port = $('#db_port').val();
+            var db_name = $('#db_name').val();
+            var db_username = $('#db_username').val();
+            var db_password = $('#db_password').val();
+            
+            if(!db_host){
+                $('#db-status-message').html('<span class="field-error text-danger">Database Host is required</span>').fadeOut(1000);
+                return;
+            }
+            if(!db_port){
+                $('#db-status-message').html('<span class="field-error text-danger">Database Port is required</span>').fadeOut(1000);
+                return;
+            }
+            if(!db_name){
+                $('#db-status-message').html('<span class="field-error text-danger">Database Name is required</span>').fadeOut(1000);
+                return;
+            }
+            if(!db_username){
+                $('#db-status-message').html('<span class="field-error text-danger">Database Username is required</span>').fadeOut(1000);
+                return;
+            }
+            if(!db_password){
+                $('#db-status-message').html('<span class="field-error text-danger">Database Password is required</span>').fadeOut(1000);
+                return;
+            }
+
+            $.ajax({
+                url: "{{ route('check.db.connectivity') }}",
+                type: 'POST',
+                data: {
+                    db_host: db_host,
+                    db_port: db_port,
+                    db_name: db_name,
+                    db_username: db_username,
+                    db_password: db_password,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function (response) {
+                    if (response.success) {
+                        $('#db-status-message').html(`
+                            <div class="checkmark-wrapper">
+                                <div class="checkmark-circle">
+                                    <div class="checkmark"></div>
+                                </div>
+                                <div>Connection successful!</div>
+                            </div>
+                        `).fadeIn(500);
+                    } else {
+                        $('#db-status-message').html('<span class="text-danger">' + response.message + '</span>');
+                    }
+                    setTimeout(function () {
+                        $('#db-status-message').fadeOut(500);
+                    }, 5000);
+                },
+                error: function () {
+                    $('#db-status-message').html('<span class="text-danger">Error occurred while connecting to the DB.</span>');
+                    setTimeout(function () {
+                        $('#db-status-message').fadeOut(500);
+                    }, 5000);
+                }
+            });
+        });
+    });
+</script>
+
+
 @endpush

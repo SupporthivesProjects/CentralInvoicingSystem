@@ -109,9 +109,23 @@ class InvoiceController extends Controller
 
 
     public function productSelection(Request $request)
-    {
+    {   
+       
+        $new_site_id = $request->query('new_site_id');
+
+        if ($new_site_id && session('customer.site_id') != $new_site_id) {
+
+            $site = Website::findOrFail($new_site_id);
+            $customer = session('customer');
+            $customer['site_id'] = $new_site_id;
+            $customer['site_name'] = $site->site_name;
+            session()->put('customer', $customer);
+            
+            session()->flash('success', 'Website has been changed');
+        }
+       
         $site_id = session('customer.site_id');
-    
+
         if (!$site_id) {
             return redirect()->back()
                 ->with('error', 'Missing invoice session data. Please try again.');
@@ -128,14 +142,10 @@ class InvoiceController extends Controller
                 ->where('status', 1)
                 ->first();
 
-                $modelType = $site->businessModel->model_type;
+            $modelType = $site->businessModel->model_type;
+            $sites = Website::all();
 
-                return view("invoice.{$modelType}.productSelection", [
-                    'currency' => $currency,
-                    'customer' => session('customer'),
-                    'invoice' => session('invoice'),
-                    'site' => $site
-                ]);
+            return view("invoice.{$modelType}.productSelection", [ 'currency' => $currency, 'customer' => session('customer'), 'invoice' => session('invoice'), 'site' => $site, 'sites' => $sites]);
                 
     
         } catch (\Exception $e) {
@@ -143,6 +153,38 @@ class InvoiceController extends Controller
                 ->with('error', 'Database connection failed: ' . $e->getMessage());
         }
     }
+
+
+    public function updateInvoiceAmount(Request $request)
+    {
+        $validated = $request->validate([
+
+            'invoice_amount' => 'nullable|numeric|min:1',
+            'invoice_date' => 'nullable|date',
+            'customer_name' => 'nullable|string|max:255',
+            'customer_email' => 'nullable|email',
+            'customer_mobile' => 'nullable|string|max:15',
+        ]);
+
+        session()->put('invoice.invoice_amount', $request->invoice_amount);
+        session()->put('invoice.invoice_date', $request->invoice_date);
+        session()->put('customer.customer_name', $request->customer_name);
+        session()->put('customer.customer_mobile', $request->customer_mobile);
+        session()->put('customer.customer_email', $request->customer_email);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Customer details updated successfully!',
+            'updated' => [
+                'invoice_amount' => $request->invoice_amount,
+                'invoice_date' => $request->invoice_date,
+                'customer_name' => $request->customer_name,
+                'customer_email' => $request->customer_email,
+                'customer_mobile' => $request->customer_mobile,
+            ],
+        ]);
+    }   
+
 
     public function randomProducts(Request $request)
     {

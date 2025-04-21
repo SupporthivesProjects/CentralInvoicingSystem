@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 
 class WebsiteController extends Controller
 {
@@ -445,5 +447,59 @@ class WebsiteController extends Controller
             return redirect()->back()->with('error', 'Something went wrong. Please try again.');
         }
     }
+
+
+
+    public function checkRemoteDbConnectivity(Request $request)
+    {
+        try {
+          
     
+            Config::set('database.connections.' . $this->connectionType, [
+                'driver' => 'mysql',
+                'host' => $request->db_host,
+                'port' => $request->db_port ?? '3306', 
+                'database' => $request->db_name,
+                'username' => $request->db_username,
+                'password' => $request->db_password,
+                'charset' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci',
+                'prefix' => '',
+                'strict' => true,
+                'engine' => null,
+            ]);
+    
+           
+            $connection = DB::connection($this->connectionType);
+    
+         
+            $pdo = $connection->getPdo();
+    
+         
+            if ($pdo) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Remote DB connection successful!',
+                ]);
+            }
+    
+            return response()->json([
+                'success' => false,
+                'message' => 'Could not establish connection to the database.',
+            ]);
+    
+        } catch (\Exception $e) {
+            \Log::error('Error while connecting to remote DB', [
+                'error_message' => $e->getMessage(),
+                'stack_trace' => $e->getTraceAsString(),
+            ]);
+    
+            return response()->json([
+                'success' => false,
+                'message' => 'Error occurred while connecting to the DB: ' . $e->getMessage(),
+            ]);
+        }
+    }
+    
+   
 }
