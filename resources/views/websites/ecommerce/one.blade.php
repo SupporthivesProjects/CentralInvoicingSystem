@@ -131,7 +131,7 @@
                                     <td colspan="2"></td>
                                     <td style="padding-left:10px; font-family: Calibri; font-size: 10px;"><b style="color:#2f5496;">TOTAL</b></td>
                                     <td style="text-align:right; padding-right:10px; font-family: Calibri; font-size: 10px; background: #d9e2f3 !important; border-bottom: 2px solid #2f5496 !important;">
-                                        {{ site_currency() . number_format($invoice_amount - $discount_amount, 2) }}
+                                        {{ site_currency() . number_format($invoice_amount, 2) }}
                                     </td>
                                 </tr>
                             </table>
