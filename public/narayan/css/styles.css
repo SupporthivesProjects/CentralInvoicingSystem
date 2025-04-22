@@ -1,78 +1,70 @@
 /* Custom CSS written by Narayan Zade for eCommerce product selection checkbox */
-
 .narayan-checkbox {
-    -webkit-appearance: none !important;
-    -moz-appearance: none !important;
-    appearance: none !important;
-    width: 22px !important; /* Enforce smaller size */
-    height: 22px !important; /* Enforce smaller size */
-    border-radius: 50% !important; /* Ensure round shape */
-    border: 2px solid #6c757d !important;
-    background-color: #fff !important;
-    position: relative;
-    cursor: pointer;
-    transition: all 0.3s ease-in-out;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+  width: 22px !important;
+  height: 22px !important;
+  border-radius: 0% !important;
+  border: 1px solid rgb(26, 178, 90) !important;
+  background-color: #fff !important;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
 }
 
 .narayan-checkbox:checked {
-    background: var(--primary-color) !important; /* Use the primary color defined by CSS variable */
-    border: 2px solid var(--primary-color) !important; /* Use the primary color for border */
-    transform: scale(1.1) !important; /* Slight scaling effect when checked */
-    animation: pulse 0.5s ease-out forwards;
+  background: rgb(26, 178, 90) !important;
+  transform: scale(1) !important;
+  animation: checkBounce 0.3s ease-out;
 }
 
 .narayan-checkbox:checked::before {
-    content: '';
-    position: absolute;
-    top: 4px !important; /* Adjust to center vertically */
-    left: 7px !important; /* Adjust to center horizontally */
-    width: 5px !important;
-    height: 9px !important;
-    border: solid white;
-    border-width: 0 3px 3px 0;
-    transform: rotate(45deg) !important;
+  content: '';
+  position: absolute;
+  top: 4px !important;
+  left: 7px !important;
+  width: 5px !important;
+  height: 9px !important;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  transform: rotate(45deg) scale(0);
+  animation: drawCheck 0.3s ease-out forwards;
 }
 
-@keyframes pulse {
-    0% {
-        transform: scale(1.1) !important;
-    }
-    50% {
-        transform: scale(1) !important;
-    }
-    100% {
-        transform: scale(1.1) !important;
-    }
+@keyframes checkBounce {
+  0% {
+    transform: scale(0.9);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes drawCheck {
+  to {
+    transform: rotate(45deg) scale(1);
+  }
 }
 
 .narayan-checkbox:disabled {
-    cursor: not-allowed !important;
-    background-color: #e9ecef !important;
-    border: 2px solid #ced4da !important;
-    transition: background-color 0.3s ease, border-color 0.3s ease;
+  cursor: not-allowed !important;
+  background-color: #e9ecef !important;
+  border: 2px solid #ced4da !important;
 }
 
 .narayan-checkbox:disabled:checked {
-    background-color: #c6c6c6 !important;
-    border: 2px solid #ced4da !important;
-}
-
-.narayan-checkbox:not(:checked) {
-    background-color: #fff !important;
-    border: 2px solid #6c757d !important;
-    transition: all 0.3s ease !important;
+  background-color: #c6c6c6 !important;
+  border: 2px solid #ced4da !important;
 }
 
 .narayan-checkbox:not(:checked):hover {
-    border-color: #007bff !important;
-    background-color: #f8f9fa !important;
+  background-color: #f8f9fa !important;
+  border-color: rgb(26, 178, 90) !important;
 }
-
-.narayan-checkbox:checked:hover {
-    border-color: var(--primary-color) !important;
-    background-color: #320cbc !important;
-}
-
 
 /* Toast uI changed by narayan xzade */
 
@@ -390,7 +382,7 @@
     width: 24px;
     height: 24px;
     background-color: #28a745;
-    border-radius: 50%;
+    border-radius: 0%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -429,3 +421,208 @@
 .narayan-bg{
   background: linear-gradient(to right, #f0f4f8, #ffffff);
 }
+
+
+
+
+
+/*Search loader*/
+
+/* From Uiverse.io by mobinkakei */ 
+#wifi-loader {
+  --background: #62abff;
+  --front-color: #4f29f0;
+  --back-color: #c3c8de;
+  --text-color: #414856;
+  width: 64px;
+  height: 64px;
+  border-radius: 50px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#wifi-loader svg {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#wifi-loader svg circle {
+  position: absolute;
+  fill: none;
+  stroke-width: 6px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transform: rotate(-100deg);
+  transform-origin: center;
+}
+
+#wifi-loader svg circle.back {
+  stroke: var(--back-color);
+}
+
+#wifi-loader svg circle.front {
+  stroke: var(--front-color);
+}
+
+#wifi-loader svg.circle-outer {
+  height: 86px;
+  width: 86px;
+}
+
+#wifi-loader svg.circle-outer circle {
+  stroke-dasharray: 62.75 188.25;
+}
+
+#wifi-loader svg.circle-outer circle.back {
+  animation: circle-outer135 1.8s ease infinite 0.3s;
+}
+
+#wifi-loader svg.circle-outer circle.front {
+  animation: circle-outer135 1.8s ease infinite 0.15s;
+}
+
+#wifi-loader svg.circle-middle {
+  height: 60px;
+  width: 60px;
+}
+
+#wifi-loader svg.circle-middle circle {
+  stroke-dasharray: 42.5 127.5;
+}
+
+#wifi-loader svg.circle-middle circle.back {
+  animation: circle-middle6123 1.8s ease infinite 0.25s;
+}
+
+#wifi-loader svg.circle-middle circle.front {
+  animation: circle-middle6123 1.8s ease infinite 0.1s;
+}
+
+#wifi-loader svg.circle-inner {
+  height: 34px;
+  width: 34px;
+}
+
+#wifi-loader svg.circle-inner circle {
+  stroke-dasharray: 22 66;
+}
+
+#wifi-loader svg.circle-inner circle.back {
+  animation: circle-inner162 1.8s ease infinite 0.2s;
+}
+
+#wifi-loader svg.circle-inner circle.front {
+  animation: circle-inner162 1.8s ease infinite 0.05s;
+}
+
+#wifi-loader .text {
+  position: absolute;
+  bottom: -40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-transform: lowercase;
+  font-weight: 500;
+  font-size: 14px;
+  letter-spacing: 0.2px;
+}
+
+#wifi-loader .text::before, #wifi-loader .text::after {
+  content: attr(data-text);
+}
+
+#wifi-loader .text::before {
+  color: var(--text-color);
+}
+
+#wifi-loader .text::after {
+  color: var(--front-color);
+  animation: text-animation76 3.6s ease infinite;
+  position: absolute;
+  left: 0;
+}
+
+@keyframes circle-outer135 {
+  0% {
+    stroke-dashoffset: 25;
+  }
+
+  25% {
+    stroke-dashoffset: 0;
+  }
+
+  65% {
+    stroke-dashoffset: 301;
+  }
+
+  80% {
+    stroke-dashoffset: 276;
+  }
+
+  100% {
+    stroke-dashoffset: 276;
+  }
+}
+
+@keyframes circle-middle6123 {
+  0% {
+    stroke-dashoffset: 17;
+  }
+
+  25% {
+    stroke-dashoffset: 0;
+  }
+
+  65% {
+    stroke-dashoffset: 204;
+  }
+
+  80% {
+    stroke-dashoffset: 187;
+  }
+
+  100% {
+    stroke-dashoffset: 187;
+  }
+}
+
+@keyframes circle-inner162 {
+  0% {
+    stroke-dashoffset: 9;
+  }
+
+  25% {
+    stroke-dashoffset: 0;
+  }
+
+  65% {
+    stroke-dashoffset: 106;
+  }
+
+  80% {
+    stroke-dashoffset: 97;
+  }
+
+  100% {
+    stroke-dashoffset: 97;
+  }
+}
+
+@keyframes text-animation76 {
+  0% {
+    clip-path: inset(0 100% 0 0);
+  }
+
+  50% {
+    clip-path: inset(0);
+  }
+
+  100% {
+    clip-path: inset(0 0 0 100%);
+  }
+}
+ 

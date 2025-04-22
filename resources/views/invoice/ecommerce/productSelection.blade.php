@@ -145,21 +145,28 @@
             </div>
 
             <div class="card custom-card mt-4 border-1 rounded shadow">
-                <div class="card-header bg-light border-bottom pb-3 d-flex flex-wrap justify-content-between align-items-center">
-                    <h5 class="mb-2 mb-md-0"><i class="bi bi-funnel me-1"></i> Product Selection, Customization & Invoice Generation</h5>
-                    <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
-                        <button type="button" data-bs-toggle="modal" data-bs-target="#addmoreproducts" onclick="customizeProducts()"  class="btn btn-outline-success me-1">
-                            <i class="bi bi-box-seam"></i> Add More Products
-                        </button>
-                        <button type="button" class="btn btn-outline-info me-1" onclick="randomizeProducts()">
-                            <i class="bi bi-dice-5"></i> Randomize
-                        </button>
-                        <button type="button" class="btn btn-outline-primary me-1" onclick="generateInvoice(event)">
-                            <i class="bi bi-receipt-cutoff"></i> Generate Invoice
-                        </button>
-                    </div>
-
+            <div class="card-header bg-white shadow-sm rounded-3 p-3 d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-stars text-primary fs-4 me-2"></i>
+                    <h4 class="mb-0 fw-semibold text-dark">Build Your Product & Invoice</h4>
                 </div>
+
+                <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
+                    <button type="button" class="btn btn-success d-flex align-items-center gap-1" 
+                            data-bs-toggle="modal" data-bs-target="#addmoreproducts" onclick="customizeProducts()">
+                        <i class="bi bi-box-seam"></i> Add Products
+                    </button>
+                    <button type="button" class="btn btn-info text-white d-flex align-items-center gap-1"
+                            onclick="randomizeProducts()">
+                        <i class="bi bi-dice-5"></i> Randomize
+                    </button>
+                    <button type="button" class="btn btn-primary d-flex align-items-center gap-1"
+                            onclick="generateInvoice(event)">
+                        <i class="bi bi-receipt-cutoff"></i> Generate Invoice
+                    </button>
+                </div>
+            </div>
+
 
                 <div class="card-body">
                 
@@ -200,97 +207,104 @@
 </div>
 
 <div class="modal fade" id="addmoreproducts" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable modal-xl">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
         <div class="modal-content">
-        <div class="modal-header bg-primary text-white">
-            <h5 class="modal-title fw-semibold" id="staticBackdropLabel1">
-                <i class="fas fa-sliders-h me-2"></i>Customize Your Product Selection
-            </h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
+            
+            <!-- Modal Header -->
+            <div class="modal-header bg-white shadow-sm rounded-3 p-3 d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-sliders-h text-primary fs-4 me-2"></i>
+                    <h5 class="modal-title fw-semibold text-dark mb-0" id="staticBackdropLabel1">
+                        Customize Your Product Selection
+                    </h5>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
 
-            <div class="modal-body">
-            <div class="card-body">
-                <div class="mb-4">
-                <div class="row g-3 align-items-end">
-                        <div class="col-md-6">
-                            <label for="keywordInput" class="form-label text-center">Search Products by Keyword</label>
+            
+            <!-- Modal Body -->
+            <div class="modal-body bg-white">
+                <div class="container-fluid">
+                    
+                <div class="row g-3 mb-4">
+                        <div class="col-md-6 d-flex flex-column">
+                            <label for="keywordInput" class="form-label text-center fw-semibold mb-2">🔍 Search Products</label>
                             <div class="input-group">
-                                <span class="input-group-text"><i class="fas fa-search"></i></span>
-                                <input type="text" class="form-control" name="manual_keyword" id="keywordInput" placeholder="Enter product or category name...">
+                                <span class="input-group-text bg-light"><i class="fas fa-search"></i></span>
+                                <input type="text" class="form-control" id="keywordInput" placeholder="Enter product or category name...">
                                 <button class="btn btn-outline-primary" type="button" onclick="customizeProducts()">Search</button>
                             </div>
                         </div>
 
-                        <div class="col-md-6">
-                            <label class="form-label text-center">Filter by Price Range</label>
-                            <div id="customize-price-slider" class="w-100"></div>
-                            <input type="hidden" name="price_from" id="hidden_customize_price_from_input_id">
-                            <input type="hidden" name="price_to" id="hidden_customize_price_to_input_id">
-                        </div>
-                    </div>
-                    <div class="row mt-2 g-3">
-                    <div class="col-md-4">
-                        <div class="border rounded d-flex justify-content-between align-items-center px-3 py-2 bg-light shadow-sm">
-                            <div class="text-muted fw-semibold small">Current Amount</div>
-                            <div class="fw-bold text-success">{{ site_currency() }}<span id="temp_current_amount_text">0.00</span></div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="border rounded d-flex justify-content-between align-items-center px-3 py-2 bg-light shadow-sm">
-                            <div class="text-muted fw-semibold small">Discount Amount</div>
-                            <div class="fw-bold text-danger">{{ site_currency() }}<span id="temp_discount_amount_text">0.00</span></div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="border rounded d-flex justify-content-between align-items-center px-3 py-2 bg-light shadow-sm">
-                            <div class="text-muted fw-semibold small">Invoice Amount</div>
-                            <div class="fw-bold text-warning">{{ site_currency() }}<span id="temp_invoice_amount_text">0.00</span></div>
+                        <div class="col-md-6 d-flex flex-column">
+                            <label class="form-label text-center fw-semibold mb-2">💰 Filter by Price</label>
+                            <div class="align-items-center rounded bg-white shadow-sm">
+                                <div class="w-100" id="customize-price-slider"></div>
+                            </div>
+                            <input type="hidden" id="hidden_customize_price_from_input_id">
+                            <input type="hidden" id="hidden_customize_price_to_input_id">
                         </div>
                     </div>
 
-                    </div>
-
-                </div>
-            
-                <div class="table-responsive border rounded shadow-sm">
-                    <table class="table table-bordered table-hover align-middle mb-0">
-                        <thead class="table-dark">
-                        <tr>
-                            <th class="text-center" style="width: 10%;">PID</th>
-                            <th class="text-center" style="width: 10%;">Category</th>
-                            <th class="text-center" style="width: 35%;">Product Name</th>
-                            <th class="text-center" style="width: 15%;">Unit Price</th>
-                            <th class="text-center" style="width: 20%;">Editable Price</th>
-                            <th class="text-center" style="width: 10%;">Select</th>
-                        </tr>
-
-                        </thead>
-                        <tbody id="customize-product-table-body">
-                            
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            </div>
-            <div class="modal-footer">
-                <div class="btn-group" role="group" aria-label="Actions">
-                    <button type="button" class="btn btn-outline-secondary" onclick="clearFilters()" data-bs-dismiss="modal">
-                        <i class="bi bi-x-circle me-2"></i>Cancel
-                    </button>
-                    <button type="button" class="btn btn-outline-danger" onclick="clearFilters()">
-                        <i class="bi bi-arrow-counterclockwise me-2"></i>Reset Filters
-                    </button>
-                    <button type="button" id="add-custom-products" class="btn btn-outline-primary">
-                        <i class="bi bi-cart-plus me-2"></i>Add Selected to Cart
-                    </button>
                     
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-4">
+                            <div class="bg-light rounded border shadow-sm p-1 text-center">
+                                <div class="text-muted small fw-semibold">Current Amount</div>
+                                <div class="fw-bold text-success fs-5">{{ site_currency() }}<span id="temp_current_amount_text">0.00</span></div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="bg-light rounded border shadow-sm p-1 text-center">
+                                <div class="text-muted small fw-semibold">Discount</div>
+                                <div class="fw-bold text-danger fs-5">{{ site_currency() }}<span id="temp_discount_amount_text">0.00</span></div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="bg-light rounded border shadow-sm p-1 text-center">
+                                <div class="text-muted small fw-semibold">Invoice Amount</div>
+                                <div class="fw-bold text-warning fs-5">{{ site_currency() }}<span id="temp_invoice_amount_text">0.00</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="table-responsive border rounded shadow-sm">
+                        <table class="table table-bordered table-hover align-middle mb-0">
+                            <thead class="table-dark text-center">
+                                <tr>
+                                    <th style="width: 10%;">PID</th>
+                                    <th style="width: 10%;">Category</th>
+                                    <th style="width: 35%;">Product Name</th>
+                                    <th style="width: 15%;">Unit Price</th>
+                                    <th style="width: 20%;">Editable Price</th>
+                                    <th style="width: 10%;">Select</th>
+                                </tr>
+                            </thead>
+                            <tbody id="customize-product-table-body">
+                               
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
-
+            
+            <div class="modal-footer bg-light border-top">
+                <div class="d-flex flex-wrap gap-2">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="clearFilters()">
+                        <i class="bi bi-x-circle me-1"></i> Cancel
+                    </button>
+                    <button type="button" class="btn btn-danger" onclick="clearFilters()">
+                        <i class="bi bi-arrow-counterclockwise me-1"></i> Reset Filters
+                    </button>
+                    <button type="button" id="add-custom-products" class="btn btn-primary">
+                        <i class="bi bi-cart-plus me-1"></i> Add Selected to Cart
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
 
 
 <div class="modal fade" id="sitechangemodel" data-bs-backdrop="static"
@@ -508,7 +522,7 @@
                 return;
             }
 
-            $('#customize-product-table-body').html(getLoaderRowHTML());
+            $('#customize-product-table-body').html(getProductsSearchRowHTML());
 
             $.ajax({
                 url: "{{ route('filter.products') }}",
