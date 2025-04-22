@@ -200,6 +200,7 @@
                                                         <th>Website</th>
                                                         <th>Discount Amount</th>
                                                         <th>Total Amount</th>
+                                                        <td>Regenerate Invoive</th>
                                                         <th>Date</th>
                                                     </tr>
                                                 </thead>
@@ -212,7 +213,22 @@
                                                             <td><a target="_blank" href="{{ $invoice->website->site_link }}">{{ $invoice->website->site_name }}</a></td>
                                                             <td>{{ $invoice->currency }} {{ number_format($invoice->discount_amount, 2) }} </td>
                                                             <td>{{ $invoice->currency }} {{ number_format($invoice->invoice_amount, 2) }}</td>
+                                                           <td> 
+                                                           <a href="{{ route('product.selection', ['invoice_id' => $invoice->id]) }}" class="btn btn-outline-warning rounded-pill btn-sm">
+                                                                <i class="fas fa-redo-alt"></i> Regenerate
+                                                            </a>
+                                                            </td>
+                                                            <td>
+                                                                @if ($invoice->status == 'pending')
+                                                                    <span class="badge bg-warning">Pending</span>
+                                                                @elseif ($invoice->status == 'completed')
+                                                                    <span class="badge bg-success">Completed</span>
+                                                                @else
+                                                                    <span class="badge bg-danger">Failed</span>
+                                                                @endif
+                                                           </td>
                                                             <td>{{ $invoice->created_at->format('Y-m-d') }}</td>
+
                                                         </tr>
                                                     @endforeach
                                                 </tbody>

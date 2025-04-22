@@ -87,7 +87,7 @@
                     <h6 class="fs-15 mt-3 mb-4 text-white-50">
                         We’re currently unable to connect to our database. Please try again in a few minutes.
                     </h6>
-                    <a class="btn ripple btn-secondary text-center mb-2" href="{{ url('/') }}">Back to Home</a>
+                    <a class="btn ripple btn-secondary text-center mb-2" href="{{ url()->previous() }}">Go to Back</a>
                 </div>
             </div>
         </div>

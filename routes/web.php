@@ -68,11 +68,15 @@ Route::middleware('auth')->group(function () {
     Route::post('/site/connect/check-connectivity', [WebsiteController::class, 'checkRemoteDbConnectivity'])->name('check.db.connectivity');
     Route::post('/invoice/save-customerdetails', [InvoiceController::class, 'saveCustomerDetails'])->name('customerdetails.store');
     Route::get('/invoice/product-selection', [InvoiceController::class, 'productSelection'])->name('product.selection');
+    Route::post('/invoice/product/reselection/', [InvoiceController::class, 'productReselection'])->name('product.reselection');
     Route::post('/invoice/update-invoice-amount', [InvoiceController::class, 'updateInvoiceAmount'])->name('update.invoice.amount');
     Route::get('/random-products', [InvoiceController::class, 'randomProducts'])->name('random.products');
+
+    
+    
     Route::get('/filter-products', [InvoiceController::class, 'filterProducts'])->name('filter.products');
     Route::post('/invoice/generate/download', [InvoiceController::class, 'generateInvoice'])->name('generate.invoice');
-
+    
     // Currency Routes by Narayan Zade
     Route::get('/currencies', [CurrencyController::class, 'index'])->name('currency.index');
     Route::post('/currencies/create', [CurrencyController::class, 'add'])->name('currency.add');
@@ -81,8 +85,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/currency/delete/{id}', [CurrencyController::class, 'delete'])->name('currency.delete');
 
     // Generated Invoices & Reporting
+    Route::post('/add-product', [EcommerceController::class, 'addProducts'])->name('add.products');
+    Route::post('/remove-product', [EcommerceController::class, 'removeProduct'])->name('remove.product');
     Route::get('/price-range', [EcommerceController::class, 'getPriceRange'])->name('get.price.range');
-    Route::get('/generate-new-invoice-number', [InvoiceController::class, 'generateNewInvoiceNumber'])->name('generate.invoice.number');
+    Route::get('/generate-new-invoice-number', [InvoiceController::class, 'generateInvoiceNumber'])->name('generate.invoice.number');
     Route::get('/invoice/chart', [HomeController::class, 'showInvoiceChart'])->name('invoice.chart');
     Route::get('/report/invoices', [ReportController::class, 'invoiceReport'])->name('invoice.report');
 
