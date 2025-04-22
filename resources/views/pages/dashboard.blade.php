@@ -200,7 +200,7 @@
                                                         <th>Website</th>
                                                         <th>Discount Amount</th>
                                                         <th>Total Amount</th>
-                                                        <td>Regenerate Invoive</th>
+                                                        <th>Regenerate Invoive</th>
                                                         <th>Date</th>
                                                     </tr>
                                                 </thead>
@@ -218,15 +218,7 @@
                                                                 <i class="fas fa-redo-alt"></i> Regenerate
                                                             </a>
                                                             </td>
-                                                            <td>
-                                                                @if ($invoice->status == 'pending')
-                                                                    <span class="badge bg-warning">Pending</span>
-                                                                @elseif ($invoice->status == 'completed')
-                                                                    <span class="badge bg-success">Completed</span>
-                                                                @else
-                                                                    <span class="badge bg-danger">Failed</span>
-                                                                @endif
-                                                           </td>
+                                                           
                                                             <td>{{ $invoice->created_at->format('Y-m-d') }}</td>
 
                                                         </tr>
