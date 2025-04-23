@@ -55,7 +55,7 @@
                                 </label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="fas fa-file-invoice"></i></span>
-                                    <input type="text" form="generate-invoice-form" id="invoice_number" name="invoice_number" class="form-control font-italic" value="{{ session('invoice_number') ?? old('invoice_number') }}" placeholder="Enter or generate invoice number">
+                                    <input type="text" form="generate-invoice-form" id="invoice_number" name="invoice_number" class="form-control font-italic" value="{{ session('regenerate_invoice_number') ?? '' }}" placeholder="Enter or generate invoice number">
                                     <div class="btn-group">
                                             <button type="button" class="btn input-group-text dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
                                                 <span class="visually-hidden">Toggle Dropdown</span>
@@ -117,7 +117,7 @@
                         <div class="input-group mb-3">
                             <span class="input-group-text">{{ site_currency() }}</span>
                             <input type="text" form="generate-invoice-form" id="current_amount" name="current_amount" class="form-control bg-white" value="{{ $current_total ?? '00.00' }}" readonly>
-                            <span class="input-group-text"><i class="fas fa-money-bill-wave"></i></span> 
+                            <span class="input-group-text" style="width: 40px;"><i class="fas fa-money-bill-wave"></i></span> 
                         </div>
                     </div>
 
@@ -126,7 +126,7 @@
                         <div class="input-group mb-3">
                             <span class="input-group-text">{{ site_currency() }}</span>
                             <input type="number" form="generate-invoice-form" name="discount_amount" id="discount_amount" class="form-control bg-white" placeholder="Discount Amount" value="0">
-                            <span class="input-group-text"><i class="fas fa-tags"></i></span> 
+                            <span class="input-group-text" style="width: 40px;"><i class="fas fa-tags"></i></span> 
                         </div>
                     </div>
 
@@ -135,7 +135,7 @@
                         <div class="input-group mb-3">
                             <span class="input-group-text">{{ site_currency() }}</span>
                             <input form="generate-invoice-form" name="invoice_amount" id="invoice_amount" class="form-control" value="{{ number_format($invoice['invoice_amount'], 2, '.', '') }}" type="number">
-                            <span class="input-group-text" id="update_invoice_amount" style="cursor:pointer;"><i data-feather="edit" id="icon"></i></span> 
+                            <span class="input-group-text" id="update_invoice_amount" style="cursor:pointer;width: 40px;"><i data-feather="edit" id="icon"></i></span> 
                         </div>
                     </div>
                 </div>
@@ -152,21 +152,29 @@
                 </div>
 
                 <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
-                    <button type="button" class="btn btn-success d-flex align-items-center gap-1" 
-                            data-bs-toggle="modal" data-bs-target="#addmoreproducts" onclick="customizeProducts()">
-                        <i class="bi bi-box-seam"></i> Add Products
-                    </button>
-                    <button type="button" class="btn btn-info text-white d-flex align-items-center gap-1"
-                            onclick="randomizeProducts()">
-                        <i class="bi bi-dice-5"></i> Randomize
-                    </button>
-                    <button type="button" class="btn btn-primary d-flex align-items-center gap-1"
-                            onclick="generateInvoice(event)">
-                        <i class="bi bi-receipt-cutoff"></i> Generate Invoice
-                    </button>
-                </div>
-            </div>
+                        <button type="button" class="btn btn-outline-primary d-flex align-items-center gap-1 me-1" 
+                                data-bs-toggle="modal" data-bs-target="#addmoreproducts" onclick="customizeProducts()">
+                            <i class="bi bi-box-seam"></i> Add Products
+                        </button>
 
+                        <button type="button" class="btn btn-outline-success d-flex align-items-center gap-1 me-1"
+                                onclick="randomizeProducts()">
+                            <i class="bi bi-dice-5"></i> Randomize
+                        </button>
+
+                        <button type="button" class="btn btn-outline-secondary d-flex align-items-center gap-1 me-1"
+                                onclick="clearRandomizedFilter(this)">
+                            <i class="fa-solid fa-filter-circle-xmark"></i>
+                        </button>
+
+                        <button type="button" class="btn btn-primary d-flex align-items-center gap-1 me-1"
+                                onclick="generateInvoice(event)">
+                            <i class="bi bi-receipt-cutoff"></i> Generate Invoice
+                        </button>
+                    </div>
+
+
+            </div>
 
                 <div class="card-body">
                 
@@ -256,7 +264,7 @@
                         </div>
                         <div class="col-md-4">
                             <div class="bg-light rounded border shadow-sm p-1 text-center">
-                                <div class="text-muted small fw-semibold">Discount</div>
+                                <div class="text-muted small fw-semibold">Discount Amount</div>
                                 <div class="fw-bold text-danger fs-5">{{ site_currency() }}<span id="temp_discount_amount_text">0.00</span></div>
                             </div>
                         </div>
@@ -290,7 +298,7 @@
             
             <div class="modal-footer bg-light border-top">
                 <div class="d-flex flex-wrap gap-2">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="clearFilters()">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="closeFilters()">
                         <i class="bi bi-x-circle me-1"></i> Cancel
                     </button>
                     <button type="button" class="btn btn-danger" onclick="clearFilters()">
@@ -437,15 +445,12 @@
                     $('#discount_amount').prop('readonly', false).prop('type', 'number') 
                     $('#discount_amount').val((currentAmount - invoiceAmount).toFixed(2));
                     calculateTotalPrice();
+                    replaceFeatherIconsTemporarily();
                 }
             },
             error: function () {
                 toastr.error("Could not fetch random products.");
                 Swal.close();
-            },
-            complete: function() {
-                setTimeout(() => {
-                }, requestTimeout);
             }
         });
     }
@@ -493,7 +498,7 @@
                     randomizePriceSlider.noUiSlider.set([minUnitPrice, maxUnitPrice]);
                 }
             });
-        }, 1500);
+        }, 1000);
     });
 </script>
 
@@ -549,6 +554,44 @@
         }
 </script>
 
+<script>
+
+function clearRandomizedFilter(button) {
+    const icon = $(button).find('i');
+    const originalIconClass = 'fa-filter-circle-xmark';
+    icon.removeClass(originalIconClass).addClass('fa-spinner fa-spin');
+
+    $.ajax({
+        url: "{{ route('clear.randomized.products') }}",
+        type: 'GET',
+        success: function(response) {
+            $('input[name="product_ids[]"]').prop('checked', false);
+            $('.product-price').val('');
+            $('#current_amount').val('0.00');
+            $('#discount_amount').val('0.00');
+            $('#temp_current_amount_text').text('0.00');
+            $('#temp_discount_amount_text').text('0.00');
+            $('#temp_invoice_amount_text').text($('#invoice_amount').val());
+            $('#randomize-product-table-body').html(
+                getErrorRowHTML('Randomize filter cleared. You can now randomize products again or add custom products.')
+            );
+            toastr.success('Randomized products filter has been reset');
+            calculateTotalPrice();
+            
+        },
+        error: function(xhr, status, error) {
+            icon.removeClass('fa-spinner fa-spin').addClass(originalIconClass);
+            toastr.error(error , 'Error clearing randomized products');
+        },
+        complete: function() {
+            icon.removeClass('fa-spinner fa-spin').addClass(originalIconClass);
+        }
+    });
+}
+
+
+
+</script>
 
 <script>
     function generateInvoice(event) {
@@ -593,7 +636,16 @@
 
         const invoiceNumber = invoiceInput.val().trim();
         if (!invoiceNumber) {
-            toastr.error('Invoice number cannot be empty!', 'Error');
+            toastr.error('Please enter your invoice number or generate one randomly.', 'Invoice Number Missing');
+            let blinkCount = 0;
+            const interval = setInterval(() => {
+                invoiceNumber.toggleClass('border border-danger');
+                blinkCount++;
+                if (blinkCount >= 10) { 
+                    clearInterval(interval);
+                    invoiceNumber.removeClass('border border-danger');
+                }
+            }, 200);
             return;
         }
 
@@ -610,14 +662,7 @@
             }));
         });
 
-        toastr.options = {
-            timeOut: 15000,
-            onHidden: function () {
-                toastr.options = { timeOut: 4000 };
-                toastr.success('Invoice is ready and will download shortly.', 'Completed');
-            }
-        };
-
+       
         let blinkCount = 0;
         const maxBlinkCount = 30;
         const blinkInterval = 500;
@@ -634,9 +679,27 @@
             }
         })();
 
-        toastr.info('Generating invoice PDF file...', 'Processing');
+        Swal.fire({
+            title: 'Generating Invoice...',
+            html: getPrinterLoaderRowHTML(6),
+            showConfirmButton: false,
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            width: '334px',
+            height: '280px',
+            background: 'rgba(0, 0, 0, 0.1)',
+            customClass: {
+                popup: 'p-2 text-center',
+                title: 'text-white'
+            }
+        });
 
         $('#generate-invoice-form')[0].submit();
+
+        setTimeout(() => {
+            Swal.close();
+            toastr.success('Invoice is ready and will download shortly.', 'Completed');
+        }, 20000);  
     }
 </script>
 
@@ -777,6 +840,5 @@ $(document).ready(function () {
     });
 });
 </script>
-
 
 @endpush

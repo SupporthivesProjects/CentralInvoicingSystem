@@ -60,6 +60,25 @@
         return new bootstrap.Tooltip(tooltipTriggerEl);
     });
 
+    
+    function closeFilters() {
+        let originalAmount = parseFloat(@json(session('current_amount', 0)));
+        let invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
+        $('input[name="add_product_ids[]"]').prop('checked', false);
+        $('.add-product-price').val('');
+        $('#manual_keyword').val('');
+        let tempTotal = 0;
+        let discountAmount = 0;
+
+        if (tempTotal > invoiceAmount) {
+            discountAmount = tempTotal - invoiceAmount;
+        }
+
+        $('#temp_current_amount_text').text(originalAmount.toFixed(2));
+        $('#temp_discount_amount_text').text(discountAmount.toFixed(2));
+        $('#temp_invoice_amount_text').text(invoiceAmount.toFixed(2));
+    }
+
     function clearFilters() {
         let originalAmount = parseFloat(@json(session('current_amount', 0)));
         let invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
@@ -122,9 +141,7 @@
     $(document).ready(function () {
     $('#add-custom-products').off('click').on('click', function () {
         let selectedProducts = [];
-        $('#current_amount').val('Calculating...');
-        $('#discount_amount').prop('type', 'text').val('Calculating...').prop('readonly', true);
-
+       
         $('input[name="add_product_ids[]"]:checked').each(function () {
             let productId = $(this).val();
             let unitPrice = parseFloat($('.add-product-price[data-product-id="' + productId + '"]').val()) || 0;
@@ -138,7 +155,9 @@
         if (selectedProducts.length > 0) {
             let btn = $('#add-custom-products');
             btn.prop('disabled', true);
-            btn.html('<i class="fas fa-spinner fa-spin"></i> Adding...');
+            btn.html('<i class="fas fa-spinner fa-spin"></i> Adding to Cart...');
+            $('#current_amount').val('Calculating...');
+             $('#discount_amount').prop('type', 'text').val('Calculating...').prop('readonly', true);
 
             $.ajax({
                 url: "{{ route('add.products') }}",
@@ -174,11 +193,11 @@
                 },
                 complete: function() {
                     btn.prop('disabled', false);
-                    btn.html('Add to Cart');
+                    btn.html('Add Selected to Cart');
                 }
             });
         } else {
-            toast.error('Please select at least one product to add.');
+            toastr.error('Please select product(s) to add.');
         }
     });
 });

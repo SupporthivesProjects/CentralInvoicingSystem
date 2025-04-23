@@ -43,108 +43,7 @@ class EcommerceController extends Controller
         return response()->json(['minProductPrice' => $min_unit_price, 'maxProductPrice' => $max_unit_price]);
     }
 
-   public function randsomProducts(Request $request)
-    {
-        $site_id = $request->get('site_id');
-        $invoiceAmount = floatval($request->get('invoice_amount'));
-    
-        $priceFrom = $request->get('price_from');
-        $priceTo = $request->get('price_to');
-    
-        $minTotal = $invoiceAmount;
-        $maxTotal = $invoiceAmount * 1.05;
-    
-        $site = Website::findOrFail($site_id);
-        $productstable = getProductTable($site->technology);
-        DynamicDatabaseService::connect($site);
-        
-        $allProducts = DB::connection($this->connectionType)->table($this->productTable)
-            ->select('id','category_id', 'name', 'unit_price','slug')
-            ->where('published', 1)
-            ->when($priceFrom && $priceTo, function ($query) use ($priceFrom, $priceTo) {
-                return $query->whereBetween('unit_price', [$priceFrom, $priceTo]);
-            })
-            ->orderByDesc('unit_price')
-            ->get();
-        
-        $allProducts = $allProducts->shuffle()->take(100);
-    
-        $bestMatch = null;
-        $bestTotal = 0;
-    
-        for ($i = 0; $i < 10; $i++) {
-            $shuffled = $allProducts->shuffle();
-            $selected = [];
-            $currentTotal = 0;
-    
-            foreach ($shuffled as $product) {
-                $price = floatval($product->unit_price);
-    
-                if (($currentTotal + $price) <= $maxTotal) {
-                    $product->source = 'Random';
-                    $selected[] = $product;
-                    $currentTotal += $price;
-    
-                    if ($currentTotal >= $minTotal && $currentTotal <= $maxTotal) {
-                        $bestMatch = $selected;
-                        $bestTotal = $currentTotal;
-                        break;
-                    }
-                }
-            }
-    
-            if ($bestMatch) {
-                break;
-            }
-        }
-    
-        if (!$bestMatch) {
-            return response()->json([
-                'tableRows' => '',
-                'total' => 0,
-                'message' => 'No matching combination found, try again please'
-            ]);
-        }
-    
-        $currency = DB::connection($this->connectionType)->table('currencies')->where('status', 1)->first();
-        
-         $bestMatch = collect($bestMatch); 
-         $bestMatch->each(function ($product) {
-             $product->source = 'Random';
-             $product->category_name = DB::connection($this->connectionType)->table('categories')->where('id', $product->category_id)->value('name') ?? 'unknown';
-         
-         });
  
-         $bestMatch->each(function ($product) use ($site_id) {
-             $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
-                                              ->where('product_id', $product->id)
-                                              ->orderByDesc('last_price_changed')
-                                              ->first();
-         
-             if ($lastUpdate) {
- 
-                 $lastPriceChanged = Carbon::parse($lastUpdate->last_price_changed);
-                 $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
-                 $remainingDays = now()->diffInDays($nextPriceChangeDate, false);
-                 $product->remaining_days = round(max($remainingDays, 0));
-                 $product->can_edit_price = now()->greaterThanOrEqualTo($nextPriceChangeDate) ? 1 : 0;
- 
-             } else {
-                 $product->can_edit_price = 1;
-                 $product->remaining_days = 0;
-             }
-         });
-    
-        $modelType = $site->businessModel->model_type;
-        $tableRows = view("invoice.{$modelType}.random_product_rows", ['products' => $bestMatch, 'currency' => $currency,'site' => $site])->render();
-        
-        return response()->json([
-            'tableRows' => $tableRows,
-            'total' => $bestTotal,
-            'currency' => $currency
-        ]);
-    }
-    
     public function randomProducts(Request $request)
     {
         $site_id = $request->get('site_id');
@@ -416,6 +315,18 @@ class EcommerceController extends Controller
             'tableRows' => $tableRows,
             'currency' => $currency,
             'total' => collect($products)->sum('unit_price')
+        ]);
+    }
+
+    public function clearRandomizedProducts(Request $request)
+    {
+        session()->forget('ready_products');
+        session()->forget('current_amount');
+        return response()->json([
+            'success' => true,
+            'tableRows' => '',
+            'currency' => null,
+            'total' => 0
         ]);
     }
 

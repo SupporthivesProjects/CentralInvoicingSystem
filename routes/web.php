@@ -70,11 +70,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/invoice/product-selection', [InvoiceController::class, 'productSelection'])->name('product.selection');
     Route::post('/invoice/product/reselection/', [InvoiceController::class, 'productReselection'])->name('product.reselection');
     Route::post('/invoice/update-invoice-amount', [InvoiceController::class, 'updateInvoiceAmount'])->name('update.invoice.amount');
+    
     Route::get('/random-products', [InvoiceController::class, 'randomProducts'])->name('random.products');
+    Route::get('/filter-products', [InvoiceController::class, 'filterProducts'])->name('filter.products');
 
     
-    
-    Route::get('/filter-products', [InvoiceController::class, 'filterProducts'])->name('filter.products');
     Route::post('/invoice/generate/download', [InvoiceController::class, 'generateInvoice'])->name('generate.invoice');
     
     // Currency Routes by Narayan Zade
@@ -85,6 +85,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/currency/delete/{id}', [CurrencyController::class, 'delete'])->name('currency.delete');
 
     // Generated Invoices & Reporting
+
+    Route::get('/clear-randomized-products', [EcommerceController::class, 'clearRandomizedProducts'])->name('clear.randomized.products');
     Route::post('/add-product', [EcommerceController::class, 'addProducts'])->name('add.products');
     Route::post('/remove-product', [EcommerceController::class, 'removeProduct'])->name('remove.product');
     Route::get('/price-range', [EcommerceController::class, 'getPriceRange'])->name('get.price.range');

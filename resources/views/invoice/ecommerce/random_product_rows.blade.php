@@ -43,8 +43,8 @@
     </td>
    
     <td class="text-center">
-        <button class="remove-product btn btn-danger btn-sm" data-product-id="{{ $product->id }}">
-            <i class="fas fa-trash-alt"></i>
+        <button class="remove-product btn btn-danger btn-sm" data-product-name="{{ $product->name }}"  data-product-id="{{ $product->id }}">
+        <i class="fa fa-trash"></i>
         </button>
     </td>
 
@@ -68,21 +68,29 @@ $(document).ready(function() {
     $(document).off('click', '.remove-product').on('click', '.remove-product', function() {
         var $button = $(this);
         var productId = $button.data('product-id');
-        $('#current_amount').val('Calculating...');
-        $('#discount_amount').prop('type', 'text').val('Calculating...').prop('readonly', true);
-        
+        var productName = $button.data('product-name');
+       
         Swal.fire({
-            title: 'Are you sure?',
-            text: 'This product will be removed from your cart.',
-            icon: 'warning',
+            title: 'Remove Product?',
+            text: `Are you sure you want to remove '${productName}' product?`,
+            icon: 'question',
             showCancelButton: true,
-            confirmButtonText: 'Yes, remove it!',
+            confirmButtonText: 'Yes, Remove',
             cancelButtonText: 'Cancel',
-            reverseButtons: true
+            customClass: {
+                popup: 'p-2 text-sm',
+                title: 'text-base font-weight-bold',
+                confirmButtonClass: 'btn btn-sm btn-danger',
+                cancelButtonClass: 'btn btn-sm btn-secondary'
+            },
+            width: '350px',
+            padding: '1em'
         }).then((result) => {
             if (result.isConfirmed) {
                 $button.html('<i class="fas fa-spinner fa-spin"></i>'); 
-
+                $('#current_amount').val('Recalculating...');
+                $('#discount_amount').prop('type', 'text').val('Recalculating...').prop('readonly', true);
+        
                 $.ajax({
                     url: "{{ route('remove.product') }}", 
                     method: 'POST',
@@ -95,6 +103,7 @@ $(document).ready(function() {
                         $button.html('<i class="fas fa-check-square"></i>'); 
                         $button.removeClass('btn-danger').addClass('btn-success');
                         $('#randomize-product-table-body').html(response.tableRows); 
+                        toastr.success('Product has been removed successfully.','removed');
                         calculateTotalPrice(); 
 
                         setTimeout(() => {
@@ -106,7 +115,7 @@ $(document).ready(function() {
                         $button.html('<i class="fas fa-trash-alt"></i>');
                         $button.removeClass('btn-success').addClass('btn-danger');
                         calculateTotalPrice();
-                        toast.error('Error removing product. Please try again.'); 
+                        toastr.error('Error removing product. Please try again.'); 
                     }
                 });
             } else {
@@ -144,5 +153,6 @@ function calculateTotalPrice() {
     $('#invoice_amount').val(invoiceAmount.toFixed(2));
     $('#temp_invoice_amount_text').text(invoiceAmount.toFixed(2));
 }
-</script>
 
+
+</script>
