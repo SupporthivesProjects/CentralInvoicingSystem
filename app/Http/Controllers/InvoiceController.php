@@ -106,53 +106,82 @@ class InvoiceController extends Controller
         
         return redirect()->route('product.selection')->with('success', 'Database connection established for the selected website.');
     }
-
+    
 
     public function productSelection(Request $request)
     {   
-       
+        $invoice_id = $request->query('invoice_id');
+
+        if ($invoice_id) {
+            $invoiceHistory = InvoiceGenerationHistory::where('id', $invoice_id)->first();
+            
+            if ($invoiceHistory) {
+                session([
+                    'customer' => [
+                        'site_id' => $invoiceHistory->site_id,
+                        'site_name' => $invoiceHistory->website->site_name,
+                    ],
+                    'invoice' => [
+                        'invoice_amount' => $invoiceHistory->invoice_amount,
+                    ],
+                    'products' => []  
+                ]);
+                session()->flash('regenerate_invoice_number', $invoiceHistory->invoice_number);
+            }
+        }
         $new_site_id = $request->query('new_site_id');
 
         if ($new_site_id && session('customer.site_id') != $new_site_id) {
-
             $site = Website::findOrFail($new_site_id);
             $customer = session('customer');
             $customer['site_id'] = $new_site_id;
             $customer['site_name'] = $site->site_name;
             session()->put('customer', $customer);
-            
+
             session()->flash('success', 'Website has been changed');
         }
-       
+
         $site_id = session('customer.site_id');
 
         if (!$site_id) {
             return redirect()->back()
                 ->with('error', 'Missing invoice session data. Please try again.');
         }
-    
+
         try {
             $site = Website::findOrFail($site_id);
             
             DynamicDatabaseService::connect($site);
             DB::connection($this->connectionType)->getPdo(); 
-    
-            $currency = DB::connection($this->connectionType)
-                ->table('currencies')
-                ->where('status', 1)
-                ->first();
 
+            try {
+                $min_unit_price = DB::connection($this->connectionType)->table($this->productTable)->where('published', 1)->min('unit_price') ?? 10;
+                $max_unit_price = DB::connection($this->connectionType)->table($this->productTable)->where('published', 1)->max('unit_price') ?? 1000;
+            } catch (\Exception $e) {
+                $min_unit_price = 10;
+                $max_unit_price = 1000;
+            }
+
+            $currency = DB::connection($this->connectionType)->table('currencies')->where('status', 1)->first();
             $modelType = $site->businessModel->model_type;
             $sites = Website::all();
 
-            return view("invoice.{$modelType}.productSelection", [ 'currency' => $currency, 'customer' => session('customer'), 'invoice' => session('invoice'), 'site' => $site, 'sites' => $sites]);
-                
-    
+            return view("invoice.{$modelType}.productSelection", [
+                'currency' => $currency, 
+                'customer' => session('customer'), 
+                'invoice' => session('invoice'), 
+                'site' => $site, 
+                'sites' => $sites, 
+                'min_unit_price' => $min_unit_price, 
+                'max_unit_price' => $max_unit_price
+            ]);
+
         } catch (\Exception $e) {
             return redirect()->back()
                 ->with('error', 'Database connection failed: ' . $e->getMessage());
         }
     }
+
 
 
     public function updateInvoiceAmount(Request $request)
@@ -249,7 +278,7 @@ class InvoiceController extends Controller
     }
 
 
-    public function generateNewInvoiceNumber(Request $request)
+    public function generateInvoiceNumber(Request $request)
     {
         $siteName = $request->input('site_name');
         $newInvoiceNumber = generateInvoiceNumber($siteName);

@@ -1,3 +1,10 @@
+const script = document.createElement('script');
+script.src = "https://unpkg.com/feather-icons";
+document.head.appendChild(script);
+script.onload = function() {
+    feather.replace();
+};
+
 $(document).ready(function () {
     
     $('#internalSearchInput').on('input', performInternalSearch);
@@ -99,6 +106,38 @@ $(document).ready(function () {
         toastr.success('Invoice number copied to clipboard!');
     });
 
+function replaceFeatherIconsTemporarily() {
+        const fields = [
+            { input: '#current_amount', postfixSelector: '#current_amount' },
+            { input: '#discount_amount', postfixSelector: '#discount_amount' },
+            { input: '#invoice_amount', postfixSelector: '#update_invoice_amount' } // explicit
+        ];
+    
+        fields.forEach(function(fieldObj) {
+            const $input = $(fieldObj.input);
+            const $postfix = $(fieldObj.postfixSelector).closest('.input-group').find('.input-group-text').last();
+    
+            if ($postfix.length === 0) {
+                console.warn(`Postfix not found for ${fieldObj.input}`);
+                return;
+            }
+    
+            const originalHTML = $postfix.html();
+    
+            $postfix.html('<i data-feather="check" class="text-white" style="width: 17px;"></i>')
+                    .addClass('bg-success');
+    
+            feather.replace();
+    
+            setTimeout(() => {
+                $postfix.html(originalHTML).removeClass('bg-success');
+                feather.replace();
+            }, 5000);
+        });
+    }
+    
+    
+
 
 function getLoaderRowHTML(colspan = 6) {
     return `
@@ -115,6 +154,50 @@ function getLoaderRowHTML(colspan = 6) {
     `;
 }
 
+function getPrinterLoaderRowHTML(colspan = 6) {
+    return `
+        <tr id="loaderRow">
+            <td colspan="${colspan}" style="padding: 0.5rem;">
+                <div style="height: 100px; display: flex; align-items: center; justify-content: center;">
+                    <div class="typewriter">
+                        <div class="slide"><i></i></div>
+                        <div class="paper"></div>
+                        <div class="keyboard"></div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    `;
+}
+
+
+
+function getProductsSearchRowHTML(colspan = 6) {
+    return `
+        <tr id="loaderRow">
+            <td colspan="${colspan}" class="text-center py-4" style="position: relative; height: 180px;">
+                <div id="wifi-loader" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex; justify-content: center; align-items: center;">
+                    <svg class="circle-outer" viewBox="0 0 86 86">
+                        <circle class="back" cx="43" cy="43" r="40"></circle>
+                        <circle class="front" cx="43" cy="43" r="40"></circle>
+                        <circle class="new" cx="43" cy="43" r="40"></circle>
+                    </svg>
+                    <svg class="circle-middle" viewBox="0 0 60 60">
+                        <circle class="back" cx="30" cy="30" r="27"></circle>
+                        <circle class="front" cx="30" cy="30" r="27"></circle>
+                    </svg>
+                    <svg class="circle-inner" viewBox="0 0 34 34">
+                        <circle class="back" cx="17" cy="17" r="14"></circle>
+                        <circle class="front" cx="17" cy="17" r="14"></circle>
+                    </svg>
+                   
+                </div>
+            </td>
+        </tr>
+    `;
+}
+
+
 function getErrorRowHTML(message) {
     return `
         <tr id="error-row" style="display: none;">
@@ -128,6 +211,9 @@ function getErrorRowHTML(message) {
 }
 
 $('#error-row').fadeIn(300).delay(3000).fadeOut(500);
+
+
+
 
   
     
