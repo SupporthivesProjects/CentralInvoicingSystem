@@ -1,7 +1,7 @@
 @forelse($products as $index => $product)
 <tr id="customize-product-row-{{ $product->id }}">
     <td class="text-center" >{{ $product->id }}</td>
-    <td>#{{ $product->category_name }}</td>
+    <td>{{ $product->category_name }}</td>
     <td>
         {{ $product->name }} 
         @if($site->site_link && $product->slug)
@@ -202,5 +202,45 @@
 });
 
 </script>
+
+<script>
+   function startVoiceSearch() {
+    const inputField = document.getElementById('keywordInput');
+    inputField.placeholder = "Please speak product name or category";
+
+    if (!('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
+        toastr.error("Your browser does not support voice recognition. Please try using a modern browser like Chrome.");
+        return;
+    }
+
+    inputField.value = '';
+    inputField.placeholder = "Listening to your voice search...";
+
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.lang = "en-US";
+    recognition.interimResults = false;
+
+    recognition.start();
+
+    recognition.onresult = function(event) {
+        const transcript = event.results[0][0].transcript;
+        inputField.style.color = "blue"; 
+        document.getElementById('keywordInput').value = transcript;
+    };
+
+    recognition.onerror = function(event) {
+        toastr.error("Voice recognition error: " + event.error);
+        inputField.value = '';
+        inputField.style.color = ''; 
+        inputField.placeholder = "Enter or Speak product or category name...";
+    };
+
+    recognition.onend = function() {
+        inputField.style.color = 'blue'; 
+        inputField.placeholder = "Enter or Speak product or category name...";
+    };
+ }
+</script>
+
 
 

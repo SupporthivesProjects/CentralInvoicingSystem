@@ -209,11 +209,3 @@ function getErrorRowHTML(message) {
         </tr>
     `;
 }
-
-$('#error-row').fadeIn(300).delay(3000).fadeOut(500);
-
-
-
-
-  
-    

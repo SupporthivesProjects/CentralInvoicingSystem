@@ -8,11 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta name="description" content="Central Invoice System - A responsive and secure admin panel for managing invoices, users, and analytics.">
-    <meta name="author" content="Central Invoice System Team">
-    <meta name="keywords" content="invoice system, admin panel, user management, dashboard, analytics, billing, responsive admin, Laravel admin, central invoice system">
+    @section('title', '404 Not Found')
+    @section('meta_description', 'The page you are looking for could not be found. Check the URL or return to the homepage.')
 
-    <title>@yield('title', 'Welcome to Central Invoice System')</title>
 
     <!-- Favicon -->
     <link rel="icon" href="{{ asset('images/brand-logos/favicon.ico') }}" type="image/x-icon">
@@ -75,25 +73,28 @@
     @stack('styles')
     </head>
   <body>
-<div class="page main-signin-wrapper bg-primary construction">
+  <div class="container-fluid min-vh-100 d-flex flex-column justify-content-center align-items-center bg-dark text-white text-center">
 
-<div class="container ">
-    <div class="construction1 text-center details text-fixed-white">
-        <div class="">
-            <div class="col-lg-12">
-                <h1 class="fs-140 mb-0">404</h1>
-            </div>
-            <div class="col-lg-12 ">
-                <h1>Oops.The Page you are looking  for doesn't  exit..</h1>
-                <h6 class="fs-15 mt-3 mb-4 text-white-50">You may have mistyped the address or the page may have moved. Try searching below.</h6>
-                <a class="btn ripple btn-secondary text-center mb-2" href="index.html">Back to Home</a>
-            </div>
+        <div class="mb-4">
+            <h1 class="display-1 fw-bold text-danger">404</h1>
+            <h2 class="fw-semibold mb-3">Oops! Page Not Found</h2>
+            <p class="lead text-secondary">
+                The page you're looking for doesn't exist or has been moved.<br>
+                Let's help you find your way.
+            </p>
         </div>
-    </div>
-</div>
 
+        <div>
+            <a href="{{ url()->previous() }}" class="btn btn-outline-light me-2">
+                <i class="bi bi-arrow-left-circle"></i> Go Back
+            </a>
+            <a href="{{ route('dashboard') }}" class="btn btn-danger">
+                <i class="bi bi-house-door"></i> Go to Dashboard
+            </a>
+        </div>
 
-</div>
+        </div>
+
  <!-- Scroll To Top -->
  <div class="scrollToTop">
             <span class="arrow"><i class="fe fe-arrow-up"></i></span>

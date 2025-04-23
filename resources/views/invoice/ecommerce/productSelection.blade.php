@@ -239,7 +239,10 @@
                             <label for="keywordInput" class="form-label text-center fw-semibold mb-2">🔍 Search Products</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-light"><i class="fas fa-search"></i></span>
-                                <input type="text" class="form-control" id="keywordInput" placeholder="Enter product or category name...">
+                                <input type="text" class="form-control" id="keywordInput" placeholder="Enter or Speak product or category name...">
+                                <button class="btn btn-outline-secondary" type="button" onclick="startVoiceSearch()" id="micBtn" title="Voice Search">
+                                    <i class="fas fa-microphone" id="micIcon" class="mic-icon"></i>
+                                </button>
                                 <button class="btn btn-outline-primary" type="button" onclick="customizeProducts()">Search</button>
                             </div>
                         </div>
@@ -351,7 +354,6 @@
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
 <script src="https://unpkg.com/feather-icons"></script>
-
 <script>
     feather.replace();
 </script>
