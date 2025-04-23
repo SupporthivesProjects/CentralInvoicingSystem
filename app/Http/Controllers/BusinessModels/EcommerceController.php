@@ -65,7 +65,7 @@ class EcommerceController extends Controller
             ->when($priceFrom && $priceTo, function ($query) use ($priceFrom, $priceTo) {
                 return $query->whereBetween('unit_price', [$priceFrom, $priceTo]);
             })
-            ->orderByDesc('unit_price')
+            ->orderByDesc('unit_price') 
             ->get();
         
         $allProducts = $allProducts->shuffle()->take(100);
@@ -111,7 +111,6 @@ class EcommerceController extends Controller
         
          $bestMatch = collect($bestMatch); 
          $bestMatch->each(function ($product) {
-             $product->source = 'Random';
              $product->category_name = DB::connection($this->connectionType)->table('categories')->where('id', $product->category_id)->value('name') ?? 'unknown';
          
          });
@@ -190,21 +189,22 @@ class EcommerceController extends Controller
     
         session()->put('ready_products', $readyProducts);
     
-        $productIds = collect($readyProducts)->pluck('id')->toArray();
-    
+        $productIds = collect($readyProducts)->pluck('id')->reverse()->values()->toArray();
+
         $products = DB::connection($this->connectionType)->table($this->productTable)
             ->select('id', 'category_id', 'name', 'unit_price', 'slug')
             ->whereIn('id', $productIds)
-            ->get();
+            ->get()
+            ->keyBy('id');
+
+        $products = collect($productIds)->map(function ($id) use ($products) {
+            return $products[$id];
+        });
     
         $products = $products->map(function ($product) use ($readyProducts, $site_id) {
             $sessionProduct = collect($readyProducts)->firstWhere('id', $product->id);
             $product->unit_price = $sessionProduct['unit_price'] ?? $product->unit_price;
-    
-            $product->category_name = DB::connection($this->connectionType)
-                ->table('categories')
-                ->where('id', $product->category_id)
-                ->value('name') ?? 'unknown';
+            $product->category_name = DB::connection($this->connectionType)->table('categories')->where('id', $product->category_id)->value('name') ?? 'unknown';
     
             $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
                 ->where('product_id', $product->id)
@@ -265,6 +265,7 @@ class EcommerceController extends Controller
         }
 
         DynamicDatabaseService::connect($site);
+
         $productIds = array_column($updatedProducts, 'id');
 
         $products = DB::connection($this->connectionType)->table($this->productTable)
@@ -275,11 +276,7 @@ class EcommerceController extends Controller
         $products = $products->map(function ($product) use ($updatedProducts, $site_id) {
             $sessionProduct = collect($updatedProducts)->firstWhere('id', $product->id);
             $product->unit_price = $sessionProduct['unit_price'] ?? $product->unit_price;
-
-            $product->category_name = DB::connection($this->connectionType)
-                ->table('categories')
-                ->where('id', $product->category_id)
-                ->value('name') ?? 'unknown';
+            $product->category_name = DB::connection($this->connectionType)->table('categories')->where('id', $product->category_id)->value('name') ?? 'unknown';
 
             $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
                 ->where('product_id', $product->id)
@@ -300,7 +297,6 @@ class EcommerceController extends Controller
             return $product;
         });
 
-        // Prepare view
         $modelType = $site->businessModel->model_type;
         $currency = DB::connection($this->connectionType)->table('currencies')->where('status', 1)->first();
         session(['current_amount' => collect($products)->sum('unit_price')]);

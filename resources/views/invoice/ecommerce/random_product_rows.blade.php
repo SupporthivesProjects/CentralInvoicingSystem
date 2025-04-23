@@ -1,7 +1,7 @@
-@forelse($products->sortByDesc('unit_price') as $index => $product)
+@forelse($products as $index => $product)
 <tr class="product-row">
-    <td>#{{ $product->id }}</td>
-    <td>{{ $product->category_name }}</td>
+    <td class="text-center" >{{ $product->id }}</td>
+    <td>#{{ $product->category_name }}</td>
     <td>
         {{ $product->name }} 
         @if($site->site_link && $product->slug)
@@ -103,7 +103,7 @@ $(document).ready(function() {
                         $button.html('<i class="fas fa-check-square"></i>'); 
                         $button.removeClass('btn-danger').addClass('btn-success');
                         $('#randomize-product-table-body').html(response.tableRows); 
-                        toastr.success('Product has been removed successfully.','removed');
+                        toastr.success('Product has been removed successfully.','Product Removed');
                         calculateTotalPrice(); 
 
                         setTimeout(() => {

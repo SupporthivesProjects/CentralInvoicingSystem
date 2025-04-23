@@ -572,9 +572,7 @@ function clearRandomizedFilter(button) {
             $('#temp_current_amount_text').text('0.00');
             $('#temp_discount_amount_text').text('0.00');
             $('#temp_invoice_amount_text').text($('#invoice_amount').val());
-            $('#randomize-product-table-body').html(
-                getErrorRowHTML('Randomize filter cleared. You can now randomize products again or add custom products.')
-            );
+            $('#randomize-product-table-body').html(getErrorRowHTML('Randomize filter cleared. You can now randomize products again or add custom products.'));
             toastr.success('Randomized products filter has been reset');
             calculateTotalPrice();
             
@@ -617,8 +615,11 @@ function clearRandomizedFilter(button) {
             return;
         }
 
-        if ((currentAmount - discountAmount) !== invoiceAmount) {
-            const diff = (currentAmount - invoiceAmount);
+        const expectedAmount = currentAmount - discountAmount;
+        const epsilon = 0.01;
+
+        if (Math.abs(expectedAmount - invoiceAmount) > epsilon) {
+            const diff = currentAmount - invoiceAmount;
             const diffFixed = diff.toFixed(2);
 
             $('#discount_amount').addClass('border border-danger');
@@ -633,6 +634,7 @@ function clearRandomizedFilter(button) {
             }
             return;
         }
+
 
         const invoiceNumber = invoiceInput.val().trim();
         if (!invoiceNumber) {
