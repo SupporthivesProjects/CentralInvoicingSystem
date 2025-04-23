@@ -66,12 +66,11 @@
         let invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
         $('input[name="add_product_ids[]"]').prop('checked', false);
         $('.add-product-price').val('');
-        $('#manual_keyword').val('');
-        let tempTotal = 0;
+        $('#keywordInput').val('');
         let discountAmount = 0;
 
-        if (tempTotal > invoiceAmount) {
-            discountAmount = tempTotal - invoiceAmount;
+        if (originalAmount > invoiceAmount) {
+            discountAmount = originalAmount - invoiceAmount;
         }
 
         $('#temp_current_amount_text').text(originalAmount.toFixed(2));
@@ -87,11 +86,11 @@
         $('.add-product-price').val('');
         $('#manual_keyword').val('');
         $('#customize-product-table-body').html(getErrorRowHTML('No results found. Try randomizing or use a different keyword.'));
-        let tempTotal = 0;
         let discountAmount = 0;
 
-        if (tempTotal > invoiceAmount) {
-            discountAmount = tempTotal - invoiceAmount;
+
+        if (originalAmount > invoiceAmount) {
+            discountAmount = originalAmount - invoiceAmount;
         }
 
         $('#temp_current_amount_text').text(originalAmount.toFixed(2));
