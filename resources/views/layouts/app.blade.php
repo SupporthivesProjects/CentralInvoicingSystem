@@ -8,11 +8,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta name="description" content="Central Invoice System - A responsive and secure admin panel for managing invoices, users, and analytics.">
-    <meta name="author" content="Central Invoice System Team">
-    <meta name="keywords" content="invoice system, admin panel, user management, dashboard, analytics, billing, responsive admin, Laravel admin, central invoice system">
 
-    <title>@yield('title', 'Welcome to Central Invoice System')</title>
+    <meta name="description" content="@yield('meta_description', 'Central Invoice System Admin Panel - Manage remote websites, select products based on business models, generate invoices, customize invoice layouts, and download invoice PDFs.')">
+    <title>@yield('title', 'Central Invoice System Admin Panel')</title>
+
 
     <!-- Favicon -->
     <link rel="icon" href="{{ asset('images/brand-logos/favicon.ico') }}" type="image/x-icon">
@@ -58,7 +57,8 @@
 
     <!-- Prism CSS -->
     <link rel="stylesheet" href="{{ asset('libs/prismjs/themes/prism-coy.min.css') }}">
-
+    
+    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
     <link rel="stylesheet" href="{{ asset('narayan/css/styles.css') }}">
 
     <!-- SweetAlert2 -->

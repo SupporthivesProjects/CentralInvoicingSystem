@@ -128,7 +128,7 @@
                                         <p>Sub Total</p>
                                     </td>
                                     <td style="text-align: center; font-family: arial; font-size: 10px; border: 1px solid rgb(56, 53, 53); color:#474748;">
-                                        <p>{{ site_currency() . number_format($invoice_amount, 2) }}</p>
+                                        <p>{{ site_currency() . number_format(($invoice_amount + $discount_amount), 2) }} </p>
                                     </td>
                                 </tr>
 

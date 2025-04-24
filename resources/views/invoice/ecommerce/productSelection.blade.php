@@ -153,13 +153,13 @@
 
                 <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
                         <button type="button" class="btn btn-outline-primary d-flex align-items-center gap-1 me-1" 
-                                data-bs-toggle="modal" data-bs-target="#addmoreproducts" onclick="customizeProducts()">
-                            <i class="bi bi-box-seam"></i> Add Products
+                                data-bs-toggle="modal" data-bs-target="#addmoreproducts" onclick="customizeProducts('onload')">
+                                <i class="fas fa-plus-square"></i> Add Products
                         </button>
 
-                        <button type="button" class="btn btn-outline-success d-flex align-items-center gap-1 me-1"
+                        <button type="button" class="btn btn-outline-success d-flex align-items-center gap-1"
                                 onclick="randomizeProducts()">
-                            <i class="bi bi-dice-5"></i> Randomize
+                                <i class="fas fa-random"></i> Randomize
                         </button>
 
                         <button type="button" class="btn btn-outline-secondary d-flex align-items-center gap-1 me-1"
@@ -236,16 +236,19 @@
                     
                 <div class="row g-3 mb-4">
                         <div class="col-md-6 d-flex flex-column">
-                            <label for="keywordInput" class="form-label text-center fw-semibold mb-2">🔍 Search Products</label>
+                            <label for="keywordInput" class="form-label text-center fw-semibold mb-2"> Search By Keyword</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-light"><i class="fas fa-search"></i></span>
-                                <input type="text" class="form-control" id="keywordInput" placeholder="Enter product or category name...">
-                                <button class="btn btn-outline-primary" type="button" onclick="customizeProducts()">Search</button>
+                                <input type="text" class="form-control" id="keywordInput" placeholder="Enter or Speak product or category name...">
+                                <button class="btn btn-outline-secondary" type="button" onclick="startVoiceSearch()" id="micBtn" title="Voice Search">
+                                    <i class="fas fa-microphone" id="micIcon" class="mic-icon"></i>
+                                </button>
+                                <button class="btn btn-outline-primary" type="button" onclick="customizeProducts('search')">Search</button>
                             </div>
                         </div>
 
                         <div class="col-md-6 d-flex flex-column">
-                            <label class="form-label text-center fw-semibold mb-2">💰 Filter by Price</label>
+                            <label class="form-label text-center fw-semibold mb-2">Search By Price</label>
                             <div class="align-items-center rounded bg-white shadow-sm">
                                 <div class="w-100" id="customize-price-slider"></div>
                             </div>
@@ -351,7 +354,6 @@
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
 <script src="https://unpkg.com/feather-icons"></script>
-
 <script>
     feather.replace();
 </script>
@@ -467,7 +469,7 @@
         customizeSliderTimer = setTimeout(() => {
             const [min, max] = values.map(v => Math.round(parseFloat(v.replace(currency, ''))));
             updateHiddenInputs(min, max, 'customize');
-            customizeProducts();
+            customizeProducts('search');
         }, 1500);
     });
 
@@ -505,7 +507,7 @@
 
  <script>
 
-        function customizeProducts() {
+        function customizeProducts(search_type='search') {
             const keyword = $('#keywordInput').val().trim();
             const priceFrom = $('#hidden_customize_price_from_input_id').val();
             const priceTo = $('#hidden_customize_price_to_input_id').val();
@@ -535,7 +537,8 @@
                 data: {
                     keyword: keyword,
                     price_from: priceFrom,
-                    price_to: priceTo
+                    price_to: priceTo,
+                    search_type : search_type
                 },
                 success: function (response) {
                     if (!response.tableRows) {
@@ -572,9 +575,7 @@ function clearRandomizedFilter(button) {
             $('#temp_current_amount_text').text('0.00');
             $('#temp_discount_amount_text').text('0.00');
             $('#temp_invoice_amount_text').text($('#invoice_amount').val());
-            $('#randomize-product-table-body').html(
-                getErrorRowHTML('Randomize filter cleared. You can now randomize products again or add custom products.')
-            );
+            $('#randomize-product-table-body').html(getErrorRowHTML('Randomize filter cleared. You can now randomize products again or add custom products.'));
             toastr.success('Randomized products filter has been reset');
             calculateTotalPrice();
             
@@ -617,8 +618,11 @@ function clearRandomizedFilter(button) {
             return;
         }
 
-        if ((currentAmount - discountAmount) !== invoiceAmount) {
-            const diff = (currentAmount - invoiceAmount);
+        const expectedAmount = currentAmount - discountAmount;
+        const epsilon = 0.01;
+
+        if (Math.abs(expectedAmount - invoiceAmount) > epsilon) {
+            const diff = currentAmount - invoiceAmount;
             const diffFixed = diff.toFixed(2);
 
             $('#discount_amount').addClass('border border-danger');
@@ -633,6 +637,7 @@ function clearRandomizedFilter(button) {
             }
             return;
         }
+
 
         const invoiceNumber = invoiceInput.val().trim();
         if (!invoiceNumber) {
