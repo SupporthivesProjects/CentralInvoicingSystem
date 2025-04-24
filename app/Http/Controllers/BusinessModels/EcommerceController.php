@@ -329,6 +329,7 @@ class EcommerceController extends Controller
     public function filterProducts(Request $request)
     {
         $site_id = session('customer.site_id');
+        $search_type = $request->input('search_type');
         $site = Website::findOrFail($site_id);
         $productstable = getProductTable($site->technology);
         DynamicDatabaseService::connect($site);
@@ -375,8 +376,12 @@ class EcommerceController extends Controller
         if (count($readyProductIds) > 0) {
             $query->whereNotIn('products.id', $readyProductIds);
         }
-    
-        $products = $query->orderBy('products.name')->limit(20)->get();
+        if($search_type == 'onload'){
+            $products = $query->orderBy('products.name')->limit(5)->get();
+        }else{
+            $products = $query->orderBy('products.name')->limit(20)->get();
+        }
+        
     
         if ($products->isEmpty()) {
             return response()->json([

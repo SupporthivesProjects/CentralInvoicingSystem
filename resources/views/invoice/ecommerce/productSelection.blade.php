@@ -153,13 +153,13 @@
 
                 <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
                         <button type="button" class="btn btn-outline-primary d-flex align-items-center gap-1 me-1" 
-                                data-bs-toggle="modal" data-bs-target="#addmoreproducts" onclick="customizeProducts()">
-                            <i class="bi bi-box-seam"></i> Add Products
+                                data-bs-toggle="modal" data-bs-target="#addmoreproducts" onclick="customizeProducts('onload')">
+                                <i class="fas fa-plus-square"></i> Add Products
                         </button>
 
-                        <button type="button" class="btn btn-outline-success d-flex align-items-center gap-1 me-1"
+                        <button type="button" class="btn btn-outline-success d-flex align-items-center gap-1"
                                 onclick="randomizeProducts()">
-                            <i class="bi bi-dice-5"></i> Randomize
+                                <i class="fas fa-random"></i> Randomize
                         </button>
 
                         <button type="button" class="btn btn-outline-secondary d-flex align-items-center gap-1 me-1"
@@ -243,7 +243,7 @@
                                 <button class="btn btn-outline-secondary" type="button" onclick="startVoiceSearch()" id="micBtn" title="Voice Search">
                                     <i class="fas fa-microphone" id="micIcon" class="mic-icon"></i>
                                 </button>
-                                <button class="btn btn-outline-primary" type="button" onclick="customizeProducts()">Search</button>
+                                <button class="btn btn-outline-primary" type="button" onclick="customizeProducts('search')">Search</button>
                             </div>
                         </div>
 
@@ -469,7 +469,7 @@
         customizeSliderTimer = setTimeout(() => {
             const [min, max] = values.map(v => Math.round(parseFloat(v.replace(currency, ''))));
             updateHiddenInputs(min, max, 'customize');
-            customizeProducts();
+            customizeProducts('search');
         }, 1500);
     });
 
@@ -507,7 +507,7 @@
 
  <script>
 
-        function customizeProducts() {
+        function customizeProducts(search_type='search') {
             const keyword = $('#keywordInput').val().trim();
             const priceFrom = $('#hidden_customize_price_from_input_id').val();
             const priceTo = $('#hidden_customize_price_to_input_id').val();
@@ -537,7 +537,8 @@
                 data: {
                     keyword: keyword,
                     price_from: priceFrom,
-                    price_to: priceTo
+                    price_to: priceTo,
+                    search_type : search_type
                 },
                 success: function (response) {
                     if (!response.tableRows) {
