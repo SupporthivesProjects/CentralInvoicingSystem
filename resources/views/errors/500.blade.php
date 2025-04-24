@@ -79,8 +79,7 @@
         <h1 class="display-1 fw-bold text-warning">500</h1>
         <h2 class="fw-semibold mb-3">Internal Server Error</h2>
         <p class="lead text-secondary">
-            Something went wrong on our end.<br>
-            Please try again later or return to a safe place.
+             Something went wrong. <br>Please check your internet connection or try again later.
         </p>
     </div>
 
