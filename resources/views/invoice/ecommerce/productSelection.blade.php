@@ -248,7 +248,7 @@
                         </div>
 
                         <div class="col-md-6 d-flex flex-column">
-                            <label class="form-label text-center fw-semibold mb-2">Search by Price</label>
+                            <label class="form-label text-center fw-semibold mb-2">Search By Price</label>
                             <div class="align-items-center rounded bg-white shadow-sm">
                                 <div class="w-100" id="customize-price-slider"></div>
                             </div>
