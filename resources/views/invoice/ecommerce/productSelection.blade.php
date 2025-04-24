@@ -236,7 +236,7 @@
                     
                 <div class="row g-3 mb-4">
                         <div class="col-md-6 d-flex flex-column">
-                            <label for="keywordInput" class="form-label text-center fw-semibold mb-2">🔍 Search Products</label>
+                            <label for="keywordInput" class="form-label text-center fw-semibold mb-2"> Search By Keyword</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-light"><i class="fas fa-search"></i></span>
                                 <input type="text" class="form-control" id="keywordInput" placeholder="Enter or Speak product or category name...">
@@ -248,7 +248,7 @@
                         </div>
 
                         <div class="col-md-6 d-flex flex-column">
-                            <label class="form-label text-center fw-semibold mb-2">💰 Filter by Price</label>
+                            <label class="form-label text-center fw-semibold mb-2">Search by Price</label>
                             <div class="align-items-center rounded bg-white shadow-sm">
                                 <div class="w-100" id="customize-price-slider"></div>
                             </div>
