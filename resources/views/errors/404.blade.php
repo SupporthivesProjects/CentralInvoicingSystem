@@ -8,9 +8,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
-    <meta name="description" content="@yield('meta_description', 'Central Invoice System Admin Panel - Manage remote websites, select products based on business models, generate invoices, customize invoice layouts, and download invoice PDFs.')">
-    <title>@yield('title', 'Central Invoice System Admin Panel')</title>
+    @section('title', '404 Not Found')
+    @section('meta_description', 'The page you are looking for could not be found. Check the URL or return to the homepage.')
 
 
     <!-- Favicon -->
@@ -57,8 +56,7 @@
 
     <!-- Prism CSS -->
     <link rel="stylesheet" href="{{ asset('libs/prismjs/themes/prism-coy.min.css') }}">
-    
-    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+
     <link rel="stylesheet" href="{{ asset('narayan/css/styles.css') }}">
 
     <!-- SweetAlert2 -->
@@ -71,34 +69,34 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.3.0/css/responsive.bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.3/css/buttons.bootstrap5.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/notyf@3.0.0/notyf.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/notyf@3.0.0/notyf.min.js"></script>
-
 
     @stack('styles')
     </head>
   <body>
-    <div id="loader" class="spinner-border text-primary" role="status" >
-         <span class="visually-hidden">Loading...</span>
-    </div>
+  <div class="container-fluid min-vh-100 d-flex flex-column justify-content-center align-items-center bg-dark text-white text-center">
 
-     
-        @unless(in_array(Route::currentRouteName(), ['login', 'password.request', 'password.reset']))
-            @include('partials.sidebar')
-        @endunless
+        <div class="mb-4">
+            <h1 class="display-1 fw-bold text-danger">404</h1>
+            <h2 class="fw-semibold mb-3">Oops! Page Not Found</h2>
+            <p class="lead text-secondary">
+                The page you're looking for doesn't exist or has been moved.<br>
+                Let's help you find your way.
+            </p>
+        </div>
 
-          @yield('content')
-          
-        @include("partials/switcher")
-         
-        @unless(in_array(Route::currentRouteName(), ['login', 'password.request', 'password.reset']))
-        @include("partials/header")
-        @endunless
-        
-        @include('partials.footer')
+        <div>
+            <a href="{{ url()->previous() }}" class="btn btn-outline-light me-2">
+                <i class="bi bi-arrow-left-circle"></i> Go Back
+            </a>
+            <a href="{{ route('dashboard') }}" class="btn btn-danger">
+                <i class="bi bi-house-door"></i> Go to Dashboard
+            </a>
+        </div>
 
-    <!-- Scroll To Top -->
-        <div class="scrollToTop">
+        </div>
+
+ <!-- Scroll To Top -->
+ <div class="scrollToTop">
             <span class="arrow"><i class="fe fe-arrow-up"></i></span>
         </div>
         <div id="responsive-overlay"></div>

@@ -11,6 +11,7 @@ use App\Models\InvoiceGenerationHistory;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 
 
 
@@ -21,9 +22,17 @@ class HomeController extends Controller
     {
 
         list($dates, $invoiceCounts, $priceChanges) = $this->getInvoiceChartData();
-        $invoices = InvoiceGenerationHistory::latest()->get();
-        $businessmodels = BusinessModel::latest()->get();
-        $sites = Website::latest()->get();
+        $businessmodels = Cache::rememberForever('businessmodels.all', function () {
+            return BusinessModel::latest()->get();
+        });
+
+        $sites = Cache::rememberForever('websites.all', function () {
+            return Website::latest()->get();
+        });
+
+        $invoices = Cache::remember('invoices.all', 300, function () {
+            return InvoiceGenerationHistory::latest()->get();
+        });
         return view('pages.dashboard', compact('invoices', 'dates', 'invoiceCounts','businessmodels','sites', 'priceChanges'));
     }
 
@@ -32,18 +41,22 @@ class HomeController extends Controller
         $sevenDaysAgo = Carbon::now()->subDays(7)->startOfDay();
         $today = Carbon::now()->endOfDay();
 
+        $cacheKeyPriceHistory = 'price_history_' . $sevenDaysAgo . '_' . $today;
+        $cacheKeyInvoiceStats = 'invoice_stats_' . $sevenDaysAgo . '_' . $today;
 
-        $priceHistory = ProductPriceHistory::select(
-            DB::raw('DATE(last_price_changed) as date'),
-            DB::raw('COUNT(*) as price_changes')
-        )
-        ->whereBetween('last_price_changed', [$sevenDaysAgo, $today])
-        ->groupBy('date')
-        ->orderBy('date', 'asc')
-        ->get();
+        $priceHistory = Cache::remember($cacheKeyPriceHistory, 300, function () use ($sevenDaysAgo, $today) {
+            return ProductPriceHistory::select(
+                DB::raw('DATE(last_price_changed) as date'),
+                DB::raw('COUNT(*) as price_changes')
+            )
+            ->whereBetween('last_price_changed', [$sevenDaysAgo, $today])
+            ->groupBy('date')
+            ->orderBy('date', 'asc')
+            ->get();
+        });
 
-
-        $invoiceStats = InvoiceGenerationHistory::select(
+        $invoiceStats = Cache::remember($cacheKeyInvoiceStats, 300, function () use ($sevenDaysAgo, $today) {
+            return InvoiceGenerationHistory::select(
                 DB::raw('DATE(created_at) as date'),
                 DB::raw('COUNT(*) as count'),
                 DB::raw('SUM(invoice_amount) as total_sales'),
@@ -53,6 +66,7 @@ class HomeController extends Controller
             ->groupBy('date')
             ->orderBy('date', 'asc')
             ->get();
+        });
 
         $dates = [];
         $priceChangeCounts = [];

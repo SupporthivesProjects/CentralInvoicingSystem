@@ -196,10 +196,11 @@
                                                     <tr>
                                                         <th>#</th>
                                                         <th>Invoice No</th>
-                                                        <th>Model Type</th>
+                                                        <th>Model</th>
                                                         <th>Website</th>
                                                         <th>Discount Amount</th>
                                                         <th>Total Amount</th>
+                                                        <th>Regenerate</th>
                                                         <th>Date</th>
                                                     </tr>
                                                 </thead>
@@ -212,7 +213,16 @@
                                                             <td><a target="_blank" href="{{ $invoice->website->site_link }}">{{ $invoice->website->site_name }}</a></td>
                                                             <td>{{ $invoice->currency }} {{ number_format($invoice->discount_amount, 2) }} </td>
                                                             <td>{{ $invoice->currency }} {{ number_format($invoice->invoice_amount, 2) }}</td>
+                                                            <td class="text-center">
+                                                                <div class="d-flex justify-content-center">
+                                                                    <a href="{{ route('product.selection', ['invoice_id' => $invoice->id]) }}"
+                                                                    class="btn btn-outline-warning rounded-pill btn-sm">
+                                                                        <i class="fas fa-redo-alt"></i> Regenerate
+                                                                    </a>
+                                                                </div>
+                                                            </td>
                                                             <td>{{ $invoice->created_at->format('Y-m-d') }}</td>
+
                                                         </tr>
                                                     @endforeach
                                                 </tbody>

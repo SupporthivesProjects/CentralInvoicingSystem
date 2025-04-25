@@ -34,8 +34,8 @@
         background-repeat: no-repeat; 
         background-position: center;
         background-size: cover;
-        height: 120px; /* Increased from default */
-        padding: 20px;
+        height: 130px; 
+        padding: 10px;
         width: 100%;
      }
  </style>
@@ -50,14 +50,15 @@
                         <td style="padding: 0px;max-height: 100px;">
                             <table>
                                 <tr>
-                                    <td class="invoice_header_image">
-                                        <img src="{{ $invoice_header_image }}" alt="" style="margin: auto; display: block;height:60px;">
-                                    </td>
+                                <td class="invoice_header_image">
+                                    <center><img src="{{ $invoice_header_image }}" alt="" style="display: block; margin: 0 auto; height: 60px;"></center>
+                                </td>
+
 
                                     <td style="width:300px;padding: 40px;text-align: right;">
                                         <h1 style="font-family: arial;font-size: 20px;margin: 0px;font-weight: 700;">INVOICE</h1><br><br>
                                         <p style="font-family: arial;font-size:10px;margin: 0px;font-weight: 400;">
-                                            INVOICE #{{ $invoice_amount}}
+                                            INVOICE #{{ $invoice_number}}
                                         </p>
                                         <p style="font-family: arial;font-size:10px;margin: 0px;font-weight: 400;">
                                             DATE: {{ $invoice_date }}
@@ -145,7 +146,7 @@
                                         SUBTOTAL
                                     </td>
                                     <td style="text-align: right; padding-right: 10px; font-family: arial; font-size: 10px; font-weight: 700; border: 1px solid black;">
-                                        {{ site_currency() . number_format($invoice_amount, 2) }}
+                                    {{ site_currency() . number_format(($invoice_amount + $discount_amount), 2) }}
                                     </td>
                                 </tr>
 

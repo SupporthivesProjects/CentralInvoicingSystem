@@ -8,9 +8,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
-    <meta name="description" content="@yield('meta_description', 'Central Invoice System Admin Panel - Manage remote websites, select products based on business models, generate invoices, customize invoice layouts, and download invoice PDFs.')">
-    <title>@yield('title', 'Central Invoice System Admin Panel')</title>
+    @section('title', '403 Forbidden')
+    @section('meta_description', 'You do not have permission to access this page. Please contact the administrator for assistance.')
 
 
     <!-- Favicon -->
@@ -57,8 +56,7 @@
 
     <!-- Prism CSS -->
     <link rel="stylesheet" href="{{ asset('libs/prismjs/themes/prism-coy.min.css') }}">
-    
-    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+
     <link rel="stylesheet" href="{{ asset('narayan/css/styles.css') }}">
 
     <!-- SweetAlert2 -->
@@ -71,34 +69,26 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.3.0/css/responsive.bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.3/css/buttons.bootstrap5.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/notyf@3.0.0/notyf.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/notyf@3.0.0/notyf.min.js"></script>
-
 
     @stack('styles')
     </head>
   <body>
-    <div id="loader" class="spinner-border text-primary" role="status" >
-         <span class="visually-hidden">Loading...</span>
-    </div>
+  <div class="container-fluid min-vh-100 d-flex flex-column justify-content-center align-items-center bg-dark text-white">
 
-     
-        @unless(in_array(Route::currentRouteName(), ['login', 'password.request', 'password.reset']))
-            @include('partials.sidebar')
-        @endunless
+        <div class="text-center">
+            <h1 class="display-1 fw-bold">403</h1>
+            <h2 class="mb-3">Access Denied</h2>
+            <p class="lead text-secondary mb-4">
+                You don't have permission to access this page.<br> 
+                Please contact your administrator if you believe this is an error.
+            </p>
+            <a href="{{ url()->previous() }}" class="btn btn-secondary">Go Back</a>
+        </div>
 
-          @yield('content')
-          
-        @include("partials/switcher")
-         
-        @unless(in_array(Route::currentRouteName(), ['login', 'password.request', 'password.reset']))
-        @include("partials/header")
-        @endunless
-        
-        @include('partials.footer')
+   </div>
 
-    <!-- Scroll To Top -->
-        <div class="scrollToTop">
+
+ <div class="scrollToTop">
             <span class="arrow"><i class="fe fe-arrow-up"></i></span>
         </div>
         <div id="responsive-overlay"></div>

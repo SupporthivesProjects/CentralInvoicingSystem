@@ -110,6 +110,37 @@ class InvoiceController extends Controller
 
     public function productSelection(Request $request)
     {
+        $invoice_id = $request->query('invoice_id');
+
+        if ($invoice_id) {
+            $invoiceHistory = InvoiceGenerationHistory::where('id', $invoice_id)->first();
+
+            if ($invoiceHistory) {
+                session([
+                    'customer' => [
+                        'site_id' => $invoiceHistory->site_id,
+                        'site_name' => $invoiceHistory->website->site_name,
+                    ],
+                    'invoice' => [
+                        'invoice_amount' => $invoiceHistory->invoice_amount,
+                    ],
+                    'products' => []
+                ]);
+                session()->flash('regenerate_invoice_number', $invoiceHistory->invoice_number);
+            }
+        }
+        $new_site_id = $request->query('new_site_id');
+
+        if ($new_site_id && session('customer.site_id') != $new_site_id) {
+            $site = Website::findOrFail($new_site_id);
+            $customer = session('customer');
+            $customer['site_id'] = $new_site_id;
+            $customer['site_name'] = $site->site_name;
+            session()->put('customer', $customer);
+
+            session()->flash('success', 'Website has been changed');
+        }
+
         $site_id = session('customer.site_id');
 
         if (!$site_id) {
@@ -123,26 +154,66 @@ class InvoiceController extends Controller
             DynamicDatabaseService::connect($site);
             DB::connection($this->connectionType)->getPdo();
 
-            $currency = DB::connection($this->connectionType)
-                ->table('currencies')
-                ->where('status', 1)
-                ->first();
+            try {
+                $min_unit_price = DB::connection($this->connectionType)->table($this->productTable)->where('published', 1)->min('unit_price') ?? 10;
+                $max_unit_price = DB::connection($this->connectionType)->table($this->productTable)->where('published', 1)->max('unit_price') ?? 1000;
+            } catch (\Exception $e) {
+                $min_unit_price = 10;
+                $max_unit_price = 1000;
+            }
 
-                $modelType = $site->businessModel->model_type;
+            $currency = DB::connection($this->connectionType)->table('currencies')->where('status', 1)->first();
+            $modelType = $site->businessModel->model_type;
+            $sites = Website::all();
 
-                return view("invoice.{$modelType}.productSelection", [
-                    'currency' => $currency,
-                    'customer' => session('customer'),
-                    'invoice' => session('invoice'),
-                    'site' => $site
-                ]);
-
+            return view("invoice.{$modelType}.productSelection", [
+                'currency' => $currency,
+                'customer' => session('customer'),
+                'invoice' => session('invoice'),
+                'site' => $site,
+                'sites' => $sites,
+                'min_unit_price' => $min_unit_price,
+                'max_unit_price' => $max_unit_price
+            ]);
 
         } catch (\Exception $e) {
             return redirect()->back()
                 ->with('error', 'Database connection failed: ' . $e->getMessage());
         }
     }
+
+
+
+    public function updateInvoiceAmount(Request $request)
+    {
+        $validated = $request->validate([
+
+            'invoice_amount' => 'nullable|numeric|min:1',
+            'invoice_date' => 'nullable|date',
+            'customer_name' => 'nullable|string|max:255',
+            'customer_email' => 'nullable|email',
+            'customer_mobile' => 'nullable|string|max:15',
+        ]);
+
+        session()->put('invoice.invoice_amount', $request->invoice_amount);
+        session()->put('invoice.invoice_date', $request->invoice_date);
+        session()->put('customer.customer_name', $request->customer_name);
+        session()->put('customer.customer_mobile', $request->customer_mobile);
+        session()->put('customer.customer_email', $request->customer_email);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Customer details updated successfully!',
+            'updated' => [
+                'invoice_amount' => $request->invoice_amount,
+                'invoice_date' => $request->invoice_date,
+                'customer_name' => $request->customer_name,
+                'customer_email' => $request->customer_email,
+                'customer_mobile' => $request->customer_mobile,
+            ],
+        ]);
+    }
+
 
     public function randomProducts(Request $request)
     {
@@ -207,7 +278,7 @@ class InvoiceController extends Controller
     }
 
 
-    public function generateNewInvoiceNumber(Request $request)
+    public function generateInvoiceNumber(Request $request)
     {
         $siteName = $request->input('site_name');
         $newInvoiceNumber = generateInvoiceNumber($siteName);
