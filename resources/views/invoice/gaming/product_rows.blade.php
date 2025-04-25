@@ -5,7 +5,7 @@
     @endphp
 
     {{-- Main Row --}}
-    <tr class="product-row align-middle" data-bs-toggle="collapse" data-bs-target="#collapse-{{ $index + 1 }}" aria-expanded="false" aria-controls="collapse-{{ $index + 1 }}" style="cursor: pointer;">
+    <tr class="product-row align-middle" id="product-main-row-{{ $index + 1 }}" data-bs-toggle="collapse" data-bs-target="#collapse-{{ $index + 1 }}" aria-expanded="false" aria-controls="collapse-{{ $index + 1 }}" style="cursor: pointer;">
         <td class="text-center">
             <div class="form-check m-0 d-flex justify-content-center">
                 <input form="generate-invoice-form" class="form-check-input narayan-checkbox border-primary" type="checkbox"
@@ -30,11 +30,16 @@
             <input form="generate-invoice-form" type="hidden" name="products[{{ $product->id }}][unit_price]" value="{{ $product->unit_price }}">
         </td>
         <td><span class="badge rounded-pill bg-info">{{ $product->source ?? 'Custom' }}</span></td>
+        <td>
+            <button type="button" class="btn btn-sm btn-outline-danger px-2 py-1" onclick="removeProductRow({{ $index + 1 }})" title="Remove Row">
+                <i class="fa fa-trash"></i>
+            </button>
+        </td>
     </tr>
 
     {{-- Expandable Capture Row --}}
-    <tr>
-        <td colspan="7" class="p-0 border-0">
+    <tr id="product-collapse-row-{{ $index + 1 }}">
+        <td colspan="8" class="p-0 border-0">
             <div class="collapse bg-light" id="collapse-{{ $index + 1 }}" data-bs-parent="#product-table-body">
                 <div class="p-3">
                     <h6 class="fw-bold mb-3">Game Account Details Required:</h6>
@@ -82,6 +87,6 @@
     </tr>
 @empty
     <tr>
-        <td colspan="7" class="text-center text-muted py-3">No results found.</td>
+        <td colspan="8" class="text-center text-muted py-3">No results found.</td>
     </tr>
 @endforelse

@@ -185,6 +185,7 @@
                                 <th>GAME CURRENCY AMOUNT</th>
                                 <th>UNIT PRICE</th>
                                 <th>FILTER</th>
+                                <th>REMOVE</th>
                                 {{-- <th>MODIFY PRICE</th> --}}
                             </tr>
                             </thead>
@@ -623,6 +624,18 @@ function handlePlatformChange(select) {
     }
 }
 </script>
+
+{{-- Remove Row Script --}}
+<script>
+    function removeProductRow(index) {
+        const mainRow = document.getElementById(`product-main-row-${index}`);
+        const collapseRow = document.getElementById(`product-collapse-row-${index}`);
+
+        if (mainRow) mainRow.remove();
+        if (collapseRow) collapseRow.remove();
+    }
+</script>
+
 @endpush
 
 
