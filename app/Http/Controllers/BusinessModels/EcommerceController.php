@@ -33,16 +33,6 @@ class EcommerceController extends Controller
         $this->connectionType = 'dynamic';
     }
 
-    public function getPriceRange(Request $request)
-    {
-        $site_id = session('customer.site_id');
-        $site = Website::findOrFail($site_id);
-        DynamicDatabaseService::connect($site);
-        $min_unit_price = DB::connection($this->connectionType)->table($this->productTable)->where('published', 1)->min('unit_price');
-        $max_unit_price = DB::connection($this->connectionType)->table($this->productTable)->where('published', 1)->max('unit_price');
-        return response()->json(['minProductPrice' => $min_unit_price, 'maxProductPrice' => $max_unit_price]);
-    }
-
  
     public function randomProducts(Request $request)
     {
@@ -107,7 +97,6 @@ class EcommerceController extends Controller
             ]);
         }
     
-        $currency = DB::connection($this->connectionType)->table('currencies')->where('status', 1)->first();
         
          $bestMatch = collect($bestMatch); 
          $bestMatch->each(function ($product) {
@@ -146,12 +135,11 @@ class EcommerceController extends Controller
         session()->put('ready_products', $productList);
         session(['current_amount' => $bestTotal]);
         $modelType = $site->businessModel->model_type;
-        $tableRows = view("invoice.{$modelType}.random_product_rows", ['products' => $bestMatch, 'currency' => $currency,'site' => $site])->render();
+        $tableRows = view("invoice.{$modelType}.random_product_rows", ['products' => $bestMatch,'site' => $site])->render();
         
         return response()->json([
             'tableRows' => $tableRows,
-            'total' => $bestTotal,
-            'currency' => $currency
+            'total' => $bestTotal
         ]);
     }
     
@@ -224,21 +212,17 @@ class EcommerceController extends Controller
     
             return $product;
         });
-    
-        $currency = DB::connection($this->connectionType)->table('currencies')->where('status', 1)->first();
         $modelType = $site->businessModel->model_type;
         session(['current_amount' => collect($products)->sum('unit_price')]);
     
         $tableRows = view("invoice.{$modelType}.random_product_rows", [
             'products' => $products,
-            'currency' => $currency,
             'site' => $site,
             'total' => collect($products)->sum('unit_price')
         ])->render();
     
         return response()->json([
             'tableRows' => $tableRows,
-            'currency' => $currency,
             'total' => collect($products)->sum('unit_price')
         ]);
     }
@@ -298,21 +282,90 @@ class EcommerceController extends Controller
         });
 
         $modelType = $site->businessModel->model_type;
-        $currency = DB::connection($this->connectionType)->table('currencies')->where('status', 1)->first();
         session(['current_amount' => collect($products)->sum('unit_price')]);
         $tableRows = view("invoice.{$modelType}.random_product_rows", [
             'products' => $products,
-            'currency' => $currency,
             'site' => $site,
             'total' => collect($products)->sum('unit_price')
         ])->render();
 
         return response()->json([
             'tableRows' => $tableRows,
-            'currency' => $currency,
             'total' => collect($products)->sum('unit_price')
         ]);
     }
+
+    public function updateProduct(Request $request)
+    {
+        $productId = $request->get('product_id');
+        $quantity = $request->get('quantity');
+        $site_id = $request->get('site_id');
+
+        $site = Website::findOrFail($site_id);
+        DynamicDatabaseService::connect($site);
+
+        $readyProducts = session()->get('ready_products', []);
+
+        foreach ($readyProducts as &$product) {
+            if ($product['id'] == $productId) {
+                $product['quantity'] = $quantity;
+                break;
+            }
+        }
+        session()->put('ready_products', $readyProducts);
+
+        $productIds = collect($readyProducts)->pluck('id')->toArray();
+
+        $products = DB::connection($this->connectionType)->table($this->productTable)
+            ->select('id', 'category_id', 'name', 'unit_price', 'slug')
+            ->whereIn('id', $productIds)
+            ->get();
+
+        $products = $products->map(function ($product) use ($readyProducts, $site_id) {
+            $sessionProduct = collect($readyProducts)->firstWhere('id', $product->id);
+            $product->unit_price = $sessionProduct['unit_price'] ?? $product->unit_price;
+            $product->quantity = $sessionProduct['quantity'] ?? 1;
+            $product->category_name = DB::connection($this->connectionType)->table('categories')->where('id', $product->category_id)->value('name') ?? 'unknown';
+
+            $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
+                ->where('product_id', $product->id)
+                ->orderByDesc('last_price_changed')
+                ->first();
+
+            if ($lastUpdate) {
+                $lastPriceChanged = Carbon::parse($lastUpdate->last_price_changed);
+                $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
+                $remainingDays = now()->diffInDays($nextPriceChangeDate, false);
+                $product->remaining_days = round(max($remainingDays, 0));
+                $product->can_edit_price = now()->greaterThanOrEqualTo($nextPriceChangeDate) ? 1 : 0;
+            } else {
+                $product->can_edit_price = 1;
+                $product->remaining_days = 0;
+            }
+
+            return $product;
+        });
+
+        $modelType = $site->businessModel->model_type;
+
+        $total = $products->sum(function ($product) {
+            return $product->unit_price * ($product->quantity ?? 1);
+        });
+
+        session(['current_amount' => $total]);
+
+        $tableRows = view("invoice.{$modelType}.random_product_rows", [
+            'products' => $products,
+            'site' => $site,
+            'total' => $total
+        ])->render();
+
+        return response()->json([
+            'tableRows' => $tableRows,
+            'total' => $total
+        ]);
+    }
+
 
     public function clearRandomizedProducts(Request $request)
     {
@@ -377,7 +430,7 @@ class EcommerceController extends Controller
             $query->whereNotIn('products.id', $readyProductIds);
         }
         if($search_type == 'onload'){
-            $products = $query->orderBy('products.name')->limit(5)->get();
+            $products = $query->inRandomOrder()->limit(10)->get();
         }else{
             $products = $query->orderBy('products.name')->limit(20)->get();
         }
@@ -389,7 +442,6 @@ class EcommerceController extends Controller
             ]);
         }
     
-        $currency = DB::connection($this->connectionType)->table('currencies')->where('status', 1)->first();
         $products = collect($products);
         $products->each(function ($product) {
             $product->category_name = DB::connection($this->connectionType)->table('categories')->where('id', $product->category_id)->value('name') ?? 'unknown';
@@ -415,11 +467,10 @@ class EcommerceController extends Controller
     
         $modelType = $site->businessModel->model_type;
         $random_amount = session('current_amount', 0);
-        $tableRows = view("invoice.{$modelType}.add_product_rows", ['products' => $products, 'currency' => $currency, 'site' => $site, 'random_amount' => $random_amount])->render();
+        $tableRows = view("invoice.{$modelType}.add_product_rows", ['products' => $products, 'site' => $site, 'random_amount' => $random_amount])->render();
     
         return response()->json([
             'tableRows' => $tableRows,
-            'currency' => $currency,
             'random_amount' => $random_amount,
         ]);
     }
@@ -489,8 +540,7 @@ class EcommerceController extends Controller
         });
         
        
-        $currency = DB::connection($this->connectionType)->table('currencies')->where('status', 1)->first();
-        $invoice_data['currency'] = $currency ? $currency->symbol : "$";
+        $invoice_data['currency'] =  site_currency();
     
         $invoice_data['products'] = $products;
         $invoice_data['product_ids'] = $productIds;

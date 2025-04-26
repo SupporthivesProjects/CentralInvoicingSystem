@@ -8,10 +8,10 @@
             <a href="{{ $site->site_link }}/product/{{ $product->slug }}" target="_blank">🔗</a>
         @endif
     </td>
-    <td>{{ $currency->symbol }}{{ number_format($product->unit_price, 2) }}</td>
+    <td>{{ site_currency() }}{{ number_format($product->unit_price, 2) }}</td>
     <td>
         <div class="input-group d-flex">
-            <span class="input-group-text">{{ $currency->symbol }}</span>
+            <span class="input-group-text">{{ site_currency() }}</span>
             <input  style="display: none;"
                 class="form-check-input border narayan-checkbox border-1 border-primary" 
                 type="checkbox" 

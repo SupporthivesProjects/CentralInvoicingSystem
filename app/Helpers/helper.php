@@ -80,22 +80,24 @@ if (!function_exists('generateInvoiceNumber')) {
 if (!function_exists('site_currency')) {
     function site_currency()
     {
-        $site_id = request()->get('site_id') ?? session('site_id');
+        $site_id = session('customer.site_id');
         if (!$site_id) {
             return '$';
         }
         try {
             $site = \App\Models\Website::findOrFail($site_id);
             \App\Services\DynamicDatabaseService::connect($site);
-
-            $currency = DB::connection('dynamic')->table('currencies')->where('status', 1)->first();
+            $site_currency = DB::connection('dynamic')->table('business_settings')->where('type', 'system_default_currency')->first()
+                ?? DB::connection('dynamic')->table('business_settings')->where('type', 'home_default_currency')->first();
+            $currency = DB::connection('dynamic')->table('currencies')->where('id', $site_currency->value)->first();
             return $currency->symbol ?? '$';
         } catch (\Exception $e) {
-            Log::error('Error fetching site currency: ' . $e->getMessage());
             return '$';
         }
     }
 }
+
+
 
 if (!function_exists('admin_currency')) {
     function admin_currency()

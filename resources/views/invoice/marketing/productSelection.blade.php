@@ -195,12 +195,12 @@
                         <table class="table table-bordered table-hover align-middle mb-0">
                             <thead class="table-dark">
                             <tr>
-                                <th class="text-center" style="width: 10%;">PID</th>
-                                <th class="text-center" style="width: 10%;">Category</th>
-                                <th class="text-center" style="width: 40%;">Product Name</th>
-                                <th class="text-center" style="width: 10%;">Unit Price</th>
-                                <th class="text-center" style="width: 20%;">Editable Price</th>
-                                <th class="text-center" style="width: 10%;">Remove</th>
+                                <th class="w-10 text-center">PID</th>
+                                <th class="w-30">Package Name</th>
+                                <th class="w-20 text-center">Subscription</th>
+                                <th class="w-15 text-center">Unit Price</th>
+                                <th class="w-25 text-center">Editable Price</th>
+                                <th class="w-10 text-center">Remove</th>
                             </tr>
                             </thead>
                             <tbody id="randomize-product-table-body">
@@ -233,68 +233,68 @@
             <!-- Modal Body -->
             <div class="modal-body bg-white">
                 <div class="container-fluid">
-                <div class="row g-3 mb-4 mx-4">
-                        <div class="col-md-6 d-flex flex-column">
-                            <label for="keywordInput" class="form-label text-center fw-semibold mb-2">Search By Keyword</label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-light"><i class="fas fa-search"></i></span>
-                                <input type="text" class="form-control" id="keywordInput" placeholder="Enter or Speak product or category name...">
-                                <button class="btn btn-outline-secondary" type="button" onclick="startVoiceSearch()" id="micBtn" title="Voice Search">
-                                    <i class="fas fa-microphone" id="micIcon"></i>
-                                </button>
-                                <button class="btn btn-outline-primary" type="button" onclick="customizeProducts('search')">Search</button>
+                    <div class="row g-3 mb-4 mx-4">
+                            <div class="col-md-6 d-flex flex-column">
+                                <label for="keywordInput" class="form-label text-center fw-semibold mb-2">Search By Keyword</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light"><i class="fas fa-search"></i></span>
+                                    <input type="text" class="form-control" id="keywordInput" placeholder="Enter or Speak product or category name...">
+                                    <button class="btn btn-outline-secondary" type="button" onclick="startVoiceSearch()" id="micBtn" title="Voice Search">
+                                        <i class="fas fa-microphone" id="micIcon"></i>
+                                    </button>
+                                    <button class="btn btn-outline-primary" type="button" onclick="customizeProducts('search')">Search</button>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="col-md-6 d-flex flex-column">
-                            <label class="form-label text-center fw-semibold mb-2">Search By Price</label>
-                            <div class="align-items-center rounded bg-white shadow-sm">
-                                <div class="w-100" id="customize-price-slider"></div>
+                            <div class="col-md-6 d-flex flex-column">
+                                <label class="form-label text-center fw-semibold mb-2">Search By Price</label>
+                                <div class="align-items-center rounded bg-white shadow-sm">
+                                    <div class="w-100" id="customize-price-slider"></div>
+                                </div>
+                                <input type="hidden" id="hidden_customize_price_from_input_id">
+                                <input type="hidden" id="hidden_customize_price_to_input_id">
                             </div>
-                            <input type="hidden" id="hidden_customize_price_from_input_id">
-                            <input type="hidden" id="hidden_customize_price_to_input_id">
+                        </div>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-4">
+                                <div class="bg-light rounded border shadow-sm p-1 text-center">
+                                    <div class="text-muted small fw-semibold">Current Amount</div>
+                                    <div class="fw-bold text-success fs-5">{{ site_currency() }}<span id="temp_current_amount_text">0.00</span></div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="bg-light rounded border shadow-sm p-1 text-center">
+                                    <div class="text-muted small fw-semibold">Discount Amount</div>
+                                    <div class="fw-bold text-danger fs-5">{{ site_currency() }}<span id="temp_discount_amount_text">0.00</span></div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="bg-light rounded border shadow-sm p-1 text-center">
+                                    <div class="text-muted small fw-semibold">Invoice Amount</div>
+                                    <div class="fw-bold text-warning fs-5">{{ site_currency() }}<span id="temp_invoice_amount_text">0.00</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="table-responsive border rounded shadow-sm">
+                            <table class="table table-bordered table-hover align-middle mb-0">
+                                <thead class="table-dark text-center">
+                                    <tr>
+                                        <th class="w-10 text-center">PID</th>
+                                        <th class="w-30">Package Name</th>
+                                        <th class="w-20 text-center">Subscription</th>
+                                        <th class="w-15 text-center">Unit Price</th>
+                                        <th class="w-25 text-center">Editable Price</th>
+                                        <th class="w-10 text-center">Select</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="customize-product-table-body">
+                                
+                                </tbody>
+                            </table>
                         </div>
                     </div>
-                    <div class="row g-3 mb-4">
-                        <div class="col-md-4">
-                            <div class="bg-light rounded border shadow-sm p-1 text-center">
-                                <div class="text-muted small fw-semibold">Current Amount</div>
-                                <div class="fw-bold text-success fs-5">{{ site_currency() }}<span id="temp_current_amount_text">0.00</span></div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="bg-light rounded border shadow-sm p-1 text-center">
-                                <div class="text-muted small fw-semibold">Discount Amount</div>
-                                <div class="fw-bold text-danger fs-5">{{ site_currency() }}<span id="temp_discount_amount_text">0.00</span></div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="bg-light rounded border shadow-sm p-1 text-center">
-                                <div class="text-muted small fw-semibold">Invoice Amount</div>
-                                <div class="fw-bold text-warning fs-5">{{ site_currency() }}<span id="temp_invoice_amount_text">0.00</span></div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="table-responsive border rounded shadow-sm">
-                        <table class="table table-bordered table-hover align-middle mb-0">
-                            <thead class="table-dark text-center">
-                                <tr>
-                                    <th style="width: 10%;">PID</th>
-                                    <th style="width: 10%;">Category</th>
-                                    <th style="width: 35%;">Product Name</th>
-                                    <th style="width: 15%;">Unit Price</th>
-                                    <th style="width: 20%;">Editable Price</th>
-                                    <th style="width: 10%;">Select</th>
-                                </tr>
-                            </thead>
-                            <tbody id="customize-product-table-body">
-                               
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                </div>
+            </div>
             
             <div class="modal-footer bg-light border-top">
                 <div class="d-flex flex-wrap gap-2">
@@ -432,9 +432,10 @@
                 Swal.close();
                 $('#discount_amount').val(0.00);
                 if (response.total === 0) {
-                    $('#randomize-product-table-body').html(getErrorRowHTML('No results found. Try randomizing or use a different keyword.')); 
+                    $('#randomize-product-table-body').html(getErrorRowHTML(`Try again with Randomize or click 'Add Product' to add manually.`));
                     return;
-                } else {
+                }
+                else {
                     const invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
                     const currentAmount = parseFloat(response.total.toFixed(2));
                     $('#current_amount_text').text(currentAmount.toFixed(2));
@@ -843,4 +844,33 @@ $(document).ready(function () {
 });
 </script>
 
+
+<script>    
+    $(document).on('input', '.product-price', function() {
+        calculateTotalPrice();
+    });
+    
+    function calculateTotalPrice() {
+        let currentAmount = 0;
+        $('input[name="product_ids[]"]:checked').each(function() {
+            const productId = $(this).val();
+            const punitPrice = parseFloat($(`input[data-product-id="${productId}"]`).val()) || 0;
+            currentAmount += punitPrice;
+        });
+
+        const invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
+        let discountAmount = 0;
+
+        if (currentAmount > invoiceAmount) {
+            discountAmount = currentAmount - invoiceAmount;
+        }
+        $('#discount_amount').prop('readonly', false).prop('type', 'number') 
+        $('#current_amount').val(currentAmount.toFixed(2));
+        $('#temp_current_amount_text').text(currentAmount.toFixed(2));
+        $('#discount_amount').val(discountAmount.toFixed(2));
+        $('#temp_discount_amount_text').text(discountAmount.toFixed(2));
+        $('#invoice_amount').val(invoiceAmount.toFixed(2));
+        $('#temp_invoice_amount_text').text(invoiceAmount.toFixed(2));
+    }
+</script>
 @endpush

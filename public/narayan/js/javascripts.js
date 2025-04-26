@@ -110,7 +110,7 @@ function replaceFeatherIconsTemporarily() {
         const fields = [
             { input: '#current_amount', postfixSelector: '#current_amount' },
             { input: '#discount_amount', postfixSelector: '#discount_amount' },
-            { input: '#invoice_amount', postfixSelector: '#update_invoice_amount' } // explicit
+            { input: '#invoice_amount', postfixSelector: '#update_invoice_amount' } 
         ];
     
         fields.forEach(function(fieldObj) {
@@ -200,7 +200,7 @@ function getProductsSearchRowHTML(colspan = 6) {
 
 function getErrorRowHTML(message) {
     return `
-        <tr id="error-row" style="display: none;">
+        <tr id="error-row">
             <td colspan="7" class="text-center text-muted">
                 <div class="alert alert-danger" role="alert">
                     ${message}
@@ -209,3 +209,4 @@ function getErrorRowHTML(message) {
         </tr>
     `;
 }
+

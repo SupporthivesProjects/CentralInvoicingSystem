@@ -79,7 +79,7 @@
                             <li class="slide side-menu__label1"><a href="javascript:void(0)">{{ $model->name }}</a></li>
                             <li class="slide">
                                 <a href="{{ route('businessmodel.websites', $model->id) }}" class="side-menu__item d-flex align-items-center justify-content-between">
-                                    <span>Connected Sites</span>
+                                    <span>Available Sites</span>
                                     <span class="badge bg-success">{{ getWebsiteCountByModel($model->id) }}</span>
                                 </a>
                             </li>

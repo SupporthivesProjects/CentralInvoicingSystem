@@ -83,7 +83,7 @@
     </div>
 
      
-        @unless(in_array(Route::currentRouteName(), ['login', 'password.request', 'password.reset']))
+        @unless(in_array(Route::currentRouteName(), ['login', 'password.request', 'password.reset','error.404','error.403','error.500']))
             @include('partials.sidebar')
         @endunless
 
@@ -91,7 +91,7 @@
           
         @include("partials/switcher")
          
-        @unless(in_array(Route::currentRouteName(), ['login', 'password.request', 'password.reset']))
+        @unless(in_array(Route::currentRouteName(), ['login', 'password.request', 'password.reset','error.404','error.403','error.500']))
         @include("partials/header")
         @endunless
         

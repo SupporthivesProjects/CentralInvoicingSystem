@@ -59,7 +59,7 @@
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Invoice Amount <span class="text-danger">*</span></label>
                                 <div class="input-group">
-                                    <span class="input-group-text">$</span>
+                                    <span class="input-group-text">{{ site_currency() }}</span>
                                     <input type="number" name="invoice_amount" class="form-control" placeholder="Enter invoice target amount" value="{{ $invoice['invoice_amount'] ?? '' }}" required>
                                 </div>
                             </div>

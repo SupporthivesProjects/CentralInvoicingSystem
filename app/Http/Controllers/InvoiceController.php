@@ -52,6 +52,8 @@ class InvoiceController extends Controller
             $site_id = request()->get('site_id', $site_id_from_url);
             $site = Website::findOrFail($site_id);
             $sites = Website::all();
+
+            session()->put('customer.site_id', $site->id);
     
             return view('invoice.getCustomer', [
                 'site' => $site,
@@ -162,12 +164,10 @@ class InvoiceController extends Controller
                 $max_unit_price = 1000;
             }
 
-            $currency = DB::connection($this->connectionType)->table('currencies')->where('status', 1)->first();
             $modelType = $site->businessModel->model_type;
             $sites = Website::all();
 
             return view("invoice.{$modelType}.productSelection", [
-                'currency' => $currency, 
                 'customer' => session('customer'), 
                 'invoice' => session('invoice'), 
                 'site' => $site, 
@@ -218,27 +218,53 @@ class InvoiceController extends Controller
     public function randomProducts(Request $request)
     {
         $site = Website::findOrFail(session('customer.site_id'));
-        $modelType = $site->businessModel->model_type;
-        $modelType = strtolower($modelType); 
+        $modelType = strtolower($site->businessModel->model_type);
         return $this->resolveModelController($modelType, 'randomProducts', $request);
     }
     
     public function filterProducts(Request $request)
     {
         $site = Website::findOrFail(session('customer.site_id'));
-        $modelType = $site->businessModel->model_type;
-        $modelType = strtolower($modelType); 
+        $modelType = strtolower($site->businessModel->model_type);
         return $this->resolveModelController($modelType, 'filterProducts', $request);
     }
     
-    public function generateInvoice(Request $request)
-    {  
+    public function addProducts(Request $request)
+    {
         $site = Website::findOrFail(session('customer.site_id'));
-        $modelType = $site->businessModel->model_type;
-        $modelType = strtolower($modelType); 
+        $modelType = strtolower($site->businessModel->model_type);
+        return $this->resolveModelController($modelType, 'addProducts', $request);
+    }
     
+    public function removeProduct(Request $request)
+    {
+        $site = Website::findOrFail(session('customer.site_id'));
+        $modelType = strtolower($site->businessModel->model_type);
+        return $this->resolveModelController($modelType, 'removeProduct', $request);
+    }
+
+    public function updateProduct(Request $request)
+    {
+        $site = Website::findOrFail(session('customer.site_id'));
+        $modelType = strtolower($site->businessModel->model_type);
+        return $this->resolveModelController($modelType, 'updateProduct', $request);
+    }
+
+    public function clearRandomizedProducts(Request $request)
+    {
+        $site = Website::findOrFail(session('customer.site_id'));
+        $modelType = strtolower($site->businessModel->model_type);
+        return $this->resolveModelController($modelType, 'clearRandomizedProducts', $request);
+    }
+    
+    public function generateInvoice(Request $request)
+    {
+        $site = Website::findOrFail(session('customer.site_id'));
+        $modelType = strtolower($site->businessModel->model_type);
         return $this->resolveModelController($modelType, 'generateInvoice', $request);
     }
+    
+
     
     private function resolveModelController($modelType, $method, $request)
     {
@@ -258,10 +284,10 @@ class InvoiceController extends Controller
             case 'translation':
                 return app(TranslationController::class)->$method($request);
             default:
-            return redirect()->back()->with('error', 'Invalid business model type');
+                return redirect()->back()->with('error', 'Invalid business model type, please contact developer.');
         }
     }
-
+    
 
     public static function createInvoiceHistory($invoice_data)
     {
