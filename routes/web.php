@@ -86,9 +86,9 @@ Route::middleware('auth')->group(function () {
 
     // Generated Invoices & Reporting
 
-    Route::get('/clear-randomized-products', [EcommerceController::class, 'clearRandomizedProducts'])->name('clear.randomized.products');
-    Route::post('/add-product', [EcommerceController::class, 'addProducts'])->name('add.products');
-    Route::post('/remove-product', [EcommerceController::class, 'removeProduct'])->name('remove.product');
+    Route::get('/clear-randomized-products', [InvoiceController::class, 'clearRandomizedProducts'])->name('clear.randomized.products');
+    Route::post('/add-product', [InvoiceController::class, 'addProducts'])->name('add.products');
+    Route::post('/remove-product', [InvoiceController::class, 'removeProduct'])->name('remove.product');
     Route::get('/price-range', [EcommerceController::class, 'getPriceRange'])->name('get.price.range');
     Route::get('/generate-new-invoice-number', [InvoiceController::class, 'generateInvoiceNumber'])->name('generate.invoice.number');
     Route::get('/invoice/chart', [HomeController::class, 'showInvoiceChart'])->name('invoice.chart');

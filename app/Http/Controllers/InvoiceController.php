@@ -231,6 +231,30 @@ class InvoiceController extends Controller
         return $this->resolveModelController($modelType, 'filterProducts', $request);
     }
 
+    public function addProducts(Request $request)
+    {
+        $site = Website::findOrFail(session('customer.site_id'));
+        $modelType = $site->businessModel->model_type;
+        $modelType = strtolower($modelType);
+        return $this->resolveModelController($modelType, 'addProducts', $request);
+    }
+
+    public function removeProduct(Request $request)
+    {
+        $site = Website::findOrFail(session('customer.site_id'));
+        $modelType = $site->businessModel->model_type;
+        $modelType = strtolower($modelType);
+        return $this->resolveModelController($modelType, 'removeProduct', $request);
+    }
+
+    public function clearRandomizedProducts(Request $request)
+    {
+        $site = Website::findOrFail(session('customer.site_id'));
+        $modelType = $site->businessModel->model_type;
+        $modelType = strtolower($modelType);
+        return $this->resolveModelController($modelType, 'clearRandomizedProducts', $request);
+    }
+
     public function generateInvoice(Request $request)
     {
         $site = Website::findOrFail(session('customer.site_id'));

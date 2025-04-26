@@ -31,7 +31,7 @@
         </td>
         <td><span class="badge rounded-pill bg-info">{{ $product->source ?? 'Custom' }}</span></td>
         <td>
-            <button type="button" class="btn btn-sm btn-outline-danger px-2 py-1 remove-product" data-product-id="{{ $product->id }}" data-product-name="{{ $product->name }}" title="Remove Row">
+            <button type="button" class="btn btn-sm btn-outline-danger px-2 py-1 remove-product" data-product-id="{{ $product->id }}" data-unit-price="{{ $product->unit_price }}" data-product-name="{{ $product->name }}" title="Remove Row">
                 <i class="fa fa-trash"></i>
             </button>
         </td>
@@ -97,6 +97,7 @@
         $(document).off('click', '.remove-product').on('click', '.remove-product', function() {
             var $button = $(this);
             var productId = $button.data('product-id');
+            var unitPrice = $button.data('unit-price');
             var productName = $button.data('product-name');
 
             Swal.fire({
@@ -125,6 +126,7 @@
                         method: 'POST',
                         data: {
                             product_id: productId,
+                            unit_price: unitPrice,
                             site_id: "{{ session('customer.site_id') }}",
                             _token: '{{ csrf_token() }}'
                         },

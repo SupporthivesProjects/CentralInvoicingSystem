@@ -164,7 +164,7 @@ class GamingSiteController extends Controller
             ->table('currencies')->where('status', 1)->first();
 
         $modelType = $site->businessModel->model_type;
-        $tableRows = view("invoice.{$modelType}.product_rows", [
+        $tableRows = view("invoice.{$modelType}.random_product_rows", [
             'products' => $bestMatch,
             'currency' => $currency,
             'site'     => $site
@@ -178,38 +178,45 @@ class GamingSiteController extends Controller
         ]);
     }
     public function removeProduct(Request $request)
-    {
-        $productId = $request->get('product_id');
-        $site_id = $request->get('site_id');
-        $site = Website::findOrFail($site_id);
+{
+    $id = $request->get('product_id');
+    $unitPrice = $request->get('unit_price');
+    $site_id = $request->get('site_id');
 
-        $readyProducts = session('selected_games', []);
+    $selectedGames = session('selected_games', []);
 
-        $updatedProducts = collect($readyProducts)->filter(function ($product) use ($productId) {
-            return $product['id'] != $productId;
-        })->values()->toArray();
+    // Remove matching bundle (id + unit_price)
+    $updatedGames = array_filter($selectedGames, function ($game) use ($id, $unitPrice) {
+        return !($game['id'] == $id && floatval($game['unit_price']) == floatval($unitPrice));
+    });
 
-        session()->put('selected_games', $updatedProducts);
-        if (empty($updatedProducts)) {
-            return response()->json([
-                'tableRows' => '',
-                'currency' => null,
-            ]);
-        }
+    $updatedGames = array_values($updatedGames);
 
-        DynamicDatabaseService::connect($site);
+    // Update session
+    session(['selected_games' => $updatedGames]);
 
-        $productIds = array_column($updatedProducts, 'id');
-        dd($updatedProducts, $productIds);
-        // $products = DB::connection($this->connectionType)->table($this->productTable)
-        //     ->select('id', 'category_id', 'name', 'unit_price', 'slug')
-        //     ->whereIn('id', $productIds)
-        //     ->get();
+    if (empty($updatedGames)) {
+        return response()->json([
+            'tableRows' => '',
+            'total'     => 0,
+            'currency'  => null,
+            'message'   => 'No products remaining'
+        ]);
+    }
 
-        $products = DB::connection($this->connectionType)
+    $site = Website::findOrFail($site_id);
+    DynamicDatabaseService::connect($site);
+
+    $currency = DB::connection($this->connectionType)
+        ->table('currencies')->where('status', 1)->first();
+
+    $modelType = $site->businessModel->model_type;
+
+    $productIds = array_column($updatedGames, 'id');
+
+    $products = DB::connection($this->connectionType)
         ->table('products as p')
-        ->join('game_server_based_cost as c', 'p.id', '=', 'c.game_id')
-        ->where('p.published', 1)
+        ->join('game_sever_based_cost as c', 'p.id', '=', 'c.game_id')
         ->whereIn('p.id', $productIds)
         ->select(
             'p.id',
@@ -223,43 +230,51 @@ class GamingSiteController extends Controller
         )
         ->get();
 
-        $products = $products->map(function ($product) use ($updatedProducts, $site_id) {
-            $sessionProduct = collect($updatedProducts)->firstWhere('id', $product->id);
-            $product->unit_price = $sessionProduct['unit_price'] ?? $product->unit_price;
+    $finalProducts = collect();
 
+    foreach ($products as $product) {
+        $costs = json_decode($product->costs, true);
+        if (isset($costs['bundles']) && is_array($costs['bundles'])) {
+            foreach ($costs['bundles'] as $bundleAmount => $bundlePrice) {
+                $bundlePrice = floatval($bundlePrice);
 
-            $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
-                ->where('product_id', $product->id)
-                ->orderByDesc('last_price_changed')
-                ->first();
-
-            if ($lastUpdate) {
-                $lastPriceChanged = Carbon::parse($lastUpdate->last_price_changed);
-                $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
-                $remainingDays = now()->diffInDays($nextPriceChangeDate, false);
-                $product->remaining_days = round(max($remainingDays, 0));
-                $product->can_edit_price = now()->greaterThanOrEqualTo($nextPriceChangeDate) ? 1 : 0;
-            } else {
-                $product->can_edit_price = 1;
-                $product->remaining_days = 0;
+                foreach ($updatedGames as $sessionGame) {
+                    if ($sessionGame['id'] == $product->id && floatval($sessionGame['unit_price']) == $bundlePrice) {
+                        $finalProducts->push((object)[
+                            'id'             => $product->id,
+                            'name'           => $product->name,
+                            'unit_price'     => $bundlePrice,
+                            'slug'           => Str::slug($product->name . '-' . $bundleAmount),
+                            'source'         => 'Random',
+                            'can_edit_price' => 0,
+                            'remaining_days' => 0,
+                            'game_currency'  => $product->game_currency,
+                            'game_currency_amount' => $bundleAmount,
+                            'game_platform'  => $product->game_platform,
+                            'game_region'    => $product->game_server_region,
+                            'game_need_to_capture' => $product->game_need_to_capture
+                        ]);
+                    }
+                }
             }
-
-            return $product;
-        });
-
-        $modelType = $site->businessModel->model_type;
-        session(['current_amount' => collect($products)->sum('unit_price')]);
-        $tableRows = view("invoice.{$modelType}.random_product_rows", [
-            'products' => $products,
-            'site' => $site,
-            'total' => collect($products)->sum('unit_price')
-        ])->render();
-
-        return response()->json([
-            'tableRows' => $tableRows,
-            'total' => collect($products)->sum('unit_price')
-        ]);
+        }
     }
+
+    $tableRows = view("invoice.{$modelType}.random_product_rows", [
+        'products' => $finalProducts,
+        'currency' => $currency,
+        'site'     => $site
+    ])->render();
+
+    $total = $finalProducts->sum('unit_price');
+
+    return response()->json([
+        'tableRows' => $tableRows,
+        'total'     => $total,
+        'currency'  => $currency
+    ]);
+}
+
 
 
 
