@@ -26,12 +26,12 @@
         <td>{{ $product->game_currency_amount . ' ' . $product->game_currency }}
             <input form="generate-invoice-form" type="hidden" name="products[{{ $product->id }}][game_currency_amount]" value="{{ $product->game_currency_amount }}">
         </td>
-        <td>{{ $currency->symbol }}{{ number_format($product->unit_price, 2) }}
+        <td>{{ site_currency() }}{{ number_format($product->unit_price, 2) }}
             <input form="generate-invoice-form" type="hidden" name="products[{{ $product->id }}][unit_price]" value="{{ $product->unit_price }}">
         </td>
         <td><span class="badge rounded-pill bg-info">{{ $product->source ?? 'Custom' }}</span></td>
         <td>
-            <button type="button" class="btn btn-sm btn-outline-danger px-2 py-1" onclick="removeProductRow({{ $index + 1 }})" title="Remove Row">
+            <button type="button" class="btn btn-sm btn-outline-danger px-2 py-1 remove-product" data-product-id="{{ $product->id }}" data-product-name="{{ $product->name }}" title="Remove Row">
                 <i class="fa fa-trash"></i>
             </button>
         </td>
@@ -90,3 +90,98 @@
         <td colspan="8" class="text-center text-muted py-3">No results found.</td>
     </tr>
 @endforelse
+
+<script>
+
+    $(document).ready(function() {
+        $(document).off('click', '.remove-product').on('click', '.remove-product', function() {
+            var $button = $(this);
+            var productId = $button.data('product-id');
+            var productName = $button.data('product-name');
+
+            Swal.fire({
+                title: 'Remove Product?',
+                text: `Are you sure you want to remove '${productName}' product?`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, Remove',
+                cancelButtonText: 'Cancel',
+                customClass: {
+                    popup: 'p-2 text-sm',
+                    title: 'text-base font-weight-bold',
+                    confirmButtonClass: 'btn btn-sm btn-danger',
+                    cancelButtonClass: 'btn btn-sm btn-secondary'
+                },
+                width: '350px',
+                padding: '1em'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $button.html('<i class="fas fa-spinner fa-spin"></i>');
+                    $('#current_amount').val('Recalculating...');
+                    $('#discount_amount').prop('type', 'text').val('Recalculating...').prop('readonly', true);
+
+                    $.ajax({
+                        url: "{{ route('remove.product') }}",
+                        method: 'POST',
+                        data: {
+                            product_id: productId,
+                            site_id: "{{ session('customer.site_id') }}",
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            $button.html('<i class="fas fa-check-square"></i>');
+                            $button.removeClass('btn-danger').addClass('btn-success');
+                            $('#product-table-body').html(response.tableRows);
+                            toastr.success('Product has been removed successfully.','Product Removed');
+                            calculateTotalPrice();
+
+                            setTimeout(() => {
+                                $button.html('<i class="fas fa-trash-alt"></i>');
+                                $button.removeClass('btn-success').addClass('btn-danger');
+                            }, 2000);
+                        },
+                        error: function(xhr, status, error) {
+                            $button.html('<i class="fas fa-trash-alt"></i>');
+                            $button.removeClass('btn-success').addClass('btn-danger');
+                            calculateTotalPrice();
+                            toastr.error('Error removing product. Please try again.');
+                        }
+                    });
+                } else {
+                    console.log('Product removal canceled.');
+                }
+            });
+        });
+    });
+
+
+
+    $(document).on('input', '.product-price', function() {
+        calculateTotalPrice();
+    });
+
+    function calculateTotalPrice() {
+        let currentAmount = 0;
+        $('input[name="product_ids[]"]:checked').each(function() {
+            const productId = $(this).val();
+            const punitPrice = parseFloat($(`input[data-product-id="${productId}"]`).val()) || 0;
+            currentAmount += punitPrice;
+        });
+
+        const invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
+        let discountAmount = 0;
+
+        if (currentAmount > invoiceAmount) {
+            discountAmount = currentAmount - invoiceAmount;
+        }
+        $('#discount_amount').prop('readonly', false).prop('type', 'number')
+        $('#current_amount').val(currentAmount.toFixed(2));
+        $('#temp_current_amount_text').text(currentAmount.toFixed(2));
+        $('#discount_amount').val(discountAmount.toFixed(2));
+        $('#temp_discount_amount_text').text(discountAmount.toFixed(2));
+        $('#invoice_amount').val(invoiceAmount.toFixed(2));
+        $('#temp_invoice_amount_text').text(invoiceAmount.toFixed(2));
+    }
+
+
+    </script>

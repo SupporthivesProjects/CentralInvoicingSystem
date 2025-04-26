@@ -254,6 +254,8 @@ class GamingSiteController extends Controller
         'customer_mobile'      => $request->input('customer_mobile'),
         'customer_email'       => $request->input('customer_email'),
         'company_email'        => $request->input('company_email'),
+        'currency'             => site_currency(),
+        'product_ids'          => [],
         'invoice_amount'       => $request->input('invoice_amount'),
         'current_amount'       => $request->input('current_amount'),
         'discount_amount'      => $request->input('discount_amount'),
@@ -273,108 +275,43 @@ class GamingSiteController extends Controller
         'site_id'              => $site->id,
     ];
 
-    // 2️⃣ Parse product_data & game_capture
-    // 👉 Now expecting each JSON blob to include both product_id and bundle:
-    //    e.g. '{"product_id":"15","bundle":"1000"}'
-    $productDataArray = $request->input('product_data', []);
-    $gameCaptureData  = $request->input('game_capture', []);
-    $productIds       = [];
-    $structured = [];
+    // Retrieve the products array from the form
+    $products = $request->input('products', []);
 
-    foreach ($productDataArray as $jsonBlob) {
-        $item         = json_decode($jsonBlob, true);
-        $pid          = $item['product_id'] ?? null;
-        $selectedBundle = $item['bundle'] ?? null;  // <-- pulled here
+    // Process products - remove any debugging echo statements
+    $processedProducts = [];
+    foreach ($products as $productId => $productData) {
+        // Skip if selected check was implemented and not selected
+        // if (isset($productData['selected']) && $productData['selected'] !== "1") {
+        //    continue;
+        // }
 
-        if (!$pid) continue;
-        $productIds[] = $pid;
-
-        $structured[$pid] = [
-            'selected_bundle'     => $selectedBundle,
-            'user_capture_values' => $gameCaptureData[$pid] ?? [],
-        ];
+        // Add product to processed array with all necessary data
+        $processedProducts[] = $productData;
     }
 
-    // 3️⃣ Connect to dynamic DB
-    DynamicDatabaseService::connect($site);
+    // Add products to the invoice data
+    $invoice_data['products'] = $processedProducts;
 
-    // 4️⃣ Fetch products + cost JSON
-    $products = collect(DB::connection($this->connectionType)
-        ->table('products as p')
-        ->join('game_sever_based_cost as c', 'p.id', '=', 'c.game_id')
-        ->where('p.published', 1)
-        ->whereIn('p.id', $productIds)
-        ->select(
-            'p.id',
-            'p.name',
-            'p.slug',
-            'p.game_currency',
-            'p.game_platform',
-            'p.game_server_region',
-            'p.game_need_to_capture',
-            'c.costs'
-        )
-        ->get()
-    )->sortBy(fn($p) => array_search($p->id, $productIds))
-     ->map(function ($product) use ($structured) {
-        $pid   = $product->id;
-        $data  = $structured[$pid] ?? [];
-
-
-        // decode JSONs
-        $bundles       = json_decode($product->costs, true)['bundles'] ?? [];
-        $requiredFields= json_decode($product->game_need_to_capture, true) ?? [];
-
-        $bundleKey     = $data['selected_bundle'];
-
-        //dd($data, $bundles, $requiredFields, $bundleKey);
-        $unitPrice     = isset($bundles[$bundleKey]) ? (float)$bundles[$bundleKey] : 0.00;
-
-        return (object)[
-            'id'                   => $pid,
-            'name'                 => $product->name,
-            'slug'                 => $product->slug,
-            'game_currency'        => $product->game_currency,
-            'game_platform'        => $product->game_platform,
-            'game_server_region'   => $product->game_server_region,
-            'game_need_to_capture' => $requiredFields,
-            'user_capture_values'  => $data['user_capture_values'],
-            'selected_bundle'      => $bundleKey,
-            'unit_price'           => $unitPrice,
-        ];
-    });
-
-    // 5️⃣ Currency symbol
-    $currency = DB::connection($this->connectionType)
-        ->table('currencies')
-        ->where('status', 1)
-        ->first();
-
-    $invoice_data['currency']    = $currency->symbol ?? '$';
-    $invoice_data['products']    = $products;
-    $invoice_data['product_ids'] = $productIds;
-
-    // 6️⃣ Determine view
+    // Determine view
     $modelType = strtolower($site->businessModel->model_type);
     $siteWords = numberToWords($site->id);
     $viewPath  = "websites.{$modelType}.{$siteWords}";
 
-    // 7️⃣ Generate and return PDF
+    // Generate and return PDF
     try {
-        InvoiceController::createInvoiceHistory($invoice_data, $products);
-        $pdf      = PDF::loadView($viewPath, $invoice_data)->setPaper('A4', 'portrait');
+        InvoiceController::createInvoiceHistory($invoice_data, $processedProducts);
+        $pdf = PDF::loadView($viewPath, $invoice_data)->setPaper('A4', 'portrait');
         $filename = preg_replace('/[^A-Za-z0-9_\-]/', '_', $invoice_data['invoice_number']) . '.pdf';
         return $pdf->download($filename);
     } catch (\Illuminate\View\ViewNotFoundException $e) {
         abort(500, 'Please set up or upload your invoice template.');
+    } catch (\Exception $e) {
+        // Add better error handling
+        \Log::error('PDF generation error: ' . $e->getMessage());
+        abort(500, 'Error generating invoice: ' . $e->getMessage());
     }
 }
-
-
-
-
-
-
 
 }
 

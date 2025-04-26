@@ -137,6 +137,8 @@ class GamingSiteController extends Controller
 
             if ($bestMatch) break;
         }
+        //dd($bestMatch);
+
 
         if (!$bestMatch) {
             return response()->json([
@@ -145,6 +147,18 @@ class GamingSiteController extends Controller
                 'message' => 'No matching combination found, try again please'
             ]);
         }
+        session()->forget('selected_games');
+        $selected_games = [];
+
+        foreach ($bestMatch as $game) {
+            $selected_games[] = [
+                'id' => $game->id,
+                'unit_price' => $game->unit_price
+            ];
+        }
+
+        session(['selected_games' => $selected_games]);
+        //dd($in_session);
 
         $currency = DB::connection($this->connectionType)
             ->table('currencies')->where('status', 1)->first();
@@ -156,10 +170,94 @@ class GamingSiteController extends Controller
             'site'     => $site
         ])->render();
 
+
         return response()->json([
             'tableRows' => $tableRows,
             'total'     => $bestTotal,
             'currency'  => $currency
+        ]);
+    }
+    public function removeProduct(Request $request)
+    {
+        $productId = $request->get('product_id');
+        $site_id = $request->get('site_id');
+        $site = Website::findOrFail($site_id);
+
+        $readyProducts = session('selected_games', []);
+
+        $updatedProducts = collect($readyProducts)->filter(function ($product) use ($productId) {
+            return $product['id'] != $productId;
+        })->values()->toArray();
+
+        session()->put('selected_games', $updatedProducts);
+        if (empty($updatedProducts)) {
+            return response()->json([
+                'tableRows' => '',
+                'currency' => null,
+            ]);
+        }
+
+        DynamicDatabaseService::connect($site);
+
+        $productIds = array_column($updatedProducts, 'id');
+        dd($updatedProducts, $productIds);
+        // $products = DB::connection($this->connectionType)->table($this->productTable)
+        //     ->select('id', 'category_id', 'name', 'unit_price', 'slug')
+        //     ->whereIn('id', $productIds)
+        //     ->get();
+
+        $products = DB::connection($this->connectionType)
+        ->table('products as p')
+        ->join('game_server_based_cost as c', 'p.id', '=', 'c.game_id')
+        ->where('p.published', 1)
+        ->whereIn('p.id', $productIds)
+        ->select(
+            'p.id',
+            'p.name',
+            'p.slug',
+            'p.game_currency',
+            'p.game_platform',
+            'p.game_server_region',
+            'p.game_need_to_capture',
+            'c.costs'
+        )
+        ->get();
+
+        $products = $products->map(function ($product) use ($updatedProducts, $site_id) {
+            $sessionProduct = collect($updatedProducts)->firstWhere('id', $product->id);
+            $product->unit_price = $sessionProduct['unit_price'] ?? $product->unit_price;
+
+
+            $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
+                ->where('product_id', $product->id)
+                ->orderByDesc('last_price_changed')
+                ->first();
+
+            if ($lastUpdate) {
+                $lastPriceChanged = Carbon::parse($lastUpdate->last_price_changed);
+                $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
+                $remainingDays = now()->diffInDays($nextPriceChangeDate, false);
+                $product->remaining_days = round(max($remainingDays, 0));
+                $product->can_edit_price = now()->greaterThanOrEqualTo($nextPriceChangeDate) ? 1 : 0;
+            } else {
+                $product->can_edit_price = 1;
+                $product->remaining_days = 0;
+            }
+
+            return $product;
+        });
+
+        $modelType = $site->businessModel->model_type;
+        session(['current_amount' => collect($products)->sum('unit_price')]);
+        $tableRows = view("invoice.{$modelType}.random_product_rows", [
+            'products' => $products,
+            'site' => $site,
+            'total' => collect($products)->sum('unit_price')
+        ])->render();
+
+        return response()->json([
+            'tableRows' => $tableRows,
+            'total' => collect($products)->sum('unit_price')
         ]);
     }
 
@@ -242,76 +340,77 @@ class GamingSiteController extends Controller
     }
 
     public function generateInvoice(Request $request)
-{
-    $site = Website::findOrFail($request->input('site_id'));
+    {
+        $site = Website::findOrFail($request->input('site_id'));
 
-    // 1️⃣ Build base invoice info
-    $invoice_data = [
-        'site'                 => $site,
-        'invoice_number'       => $request->input('invoice_number'),
-        'invoice_date'         => $request->input('invoice_date'),
-        'customer_name'        => $request->input('customer_name'),
-        'customer_mobile'      => $request->input('customer_mobile'),
-        'customer_email'       => $request->input('customer_email'),
-        'company_email'        => $request->input('company_email'),
-        'currency'             => site_currency(),
-        'product_ids'          => [],
-        'invoice_amount'       => $request->input('invoice_amount'),
-        'current_amount'       => $request->input('current_amount'),
-        'discount_amount'      => $request->input('discount_amount'),
-        'company_name'         => $site->company_name,
-        'company_email'        => $site->company_email,
-        'company_mobile'       => $site->company_mobile,
-        'company_address'      => $site->company_address,
-        'invoice_header_image' => base64EncodeImage($site->invoice_header_image),
-        'invoice_footer_image' => base64EncodeImage($site->invoice_footer_image),
-        'invoice_signature'    => base64EncodeImage($site->invoice_signature),
-        'company_logo'         => base64EncodeImage($site->company_logo),
-        'invoice_image1'       => base64EncodeImage($site->invoice_image1),
-        'invoice_image2'       => base64EncodeImage($site->invoice_image2),
-        'invoice_image3'       => base64EncodeImage($site->invoice_image3),
-        'invoice_template'     => $site->invoice_template,
-        'model_type'           => $site->businessModel->model_type,
-        'site_id'              => $site->id,
-    ];
+        // 1️⃣ Build base invoice info
+        $invoice_data = [
+            'site'                 => $site,
+            'invoice_number'       => $request->input('invoice_number'),
+            'invoice_date'         => $request->input('invoice_date'),
+            'customer_name'        => $request->input('customer_name'),
+            'customer_mobile'      => $request->input('customer_mobile'),
+            'customer_email'       => $request->input('customer_email'),
+            'company_email'        => $request->input('company_email'),
+            'currency'             => site_currency(),
+            'product_ids'          => [],
+            'invoice_amount'       => $request->input('invoice_amount'),
+            'current_amount'       => $request->input('current_amount'),
+            'discount_amount'      => $request->input('discount_amount'),
+            'company_name'         => $site->company_name,
+            'company_email'        => $site->company_email,
+            'company_mobile'       => $site->company_mobile,
+            'company_address'      => $site->company_address,
+            'invoice_header_image' => base64EncodeImage($site->invoice_header_image),
+            'invoice_footer_image' => base64EncodeImage($site->invoice_footer_image),
+            'invoice_signature'    => base64EncodeImage($site->invoice_signature),
+            'company_logo'         => base64EncodeImage($site->company_logo),
+            'invoice_image1'       => base64EncodeImage($site->invoice_image1),
+            'invoice_image2'       => base64EncodeImage($site->invoice_image2),
+            'invoice_image3'       => base64EncodeImage($site->invoice_image3),
+            'invoice_template'     => $site->invoice_template,
+            'model_type'           => $site->businessModel->model_type,
+            'site_id'              => $site->id,
+        ];
 
-    // Retrieve the products array from the form
-    $products = $request->input('products', []);
+        // Retrieve the products array from the form
+        $products = $request->input('products', []);
 
-    // Process products - remove any debugging echo statements
-    $processedProducts = [];
-    foreach ($products as $productId => $productData) {
-        // Skip if selected check was implemented and not selected
-        // if (isset($productData['selected']) && $productData['selected'] !== "1") {
-        //    continue;
-        // }
+        // Process products - remove any debugging echo statements
+        $processedProducts = [];
+        foreach ($products as $productId => $productData) {
+            // Skip if selected check was implemented and not selected
+            // if (isset($productData['selected']) && $productData['selected'] !== "1") {
+            //    continue;
+            // }
 
-        // Add product to processed array with all necessary data
-        $processedProducts[] = $productData;
+            // Add product to processed array with all necessary data
+            $processedProducts[] = $productData;
+        }
+
+        // Add products to the invoice data
+        $invoice_data['products'] = $processedProducts;
+
+        // Determine view
+        $modelType = strtolower($site->businessModel->model_type);
+        $siteWords = numberToWords($site->id);
+        $viewPath  = "websites.{$modelType}.{$siteWords}";
+
+        // Generate and return PDF
+        try {
+            InvoiceController::createInvoiceHistory($invoice_data, $processedProducts);
+            $pdf = PDF::loadView($viewPath, $invoice_data)->setPaper('A4', 'portrait');
+            $filename = preg_replace('/[^A-Za-z0-9_\-]/', '_', $invoice_data['invoice_number']) . '.pdf';
+            return $pdf->download($filename);
+        } catch (\Illuminate\View\ViewNotFoundException $e) {
+            abort(500, 'Please set up or upload your invoice template.');
+        } catch (\Exception $e) {
+            // Add better error handling
+            \Log::error('PDF generation error: ' . $e->getMessage());
+            abort(500, 'Error generating invoice: ' . $e->getMessage());
+        }
     }
 
-    // Add products to the invoice data
-    $invoice_data['products'] = $processedProducts;
-
-    // Determine view
-    $modelType = strtolower($site->businessModel->model_type);
-    $siteWords = numberToWords($site->id);
-    $viewPath  = "websites.{$modelType}.{$siteWords}";
-
-    // Generate and return PDF
-    try {
-        InvoiceController::createInvoiceHistory($invoice_data, $processedProducts);
-        $pdf = PDF::loadView($viewPath, $invoice_data)->setPaper('A4', 'portrait');
-        $filename = preg_replace('/[^A-Za-z0-9_\-]/', '_', $invoice_data['invoice_number']) . '.pdf';
-        return $pdf->download($filename);
-    } catch (\Illuminate\View\ViewNotFoundException $e) {
-        abort(500, 'Please set up or upload your invoice template.');
-    } catch (\Exception $e) {
-        // Add better error handling
-        \Log::error('PDF generation error: ' . $e->getMessage());
-        abort(500, 'Error generating invoice: ' . $e->getMessage());
-    }
-}
 
 }
 

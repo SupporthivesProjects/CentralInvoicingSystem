@@ -185,6 +185,7 @@
                                 <th>GAME CURRENCY AMOUNT</th>
                                 <th>UNIT PRICE</th>
                                 <th>FILTER</th>
+                                <th>REMOVE</th>
                                 {{-- <th>MODIFY PRICE</th> --}}
                             </tr>
                             </thead>
@@ -492,10 +493,10 @@ function clearAllProducts() {
 }
     function generateInvoice(event) {
         event.preventDefault();
-        const gameCaptureData = gatherGameCaptureData();
+        //const gameCaptureData = gatherGameCaptureData();
 
         // Now you can send this data to the server or process it further
-        console.log(gameCaptureData);
+        //console.log(gameCaptureData);
 
         const visibleProducts = $('input[name="product_ids[]"]:visible');
         const selectedProducts = $('input[name="product_ids[]"]:checked');
@@ -503,10 +504,10 @@ function clearAllProducts() {
         const current_amount = parseFloat($('#current_amount').val()) || 0;
         const discountAmount = parseFloat($('#discount_amount').val()) || 0;
 
-        if (selectedProducts.length === 0) {
-            toastr.error('Please select your products combo...', 'No Product Selected');
-            return;
-        }
+        // if (selectedProducts.length === 0) {
+        //     toastr.error('Please select your products combo...', 'No Product Selected');
+        //     return;
+        // }
 
         if (current_amount < invoiceAmount) {
             $('#current_amount').addClass('border border-danger');
@@ -566,16 +567,16 @@ function clearAllProducts() {
                 $('input[name="invoice_number"]').val(response.new_invoice_number);
                 $('#generate-invoice-form').find('input[name="product_data[]"]').remove();
 
-                selectedProducts.each(function () {
-                    const productId = $(this).val();
-                    const unitPrice = $(`input[data-product-id="${productId}"]`).val();
+                // selectedProducts.each(function () {
+                //     const productId = $(this).val();
+                //     const unitPrice = $(`input[data-product-id="${productId}"]`).val();
 
-                    $('#generate-invoice-form').append($('<input>', {
-                        type: 'hidden',
-                        name: 'product_data[]',
-                        value: JSON.stringify({ product_id: productId, unit_price: unitPrice })
-                    }));
-                });
+                //     $('#generate-invoice-form').append($('<input>', {
+                //         type: 'hidden',
+                //         name: 'product_data[]',
+                //         value: JSON.stringify({ product_id: productId, unit_price: unitPrice })
+                //     }));
+                // });
 
                 $('#generate-invoice-form')[0].submit();
 
@@ -623,6 +624,18 @@ function handlePlatformChange(select) {
     }
 }
 </script>
+
+{{-- Remove Row Script --}}
+<script>
+    function removeProductRow(index) {
+        const mainRow = document.getElementById(`product-main-row-${index}`);
+        const collapseRow = document.getElementById(`product-collapse-row-${index}`);
+
+        if (mainRow) mainRow.remove();
+        if (collapseRow) collapseRow.remove();
+    }
+</script>
+
 @endpush
 
 
