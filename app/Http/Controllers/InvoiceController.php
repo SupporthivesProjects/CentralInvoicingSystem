@@ -250,11 +250,11 @@ class InvoiceController extends Controller
         return $this->resolveModelController($modelType, 'updateProduct', $request);
     }
 
-    public function clearRandomizedProducts(Request $request)
+    public function clearProducts(Request $request)
     {
         $site = Website::findOrFail(session('customer.site_id'));
         $modelType = strtolower($site->businessModel->model_type);
-        return $this->resolveModelController($modelType, 'clearRandomizedProducts', $request);
+        return $this->resolveModelController($modelType, 'clearProducts', $request);
     }
     
     public function generateInvoice(Request $request)

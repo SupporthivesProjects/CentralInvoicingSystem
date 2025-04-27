@@ -211,8 +211,8 @@
                                                             <td>{{ $invoice->invoice_number }}</td>
                                                             <td>{{ $invoice->model_type }}</td>
                                                             <td><a target="_blank" href="{{ $invoice->website->site_link }}">{{ $invoice->website->site_name }}</a></td>
-                                                            <td>{{ $invoice->currency }} {{ number_format($invoice->discount_amount, 2) }} </td>
-                                                            <td>{{ $invoice->currency }} {{ number_format($invoice->invoice_amount, 2) }}</td>
+                                                            <td>{{ $invoice->currency }}{{ number_format($invoice->discount_amount, 2) }} </td>
+                                                            <td>{{ $invoice->currency }}{{ number_format($invoice->invoice_amount, 2) }}</td>
                                                             <td class="text-center">
                                                                 <div class="d-flex justify-content-center">
                                                                     <a href="{{ route('product.selection', ['invoice_id' => $invoice->id]) }}"

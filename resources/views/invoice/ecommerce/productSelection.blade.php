@@ -562,7 +562,7 @@ function clearRandomizedFilter(button) {
     icon.removeClass(originalIconClass).addClass('fa-spinner fa-spin');
 
     $.ajax({
-        url: "{{ route('clear.randomized.products') }}",
+        url: "{{ route('clear.products') }}",
         type: 'GET',
         success: function(response) {
             $('input[name="product_ids[]"]').prop('checked', false);

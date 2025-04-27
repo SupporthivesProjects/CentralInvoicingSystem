@@ -10,7 +10,6 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\ReportController;
-use App\Http\Controllers\BusinessModels\EcommerceController;
 
 
 Route::middleware('guest')->group(function () {
@@ -71,7 +70,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/currencies/edit', [CurrencyController::class, 'edit'])->name('currency.edit');
     Route::delete('/currency/delete/{id}', [CurrencyController::class, 'delete'])->name('currency.delete');
 
-    Route::get('/clear-randomized-products', [InvoiceController::class, 'clearRandomizedProducts'])->name('clear.randomized.products');
+    Route::get('/clear-products', [InvoiceController::class, 'clearProducts'])->name('clear.products');
     Route::post('/add-product', [InvoiceController::class, 'addProducts'])->name('add.products');
     Route::post('/remove-product', [InvoiceController::class, 'removeProduct'])->name('remove.product');
     Route::post('/update-product', [InvoiceController::class, 'updateProduct'])->name('update.product');
