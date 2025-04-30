@@ -1,3 +1,12 @@
+@media (min-width: 992px) {
+  .header-logo {
+    background-color: #ffffff;
+    padding: 1px 9px 7px 8px;
+    border-radius: 5px;
+}
+}
+
+
 /* Custom CSS written by Narayan Zade for eCommerce product selection checkbox */
 .narayan-checkbox {
   -webkit-appearance: none !important;
@@ -95,57 +104,57 @@
 /* Custom CSS for ecommerce product selection slider by Narayan Zade */
 
 #price-slider {
-    margin-top: 6px;
+  margin-top: 6px;
 }
 
 .noUi-target {
-    height: 38px !important;
-    border-radius: 5px;
-    background: #e9ecef;
-    box-shadow: none;
-    border: 1px solid #ced4da;
+  height: 38px !important;
+  border-radius: 5px;
+  background: #f1f3f5; 
+  box-shadow: none;
+  border: 1px solid #ced4da; 
 }
 
 .noUi-horizontal .noUi-handle {
-    width: 18px;
-    height: 38px !important;
-    top: -1px !important;
-    background: #0d6efd;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+  width: 18px;
+  height: 38px !important;
+  top: -1px !important;
+  background: #007bff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15); 
 }
 
 .noUi-horizontal .noUi-handle:before,
 .noUi-horizontal .noUi-handle:after {
-    display: none;
+  display: none;
 }
 
 .noUi-connect {
-  background: linear-gradient(135deg, #00b894, #55efc4);
-
+background: linear-gradient(135deg, #4e73df, #1cc88a); 
 }
 
 #range-values {
-    margin-top: 10px !important;
-    display: flex !important;
-    justify-content: space-between !important;
-    font-size: 14px !important;
+  margin-top: 10px !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  font-size: 14px !important;
+  color: #495057;
 }
 
 .noUi-tooltip {
-    font-size: 14px !important;
-    font-weight: 500 !important;
-    background: #343a40 !important;
-    color: #fff !important;
-    border-radius: 4px !important;
-    padding: 4px 8px !important;
-    top: -30px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  background: #343a40 !important;
+  color: #ffffff !important; 
+  border-radius: 4px !important;
+  padding: 4px 8px !important;
+  top: -30px !important;
 }
 
 .noUi-handle {
-    width: 10px !important;
+  width: 10px !important;
 }
 
 .input-group-text {
@@ -867,4 +876,11 @@
     box-shadow: 15px 0 0 var(--key), 30px 0 0 var(--key), 45px 0 0 var(--key), 60px 0 0 var(--key), 75px 0 0 var(--key), 90px 0 0 var(--key), 22px 10px 0 var(--key), 37px 12px 0 var(--key), 52px 10px 0 var(--key), 60px 10px 0 var(--key), 68px 10px 0 var(--key), 83px 10px 0 var(--key);
   }
 }
+
+
+
+
+
+
+
 

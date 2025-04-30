@@ -42,34 +42,55 @@ class LaravelController extends Controller
         $priceFrom = $request->get('price_from');
         $priceTo = $request->get('price_to');
     
-        $minTotal = $invoiceAmount;
+        $randomizeKeywordInput = trim($request->get('randomizeKeywordInput'));
+        $noOfProducts = intval($request->get('noOfProducts'));
+
+        if($randomizeKeywordInput ||  $noOfProducts){
+            $minTotal = $invoiceAmount * 0.5; 
+        }else{
+            $minTotal = $invoiceAmount* 0.05; 
+        }
         $maxTotal = $invoiceAmount * 1.10;
     
         $site = Website::findOrFail($site_id);
         $productstable = getProductTable($site->technology);
         DynamicDatabaseService::connect($site);
         
+        $keyword = strtolower(str_replace('-', '', trim($randomizeKeywordInput)));
+
         $allProducts = DB::connection($this->connectionType)->table($this->productTable)
             ->select('id','subscription','category_id', 'name', 'unit_price','slug')
-            ->where('published', 1)
+            ->when($randomizeKeywordInput, function ($query) use ($keyword) {
+                $query->where(function ($q) use ($keyword) {
+                    $q->whereRaw("REPLACE(LOWER(name), '-', '') LIKE ?", ["%{$keyword}%"])
+                      ->orWhereIn('category_id', function ($sub) use ($keyword) {
+                          $sub->select('id')
+                              ->from('categories')
+                              ->whereRaw("REPLACE(LOWER(name), '-', '') LIKE ?", ["%{$keyword}%"]);
+                      });
+                });
+            })
             ->when($priceFrom && $priceTo, function ($query) use ($priceFrom, $priceTo) {
                 return $query->whereBetween('unit_price', [$priceFrom, $priceTo]);
             })
-            ->orderByDesc('unit_price') 
-            ->get();
-        
-        $allProducts = $allProducts->shuffle()->take(100);
-    
+            ->orderByDesc('unit_price')
+            ->get()
+            ->shuffle();
+
         $bestMatch = null;
         $bestTotal = 0;
         $selectedCategories = [];
     
         for ($i = 0; $i < 10; $i++) {
-            $shuffled = $allProducts->shuffle();
+            $shuffled = $allProducts;
             $selected = [];
             $currentTotal = 0;
     
             foreach ($shuffled as $product) {
+
+                if ($noOfProducts && count($selected) >= $noOfProducts) {
+                    break;
+                }
                 $price = floatval($product->unit_price);
                 
                 if (in_array($product->category_id, $selectedCategories) && count($selected) > 0) {
@@ -77,15 +98,14 @@ class LaravelController extends Controller
                 }
 
                 if (($currentTotal + $price) <= $maxTotal) {
-                    $product->source = 'Random';
                     $selected[] = $product;
-                    $selectedCategories[] = $product->category_id;
                     $currentTotal += $price;
     
                     if ($currentTotal >= $minTotal && $currentTotal <= $maxTotal) {
-                        $bestMatch = $selected;
-                        $bestTotal = $currentTotal;
-                        break;
+                        if ($currentTotal > $bestTotal) {
+                            $bestMatch = $selected;
+                            $bestTotal = $currentTotal;
+                        }
                     }
                 }
             }
@@ -141,7 +161,7 @@ class LaravelController extends Controller
         session()->put('ready_products', $productList);
         session(['current_amount' => $bestTotal]);
         $modelType = $site->businessModel->model_type;
-        $tableRows = view("invoice.{$modelType}.random_product_rows", ['products' => $bestMatch,'site' => $site])->render();
+        $tableRows = view("invoice.{$modelType}.random_product_rows", ['products' => $bestMatch,'site' => $site,  'total' => $bestTotal])->render();
         
         return response()->json([
             'tableRows' => $tableRows,
@@ -290,6 +310,7 @@ class LaravelController extends Controller
 
         $modelType = $site->businessModel->model_type;
         session(['current_amount' => collect($products)->sum('unit_price')]);
+        $no_of_products = count($products);
         $tableRows = view("invoice.{$modelType}.random_product_rows", [
             'products' => $products,
             'site' => $site,
@@ -412,34 +433,18 @@ class LaravelController extends Controller
         $productstable = getProductTable($site->technology);
         DynamicDatabaseService::connect($site);
     
-        $hasKeyword = $request->filled('keyword');
         $hasPriceRange = $request->filled('price_from') && $request->filled('price_to');
     
-        if (!$hasKeyword && !$hasPriceRange) {
+        if (!$hasPriceRange) {
             return response()->json([
                 'tableRows' => '<tr><td colspan="6" class="text-center text-muted">Please enter a keyword or price range to search.</td></tr>'
             ]);
         }
     
-        if ($hasKeyword) {
-            $keyword = strtolower(str_replace('-', '', $request->keyword));
-            $keyword = preg_replace('/\s+/', ' ', $keyword);
-    
-            $query = DB::connection($this->connectionType)
-                ->table($this->productTable)
-                ->join('categories', 'products.category_id', '=', 'categories.id')
-                ->select('products.id', 'products.subscription','products.category_id', 'products.name', 'products.unit_price', 'products.slug')
-                ->where('products.published', 1)
-                ->where(function ($q) use ($keyword) {
-                    $q->whereRaw("REPLACE(LOWER(products.name), '-', '') LIKE ?", ["%{$keyword}%"])
-                        ->orWhereRaw("REPLACE(LOWER(categories.name), '-', '') LIKE ?", ["%{$keyword}%"]);
-                });
-        } else {
-            $query = DB::connection($this->connectionType)
-                ->table($this->productTable)
-                ->select('products.id', 'products.subscription','products.category_id', 'products.name', 'products.unit_price', 'products.slug')
-                ->where('products.published', 1);
-        }
+        $query = DB::connection($this->connectionType)
+        ->table($this->productTable)
+        ->select('products.id', 'products.subscription','products.category_id', 'products.name', 'products.unit_price', 'products.slug')
+        ->where('products.published', 1);
     
         if ($hasPriceRange) {
             $query->whereBetween('unit_price', [
@@ -455,9 +460,9 @@ class LaravelController extends Controller
             $query->whereNotIn('products.id', $readyProductIds);
         }
         if($search_type == 'onload'){
-            $products = $query->inRandomOrder()->limit(10)->get();
+            $products = $query->inRandomOrder()->limit(20)->get();
         }else{
-            $products = $query->orderBy('products.name')->limit(20)->get();
+            $products = $query->orderBy('unit_price')->get();
         }
         
         if ($products->isEmpty()) {
@@ -491,11 +496,15 @@ class LaravelController extends Controller
     
         $modelType = $site->businessModel->model_type;
         $random_amount = session('current_amount', 0);
-        $tableRows = view("invoice.{$modelType}.add_product_rows", ['products' => $products, 'site' => $site, 'random_amount' => $random_amount])->render();
+        $tableRows = view("invoice.{$modelType}.add_product_rows", 
+        ['products' => $products,
+         'site' => $site, 
+         'random_amount' => $random_amount
+         ])->render();
     
         return response()->json([
             'tableRows' => $tableRows,
-            'random_amount' => $random_amount,
+            'random_amount' => $random_amount
         ]);
     }
     

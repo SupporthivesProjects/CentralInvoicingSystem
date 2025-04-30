@@ -63,47 +63,7 @@
     tooltipTriggerList.map(function (tooltipTriggerEl) {
         return new bootstrap.Tooltip(tooltipTriggerEl);
     });
-
     
-    function closeFilters() {
-        let originalAmount = parseFloat(@json(session('current_amount', 0)));
-        let invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
-        $('input[name="add_product_ids[]"]').prop('checked', false);
-        $('.add-product-price').val('');
-        $('#keywordInput').val('');
-        let discountAmount = 0;
-
-        if (originalAmount > invoiceAmount) {
-            discountAmount = originalAmount - invoiceAmount;
-        }
-
-        $('#temp_current_amount_text').text(originalAmount.toFixed(2));
-        $('#temp_discount_amount_text').text(discountAmount.toFixed(2));
-        $('#temp_invoice_amount_text').text(invoiceAmount.toFixed(2));
-    }
-
-    function clearFilters() {
-        let originalAmount = parseFloat(@json(session('current_amount', 0)));
-        let invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
-
-        $('input[name="add_product_ids[]"]').prop('checked', false);
-        $('.add-product-price').val('');
-        $('#manual_keyword').val('');
-        $('#customize-product-table-body').html(getErrorRowHTML('No results found. Try randomizing or use a different keyword.'));
-        let discountAmount = 0;
-
-
-        if (originalAmount > invoiceAmount) {
-            discountAmount = originalAmount - invoiceAmount;
-        }
-
-        $('#temp_current_amount_text').text(originalAmount.toFixed(2));
-        $('#temp_discount_amount_text').text(discountAmount.toFixed(2));
-        $('#temp_invoice_amount_text').text(invoiceAmount.toFixed(2));
-
-        toastr.info('Filters have been reset.');
-    }
-
 </script>
 
 <script>
@@ -207,44 +167,6 @@
 
 </script>
 
-<script>
-   function startVoiceSearch() {
-    const inputField = document.getElementById('keywordInput');
-    inputField.placeholder = "Please speak product name or category";
-
-    if (!('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
-        toastr.error("Your browser does not support voice recognition. Please try using a modern browser like Chrome.");
-        return;
-    }
-
-    inputField.value = '';
-    inputField.placeholder = "Listening to your voice search...";
-
-    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-    recognition.lang = "en-US";
-    recognition.interimResults = false;
-
-    recognition.start();
-
-    recognition.onresult = function(event) {
-        const transcript = event.results[0][0].transcript;
-        inputField.style.color = "blue"; 
-        document.getElementById('keywordInput').value = transcript;
-    };
-
-    recognition.onerror = function(event) {
-        toastr.error("Voice recognition error: " + event.error);
-        inputField.value = '';
-        inputField.style.color = ''; 
-        inputField.placeholder = "Enter or Speak product or category name...";
-    };
-
-    recognition.onend = function() {
-        inputField.style.color = 'blue'; 
-        inputField.placeholder = "Enter or Speak product or category name...";
-    };
- }
-</script>
 
 
 

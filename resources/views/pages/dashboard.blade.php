@@ -250,65 +250,75 @@
 
 <div class="modal fade" id="generateReportModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" 
      aria-labelledby="generateReportModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="generateReportModalLabel">Generate Invoice Report</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content shadow-lg border-0 rounded-4">
+            <div class="modal-header bg-primary text-white rounded-top-4">
+                <h5 class="modal-title fw-semibold" id="generateReportModalLabel">
+                    🧾 Invoice Report Generator
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
             <form action="{{ route('invoice.report') }}" method="GET">
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="business_model_id" class="form-label">Select Business Model</label>
-                        <?php $models = getallModels(); ?>
-                        <select name="business_model_id" id="business_model_id" class="form-select">
-                            <option value="">-- Select Business Model --</option>
-                            @foreach($models as $model)
-                                <option value="{{ $model->id }}" {{ request()->business_model_id == $model->id ? 'selected' : '' }}>
-                                    {{ $model->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
+                <div class="modal-body p-4">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="business_model_id" class="form-label fw-medium">Business Model</label>
+                            <?php $models = getallModels(); ?>
+                            <select name="business_model_id" id="business_model_id" class="form-select shadow-sm">
+                                <option value="">-- Choose Model --</option>
+                                @foreach($models as $model)
+                                    <option value="{{ $model->id }}" {{ request()->business_model_id == $model->id ? 'selected' : '' }}>
+                                        {{ $model->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
 
-                    <div class="mb-3">
-                        <label for="site_id" class="form-label">Select Site</label>
-                        <select name="site_id" id="site_id" class="form-select">
-                            <option value="all" {{ request()->site_id == 'all' ? 'selected' : '' }}>All Sites</option>
-                            @foreach($sites as $site)
-                                <option value="{{ $site->id }}" {{ request()->site_id == $site->id ? 'selected' : '' }}>
-                                    {{ $site->site_name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
+                        <div class="col-md-6">
+                            <label for="site_id" class="form-label fw-medium">Select Websites</label>
+                            <select name="site_id" id="site_id" class="form-select shadow-sm">
+                                <option value="all" {{ request()->site_id == 'all' ? 'selected' : '' }}>All Sites</option>
+                                @foreach($sites as $site)
+                                    <option value="{{ $site->id }}" {{ request()->site_id == $site->id ? 'selected' : '' }}>
+                                        {{ $site->site_name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
 
-                    <div class="mb-3">
-                        <label for="start_date" class="form-label">Start Date</label>
-                        <input type="date" name="start_date" id="start_date" class="form-control" value="{{ request()->start_date }}">
-                    </div>
+                        <div class="col-md-6">
+                            <label for="start_date" class="form-label fw-medium">Start Date</label>
+                            <input type="date" name="start_date" id="start_date" class="form-control shadow-sm" value="{{ request()->start_date }}">
+                        </div>
 
-                    <div class="mb-3">
-                        <label for="end_date" class="form-label">End Date</label>
-                        <input type="date" name="end_date" id="end_date" class="form-control" value="{{ request()->end_date }}">
+                        <div class="col-md-6">
+                            <label for="end_date" class="form-label fw-medium">End Date</label>
+                            <input type="date" name="end_date" id="end_date" class="form-control shadow-sm" value="{{ request()->end_date }}">
+                        </div>
                     </div>
                 </div>
 
-                <div class="modal-footer justify-content-between">
-                    <button type="submit" class="btn btn-primary">View Report</button>
+                <div class="modal-footer justify-content-between px-4 pb-4">
+                    <button type="submit" class="btn btn-primary px-4">
+                        <i class="bi bi-bar-chart-line-fill me-2"></i>View Report
+                    </button>
                     <a href="{{ route('invoice.report', [
                         'generate_pdf' => true,
                         'business_model_id' => request()->business_model_id,
                         'site_id' => request()->site_id,
                         'start_date' => request()->start_date,
                         'end_date' => request()->end_date
-                    ]) }}" class="btn btn-danger">Download PDF</a>
+                    ]) }}" class="btn btn-danger px-4">
+                        <i class="bi bi-file-earmark-arrow-down-fill me-2"></i>Download as PDF
+                    </a>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
+
 
 
 @endsection

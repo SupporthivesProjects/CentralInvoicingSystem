@@ -99,11 +99,7 @@
                                 <option selected disabled>Choose Technology</option>
                                 <option value="wordpress">WordPress</option>
                                 <option value="laravel">Laravel</option>
-                                <option value="django">Django</option>
                                 <option value="corephp">Core PHP</option>
-                                <option value="static">Static</option>
-                                <option value="joomla">Joomla</option>
-                                <option value="other">Other</option>
                             </select>
                         </div>
 

@@ -93,6 +93,7 @@ class InvoiceController extends Controller
             'invoice' => [
                 'invoice_amount' => $request->invoice_amount,
                 'invoice_date' => $request->invoice_date,
+                'invoice_number' => $request->invoice_number,
             ],
             'products' => []
         ]); 
@@ -125,10 +126,10 @@ class InvoiceController extends Controller
                     ],
                     'invoice' => [
                         'invoice_amount' => $invoiceHistory->invoice_amount,
+                        'invoice_number' => $invoiceHistory->invoice_number,
                     ],
                     'products' => []  
                 ]);
-                session()->flash('regenerate_invoice_number', $invoiceHistory->invoice_number);
             }
         }
         $new_site_id = $request->query('new_site_id');

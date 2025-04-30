@@ -150,11 +150,7 @@ if (!function_exists('getProductTable')) {
         $tables = [
             'wordpress' => 'wordpress_products',
             'laravel' => 'products',
-            'django' => 'django_products',
             'corephp' => 'corephp_products',
-            'static' => 'static_products',
-            'joomla' => 'joomla_products',
-            'other' => 'other_products',
         ];
 
         return $tables[$technology] ?? 'products';

@@ -23,11 +23,6 @@
                     <i class="fas fa-arrow-left"></i> Go Back
                 </a>
 
-                <a href="{{ route('website.edit', ['id' => $site->id]) }}" class="btn btn-outline-primary btn-sm">
-                    <i class="fas fa-edit"></i> Edit Website
-                </a>
-
-               
                 </div>
                 </div>
             </div>
@@ -110,7 +105,7 @@
                 </div>
             </div>
             <div class="card custom-card mt-4">
-                <div class="card-body shadow rounded narayan-bg">
+                <div class="card-body shadow-lg rounded">
                 <div class="row">
                     <div class="col-md-4 mb-3">
                         <label class="form-label">Current Amount</label>
@@ -153,12 +148,12 @@
 
                 <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
                         <button type="button" class="btn btn-outline-primary d-flex align-items-center gap-1 me-1" 
-                                data-bs-toggle="modal" data-bs-target="#addmoreproducts" onclick="customizeProducts('onload')">
+                                data-bs-toggle="modal" data-bs-target="#addmoreproducts"  onclick="customizeProducts('onload')">
                                 <i class="fas fa-plus-square"></i> Add Products
                         </button>
 
                         <button type="button" class="btn btn-outline-success d-flex align-items-center gap-1"
-                                onclick="randomizeProducts()">
+                                onclick="randomizeProducts('smart_random')">
                                 <i class="fas fa-random"></i> Randomize
                         </button>
 
@@ -177,19 +172,42 @@
             </div>
 
                 <div class="card-body">
-                
-                    <div class="mb-4">
-                    <div class="row justify-content-center g-3 align-items-end">
-                        <div class="col-md-6">
-                            <label class="form-label text-center w-100">Randomize by Price Range</label>
-                            <div id="randomize-price-slider" class="w-100"></div>
-                            <input type="hidden" name="price_from" id="hidden_randomize_price_from_input_id">
-                            <input type="hidden" name="price_to" id="hidden_randomize_price_to_input_id">
+                    <div class="container">
+                        <div class="row g-3 justify-content-center mb-3">
+                            <!-- Search Keyword -->
+                            <div class="col-md-5 text-center">
+                                <div class="d-flex flex-column align-items-center">
+                                    <small class="text-muted fw-semibold mb-2">No. of Products ~ Keyword</small>
+                                    <div class="input-group shadow-sm bg-white w-100 bg-primary">
+                                        <select class="form-select border-0 text-primary" name="no_of_products" id="noOfProducts" style="max-width:65px;">
+                                            <option value="">0</option>
+                                            @for ($i = 1; $i <= 20; $i++)
+                                                <option value="{{ $i }}">{{ $i }}</option>
+                                            @endfor
+                                        </select>
+                                        <input type="text" class="form-control border-0" id="randomizeKeywordInput" placeholder="Enter or Speak product/category..." aria-label="Search Keyword">
+                                        <button class="btn btn-light border-0" type="button" title="Voice Search" onclick="startVoiceSearch('randomizeKeywordInput','randomizeMicIcon')">
+                                            <i class="fas fa-microphone text-primary" id="randomizeMicIcon"></i>
+                                        </button>
+                                        <button class="btn btn-primary" onclick="randomizeProducts('semi_random')" type="button">Search</button>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <!-- Price Range -->
+                            <div class="col-md-5 text-center">
+                                <div class="d-flex flex-column align-items-center ms-1">
+                                    <small class="text-muted fw-semibold mb-2">Price Range</small>
+                                    <div class="w-100">
+                                        <div id="randomize-price-slider" class="w-100"></div>
+                                        <input type="hidden" name="price_from" id="hidden_randomize_price_from_input_id">
+                                        <input type="hidden" name="price_to" id="hidden_randomize_price_to_input_id">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-
-                    </div>
-
+                    </div>  
                 
                     <div class="table-responsive border rounded shadow-sm">
                         <table class="table table-bordered table-hover align-middle mb-0">
@@ -198,7 +216,11 @@
                                 <th class="w-10 text-center">PID</th>
                                 <th class="w-30">Package Name</th>
                                 <th class="w-20 text-center">Subscription</th>
-                                <th class="w-15 text-center">Unit Price</th>
+                                <th class="text-center unit-price-header" data-column="3" data-order="desc">
+                                    <span class="d-inline-flex align-items-center justify-content-center gap-1">
+                                        Unit Price <i class="bi bi-caret-down-fill"></i>
+                                    </span>
+                                </th>
                                 <th class="w-25 text-center">Editable Price</th>
                                 <th class="w-10 text-center">Remove</th>
                             </tr>
@@ -233,21 +255,21 @@
             <!-- Modal Body -->
             <div class="modal-body bg-white">
                 <div class="container-fluid">
-                    <div class="row g-3 mb-4 mx-4">
+                        <div class="row g-3 mb-4 mx-4">
                             <div class="col-md-6 d-flex flex-column">
-                                <label for="keywordInput" class="form-label text-center fw-semibold mb-2">Search By Keyword</label>
-                                <div class="input-group">
-                                    <span class="input-group-text bg-light"><i class="fas fa-search"></i></span>
-                                    <input type="text" class="form-control" id="keywordInput" placeholder="Enter or Speak product or category name...">
-                                    <button class="btn btn-outline-secondary" type="button" onclick="startVoiceSearch()" id="micBtn" title="Voice Search">
-                                        <i class="fas fa-microphone" id="micIcon"></i>
+                                <label for="customizeKeywordInput" class="form-label text-center fw-semibold">Search By Keyword</label>
+                                <div class="input-group bg-light shadow-sm">
+                                    <span class="input-group-text bg-transparent border-0">
+                                        <i class="fas fa-search text-muted"></i>
+                                    </span>
+                                    <input type="text" class="form-control border-0 bg-transparent" id="customizeKeywordInput" placeholder="Enter or Speak product or category name..." aria-label="Search Keyword">
+                                    <button class="btn btn-light border-0 d-flex align-items-center" type="button" onclick="startVoiceSearch('customizeKeywordInput','customizeMicIcon')" id="micBtn" title="Voice Search">
+                                        <i class="fas fa-microphone text-primary" id="customizeMicIcon"></i>
                                     </button>
-                                    <button class="btn btn-outline-primary" type="button" onclick="customizeProducts('search')">Search</button>
-                                </div>
+                                 </div>
                             </div>
-
                             <div class="col-md-6 d-flex flex-column">
-                                <label class="form-label text-center fw-semibold mb-2">Search By Price</label>
+                                <label class="form-label text-center fw-semibold mb-2">Fliiter By Price Range</label>
                                 <div class="align-items-center rounded bg-white shadow-sm">
                                     <div class="w-100" id="customize-price-slider"></div>
                                 </div>
@@ -276,14 +298,14 @@
                             </div>
                         </div>
                         
-                        <div class="table-responsive border rounded shadow-sm">
-                            <table class="table table-bordered table-hover align-middle mb-0">
+                        <div class="rounded shadow-sm p-2"> 
+                        <table id="customize-products-table" class="table table-bordered table-hover align-middle mb-0 table-responsive">
                                 <thead class="table-dark text-center">
                                     <tr>
                                         <th class="w-10 text-center">PID</th>
                                         <th class="w-30">Package Name</th>
                                         <th class="w-20 text-center">Subscription</th>
-                                        <th class="w-15 text-center">Unit Price</th>
+                                        <th class="text-center">  Unit Price </th>
                                         <th class="w-25 text-center">Editable Price</th>
                                         <th class="w-10 text-center">Select</th>
                                     </tr>
@@ -298,10 +320,10 @@
             
             <div class="modal-footer bg-light border-top">
                 <div class="d-flex flex-wrap gap-2">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="closeFilters()">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                         <i class="bi bi-x-circle me-1"></i> Cancel
                     </button>
-                    <button type="button" class="btn btn-danger" onclick="clearFilters()">
+                    <button type="button" class="btn btn-danger" onclick="customizeProducts('onload')">
                         <i class="bi bi-arrow-counterclockwise me-1"></i> Reset Filters
                     </button>
                     <button type="button" id="add-custom-products" class="btn btn-primary">
@@ -315,38 +337,42 @@
 
 
 
-<div class="modal fade" id="sitechangemodel" data-bs-backdrop="static"
-    data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
-    aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h6 class="modal-title" id="staticBackdropLabel">Select a Different Site</h6>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                        aria-label="Close"></button>
-                </div>
-                <form method="GET" action="{{ route('product.selection') }}" id="sitechangemodel-form">
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label for="new_site_id" class="form-label">Choose a site</label>
-                            <select form="sitechangemodel-form" name="new_site_id" id="new_site_id" class="form-select select2" required>
-                                <option value="">-- Select Site --</option>
-                                @foreach($sites as $s)
-                                    <option value="{{ $s->id }}">{{ $s->site_name }}</option>
-                                @endforeach
-                            </select>
-
-                        </div>
-                        <p class="text-muted small">Selecting another site will refresh the page to re-establish the database connection.</p>
-                    </div>
-                    <div class="modal-footer justify-content-center">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" form="sitechangemodel-form" class="btn btn-primary">Change Site</button>
-                    </div>
-                </form>
+<div class="modal fade" id="sitechangemodel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="siteChangeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 rounded-4 shadow-sm overflow-hidden">
+            
+            <div class="modal-header bg-primary text-white border-0">
+                <h5 class="modal-title fw-bold" id="siteChangeModalLabel">Select a New Site</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+
+            <form method="GET" action="{{ route('product.selection') }}" id="sitechangemodel-form">
+                <div class="modal-body bg-light">
+                    <div class="mb-3">
+                        <label for="new_site_id" class="form-label fw-semibold">Select a Site</label>
+                        <select name="new_site_id" id="new_site_id" class="form-select" required>
+                            <option value="">-- Select Site --</option>
+                            @foreach($sites as $s)
+                                <option value="{{ $s->id }}">{{ $s->site_name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="alert alert-warning small py-2 px-3" role="alert">
+                        Selecting a different site will refresh the page and re-establish the database connection.
+                    </div>
+                </div>
+
+                <div class="modal-footer bg-light border-0 rounded-bottom-4 d-flex justify-content-center gap-3">
+                    <button type="button" class="btn btn-outline-secondary px-4" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary px-4">Confirm</button>
+                </div>
+            </form>
         </div>
-   </div>
+    </div>
+</div>
+
+
 @endsection
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
@@ -382,7 +408,7 @@
     noUiSlider.create(randomizePriceSlider, {
         start: [minUnitPrice, maxUnitPrice],
         connect: true,
-        step: 0.1,
+        step: 5,
         range: { min: minUnitPrice, max: maxUnitPrice },
         tooltips: [true, true],
         format: {
@@ -394,7 +420,7 @@
     noUiSlider.create(customizePriceSlider, {
         start: [minUnitPrice, maxUnitPrice],
         connect: true,
-        step: 0.1,
+        step: 5,
         range: { min: minUnitPrice, max: maxUnitPrice },
         tooltips: [true, true],
         format: {
@@ -410,10 +436,16 @@
 
 
 <script>
-    function randomizeProducts() {
+    function randomizeProducts(mode = 'smart_random') {
         $('#randomize-product-table-body').html(getLoaderRowHTML());
         const priceFrom = $('#hidden_randomize_price_from_input_id').val();
         const priceTo = $('#hidden_randomize_price_to_input_id').val();
+        const randomizeKeywordInput = $('#randomizeKeywordInput').val().trim();
+        const noOfProducts = $('#noOfProducts').val();
+        if(mode === 'smart_random') {
+          $('#randomizeKeywordInput').val('');
+          $('#noOfProducts').val('');
+        }
 
         $('#current_amount').val('Calculating...');
         $('#discount_amount').prop('type', 'text').val('Calculating...').prop('readonly', true);
@@ -426,7 +458,9 @@
                 site_id: "{{ $customer['site_id'] }}",
                 invoice_amount: invoice_amount,
                 price_from: priceFrom,
-                price_to: priceTo
+                price_to: priceTo,
+                randomizeKeywordInput: randomizeKeywordInput,
+                noOfProducts: noOfProducts
             },
             success: function (response) {
                 Swal.close();
@@ -493,7 +527,7 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     updateHiddenInputs(min, max, 'randomize');
-                    randomizeProducts();
+                    randomizeProducts('semi_random');
                 } else {
                     randomizePriceSlider.noUiSlider.set([minUnitPrice, maxUnitPrice]);
                 }
@@ -506,7 +540,13 @@
  <script>
 
         function customizeProducts(search_type='search') {
-            const keyword = $('#keywordInput').val().trim();
+
+            $('#addmoreproducts').on('shown.bs.modal', function () {
+                if ($.fn.DataTable.isDataTable('#customize-products-table')) {
+                    $('#customize-products-table').DataTable().columns.adjust().draw();
+                }
+            });
+            
             const priceFrom = $('#hidden_customize_price_from_input_id').val();
             const priceTo = $('#hidden_customize_price_to_input_id').val();
             let invoice_amount = parseFloat($('#invoice_amount').val()) || 0;
@@ -521,7 +561,7 @@
             $('#temp_invoice_amount_text').text(invoice_amount.toFixed(2));
             $('#temp_discount_amount_text').text(discountAmount.toFixed(2));
 
-            if (!keyword && !priceFrom && !priceTo) {
+            if (!priceFrom && !priceTo) {
                 $('#customize-product-table-body').html(getErrorRowHTML('No products found for your keyword. Try a different keyword or adjust the range filter.'));
                 $('#error-row').fadeIn(300).delay(3000).fadeOut(500);
                 return;
@@ -533,7 +573,6 @@
                 url: "{{ route('filter.products') }}",
                 type: 'GET',
                 data: {
-                    keyword: keyword,
                     price_from: priceFrom,
                     price_to: priceTo,
                     search_type : search_type
@@ -547,6 +586,37 @@
                     }
                     $('#customize-product-table-body').html(response.tableRows);
                     calculateTotalPrice();
+
+                    if (!$.fn.DataTable.isDataTable('#customize-products-table')) {
+                        customizeTable = $('#customize-products-table').DataTable({
+                            responsive: true,
+                            dom: 'rtip',
+                            language: {
+                                search: "",
+                                searchPlaceholder: ""
+                            },
+                            columnDefs: [
+                                { orderable: false, targets: [0,1,2,4,5] }
+                            ]
+                        });
+
+                        $('#customizeKeywordInput').on('input', function () {
+                            customizeTable.search(this.value).draw();
+                        });
+                    } else {
+                        customizeTable.clear().destroy(); 
+                        customizeTable = $('#customize-products-table').DataTable({ 
+                            responsive: true,
+                            dom: 'rtip',
+                            language: {
+                                search: "",
+                                searchPlaceholder: ""
+                            },
+                            columnDefs: [
+                                { orderable: false, targets: [0,1,2,4,5] }
+                            ]
+                        });
+                    }
                 },
                 error: function () {
                     toastr.error('Something went wrong while filtering.', 'Oops!');
@@ -587,9 +657,6 @@ function clearRandomizedFilter(button) {
         }
     });
 }
-
-
-
 </script>
 
 <script>
@@ -843,7 +910,86 @@ $(document).ready(function () {
     });
 });
 </script>
+<script>
+$(document).ready(function() {
+    $('.unit-price-header').click(function() {
+        var $header = $(this);
+        var $table = $header.closest('table');
+        var $tbody = $table.find('tbody');
+        var $rows = $tbody.find('tr').toArray();
+        var column = $header.data('column');
+        var order = $header.data('order');
 
+        $rows.sort(function(a, b) {
+            var A = $(a).find('td').eq(column).text().trim();
+            var B = $(b).find('td').eq(column).text().trim();
+
+            A = parseFloat(A.replace(/[^\d.-]/g, '')) || 0;
+            B = parseFloat(B.replace(/[^\d.-]/g, '')) || 0;
+
+            return (order === 'asc') ? (A - B) : (B - A);
+        });
+
+        $.each($rows, function(index, row) {
+            $tbody.append(row);
+        });
+
+        var newOrder = (order === 'asc') ? 'desc' : 'asc';
+        $header.data('order', newOrder);
+
+        $header.find('i')
+            .removeClass('bi-caret-down-fill bi-caret-up-fill')
+            .addClass(newOrder === 'asc' ? 'bi-caret-up-fill' : 'bi-caret-down-fill');
+    });
+});
+</script>
+
+<script>
+function startVoiceSearch(inputId, micIconId) {
+    const inputField = document.getElementById(inputId);
+    const micIcon = document.getElementById(micIconId);
+    inputField.placeholder = "Please speak product name or category";
+
+    if (!('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
+        toastr.error("Your browser does not support voice recognition. Please try using a modern browser like Chrome.");
+        return;
+    }
+
+    inputField.value = '';
+    inputField.placeholder = "Listening to your voice search...";
+
+    micIcon.classList.remove("text-primary"); 
+    micIcon.classList.add("text-danger");
+
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.lang = "en-US";
+    recognition.interimResults = false;
+
+    recognition.start();
+
+    recognition.onresult = function(event) {
+        const transcript = event.results[0][0].transcript;
+        inputField.style.color = "blue"; 
+        inputField.value = transcript;
+    };
+
+    recognition.onerror = function(event) {
+        toastr.error("Voice recognition error: " + event.error);
+        inputField.value = '';
+        inputField.style.color = ''; 
+        micIcon.classList.remove("text-danger");
+        micIcon.classList.add("text-primary"); 
+        inputField.placeholder = "Enter or Speak product or category name...";
+    };
+
+    recognition.onend = function() {
+        micIcon.classList.remove("text-danger");
+        micIcon.classList.add("text-primary"); 
+        inputField.style.color = 'blue'; 
+        inputField.placeholder = "Enter or Speak product or category name...";
+    };
+}
+</script>
 
 <script>    
     $(document).on('input', '.product-price', function() {
@@ -873,4 +1019,35 @@ $(document).ready(function () {
         $('#temp_invoice_amount_text').text(invoiceAmount.toFixed(2));
     }
 </script>
+<script>
+$(document).on('input', '.product-price', function() {
+    calculateTotalPrice();
+});
+
+function calculateTotalPrice() {
+    let currentAmount = 0;
+    $('input[name="product_ids[]"]:checked').each(function() {
+        const productId = $(this).val();
+        const punitPrice = parseFloat($(`input[data-product-id="${productId}"]`).val()) || 0;
+        currentAmount += punitPrice;
+    });
+
+    const invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
+    let discountAmount = 0;
+
+    if (currentAmount > invoiceAmount) {
+        discountAmount = currentAmount - invoiceAmount;
+    }
+
+    $('#discount_amount').prop('readonly', false).prop('type', 'number');
+    $('#current_amount').val(currentAmount.toFixed(2));
+    $('#temp_current_amount_text').text(currentAmount.toFixed(2));
+    $('#discount_amount').val(discountAmount.toFixed(2));
+    $('#temp_discount_amount_text').text(discountAmount.toFixed(2));
+    $('#invoice_amount').val(invoiceAmount.toFixed(2));
+    $('#temp_invoice_amount_text').text(invoiceAmount.toFixed(2));
+
+}
+</script>
+
 @endpush

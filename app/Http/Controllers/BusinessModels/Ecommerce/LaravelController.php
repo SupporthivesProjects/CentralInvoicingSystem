@@ -33,7 +33,6 @@ class LaravelController extends Controller
         $this->connectionType = 'dynamic';
     }
 
- 
     public function randomProducts(Request $request)
     {
         $site_id = $request->get('site_id');
@@ -41,45 +40,68 @@ class LaravelController extends Controller
     
         $priceFrom = $request->get('price_from');
         $priceTo = $request->get('price_to');
-    
-        $minTotal = $invoiceAmount;
-        $maxTotal = $invoiceAmount * 1.05;
-    
+        $randomizeKeywordInput = trim($request->get('randomizeKeywordInput'));
+        $noOfProducts = intval($request->get('noOfProducts'));
+
+        if($randomizeKeywordInput ||  $noOfProducts){
+            $minTotal = $invoiceAmount * 0.5; 
+        }else{
+            $minTotal = $invoiceAmount* 0.05; 
+        }
+        $maxTotal = $invoiceAmount * 1.10;
+        
         $site = Website::findOrFail($site_id);
         $productstable = getProductTable($site->technology);
         DynamicDatabaseService::connect($site);
+    
+        $query = DB::connection($this->connectionType)->table($this->productTable)
+            ->select('id', 'category_id', 'name', 'unit_price', 'slug')
+            ->where('published', 1);
+    
+        if ($priceFrom && $priceTo) {
+            $query->whereBetween('unit_price', [$priceFrom, $priceTo]);
+        }
+    
+        if ($randomizeKeywordInput) {
+            $keyword = strtolower(str_replace('-', '', trim($randomizeKeywordInput)));
         
-        $allProducts = DB::connection($this->connectionType)->table($this->productTable)
-            ->select('id','category_id', 'name', 'unit_price','slug')
-            ->where('published', 1)
-            ->when($priceFrom && $priceTo, function ($query) use ($priceFrom, $priceTo) {
-                return $query->whereBetween('unit_price', [$priceFrom, $priceTo]);
-            })
-            ->orderByDesc('unit_price') 
-            ->get();
+            $query->where(function ($q) use ($keyword) {
+                $q->whereRaw("REPLACE(LOWER(name), '-', '') LIKE ?", ["%{$keyword}%"])
+                  ->orWhereIn('category_id', function ($sub) use ($keyword) {
+                      $sub->select('id')
+                          ->from('categories')
+                          ->whereRaw("REPLACE(LOWER(name), '-', '') LIKE ?", ["%{$keyword}%"]);
+                  });
+            });
+        }
         
-        $allProducts = $allProducts->shuffle()->take(100);
+    
+        $allProducts = $query->orderByDesc('unit_price')->get()->shuffle();
     
         $bestMatch = null;
         $bestTotal = 0;
     
         for ($i = 0; $i < 10; $i++) {
-            $shuffled = $allProducts->shuffle();
+            $shuffled = $allProducts;
             $selected = [];
             $currentTotal = 0;
     
             foreach ($shuffled as $product) {
+                if ($noOfProducts && count($selected) >= $noOfProducts) {
+                    break;
+                }
+    
                 $price = floatval($product->unit_price);
     
                 if (($currentTotal + $price) <= $maxTotal) {
-                    $product->source = 'Random';
                     $selected[] = $product;
                     $currentTotal += $price;
     
                     if ($currentTotal >= $minTotal && $currentTotal <= $maxTotal) {
-                        $bestMatch = $selected;
-                        $bestTotal = $currentTotal;
-                        break;
+                        if ($currentTotal > $bestTotal) {
+                            $bestMatch = $selected;
+                            $bestTotal = $currentTotal;
+                        }
                     }
                 }
             }
@@ -97,51 +119,57 @@ class LaravelController extends Controller
             ]);
         }
     
-        
-         $bestMatch = collect($bestMatch); 
-         $bestMatch->each(function ($product) {
-             $product->category_name = DB::connection($this->connectionType)->table('categories')->where('id', $product->category_id)->value('name') ?? 'unknown';
-         
-         });
- 
-         $bestMatch->each(function ($product) use ($site_id) {
-             $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
-                                              ->where('product_id', $product->id)
-                                              ->orderByDesc('last_price_changed')
-                                              ->first();
-         
-             if ($lastUpdate) {
- 
-                 $lastPriceChanged = Carbon::parse($lastUpdate->last_price_changed);
-                 $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
-                 $remainingDays = now()->diffInDays($nextPriceChangeDate, false);
-                 $product->remaining_days = round(max($remainingDays, 0));
-                 $product->can_edit_price = now()->greaterThanOrEqualTo($nextPriceChangeDate) ? 1 : 0;
- 
-             } else {
-                 $product->can_edit_price = 1;
-                 $product->remaining_days = 0;
-             }
-         });
-        
-         $productList = $bestMatch->map(function ($product) {
+        $bestMatch = collect($bestMatch);
+        $bestMatch->each(function ($product) {
+            $product->category_name = DB::connection($this->connectionType)
+                ->table('categories')
+                ->where('id', $product->category_id)
+                ->value('name') ?? 'unknown';
+        });
+    
+        $bestMatch->each(function ($product) use ($site_id) {
+            $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
+                ->where('product_id', $product->id)
+                ->orderByDesc('last_price_changed')
+                ->first();
+    
+            if ($lastUpdate) {
+                $lastPriceChanged = Carbon::parse($lastUpdate->last_price_changed);
+                $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
+                $remainingDays = now()->diffInDays($nextPriceChangeDate, false);
+                $product->remaining_days = round(max($remainingDays, 0));
+                $product->can_edit_price = now()->greaterThanOrEqualTo($nextPriceChangeDate) ? 1 : 0;
+            } else {
+                $product->can_edit_price = 1;
+                $product->remaining_days = 0;
+            }
+        });
+    
+        $productList = $bestMatch->map(function ($product) {
             return [
                 'id' => $product->id,
                 'unit_price' => $product->unit_price,
             ];
         })->toArray();
-        
-        session()->forget('ready_products'); 
+    
+        session()->forget('ready_products');
         session()->put('ready_products', $productList);
         session(['current_amount' => $bestTotal]);
+    
         $modelType = $site->businessModel->model_type;
-        $tableRows = view("invoice.{$modelType}.random_product_rows", ['products' => $bestMatch,'site' => $site])->render();
-        
+        $tableRows = view("invoice.{$modelType}.random_product_rows", [
+            'products' => $bestMatch,
+            'site' => $site,
+            'total' => $bestTotal
+        ])->render();
+    
         return response()->json([
             'tableRows' => $tableRows,
             'total' => $bestTotal
         ]);
     }
+    
+ 
     
     public function addProducts(Request $request)
     {
@@ -214,7 +242,7 @@ class LaravelController extends Controller
         });
         $modelType = $site->businessModel->model_type;
         session(['current_amount' => collect($products)->sum('unit_price')]);
-    
+       
         $tableRows = view("invoice.{$modelType}.random_product_rows", [
             'products' => $products,
             'site' => $site,
@@ -382,47 +410,30 @@ class LaravelController extends Controller
     public function filterProducts(Request $request)
     {
         $site_id = session('customer.site_id');
+        $hasPriceRange = $request->filled('price_from') && $request->filled('price_to');
         $search_type = $request->input('search_type');
         $site = Website::findOrFail($site_id);
         $productstable = getProductTable($site->technology);
         DynamicDatabaseService::connect($site);
-    
-        $hasKeyword = $request->filled('keyword');
-        $hasPriceRange = $request->filled('price_from') && $request->filled('price_to');
-    
-        if (!$hasKeyword && !$hasPriceRange) {
+
+        if (!$hasPriceRange) {
             return response()->json([
-                'tableRows' => '<tr><td colspan="6" class="text-center text-muted">Please enter a keyword or price range to search.</td></tr>'
+                'tableRows' => '<tr><td colspan="6" class="text-center text-muted">Please enter a price range to search.</td></tr>'
             ]);
         }
-    
-        if ($hasKeyword) {
-            $keyword = strtolower(str_replace('-', '', $request->keyword));
-            $keyword = preg_replace('/\s+/', ' ', $keyword);
-    
-            $query = DB::connection($this->connectionType)
-                ->table($this->productTable)
-                ->join('categories', 'products.category_id', '=', 'categories.id')
-                ->select('products.id', 'products.category_id', 'products.name', 'products.unit_price', 'products.slug')
-                ->where('products.published', 1)
-                ->where(function ($q) use ($keyword) {
-                    $q->whereRaw("REPLACE(LOWER(products.name), '-', '') LIKE ?", ["%{$keyword}%"])
-                        ->orWhereRaw("REPLACE(LOWER(categories.name), '-', '') LIKE ?", ["%{$keyword}%"]);
-                });
-        } else {
-            $query = DB::connection($this->connectionType)
-                ->table($this->productTable)
-                ->select('products.id', 'products.category_id', 'products.name', 'products.unit_price', 'products.slug')
-                ->where('products.published', 1);
-        }
-    
+
+        $query = DB::connection($this->connectionType)
+            ->table($this->productTable)
+            ->select('products.id', 'products.category_id', 'products.name', 'products.unit_price', 'products.slug')
+            ->where('products.published', 1);
+
         if ($hasPriceRange) {
             $query->whereBetween('unit_price', [
                 (float) $request->price_from,
                 (float) $request->price_to
             ]);
         }
-    
+
         $readyProducts = session('ready_products', []);
         $readyProductIds = collect($readyProducts)->pluck('id')->toArray();
     
@@ -430,9 +441,9 @@ class LaravelController extends Controller
             $query->whereNotIn('products.id', $readyProductIds);
         }
         if($search_type == 'onload'){
-            $products = $query->inRandomOrder()->limit(10)->get();
+            $products = $query->inRandomOrder()->limit(20)->get();
         }else{
-            $products = $query->orderBy('products.name')->limit(20)->get();
+            $products = $query->orderBy('unit_price')->get();
         }
         
     
@@ -446,6 +457,7 @@ class LaravelController extends Controller
         $products->each(function ($product) {
             $product->category_name = DB::connection($this->connectionType)->table('categories')->where('id', $product->category_id)->value('name') ?? 'unknown';
         });
+        
     
         $products->each(function ($product) use ($site_id) {
             $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
@@ -467,11 +479,16 @@ class LaravelController extends Controller
     
         $modelType = $site->businessModel->model_type;
         $random_amount = session('current_amount', 0);
-        $tableRows = view("invoice.{$modelType}.add_product_rows", ['products' => $products, 'site' => $site, 'random_amount' => $random_amount])->render();
+        $tableRows = view("invoice.{$modelType}.add_product_rows", 
+        [
+        'products' => $products, 
+        'site' => $site,
+        'random_amount' => $random_amount
+         ])->render();
     
         return response()->json([
             'tableRows' => $tableRows,
-            'random_amount' => $random_amount,
+            'random_amount' => $random_amount
         ]);
     }
     

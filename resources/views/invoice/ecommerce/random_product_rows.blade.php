@@ -127,33 +127,4 @@ $(document).ready(function() {
 });
 
 
-
-$(document).on('input', '.product-price', function() {
-    calculateTotalPrice();
-});
-
-function calculateTotalPrice() {
-    let currentAmount = 0;
-    $('input[name="product_ids[]"]:checked').each(function() {
-        const productId = $(this).val();
-        const punitPrice = parseFloat($(`input[data-product-id="${productId}"]`).val()) || 0;
-        currentAmount += punitPrice;
-    });
-
-    const invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
-    let discountAmount = 0;
-
-    if (currentAmount > invoiceAmount) {
-        discountAmount = currentAmount - invoiceAmount;
-    }
-    $('#discount_amount').prop('readonly', false).prop('type', 'number') 
-    $('#current_amount').val(currentAmount.toFixed(2));
-    $('#temp_current_amount_text').text(currentAmount.toFixed(2));
-    $('#discount_amount').val(discountAmount.toFixed(2));
-    $('#temp_discount_amount_text').text(discountAmount.toFixed(2));
-    $('#invoice_amount').val(invoiceAmount.toFixed(2));
-    $('#temp_invoice_amount_text').text(invoiceAmount.toFixed(2));
-}
-
-
 </script>

@@ -108,11 +108,7 @@
                                     <option selected disabled>Choose Technology</option>
                                     <option value="wordpress" {{ $website->technology == 'wordpress' ? 'selected' : '' }}>WordPress</option>
                                     <option value="laravel" {{ $website->technology == 'laravel' ? 'selected' : '' }}>Laravel</option>
-                                    <option value="django" {{ $website->technology == 'django' ? 'selected' : '' }}>Django</option>
                                     <option value="corephp" {{ $website->technology == 'corephp' ? 'selected' : '' }}>Core PHP</option>
-                                    <option value="static" {{ $website->technology == 'static' ? 'selected' : '' }}>Static</option>
-                                    <option value="joomla" {{ $website->technology == 'joomla' ? 'selected' : '' }}>Joomla</option>
-                                    <option value="other" {{ $website->technology == 'other' ? 'selected' : '' }}>Other</option>
                                 </select>
                             </div>
                             <div class="col-md-6 mx-auto">

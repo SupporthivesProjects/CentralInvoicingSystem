@@ -29,23 +29,37 @@
                 <!-- End::header-link -->
             </div>
             <!-- End::header-element -->
+            <div class="main-header-center d-none d-lg-block header-link">
+                <div class="input-group">
+                    <!-- Search Panel Dropdown -->
+                    <div class="input-group-prepend">
+                        <select class="form-select" name="internalSearchType" id="internalSearchType" aria-label="Search Type" data-trigger>
+                            <option value="websites">Websites</option>
+                            <option value="business_models">Business Models</option>
+                        </select>
+                    </div>
 
-            <!-- Start::header-element -->
-            <div class="main-header-center d-none d-lg-block  header-link">
-            <div class="input-group">
-                <div class="input-group-btn search-panel">
-                    <select class="js-example-basic-single" name="internalSearchType" id="internalSearchType" data-trigger>
-                        <option value="websites">Websites</option>
-                        <option value="business_models">Business Models</option>
-                    </select>
+                    <!-- Search Input -->
+                    <input type="text" class="form-control" data-url="{{ route('internal.search') }}" id="internalSearchInput" name="internalSearchInput" placeholder="Search for results..." autocomplete="off">
+
+                    <!-- Search Button -->
+                    <button class="btn btn-primary" type="button">
+                        <i class="fe fe-search" aria-hidden="true"></i>
+                    </button>
                 </div>
-                <input type="text" class="form-control" data-url="{{ route('internal.search') }}" id="internalSearchInput" name="internalSearchInput" placeholder="Search for results..." autocomplete="off">
-                <button class="btn btn-primary"><i class="fe fe-search" aria-hidden="true"></i></button>
-            </div>
-                <div id="searchspinner" class="text-center my-2" style="display: none;"></div>
+
+                <!-- Loading Spinner -->
+                <div id="searchspinner" class="text-center my-2" style="display: none;">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+
+                <!-- Search Results -->
                 <div id="searchResults" class="header-search"></div>
             </div>
-             <!-- End::header-element -->
+
+
              
         </div>
         <!-- End::header-content-left -->
@@ -106,7 +120,7 @@
             </div>
             <!-- End::header-element -->
 
-            <!-- Start::header-element -->
+           {{--
             <div class="header-element notifications-dropdown">
                 <!-- Start::header-link|dropdown-toggle -->
                 <a href="javascript:void(0);" class="header-link dropdown-toggle" data-bs-toggle="dropdown" data-bs-auto-close="outside" id="messageDropdown" aria-expanded="false">
@@ -221,7 +235,7 @@
                 </div>
                 <!-- End::main-header-dropdown -->
             </div>
-            <!-- End::header-element -->
+            --}}
 
             <!-- Start::header-element -->
             <div class="header-element header-shortcuts-dropdown d-xl-flex d-none">
