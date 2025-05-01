@@ -115,6 +115,7 @@ function replaceFeatherIconsTemporarily() {
     
         fields.forEach(function(fieldObj) {
             const $input = $(fieldObj.input);
+
             const $postfix = $(fieldObj.postfixSelector).closest('.input-group').find('.input-group-text').last();
     
             if ($postfix.length === 0) {
@@ -126,7 +127,7 @@ function replaceFeatherIconsTemporarily() {
     
             $postfix.html('<i data-feather="check" class="text-white" style="width: 17px;"></i>')
                     .addClass('bg-success');
-    
+            $input.addClass('text-success');
             feather.replace();
     
             setTimeout(() => {

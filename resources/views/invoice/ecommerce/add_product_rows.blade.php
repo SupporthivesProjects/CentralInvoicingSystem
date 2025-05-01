@@ -8,7 +8,7 @@
             <a href="{{ $site->site_link }}/product/{{ $product->slug }}" target="_blank">🔗</a>
         @endif
     </td>
-    <td>{{ site_currency() }}{{ number_format($product->unit_price, 2) }}</td>
+    <td class="text-center">{{ site_currency() }}{{ number_format($product->unit_price, 2) }}</td>
     <td>
         <div class="input-group">
             <span class="input-group-text">{{ site_currency() }}</span>

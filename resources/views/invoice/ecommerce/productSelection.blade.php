@@ -178,7 +178,7 @@
                             <small class="text-muted fw-semibold mb-2">No. of Products ~ Keyword</small>
                             <div class="input-group shadow-sm bg-white w-100">
                                 <select class="form-select border-0 text-primary" name="no_of_products" id="noOfProducts" style="max-width: 80px;">
-                                    <option value="">auto</option>
+                                    <option value="">Auto</option>
                                     @for ($i = 1; $i <= 20; $i++)
                                         <option value="{{ $i }}">{{ $i }}</option>
                                     @endfor
@@ -283,19 +283,19 @@
                         <div class="col-md-4">
                             <div class="bg-light rounded border shadow-sm p-1 text-center">
                                 <div class="text-muted small fw-semibold">Current Amount</div>
-                                <div class="fw-bold text-success fs-5">{{ site_currency() }}<span id="temp_current_amount_text">0.00</span></div>
+                                <div class="fw-bold text-primary fs-5">{{ site_currency() }}<span id="temp_current_amount_text">0.00</span></div>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="bg-light rounded border shadow-sm p-1 text-center">
                                 <div class="text-muted small fw-semibold">Discount Amount</div>
-                                <div class="fw-bold text-danger fs-5">{{ site_currency() }}<span id="temp_discount_amount_text">0.00</span></div>
+                                <div class="fw-bold text-primary fs-5">{{ site_currency() }}<span id="temp_discount_amount_text">0.00</span></div>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="bg-light rounded border shadow-sm p-1 text-center">
                                 <div class="text-muted small fw-semibold">Invoice Amount</div>
-                                <div class="fw-bold text-warning fs-5">{{ site_currency() }}<span id="temp_invoice_amount_text">0.00</span></div>
+                                <div class="fw-bold text-primary fs-5">{{ site_currency() }}<span id="temp_invoice_amount_text">0.00</span></div>
                             </div>
                         </div>
                     </div>
@@ -436,6 +436,7 @@
 
 <script>
     function randomizeProducts(mode = 'smart_random') {
+
         $('#randomize-product-table-body').html(getLoaderRowHTML());
         const priceFrom = $('#hidden_randomize_price_from_input_id').val();
         const priceTo = $('#hidden_randomize_price_to_input_id').val();
@@ -537,12 +538,17 @@
  <script>
 
     function customizeProducts(search_type='search') {
-        
+
+            let btn = $('#add-custom-products');
             $('#addmoreproducts').on('shown.bs.modal', function () {
                 if ($.fn.DataTable.isDataTable('#customize-products-table')) {
                     $('#customize-products-table').DataTable().columns.adjust().draw();
                 }
             });
+            
+            btn.prop('disabled', false);
+            btn.html('Add Selected to Cart');
+
             const priceFrom = $('#hidden_customize_price_from_input_id').val();
             const priceTo = $('#hidden_customize_price_to_input_id').val();
             let invoice_amount = parseFloat($('#invoice_amount').val()) || 0;
@@ -658,14 +664,26 @@ function clearRandomizedFilter(button) {
     function generateInvoice(event) {
         event.preventDefault();
 
-        const invoiceInput = $('input[name="invoice_number"]');
+        const customer_name = $('input[name="customer_name"]');
+        const invoice_date = $('input[name="invoice_date"]');
         const selectedProducts = $('input[name="product_ids[]"]:checked');
+        const invoiceNumber = $('input[name="invoice_number"]');
+
         const invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
         const currentAmount = parseFloat($('#current_amount').val()) || 0;
         const discountAmount = parseFloat($('#discount_amount').val()) || 0;
 
         if (selectedProducts.length === 0) {
             toastr.error('Please select your products combo...', 'No Product Selected');
+            return;
+        }
+        if ($.trim(customer_name.val()) === '') {
+            toastr.error('Customer name cannot be empty.', 'Missing Customer Name');
+            return;
+        }
+
+        if ($.trim(invoice_date.val()) === '') {
+            toastr.error('Invoice date cannot be empty.', 'Missing Invoice Date');
             return;
         }
 
@@ -699,7 +717,7 @@ function clearRandomizedFilter(button) {
         }
 
 
-        const invoiceNumber = invoiceInput.val().trim();
+        const invoiceNumber = invoiceNumber.val().trim();
         if (!invoiceNumber) {
             toastr.error('Please enter your invoice number or generate one randomly.', 'Invoice Number Missing');
             let blinkCount = 0;
@@ -940,83 +958,107 @@ $(document).ready(function() {
 </script>
 
 <script>
-function startVoiceSearch(inputId, micIconId) {
-    const inputField = document.getElementById(inputId);
-    const micIcon = document.getElementById(micIconId);
-    inputField.placeholder = "Please speak product name or category";
+    function startVoiceSearch(inputId, micIconId) {
+        const inputField = document.getElementById(inputId);
+        const micIcon = document.getElementById(micIconId);
+        inputField.placeholder = "Please speak product name or category";
 
-    if (!('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
-        toastr.error("Your browser does not support voice recognition. Please try using a modern browser like Chrome.");
-        return;
+        if (!('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
+            toastr.error("Your browser does not support voice recognition. Please try using a modern browser like Chrome.");
+            return;
+        }
+
+        inputField.value = '';
+        inputField.placeholder = "Listening to your voice search...";
+
+        micIcon.classList.remove("text-primary"); 
+        micIcon.classList.add("text-danger");
+
+        const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        recognition.lang = "en-US";
+        recognition.interimResults = false;
+
+        recognition.start();
+
+        recognition.onresult = function(event) {
+            const transcript = event.results[0][0].transcript;
+            inputField.style.color = "blue"; 
+            inputField.value = transcript;
+
+            if (inputId === 'customizeKeywordInput') {
+                filterDataTable(transcript); 
+            }
+        };
+
+        recognition.onerror = function(event) {
+            toastr.error("Voice recognition error: " + event.error);
+            inputField.value = '';
+            inputField.style.color = ''; 
+            micIcon.classList.remove("text-danger");
+            micIcon.classList.add("text-primary"); 
+            inputField.placeholder = "Enter or Speak product or category name...";
+        };
+
+        recognition.onend = function() {
+            micIcon.classList.remove("text-danger");
+            micIcon.classList.add("text-primary"); 
+            inputField.style.color = 'blue'; 
+            inputField.placeholder = "Enter or Speak product or category name...";
+        };
     }
 
-    inputField.value = '';
-    inputField.placeholder = "Listening to your voice search...";
-
-    micIcon.classList.remove("text-primary"); 
-    micIcon.classList.add("text-danger");
-
-    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-    recognition.lang = "en-US";
-    recognition.interimResults = false;
-
-    recognition.start();
-
-    recognition.onresult = function(event) {
-        const transcript = event.results[0][0].transcript;
-        inputField.style.color = "blue"; 
-        inputField.value = transcript;
-    };
-
-    recognition.onerror = function(event) {
-        toastr.error("Voice recognition error: " + event.error);
-        inputField.value = '';
-        inputField.style.color = ''; 
-        micIcon.classList.remove("text-danger");
-        micIcon.classList.add("text-primary"); 
-        inputField.placeholder = "Enter or Speak product or category name...";
-    };
-
-    recognition.onend = function() {
-        micIcon.classList.remove("text-danger");
-        micIcon.classList.add("text-primary"); 
-        inputField.style.color = 'blue'; 
-        inputField.placeholder = "Enter or Speak product or category name...";
-    };
-}
+    function filterDataTable(searchTerm) {
+        const table = $('#customize-products-table').DataTable();
+        table.search(searchTerm).draw();
+    }
 </script>
 
 <script>
-    $(document).on('input', '.product-price', function() {
-        calculateTotalPrice();
-    });
-    $(document).on('input', '#discount_amount', function () {
+    let discountManuallyChanged = false;
+
+    $(document).on('input', '.product-price, input[name="product_ids[]"]', function () {
+        discountManuallyChanged = true;
         calculateTotalPrice();
     });
 
+    $(document).on('input', '#discount_amount', function () {
+        discountManuallyChanged = true;
+        calculateTotalPrice();
+    });
+
+    $(document).on('blur', '#discount_amount', function () {
+        calculateTotalPrice();
+    });
 
     function calculateTotalPrice() {
         let currentAmount = 0;
-        $('input[name="product_ids[]"]:checked').each(function() {
+
+        $('input[name="product_ids[]"]:checked').each(function () {
             const productId = $(this).val();
             const punitPrice = parseFloat($(`input[data-product-id="${productId}"]`).val()) || 0;
             currentAmount += punitPrice;
         });
 
-        const invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
-        let discountAmount = 0;
+        let invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
+        let discountAmount = parseFloat($('#discount_amount').val()) || 0;
 
-        if (currentAmount > invoiceAmount) {
-            discountAmount = currentAmount - invoiceAmount;
+        if (!discountManuallyChanged) {
+            discountAmount = currentAmount > invoiceAmount ? currentAmount - invoiceAmount : 0;
+            $('#discount_amount').val(discountAmount.toFixed(2));
         }
 
-        $('#discount_amount').prop('readonly', false).prop('type', 'number');
         $('#current_amount').val(currentAmount.toFixed(2));
         $('#temp_current_amount_text').text(currentAmount.toFixed(2));
-        $('#discount_amount').val(discountAmount.toFixed(2));
         $('#temp_discount_amount_text').text(discountAmount.toFixed(2));
         $('#invoice_amount').val(invoiceAmount.toFixed(2));
         $('#temp_invoice_amount_text').text(invoiceAmount.toFixed(2));
+
+        const expectedTotal = invoiceAmount + discountAmount;
+        const isMatch = Math.abs(currentAmount - expectedTotal) < 0.01;
+
+        const colorClass = isMatch ? 'text-success' : 'text-danger';
+
+        $('#current_amount, #discount_amount, #invoice_amount').removeClass('text-success text-danger').addClass(colorClass);
     }
 </script>
 

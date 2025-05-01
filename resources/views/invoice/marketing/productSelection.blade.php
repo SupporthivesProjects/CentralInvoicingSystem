@@ -180,7 +180,7 @@
                                     <small class="text-muted fw-semibold mb-2">No. of Products ~ Keyword</small>
                                     <div class="input-group shadow-sm bg-white w-100 bg-primary">
                                         <select class="form-select border-0 text-primary" name="no_of_products" id="noOfProducts" style="max-width:65px;">
-                                            <option value="">0</option>
+                                            <option value="">Auto</option>
                                             @for ($i = 1; $i <= 20; $i++)
                                                 <option value="{{ $i }}">{{ $i }}</option>
                                             @endfor
@@ -541,11 +541,15 @@
 
         function customizeProducts(search_type='search') {
 
+            let btn = $('#add-custom-products');
             $('#addmoreproducts').on('shown.bs.modal', function () {
                 if ($.fn.DataTable.isDataTable('#customize-products-table')) {
                     $('#customize-products-table').DataTable().columns.adjust().draw();
                 }
             });
+            
+            btn.prop('disabled', false);
+            btn.html('Add Selected to Cart');
             
             const priceFrom = $('#hidden_customize_price_from_input_id').val();
             const priceTo = $('#hidden_customize_price_to_input_id').val();
@@ -663,14 +667,26 @@ function clearRandomizedFilter(button) {
     function generateInvoice(event) {
         event.preventDefault();
 
-        const invoiceInput = $('input[name="invoice_number"]');
+        const customer_name = $('input[name="customer_name"]');
+        const invoice_date = $('input[name="invoice_date"]');
         const selectedProducts = $('input[name="product_ids[]"]:checked');
+        const invoiceNumber = $('input[name="invoice_number"]');
+
         const invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
         const currentAmount = parseFloat($('#current_amount').val()) || 0;
         const discountAmount = parseFloat($('#discount_amount').val()) || 0;
 
         if (selectedProducts.length === 0) {
             toastr.error('Please select your products combo...', 'No Product Selected');
+            return;
+        }
+        if ($.trim(customer_name.val()) === '') {
+            toastr.error('Customer name cannot be empty.', 'Missing Customer Name');
+            return;
+        }
+
+        if ($.trim(invoice_date.val()) === '') {
+            toastr.error('Invoice date cannot be empty.', 'Missing Invoice Date');
             return;
         }
 
@@ -971,6 +987,10 @@ function startVoiceSearch(inputId, micIconId) {
         const transcript = event.results[0][0].transcript;
         inputField.style.color = "blue"; 
         inputField.value = transcript;
+
+        if (inputId === 'customizeKeywordInput') {
+                filterDataTable(transcript); 
+        }
     };
 
     recognition.onerror = function(event) {
@@ -989,65 +1009,60 @@ function startVoiceSearch(inputId, micIconId) {
         inputField.placeholder = "Enter or Speak product or category name...";
     };
 }
+
+    function filterDataTable(searchTerm) {
+        const table = $('#customize-products-table').DataTable();
+        table.search(searchTerm).draw();
+    }
 </script>
 
-<script>    
-    $(document).on('input', '.product-price', function() {
+<script>
+    let discountManuallyChanged = false;
+
+    $(document).on('input', '.product-price, input[name="product_ids[]"]', function () {
+        discountManuallyChanged = true;
         calculateTotalPrice();
     });
-    
+
+    $(document).on('input', '#discount_amount', function () {
+        discountManuallyChanged = true;
+        calculateTotalPrice();
+    });
+
+    $(document).on('blur', '#discount_amount', function () {
+        calculateTotalPrice();
+    });
+
     function calculateTotalPrice() {
         let currentAmount = 0;
-        $('input[name="product_ids[]"]:checked').each(function() {
+
+        $('input[name="product_ids[]"]:checked').each(function () {
             const productId = $(this).val();
             const punitPrice = parseFloat($(`input[data-product-id="${productId}"]`).val()) || 0;
             currentAmount += punitPrice;
         });
 
-        const invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
-        let discountAmount = 0;
+        let invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
+        let discountAmount = parseFloat($('#discount_amount').val()) || 0;
 
-        if (currentAmount > invoiceAmount) {
-            discountAmount = currentAmount - invoiceAmount;
+        if (!discountManuallyChanged) {
+            discountAmount = currentAmount > invoiceAmount ? currentAmount - invoiceAmount : 0;
+            $('#discount_amount').val(discountAmount.toFixed(2));
         }
-        $('#discount_amount').prop('readonly', false).prop('type', 'number') 
+
         $('#current_amount').val(currentAmount.toFixed(2));
         $('#temp_current_amount_text').text(currentAmount.toFixed(2));
-        $('#discount_amount').val(discountAmount.toFixed(2));
         $('#temp_discount_amount_text').text(discountAmount.toFixed(2));
         $('#invoice_amount').val(invoiceAmount.toFixed(2));
         $('#temp_invoice_amount_text').text(invoiceAmount.toFixed(2));
+
+        const expectedTotal = invoiceAmount + discountAmount;
+        const isMatch = Math.abs(currentAmount - expectedTotal) < 0.01;
+
+        const colorClass = isMatch ? 'text-success' : 'text-danger';
+
+        $('#current_amount, #discount_amount, #invoice_amount').removeClass('text-success text-danger').addClass(colorClass);
     }
-</script>
-<script>
-$(document).on('input', '.product-price', function() {
-    calculateTotalPrice();
-});
-
-function calculateTotalPrice() {
-    let currentAmount = 0;
-    $('input[name="product_ids[]"]:checked').each(function() {
-        const productId = $(this).val();
-        const punitPrice = parseFloat($(`input[data-product-id="${productId}"]`).val()) || 0;
-        currentAmount += punitPrice;
-    });
-
-    const invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
-    let discountAmount = 0;
-
-    if (currentAmount > invoiceAmount) {
-        discountAmount = currentAmount - invoiceAmount;
-    }
-
-    $('#discount_amount').prop('readonly', false).prop('type', 'number');
-    $('#current_amount').val(currentAmount.toFixed(2));
-    $('#temp_current_amount_text').text(currentAmount.toFixed(2));
-    $('#discount_amount').val(discountAmount.toFixed(2));
-    $('#temp_discount_amount_text').text(discountAmount.toFixed(2));
-    $('#invoice_amount').val(invoiceAmount.toFixed(2));
-    $('#temp_invoice_amount_text').text(invoiceAmount.toFixed(2));
-
-}
 </script>
 
 @endpush
