@@ -174,39 +174,43 @@
                 <div class="card-body">
                     <div class="container">
                         <div class="row g-3 justify-content-center mb-3">
-                            <!-- Search Keyword -->
-                            <div class="col-md-5 text-center">
-                                <div class="d-flex flex-column align-items-center">
-                                    <small class="text-muted fw-semibold mb-2">No. of Products ~ Keyword</small>
-                                    <div class="input-group shadow-sm bg-white w-100 bg-primary">
-                                        <select class="form-select border-0 text-primary" name="no_of_products" id="noOfProducts" style="max-width:65px;">
-                                            <option value="">Auto</option>
-                                            @for ($i = 1; $i <= 20; $i++)
-                                                <option value="{{ $i }}">{{ $i }}</option>
-                                            @endfor
-                                        </select>
-                                        <input type="text" class="form-control border-0" id="randomizeKeywordInput" placeholder="Enter or Speak product/category..." aria-label="Search Keyword">
-                                        <button class="btn btn-light border-0" type="button" title="Voice Search" onclick="startVoiceSearch('randomizeKeywordInput','randomizeMicIcon')">
-                                            <i class="fas fa-microphone text-primary" id="randomizeMicIcon"></i>
-                                        </button>
-                                        <button class="btn btn-primary" onclick="randomizeProducts('semi_random')" type="button">Search</button>
+                            <div class="col-md-3">
+                                <div class="d-flex flex-column align-items-center h-100">
+                                    <small class="text-muted fw-semibold mb-2">No. of Products</small>
+                                    <div class="input-group shadow-sm bg-white w-100">
+                                        <button class="btn btn-outline-primary" type="button" onclick="adjustNoOfProducts('noOfProducts', -1)">−</button>
+                                        <input type="text" class="form-control text-center" name="noOfProducts" id="noOfProducts" min="1" max="20" placeholder="Auto" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Auto'" readonly>
+                                        <button class="btn btn-outline-primary" type="button" onclick="adjustNoOfProducts('noOfProducts', 1)">+</button>
                                     </div>
                                 </div>
                             </div>
 
-
-                            <!-- Price Range -->
-                            <div class="col-md-5 text-center">
-                                <div class="d-flex flex-column align-items-center ms-1">
+                            <div class="col-md-6">
+                                <div class="d-flex flex-column align-items-center h-100">
                                     <small class="text-muted fw-semibold mb-2">Price Range</small>
-                                    <div class="w-100">
+                                    <div class="w-100 h-100">
                                         <div id="randomize-price-slider" class="w-100"></div>
                                         <input type="hidden" name="price_from" id="hidden_randomize_price_from_input_id">
                                         <input type="hidden" name="price_to" id="hidden_randomize_price_to_input_id">
                                     </div>
                                 </div>
                             </div>
-                        </div>
+
+                            <div class="col-md-3">
+                                <div class="d-flex flex-column align-items-center h-100">
+                                    <small class="text-muted fw-semibold mb-2">Category</small>
+                                    <select class="form-select w-100 h-100" name="category_id" id="category_id">
+                                        <option value="">All Categories</option>
+                                        @foreach(getCategoryList($site->technology) as $category)
+                                            <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
+                     </div>
+
+                </div>  
                     </div>  
                 
                     <div class="table-responsive border rounded shadow-sm">
@@ -256,20 +260,21 @@
             <div class="modal-body bg-white">
                 <div class="container-fluid">
                         <div class="row g-3 mb-4 mx-4">
-                            <div class="col-md-6 d-flex flex-column">
-                                <label for="customizeKeywordInput" class="form-label text-center fw-semibold">Search By Keyword</label>
-                                <div class="input-group bg-light shadow-sm">
-                                    <span class="input-group-text bg-transparent border-0">
-                                        <i class="fas fa-search text-muted"></i>
-                                    </span>
-                                    <input type="text" class="form-control border-0 bg-transparent" id="customizeKeywordInput" placeholder="Enter or Speak product or category name..." aria-label="Search Keyword">
-                                    <button class="btn btn-light border-0 d-flex align-items-center" type="button" onclick="startVoiceSearch('customizeKeywordInput','customizeMicIcon')" id="micBtn" title="Voice Search">
-                                        <i class="fas fa-microphone text-primary" id="customizeMicIcon"></i>
-                                    </button>
-                                 </div>
+                          <div class="col-md-6 d-flex flex-column">
+                            <label for="customizeKeywordInput" class="form-label text-center fw-semibold">Search By Keyword</label>
+                            <div class="input-group bg-light shadow-sm ms-2">
+                                <span class="input-group-text bg-transparent border-0">
+                                    <i class="fas fa-search text-muted"></i>
+                                </span>
+                                <input type="text" class="form-control border-0" id="customizeKeywordInput" placeholder="Enter or Speak product or category name..." id="micBtn" title="Voice Search">
+                                <button class="btn btn-light border-0" type="button" title="Voice Search" onclick="startVoiceSearch('customizeKeywordInput','customizeMicIcon')">
+                                    <i class="fas fa-microphone text-primary" id="customizeMicIcon"></i>
+                                </button>
+                            
                             </div>
+                        </div>
                             <div class="col-md-6 d-flex flex-column">
-                                <label class="form-label text-center fw-semibold mb-2">Fliiter By Price Range</label>
+                                <label class="form-label text-center fw-semibold mb-2">Search By Price Range</label>
                                 <div class="align-items-center rounded bg-white shadow-sm">
                                     <div class="w-100" id="customize-price-slider"></div>
                                 </div>
@@ -281,19 +286,19 @@
                             <div class="col-md-4">
                                 <div class="bg-light rounded border shadow-sm p-1 text-center">
                                     <div class="text-muted small fw-semibold">Current Amount</div>
-                                    <div class="fw-bold text-success fs-5">{{ site_currency() }}<span id="temp_current_amount_text">0.00</span></div>
+                                    <div class="fw-bold text-primary fs-5">{{ site_currency() }}<span id="temp_current_amount_text">0.00</span></div>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="bg-light rounded border shadow-sm p-1 text-center">
                                     <div class="text-muted small fw-semibold">Discount Amount</div>
-                                    <div class="fw-bold text-danger fs-5">{{ site_currency() }}<span id="temp_discount_amount_text">0.00</span></div>
+                                    <div class="fw-bold text-primary fs-5">{{ site_currency() }}<span id="temp_discount_amount_text">0.00</span></div>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="bg-light rounded border shadow-sm p-1 text-center">
                                     <div class="text-muted small fw-semibold">Invoice Amount</div>
-                                    <div class="fw-bold text-warning fs-5">{{ site_currency() }}<span id="temp_invoice_amount_text">0.00</span></div>
+                                    <div class="fw-bold text-primary fs-5">{{ site_currency() }}<span id="temp_invoice_amount_text">0.00</span></div>
                                 </div>
                             </div>
                         </div>
@@ -349,7 +354,7 @@
             <form method="GET" action="{{ route('product.selection') }}" id="sitechangemodel-form">
                 <div class="modal-body bg-light">
                     <div class="mb-3">
-                        <label for="new_site_id" class="form-label fw-semibold">Select a Site</label>
+                        <label for="new_site_id" class="form-label fw-semibold">Want to change website?</label>
                         <select name="new_site_id" id="new_site_id" class="form-select" required>
                             <option value="">-- Select Site --</option>
                             @foreach($sites as $s)
@@ -387,6 +392,35 @@
         $('#discount_amount').prop('type', 'text').val('loading...').prop('readonly', true);
     });
 </script>
+<script>
+    function adjustNoOfProducts(id, step) {
+        const input = document.getElementById(id);
+        let val = input.value === 'Auto' || input.value === '' ? 1 : parseInt(input.value) || 1;
+        val = Math.max(1, Math.min(20, val + step));
+
+        if (val === 1) {
+            input.value = '';
+            input.placeholder = 'Auto';
+        } else {
+            input.value = val;
+            input.placeholder = '';
+        }
+
+        triggerRandomizeProducts();
+    }
+
+    let randomizeTimeout;
+    function triggerRandomizeProducts() {
+        clearTimeout(randomizeTimeout);
+        randomizeTimeout = setTimeout(() => {
+            randomizeProducts('semi_random');
+        }, 1500);
+    }
+
+    document.getElementById('noOfProducts').addEventListener('change', triggerRandomizeProducts);
+    document.getElementById('category_id').addEventListener('change', triggerRandomizeProducts);
+</script>
+
 <script>
     const randomizePriceSlider = document.getElementById('randomize-price-slider');
     const customizePriceSlider = document.getElementById('customize-price-slider');
@@ -440,15 +474,18 @@
         $('#randomize-product-table-body').html(getLoaderRowHTML());
         const priceFrom = $('#hidden_randomize_price_from_input_id').val();
         const priceTo = $('#hidden_randomize_price_to_input_id').val();
-        const randomizeKeywordInput = $('#randomizeKeywordInput').val().trim();
+        const category_id = $('#category_id').val().trim();
         const noOfProducts = $('#noOfProducts').val();
-        if(mode === 'smart_random') {
-          $('#randomizeKeywordInput').val('');
-          $('#noOfProducts').val('');
+        if (mode === 'smart_random') {
+            $('#category_id').val('');
+            $('#noOfProducts').val('');
+            $('#noOfProducts').attr('placeholder', 'Auto');
         }
 
         $('#current_amount').val('Calculating...');
         $('#discount_amount').prop('type', 'text').val('Calculating...').prop('readonly', true);
+        $('#current_amount').removeClass('text-danger text-success');
+        $('#discount_amount').removeClass('text-danger text-success');
         var invoice_amount = parseFloat($('#invoice_amount').val()) || 0;
 
         $.ajax({
@@ -459,7 +496,7 @@
                 invoice_amount: invoice_amount,
                 price_from: priceFrom,
                 price_to: priceTo,
-                randomizeKeywordInput: randomizeKeywordInput,
+                category_id: category_id,
                 noOfProducts: noOfProducts
             },
             success: function (response) {
@@ -594,13 +631,14 @@
                     if (!$.fn.DataTable.isDataTable('#customize-products-table')) {
                         customizeTable = $('#customize-products-table').DataTable({
                             responsive: true,
+                            searchHighlight: true,
                             dom: 'rtip',
                             language: {
                                 search: "",
                                 searchPlaceholder: ""
                             },
                             columnDefs: [
-                                { orderable: false, targets: [0,1,2,4,5] }
+                                { orderable: false, targets: [4,5] }
                             ]
                         });
 
@@ -611,13 +649,14 @@
                         customizeTable.clear().destroy(); 
                         customizeTable = $('#customize-products-table').DataTable({ 
                             responsive: true,
+                            searchHighlight: true,
                             dom: 'rtip',
                             language: {
                                 search: "",
                                 searchPlaceholder: ""
                             },
                             columnDefs: [
-                                { orderable: false, targets: [0,1,2,4,5] }
+                                { orderable: false, targets: [4,5] }
                             ]
                         });
                     }
@@ -719,8 +758,6 @@ function clearRandomizedFilter(button) {
             return;
         }
 
-
-        const invoiceNumber = invoiceInput.val().trim();
         if (!invoiceNumber) {
             toastr.error('Please enter your invoice number or generate one randomly.', 'Invoice Number Missing');
             let blinkCount = 0;
@@ -961,58 +998,62 @@ $(document).ready(function() {
 </script>
 
 <script>
-function startVoiceSearch(inputId, micIconId) {
-    const inputField = document.getElementById(inputId);
-    const micIcon = document.getElementById(micIconId);
-    inputField.placeholder = "Please speak product name or category";
+    $.fn.dataTable.ext.type.search.string = function (data) {
+        return !data ? '' : data.toString().toLowerCase().replace(/-/g, '');
+    };
 
-    if (!('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
-        toastr.error("Your browser does not support voice recognition. Please try using a modern browser like Chrome.");
-        return;
-    }
+    function startVoiceSearch(inputId, micIconId) {
+        const inputField = document.getElementById(inputId);
+        const micIcon = document.getElementById(micIconId);
+        inputField.placeholder = "Please speak product name or category";
 
-    inputField.value = '';
-    inputField.placeholder = "Listening to your voice search...";
-
-    micIcon.classList.remove("text-primary"); 
-    micIcon.classList.add("text-danger");
-
-    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-    recognition.lang = "en-US";
-    recognition.interimResults = false;
-
-    recognition.start();
-
-    recognition.onresult = function(event) {
-        const transcript = event.results[0][0].transcript;
-        inputField.style.color = "blue"; 
-        inputField.value = transcript;
-
-        if (inputId === 'customizeKeywordInput') {
-                filterDataTable(transcript); 
+        if (!('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
+            toastr.error("Your browser does not support voice recognition. Please try using a modern browser like Chrome.");
+            return;
         }
-    };
 
-    recognition.onerror = function(event) {
-        toastr.error("Voice recognition error: " + event.error);
         inputField.value = '';
-        inputField.style.color = ''; 
-        micIcon.classList.remove("text-danger");
-        micIcon.classList.add("text-primary"); 
-        inputField.placeholder = "Enter or Speak product or category name...";
-    };
+        inputField.placeholder = "Listening to your voice search...";
+        micIcon.classList.remove("text-primary");
+        micIcon.classList.add("text-danger");
 
-    recognition.onend = function() {
-        micIcon.classList.remove("text-danger");
-        micIcon.classList.add("text-primary"); 
-        inputField.style.color = 'blue'; 
-        inputField.placeholder = "Enter or Speak product or category name...";
-    };
-}
+        const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        recognition.lang = "en-US";
+        recognition.interimResults = false;
+
+        recognition.start();
+
+        recognition.onresult = function(event) {
+            const transcript = event.results[0][0].transcript;
+            inputField.style.color = "blue";
+            inputField.value = transcript;
+
+            if (inputId === 'customizeKeywordInput') {
+                filterDataTable(transcript);
+            }
+        };
+
+        recognition.onerror = function(event) {
+            toastr.error("Voice recognition error: " + event.error);
+            inputField.value = '';
+            inputField.style.color = '';
+            micIcon.classList.remove("text-danger");
+            micIcon.classList.add("text-primary");
+            inputField.placeholder = "Enter or Speak product or category name...";
+        };
+
+        recognition.onend = function() {
+            micIcon.classList.remove("text-danger");
+            micIcon.classList.add("text-primary");
+            inputField.style.color = 'blue';
+            inputField.placeholder = "Enter or Speak product or category name...";
+        };
+    }
 
     function filterDataTable(searchTerm) {
         const table = $('#customize-products-table').DataTable();
-        table.search(searchTerm).draw();
+        const normalizedSearchTerm = searchTerm.toLowerCase().replace(/-/g, '');
+        table.search(normalizedSearchTerm).draw();
     }
 </script>
 

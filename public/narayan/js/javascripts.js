@@ -137,7 +137,6 @@ function replaceFeatherIconsTemporarily() {
         });
     }
     
-    
 
 
 function getLoaderRowHTML(colspan = 6) {

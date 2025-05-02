@@ -120,7 +120,9 @@
             btn.prop('disabled', true);
             btn.html('<i class="fas fa-spinner fa-spin"></i> Adding to Cart...');
             $('#current_amount').val('Calculating...');
-             $('#discount_amount').prop('type', 'text').val('Calculating...').prop('readonly', true);
+            $('#discount_amount').prop('type', 'text').val('Calculating...').prop('readonly', true);
+            $('#current_amount').removeClass('text-danger text-success');
+            $('#discount_amount').removeClass('text-danger text-success');
 
             $.ajax({
                 url: "{{ route('add.products') }}",

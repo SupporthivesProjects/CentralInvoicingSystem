@@ -40,16 +40,12 @@ class LaravelController extends Controller
     
         $priceFrom = $request->get('price_from');
         $priceTo = $request->get('price_to');
-        $randomizeKeywordInput = trim($request->get('randomizeKeywordInput'));
+        $categoryId = $request->get('category_id');
         $noOfProducts = intval($request->get('noOfProducts'));
-
-        if($randomizeKeywordInput ||  $noOfProducts){
-            $minTotal = $invoiceAmount * 0.5; 
-        }else{
-            $minTotal = $invoiceAmount* 0.05; 
-        }
+    
+        $minTotal = $invoiceAmount * 0.5;
         $maxTotal = $invoiceAmount * 1.10;
-        
+    
         $site = Website::findOrFail($site_id);
         $productstable = getProductTable($site->technology);
         DynamicDatabaseService::connect($site);
@@ -62,52 +58,58 @@ class LaravelController extends Controller
             $query->whereBetween('unit_price', [$priceFrom, $priceTo]);
         }
     
-        if ($randomizeKeywordInput) {
-            $keyword = strtolower(str_replace('-', '', trim($randomizeKeywordInput)));
-        
-            $query->where(function ($q) use ($keyword) {
-                $q->whereRaw("REPLACE(LOWER(name), '-', '') LIKE ?", ["%{$keyword}%"])
-                  ->orWhereIn('category_id', function ($sub) use ($keyword) {
-                      $sub->select('id')
-                          ->from('categories')
-                          ->whereRaw("REPLACE(LOWER(name), '-', '') LIKE ?", ["%{$keyword}%"]);
-                  });
-            });
+        if ($categoryId) {
+            $query->where('category_id', $categoryId);
         }
-        
     
         $allProducts = $query->orderByDesc('unit_price')->get()->shuffle();
     
         $bestMatch = null;
         $bestTotal = 0;
+        $bestDistance = null;
     
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 20; $i++) {
             $shuffled = $allProducts;
             $selected = [];
             $currentTotal = 0;
     
             foreach ($shuffled as $product) {
-                if ($noOfProducts && count($selected) >= $noOfProducts) {
-                    break;
-                }
-    
                 $price = floatval($product->unit_price);
     
-                if (($currentTotal + $price) <= $maxTotal) {
-                    $selected[] = $product;
-                    $currentTotal += $price;
+                if ($noOfProducts) {
+                    if (count($selected) >= $noOfProducts) break;
     
-                    if ($currentTotal >= $minTotal && $currentTotal <= $maxTotal) {
-                        if ($currentTotal > $bestTotal) {
-                            $bestMatch = $selected;
-                            $bestTotal = $currentTotal;
+                    if ($currentTotal + $price <= $invoiceAmount) {
+                        $selected[] = $product;
+                        $currentTotal += $price;
+                    }
+                } else {
+                    if (($currentTotal + $price) <= $maxTotal) {
+                        $selected[] = $product;
+                        $currentTotal += $price;
+    
+                        if ($currentTotal >= $minTotal && $currentTotal <= $maxTotal) {
+                            if ($currentTotal > $bestTotal) {
+                                $bestMatch = $selected;
+                                $bestTotal = $currentTotal;
+                            }
                         }
                     }
                 }
             }
     
-            if ($bestMatch) {
-                break;
+            if ($noOfProducts && count($selected) === $noOfProducts) {
+                $distance = abs($invoiceAmount - $currentTotal);
+    
+                if ($bestMatch === null || $distance < $bestDistance) {
+                    $bestMatch = $selected;
+                    $bestTotal = $currentTotal;
+                    $bestDistance = $distance;
+    
+                    if ($currentTotal >= ($invoiceAmount * 0.9)) {
+                        break;
+                    }
+                }
             }
         }
     
@@ -168,6 +170,8 @@ class LaravelController extends Controller
             'total' => $bestTotal
         ]);
     }
+    
+    
     
  
     
@@ -441,7 +445,7 @@ class LaravelController extends Controller
             $query->whereNotIn('products.id', $readyProductIds);
         }
         if($search_type == 'onload'){
-            $products = $query->inRandomOrder()->limit(20)->get();
+            $products = $query->inRandomOrder()->limit(150)->get();
         }else{
             $products = $query->orderBy('unit_price')->get();
         }

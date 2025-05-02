@@ -65,66 +65,66 @@
 
 <script>    
 
-$(document).ready(function() {
-    $(document).off('click', '.remove-product').on('click', '.remove-product', function() {
-        var $button = $(this);
-        var productId = $button.data('product-id');
-        var productName = $button.data('product-name');
-       
-        Swal.fire({
-            title: 'Remove Product?',
-            text: `Are you sure you want to remove '${productName}' product?`,
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonText: 'Yes, Remove',
-            cancelButtonText: 'Cancel',
-            customClass: {
-                popup: 'p-2 text-sm',
-                title: 'text-base font-weight-bold',
-                confirmButtonClass: 'btn btn-sm btn-danger',
-                cancelButtonClass: 'btn btn-sm btn-secondary'
-            },
-            width: '350px',
-            padding: '1em'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $button.html('<i class="fas fa-spinner fa-spin"></i>'); 
-                $('#current_amount').val('Recalculating...');
-                $('#discount_amount').prop('type', 'text').val('Recalculating...').prop('readonly', true);
+    $(document).ready(function() {
+        $(document).off('click', '.remove-product').on('click', '.remove-product', function() {
+            var $button = $(this);
+            var productId = $button.data('product-id');
+            var productName = $button.data('product-name');
         
-                $.ajax({
-                    url: "{{ route('remove.product') }}", 
-                    method: 'POST',
-                    data: {
-                        product_id: productId,
-                        site_id: "{{ session('customer.site_id') }}",
-                        _token: '{{ csrf_token() }}'
-                    },
-                    success: function(response) {
-                        $button.html('<i class="fas fa-check-square"></i>'); 
-                        $button.removeClass('btn-danger').addClass('btn-success');
-                        $('#randomize-product-table-body').html(response.tableRows); 
-                        toastr.success('Product has been removed successfully.','Product Removed');
-                        calculateTotalPrice(); 
+            Swal.fire({
+                title: 'Remove Product?',
+                text: `Are you sure you want to remove '${productName}' product?`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, Remove',
+                cancelButtonText: 'Cancel',
+                customClass: {
+                    popup: 'p-2 text-sm',
+                    title: 'text-base font-weight-bold',
+                    confirmButton: 'btn btn-sm btn-danger',
+                    cancelButton: 'btn btn-sm btn-secondary'
+                },
+                width: '350px',
+                padding: '1em'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $button.html('<i class="fas fa-spinner fa-spin"></i>');
+                    $('#current_amount').val('Recalculating...');
+                    $('#discount_amount').prop('type', 'text').val('Recalculating...').prop('readonly', true);
+                    $('#current_amount').removeClass('text-danger text-success');
+                    $('#discount_amount').removeClass('text-danger text-success');
+            
+                    $.ajax({
+                        url: "{{ route('remove.product') }}",
+                        method: 'POST',
+                        data: {
+                            product_id: productId,
+                            site_id: "{{ session('customer.site_id') }}",
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            $button.html('<i class="fas fa-check-square"></i>');
+                            $button.removeClass('btn-danger').addClass('btn-success');
+                            $('#randomize-product-table-body').html(response.tableRows);
+                            toastr.success('Product has been removed successfully.','Product Removed');
+                            $('#discount_amount').prop('readonly', false).prop('type', 'number');
+                            calculateTotalPrice();
 
-                        setTimeout(() => {
-                            $button.html('<i class="fas fa-trash-alt"></i>'); 
+                            setTimeout(() => {
+                                $button.html('<i class="fas fa-trash-alt"></i>');
+                                $button.removeClass('btn-success').addClass('btn-danger');
+                            }, 2000);
+                        },
+                        error: function() {
+                            $button.html('<i class="fas fa-trash-alt"></i>');
                             $button.removeClass('btn-success').addClass('btn-danger');
-                        }, 2000);
-                    },
-                    error: function(xhr, status, error) {
-                        $button.html('<i class="fas fa-trash-alt"></i>');
-                        $button.removeClass('btn-success').addClass('btn-danger');
-                        calculateTotalPrice();
-                        toastr.error('Error removing product. Please try again.'); 
-                    }
-                });
-            } else {
-                console.log('Product removal canceled.');
-            }
+                            calculateTotalPrice();
+                            toastr.error('Error removing product. Please try again.');
+                        }
+                    });
+                }
+            });
         });
     });
-});
-
 
 </script>

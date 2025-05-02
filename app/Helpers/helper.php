@@ -157,6 +157,19 @@ if (!function_exists('getProductTable')) {
     }
 }
 
+if (!function_exists('getCategoryList')) {
+    function getCategoryList($technology)
+    {
+        $categories = [
+            'wordpress' => DB::connection('dynamic')->table('categories')->select('id', 'name')->get(),
+            'laravel'   => DB::connection('dynamic')->table('categories')->select('id', 'name')->get(),
+            'corephp'   => DB::connection('dynamic')->table('categories')->select('id', 'name')->get(),
+        ];
+
+        return $categories[$technology] ?? collect();
+    }
+}
+
 
 
 

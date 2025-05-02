@@ -38,37 +38,28 @@ class LaravelController extends Controller
     {
         $site_id = $request->get('site_id');
         $invoiceAmount = floatval($request->get('invoice_amount'));
-    
+
         $priceFrom = $request->get('price_from');
         $priceTo = $request->get('price_to');
-    
-        $randomizeKeywordInput = trim($request->get('randomizeKeywordInput'));
+
+        $categoryId = intval($request->get('category_id'));
         $noOfProducts = intval($request->get('noOfProducts'));
 
-        if($randomizeKeywordInput ||  $noOfProducts){
-            $minTotal = $invoiceAmount * 0.5; 
-        }else{
-            $minTotal = $invoiceAmount* 0.05; 
+        if ($categoryId || $noOfProducts) {
+            $minTotal = $invoiceAmount * 0.5;
+        } else {
+            $minTotal = $invoiceAmount * 0.05;
         }
         $maxTotal = $invoiceAmount * 1.10;
-    
+
         $site = Website::findOrFail($site_id);
         $productstable = getProductTable($site->technology);
         DynamicDatabaseService::connect($site);
-        
-        $keyword = strtolower(str_replace('-', '', trim($randomizeKeywordInput)));
 
         $allProducts = DB::connection($this->connectionType)->table($this->productTable)
-            ->select('id','subscription','category_id', 'name', 'unit_price','slug')
-            ->when($randomizeKeywordInput, function ($query) use ($keyword) {
-                $query->where(function ($q) use ($keyword) {
-                    $q->whereRaw("REPLACE(LOWER(name), '-', '') LIKE ?", ["%{$keyword}%"])
-                      ->orWhereIn('category_id', function ($sub) use ($keyword) {
-                          $sub->select('id')
-                              ->from('categories')
-                              ->whereRaw("REPLACE(LOWER(name), '-', '') LIKE ?", ["%{$keyword}%"]);
-                      });
-                });
+            ->select('id', 'subscription', 'category_id', 'name', 'unit_price', 'slug')
+            ->when($categoryId, function ($query) use ($categoryId) {
+                return $query->where('category_id', $categoryId);
             })
             ->when($priceFrom && $priceTo, function ($query) use ($priceFrom, $priceTo) {
                 return $query->whereBetween('unit_price', [$priceFrom, $priceTo]);
@@ -80,19 +71,19 @@ class LaravelController extends Controller
         $bestMatch = null;
         $bestTotal = 0;
         $selectedCategories = [];
-    
+
         for ($i = 0; $i < 10; $i++) {
             $shuffled = $allProducts;
             $selected = [];
             $currentTotal = 0;
-    
-            foreach ($shuffled as $product) {
 
+            foreach ($shuffled as $product) {
                 if ($noOfProducts && count($selected) >= $noOfProducts) {
                     break;
                 }
+
                 $price = floatval($product->unit_price);
-                
+
                 if (in_array($product->category_id, $selectedCategories) && count($selected) > 0) {
                     continue;
                 }
@@ -100,7 +91,7 @@ class LaravelController extends Controller
                 if (($currentTotal + $price) <= $maxTotal) {
                     $selected[] = $product;
                     $currentTotal += $price;
-    
+
                     if ($currentTotal >= $minTotal && $currentTotal <= $maxTotal) {
                         if ($currentTotal > $bestTotal) {
                             $bestMatch = $selected;
@@ -109,12 +100,12 @@ class LaravelController extends Controller
                     }
                 }
             }
-    
+
             if ($bestMatch) {
                 break;
             }
         }
-    
+
         if (!$bestMatch) {
             return response()->json([
                 'tableRows' => '',
@@ -123,51 +114,53 @@ class LaravelController extends Controller
             ]);
         }
 
-        
-         $bestMatch = collect($bestMatch); 
-         $bestMatch->each(function ($product) {
-             $product->category_name = DB::connection($this->connectionType)->table('categories')->where('id', $product->category_id)->value('name') ?? 'unknown';
-         
-         });
- 
-         $bestMatch->each(function ($product) use ($site_id) {
-             $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
-                                              ->where('product_id', $product->id)
-                                              ->orderByDesc('last_price_changed')
-                                              ->first();
-         
-             if ($lastUpdate) {
- 
-                 $lastPriceChanged = Carbon::parse($lastUpdate->last_price_changed);
-                 $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
-                 $remainingDays = now()->diffInDays($nextPriceChangeDate, false);
-                 $product->remaining_days = round(max($remainingDays, 0));
-                 $product->can_edit_price = now()->greaterThanOrEqualTo($nextPriceChangeDate) ? 1 : 0;
- 
-             } else {
-                 $product->can_edit_price = 1;
-                 $product->remaining_days = 0;
-             }
-         });
-        
-         $productList = $bestMatch->map(function ($product) {
+        $bestMatch = collect($bestMatch);
+        $bestMatch->each(function ($product) {
+            $product->category_name = DB::connection($this->connectionType)->table('categories')->where('id', $product->category_id)->value('name') ?? 'unknown';
+        });
+
+        $bestMatch->each(function ($product) use ($site_id) {
+            $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
+                                            ->where('product_id', $product->id)
+                                            ->orderByDesc('last_price_changed')
+                                            ->first();
+
+            if ($lastUpdate) {
+                $lastPriceChanged = Carbon::parse($lastUpdate->last_price_changed);
+                $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
+                $remainingDays = now()->diffInDays($nextPriceChangeDate, false);
+                $product->remaining_days = round(max($remainingDays, 0));
+                $product->can_edit_price = now()->greaterThanOrEqualTo($nextPriceChangeDate) ? 1 : 0;
+            } else {
+                $product->can_edit_price = 1;
+                $product->remaining_days = 0;
+            }
+        });
+
+        $productList = $bestMatch->map(function ($product) {
             return [
                 'id' => $product->id,
                 'unit_price' => $product->unit_price,
             ];
         })->toArray();
-        
-        session()->forget('ready_products'); 
+
+        session()->forget('ready_products');
         session()->put('ready_products', $productList);
         session(['current_amount' => $bestTotal]);
+
         $modelType = $site->businessModel->model_type;
-        $tableRows = view("invoice.{$modelType}.random_product_rows", ['products' => $bestMatch,'site' => $site,  'total' => $bestTotal])->render();
-        
+        $tableRows = view("invoice.{$modelType}.random_product_rows", [
+            'products' => $bestMatch,
+            'site' => $site,
+            'total' => $bestTotal
+        ])->render();
+
         return response()->json([
             'tableRows' => $tableRows,
             'total' => $bestTotal
         ]);
     }
+
     
     public function addProducts(Request $request)
     {
@@ -460,7 +453,7 @@ class LaravelController extends Controller
             $query->whereNotIn('products.id', $readyProductIds);
         }
         if($search_type == 'onload'){
-            $products = $query->inRandomOrder()->limit(20)->get();
+            $products = $query->inRandomOrder()->limit(150)->get();
         }else{
             $products = $query->orderBy('unit_price')->get();
         }
