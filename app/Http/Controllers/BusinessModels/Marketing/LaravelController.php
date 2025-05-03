@@ -453,7 +453,7 @@ class LaravelController extends Controller
             $query->whereNotIn('products.id', $readyProductIds);
         }
         if($search_type == 'onload'){
-            $products = $query->inRandomOrder()->limit(150)->get();
+            $products = $query->inRandomOrder()->limit(100)->get();
         }else{
             $products = $query->orderBy('unit_price')->get();
         }
