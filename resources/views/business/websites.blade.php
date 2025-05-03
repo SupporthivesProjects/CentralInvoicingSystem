@@ -23,25 +23,27 @@
                     <div class="col-xl-12">
                         <div class="card custom-card">
                         <div class="card-header d-flex justify-content-between align-items-center">
-                                <div class="card-title mb-0">Available Websites</div>
+                            <div class="card-title mb-0">Available Websites</div>
                                 <a href="{{ route('website.create') }}" class="btn btn-sm btn-primary d-flex align-items-center gap-1 group">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
                                         <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
                                     </svg>
                                     New Website
                                 </a>
-                            </div>
+                              </div>
                             <div class="card-body">
                                 <div class="table-responsive">
                                     <table id="file-export" class="table table-bordered text-nowrap" style="width:100%">
                                     <thead>
                                             <tr>
                                                 <th>#</th>
-                                                <th>Business Model</th>
+                                                <th>Model</th>
                                                 <th>Site Name</th>
-                                                <th>Site live link</th>
-                                                <th>Created At</th>
+                                                <th>Site link</th>
+                                                <th>Bank name</th>
+                                                <th>Bank Code</th>
                                                 <th>Actions</th>
+                                                <th>Created At</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -50,8 +52,9 @@
                                                     <td>{{ $index + 1 }}</td>
                                                     <td>{{ $site->businessModel->name ?? '-' }}</td>
                                                     <td>{{ $site->site_name }}</td>
-                                                    <td><a href="{{ $site->site_link }}" target="_blank" >{{ $site->site_link }}</a></td>
-                                                    <td>{{ $site->created_at->format('Y-m-d') }}</td>
+                                                    <td><a href="{{ $site->site_link }}" target="_blank" >View</a></td>
+                                                    <td>{{ $site->bank_name }}</td>
+                                                    <td>{{ $site->bank_code }}</td>
                                                     <td>
                                                      
                                                         <a href="{{ route('site.connect.db', $site->id) }}" class="btn btn-sm btn-warning">
@@ -64,6 +67,7 @@
                                                             <i class="fas fa-trash-alt"></i> Delete
                                                         </button>
                                                     </td>
+                                                    <td>{{ $site->created_at->format('Y-m-d') }}</td>
 
                                                 </tr>
                                             @endforeach

@@ -123,6 +123,16 @@
                             <input type="text" name="company_address" class="form-control" placeholder="Enter Company Address">
                         </div>
 
+                        <div class="col-md-6 mx-auto">
+                            <label class="form-label">Bank Name</label>
+                            <input type="text" name="bank_name" class="form-control" placeholder="Enter Bank Name">
+                        </div>
+
+                        <div class="col-md-6 mx-auto">
+                            <label class="form-label">Bank Code</label>
+                            <input type="text" name="bank_code" class="form-control" placeholder="Enter Bank Code (e.g., IFSC or SWIFT)">
+                        </div>
+
                         <hr>
                         <!-- First Row for Invoice Template -->
                         <div class="row mb-4 mt-1">

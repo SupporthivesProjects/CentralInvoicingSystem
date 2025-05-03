@@ -46,9 +46,9 @@ class LaravelController extends Controller
         $noOfProducts = intval($request->get('noOfProducts'));
 
         if ($categoryId || $noOfProducts) {
-            $minTotal = $invoiceAmount * 0.5;
+            $minTotal = $invoiceAmount * 0.7;
         } else {
-            $minTotal = $invoiceAmount * 0.05;
+            $minTotal = $invoiceAmount;
         }
         $maxTotal = $invoiceAmount * 1.10;
 
@@ -583,7 +583,13 @@ class LaravelController extends Controller
             InvoiceController::createInvoiceHistory($invoice_data);
             $pdf = PDF::loadView($viewPath, $invoice_data);
             $pdf->setPaper('A4', 'portrait');
-            $filename = $invoice_data['invoice_number'] . '.pdf';
+            
+            if ($request->filled('invoice_file_name')) {
+                $filename = $request->input('invoice_file_name') . '.pdf';
+            } else {
+                $filename = $invoice_data['invoice_number'] . '.pdf';
+            }
+            
             return $pdf->download($filename);
         } catch (\Illuminate\View\ViewNotFoundException $e) {
             abort(500, 'Please set up or upload your invoice template.');

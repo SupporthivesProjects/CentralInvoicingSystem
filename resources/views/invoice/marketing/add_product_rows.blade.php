@@ -123,6 +123,7 @@
             $('#discount_amount').prop('type', 'text').val('Calculating...').prop('readonly', true);
             $('#current_amount').removeClass('text-danger text-success');
             $('#discount_amount').removeClass('text-danger text-success');
+            $('#invoice_amount').removeClass('text-danger text-success');
 
             $.ajax({
                 url: "{{ route('add.products') }}",

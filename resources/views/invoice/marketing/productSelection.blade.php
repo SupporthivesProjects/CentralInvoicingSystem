@@ -19,11 +19,10 @@
 
                 <div class="mt-3 mt-md-0">
                 <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
-                <a href="{{ url()->previous() }}" class="btn btn-outline-secondary btn-sm" >
-                    <i class="fas fa-arrow-left"></i> Go Back
-                </a>
-
-                </div>
+                        <a href="{{ url()->previous() }}" class="btn btn-outline-secondary btn-sm" >
+                            <i class="fas fa-arrow-left"></i> Go Back
+                        </a>
+                 </div>
                 </div>
             </div>
 
@@ -56,7 +55,7 @@
                                 </label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="fas fa-file-invoice"></i></span>
-                                    <input type="text" form="generate-invoice-form" id="invoice_number" name="invoice_number" class="form-control font-italic" value="{{ session('regenerate_invoice_number') ?? '' }}" placeholder="Enter or generate invoice number">
+                                    <input type="text" form="generate-invoice-form" id="invoice_number" name="invoice_number" class="form-control font-italic" value="{{ $invoice['invoice_number'] ?? '' }}"  placeholder="Enter or generate invoice number">
                                     <div class="btn-group">
                                             <button type="button" class="btn input-group-text dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
                                                 <span class="visually-hidden">Toggle Dropdown</span>
@@ -82,6 +81,8 @@
                                     <input type="date" form="generate-invoice-form" name="invoice_date" class="form-control" value="{{ $invoice['invoice_date'] ?? now()->toDateString() }}">
                                 </div>
                             </div>
+                           
+
                             <div class="col-md-4 mb-3">
                                 <label class="form-label">Customer Email</label>
                                 <div class="input-group">
@@ -89,14 +90,15 @@
                                     <input type="email" form="generate-invoice-form" class="form-control" id="customer_email" name="customer_email" value="{{ $customer['customer_email'] ?? '' }}"  placeholder="Enter Customer email">
                                 </div>
                             </div>
-                            
+
                             <div class="col-md-4 mb-3">
-                                <label class="form-label">Customer Phone</label>
+                                <label class="form-label">Invoice File Name</label>
                                 <div class="input-group">
-                                    <span class="input-group-text"><i class="fas fa-phone"></i></span>
-                                    <input type="text" form="generate-invoice-form" class="form-control" id="customer_mobile" name="customer_mobile" value="{{ $customer['customer_mobile'] ?? '' }}"  placeholder="Enter customer Mobile">
+                                    <span class="input-group-text"><i class="fas fa-file-invoice"></i></span>
+                                    <input type="text" form="generate-invoice-form" class="form-control" id="invoice_file_name" name="invoice_file_name" value="{{ old('invoice_file_name') }}" placeholder="Enter Invoice File Name">
                                 </div>
                             </div>
+                          
                         </div>
 
 
@@ -186,7 +188,7 @@
                             </div>
 
                             <div class="col-md-6">
-                                <div class="d-flex flex-column align-items-center h-100">
+                                <div class="d-flex flex-column align-items-center h-100 ms-3">
                                     <small class="text-muted fw-semibold mb-2">Price Range</small>
                                     <div class="w-100 h-100">
                                         <div id="randomize-price-slider" class="w-100"></div>
@@ -198,7 +200,7 @@
 
                             <div class="col-md-3">
                                 <div class="d-flex flex-column align-items-center h-100">
-                                    <small class="text-muted fw-semibold mb-2">Category</small>
+                                    <small class="text-muted fw-semibold mb-2">Product Category</small>
                                     <select class="form-select w-100 h-100" name="category_id" id="category_id">
                                         <option value="">All Categories</option>
                                         @foreach(getCategoryList($site->technology) as $category)
@@ -275,7 +277,7 @@
                         </div>
                             <div class="col-md-6 d-flex flex-column">
                                 <label class="form-label text-center fw-semibold mb-2">Search By Price Range</label>
-                                <div class="align-items-center rounded bg-white shadow-sm">
+                                <div class="align-items-center rounded bg-white shadow-sm ms-3">
                                     <div class="w-100" id="customize-price-slider"></div>
                                 </div>
                                 <input type="hidden" id="hidden_customize_price_from_input_id">
@@ -486,6 +488,7 @@
         $('#discount_amount').prop('type', 'text').val('Calculating...').prop('readonly', true);
         $('#current_amount').removeClass('text-danger text-success');
         $('#discount_amount').removeClass('text-danger text-success');
+        $('#invoice_amount').removeClass('text-danger text-success');
         var invoice_amount = parseFloat($('#invoice_amount').val()) || 0;
 
         $.ajax({
@@ -514,7 +517,6 @@
                     $('#randomize-product-table-body').html(response.tableRows);
                     $('#current_amount').val(currentAmount.toFixed(2));
                     $('#discount_amount').prop('readonly', false).prop('type', 'number') 
-                    $('#discount_amount').val((currentAmount - invoiceAmount).toFixed(2));
                     calculateTotalPrice();
                     replaceFeatherIconsTemporarily();
                 }
@@ -709,7 +711,7 @@ function clearRandomizedFilter(button) {
         const customer_name = $('input[name="customer_name"]');
         const invoice_date = $('input[name="invoice_date"]');
         const selectedProducts = $('input[name="product_ids[]"]:checked');
-        const invoiceNumber = $('input[name="invoice_number"]');
+        const invoiceNumber = $('input[name="invoice_number"]').val();
 
         const invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
         const currentAmount = parseFloat($('#current_amount').val()) || 0;
