@@ -1,0 +1,473 @@
+@forelse($products as $index => $product)
+    @php
+        $captureFields = json_decode($product->game_need_to_capture ?? '{}', true);
+        $platforms = array_keys($captureFields);
+    @endphp
+
+    {{-- Main Row --}}
+    <tr class="align-middle product-row" id="customize-product-row-{{ $product->id }}" data-bs-toggle="collapse" data-bs-target="#collapse-{{ $product->id }}" aria-expanded="false" aria-controls="collapse-{{ $product->id }}" style="cursor: pointer;">
+        <!-- 1️⃣ SR. NO. -->
+        <td class="text-center">{{ $index + 1 }}</td>
+
+        <!-- 2️⃣ GAME NAME -->
+        <td>
+            {{ $product->name }}
+            @if($site->site_link && $product->slug)
+                <a href="{{ $site->site_link }}product/{{ $product->slug }}" target="_blank" title="View Product">🔗</a>
+            @endif
+        </td>
+
+        <!-- 3️⃣ GAME CURRENCY -->
+        <td>{{ $product->game_currency }}</td>
+
+        <!-- 4️⃣ GAME CURRENCY AMOUNT -->
+        <td class="text-center">
+            <div class="input-group">
+                <span class="input-group-text">{{ $product->game_currency }}</span>
+                <input type="text" class="form-control add-product-price text-center" value="0.00" data-product-id="{{ $product->id }}" readonly>
+                <input type="hidden" name="custom_products[{{ $product->id }}][bundle_first_amount]" value="{{ $product->bundle_first_amount }}">
+            </div>
+        </td>
+
+        <!-- 5️⃣ UNIT PRICE -->
+        <td>
+            <div class="input-group">
+                <span class="input-group-text">{{ site_currency() }}</span>
+                <input type="text" class="form-control add-product-price text-center dynamic-input" value="0.00" data-product-id="{{ $product->id }}">
+            </div>
+        </td>
+
+        <!-- 6️⃣ SELECT -->
+        <td class="text-center">
+            <div class="form-check d-flex justify-content-center align-items-center m-0">
+                <input class="form-check-input border border-primary" type="checkbox" name="add_product_ids[]" value="{{ $product->id }}">
+            </div>
+        </td>
+    </tr>
+
+    {{-- Expandable Row with Platform Fields --}}
+    <tr id="product-collapse-row-{{ $product->id }}">
+        <td colspan="6" class="p-0 border-0">
+            <div class="collapse bg-light" id="collapse-{{ $product->id }}">
+                <div class="p-3">
+                    <h6 class="fw-bold mb-3">Game Account Details Required:</h6>
+
+                    @if (!empty($captureFields))
+                        <!-- Platform Selector -->
+                        <div class="mb-3">
+                            <label class="form-label">Select Platform:</label>
+                            <select class="form-select select-platform dynamic-input"
+                                    data-product-id="{{ $product->id }}"
+                                    name="custom_products[{{ $product->id }}][selected_platform]"
+                                    onchange="handlePlatformChange(this)">
+                                <option value="">-- Select Platform --</option>
+                                @foreach ($platforms as $platform)
+                                    <option value="{{ \Illuminate\Support\Str::slug($platform, '_') }}">{{ $platform }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <!-- Dynamic Capture Fields -->
+                        @foreach ($captureFields as $platform => $fields)
+                            @php $slug = \Illuminate\Support\Str::slug($platform, '_'); @endphp
+                            <div class="platform-section" data-product-id="{{ $product->id }}" data-platform="{{ $slug }}" style="display: none;">
+                                <div class="row">
+                                    @foreach ($fields as $field)
+                                        <div class="col-md-6 mb-2">
+                                            <label class="form-label">{{ $field }}</label>
+                                            <input type="text"
+                                                   class="form-control dynamic-input"
+                                                   data-field-name="{{ \Illuminate\Support\Str::slug($field, '_') }}"
+                                                   name="custom_products[{{ $product->id }}][platform_fields][{{ $slug }}][{{ \Illuminate\Support\Str::slug($field, '_') }}]"
+                                                   placeholder="Enter {{ $field }}" required>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endforeach
+                    @else
+                        <div class="text-muted">No capture fields defined.</div>
+                    @endif
+                </div>
+            </div>
+        </td>
+    </tr>
+@empty
+    <tr>
+        <td colspan="6" class="text-center text-muted py-3">No products found. Please try a different keyword or randomize the list.</td>
+    </tr>
+@endforelse
+
+
+
+<script>
+    $(document).on('keyup change', '.add-product-price', function () {
+        const $priceInput = $(this);
+        const productId = $priceInput.data('product-id');
+
+        if (!productId) return;
+
+        // Fetch unit price and check if it's the editable one (we skip read-only)
+        if ($priceInput.prop('readonly')) return;
+
+        // Get the hidden bundle_first_amount value
+        const $hiddenAmountInput = $(`input[name="custom_products[${productId}][bundle_first_amount]"]`);
+        let rawAmount = $hiddenAmountInput.val().toString().trim();
+
+        // Normalize value
+        let numericAmount = parseFloat(rawAmount.replace(/[^0-9.]/g, '')) || 0;
+
+        // Handle Lakh/Million suffix
+        if (/l$/i.test(rawAmount)) {
+            numericAmount *= 100000;
+        } else if (/mill/i.test(rawAmount)) {
+            numericAmount *= 1000000;
+        }
+
+        // Get the current unit price
+        const unitPrice = parseFloat($priceInput.val()) || 0;
+
+        // Final currency amount
+        const totalAmount = numericAmount * unitPrice;
+
+        // Find the corresponding currency input (read-only one)
+        const $currencyInput = $(`input[data-product-id="${productId}"]`).filter(function () {
+            return $(this).prop('readonly');
+        });
+
+        $currencyInput.val(totalAmount.toFixed(2));
+    });
+    </script>
+
+
+<script>
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+
+
+    function closeFilters() {
+        let originalAmount = parseFloat(@json(session('current_amount', 0)));
+        let invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
+        $('input[name="add_product_ids[]"]').prop('checked', false);
+        $('.add-product-price').val('');
+        $('#keywordInput').val('');
+        let discountAmount = 0;
+
+        if (originalAmount > invoiceAmount) {
+            discountAmount = originalAmount - invoiceAmount;
+        }
+
+        $('#temp_current_amount_text').text(originalAmount.toFixed(2));
+        $('#temp_discount_amount_text').text(discountAmount.toFixed(2));
+        $('#temp_invoice_amount_text').text(invoiceAmount.toFixed(2));
+    }
+
+    function clearFilters() {
+        let originalAmount = parseFloat(@json(session('current_amount', 0)));
+        let invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
+
+        $('input[name="add_product_ids[]"]').prop('checked', false);
+        $('.add-product-price').val('');
+        $('#manual_keyword').val('');
+        $('#customize-product-table-body').html(getErrorRowHTML('No results found. Try randomizing or use a different keyword.'));
+        let discountAmount = 0;
+
+
+        if (originalAmount > invoiceAmount) {
+            discountAmount = originalAmount - invoiceAmount;
+        }
+
+        $('#temp_current_amount_text').text(originalAmount.toFixed(2));
+        $('#temp_discount_amount_text').text(discountAmount.toFixed(2));
+        $('#temp_invoice_amount_text').text(invoiceAmount.toFixed(2));
+
+        toastr.info('Filters have been reset.');
+    }
+
+</script>
+
+<script>
+
+
+    $(document).ready(function () {
+        let originalAmount = parseFloat(@json(session('current_amount', 0)));
+
+        function updateTempTotal() {
+            let selectedTotal = 0;
+
+            $('input[name="add_product_ids[]"]:checked').each(function () {
+                let productId = $(this).val();
+                let priceInput = $('.add-product-price[data-product-id="' + productId + '"]');
+                let price = parseFloat(priceInput.val()) || 0;
+                selectedTotal += price;
+            });
+
+            let tempTotal = originalAmount + selectedTotal;
+            let invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
+            let discountAmount = 0;
+
+            if (tempTotal > invoiceAmount) {
+                discountAmount = tempTotal - invoiceAmount;
+            }
+
+            $('#temp_current_amount_text').text(tempTotal.toFixed(2));
+            $('#temp_discount_amount_text').text(discountAmount.toFixed(2));
+            $('#temp_invoice_amount_text').text(invoiceAmount.toFixed(2));
+        }
+
+        $(document).on('input change', 'input[name="add_product_ids[]"], .add-product-price, #invoice_amount', function () {
+            updateTempTotal();
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+    $('#add-custom-products').off('click').on('click', function () {
+        let selectedProducts = [];
+        let hasValidData = true;
+
+        $('input[name="add_product_ids[]"]:checked').each(function () {
+            let productId = $(this).val();
+            let $row = $('#customize-product-row-' + productId);
+            let $collapseRow = $('#product-collapse-row-' + productId);
+
+            // Get unit price (editable field)
+            let unitPrice = parseFloat($row.find('.add-product-price:not([readonly])').val());
+
+            // Validate unit price
+            if (isNaN(unitPrice) || unitPrice <= 0) {
+                toastr.error('Please enter a valid price for ' + $row.find('td:nth-child(2)').text().trim());
+                hasValidData = false;
+                return false; // break the loop
+            }
+
+            // Get game currency amount - convert from readonly field
+            let bundleFirstAmount = parseFloat($row.find('input[name$="[bundle_first_amount]"]').val()) || 0;
+            // Calculate currency amount based on unit price and any other logic if needed
+            let currencyAmount = bundleFirstAmount;
+
+            // Get game name and currency
+            let gameName = $row.find('td:nth-child(2)').clone().children().remove().end().text().trim();
+            let gameCurrency = $row.find('td:nth-child(3)').text().trim();
+
+            // Get selected platform
+            let selectedPlatform = $collapseRow.find('.select-platform').val();
+
+            // Check if platform is required and selected
+            let platformRequired = $collapseRow.find('.platform-section').length > 0;
+            if (platformRequired && (!selectedPlatform || selectedPlatform === '')) {
+                toastr.error('Please select a platform for ' + gameName);
+                hasValidData = false;
+                return false; // break the loop
+            }
+
+            // Get all capture fields for the selected platform
+            let platformFields = {};
+            let missingFields = false;
+
+            if (selectedPlatform) {
+                $collapseRow.find(`.platform-section[data-platform="${selectedPlatform}"] input`).each(function() {
+                    let fieldName = $(this).attr('name');
+                    let fieldValue = $(this).val();
+
+                    if ($(this).prop('required') && (!fieldValue || fieldValue.trim() === '')) {
+                        let fieldLabel = $(this).prev('label').text();
+                        toastr.error(`Please enter ${fieldLabel} for ${gameName}`);
+                        missingFields = true;
+                        return false; // break this loop
+                    }
+
+                    platformFields[fieldName] = fieldValue;
+                });
+
+                if (missingFields) {
+                    hasValidData = false;
+                    return false; // break the outer loop
+                }
+            }
+
+            // Get all dynamic fields (platform + capture)
+            let userInputFields = {
+                selected_platform: selectedPlatform,
+                platform_fields: platformFields
+            };
+
+            // Create game object
+            selectedProducts.push({
+                id: productId,
+                game_currency_amount: currencyAmount,
+                unit_price: unitPrice,
+                bundle: 'custom'
+            });
+        });
+
+        // If validation failed, stop here
+        if (!hasValidData) {
+            return;
+        }
+
+        if (selectedProducts.length > 0) {
+            let btn = $('#add-custom-products');
+            btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Adding to Cart...');
+            $('#current_amount').val('Calculating...');
+            $('#discount_amount').prop('type', 'text').val('Calculating...').prop('readonly', true);
+
+            $.ajax({
+                url: "{{ route('add.products') }}", // This should be defined globally or via data attributes
+                type: 'POST',
+                data: {
+                    _token: "{{ csrf_token() }}", // Laravel CSRF token
+                    selected_games: selectedProducts,
+                    site_id: "{{ $site->id ?? '' }}" // Ensure site ID is passed from the backend
+                },
+                success: function(response) {
+                    // Uncheck selected products in modal
+                    $('input[name="products[]"]:checked').prop('disabled', true);
+
+                    let discountAmount = 0;
+                    let current_amount = response.total;
+                    let invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
+
+                    if (current_amount > invoiceAmount) {
+                        discountAmount = current_amount - invoiceAmount;
+                    }
+
+                    $('#addgames').modal('hide');
+                    $('#discount_amount').prop('readonly', false).prop('type', 'number');
+                    $('#product-table-body').html(response.tableRows);
+                    $('#current_amount').val(current_amount.toFixed(2));
+                    $('#temp_current_amount_text').text(current_amount.toFixed(2));
+                    $('#discount_amount').val(discountAmount.toFixed(2));
+                    $('#temp_discount_amount_text').text(discountAmount.toFixed(2));
+                    $('#invoice_amount').val(invoiceAmount.toFixed(2));
+
+                    // Show success message
+                    toastr.success('Products added successfully!');
+
+                    // Update checkboxes in main table
+                    if (!response.is_random) {
+                        $('.narayan-checkbox').prop('disabled', false);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error adding products to cart:', error);
+                    toastr.error('Failed to add products. Please try again.');
+                },
+                complete: function() {
+                    btn.prop('disabled', false).html('Add Selected to Cart');
+                }
+            });
+        } else {
+            toastr.error('Please select product(s) to add.');
+        }
+    });
+
+    // Helper function to update the read-only game currency amount field based on unit price
+    $('.add-product-price:not([readonly])').on('input', function() {
+        let productId = $(this).data('product-id');
+        let unitPrice = parseFloat($(this).val()) || 0;
+        let $row = $('#customize-product-row-' + productId);
+
+        // Here you can implement any calculation logic needed
+        // For example, if there's a conversion rate or formula
+        let bundleFirstAmount = parseFloat($row.find('input[name$="[bundle_first_amount]"]').val()) || 0;
+        let calculatedAmount = bundleFirstAmount; // Apply any conversion if needed
+
+        // Update the read-only field
+        $row.find('.add-product-price[readonly]').val(calculatedAmount.toFixed(2));
+    });
+});
+</script>
+
+
+
+<script>
+   function startVoiceSearch() {
+    const inputField = document.getElementById('keywordInput');
+    inputField.placeholder = "Please speak product name or category";
+
+    if (!('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
+        toastr.error("Your browser does not support voice recognition. Please try using a modern browser like Chrome.");
+        return;
+    }
+
+    inputField.value = '';
+    inputField.placeholder = "Listening to your voice search...";
+
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.lang = "en-US";
+    recognition.interimResults = false;
+
+    recognition.start();
+
+    recognition.onresult = function(event) {
+        const transcript = event.results[0][0].transcript;
+        inputField.style.color = "blue";
+        document.getElementById('keywordInput').value = transcript;
+    };
+
+    recognition.onerror = function(event) {
+        toastr.error("Voice recognition error: " + event.error);
+        inputField.value = '';
+        inputField.style.color = '';
+        inputField.placeholder = "Enter or Speak product or category name...";
+    };
+
+    recognition.onend = function() {
+        inputField.style.color = 'blue';
+        inputField.placeholder = "Enter or Speak product or category name...";
+    };
+ }
+</script>
+<script>
+    // Function to handle platform selection change
+function handlePlatformChange(selectElement) {
+    const productId = $(selectElement).data('product-id');
+    const selectedPlatform = $(selectElement).val();
+
+    // Hide all platform sections for this product
+    $(`.platform-section[data-product-id="${productId}"]`).hide();
+
+    // Show the selected platform section
+    if (selectedPlatform) {
+        $(`.platform-section[data-product-id="${productId}"][data-platform="${selectedPlatform}"]`).show();
+
+        // Clear any validation styling
+        $(`.platform-section[data-product-id="${productId}"][data-platform="${selectedPlatform}"] input`).removeClass('is-invalid');
+
+        // Reset required attribute for all platform fields
+        $(`.platform-section[data-product-id="${productId}"] input`).prop('required', false);
+
+        // Make fields for selected platform required
+        $(`.platform-section[data-product-id="${productId}"][data-platform="${selectedPlatform}"] input`).prop('required', true);
+    }
+}
+
+// Initialize platform sections on page load
+$(document).ready(function() {
+    // Initialize all platform sections (hide them)
+    $('.platform-section').hide();
+
+    // For any pre-selected platforms, show their sections
+    $('.select-platform').each(function() {
+        const selectedPlatform = $(this).val();
+        if (selectedPlatform) {
+            handlePlatformChange(this);
+        }
+    });
+
+    // Add click event handler for product rows to prevent default collapse behavior
+    $('.product-row').on('click', function(e) {
+        // Only prevent default if clicking inside input fields or select elements
+        if ($(e.target).is('input, select, label, .form-check-input')) {
+            e.stopPropagation();
+        }
+    });
+});
+    </script>
+
+
+
+

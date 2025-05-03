@@ -1,15 +1,27 @@
+
 @forelse(collect($products)->sortByDesc('unit_price') as $index => $product)
     @php
         $captureFields = json_decode($product->game_need_to_capture ?? '{}', true);
         $platforms = array_keys($captureFields);
     @endphp
 
+
     {{-- Main Row --}}
     <tr class="product-row align-middle" id="product-main-row-{{ $index + 1 }}" data-bs-toggle="collapse" data-bs-target="#collapse-{{ $index + 1 }}" aria-expanded="false" aria-controls="collapse-{{ $index + 1 }}" style="cursor: pointer;">
         <td class="text-center">
             <div class="form-check m-0 d-flex justify-content-center">
-                <input form="generate-invoice-form" class="form-check-input narayan-checkbox border-primary" type="checkbox"
-                    data-unit_price="{{ $product->unit_price }}" name="products[{{ $product->id }}][selected]" value="1">
+                <input form="generate-invoice-form" class="form-check-input narayan-checkbox border-primary"
+       type="checkbox"
+       data-unit_price="{{ $product->unit_price }}"
+       name="products[{{ $product->id }}][selected_checkbox]"
+       value="1"
+       checked
+       disabled
+       {{-- @if(request()->has('is_random') && request('is_random'))
+           disabled
+       @endif --}}
+>
+                <input type="hidden" name="products[{{ $product->id }}][selected]" value="1">
             </div>
         </td>
         <td>{{ $index + 1 }}</td>
@@ -29,7 +41,9 @@
         <td>{{ site_currency() }}{{ number_format($product->unit_price, 2) }}
             <input form="generate-invoice-form" type="hidden" name="products[{{ $product->id }}][unit_price]" value="{{ $product->unit_price }}">
         </td>
-        <td><span class="badge rounded-pill bg-info">{{ $product->source ?? 'Custom' }}</span></td>
+        <td>
+            <input form="generate-invoice-form" type="number" class="form-control edit-price" name="products[{{ $product->id }}][unit_price]" value="{{ $product->unit_price }}">
+        </td>
         <td>
             <button type="button" class="btn btn-sm btn-outline-danger px-2 py-1 remove-product" data-product-id="{{ $product->id }}" data-unit-price="{{ $product->unit_price }}" data-product-name="{{ $product->name }}" title="Remove Row">
                 <i class="fa fa-trash"></i>
@@ -72,7 +86,7 @@
                                             <label class="form-label">{{ $field }}</label>
                                             <input form="generate-invoice-form" type="text" class="form-control"
                                                    name="products[{{ $product->id }}][platform_fields][{{ $slug }}][{{ \Illuminate\Support\Str::slug($field, '_') }}]"
-                                                   placeholder="Enter {{ $field }}">
+                                                   placeholder="Enter {{ $field }}" required>
                                         </div>
                                     @endforeach
                                 </div>
@@ -92,8 +106,8 @@
 @endforelse
 
 <script>
-
     $(document).ready(function() {
+        // Remove product with confirmation
         $(document).off('click', '.remove-product').on('click', '.remove-product', function() {
             var $button = $(this);
             var productId = $button.data('product-id');
@@ -108,82 +122,83 @@
                 confirmButtonText: 'Yes, Remove',
                 cancelButtonText: 'Cancel',
                 customClass: {
-                    popup: 'p-2 text-sm',
-                    title: 'text-base font-weight-bold',
-                    confirmButtonClass: 'btn btn-sm btn-danger',
-                    cancelButtonClass: 'btn btn-sm btn-secondary'
-                },
-                width: '350px',
-                padding: '1em'
-            }).then((result) => {
+                    popup: 'p-2'
+                }
+            }).then(function(result) {
                 if (result.isConfirmed) {
-                    $button.html('<i class="fas fa-spinner fa-spin"></i>');
-                    $('#current_amount').val('Recalculating...');
-                    $('#discount_amount').prop('type', 'text').val('Recalculating...').prop('readonly', true);
+                    $('#table-blocker').show();
+                    $button.prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>');
 
                     $.ajax({
                         url: "{{ route('remove.product') }}",
                         method: 'POST',
                         data: {
+                            _token: '{{ csrf_token() }}',
                             product_id: productId,
                             unit_price: unitPrice,
-                            site_id: "{{ session('customer.site_id') }}",
-                            _token: '{{ csrf_token() }}'
+                            site_id: '{{ $site->id }}'
                         },
                         success: function(response) {
-                            $button.html('<i class="fas fa-check-square"></i>');
-                            $button.removeClass('btn-danger').addClass('btn-success');
-                            $('#product-table-body').html(response.tableRows);
-                            toastr.success('Product has been removed successfully.','Product Removed');
-                            calculateTotalPrice();
+                            if (response.tableRows !== undefined) {
+                                $('#product-table-body').html(response.tableRows);
 
-                            setTimeout(() => {
-                                $button.html('<i class="fas fa-trash-alt"></i>');
-                                $button.removeClass('btn-success').addClass('btn-danger');
-                            }, 2000);
+                                // Update Current Amount
+                                $('#current_amount').val(response.total.toFixed(2));
+
+                                toastr.success('Product removed successfully!');
+                            }
                         },
-                        error: function(xhr, status, error) {
-                            $button.html('<i class="fas fa-trash-alt"></i>');
-                            $button.removeClass('btn-success').addClass('btn-danger');
-                            calculateTotalPrice();
-                            toastr.error('Error removing product. Please try again.');
+                        error: function(xhr) {
+                            console.error(xhr.responseText);
+                            toastr.error('Something went wrong! Please try again.');
+                        },
+                        complete: function() {
+                            $('#table-blocker').hide();
+                            $button.prop('disabled', false).html('<i class="fa fa-trash"></i>');
                         }
                     });
-                } else {
-                    console.log('Product removal canceled.');
                 }
             });
         });
-    });
 
-
-
-    $(document).on('input', '.product-price', function() {
-        calculateTotalPrice();
-    });
-
-    function calculateTotalPrice() {
-        let currentAmount = 0;
-        $('input[name="product_ids[]"]:checked').each(function() {
-            const productId = $(this).val();
-            const punitPrice = parseFloat($(`input[data-product-id="${productId}"]`).val()) || 0;
-            currentAmount += punitPrice;
+        // ✅ Recalculate when checkbox changes
+        $(document).on('change', '.narayan-checkbox', function() {
+            calculateTotalPrice();
         });
 
-        const invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
-        let discountAmount = 0;
+        // ✅ Recalculate when Edit Price input changes
+        $(document).on('input', '.edit-price', function() {
+            calculateTotalPrice();
+        });
 
-        if (currentAmount > invoiceAmount) {
-            discountAmount = currentAmount - invoiceAmount;
+        // Main Calculation Function
+        function calculateTotalPrice() {
+            let currentAmount = 0;
+
+            // Loop through all selected products
+            $('.narayan-checkbox:checked').each(function() {
+                const productRow = $(this).closest('tr');
+                const editPriceInput = productRow.find('.edit-price');
+                let editPrice = parseFloat(editPriceInput.val());
+
+                if (isNaN(editPrice)) {
+                    editPrice = parseFloat($(this).data('unit_price')) || 0;
+                }
+
+                currentAmount += editPrice;
+            });
+
+            const invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
+            let discountAmount = 0;
+
+            if (currentAmount > invoiceAmount) {
+                discountAmount = currentAmount - invoiceAmount;
+            }
+
+            $('#current_amount').val(currentAmount.toFixed(2));
+            $('#discount_amount').val(discountAmount.toFixed(2));
         }
-        $('#discount_amount').prop('readonly', false).prop('type', 'number')
-        $('#current_amount').val(currentAmount.toFixed(2));
-        $('#temp_current_amount_text').text(currentAmount.toFixed(2));
-        $('#discount_amount').val(discountAmount.toFixed(2));
-        $('#temp_discount_amount_text').text(discountAmount.toFixed(2));
-        $('#invoice_amount').val(invoiceAmount.toFixed(2));
-        $('#temp_invoice_amount_text').text(invoiceAmount.toFixed(2));
-    }
-
+    });
 
     </script>
+
