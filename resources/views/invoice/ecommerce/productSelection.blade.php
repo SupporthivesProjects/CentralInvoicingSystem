@@ -326,7 +326,7 @@
             
             <div class="modal-footer bg-light border-top">
                 <div class="d-flex flex-wrap gap-2">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancelCustomizeRequest">
                         <i class="bi bi-x-circle me-1"></i> Cancel
                     </button>
                     <button type="button" class="btn btn-danger" onclick="customizeProducts('onload')">
@@ -472,7 +472,7 @@
     let randomizeRequest = false; 
     function randomizeProducts(mode = 'smart_random') {
         if (randomizeRequest) {
-                toastr.info('A request is already in progress. Please wait.', 'Processing');
+                toastr.info('Randomizing in progress. Please wait...', 'Processing');
                 return;
         }
         randomizeRequest = true;
@@ -527,9 +527,8 @@
                     //replaceFeatherIconsTemporarily();
                 }
             },
-            error: function () {
-                toastr.error("Could not fetch random products.");
-                Swal.close();
+            error: function (xhr, textStatus) {
+                toastr.error('Failed to fetch random products.', 'Oops!');
             },
             complete: function () {
                 randomizeRequest = false; 
@@ -585,11 +584,26 @@
 
 
  <script>
+    $(document).on('click', '#cancelCustomizeRequest', function () {
+        if (customizeAjax) {
+            customizeAjax.abort();
+        }
+    });
+
     let customizeRequest = false;
+    let customizeAjax = null;
+
     function customizeProducts(search_type='search') {
 
             if (customizeRequest) {
-                toastr.info('A request is already in progress. Please wait.', 'Processing');
+                toastr.info(
+                            '<div>Processing your request...  <button type="button" class="btn btn-sm btn-light ml-2" id="cancelCustomizeRequest">Cancel</button></div>',
+                            'Please Wait',
+                            {
+                                closeButton: true,
+                                allowHtml: true
+                            }
+                        );
                 return;
             }
             customizeRequest = true;
@@ -626,7 +640,7 @@
 
             $('#customize-product-table-body').html(getProductsSearchRowHTML());
 
-            $.ajax({
+            customizeAjax = $.ajax({
                 url: "{{ route('filter.products') }}",
                 type: 'GET',
                 data: {
@@ -677,11 +691,19 @@
                         });
                     }
                 },
-                error: function () {
-                    toastr.error('Something went wrong while filtering.', 'Oops!');
+                error: function (xhr, textStatus) {
+                    if (textStatus === 'abort') {
+                        toastr.warning('Customize request was cancelled.', 'Cancelled');
+                        setTimeout(function () {
+                            $('#addmoreproducts').modal('hide');
+                        }, 300);
+                    } else {
+                        toastr.error('Something went wrong while filtering.', 'Oops!');
+                    }
                 },
                 complete: function () {
                     customizeRequest = false; 
+                    customizeAjax = null;
                 }
             });
         }
