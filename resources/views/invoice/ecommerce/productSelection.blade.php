@@ -156,7 +156,7 @@
                         </button>
 
                         <button type="button" class="btn btn-outline-success d-flex align-items-center gap-1"
-                                onclick="randomizeProducts('smart_random')">
+                                onclick="randomizeProducts('semi_random')">
                             <i class="fas fa-random"></i> Randomize
                         </button>
 
@@ -347,14 +347,14 @@
         <div class="modal-content border-0 rounded-4 shadow-sm overflow-hidden">
             
             <div class="modal-header bg-primary text-white border-0">
-                <h5 class="modal-title fw-bold" id="siteChangeModalLabel">Select a New Site</h5>
+                <h5 class="modal-title fw-bold" id="siteChangeModalLabel">Want to change website? </h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
             <form method="GET" action="{{ route('product.selection') }}" id="sitechangemodel-form">
                 <div class="modal-body bg-light">
                     <div class="mb-3">
-                        <label for="new_site_id" class="form-label fw-semibold">Want to change website?</label>
+                        <label for="new_site_id" class="form-label fw-semibold">Select a New Site</label>
                         <select name="new_site_id" id="new_site_id" class="form-select" required>
                             <option value="">-- Select Site --</option>
                             @foreach($sites as $s)
@@ -469,7 +469,13 @@
 
 
 <script>
+    let isFiltering = false; 
     function randomizeProducts(mode = 'smart_random') {
+        if (isFiltering) {
+                toastr.info('A request is already in progress. Please wait.', 'Processing');
+                return;
+        }
+        isFiltering = true;
 
         $('#randomize-product-table-body').html(getLoaderRowHTML());
         const priceFrom = $('#hidden_randomize_price_from_input_id').val();
@@ -507,6 +513,7 @@
                 $('#discount_amount').val(0.00);
                 if (response.total === 0) {
                     $('#randomize-product-table-body').html(getErrorRowHTML('No results found. Try randomizing or use a different keyword.')); 
+                    isFiltering = false; 
                     return;
                 } else {
                     const invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
@@ -517,12 +524,15 @@
                     $('#current_amount').val(currentAmount.toFixed(2));
                     $('#discount_amount').prop('readonly', false).prop('type', 'number') 
                     calculateTotalPrice();
-                    replaceFeatherIconsTemporarily();
+                    //replaceFeatherIconsTemporarily();
                 }
             },
             error: function () {
                 toastr.error("Could not fetch random products.");
                 Swal.close();
+            },
+            complete: function () {
+                    isFiltering = false; 
             }
         });
     }
@@ -575,8 +585,14 @@
 
 
  <script>
-
+    let isFiltering = false;
     function customizeProducts(search_type='search') {
+
+            if (isFiltering) {
+                toastr.info('A request is already in progress. Please wait.', 'Processing');
+                return;
+            }
+            isFiltering = true;
 
             let btn = $('#add-custom-products');
             $('#addmoreproducts').on('shown.bs.modal', function () {
@@ -604,6 +620,7 @@
             if (!priceFrom && !priceTo) {
                 $('#customize-product-table-body').html(getErrorRowHTML('No products found for your keyword. Try a different keyword or adjust the range filter.'));
                 $('#error-row').fadeIn(300).delay(3000).fadeOut(500);
+                isFiltering = false;
                 return;
             }
 
@@ -662,6 +679,9 @@
                 },
                 error: function () {
                     toastr.error('Something went wrong while filtering.', 'Oops!');
+                },
+                complete: function () {
+                    isFiltering = false; 
                 }
             });
         }

@@ -35,7 +35,7 @@
                     title="{{
                         $product->can_edit_price == 0 
                             ? 'Price update allowed after ' . $product->remaining_days . ' days.' 
-                            : 'You can update the price.'
+                            : 'Editable'
                     }}"
                 ></i>
             </span>

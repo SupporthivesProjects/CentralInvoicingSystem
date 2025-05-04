@@ -45,17 +45,9 @@ class LaravelController extends Controller
         $categoryId = intval($request->get('category_id'));
         $noOfProducts = intval($request->get('noOfProducts'));
 
-        if ($categoryId || $noOfProducts) {
-            $minTotal = $invoiceAmount * 0.7;
-        } else {
-            $minTotal = $invoiceAmount;
-        }
-        $maxTotal = $invoiceAmount * 1.10;
-
         $site = Website::findOrFail($site_id);
         $productstable = getProductTable($site->technology);
         DynamicDatabaseService::connect($site);
-
         $allProducts = DB::connection($this->connectionType)->table($this->productTable)
             ->select('id', 'subscription', 'category_id', 'name', 'unit_price', 'slug')
             ->when($categoryId, function ($query) use ($categoryId) {
@@ -64,16 +56,24 @@ class LaravelController extends Controller
             ->when($priceFrom && $priceTo, function ($query) use ($priceFrom, $priceTo) {
                 return $query->whereBetween('unit_price', [$priceFrom, $priceTo]);
             })
-            ->orderByDesc('unit_price')
-            ->get()
-            ->shuffle();
-
+            ->inRandomOrder()
+            ->get();
+        
+        if ($categoryId || $noOfProducts) {
+            $minTotal = $invoiceAmount * 0.6;
+            $allProducts = $allProducts->sortByDesc('unit_price'); 
+        } else {
+            $minTotal = $invoiceAmount;
+            $allProducts = $allProducts->sortBy('unit_price'); 
+        }
+        
+        $maxTotal = $invoiceAmount * 1.10;
+    
         $bestMatch = null;
         $bestTotal = 0;
-        $selectedCategories = [];
-
-        for ($i = 0; $i < 10; $i++) {
-            $shuffled = $allProducts;
+       
+        for ($i = 0; $i < 30; $i++) {
+            $shuffled = $allProducts->shuffle();
             $selected = [];
             $currentTotal = 0;
 
@@ -83,10 +83,6 @@ class LaravelController extends Controller
                 }
 
                 $price = floatval($product->unit_price);
-
-                if (in_array($product->category_id, $selectedCategories) && count($selected) > 0) {
-                    continue;
-                }
 
                 if (($currentTotal + $price) <= $maxTotal) {
                     $selected[] = $product;

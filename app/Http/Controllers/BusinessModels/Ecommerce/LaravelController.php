@@ -43,12 +43,6 @@ class LaravelController extends Controller
         $categoryId = $request->get('category_id');
         $noOfProducts = intval($request->get('noOfProducts'));
     
-        if ($categoryId || $noOfProducts) {
-            $minTotal = $invoiceAmount * 0.8;
-        } else {
-            $minTotal = $invoiceAmount;
-        }
-        $maxTotal = $invoiceAmount * 1.10;
         $site = Website::findOrFail($site_id);
         $productstable = getProductTable($site->technology);
         DynamicDatabaseService::connect($site);
@@ -64,15 +58,23 @@ class LaravelController extends Controller
         if ($categoryId) {
             $query->where('category_id', $categoryId);
         }
-    
-        $allProducts = $query->orderByDesc('unit_price')->get()->shuffle();
-    
+
+        if ($categoryId || $noOfProducts) {
+            $minTotal = $invoiceAmount * 0.6;
+            $allProducts = $query->orderByDesc('unit_price')->get();
+        } else {
+            $minTotal = $invoiceAmount;
+            $allProducts = $query->orderBy('unit_price')->get();
+        }
+        $maxTotal = $invoiceAmount * 1.10;
+      
         $bestMatch = null;
         $bestTotal = 0;
         $bestDistance = null;
+        
     
-        for ($i = 0; $i < 20; $i++) {
-            $shuffled = $allProducts;
+        for ($i = 0; $i < 30; $i++) {
+            $shuffled = $allProducts->shuffle();
             $selected = [];
             $currentTotal = 0;
     
@@ -448,7 +450,7 @@ class LaravelController extends Controller
             $query->whereNotIn('products.id', $readyProductIds);
         }
         if($search_type == 'onload'){
-            $products = $query->inRandomOrder()->limit(100)->get();
+            $products = $query->inRandomOrder()->limit(150)->get();
         }else{
             $products = $query->orderBy('unit_price')->get();
         }
