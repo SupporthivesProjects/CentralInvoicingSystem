@@ -472,14 +472,14 @@
 
 
 <script>
-    let isFiltering = false; 
+    let randomizeRequest = false; 
     function randomizeProducts(mode = 'smart_random') {
 
-        if (isFiltering) {
+        if (randomizeRequest) {
                 toastr.info('A request is already in progress. Please wait.', 'Processing');
                 return;
         }
-        isFiltering = true;
+        randomizeRequest = true;
         
         $('#randomize-product-table-body').html(getLoaderRowHTML());
         const priceFrom = $('#hidden_randomize_price_from_input_id').val();
@@ -515,7 +515,7 @@
                 $('#discount_amount').val(0.00);
                 if (response.total === 0) {
                     $('#randomize-product-table-body').html(getErrorRowHTML(`Try again with Randomize or click 'Add Product' to add manually.`));
-                    isFiltering = false; 
+                    randomizeRequest = false; 
                     return;
                 }
                 else {
@@ -535,7 +535,7 @@
                 Swal.close();
             },
             complete: function () {
-                    isFiltering = false; 
+                randomizeRequest = false; 
             }
         });
     }
@@ -589,13 +589,13 @@
 
 
  <script>
-        let isFiltering = false;
+        let customizeRequest = false;
         function customizeProducts(search_type='search') {
-            if (isFiltering) {
+            if (customizeRequest) {
                 toastr.info('A request is already in progress. Please wait.', 'Processing');
                 return;
             }
-            isFiltering = true;
+            customizeRequest = true;
 
             let btn = $('#add-custom-products');
             $('#addmoreproducts').on('shown.bs.modal', function () {
@@ -624,7 +624,7 @@
             if (!priceFrom && !priceTo) {
                 $('#customize-product-table-body').html(getErrorRowHTML('No products found for your keyword. Try a different keyword or adjust the range filter.'));
                 $('#error-row').fadeIn(300).delay(3000).fadeOut(500);
-                isFiltering = false;
+                customizeRequest = false;
                 return;
             }
 
@@ -685,7 +685,7 @@
                     toastr.error('Something went wrong while filtering.', 'Oops!');
                 },
                 complete: function () {
-                    isFiltering = false; 
+                    customizeRequest = false; 
                 }
             });
         }
