@@ -57,14 +57,15 @@
 @endsection
 
 @push('scripts')
+
 <script>
     document.getElementById('forgotPasswordForm').addEventListener('submit', function () {
         Swal.fire({
             title: 'Sending reset link...',
             html: `
                 <div class="d-flex flex-column align-items-center">
-                    <div class="spinner-border text-primary" role="status"></div>
-                    <small class="mt-2">Just a sec! Your reset link is zooming its way to your inbox.</small>
+                    <div class="loaderBar"></div>
+                    <small class="mt-3">Just a sec! Your reset link is zooming its way to your inbox.</small>
                 </div>
             `,
             showConfirmButton: false,

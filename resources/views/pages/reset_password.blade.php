@@ -65,8 +65,8 @@
             title: 'Resetting your password...',
             html: `
                 <div class="d-flex flex-column align-items-center">
-                    <div class="spinner-border text-primary" role="status"></div>
-                    <small class="mt-2">Sit tight! Your new password is just moments away."</small>
+                     <div class="loaderBar"></div>
+                    <small class="mt-3">Sit tight! Your new password is just moments away."</small>
                 </div>
             `,
             showConfirmButton: false,

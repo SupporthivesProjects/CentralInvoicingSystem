@@ -39,7 +39,7 @@
             <div class="col-xl-12">
                 <div class="card custom-card">
                     <div class="card-body">
-                    <form method="POST" action="{{ route('website.update', $website->id) }}" enctype="multipart/form-data" class="row g-3 mt-0">
+                    <form d="editwebsite-form" method="POST" action="{{ route('website.update', $website->id) }}" enctype="multipart/form-data" class="row g-3 mt-0">
                             @csrf
                             @method('PATCH')
 
@@ -225,6 +225,21 @@
 
 @endsection
 @push('scripts')
+<script>
+    document.getElementById('editwebsite-form').addEventListener('submit', function () {
+        Swal.fire({
+            title: 'Updating Website...',
+            html: `
+                <div class="d-flex flex-column align-items-center">
+                     <div class="loaderBar"></div>
+                    <small class="mt-3">Hold tight! Your website details are being updated right now.</small>
+                </div>
+            `,
+            showConfirmButton: false,
+            allowOutsideClick: false
+        });
+    });
+</script>
 
 <script>
     $(document).ready(function() {

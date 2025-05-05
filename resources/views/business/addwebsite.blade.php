@@ -39,7 +39,7 @@
             <div class="col-xl-12">
                 <div class="card custom-card">
                     <div class="card-body">
-                    <form method="POST" action="{{ route('website.store') }}" enctype="multipart/form-data" class="row g-3 mt-0">
+                    <form method="POST" id="addwebsite-form" action="{{ route('website.store') }}" enctype="multipart/form-data" class="row g-3 mt-0">
                         @csrf
 
                         <div class="col-md-6 mx-auto">
@@ -199,6 +199,22 @@
 
 @endsection
 @push('scripts')
+<script>
+    document.getElementById('addwebsite-form').addEventListener('submit', function () {
+        Swal.fire({
+            title: 'Adding New Website...',
+            html: `
+                <div class="d-flex flex-column align-items-center">
+                     <div class="loaderBar"></div>
+                    <small class="mt-3">Hold tight! Your new website is being added right now.</small>
+                </div>
+            `,
+            showConfirmButton: false,
+            allowOutsideClick: false
+        });
+    });
+</script>
+
 
 <script>
     $(document).ready(function() {

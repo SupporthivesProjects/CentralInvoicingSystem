@@ -65,11 +65,11 @@
 <script>
     document.getElementById('loginForm').addEventListener('submit', function () {
         Swal.fire({
-            title: '🔐 Getting You In!',
+            title: 'Logging You In...',
             html: `
                 <div class="d-flex flex-column align-items-center">
-                    <div class="spinner-border text-primary" role="status"></div>
-                    <small class="mt-2">Just a sec — logging you in quicker than your coffee kicks in!</small>
+                    <div class="loaderBar"></div>
+                    <small class="mt-3">Please wait while we securely log you in and prepare your account.</small>
                 </div>
             `,
             showConfirmButton: false,

@@ -24,7 +24,7 @@
                 <div class="col-md-6">
                     <div class="card custom-card">
                         <div class="card-body">
-                        <form method="POST" action="{{ route('businessmodel.store') }}">
+                        <form method="POST" id="addbusinessmodel-form" action="{{ route('businessmodel.store') }}">
                                 @csrf
                                 <div class="mb-3">
                                     <label class="form-label">Business Model Name <span style="color:red">*</span></label>
@@ -63,4 +63,19 @@
 
 @endsection
 @push('scripts')
+<script>
+    document.getElementById('addbusinessmodel-form').addEventListener('submit', function () {
+        Swal.fire({
+            title: 'Adding your business model...',
+            html: `
+                <div class="d-flex flex-column align-items-center">
+                     <div class="loaderBar"></div>
+                    <small class="mt-3">Hold tight! Your business model is being added right now.</small>
+                </div>
+            `,
+            showConfirmButton: false,
+            allowOutsideClick: false
+        });
+    });
+</script>
 @endpush

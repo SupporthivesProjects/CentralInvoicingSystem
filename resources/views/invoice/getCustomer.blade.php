@@ -244,11 +244,11 @@
 <script>
     document.getElementById('getCustomerForm').addEventListener('submit', function () {
         Swal.fire({
-            title: 'Setting Things Up...',
+            title: 'Saving Customer and Invoice Details...',
             html: `
                 <div class="d-flex flex-column align-items-center">
-                    <div class="spinner-border text-primary" role="status"></div>
-                    <small class="mt-2">Initializing connection, syncing data, and getting things ready..."</small>
+                   <div class="loaderBar"></div>
+                    <small class="mt-3">Saving your customer and invoice details, just a moment...</small>
                 </div>
             `,
             showConfirmButton: false,
@@ -256,6 +256,7 @@
         });
     });
 </script>
+
  <script>
     $('#sitechangemodel').on('shown.bs.modal', function () {
         $('#site_id').select2({
