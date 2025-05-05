@@ -326,8 +326,8 @@
             
             <div class="modal-footer bg-light border-top">
                 <div class="d-flex flex-wrap gap-2">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancelCustomizeRequest">
-                        <i class="bi bi-x-circle me-1"></i> Cancel
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" >
+                        <i class="bi bi-x-circle me-1"></i> Close
                     </button>
                     <button type="button" class="btn btn-danger" onclick="customizeProducts('onload')">
                         <i class="bi bi-arrow-counterclockwise me-1"></i> Reset Filters
