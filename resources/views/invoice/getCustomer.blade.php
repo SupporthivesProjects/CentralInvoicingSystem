@@ -244,11 +244,11 @@
 <script>
     document.getElementById('getCustomerForm').addEventListener('submit', function () {
         Swal.fire({
-            title: 'Saving Customer and Invoice Details...',
+            title: 'Processing Your Details...',
             html: `
                 <div class="d-flex flex-column align-items-center">
                    <div class="loaderBar"></div>
-                    <small class="mt-3">Saving your customer and invoice details, just a moment...</small>
+                    <small class="mt-3">We’re saving your details. Please hold on while we check the database connection...</small>
                 </div>
             `,
             showConfirmButton: false,
