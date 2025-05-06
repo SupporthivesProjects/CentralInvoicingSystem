@@ -73,7 +73,7 @@
                                 <!-- Totals -->
                                 <tr>
                                     <td colspan="3" style="text-align:right; font-weight:700;">Sub Total</td>
-                                    <td style="text-align:center; color:#EE5921;">{{ !! site_currency() !! . number_format(($invoice_amount + $discount_amount), 2) }}</td>
+                                    <td style="text-align:center; color:#EE5921;">{{ site_currency(). number_format(($invoice_amount + $discount_amount), 2) }}</td>
                                 </tr>
                                 <tr>
                                     <td colspan="3" style="text-align:right; font-weight:700;">Discount</td>

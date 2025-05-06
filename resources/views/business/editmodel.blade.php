@@ -74,7 +74,7 @@
             html: `
                 <div class="d-flex flex-column align-items-center">
                      <div class="loaderBar"></div>
-                    <small class="mt-3">Hold tight! Your business model is being updated now.</small>
+                    <small class="mt-3 fs-6">Hold tight! Your business model is being updated now.</small>
                 </div>
             `,
             showConfirmButton: false,

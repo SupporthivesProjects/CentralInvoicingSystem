@@ -6,6 +6,12 @@
 }
 }
 
+.btn-hover-effect:hover {
+  transform: scale(1.05);
+  transition: transform 0.3s ease;
+}
+
+
 
 /* Custom CSS written by Narayan Zade for eCommerce product selection checkbox */
 .narayan-checkbox {
@@ -897,37 +903,32 @@ background: linear-gradient(135deg, #4e73df, #1cc88a);
   left: 0;
   height: 100%;
   border-radius: 5px;
-  background: repeating-linear-gradient(45deg, #0031F2 0 30px, #006DFE 0 40px) right/200% 100%;
-  animation: fillProgress 15s ease-in-out infinite, lightEffect 1s infinite linear;
-  animation-fill-mode: forwards;
+  background: repeating-linear-gradient(
+    45deg,
+    #0031F2 0 30px,
+    #006DFE 0 40px
+  );
+  background-size: 200% 100%;
+  background-position: right;
+  animation:
+    fillProgress 15s ease-in-out forwards,
+    moveStripes 5s linear infinite;
 }
 
 @keyframes fillProgress {
   0% {
     width: 0;
   }
-
-  33% {
-    width: 33.333%;
-  }
-
-  66% {
-    width: 66.67%;
-  }
-
   100% {
     width: 100%;
   }
 }
 
-@keyframes lightEffect {
-  0%, 20%, 40%, 60%, 80%, 100% {
-    background: repeating-linear-gradient(45deg, #0031F2 0 30px, #006DFE 0 40px) right/200% 100%;
+@keyframes moveStripes {
+  0% {
+    background-position: 200% 0;
   }
-
-  10%, 30%, 50%, 70%, 90% {
-    background: repeating-linear-gradient(45deg, #0031F2 0 30px, #006DFE 0 40px, rgba(255, 255, 255, 0.3) 0 40px) right/200% 100%;
+  100% {
+    background-position: 0 0;
   }
 }
-
-

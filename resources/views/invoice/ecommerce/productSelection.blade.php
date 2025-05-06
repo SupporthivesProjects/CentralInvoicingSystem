@@ -111,7 +111,7 @@
                 <div class="card-body shadow-lg rounded">
                 <div class="row">
                     <div class="col-md-4 mb-3">
-                        <label class="form-label">Current Amount</label>
+                        <label class="form-label">Current Amount  <span class="text-danger">*</span></label>
                         <div class="input-group mb-3">
                             <span class="input-group-text">{{ site_currency() }}</span>
                             <input type="text" form="generate-invoice-form" id="current_amount" name="current_amount" class="form-control bg-white" value="{{ $current_total ?? '00.00' }}" readonly>
@@ -120,7 +120,7 @@
                     </div>
 
                     <div class="col-md-4 mb-3">
-                        <label class="form-label">Discount Amount</label>
+                        <label class="form-label">Discount Amount  <span class="text-danger">*</span></label>
                         <div class="input-group mb-3">
                             <span class="input-group-text">{{ site_currency() }}</span>
                             <input type="number" form="generate-invoice-form" name="discount_amount" id="discount_amount" class="form-control bg-white" placeholder="Discount Amount" value="0">

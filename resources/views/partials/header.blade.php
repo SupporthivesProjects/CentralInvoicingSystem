@@ -106,6 +106,8 @@
                         </svg>
                     </span>
                 </a>
+
+              
                 <!-- End::header-link|dropdown-toggle -->
                 <ul class="main-header-dropdown dropdown-menu dropdown-menu-end" data-popper-placement="none">
                     @foreach(currencies() as $currency)
@@ -116,7 +118,8 @@
                     </li>
                     @endforeach
                     
-                </ul>
+                </ul> 
+               
             </div>
             <!-- End::header-element -->
 
@@ -235,7 +238,7 @@
                 </div>
                 <!-- End::main-header-dropdown -->
             </div>
-            --}}
+            
 
             <!-- Start::header-element -->
             <div class="header-element header-shortcuts-dropdown d-xl-flex d-none">
@@ -279,7 +282,7 @@
                 <!-- End::main-header-dropdown -->
             </div>
             <!-- End::header-element -->
-
+            --}}
             <!-- Start::header-element -->
             <div class="header-element">
                 <!-- Start::header-link|dropdown-toggle -->

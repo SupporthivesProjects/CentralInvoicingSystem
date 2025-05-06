@@ -73,6 +73,9 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.3/css/buttons.bootstrap5.min.css">
     <link href="https://cdn.jsdelivr.net/npm/notyf@3.0.0/notyf.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/notyf@3.0.0/notyf.min.js"></script>
+    <!-- Add this line in the <head> tag of your layout file -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+
 
 
     @stack('styles')
@@ -95,7 +98,10 @@
         @include("partials/header")
         @endunless
         
-        @include('partials.footer')
+        @unless(in_array(Route::currentRouteName(), ['login', 'password.request', 'password.reset','error.404','error.403','error.500']))
+             @include('partials.footer')
+        @endunless
+        
 
     <!-- Scroll To Top -->
         <div class="scrollToTop">
