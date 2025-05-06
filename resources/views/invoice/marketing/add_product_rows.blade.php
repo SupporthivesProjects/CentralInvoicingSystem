@@ -1,21 +1,41 @@
 @forelse($products as $index => $product)
-<tr id="customize-product-row-{{ $product->id }}">
+<tr class="product-row" id="customize-product-row-{{ $product->id }}" data-product-id="{{ $product->id }}">
     <td class="text-center" >{{ $product->id }}</td>
-    <td>{{ $product->category_name }}</td>
+   
     <td>
         {{ $product->name }} 
         @if($site->site_link && $product->slug)
             <a href="{{ $site->site_link }}/product/{{ $product->slug }}" target="_blank">🔗</a>
         @endif
     </td>
-    <td class="text-center">{{ site_currency() }}{{ number_format($product->unit_price, 2) }}</td>
+    <td class="text-center">
+        {{ $product->subscription}}
+    </td>
+
+    <td  class="text-center">{{ site_currency() }}{{ number_format($product->unit_price, 2) }}</td>
     <td>
         <div class="input-group">
             <span class="input-group-text">{{ site_currency() }}</span>
-            <input type="text" class="form-control add-product-price text-center"  value="{{ number_format($product->unit_price, 2, '.', '') }}"  data-product-id="{{ $product->id }}" {{ $product->can_edit_price == 0 ? 'readonly' : '' }}  aria-label="Amount (to the nearest dollar)">
+            <input 
+                type="text" 
+                class="form-control add-product-price text-center" 
+                value="{{ number_format($product->unit_price, 2, '.', '') }}" 
+                data-product-id="{{ $product->id }}"
+                {{ $product->can_edit_price == 0 ? 'readonly' : '' }}  
+                aria-label="Amount (to the nearest dollar)"
+            >
             <span class="input-group-text d-flex align-items-center">
-                <i  class="{{ $product->can_edit_price == 0 ? 'fas fa-lock text-muted' : 'fas fa-edit' }}" style="font-size: 12px;" data-bs-toggle="tooltip"  data-bs-placement="top"
-                    title="{{ $product->can_edit_price == 0 ? 'Price update allowed after ' . $product->remaining_days . ' days.' : 'Editable' }}" ></i>
+                <i 
+                    class="{{ $product->can_edit_price == 0 ? 'fas fa-lock text-muted' : 'fas fa-edit' }}" 
+                    style="font-size: 12px;" 
+                    data-bs-toggle="tooltip"  
+                    data-bs-placement="top"
+                    title="{{
+                        $product->can_edit_price == 0 
+                            ? 'Price update allowed after ' . $product->remaining_days . ' days.' 
+                            : 'Editable'
+                    }}"
+                ></i>
             </span>
         </div>
     </td>
@@ -43,7 +63,7 @@
     tooltipTriggerList.map(function (tooltipTriggerEl) {
         return new bootstrap.Tooltip(tooltipTriggerEl);
     });
-
+    
 </script>
 
 <script>
@@ -88,7 +108,7 @@
         $('input[name="add_product_ids[]"]:checked').each(function () {
             let productId = $(this).val();
             let unitPrice = parseFloat($('.add-product-price[data-product-id="' + productId + '"]').val()) || 0;
-
+           
             selectedProducts.push({
                 product_id: productId,
                 unit_price: unitPrice
@@ -104,7 +124,7 @@
             $('#current_amount').removeClass('text-danger text-success');
             $('#discount_amount').removeClass('text-danger text-success');
             $('#invoice_amount').removeClass('text-danger text-success');
-           
+
             $.ajax({
                 url: "{{ route('add.products') }}",
                 type: 'POST',
@@ -149,3 +169,9 @@
 });
 
 </script>
+
+
+
+
+
+

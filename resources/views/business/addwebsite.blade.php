@@ -39,7 +39,7 @@
             <div class="col-xl-12">
                 <div class="card custom-card">
                     <div class="card-body">
-                    <form method="POST" action="{{ route('website.store') }}" enctype="multipart/form-data" class="row g-3 mt-0">
+                    <form method="POST" id="addwebsite-form" action="{{ route('website.store') }}" enctype="multipart/form-data" class="row g-3 mt-0">
                         @csrf
 
                         <div class="col-md-6 mx-auto">
@@ -99,11 +99,7 @@
                                 <option selected disabled>Choose Technology</option>
                                 <option value="wordpress">WordPress</option>
                                 <option value="laravel">Laravel</option>
-                                <option value="django">Django</option>
                                 <option value="corephp">Core PHP</option>
-                                <option value="static">Static</option>
-                                <option value="joomla">Joomla</option>
-                                <option value="other">Other</option>
                             </select>
                         </div>
 
@@ -125,6 +121,16 @@
                         <div class="col-md-6 mx-auto">
                             <label class="form-label">Company Address</label>
                             <input type="text" name="company_address" class="form-control" placeholder="Enter Company Address">
+                        </div>
+
+                        <div class="col-md-6 mx-auto">
+                            <label class="form-label">Bank Name</label>
+                            <input type="text" name="bank_name" class="form-control" placeholder="Enter Bank Name">
+                        </div>
+
+                        <div class="col-md-6 mx-auto">
+                            <label class="form-label">Bank Code</label>
+                            <input type="text" name="bank_code" class="form-control" placeholder="Enter Bank Code (e.g., IFSC or SWIFT)">
                         </div>
 
                         <hr>
@@ -193,6 +199,22 @@
 
 @endsection
 @push('scripts')
+<script>
+    document.getElementById('addwebsite-form').addEventListener('submit', function () {
+        Swal.fire({
+            title: 'Adding New Website...',
+            html: `
+                <div class="d-flex flex-column align-items-center">
+                     <div class="loaderBar"></div>
+                    <small class="mt-3 fs-6">Hold tight! Your new website is being added right now.</small>
+                </div>
+            `,
+            showConfirmButton: false,
+            allowOutsideClick: false
+        });
+    });
+</script>
+
 
 <script>
     $(document).ready(function() {

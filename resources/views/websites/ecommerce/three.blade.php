@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+     <!-- kupido -->
     <title>{{ $site->site_name }} - Invoice #{{ $invoice_number }}</title>
     <style>
         body, table, td {

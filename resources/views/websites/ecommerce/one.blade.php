@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html> 
 <head>
+    <!-- kupido -->
     <title>{{ $site->site_name }} - Invoice #{{ $invoice_number }}</title>
     <style>
         body, table, td {
@@ -24,7 +25,7 @@
             background-position: center;
             background-size: cover;
             width: 100%;
-            height:141px;
+            height:130px;
             padding:50px;
         }
     </style>
@@ -52,7 +53,7 @@
 
                     <!-- Content -->
                     <tr>
-                        <td style="padding: 40px; padding-top: 0;height:400px !important;">
+                        <td style="padding: 40px; padding-top: 0;min-height:300px !important;">
                             <table width= "100%">
                                 <tr>
                                     <td style="border-bottom: 1px solid #2f5496; width: 520px;">
@@ -72,10 +73,10 @@
                                         <p style="color: black; font-family: Calibri; font-size: 10px; margin: 0;">{{ $invoice_number }}</p>
                                     </td>
                                     <td style="width: 100%; vertical-align: top;">
-                                        <p style="color: #2f5496; font-family: Calibri; font-size: 10px; margin: 0; text-align: right; font-weight: 700;">TO:</p>
+                                        <p style="color: #2f5496; font-family: Calibri; font-size: 10px; margin: 0; text-align: center; font-weight: 700;padding-left:40px;">TO:</p>
                                     </td>
                                     <td style="vertical-align: top;">
-                                        <p style="color: black; font-family: Calibri; font-size: 10px; margin: 0; text-align: right;">{{ $customer_name }}</p>
+                                        <p style="color: black; font-family: Calibri; font-size: 10px; margin: 0; text-align: right;white-space: nowrap;">{{ $customer_name }}</p>
                                     </td>
                                 </tr>
                             </table>

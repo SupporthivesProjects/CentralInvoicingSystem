@@ -26,7 +26,7 @@
                 <div class="col-md-6">
                     <div class="card custom-card">
                         <div class="card-body">
-                        <form action="{{ route('businessmodel.update', $businessmodel->id) }}" method="POST">
+                        <form id="editbusinessmodel-form"  action="{{ route('businessmodel.update', $businessmodel->id) }}" method="POST">
                             @csrf
                             @method('PATCH')
                                 <div class="mb-3">
@@ -67,4 +67,20 @@
 
 @endsection
 @push('scripts')
+<script>
+    document.getElementById('editbusinessmodel-form').addEventListener('submit', function () {
+        Swal.fire({
+            title: 'Updating Your Business Model...',
+            html: `
+                <div class="d-flex flex-column align-items-center">
+                     <div class="loaderBar"></div>
+                    <small class="mt-3 fs-6">Hold tight! Your business model is being updated now.</small>
+                </div>
+            `,
+            showConfirmButton: false,
+            allowOutsideClick: false
+        });
+    });
+</script>
+
 @endpush

@@ -19,11 +19,10 @@
 
                 <div class="mt-3 mt-md-0">
                 <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
-                <a href="{{ url()->previous() }}" class="btn btn-outline-secondary btn-sm" >
-                    <i class="fas fa-arrow-left"></i> Go Back
-                </a>
-               
-                </div>
+                        <a href="{{ url()->previous() }}" class="btn btn-outline-secondary btn-sm" >
+                            <i class="fas fa-arrow-left"></i> Go Back
+                        </a>
+                 </div>
                 </div>
             </div>
 
@@ -56,7 +55,7 @@
                                 </label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="fas fa-file-invoice"></i></span>
-                                    <input type="text" form="generate-invoice-form" id="invoice_number" name="invoice_number" class="form-control font-italic" value="{{ $invoice['invoice_number'] ?? '' }}" placeholder="Enter or generate invoice number">
+                                    <input type="text" form="generate-invoice-form" id="invoice_number" name="invoice_number" class="form-control font-italic" value="{{ $invoice['invoice_number'] ?? '' }}"  placeholder="Enter or generate invoice number">
                                     <div class="btn-group">
                                             <button type="button" class="btn input-group-text dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
                                                 <span class="visually-hidden">Toggle Dropdown</span>
@@ -91,6 +90,7 @@
                                     <input type="email" form="generate-invoice-form" class="form-control" id="customer_email" name="customer_email" value="{{ $customer['customer_email'] ?? '' }}"  placeholder="Enter Customer email">
                                 </div>
                             </div>
+
                             <div class="col-md-4 mb-3">
                                 <label class="form-label">Invoice File Name</label>
                                 <div class="input-group">
@@ -98,8 +98,7 @@
                                     <input type="text" form="generate-invoice-form" class="form-control" id="invoice_file_name" name="invoice_file_name" value="{{ old('invoice_file_name') }}" placeholder="Enter Invoice File Name">
                                 </div>
                             </div>
-                            
-                           
+                          
                         </div>
 
 
@@ -143,21 +142,21 @@
             </div>
 
             <div class="card custom-card mt-4 border-1 rounded shadow">
-                <div class="card-header bg-white shadow-sm rounded-3 p-3 d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
-                    <div class="d-flex align-items-center">
-                        <i class="bi bi-stars text-primary fs-4 me-2"></i>
-                        <h4 class="mb-0 fw-semibold text-dark">Build Your Product & Invoice</h4>
-                    </div>
+            <div class="card-header bg-white shadow-sm rounded-3 p-3 d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-stars text-primary fs-4 me-2"></i>
+                    <h4 class="mb-0 fw-semibold text-dark">Build Your Product & Invoice</h4>
+                </div>
 
-                    <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
+                <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
                         <button type="button" class="btn btn-outline-primary d-flex align-items-center gap-1 me-1" 
-                                data-bs-toggle="modal" data-bs-target="#addmoreproducts" onclick="customizeProducts('onload')">
-                            <i class="fas fa-plus-square"></i> Add Products
+                                data-bs-toggle="modal" data-bs-target="#addmoreproducts"  onclick="customizeProducts('onload')">
+                                <i class="fas fa-plus-square"></i> Add Products
                         </button>
 
                         <button type="button" class="btn btn-outline-success d-flex align-items-center gap-1"
                                 onclick="randomizeProducts('semi_random')">
-                            <i class="fas fa-random"></i> Randomize
+                                <i class="fas fa-random"></i> Randomize
                         </button>
 
                         <button type="button" class="btn btn-outline-secondary d-flex align-items-center gap-1 me-1"
@@ -170,73 +169,75 @@
                             <i class="bi bi-receipt-cutoff"></i> Generate Invoice
                         </button>
                     </div>
-                </div>
+
+
+            </div>
 
                 <div class="card-body">
-                <div class="container">
-                <div class="row g-3 justify-content-center mb-3">
-                    <div class="col-md-3">
-                        <div class="d-flex flex-column align-items-center h-100">
-                            <small class="text-muted fw-semibold mb-2">No. of Products</small>
-                            <div class="input-group shadow-sm bg-white w-100">
-                                <button class="btn btn-outline-primary" type="button" onclick="adjustNoOfProducts('noOfProducts', -1)">−</button>
-                                <input type="text" class="form-control text-center" name="noOfProducts" id="noOfProducts" min="1" max="20" placeholder="Auto" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Auto'" readonly>
-                                <button class="btn btn-outline-primary" type="button" onclick="adjustNoOfProducts('noOfProducts', 1)">+</button>
+                    <div class="container">
+                        <div class="row g-3 justify-content-center mb-3">
+                            <div class="col-md-3">
+                                <div class="d-flex flex-column align-items-center h-100">
+                                    <small class="text-muted fw-semibold mb-2">No. of Products</small>
+                                    <div class="input-group shadow-sm bg-white w-100">
+                                        <button class="btn btn-outline-primary" type="button" onclick="adjustNoOfProducts('noOfProducts', -1)">−</button>
+                                        <input type="text" class="form-control text-center" name="noOfProducts" id="noOfProducts" min="1" max="20" placeholder="Auto" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Auto'" readonly>
+                                        <button class="btn btn-outline-primary" type="button" onclick="adjustNoOfProducts('noOfProducts', 1)">+</button>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
 
-                    <div class="col-md-6">
-                        <div class="d-flex flex-column align-items-center h-100 ms-3">
-                            <small class="text-muted fw-semibold mb-2">Price Range</small>
-                            <div class="w-100 h-100">
-                                <div id="randomize-price-slider" class="w-100"></div>
-                                <input type="hidden" name="price_from" id="hidden_randomize_price_from_input_id">
-                                <input type="hidden" name="price_to" id="hidden_randomize_price_to_input_id">
+                            <div class="col-md-6">
+                                <div class="d-flex flex-column align-items-center h-100 ms-3">
+                                    <small class="text-muted fw-semibold mb-2">Price Range</small>
+                                    <div class="w-100 h-100">
+                                        <div id="randomize-price-slider" class="w-100"></div>
+                                        <input type="hidden" name="price_from" id="hidden_randomize_price_from_input_id">
+                                        <input type="hidden" name="price_to" id="hidden_randomize_price_to_input_id">
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
 
-                    <div class="col-md-3">
-                        <div class="d-flex flex-column align-items-center h-100">
-                            <small class="text-muted fw-semibold mb-2">Product Category</small>
-                            <select class="form-select w-100 h-100" name="category_id" id="category_id">
-                                <option value="">All Categories</option>
-                                @foreach(getCategoryList($site->technology) as $category)
-                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
+                            <div class="col-md-3">
+                                <div class="d-flex flex-column align-items-center h-100">
+                                    <small class="text-muted fw-semibold mb-2">Product Category</small>
+                                    <select class="form-select w-100 h-100" name="category_id" id="category_id">
+                                        <option value="">All Categories</option>
+                                        @foreach(getCategoryList($site->technology) as $category)
+                                            <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
 
-                    </div>
+                     </div>
 
                 </div>  
-                    <!-- Product Table -->
+                    </div>  
+                
                     <div class="table-responsive border rounded shadow-sm">
                         <table class="table table-bordered table-hover align-middle mb-0">
                             <thead class="table-dark">
-                                <tr>
-                                    <th class="text-center" style="width: 10%;">PID</th>
-                                    <th class="text-center" style="width: 10%;">Category</th>
-                                    <th class="text-center" style="width: 35%;">Product Name</th>
-                                    <th class="text-center unit-price-header" data-column="3" data-order="desc">
-                                        <span class="d-inline-flex align-items-center justify-content-center gap-1">
-                                            Unit Price <i class="bi bi-caret-down-fill"></i>
-                                        </span>
-                                    </th>
-                                    <th class="text-center" style="width: 20%;">Editable Price</th>
-                                    <th class="text-center" style="width: 10%;">Remove</th>
-                                </tr>
+                            <tr>
+                                <th class="w-10 text-center">PID</th>
+                                <th class="w-30">Package Name</th>
+                                <th class="w-20 text-center">Subscription</th>
+                                <th class="text-center unit-price-header" data-column="3" data-order="desc">
+                                    <span class="d-inline-flex align-items-center justify-content-center gap-1">
+                                        Unit Price <i class="bi bi-caret-down-fill"></i>
+                                    </span>
+                                </th>
+                                <th class="w-25 text-center">Editable Price</th>
+                                <th class="w-10 text-center">Remove</th>
+                            </tr>
                             </thead>
                             <tbody id="randomize-product-table-body">
+                                
                             </tbody>
                         </table>
                     </div>
-
                 </div>
             </div>
-
         </div>
     </div>
 </div>
@@ -260,73 +261,73 @@
             <!-- Modal Body -->
             <div class="modal-body bg-white">
                 <div class="container-fluid">
-                <div class="row g-3 mb-4 mx-4">
-
-                <div class="col-md-6 d-flex flex-column">
-                    <label for="customizeKeywordInput" class="form-label text-center fw-semibold">Search By Keyword</label>
-                    <div class="input-group bg-light shadow-sm ms-2">
-                        <span class="input-group-text bg-transparent border-0">
-                            <i class="fas fa-search text-muted"></i>
-                        </span>
-                        <input type="text" class="form-control border-0" id="customizeKeywordInput" placeholder="Enter or Speak product or category name..." id="micBtn" title="Voice Search">
-                        <button class="btn btn-light border-0" type="button" title="Voice Search" onclick="startVoiceSearch('customizeKeywordInput','customizeMicIcon')">
-                            <i class="fas fa-microphone text-primary" id="customizeMicIcon"></i>
-                        </button>
-                      
-                    </div>
-                </div>
-                <div class="col-md-6 d-flex flex-column">
-                    <label class="form-label text-center fw-semibold mb-2">Search By Price Range</label>
-                    <div class="align-items-center rounded bg-white shadow-sm ms-3">
-                        <div class="w-100" id="customize-price-slider"></div>
-                    </div>
-                    <input type="hidden" id="hidden_customize_price_from_input_id">
-                    <input type="hidden" id="hidden_customize_price_to_input_id">
-                </div>
-                    </div>
-                    <div class="row g-3 mb-4">
-                        <div class="col-md-4">
-                            <div class="bg-light rounded border shadow-sm p-1 text-center">
-                                <div class="text-muted small fw-semibold">Current Amount</div>
-                                <div class="fw-bold text-primary fs-5">{{ site_currency() }}<span id="temp_current_amount_text">0.00</span></div>
+                        <div class="row g-3 mb-4 mx-4">
+                          <div class="col-md-6 d-flex flex-column">
+                            <label for="customizeKeywordInput" class="form-label text-center fw-semibold">Search By Keyword</label>
+                            <div class="input-group bg-light shadow-sm ms-2">
+                                <span class="input-group-text bg-transparent border-0">
+                                    <i class="fas fa-search text-muted"></i>
+                                </span>
+                                <input type="text" class="form-control border-0" id="customizeKeywordInput" placeholder="Enter or Speak product or category name..." id="micBtn" title="Voice Search">
+                                <button class="btn btn-light border-0" type="button" title="Voice Search" onclick="startVoiceSearch('customizeKeywordInput','customizeMicIcon')">
+                                    <i class="fas fa-microphone text-primary" id="customizeMicIcon"></i>
+                                </button>
+                            
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="bg-light rounded border shadow-sm p-1 text-center">
-                                <div class="text-muted small fw-semibold">Discount Amount</div>
-                                <div class="fw-bold text-primary fs-5">{{ site_currency() }}<span id="temp_discount_amount_text">0.00</span></div>
+                            <div class="col-md-6 d-flex flex-column">
+                                <label class="form-label text-center fw-semibold mb-2">Search By Price Range</label>
+                                <div class="align-items-center rounded bg-white shadow-sm ms-3">
+                                    <div class="w-100" id="customize-price-slider"></div>
+                                </div>
+                                <input type="hidden" id="hidden_customize_price_from_input_id">
+                                <input type="hidden" id="hidden_customize_price_to_input_id">
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="bg-light rounded border shadow-sm p-1 text-center">
-                                <div class="text-muted small fw-semibold">Invoice Amount</div>
-                                <div class="fw-bold text-primary fs-5">{{ site_currency() }}<span id="temp_invoice_amount_text">0.00</span></div>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-4">
+                                <div class="bg-light rounded border shadow-sm p-1 text-center">
+                                    <div class="text-muted small fw-semibold">Current Amount</div>
+                                    <div class="fw-bold text-primary fs-5">{{ site_currency() }}<span id="temp_current_amount_text">0.00</span></div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="bg-light rounded border shadow-sm p-1 text-center">
+                                    <div class="text-muted small fw-semibold">Discount Amount</div>
+                                    <div class="fw-bold text-primary fs-5">{{ site_currency() }}<span id="temp_discount_amount_text">0.00</span></div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="bg-light rounded border shadow-sm p-1 text-center">
+                                    <div class="text-muted small fw-semibold">Invoice Amount</div>
+                                    <div class="fw-bold text-primary fs-5">{{ site_currency() }}<span id="temp_invoice_amount_text">0.00</span></div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    
-                    <div class="rounded shadow-sm p-2"> 
+                        
+                        <div class="rounded shadow-sm p-2"> 
                         <table id="customize-products-table" class="table table-bordered table-hover align-middle mb-0 table-responsive">
-                            <thead class="table-dark text-center">
-                                <tr>
-                                    <th style="width: 10%;">PID</th>
-                                    <th style="width: 10%;">Category</th>
-                                    <th style="width: 35%;">Product Name</th>
-                                    <th class="text-center">Unit Price</th>
-                                    <th style="width: 20%;">Editable Price</th>
-                                    <th style="width: 10%;">Select</th>
-                                </tr>
-                            </thead>
-                            <tbody id="customize-product-table-body">
-                            </tbody>
-                        </table>
+                                <thead class="table-dark text-center">
+                                    <tr>
+                                        <th class="w-10 text-center">PID</th>
+                                        <th class="w-30">Package Name</th>
+                                        <th class="w-20 text-center">Subscription</th>
+                                        <th class="text-center">  Unit Price </th>
+                                        <th class="w-25 text-center">Editable Price</th>
+                                        <th class="w-10 text-center">Select</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="customize-product-table-body">
+                                
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                </div>
-                </div>
+            </div>
             
             <div class="modal-footer bg-light border-top">
                 <div class="d-flex flex-wrap gap-2">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" >
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                         <i class="bi bi-x-circle me-1"></i> Close
                     </button>
                     <button type="button" class="btn btn-danger" onclick="customizeProducts('onload')">
@@ -342,12 +343,13 @@
 </div>
 
 
+
 <div class="modal fade" id="sitechangemodel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="siteChangeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 rounded-4 shadow-sm overflow-hidden">
             
             <div class="modal-header bg-primary text-white border-0">
-                <h5 class="modal-title fw-bold" id="siteChangeModalLabel">Want to change website? </h5>
+                <h5 class="modal-title fw-bold" id="siteChangeModalLabel">Want to change website?</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
@@ -376,6 +378,7 @@
         </div>
     </div>
 </div>
+
 
 @endsection
 @push('scripts')
@@ -443,7 +446,7 @@
         connect: true,
         step: 5,
         range: { min: minUnitPrice, max: maxUnitPrice },
-        tooltips: [true , true], 
+        tooltips: [true, true],
         format: {
             to: v => `${currency}${Math.round(v)}`,
             from: v => Number(v.replace(currency, ''))
@@ -455,7 +458,7 @@
         connect: true,
         step: 5,
         range: { min: minUnitPrice, max: maxUnitPrice },
-        tooltips: [true, true], 
+        tooltips: [true, true],
         format: {
             to: v => `${currency}${Math.round(v)}`,
             from: v => Number(v.replace(currency, ''))
@@ -471,12 +474,13 @@
 <script>
     let randomizeRequest = false; 
     function randomizeProducts(mode = 'smart_random') {
+
         if (randomizeRequest) {
                 toastr.info('Randomizing in progress. Please wait...', 'Processing');
                 return;
         }
         randomizeRequest = true;
-
+        
         $('#randomize-product-table-body').html(getLoaderRowHTML());
         const priceFrom = $('#hidden_randomize_price_from_input_id').val();
         const priceTo = $('#hidden_randomize_price_to_input_id').val();
@@ -488,13 +492,11 @@
             $('#noOfProducts').attr('placeholder', 'Auto');
         }
 
-
         $('#current_amount').val('Calculating...');
         $('#discount_amount').prop('type', 'text').val('Calculating...').prop('readonly', true);
         $('#current_amount').removeClass('text-danger text-success');
         $('#discount_amount').removeClass('text-danger text-success');
         $('#invoice_amount').removeClass('text-danger text-success');
-
         var invoice_amount = parseFloat($('#invoice_amount').val()) || 0;
 
         $.ajax({
@@ -512,10 +514,11 @@
                 Swal.close();
                 $('#discount_amount').val(0.00);
                 if (response.total === 0) {
-                    $('#randomize-product-table-body').html(getErrorRowHTML('No results found. Try randomizing or use a different keyword.')); 
+                    $('#randomize-product-table-body').html(getErrorRowHTML(`Try again with Randomize or click 'Add Product' to add manually.`));
                     randomizeRequest = false; 
                     return;
-                } else {
+                }
+                else {
                     const invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
                     const currentAmount = parseFloat(response.total.toFixed(2));
                     $('#current_amount_text').text(currentAmount.toFixed(2));
@@ -527,15 +530,17 @@
                     //replaceFeatherIconsTemporarily();
                 }
             },
-            error: function (xhr, textStatus) {
-                toastr.error('Failed to fetch random products.', 'Oops!');
+            error: function () {
+                toastr.error("Could not fetch random products.");
+                Swal.close();
             },
             complete: function () {
                 randomizeRequest = false; 
             }
         });
     }
-    randomizeProducts('smart_random');
+
+    randomizeProducts();
 </script>
 
 <script>
@@ -584,17 +589,16 @@
 
 
  <script>
-    $(document).on('click', '#cancelCustomizeRequest', function () {
-        if (customizeAjax) {
-            customizeAjax.abort();
-        }
-    });
+        $(document).on('click', '#cancelCustomizeRequest', function () {
+            if (customizeAjax) {
+                customizeAjax.abort();
+            }
+        });
 
-    let customizeRequest = false;
-    let customizeAjax = null;
+         let customizeRequest = false;
+         let customizeAjax = null;
 
-    function customizeProducts(search_type='search') {
-
+        function customizeProducts(search_type='search') {
             if (customizeRequest) {
                 toastr.info(
                             '<div>Processing your request...  <button type="button" class="btn btn-sm btn-light ml-2" id="cancelCustomizeRequest">Cancel</button></div>',
@@ -617,7 +621,7 @@
             
             btn.prop('disabled', false);
             btn.html('Add Selected to Cart');
-
+            
             const priceFrom = $('#hidden_customize_price_from_input_id').val();
             const priceTo = $('#hidden_customize_price_to_input_id').val();
             let invoice_amount = parseFloat($('#invoice_amount').val()) || 0;
@@ -627,6 +631,7 @@
             if (current_amount > invoice_amount) {
                 discountAmount = current_amount - invoice_amount;
             }
+
             $('#temp_current_amount_text').text(current_amount.toFixed(2));
             $('#temp_invoice_amount_text').text(invoice_amount.toFixed(2));
             $('#temp_discount_amount_text').text(discountAmount.toFixed(2));
@@ -692,6 +697,18 @@
                     }
                 },
                 error: function (xhr, textStatus) {
+                    if (textStatus === 'abort') {
+                        toastr.warning('Customize request was cancelled.', 'Cancelled');
+                        $('#addmoreproducts').modal('hide');
+                    } else {
+                        toastr.error('Something went wrong while filtering.', 'Oops!');
+                    }
+                },
+                complete: function () {
+                    customizeRequest = false; 
+                    customizeAjax = null;
+                }error: function (xhr, textStatus) {
+                    
                     if (textStatus === 'abort') {
                         toastr.warning('Customize request was cancelled.', 'Cancelled');
                         setTimeout(function () {
@@ -1098,7 +1115,6 @@ $(document).ready(function() {
     }
 </script>
 
-
 <script>
     let discountManuallyChanged = false;
 
@@ -1147,7 +1163,5 @@ $(document).ready(function() {
         $('#current_amount, #discount_amount, #invoice_amount').removeClass('text-success text-danger').addClass(colorClass);
     }
 </script>
-
-
 
 @endpush

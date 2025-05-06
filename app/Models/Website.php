@@ -24,6 +24,8 @@ class Website extends Model
         'company_email',
         'company_mobile',
         'company_address',
+        'bank_name',
+        'bank_code',
         'invoice_header_image',
         'invoice_footer_image',
         'invoice_signature',

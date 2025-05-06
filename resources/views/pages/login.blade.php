@@ -3,51 +3,54 @@
 @section('title', 'Login | Central Invoice System')
 
 @section('content')
-<div class="page main-signin-wrapper">
-        <!-- Start::row-1 -->
-        <div class="row signpages text-center">
-            <div class="col-md-12">
-                <div class="card mb-0">
-                    <div class="row row-sm">
-                        <div class="col-lg-6 col-xl-5 d-none d-lg-block text-center bg-primary details">
-                            <div class="mt-5 pt-4 p-2 position-absolute">
-                                <div class="clearfix"></div>
-                                <img src="{{ asset('images/svgs/user.svg') }}" class="ht-100 mb-0" alt="user">
-                                <h5 class="mt-4 text-white">Welcome Back, Admin!</h5>
-                                <span class="text-white-6 fs-13 mb-5 mt-xl-0">Sign in to access the Central Invoice System admin panel</span>
-
-                            </div>
+<div class="main-signin-wrapper">
+    <div class="row signpages text-center">
+        <div class="col-md-12">
+            <div class="card shadow-lg border-0 rounded-4 mb-0">
+                <div class="row row-sm">
+                    <div class="col-lg-6 col-xl-5 d-none d-lg-flex bg-primary text-white text-center d-flex justify-content-center align-items-center p-5 animate__animated animate__fadeInLeft animate__delay-03s">
+                        <div>
+                            <img src="{{ asset('images/svgs/user.svg') }}" class="mb-4" style="width: 120px;">
+                            <h3 class="fw-bold">Welcome Back, Admin</h3>
+                            <p class="text-white-50 px-3">Please sign in to access the Central Invoice System’s admin panel.</p>
                         </div>
-                        <div class="col-lg-6 col-xl-7 col-xs-12 col-sm-12 login_form ">
-                            <div class="main-container container-fluid">
-                                <div class="row row-sm">
-                                    <div class="card-body mt-2 mb-2">
-                                   
-                                        <div class="clearfix"></div>
-                                        <form method="POST" action="{{ route('login.submit') }}" id="loginForm">
+                    </div>
+
+                    <div class="col-lg-6 col-xl-7 col-xs-12 col-sm-12 login_form">
+                        <div class="container-fluid">
+                            <div class="row row-sm">
+                                <div class="card-body mt-2 mb-2">
+                                    <div class="text-center mb-4 animate__animated animate__fadeIn animate__delay-06s">
+                                        <img src="{{ asset('images/brand-logos/central_invoice.png') }}" alt="logo" class="mb-3" style="max-width: 160px;">
+                                    </div>
+
+                                    <form method="POST" action="{{ route('login.submit') }}" id="loginForm">
                                         @csrf
-                                            <h5 class="text-start mb-2">Signin to Your Account</h5>
-                                            <p class="mb-4 text-muted fs-13 ms-0 text-start">Sign in to access the Admin and Staff Dashboard</p>
-                                            <div class="form-group text-start">
-                                                <label class="form-label">Email</label>
-                                                <input class="form-control" placeholder="Enter your email" type="email" name="email" required>
-                                            </div>
-                                            <div class="form-group text-start">
-                                                <label class="form-label">Password</label>
-                                                <input class="form-control" placeholder="Enter your password" type="password" name="password" id="password" required>
-                                            </div>
-                                            <div class="d-grid">
-                                                <button type="submit" class="btn btn-primary">Sign In</button>
-                                            </div>
-                                        </form>
-                                        <div class="text-start mt-5 ms-0">
-                                        <div class="mb-1">
-                                            <small class="text-muted">Can't remember your password?</small><br>
-                                            <a href="{{ route('password.request') }}">Forgot password?</a>
+                                        <h5 class="text-center mb-2 fw-bold animate__animated animate__fadeIn animate__delay-09s">Sign In to Your Account</h5>
+                                        <p class="text-center text-muted fs-6 mb-4 animate__animated animate__fadeIn animate__delay-12s">Access your dashboard and manage the Central Invoice System with ease.</p>
+
+                                        <div class="form-group text-start mb-3 animate__animated animate__fadeIn animate__delay-15s">
+                                            <label class="form-label">Email Address</label>
+                                            <input class="form-control" placeholder="Enter your email" type="email" name="email" required>
                                         </div>
 
+                                        <div class="form-group text-start mb-3 animate__animated animate__fadeIn animate__delay-15s">
+                                            <label class="form-label">Password</label>
+                                            <input class="form-control" placeholder="Enter your password" type="password" name="password" id="password" required>
+                                        </div>
+
+                                        <div class="d-grid mb-3 animate__animated animate__fadeIn animate__delay-18s">
+                                            <button type="submit" class="btn btn-primary w-100 rounded-pill shadow-sm btn-hover-effect">Sign In</button>
+                                        </div>
+                                    </form>
+
+                                    <div class="text-start ms-0">
+                                        <div class="mb-1">
+                                            <small class="text-muted">Forgot your password?</small><br>
+                                            <a href="{{ route('password.request') }}">Click here to reset it</a>
                                         </div>
                                     </div>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -55,21 +58,21 @@
                 </div>
             </div>
         </div>
-        <!-- End::row-1 -->
-
     </div>
-    
+</div>
+
+
 @endsection
 
 @push('scripts')
 <script>
     document.getElementById('loginForm').addEventListener('submit', function () {
         Swal.fire({
-            title: '🔐 Getting You In!',
+            title: 'Logging You In...',
             html: `
                 <div class="d-flex flex-column align-items-center">
-                    <div class="spinner-border text-primary" role="status"></div>
-                    <small class="mt-2">Just a sec — logging you in quicker than your coffee kicks in!</small>
+                    <div class="loaderBar"></div>
+                    <small class="mt-3 fs-6">Please wait while we securely log you in and prepare your account.</small>
                 </div>
             `,
             showConfirmButton: false,

@@ -121,7 +121,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <!-- Form to add currency -->
-                    <form method="POST" action="{{ route('currency.edit') }}">
+                    <form method="POST" id="addcurrency-form"  action="{{ route('currency.edit') }}">
                         @csrf
                         <div class="modal-body">
                             <div class="mb-3">
@@ -160,6 +160,22 @@
     
 @endsection
 @push('scripts')
+<script>
+    document.getElementById('addcurrency-form').addEventListener('submit', function () {
+        Swal.fire({
+            title: 'Adding New Currency...',
+            html: `
+                <div class="d-flex flex-column align-items-center">
+                     <div class="loaderBar"></div>
+                    <small class="mt-3">Hold tight! Your new currency is being added right now.</small>
+                </div>
+            `,
+            showConfirmButton: false,
+            allowOutsideClick: false
+        });
+    });
+</script>
+
 <script>
    $(document).on('click', '.currency_edit', function () {
     const id = $(this).data('id');

@@ -1,3 +1,18 @@
+@media (min-width: 992px) {
+  .header-logo {
+    background-color: #ffffff;
+    padding: 2px 9px 8px 8px;
+    border-radius: 5px;
+}
+}
+
+.btn-hover-effect:hover {
+  transform: scale(1.05);
+  transition: transform 0.3s ease;
+}
+
+
+
 /* Custom CSS written by Narayan Zade for eCommerce product selection checkbox */
 .narayan-checkbox {
   -webkit-appearance: none !important;
@@ -95,57 +110,57 @@
 /* Custom CSS for ecommerce product selection slider by Narayan Zade */
 
 #price-slider {
-    margin-top: 6px;
+  margin-top: 6px;
 }
 
 .noUi-target {
-    height: 38px !important;
-    border-radius: 5px;
-    background: #e9ecef;
-    box-shadow: none;
-    border: 1px solid #ced4da;
+  height: 38px !important;
+  border-radius: 5px;
+  background: #f1f3f5; 
+  box-shadow: none;
+  border: 1px solid #ced4da; 
 }
 
 .noUi-horizontal .noUi-handle {
-    width: 18px;
-    height: 38px !important;
-    top: -1px !important;
-    background: #0d6efd;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+  width: 18px;
+  height: 38px !important;
+  top: -1px !important;
+  background: #007bff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15); 
 }
 
 .noUi-horizontal .noUi-handle:before,
 .noUi-horizontal .noUi-handle:after {
-    display: none;
+  display: none;
 }
 
 .noUi-connect {
-  background: linear-gradient(135deg, #00b894, #55efc4);
-
+background: linear-gradient(135deg, #4e73df, #1cc88a); 
 }
 
 #range-values {
-    margin-top: 10px !important;
-    display: flex !important;
-    justify-content: space-between !important;
-    font-size: 14px !important;
+  margin-top: 10px !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  font-size: 14px !important;
+  color: #495057;
 }
 
 .noUi-tooltip {
-    font-size: 14px !important;
-    font-weight: 500 !important;
-    background: #343a40 !important;
-    color: #fff !important;
-    border-radius: 4px !important;
-    padding: 4px 8px !important;
-    top: -30px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  background: #343a40 !important;
+  color: #ffffff !important; 
+  border-radius: 4px !important;
+  padding: 4px 8px !important;
+  top: -30px !important;
 }
 
 .noUi-handle {
-    width: 10px !important;
+  width: 10px !important;
 }
 
 .input-group-text {
@@ -868,3 +883,52 @@
   }
 }
 
+
+
+/* common loader for login , and other */ 
+.loaderBar {
+  width: calc(160px / 0.707);
+  height: 15px;
+  background: #F9F9F9;
+  border-radius: 10px;
+  border: 1px solid #006DFE;
+  position: relative;
+  overflow: hidden;
+}
+
+.loaderBar::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  border-radius: 5px;
+  background: repeating-linear-gradient(
+    45deg,
+    #0031F2 0 30px,
+    #006DFE 0 40px
+  );
+  background-size: 200% 100%;
+  background-position: right;
+  animation:
+    fillProgress 15s ease-in-out forwards,
+    moveStripes 5s linear infinite;
+}
+
+@keyframes fillProgress {
+  0% {
+    width: 0;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+@keyframes moveStripes {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: 0 0;
+  }
+}

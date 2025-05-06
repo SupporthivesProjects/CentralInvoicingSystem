@@ -1,13 +1,34 @@
 @forelse($products as $index => $product)
 <tr class="product-row">
     <td class="text-center" >{{ $product->id }}</td>
-    <td>{{ $product->category_name }}</td>
     <td>
         {{ $product->name }} 
         @if($site->site_link && $product->slug)
             <a href="{{ $site->site_link }}/product/{{ $product->slug }}" target="_blank">🔗</a>
         @endif
     </td>
+    <td>
+        <div class="input-group">
+                <select class="form-select fw-semibold"
+                        name="subscription"
+                        id="subscription-select-{{ $product->id }}"
+                        onchange="randomizeProductUpdate({{ $product->category_id }}, {{ $product->id }}, this.value)">
+                    @php
+                        $options = ['1 Month', '3 Months', '6 Months', '12 Months'];
+                    @endphp
+                    @foreach($options as $option)
+                        <option value="{{ $option }}" {{ $product->subscription == $option ? 'selected' : '' }}>
+                            {{ $option }}
+                        </option>
+                    @endforeach
+                </select>
+                <span class="input-group-text" style="cursor: pointer;">
+                    <i class="fas fa-sync-alt text-muted" id="dropdown-icon-{{ $product->id }}"></i>
+                </span>
+            </div>
+        </td>
+
+
     <td  class="text-center">{{ site_currency() }}{{ number_format($product->unit_price, 2) }}</td>
     <td>
         <div class="input-group d-flex">
@@ -63,6 +84,46 @@
     });
 </script>
 
+<script>
+
+ function randomizeProductUpdate(categoryID, productId, subscription) {
+
+    const icon = document.getElementById(`dropdown-icon-${productId}`);
+    icon.className = 'fas fa-spinner fa-spin text-primary';
+    $.ajax({
+        url: "{{ route('update.product') }}",
+        method: 'POST',
+        data: {
+            _token: '{{ csrf_token() }}',
+            product_id: productId,
+            subscription: subscription,
+            category_id: categoryID
+        },
+        success: function(response) {
+            if (response.error) {
+                icon.className = 'fas fa-sync-alt text-muted';
+                toastr.error(response.error, 'Update Error');
+            } else {
+                $('#randomize-product-table-body').html(response.tableRows);
+                const newIcon = document.getElementById(`dropdown-icon-${productId}`);
+                if (newIcon) {
+                    newIcon.className = 'fas fa-check text-success';
+
+                    setTimeout(() => {
+                        newIcon.className = 'fas fa-sync-alt text-muted';
+                    }, 1000);
+                }
+                calculateTotalPrice();
+            }
+        },
+        error: function(xhr) {
+            icon.className = 'fas fa-sync-alt text-muted';
+            console.error(xhr.responseText);
+            toastr.error('Something went wrong');
+        }
+    });
+    }
+</script>
 <script>    
 
     $(document).ready(function() {
@@ -129,3 +190,5 @@
     });
 
 </script>
+
+

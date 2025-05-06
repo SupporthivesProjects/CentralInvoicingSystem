@@ -171,6 +171,8 @@ class WebsiteController extends Controller
                 'company_email' => 'nullable|email|max:255',
                 'company_mobile' => 'nullable|string|max:20',
                 'company_address' => 'nullable|string|max:1000',
+                'bank_name' => 'nullable|string|max:255',
+                'bank_code' => 'nullable|string|max:255',
                 'company_logo' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
                 'invoice_header_image' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
                 'invoice_footer_image' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
@@ -250,6 +252,8 @@ class WebsiteController extends Controller
                     'company_email' => $request->company_email,
                     'company_mobile' => $request->company_mobile,
                     'company_address' => $request->company_address,
+                    'bank_name' => $request->bank_name,
+                    'bank_code' => $request->bank_code
                 ]);
 
                 $website->save();
@@ -280,6 +284,8 @@ class WebsiteController extends Controller
                 'company_email' => 'nullable|email|max:255',
                 'company_mobile' => 'nullable|string|max:20',
                 'company_address' => 'nullable|string|max:1000',
+                'bank_name' => 'nullable|string|max:255',
+                'bank_code' => 'nullable|string|max:255',
 
                 'company_logo' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
                 'invoice_header_image' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
@@ -317,6 +323,8 @@ class WebsiteController extends Controller
                 'company_email' => $request->company_email,
                 'company_mobile' => $request->company_mobile,
                 'company_address' => $request->company_address,
+                'bank_name' => $request->bank_name,
+                'bank_code' => $request->bank_code
             ]);
 
             // Fetch the website model and business model type

@@ -39,7 +39,7 @@
             <div class="col-xl-12">
                 <div class="card custom-card">
                     <div class="card-body">
-                    <form method="POST" action="{{ route('website.update', $website->id) }}" enctype="multipart/form-data" class="row g-3 mt-0">
+                    <form id="editwebsite-form" method="POST" action="{{ route('website.update', $website->id) }}" enctype="multipart/form-data" class="row g-3 mt-0">
                             @csrf
                             @method('PATCH')
 
@@ -108,11 +108,7 @@
                                     <option selected disabled>Choose Technology</option>
                                     <option value="wordpress" {{ $website->technology == 'wordpress' ? 'selected' : '' }}>WordPress</option>
                                     <option value="laravel" {{ $website->technology == 'laravel' ? 'selected' : '' }}>Laravel</option>
-                                    <option value="django" {{ $website->technology == 'django' ? 'selected' : '' }}>Django</option>
                                     <option value="corephp" {{ $website->technology == 'corephp' ? 'selected' : '' }}>Core PHP</option>
-                                    <option value="static" {{ $website->technology == 'static' ? 'selected' : '' }}>Static</option>
-                                    <option value="joomla" {{ $website->technology == 'joomla' ? 'selected' : '' }}>Joomla</option>
-                                    <option value="other" {{ $website->technology == 'other' ? 'selected' : '' }}>Other</option>
                                 </select>
                             </div>
                             <div class="col-md-6 mx-auto">
@@ -132,6 +128,15 @@
                             <div class="col-md-6 mx-auto">
                                 <label class="form-label">Company Address</label>
                                 <input type="text" name="company_address" class="form-control" value="{{ old('company_address', $website->company_address) }}" placeholder="Enter Company Address">
+                            </div>
+                            <div class="col-md-6 mx-auto">
+                                <label class="form-label">Bank Name</label>
+                                <input type="text" name="bank_name" class="form-control" value="{{ old('bank_name', $website->bank_name) }}"  placeholder="Enter Bank Name">
+                            </div>
+
+                            <div class="col-md-6 mx-auto">
+                                <label class="form-label">Bank Code</label>
+                                <input type="text" name="bank_code" class="form-control" value="{{ old('bank_code', $website->bank_code) }}"  placeholder="Enter Bank Code (e.g., IFSC or SWIFT)">
                             </div>
                             <hr>
                            <!-- First Row for Invoice Template -->
@@ -220,6 +225,21 @@
 
 @endsection
 @push('scripts')
+<script>
+    document.getElementById('editwebsite-form').addEventListener('submit', function () {
+        Swal.fire({
+            title: 'Updating Website...',
+            html: `
+                <div class="d-flex flex-column align-items-center">
+                     <div class="loaderBar"></div>
+                    <small class="mt-3 fs-6">Hold tight! Your website details are being updated right now.</small>
+                </div>
+            `,
+            showConfirmButton: false,
+            allowOutsideClick: false
+        });
+    });
+</script>
 
 <script>
     $(document).ready(function() {
