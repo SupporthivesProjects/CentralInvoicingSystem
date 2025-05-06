@@ -89,45 +89,45 @@
 @endsection
 @push('scripts')
 <script>
-            $(document).on('click', '.delete-btn', function () {
-                const id = $(this).data('id');
+        $(document).on('click', '.delete-btn', function () {
+            const id = $(this).data('id');
 
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: 'This action cannot be undone!',
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonText: 'Yes, delete it!',
-                    showLoaderOnConfirm: true,
-                    preConfirm: () => {
-                        return fetch(`/website/${id}`, {
-                            method: 'DELETE',
-                            headers: {
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                'Accept': 'application/json'
-                            }
-                        })
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error(response.statusText);
-                            }
-                            return response.json();
-                        })
-                        .catch(error => {
-                            Swal.showValidationMessage(`Delete failed: ${error}`);
-                        });
-                    },
-                    allowOutsideClick: () => !Swal.isLoading()
-                }).then((result) => {
-                    if (result.isConfirmed && result.value?.success) {
-                        toastr.success(result.value.message || "Deleted successfully!");
-                        setTimeout(() => {
-                            location.reload(); // Optional: reload if needed
-                        }, 1500);
-                    } else if (result.value && !result.value.success) {
-                        toastr.error(result.value.message || "Failed to delete!");
-                    }
-                });
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'This action cannot be undone!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                showLoaderOnConfirm: true,
+                preConfirm: () => {
+                    return fetch(`/website/${id}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Accept': 'application/json'
+                        }
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(response.statusText);
+                        }
+                        return response.json();
+                    })
+                    .catch(error => {
+                        Swal.showValidationMessage(`Delete failed: ${error}`);
+                    });
+                },
+                allowOutsideClick: () => !Swal.isLoading()
+            }).then((result) => {
+                if (result.isConfirmed && result.value?.success) {
+                    toastr.success(result.value.message || "Deleted successfully!");
+                    setTimeout(() => {
+                        location.reload(); 
+                    }, 1500);
+                } else if (result.value && !result.value.success) {
+                    toastr.error(result.value.message || "Failed to delete!");
+                }
             });
-    </script>
+        });
+</script>
 @endpush
