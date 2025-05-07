@@ -579,6 +579,11 @@
         
         if (customizeRequest !== null) {
             customizeRequest.abort();
+            customizeRequest = null;
+
+            if ($.fn.DataTable.isDataTable('#customize-products-table')) {
+                $('#customize-products-table').DataTable().clear().draw();
+            }
         }
 
         let btn = $('#add-custom-products');
