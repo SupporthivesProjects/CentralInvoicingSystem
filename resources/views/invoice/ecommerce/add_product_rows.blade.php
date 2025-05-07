@@ -5,7 +5,7 @@
     <td>
         {{ $product->name }} 
         @if($site->site_link && $product->slug)
-            <a href="{{ $site->site_link }}/product/{{ $product->slug }}" target="_blank">🔗</a>
+            <a href="{{ $site->site_link }}product/{{ $product->slug }}" target="_blank">🔗</a>
         @endif
     </td>
     <td class="text-center">{{ site_currency() }}{{ number_format($product->unit_price, 2) }}</td>

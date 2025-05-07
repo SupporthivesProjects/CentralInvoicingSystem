@@ -72,7 +72,7 @@ class LaravelController extends Controller
         $bestMatch = null;
         $bestTotal = 0;
        
-        for ($i = 0; $i < 30; $i++) {
+        for ($i = 0; $i < 20; $i++) {
             $shuffled = $allProducts->shuffle();
             $selected = [];
             $currentTotal = 0;
