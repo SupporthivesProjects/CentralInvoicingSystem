@@ -524,7 +524,6 @@
                     $('#current_amount').val(currentAmount.toFixed(2));
                     $('#discount_amount').prop('readonly', false).prop('type', 'number') 
                     calculateTotalPrice();
-                    //replaceFeatherIconsTemporarily();
                 }
             },
             error: function (xhr, textStatus) {

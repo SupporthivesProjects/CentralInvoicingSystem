@@ -210,7 +210,7 @@
                                                             <td>{{ $index + 1 }}</td>
                                                             <td>{{ $invoice->invoice_number }}</td>
                                                             <td>{{ $invoice->model_type }}</td>
-                                                            <td><a target="_blank" href="{{ $invoice->website->site_link }}">{{ $invoice->website->site_name }}</a></td>
+                                                            <td><a target="_blank" href="{{ $invoice->website->site_link }}">View</a></td>
                                                             <td>{{ $invoice->currency }}{{ number_format($invoice->discount_amount, 2) }} </td>
                                                             <td>{{ $invoice->currency }}{{ number_format($invoice->invoice_amount, 2) }}</td>
                                                             <td class="text-center">

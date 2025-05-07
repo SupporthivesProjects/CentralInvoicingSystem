@@ -431,9 +431,9 @@ class LaravelController extends Controller
         }
     
         $query = DB::connection($this->connectionType)
-        ->table($this->productTable)
-        ->select('products.id', 'products.subscription','products.category_id', 'products.name', 'products.unit_price', 'products.slug')
-        ->where('products.published', 1);
+            ->table($this->productTable)
+            ->select('products.id', 'products.subscription','products.category_id', 'products.name', 'products.unit_price', 'products.slug')
+            ->where('products.published', 1);
     
         if ($hasPriceRange) {
             $query->whereBetween('unit_price', [
@@ -448,29 +448,37 @@ class LaravelController extends Controller
         if (count($readyProductIds) > 0) {
             $query->whereNotIn('products.id', $readyProductIds);
         }
-        if($search_type == 'onload'){
-            $products = $query->inRandomOrder()->limit(100)->get();
-        }else{
+    
+        if ($search_type == 'onload') {
+            $products = $query->inRandomOrder()->limit(50)->get();
+        } else {
             $products = $query->orderBy('unit_price')->get();
         }
-        
+    
         if ($products->isEmpty()) {
             return response()->json([
                 'tableRows' => '<tr><td colspan="7" class="text-center text-muted"> No results found. Try randomizing or use a different keyword.</td></tr>'
             ]);
         }
-
-        $products = collect($products);
-        $products->each(function ($product) {
-            $product->category_name = DB::connection($this->connectionType)->table('categories')->where('id', $product->category_id)->value('name') ?? 'unknown';
-        });
     
-        $products->each(function ($product) use ($site_id) {
-            $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
-                ->where('product_id', $product->id)
-                ->orderByDesc('last_price_changed')
-                ->first();
+        $productIds = $products->pluck('id')->toArray();
+        $categoryIds = $products->pluck('category_id')->unique()->toArray();
     
+        $categories = DB::connection($this->connectionType)
+            ->table('categories')
+            ->whereIn('id', $categoryIds)
+            ->pluck('name', 'id');
+    
+        $priceHistories = ProductPriceHistory::where('site_id', $site_id)
+            ->whereIn('product_id', $productIds)
+            ->orderByDesc('last_price_changed')
+            ->get()
+            ->groupBy('product_id');
+    
+        $products->each(function ($product) use ($categories, $priceHistories) {
+            $product->category_name = $categories[$product->category_id] ?? 'unknown';
+    
+            $lastUpdate = $priceHistories[$product->id][0] ?? null;
             if ($lastUpdate) {
                 $lastPriceChanged = Carbon::parse($lastUpdate->last_price_changed);
                 $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
@@ -485,17 +493,19 @@ class LaravelController extends Controller
     
         $modelType = $site->businessModel->model_type;
         $random_amount = session('current_amount', 0);
-        $tableRows = view("invoice.{$modelType}.add_product_rows", 
-        ['products' => $products,
-         'site' => $site, 
-         'random_amount' => $random_amount
-         ])->render();
+    
+        $tableRows = view("invoice.{$modelType}.add_product_rows", [
+            'products' => $products,
+            'site' => $site,
+            'random_amount' => $random_amount
+        ])->render();
     
         return response()->json([
             'tableRows' => $tableRows,
             'random_amount' => $random_amount
         ]);
     }
+    
     
 
 

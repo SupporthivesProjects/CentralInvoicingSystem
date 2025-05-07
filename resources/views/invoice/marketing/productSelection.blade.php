@@ -469,6 +469,74 @@
     updateHiddenInputs(minUnitPrice, maxUnitPrice, 'customize');
 
 </script>
+<script>
+    let randomizeRequest = false; 
+    function randomizeProducts(mode = 'smart_random') {
+        if (randomizeRequest) {
+                toastr.info('Randomizing in progress. Please wait...', 'Processing');
+                return;
+        }
+        randomizeRequest = true;
+
+        $('#randomize-product-table-body').html(getLoaderRowHTML());
+        const priceFrom = $('#hidden_randomize_price_from_input_id').val();
+        const priceTo = $('#hidden_randomize_price_to_input_id').val();
+        const category_id = $('#category_id').val().trim();
+        const noOfProducts = $('#noOfProducts').val();
+        if (mode === 'smart_random') {
+            $('#category_id').val('');
+            $('#noOfProducts').val('');
+            $('#noOfProducts').attr('placeholder', 'Auto');
+        }
+
+
+        $('#current_amount').val('Calculating...');
+        $('#discount_amount').prop('type', 'text').val('Calculating...').prop('readonly', true);
+        $('#current_amount').removeClass('text-danger text-success');
+        $('#discount_amount').removeClass('text-danger text-success');
+        $('#invoice_amount').removeClass('text-danger text-success');
+
+        var invoice_amount = parseFloat($('#invoice_amount').val()) || 0;
+
+        $.ajax({
+            url: "{{ route('random.products') }}",
+            type: 'GET',
+            data: {
+                site_id: "{{ $customer['site_id'] }}",
+                invoice_amount: invoice_amount,
+                price_from: priceFrom,
+                price_to: priceTo,
+                category_id: category_id,
+                noOfProducts: noOfProducts
+            },
+            success: function (response) {
+                Swal.close();
+                $('#discount_amount').val(0.00);
+                if (response.total === 0) {
+                    $('#randomize-product-table-body').html(getErrorRowHTML('No results found. Try randomizing or use a different keyword.')); 
+                    randomizeRequest = false; 
+                    return;
+                } else {
+                    const invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
+                    const currentAmount = parseFloat(response.total.toFixed(2));
+                    $('#current_amount_text').text(currentAmount.toFixed(2));
+                    $('#invoice_amount_text').text(invoiceAmount.toFixed(2));
+                    $('#randomize-product-table-body').html(response.tableRows);
+                    $('#current_amount').val(currentAmount.toFixed(2));
+                    $('#discount_amount').prop('readonly', false).prop('type', 'number') 
+                    calculateTotalPrice();
+                }
+            },
+            error: function (xhr, textStatus) {
+                toastr.error('Failed to fetch random products.', 'Oops!');
+            },
+            complete: function () {
+                randomizeRequest = false; 
+            }
+        });
+    }
+    randomizeProducts('smart_random');
+</script>
 
 <script>
     let customizeRequest = false;

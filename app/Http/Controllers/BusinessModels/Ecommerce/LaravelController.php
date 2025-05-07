@@ -18,6 +18,7 @@ use App\Services\DynamicDatabaseService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\View\ViewNotFoundException;
 use Carbon\Carbon;
+use Yajra\DataTables\Facades\DataTables;
 
 
 class LaravelController extends Controller
@@ -422,7 +423,6 @@ class LaravelController extends Controller
         $hasPriceRange = $request->filled('price_from') && $request->filled('price_to');
         $search_type = $request->input('search_type');
         $site = Website::findOrFail($site_id);
-        $productstable = getProductTable($site->technology);
         DynamicDatabaseService::connect($site);
 
         if (!$hasPriceRange) {
@@ -450,7 +450,7 @@ class LaravelController extends Controller
             $query->whereNotIn('products.id', $readyProductIds);
         }
         if($search_type == 'onload'){
-            $products = $query->inRandomOrder()->limit(150)->get();
+            $products = $query->inRandomOrder()->limit(50)->get();
         }else{
             $products = $query->orderBy('unit_price')->get();
         }
@@ -577,8 +577,7 @@ class LaravelController extends Controller
       
         try {
 
-            $this->updateProductPrice($productDataArray); //product price update checking
-
+            $this->updateProductPrice($productDataArray);
             InvoiceController::createInvoiceHistory($invoice_data);
             $pdf = PDF::loadView($viewPath, $invoice_data);
             $pdf->setPaper('A4', 'portrait');
