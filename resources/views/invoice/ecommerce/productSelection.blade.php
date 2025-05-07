@@ -668,7 +668,7 @@
                                 searchPlaceholder: ""
                             },
                             columnDefs: [
-                                { orderable: false, targets: [4,5] }
+                                { orderable: false, targets: [] }
                             ]
                         });
 
@@ -686,7 +686,7 @@
                                 searchPlaceholder: ""
                             },
                             columnDefs: [
-                                { orderable: false, targets: [4,5] }
+                                { orderable: false, targets: [] }
                             ]
                         });
                     }

@@ -470,78 +470,131 @@
 
 </script>
 
-
 <script>
-    let randomizeRequest = false; 
-    function randomizeProducts(mode = 'smart_random') {
+    let customizeRequest = false;
+    let customizeAjax = null;
 
-        if (randomizeRequest) {
-                toastr.info('Randomizing in progress. Please wait...', 'Processing');
-                return;
+    function customizeProducts(search_type = 'search') {
+        if (customizeRequest) {
+            toastr.info(
+                '<div>Processing your request...  <button type="button" class="btn btn-sm btn-light ml-2" id="cancelCustomizeRequest">Cancel</button></div>',
+                'Please Wait',
+                {
+                    closeButton: true,
+                    allowHtml: true
+                }
+            );
+            return;
         }
-        randomizeRequest = true;
-        
-        $('#randomize-product-table-body').html(getLoaderRowHTML());
-        const priceFrom = $('#hidden_randomize_price_from_input_id').val();
-        const priceTo = $('#hidden_randomize_price_to_input_id').val();
-        const category_id = $('#category_id').val().trim();
-        const noOfProducts = $('#noOfProducts').val();
-        if (mode === 'smart_random') {
-            $('#category_id').val('');
-            $('#noOfProducts').val('');
-            $('#noOfProducts').attr('placeholder', 'Auto');
+        customizeRequest = true;
+
+        let btn = $('#add-custom-products');
+        $('#addmoreproducts').on('shown.bs.modal', function () {
+            if ($.fn.DataTable.isDataTable('#customize-products-table')) {
+                $('#customize-products-table').DataTable().columns.adjust().draw();
+            }
+        });
+
+        btn.prop('disabled', false);
+        btn.html('Add Selected to Cart');
+
+        const priceFrom = $('#hidden_customize_price_from_input_id').val();
+        const priceTo = $('#hidden_customize_price_to_input_id').val();
+        let invoice_amount = parseFloat($('#invoice_amount').val()) || 0;
+        let current_amount = parseFloat($('#current_amount').val()) || 0;
+
+        let discountAmount = 0;
+        if (current_amount > invoice_amount) {
+            discountAmount = current_amount - invoice_amount;
         }
 
-        $('#current_amount').val('Calculating...');
-        $('#discount_amount').prop('type', 'text').val('Calculating...').prop('readonly', true);
-        $('#current_amount').removeClass('text-danger text-success');
-        $('#discount_amount').removeClass('text-danger text-success');
-        $('#invoice_amount').removeClass('text-danger text-success');
-        var invoice_amount = parseFloat($('#invoice_amount').val()) || 0;
+        $('#temp_current_amount_text').text(current_amount.toFixed(2));
+        $('#temp_invoice_amount_text').text(invoice_amount.toFixed(2));
+        $('#temp_discount_amount_text').text(discountAmount.toFixed(2));
 
-        $.ajax({
-            url: "{{ route('random.products') }}",
+        if (!priceFrom && !priceTo) {
+            $('#customize-product-table-body').html(getErrorRowHTML('No products found for your keyword. Try a different keyword or adjust the range filter.'));
+            $('#error-row').fadeIn(300).delay(3000).fadeOut(500);
+            customizeRequest = false;
+            return;
+        }
+
+        $('#customize-product-table-body').html(getProductsSearchRowHTML());
+
+        customizeAjax = $.ajax({
+            url: "{{ route('filter.products') }}",
             type: 'GET',
             data: {
-                site_id: "{{ $customer['site_id'] }}",
-                invoice_amount: invoice_amount,
                 price_from: priceFrom,
                 price_to: priceTo,
-                category_id: category_id,
-                noOfProducts: noOfProducts
+                search_type: search_type
             },
             success: function (response) {
-                Swal.close();
-                $('#discount_amount').val(0.00);
-                if (response.total === 0) {
-                    $('#randomize-product-table-body').html(getErrorRowHTML(`Try again with Randomize or click 'Add Product' to add manually.`));
-                    randomizeRequest = false; 
+                if (!response.tableRows) {
+                    $('#customize-product-table-body').html(
+                        getErrorRowHTML('No products found for your keyword. Try a different keyword or adjust the range filter.')
+                    );
                     return;
                 }
-                else {
-                    const invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
-                    const currentAmount = parseFloat(response.total.toFixed(2));
-                    $('#current_amount_text').text(currentAmount.toFixed(2));
-                    $('#invoice_amount_text').text(invoiceAmount.toFixed(2));
-                    $('#randomize-product-table-body').html(response.tableRows);
-                    $('#current_amount').val(currentAmount.toFixed(2));
-                    $('#discount_amount').prop('readonly', false).prop('type', 'number') 
-                    calculateTotalPrice();
-                    //replaceFeatherIconsTemporarily();
+                $('#customize-product-table-body').html(response.tableRows);
+                calculateTotalPrice();
+
+                if (!$.fn.DataTable.isDataTable('#customize-products-table')) {
+                    customizeTable = $('#customize-products-table').DataTable({
+                        responsive: true,
+                        searchHighlight: true,
+                        dom: 'rtip',
+                        language: {
+                            search: "",
+                            searchPlaceholder: ""
+                        },
+                        columnDefs: [
+                            { orderable: false, targets: [4, 5] }
+                        ]
+                    });
+
+                    $('#customizeKeywordInput').on('input', function () {
+                        customizeTable.search(this.value).draw();
+                    });
+                } else {
+                    customizeTable.clear().destroy();
+                    customizeTable = $('#customize-products-table').DataTable({
+                        responsive: true,
+                        searchHighlight: true,
+                        dom: 'rtip',
+                        language: {
+                            search: "",
+                            searchPlaceholder: ""
+                        },
+                        columnDefs: [
+                            { orderable: false, targets: [4, 5] }
+                        ]
+                    });
                 }
             },
-            error: function () {
-                toastr.error("Could not fetch random products.");
-                Swal.close();
+            error: function (xhr, textStatus) {
+                if (textStatus === 'abort') {
+                    toastr.warning('Customize request was cancelled.', 'Cancelled');
+                    $('#addmoreproducts').modal('hide');
+                } else {
+                    toastr.error('Something went wrong while filtering.', 'Oops!');
+                }
             },
             complete: function () {
-                randomizeRequest = false; 
+                customizeRequest = false;
+                customizeAjax = null;
             }
         });
     }
 
-    randomizeProducts();
+    $(document).on('click', '#cancelCustomizeRequest', function () {
+        if (customizeAjax) {
+            customizeAjax.abort();
+        }
+    });
 </script>
+
+
 
 <script>
     let customizeSliderTimer;
@@ -587,144 +640,6 @@
     });
 </script>
 
-
- <script>
-        $(document).on('click', '#cancelCustomizeRequest', function () {
-            if (customizeAjax) {
-                customizeAjax.abort();
-            }
-        });
-
-         let customizeRequest = false;
-         let customizeAjax = null;
-
-        function customizeProducts(search_type='search') {
-            if (customizeRequest) {
-                toastr.info(
-                            '<div>Processing your request...  <button type="button" class="btn btn-sm btn-light ml-2" id="cancelCustomizeRequest">Cancel</button></div>',
-                            'Please Wait',
-                            {
-                                closeButton: true,
-                                allowHtml: true
-                            }
-                        );
-                return;
-            }
-            customizeRequest = true;
-
-            let btn = $('#add-custom-products');
-            $('#addmoreproducts').on('shown.bs.modal', function () {
-                if ($.fn.DataTable.isDataTable('#customize-products-table')) {
-                    $('#customize-products-table').DataTable().columns.adjust().draw();
-                }
-            });
-            
-            btn.prop('disabled', false);
-            btn.html('Add Selected to Cart');
-            
-            const priceFrom = $('#hidden_customize_price_from_input_id').val();
-            const priceTo = $('#hidden_customize_price_to_input_id').val();
-            let invoice_amount = parseFloat($('#invoice_amount').val()) || 0;
-            let current_amount = parseFloat($('#current_amount').val()) || 0;
-
-            let discountAmount = 0;
-            if (current_amount > invoice_amount) {
-                discountAmount = current_amount - invoice_amount;
-            }
-
-            $('#temp_current_amount_text').text(current_amount.toFixed(2));
-            $('#temp_invoice_amount_text').text(invoice_amount.toFixed(2));
-            $('#temp_discount_amount_text').text(discountAmount.toFixed(2));
-
-            if (!priceFrom && !priceTo) {
-                $('#customize-product-table-body').html(getErrorRowHTML('No products found for your keyword. Try a different keyword or adjust the range filter.'));
-                $('#error-row').fadeIn(300).delay(3000).fadeOut(500);
-                customizeRequest = false;
-                return;
-            }
-
-            $('#customize-product-table-body').html(getProductsSearchRowHTML());
-
-            customizeAjax = $.ajax({
-                url: "{{ route('filter.products') }}",
-                type: 'GET',
-                data: {
-                    price_from: priceFrom,
-                    price_to: priceTo,
-                    search_type : search_type
-                },
-                success: function (response) {
-                    if (!response.tableRows) {
-                        $('#customize-product-table-body').html(
-                            getErrorRowHTML('No products found for your keyword. Try a different keyword or adjust the range filter.')
-                        );
-                        return;
-                    }
-                    $('#customize-product-table-body').html(response.tableRows);
-                    calculateTotalPrice();
-
-                    if (!$.fn.DataTable.isDataTable('#customize-products-table')) {
-                        customizeTable = $('#customize-products-table').DataTable({
-                            responsive: true,
-                            searchHighlight: true,
-                            dom: 'rtip',
-                            language: {
-                                search: "",
-                                searchPlaceholder: ""
-                            },
-                            columnDefs: [
-                                { orderable: false, targets: [4,5] }
-                            ]
-                        });
-
-                        $('#customizeKeywordInput').on('input', function () {
-                            customizeTable.search(this.value).draw();
-                        });
-                    } else {
-                        customizeTable.clear().destroy(); 
-                        customizeTable = $('#customize-products-table').DataTable({ 
-                            responsive: true,
-                            searchHighlight: true,
-                            dom: 'rtip',
-                            language: {
-                                search: "",
-                                searchPlaceholder: ""
-                            },
-                            columnDefs: [
-                                { orderable: false, targets: [4,5] }
-                            ]
-                        });
-                    }
-                },
-                error: function (xhr, textStatus) {
-                    if (textStatus === 'abort') {
-                        toastr.warning('Customize request was cancelled.', 'Cancelled');
-                        $('#addmoreproducts').modal('hide');
-                    } else {
-                        toastr.error('Something went wrong while filtering.', 'Oops!');
-                    }
-                },
-                complete: function () {
-                    customizeRequest = false; 
-                    customizeAjax = null;
-                }error: function (xhr, textStatus) {
-                    
-                    if (textStatus === 'abort') {
-                        toastr.warning('Customize request was cancelled.', 'Cancelled');
-                        setTimeout(function () {
-                            $('#addmoreproducts').modal('hide');
-                        }, 300);
-                    } else {
-                        toastr.error('Something went wrong while filtering.', 'Oops!');
-                    }
-                },
-                complete: function () {
-                    customizeRequest = false; 
-                    customizeAjax = null;
-                }
-            });
-        }
-</script>
 
 <script>
 
