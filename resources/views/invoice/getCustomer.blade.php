@@ -198,19 +198,19 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="sitechangemodel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal fade" id="sitechangemodel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 rounded-4 shadow-sm overflow-hidden">
             
             <div class="modal-header bg-primary text-white border-0">
-                <h6 class="modal-title fw-semibold" id="staticBackdropLabel">Select a Different Site</h6>
+                <h6 class="modal-title fw-semibold" id="staticBackdropLabel">Want to change website? </h6>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
             <form method="GET" action="{{ route('site.connect.db', ['site_id' => request('site_id')]) }}">
                 <div class="modal-body bg-light">
                     <div class="mb-3">
-                        <label for="site_id" class="form-label fw-semibold">Connect to Another Site</label>
+                        <label for="site_id" class="form-label fw-semibold">Select a New Site</label>
                         <select name="site_id" id="site_id" class="form-select select2" required>
                             <option value="">-- Select Site --</option>
                             @foreach($sites as $s)
@@ -220,7 +220,7 @@
                     </div>
 
                     <div class="alert alert-warning small py-2 px-3" role="alert">
-                        The page will refresh to reset the session for the new site.
+                         Selecting a different site will refresh the page and re-establish the database connection.
                     </div>
                 </div>
 
@@ -229,7 +229,7 @@
                         Cancel
                     </button>
                     <button type="submit" class="btn btn-primary px-4">
-                        Change Site
+                        Confirm
                     </button>
                 </div>
             </form>
