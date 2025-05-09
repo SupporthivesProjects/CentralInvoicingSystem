@@ -65,7 +65,7 @@
                                     <td style="width:40%;">{{ $product->name }}</td>
                                     <td style="width:20%; text-align:center;">{{ $product->subscription }}</td>
                                     <td style="width:10%; text-align:center;">{{ $product->quantity ?? 1 }}</td>
-                                    <td style="width:30%; text-align:center;">{{ site_currency() . number_format($product->unit_price, 2) }}</td>
+                                    <td style="width:30%; text-align:center;">{{  number_format($product->unit_price, 2) }}</td>
                                 </tr>
                                 <tr><td colspan="4"><hr style="border-top: 1px solid #F3F3F1;"></td></tr>
                                 @endforeach
@@ -73,15 +73,15 @@
                                 <!-- Totals -->
                                 <tr>
                                     <td colspan="3" style="text-align:right; font-weight:700;">Sub Total</td>
-                                    <td style="text-align:center; color:#EE5921;">{{ site_currency(). number_format(($invoice_amount + $discount_amount), 2) }}</td>
+                                    <td style="text-align:center; color:#EE5921;">{{  number_format(($invoice_amount + $discount_amount), 2) }}</td>
                                 </tr>
                                 <tr>
                                     <td colspan="3" style="text-align:right; font-weight:700;">Discount</td>
-                                    <td style="text-align:center; color:#EE5921;">{{ site_currency() . number_format($discount_amount, 2) }}</td>
+                                    <td style="text-align:center; color:#EE5921;">{{  number_format($discount_amount, 2) }}</td>
                                 </tr>
                                 <tr>
                                     <td colspan="3" style="text-align:right; font-weight:700;">Total</td>
-                                    <td style="text-align:center; color:#EE5921;">{{ site_currency() . number_format($invoice_amount, 2) }}</td>
+                                    <td style="text-align:center; color:#EE5921;">{{  number_format($invoice_amount, 2) }}</td>
                                 </tr>
                             </table>
                         </td>
