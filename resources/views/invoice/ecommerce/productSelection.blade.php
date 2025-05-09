@@ -306,7 +306,7 @@
                     </div>
                     
                     <div class="rounded shadow-sm p-2"> 
-                        <table id="customize-products-table" class="table table-bordered table-hover align-middle mb-0 table-responsive">
+                        <table id="customize-products-table" class="table table-bordered table-hover align-middle mb-0 table-responsive" style="width:100% !important;">
                             <thead class="table-dark text-center">
                                 <tr>
                                 <th style="width: 10%;">PID</th>
