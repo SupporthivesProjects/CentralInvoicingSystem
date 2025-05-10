@@ -272,6 +272,9 @@
                         <button class="btn btn-light border-0" type="button" title="Voice Search" onclick="startVoiceSearch('customizeKeywordInput','customizeMicIcon')">
                             <i class="fas fa-microphone text-primary" id="customizeMicIcon"></i>
                         </button>
+                        <button class="btn btn-primary" type="button" title="Search" onclick="customizeProducts()">
+                            <i class="fas fa-search"></i> Search
+                        </button>
                       
                     </div>
                 </div>
@@ -312,7 +315,11 @@
                                 <th style="width: 10%;">PID</th>
                                 <th style="width: 10%;">Category</th>
                                 <th style="width: 35%;">Product Name</th>
-                                <th class="text-center">Unit Price</th>
+                                <th class="text-center unit-price-header" style="width: 20%;"  data-column="3" data-order="desc">
+                                    <span class="d-inline-flex align-items-center justify-content-center gap-1">
+                                        Unit Price <i class="bi bi-caret-down-fill"></i>
+                                    </span>
+                                </th>
                                 <th style="width: 20%;">Editable Price</th>
                                 <th style="width: 10%;">Select</th>
                             </tr>
@@ -320,6 +327,7 @@
                             <tbody id="customize-product-table-body">
                             </tbody>
                         </table>
+                        <div id="customize-pagination"></div>
                     </div>
                 </div>
                 </div>
@@ -329,7 +337,7 @@
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" >
                         <i class="bi bi-x-circle me-1"></i> Close
                     </button>
-                    <button type="button" class="btn btn-danger" onclick="customizeProducts('onload')">
+                    <button type="button" class="btn btn-danger" onclick="customizeProducts('reset')">
                         <i class="bi bi-arrow-counterclockwise me-1"></i> Reset Filters
                     </button>
                     <button type="button" id="add-custom-products" class="btn btn-primary">
@@ -573,48 +581,52 @@
 
 
 <script>
-    let customizeRequest = null;
+    customizeRequest = null;
 
-    function customizeProducts(search_type='search') {
-        
-        if (customizeRequest !== null) {
-            customizeRequest.abort();
-            customizeRequest = null;
+    function customizeProducts(search_type = 'search', page = 1) {
+        console.log("Triggered with type:", search_type);
+        console.log("customizeRequest:", customizeRequest);
 
-            if ($.fn.DataTable.isDataTable('#customize-products-table')) {
-                $('#customize-products-table').DataTable().clear().draw();
-            }
+        if (search_type === 'onload' && customizeRequest !== null) {
+            console.log("Blocked onload request because a request is ongoing");
+            return;
         }
 
-        let btn = $('#add-custom-products');
-        $('#addmoreproducts').on('shown.bs.modal', function () {
-            if ($.fn.DataTable.isDataTable('#customize-products-table')) {
-                $('#customize-products-table').DataTable().columns.adjust().draw();
-            }
-        });
+        if (search_type !== 'onload' && customizeRequest !== null) {
+            console.log("Aborting previous request...");
+            customizeRequest.abort();
+            customizeRequest = null;
+        }
         
-        btn.prop('disabled', false);
-        btn.html('Add Selected to Cart');
+
+
+        let btn = $('#add-custom-products');
+        btn.prop('disabled', false).html('Add Selected to Cart');
 
         const priceFrom = $('#hidden_customize_price_from_input_id').val();
         const priceTo = $('#hidden_customize_price_to_input_id').val();
+        const customizeKeywordInput = $('#customizeKeywordInput').val();
         let invoice_amount = parseFloat($('#invoice_amount').val()) || 0;
         let current_amount = parseFloat($('#current_amount').val()) || 0;
 
-        let discountAmount = 0;
-        if (current_amount > invoice_amount) {
-            discountAmount = current_amount - invoice_amount;
-        }
+        let discountAmount = Math.max(current_amount - invoice_amount, 0);
+
         $('#temp_current_amount_text').text(current_amount.toFixed(2));
         $('#temp_invoice_amount_text').text(invoice_amount.toFixed(2));
         $('#temp_discount_amount_text').text(discountAmount.toFixed(2));
 
         if (!priceFrom && !priceTo) {
-            $('#customize-product-table-body').html(getErrorRowHTML('No products found for your keyword. Try a different keyword or adjust the range filter.'));
+            $('#customize-product-table-body').html(
+                getErrorRowHTML('No products found for your keyword. Try a different keyword or adjust the range filter.')
+            );
             $('#error-row').fadeIn(300).delay(3000).fadeOut(500);
-            customizeRequest = false;
             return;
         }
+        if (!customizeKeywordInput && search_type !== 'onload' && search_type !== 'reset') {
+            toastr.info('Enter or Speak product or category name...', 'Keyword missing');
+            return;
+        }
+
 
         $('#customize-product-table-body').html(getProductsSearchRowHTML());
 
@@ -624,7 +636,9 @@
             data: {
                 price_from: priceFrom,
                 price_to: priceTo,
-                search_type : search_type
+                search_type: search_type,
+                keyword: customizeKeywordInput,
+                page: page
             },
             success: function (response) {
                 if (!response.tableRows) {
@@ -633,52 +647,25 @@
                     );
                     return;
                 }
+
                 $('#customize-product-table-body').html(response.tableRows);
+                $('#customize-pagination').html(response.paginationHtml);
                 calculateTotalPrice();
-
-                if (!$.fn.DataTable.isDataTable('#customize-products-table')) {
-                    customizeTable = $('#customize-products-table').DataTable({
-                        responsive: true,
-                        searchHighlight: true,
-                        dom: 'rtip',
-                        language: {
-                            search: "",
-                            searchPlaceholder: ""
-                        },
-                        columnDefs: [
-                            { orderable: false, targets: [] }
-                        ]
-                    });
-
-                    $('#customizeKeywordInput').on('input', function () {
-                        customizeTable.search(this.value).draw();
-                    });
-                } else {
-                    customizeTable.clear().destroy(); 
-                    customizeTable = $('#customize-products-table').DataTable({ 
-                        responsive: true,
-                        searchHighlight: true,
-                        dom: 'rtip',
-                        language: {
-                            search: "",
-                            searchPlaceholder: ""
-                        },
-                        columnDefs: [
-                            { orderable: false, targets: [] }
-                        ]
-                    });
-                }
             },
             error: function (xhr, textStatus) {
                 if (textStatus !== 'abort') {
+                    console.error('AJAX Error:', textStatus);
+                    $('#customize-product-table-body').html(getErrorRowHTML('Something went wrong while filtering.'));
                     toastr.error('Something went wrong while filtering.', 'Oops!');
                 }
             },
             complete: function () {
+                console.log("Request complete");
                 customizeRequest = null; 
             }
         });
     }
+
 </script>
 
 
@@ -1041,10 +1028,6 @@ $(document).ready(function() {
             const transcript = event.results[0][0].transcript;
             inputField.style.color = "blue";
             inputField.value = transcript;
-
-            if (inputId === 'customizeKeywordInput') {
-                filterDataTable(transcript);
-            }
         };
 
         recognition.onerror = function(event) {
@@ -1064,11 +1047,6 @@ $(document).ready(function() {
         };
     }
 
-    function filterDataTable(searchTerm) {
-        const table = $('#customize-products-table').DataTable();
-        const normalizedSearchTerm = searchTerm.toLowerCase().replace(/-/g, '');
-        table.search(normalizedSearchTerm).draw();
-    }
 </script>
 
 
