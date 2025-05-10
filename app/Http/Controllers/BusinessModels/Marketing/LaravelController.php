@@ -452,6 +452,7 @@ class LaravelController extends Controller
                 });
             });
         }
+      
     
         $readyProducts = session('ready_products', []);
         $readyProductIds = collect($readyProducts)->pluck('id')->toArray();
@@ -506,8 +507,7 @@ class LaravelController extends Controller
         $modelType = $site->businessModel->model_type;
         $random_amount = session('current_amount', 0);
     
-       
-    
+        $products = $products->shuffle();
         $tableRows = view( "invoice.{$modelType}.add_product_rows", ['products' => $products, 'site' => $site,'random_amount' => $random_amount])->render();
         $paginationHtml = view("invoice.{$modelType}.pagination", ['totalPages' => $totalPages,'paginationPages' => $paginationPages, 'currentPage' => $page ])->render();
        
