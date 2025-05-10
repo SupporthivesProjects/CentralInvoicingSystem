@@ -516,7 +516,32 @@ class LaravelController extends Controller
     
     
     
+    private function smartPagination($currentPage, $totalPages)
+    {
+        $pages = [];
+        $pages[] = 1;
 
+        if ($currentPage > 4) {
+            $pages[] = '...';
+        }
+
+        $start = max(2, $currentPage - 3);
+        $end = min($totalPages - 1, $currentPage + 3);
+
+        for ($i = $start; $i <= $end; $i++) {
+            $pages[] = $i;
+        }
+
+        if ($currentPage < $totalPages - 3) {
+            $pages[] = '...';
+        }
+
+        if ($totalPages > 1) {
+            $pages[] = $totalPages;
+        }
+
+        return array_values(array_unique($pages));
+    }
 
     public function generateInvoice(Request $request)
     {
