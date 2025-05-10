@@ -149,6 +149,7 @@
                 padding: '1em'
             }).then((result) => {
                 if (result.isConfirmed) {
+                    $('.remove-product').prop('disabled', true);
                     $button.html('<i class="fas fa-spinner fa-spin"></i>');
                     $('#current_amount').val('Recalculating...');
                     $('#discount_amount').prop('type', 'text').val('Recalculating...').prop('readonly', true);
@@ -165,6 +166,7 @@
                             _token: '{{ csrf_token() }}'
                         },
                         success: function(response) {
+                            $('.remove-product').prop('disabled', false);
                             $button.html('<i class="fas fa-check-square"></i>');
                             $button.removeClass('btn-danger').addClass('btn-success');
                             $('#randomize-product-table-body').html(response.tableRows);
@@ -178,10 +180,19 @@
                             }, 2000);
                         },
                         error: function() {
+                            $('.remove-product').prop('disabled', false);
                             $button.html('<i class="fas fa-trash-alt"></i>');
                             $button.removeClass('btn-success').addClass('btn-danger');
                             calculateTotalPrice();
                             toastr.error('Error removing product. Please try again.');
+                        },
+                        complete: function() {
+                        
+                            $('.remove-product').prop('disabled', false);
+                            setTimeout(() => {
+                                $button.html('<i class="fas fa-trash-alt"></i>');
+                                $button.removeClass('btn-success').addClass('btn-danger');
+                            }, 1000);
                         }
                     });
                 }
