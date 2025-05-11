@@ -141,9 +141,9 @@
                 cancelButtonText: 'Cancel',
                 customClass: {
                     popup: 'p-2 text-sm',
-                    title: 'text-base font-weight-bold',
-                    confirmButton: 'btn btn-sm btn-danger',
-                    cancelButton: 'btn btn-sm btn-secondary'
+                    title: 'text-base',
+                    confirmButtonClass: 'btn btn-sm btn-success',
+                    cancelButtonClass: 'btn btn-sm btn-danger'
                 },
                 width: '350px',
                 padding: '1em'
