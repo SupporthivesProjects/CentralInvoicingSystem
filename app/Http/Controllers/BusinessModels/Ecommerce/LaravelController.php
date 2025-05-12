@@ -422,6 +422,7 @@ class LaravelController extends Controller
         $site_id = session('customer.site_id');
         $hasPriceRange = $request->filled('price_from') && $request->filled('price_to');
         $search_type = $request->input('search_type');
+        $keyword = $request->input('keyword');
         $site = Website::findOrFail($site_id);
         DynamicDatabaseService::connect($site);
 
@@ -442,6 +443,19 @@ class LaravelController extends Controller
                 (float) $request->price_to
             ]);
         }
+        if (!empty($keyword)) {
+            $normalizedSearch = strtolower(str_replace(['-', '_', ' '], '', $keyword));
+    
+            $query->where(function ($q) use ($normalizedSearch) {
+                $q->whereRaw("LOWER(REPLACE(REPLACE(REPLACE(products.name, '-', ''), '_', ''), ' ', '')) LIKE ?", ["%{$normalizedSearch}%"]);
+    
+                $q->orWhereIn('products.category_id', function ($sub) use ($normalizedSearch) {
+                    $sub->select('id')
+                        ->from('categories')
+                        ->whereRaw("LOWER(REPLACE(REPLACE(REPLACE(name, '-', ''), '_', ''), ' ', '')) LIKE ?", ["%{$normalizedSearch}%"]);
+                });
+            });
+        }
 
         $readyProducts = session('ready_products', []);
         $readyProductIds = collect($readyProducts)->pluck('id')->toArray();
@@ -449,12 +463,14 @@ class LaravelController extends Controller
         if (count($readyProductIds) > 0) {
             $query->whereNotIn('products.id', $readyProductIds);
         }
-        if($search_type == 'onload'){
-            $products = $query->inRandomOrder()->limit(50)->get();
-        }else{
-            $products = $query->orderBy('unit_price')->get();
-        }
         
+        $totalCount = $query->count();
+        $page = $request->input('page', 1);
+        $perPage = 10;
+        $offset = ($page - 1) * $perPage;
+        $products = $query->skip($offset)->take($perPage)->get();
+        $totalPages = ceil($totalCount / $perPage);
+        $paginationPages = $this->smartPagination($page, $totalPages);
     
         if ($products->isEmpty()) {
             return response()->json([
@@ -488,18 +504,41 @@ class LaravelController extends Controller
     
         $modelType = $site->businessModel->model_type;
         $random_amount = session('current_amount', 0);
-        $tableRows = view("invoice.{$modelType}.add_product_rows", 
-        [
-        'products' => $products, 
-        'site' => $site,
-        'random_amount' => $random_amount
-         ])->render();
-    
-        return response()->json([
-            'tableRows' => $tableRows,
-            'random_amount' => $random_amount
-        ]);
+        
+        $tableRows = view( "invoice.{$modelType}.add_product_rows", ['products' => $products, 'site' => $site,'random_amount' => $random_amount])->render();
+        $paginationHtml = view("invoice.{$modelType}.pagination", ['totalPages' => $totalPages,'paginationPages' => $paginationPages, 'currentPage' => $page ])->render();
+       
+        return response()->json([ 'tableRows' => $tableRows,'paginationHtml' => $paginationHtml, 'random_amount' => $random_amount]);
+  
     }
+
+    private function smartPagination($currentPage, $totalPages)
+    {
+        $pages = [];
+        $pages[] = 1;
+
+        if ($currentPage > 4) {
+            $pages[] = '...';
+        }
+
+        $start = max(2, $currentPage - 3);
+        $end = min($totalPages - 1, $currentPage + 3);
+
+        for ($i = $start; $i <= $end; $i++) {
+            $pages[] = $i;
+        }
+
+        if ($currentPage < $totalPages - 3) {
+            $pages[] = '...';
+        }
+
+        if ($totalPages > 1) {
+            $pages[] = $totalPages;
+        }
+
+        return array_values(array_unique($pages));
+    }
+
     
 
     public function generateInvoice(Request $request)

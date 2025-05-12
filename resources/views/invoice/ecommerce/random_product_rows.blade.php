@@ -80,14 +80,15 @@
                 cancelButtonText: 'Cancel',
                 customClass: {
                     popup: 'p-2 text-sm',
-                    title: 'text-base font-weight-bold',
-                    confirmButton: 'btn btn-sm btn-danger',
-                    cancelButton: 'btn btn-sm btn-secondary'
+                    title: 'text-base',
+                    confirmButtonClass: 'btn btn-sm btn-success',
+                    cancelButtonClass: 'btn btn-sm btn-danger'
                 },
                 width: '350px',
                 padding: '1em'
             }).then((result) => {
                 if (result.isConfirmed) {
+                    $('.remove-product').prop('disabled', true);
                     $button.html('<i class="fas fa-spinner fa-spin"></i>');
                     $('#current_amount').val('Recalculating...');
                     $('#discount_amount').prop('type', 'text').val('Recalculating...').prop('readonly', true);
@@ -117,11 +118,20 @@
                             }, 2000);
                         },
                         error: function() {
+                            $('.remove-product').prop('disabled', false);
                             $button.html('<i class="fas fa-trash-alt"></i>');
                             $button.removeClass('btn-success').addClass('btn-danger');
                             calculateTotalPrice();
                             toastr.error('Error removing product. Please try again.');
-                        }
+                        },
+                        complete: function() {
+                       
+                        $('.remove-product').prop('disabled', false);
+                        setTimeout(() => {
+                            $button.html('<i class="fas fa-trash-alt"></i>');
+                            $button.removeClass('btn-success').addClass('btn-danger');
+                        }, 1000);
+                    }
                     });
                 }
             });

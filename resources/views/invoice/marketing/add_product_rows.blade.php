@@ -148,11 +148,7 @@
                     $('#addmoreproducts').modal('hide');
                     $('#discount_amount').prop('readonly', false).prop('type', 'number') 
                     $('#randomize-product-table-body').html(response.tableRows);
-                    $('#current_amount').val(current_amount.toFixed(2));
-                    $('#temp_current_amount_text').text(current_amount.toFixed(2));
-                    $('#discount_amount').val(discountAmount.toFixed(2));
-                    $('#temp_discount_amount_text').text(discountAmount.toFixed(2));
-                    $('#invoice_amount').val(invoiceAmount.toFixed(2));
+                    calculateTotalPrice();
                 },
                 error: function(xhr, status, error) {
                     console.error('Error adding products to cart:', error);
