@@ -40,10 +40,56 @@
         </td>
         <td>{{ site_currency() }}{{ number_format($product->unit_price, 2) }}
             <input form="generate-invoice-form" type="hidden" name="products[{{ $product->id }}][unit_price]" value="{{ $product->unit_price }}">
+            <input form="generate-invoice-form" type="hidden" name="products[{{ $product->id }}][bundle_id]" value="{{ $product->bundle_id }}">
         </td>
-        <td>
+        {{-- <td>
             <input form="generate-invoice-form" type="number" class="form-control edit-price" name="products[{{ $product->id }}][unit_price]" value="{{ $product->unit_price }}">
+        </td> --}}
+
+        <td>
+            @php
+                // Check if price was updated in the last 90 days
+                $lastUpdate = \App\Models\ProductPriceHistory::where('site_id', session('customer.site_id'))
+                    ->where('product_id', $product->bundle_id)
+                    ->where('bundle', (string)$product->game_currency_amount)
+                    ->orderByDesc('last_price_changed')
+                    ->first();
+
+                $isLocked = $lastUpdate && \Carbon\Carbon::parse($lastUpdate->last_price_changed)->diffInDays(now()) < 90;
+                $daysRemaining = $isLocked ? 90 - \Carbon\Carbon::parse($lastUpdate->last_price_changed)->diffInDays(now()) : 0;
+
+                // Get lock/unlock status for display
+                $lockStatus = $isLocked ? 'locked' : 'unlocked';
+                $iconClass = $isLocked ? 'fa-lock bg-warning' : 'fa-pencil bg-success';
+                $tooltip = $isLocked
+                    ? "Price locked for {$daysRemaining} more days"
+                    : "Price can be edited";
+                $inputTooltip = $isLocked
+                    ? "This price was updated on " . \Carbon\Carbon::parse($lastUpdate->last_price_changed)->format('M d, Y') . " and cannot be modified for {$daysRemaining} more days"
+                    : "You can update this price";
+            @endphp
+
+            <div class="input-group">
+                <span class="input-group-text {{ $isLocked ? 'bg-warning' : 'bg-success' }}" data-bs-toggle="tooltip" title="{{ $tooltip }}">
+                    <i class="fa {{ $iconClass }}"></i>
+                </span>
+                <input form="generate-invoice-form"
+                       type="number"
+                       step="0.01"
+                       class="form-control edit-price {{ $isLocked ? 'bg-light' : '' }}"
+                       name="products[{{ $product->id }}][unit_price]"
+                       value="{{ $product->unit_price }}"
+                       {{ $isLocked ? 'readonly' : '' }}
+                       data-bs-toggle="tooltip"
+                       data-price-status="{{ $lockStatus }}"
+                       title="{{ $inputTooltip }}">
+
+                <!-- Hidden fields for bundle_id and game_currency_amount needed for update -->
+                <input form="generate-invoice-form" type="hidden" name="products[{{ $product->id }}][bundle_id]" value="{{ $product->bundle_id }}">
+                <input form="generate-invoice-form" type="hidden" name="products[{{ $product->id }}][game_currency_amount]" value="{{ $product->game_currency_amount }}">
+            </div>
         </td>
+
         <td>
             <button type="button" class="btn btn-sm btn-outline-danger px-2 py-1 remove-product" data-product-id="{{ $product->id }}" data-unit-price="{{ $product->unit_price }}" data-product-name="{{ $product->name }}" title="Remove Row">
                 <i class="fa fa-trash"></i>

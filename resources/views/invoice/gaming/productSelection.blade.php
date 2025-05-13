@@ -246,7 +246,7 @@
                             <label for="keywordInput" class="form-label text-center fw-semibold mb-2">Search by Keyword</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-light"><i class="fas fa-search"></i></span>
-                                <input type="text" class="form-control" id="keywordInput" placeholder="Enter or speak product or category name...">
+                                <input type="text" class="form-control" id="modalkeywordInput" placeholder="Enter or speak product or category name...">
                                 <button class="btn btn-outline-secondary" type="button" onclick="startVoiceSearch()" id="micBtn" title="Voice Search">
                                     <i class="fas fa-microphone" id="micIcon"></i>
                                 </button>
@@ -270,12 +270,14 @@
                             <div class="bg-light rounded border shadow-sm p-3 text-center">
                                 <div class="text-muted small fw-semibold">Current Amount</div>
                                 <div class="fw-bold text-success fs-5">{{ site_currency() }}<span id="temp_current_amount_text">0.00</span></div>
+                                <input type="hidden" id="modal_current_amount" />
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="bg-light rounded border shadow-sm p-3 text-center">
                                 <div class="text-muted small fw-semibold">Discount Amount</div>
                                 <div class="fw-bold text-danger fs-5">{{ site_currency() }}<span id="temp_discount_amount_text">0.00</span></div>
+                                <input type="hidden" id="modal_discount_amount" />
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -331,6 +333,9 @@
 {{-- Modal for Custom Game Selection --}}
 @endsection
 @push('scripts')
+
+
+
 <script>
     const priceSlider = document.getElementById('price-slider');
     const defaultMin = 10, defaultMax = 1000;
@@ -480,16 +485,24 @@
                     toastr.info("Oops! No magic combo this time. Try another spin or go custom!");
                     return;
                 } else {
+
+
+
                     const invoiceAmount = parseFloat("{{ $invoice['invoice_amount'] ?? 0 }}");
                     const currentAmount = parseFloat(response.total.toFixed(2));
                     const discountAmount = currentAmount - invoiceAmount;
 
+
+                    //const modalCurrentAmount = parseFloat()
+
                     $('#product-table-body').html(response.tableRows);
                     $('#current_amount').val(currentAmount.toFixed(2));
+                    $('#modal_current_amount').val(currentAmount.toFixed(2));
 
                     // 💥 Update Discount Amount also
                     if (discountAmount > 0) {
                         $('#discount_amount').val(discountAmount.toFixed(2));
+                        $('#modal_discount_amount').val(discountAmount.toFixed(2));
                     } else {
                         $('#discount_amount').val(0.00);
                     }
@@ -499,6 +512,9 @@
                     } else {
                         $('.narayan-checkbox').prop('disabled', false);
                     }
+
+                    validateAmounts();
+
                 }
             },
             error: function () {
@@ -512,6 +528,7 @@
 }
 
     </script>
+
 
 
 <script>
@@ -576,10 +593,37 @@ function filterProducts() {
             price_to: priceTo
         },
         success: function (response) {
-            $('#product-table-body').html(response.tableRows);
+            //alert(1);
+            $('#customize-product-table-body').html(response.tableRows);
             selectedTotal = 0;
             updateTotalDisplay();
             attachCheckboxHandlers();
+
+            //==
+            if ($.fn.DataTable.isDataTable('#customize-products-table')) {
+                $('#customize-products-table').DataTable().clear().destroy();
+                $('#customize-products-table').empty(); // optional cleanup
+            }
+
+            const customizeTable = $('#customize-products-table').DataTable({
+                responsive: true,
+                searchHighlight: true,
+                dom: 'lrtip', // removes built-in search bar
+                language: {
+                    search: "",
+                    searchPlaceholder: "Search..."
+                },
+                columnDefs: [
+                    { orderable: false, targets: [4, 5] }
+                ]
+            });
+
+            // 🔍 Custom search input functionality
+            $('#keywordInput').on('input', function () {
+                customizeTable.search(this.value).draw();
+            });
+
+            //==
         },
         error: function () {
             toastr.error('Something went wrong while filtering.', 'Oops!');
@@ -898,8 +942,40 @@ slider.noUiSlider.on('update', function (values, handle) {
                 search_type: search_type
             },
             success: function (response) {
+                //alert(1);
                 if (response && response.tableRows && response.tableRows.trim() !== '') {
                     $('#customize-product-table-body').html(response.tableRows);
+
+                    //==
+                    let customizeTable; // Declare globally within your script scope
+
+                    if ($.fn.DataTable.isDataTable('#customize-products-table')) {
+                        $('#customize-products-table').DataTable().clear().destroy();
+                        $('#customize-products-table').empty(); // optional cleanup
+                    }
+
+                    customizeTable = $('#customize-products-table').DataTable({
+                        responsive: true,
+                        searchHighlight: true,
+                        dom: 'lrtip', // removes built-in search bar
+                        language: {
+                            search: "",
+                            searchPlaceholder: "Search..."
+                        },
+                        columnDefs: [
+                            { orderable: false, targets: [4, 5] }
+                        ]
+                    });
+
+                    // ✅ Custom search input functionality (must be after initialization)
+                    $(document).ready(function() {
+                        // ✅ Custom search input functionality
+                        $('#modalkeywordInput').on('keyup', function() {
+                            customizeTable.search(this.value).draw();
+                        });
+                    });
+
+                    //==
 
                     if (typeof calculateTotalPrice === 'function') {
                         calculateTotalPrice();
@@ -921,9 +997,7 @@ slider.noUiSlider.on('update', function (values, handle) {
     }
 
     // 🚀 Call customizeProducts() once when modal opens
-    $(document).on('shown.bs.modal', '#addgames', function () {
-        customizeProducts();
-    });
+
 
     // 🚀 Debounce user typing to prevent too many Ajax requests
     $('#keywordInput').on('input', function () {
@@ -933,6 +1007,41 @@ slider.noUiSlider.on('update', function (values, handle) {
         }, 500); // 500ms delay after user stops typing
     });
 </script>
+
+<script>
+    function validateAmounts() {
+        const currentAmountInput = document.getElementById("current_amount");
+        const discountAmountInput = document.getElementById("discount_amount");
+        const invoiceAmountInput = document.getElementById("invoice_amount");
+
+        const currentAmount = parseFloat(currentAmountInput.value) || 0;
+        const discountAmount = parseFloat(discountAmountInput.value) || 0;
+        const invoiceAmount = parseFloat(invoiceAmountInput.value) || 0;
+
+        const expectedTotal = (invoiceAmount + discountAmount).toFixed(2);
+        const currentTotal = currentAmount.toFixed(2);
+
+        const isValid = expectedTotal === currentTotal;
+
+        const color = isValid ? "green" : "red";
+
+        currentAmountInput.style.color = color;
+        discountAmountInput.style.color = color;
+        invoiceAmountInput.style.color = color;
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        // Set up listeners
+        document.getElementById("current_amount").addEventListener("input", validateAmounts);
+        document.getElementById("discount_amount").addEventListener("input", validateAmounts);
+        document.getElementById("invoice_amount").addEventListener("input", validateAmounts);
+
+        // Initial check
+        validateAmounts();
+    });
+</script>
+
+
 
 
 @endpush

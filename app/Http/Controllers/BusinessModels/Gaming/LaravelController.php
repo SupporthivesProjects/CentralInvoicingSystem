@@ -85,7 +85,8 @@ class LaravelController extends Controller
                 'p.game_platform',
                 'p.game_server_region',
                 'p.game_need_to_capture',
-                'c.costs'
+                'c.id as bundle_id',
+                'c.costs',
             )
             ->get();
 
@@ -115,6 +116,7 @@ class LaravelController extends Controller
 
                     $allProducts->push((object)[
                         'id'                    => $product->id,
+                        'bundle_id'             => $product->bundle_id,
                         'name'                  => $product->name,
                         'unit_price'             => $unitPrice,
                         'slug'                  => Str::slug($product->name . '-' . $bundleAmount),
@@ -144,6 +146,7 @@ class LaravelController extends Controller
 
         // Get the total price
         $totalPrice = $results->sum('unit_price');
+        session(['current_amount' => $totalPrice]);
 
         // Return the search results
         $currency = DB::connection($this->connectionType)
@@ -325,6 +328,8 @@ class LaravelController extends Controller
             ]);
         }
     }
+    $bestTotal = $finalProducts->sum('unit_price');
+    session(['current_amount' => $bestTotal]);
 
     $tableRows = view("invoice.{$modelType}.random_product_rows", [
         'products' => $finalProducts,
@@ -475,6 +480,9 @@ public function addProducts(Request $request)
 
     // Pass the updated games to getGameDetails function
     $finalProducts = $this->getGameDetails($existingAssoc);
+    $bestTotal = $finalProducts->sum('unit_price');
+    session(['current_amount' => $bestTotal]);
+
 
     $modelType = $site->businessModel->model_type;
 
@@ -562,8 +570,12 @@ public function addProducts(Request $request)
         $siteWords = numberToWords($site->id);
         $viewPath  = "websites.{$modelType}.{$siteWords}";
 
+        //dd($invoice_data);
         // Generate and return PDF
         try {
+
+            $this->updateProductPrice($products);
+
             InvoiceController::createInvoiceHistory($invoice_data, $processedProducts);
             $pdf = PDF::loadView($viewPath, $invoice_data)->setPaper('A4', 'portrait');
             $filename = preg_replace('/[^A-Za-z0-9_\-]/', '_', $invoice_data['invoice_number']) . '.pdf';
@@ -576,6 +588,468 @@ public function addProducts(Request $request)
             abort(500, 'Error generating invoice: ' . $e->getMessage());
         }
     }
+
+
+
+
+
+// protected function updateProductPrice($productDataArray)
+// {
+//     $site_id = session('customer.site_id');
+//     $site = Website::findOrFail($site_id);
+
+//     $userPrices = [];
+//     $dbPrices = [];
+
+//     foreach ($productDataArray as $data) {
+//         if (
+//             !empty($data['game_currency_amount']) &&
+//             isset($data['bundle_id']) &&
+//             isset($data['unit_price'])
+//         ) {
+//             $targetAmount = $data['game_currency_amount'];
+//             $bundle_id = floatval($data['bundle_id']);
+//             $unit_price = floatval($data['unit_price']);
+
+//             // Establish dynamic DB connection
+//             DynamicDatabaseService::connect($site);
+
+//             // Fetch row from game_sever_based_cost using bundle_id
+//             $costData = DB::connection($this->connectionType)
+//                 ->table('game_sever_based_cost')
+//                 ->where('id', $bundle_id)
+//                 ->first();
+
+//             if (!$costData) continue;
+
+//             $costs = json_decode($costData->costs, true);
+//             if (!isset($costs['bundles']) || !is_array($costs['bundles'])) continue;
+
+//             // Dynamically find matching key in bundles JSON
+//             $currencyKey = null;
+//             foreach ($costs['bundles'] as $key => $value) {
+//                 if (strval($key) === strval($targetAmount)) {
+//                     $currencyKey = $key;
+//                     break;
+//                 }
+//             }
+
+//             if (!$currencyKey) {
+//                 \Log::warning("No matching bundle key found for '{$targetAmount}' in bundle ID: {$bundle_id}");
+//                 continue;
+//             }
+
+//             $currentPrice = floatval($costs['bundles'][$currencyKey]);
+//             $dbPrices[$bundle_id] = $currentPrice;
+//             $userPrices[$bundle_id] = $unit_price;
+
+//             if ($currentPrice == $unit_price) continue;
+
+//             // Check last price update history
+//             $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
+//                 ->where('product_id', $bundle_id)
+//                 ->where('bundle', (string)$currencyKey)
+//                 ->orderByDesc('last_price_changed')
+//                 ->first();
+
+//             // Only update if never updated OR 3+ months old
+//             if (!$lastUpdate || Carbon::parse($lastUpdate->last_price_changed)->diffInMonths(now()) >= 3) {
+//                 DB::connection($this->connectionType)
+//                     ->table($this->productTable)
+//                     ->where('id', $bundle_id)
+//                     ->update(['unit_price' => $unit_price]);
+
+//                 ProductPriceHistory::create([
+//                     'site_id' => $site_id,
+//                     'product_id' => $bundle_id,
+//                     'bundle' => (string)$currencyKey,
+//                     'unit_price' => $unit_price,
+//                     'last_price_changed' => now(),
+//                 ]);
+//             }
+//         }
+//     }
+//     dd("DB Prices: ", $dbPrices, "User Prices: ", $userPrices);
+// }
+
+
+protected function updateProductPrice($productDataArray)
+{
+    $site_id = session('customer.site_id');
+    $site = Website::findOrFail($site_id);
+
+    \Log::info("Starting updateProductPrice with site_id: {$site_id}");
+    \Log::info("Product Data Array:", ['count' => count($productDataArray)]);
+
+    $userPrices = [];
+    $dbPrices = [];
+    $updatedProducts = [];
+    $blockedProducts = [];
+    $errors = [];
+    $debugData = []; // Add a debug array to collect all relevant information
+
+    foreach ($productDataArray as $index => $data) {
+        $debugData[$index] = [
+            'input' => $data,
+            'processing_steps' => []
+        ];
+
+        \Log::info("Processing product data: ", ['index' => $index, 'data' => $data]);
+
+        if (
+            !empty($data['game_currency_amount']) &&
+            isset($data['bundle_id']) &&
+            isset($data['unit_price'])
+        ) {
+            $targetAmount = $data['game_currency_amount'];
+            $bundle_id = floatval($data['bundle_id']);
+            $unit_price = floatval($data['unit_price']);
+
+            $debugData[$index]['processing_steps'][] = [
+                'step' => 'initial_params',
+                'targetAmount' => $targetAmount,
+                'bundle_id' => $bundle_id,
+                'unit_price' => $unit_price
+            ];
+
+            \Log::info("Product parameters:", [
+                'targetAmount' => $targetAmount,
+                'bundle_id' => $bundle_id,
+                'unit_price' => $unit_price
+            ]);
+
+            // Establish dynamic DB connection
+            try {
+                DynamicDatabaseService::connect($site);
+                $debugData[$index]['processing_steps'][] = [
+                    'step' => 'db_connection',
+                    'status' => 'success',
+                    'connection_type' => $this->connectionType
+                ];
+                \Log::info("DB Connection established for: {$this->connectionType}");
+            } catch (\Exception $e) {
+                $debugData[$index]['processing_steps'][] = [
+                    'step' => 'db_connection',
+                    'status' => 'error',
+                    'message' => $e->getMessage()
+                ];
+                \Log::error("DB Connection failed: " . $e->getMessage());
+                $errors[] = "Database connection failed: " . $e->getMessage();
+                continue;
+            }
+
+            // Fetch row from game_sever_based_cost using bundle_id
+            try {
+                $costData = DB::connection($this->connectionType)
+                    ->table('game_sever_based_cost')
+                    ->where('id', $bundle_id)
+                    ->first();
+
+                if (!$costData) {
+                    $debugData[$index]['processing_steps'][] = [
+                        'step' => 'fetch_cost_data',
+                        'status' => 'error',
+                        'message' => "Bundle ID {$bundle_id} not found"
+                    ];
+                    \Log::warning("Bundle ID {$bundle_id} not found");
+                    $errors[] = "Bundle ID {$bundle_id} not found";
+                    continue;
+                }
+
+                $debugData[$index]['processing_steps'][] = [
+                    'step' => 'fetch_cost_data',
+                    'status' => 'success',
+                    'cost_data' => $costData
+                ];
+                \Log::info("Cost data found for bundle ID {$bundle_id}");
+
+            } catch (\Exception $e) {
+                $debugData[$index]['processing_steps'][] = [
+                    'step' => 'fetch_cost_data',
+                    'status' => 'error',
+                    'message' => $e->getMessage()
+                ];
+                \Log::error("Error fetching cost data: " . $e->getMessage());
+                $errors[] = "Error fetching cost data: " . $e->getMessage();
+                continue;
+            }
+
+            // Parse JSON costs
+            try {
+                $costs = json_decode($costData->costs, true);
+                if (!isset($costs['bundles']) || !is_array($costs['bundles'])) {
+                    $debugData[$index]['processing_steps'][] = [
+                        'step' => 'parse_costs',
+                        'status' => 'error',
+                        'message' => "Invalid bundle structure for ID {$bundle_id}"
+                    ];
+                    \Log::warning("Invalid bundle structure for ID {$bundle_id}");
+                    $errors[] = "Invalid bundle structure for ID {$bundle_id}";
+                    continue;
+                }
+
+                $debugData[$index]['processing_steps'][] = [
+                    'step' => 'parse_costs',
+                    'status' => 'success',
+                    'bundles_count' => count($costs['bundles']),
+                    'bundles_keys' => array_keys($costs['bundles'])
+                ];
+                \Log::info("Costs parsed successfully for bundle ID {$bundle_id}", [
+                    'bundles_count' => count($costs['bundles']),
+                    'bundles_keys' => array_keys($costs['bundles'])
+                ]);
+
+            } catch (\Exception $e) {
+                $debugData[$index]['processing_steps'][] = [
+                    'step' => 'parse_costs',
+                    'status' => 'error',
+                    'message' => $e->getMessage()
+                ];
+                \Log::error("Error parsing costs: " . $e->getMessage());
+                $errors[] = "Error parsing costs: " . $e->getMessage();
+                continue;
+            }
+
+            // Find currency key
+            $currencyKey = null;
+            $keyFound = false;
+
+            foreach ($costs['bundles'] as $key => $value) {
+                \Log::info("Comparing keys: ", ['json_key' => $key, 'target' => $targetAmount]);
+
+                if (strval($key) === strval($targetAmount)) {
+                    $currencyKey = $key;
+                    $keyFound = true;
+                    break;
+                }
+            }
+
+            if (!$keyFound) {
+                $debugData[$index]['processing_steps'][] = [
+                    'step' => 'find_currency_key',
+                    'status' => 'error',
+                    'target' => $targetAmount,
+                    'available_keys' => array_keys($costs['bundles'])
+                ];
+                \Log::warning("No matching bundle key found for '{$targetAmount}' in bundle ID: {$bundle_id}", [
+                    'available_keys' => array_keys($costs['bundles'])
+                ]);
+                $errors[] = "No matching bundle key found for '{$targetAmount}' in bundle ID: {$bundle_id}";
+                continue;
+            }
+
+            $debugData[$index]['processing_steps'][] = [
+                'step' => 'find_currency_key',
+                'status' => 'success',
+                'currency_key' => $currencyKey
+            ];
+            \Log::info("Currency key found: {$currencyKey}");
+
+            $currentPrice = floatval($costs['bundles'][$currencyKey]);
+            $dbPrices[$bundle_id] = $currentPrice;
+            $userPrices[$bundle_id] = $unit_price;
+
+            $debugData[$index]['processing_steps'][] = [
+                'step' => 'price_check',
+                'current_price' => $currentPrice,
+                'user_price' => $unit_price,
+                'difference' => abs($currentPrice - $unit_price)
+            ];
+            \Log::info("Price comparison:", [
+                'current_price' => $currentPrice,
+                'user_price' => $unit_price,
+                'difference' => abs($currentPrice - $unit_price)
+            ]);
+
+            // Skip if price hasn't changed
+            if (abs($currentPrice - $unit_price) < 0.01) {
+                $debugData[$index]['processing_steps'][] = [
+                    'step' => 'price_check',
+                    'status' => 'skipped',
+                    'reason' => 'Price difference too small'
+                ];
+                \Log::info("Skipping update - price difference too small");
+                continue;
+            }
+
+            // Check last price update history
+            try {
+                $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
+                    ->where('product_id', $bundle_id)
+                    ->where('bundle', (string)$currencyKey)
+                    ->orderByDesc('last_price_changed')
+                    ->first();
+
+                $debugData[$index]['processing_steps'][] = [
+                    'step' => 'check_history',
+                    'status' => 'success',
+                    'last_update' => $lastUpdate ? [
+                        'id' => $lastUpdate->id,
+                        'last_changed' => $lastUpdate->last_price_changed,
+                        'days_ago' => Carbon::parse($lastUpdate->last_price_changed)->diffInDays(now())
+                    ] : null
+                ];
+
+                \Log::info("Last update check:", [
+                    'found' => $lastUpdate ? true : false,
+                    'last_update' => $lastUpdate ? $lastUpdate->toArray() : null
+                ]);
+
+            } catch (\Exception $e) {
+                $debugData[$index]['processing_steps'][] = [
+                    'step' => 'check_history',
+                    'status' => 'error',
+                    'message' => $e->getMessage()
+                ];
+                \Log::error("Error checking price history: " . $e->getMessage());
+                $errors[] = "Error checking price history: " . $e->getMessage();
+                continue;
+            }
+
+            // Only update if never updated OR 3+ months old
+            if (!$lastUpdate || Carbon::parse($lastUpdate->last_price_changed)->diffInDays(now()) >= 90) {
+                $debugData[$index]['processing_steps'][] = [
+                    'step' => 'update_allowed',
+                    'status' => 'proceed'
+                ];
+                \Log::info("Update allowed - proceeding with update");
+
+                // THIS IS THE KEY CHANGE - Update the price in the JSON structure
+                try {
+                    $costs['bundles'][$currencyKey] = strval($unit_price);
+
+                    // Update the entire costs JSON in the database
+                    $updated = DB::connection($this->connectionType)
+                        ->table('game_sever_based_cost')
+                        ->where('id', $bundle_id)
+                        ->update(['costs' => json_encode($costs)]);
+
+                    $debugData[$index]['processing_steps'][] = [
+                        'step' => 'update_db',
+                        'status' => $updated ? 'success' : 'error',
+                        'rows_affected' => $updated
+                    ];
+
+                    \Log::info("Database update result:", [
+                        'success' => $updated ? true : false,
+                        'rows_affected' => $updated
+                    ]);
+
+                    if (!$updated) {
+                        $errors[] = "Failed to update bundle ID {$bundle_id} - no rows affected";
+                        continue;
+                    }
+                } catch (\Exception $e) {
+                    $debugData[$index]['processing_steps'][] = [
+                        'step' => 'update_db',
+                        'status' => 'exception',
+                        'message' => $e->getMessage()
+                    ];
+                    \Log::error("Error updating database: " . $e->getMessage());
+                    $errors[] = "Error updating database: " . $e->getMessage();
+                    continue;
+                }
+
+                // Create price history record
+                try {
+                    \Log::info("Creating price history with:", [
+                        'site_id' => $site_id,
+                        'product_id' => $bundle_id,
+                        'bundle' => (string)$currencyKey,
+                        'unit_price' => $unit_price
+                    ]);
+
+                    $historyRecord = ProductPriceHistory::create([
+                        'site_id' => $site_id,
+                        'product_id' => $bundle_id,
+                        'bundle' => (string)$currencyKey,
+                        'unit_price' => $unit_price,
+                        'last_price_changed' => now(),
+                    ]);
+
+                    $debugData[$index]['processing_steps'][] = [
+                        'step' => 'create_history',
+                        'status' => 'success',
+                        'history_id' => $historyRecord->id
+                    ];
+
+                    \Log::info("Price history created:", [
+                        'id' => $historyRecord->id
+                    ]);
+
+                    $updatedProducts[] = [
+                        'bundle_id' => $bundle_id,
+                        'currency_key' => $currencyKey,
+                        'old_price' => $currentPrice,
+                        'new_price' => $unit_price
+                    ];
+                } catch (\Exception $e) {
+                    $debugData[$index]['processing_steps'][] = [
+                        'step' => 'create_history',
+                        'status' => 'error',
+                        'message' => $e->getMessage(),
+                        'trace' => $e->getTraceAsString()
+                    ];
+                    \Log::error("Error creating price history: " . $e->getMessage() . "\n" . $e->getTraceAsString());
+                    $errors[] = "Error creating price history: " . $e->getMessage();
+                    // Don't continue here, we already updated the price in database
+                }
+            } else {
+                $daysRemaining = 90 - Carbon::parse($lastUpdate->last_price_changed)->diffInDays(now());
+
+                $debugData[$index]['processing_steps'][] = [
+                    'step' => 'update_blocked',
+                    'status' => 'blocked',
+                    'days_remaining' => $daysRemaining
+                ];
+
+                \Log::info("Update blocked - price changed too recently", [
+                    'days_remaining' => $daysRemaining
+                ]);
+
+                $blockedProducts[] = [
+                    'bundle_id' => $bundle_id,
+                    'currency_key' => $currencyKey,
+                    'current_price' => $currentPrice,
+                    'requested_price' => $unit_price,
+                    'days_remaining' => $daysRemaining
+                ];
+            }
+        } else {
+            $debugData[$index]['processing_steps'][] = [
+                'step' => 'validate_input',
+                'status' => 'error',
+                'missing_fields' => [
+                    'game_currency_amount' => empty($data['game_currency_amount']),
+                    'bundle_id' => !isset($data['bundle_id']),
+                    'unit_price' => !isset($data['unit_price'])
+                ]
+            ];
+            \Log::warning("Missing required fields in product data", [
+                'index' => $index,
+                'data' => $data
+            ]);
+        }
+    }
+
+    \Log::info("updateProductPrice finished", [
+        'updated_count' => count($updatedProducts),
+        'blocked_count' => count($blockedProducts),
+        'errors_count' => count($errors)
+    ]);
+
+    // Save the debug data to a file for inspection
+    \Storage::disk('local')->put('price_update_debug_' . now()->format('Y-m-d_H-i-s') . '.json', json_encode($debugData, JSON_PRETTY_PRINT));
+    //dd($debugData);
+    return [
+        'db_prices' => $dbPrices,
+        'user_prices' => $userPrices,
+        'updated_products' => $updatedProducts,
+        'blocked_products' => $blockedProducts,
+        'errors' => $errors,
+        'debug_data' => $debugData // Include debug data in the response
+    ];
+}
 
 
 

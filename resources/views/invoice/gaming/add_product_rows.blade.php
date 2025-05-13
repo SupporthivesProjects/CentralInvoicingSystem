@@ -1,11 +1,10 @@
 @forelse($products as $index => $product)
     @php
         $captureFields = json_decode($product->game_need_to_capture ?? '{}', true);
-        $platforms = array_keys($captureFields);
     @endphp
 
     {{-- Main Row --}}
-    <tr class="align-middle product-row" id="customize-product-row-{{ $product->id }}" data-bs-toggle="collapse" data-bs-target="#collapse-{{ $product->id }}" aria-expanded="false" aria-controls="collapse-{{ $product->id }}" style="cursor: pointer;">
+    <tr class="align-middle product-row" id="customize-product-row-{{ $product->id }}">
         <!-- 1️⃣ SR. NO. -->
         <td class="text-center">{{ $index + 1 }}</td>
 
@@ -40,55 +39,7 @@
         <!-- 6️⃣ SELECT -->
         <td class="text-center">
             <div class="form-check d-flex justify-content-center align-items-center m-0">
-                <input class="form-check-input border border-primary" type="checkbox" name="add_product_ids[]" value="{{ $product->id }}">
-            </div>
-        </td>
-    </tr>
-
-    {{-- Expandable Row with Platform Fields --}}
-    <tr id="product-collapse-row-{{ $product->id }}">
-        <td colspan="6" class="p-0 border-0">
-            <div class="collapse bg-light" id="collapse-{{ $product->id }}">
-                <div class="p-3">
-                    <h6 class="fw-bold mb-3">Game Account Details Required:</h6>
-
-                    @if (!empty($captureFields))
-                        <!-- Platform Selector -->
-                        <div class="mb-3">
-                            <label class="form-label">Select Platform:</label>
-                            <select class="form-select select-platform dynamic-input"
-                                    data-product-id="{{ $product->id }}"
-                                    name="custom_products[{{ $product->id }}][selected_platform]"
-                                    onchange="handlePlatformChange(this)">
-                                <option value="">-- Select Platform --</option>
-                                @foreach ($platforms as $platform)
-                                    <option value="{{ \Illuminate\Support\Str::slug($platform, '_') }}">{{ $platform }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <!-- Dynamic Capture Fields -->
-                        @foreach ($captureFields as $platform => $fields)
-                            @php $slug = \Illuminate\Support\Str::slug($platform, '_'); @endphp
-                            <div class="platform-section" data-product-id="{{ $product->id }}" data-platform="{{ $slug }}" style="display: none;">
-                                <div class="row">
-                                    @foreach ($fields as $field)
-                                        <div class="col-md-6 mb-2">
-                                            <label class="form-label">{{ $field }}</label>
-                                            <input type="text"
-                                                   class="form-control dynamic-input"
-                                                   data-field-name="{{ \Illuminate\Support\Str::slug($field, '_') }}"
-                                                   name="custom_products[{{ $product->id }}][platform_fields][{{ $slug }}][{{ \Illuminate\Support\Str::slug($field, '_') }}]"
-                                                   placeholder="Enter {{ $field }}" required>
-                                        </div>
-                                    @endforeach
-                                </div>
-                            </div>
-                        @endforeach
-                    @else
-                        <div class="text-muted">No capture fields defined.</div>
-                    @endif
-                </div>
+                <input class="form-check-input border border-primary narayan-checkbox" type="checkbox" name="add_product_ids[]" value="{{ $product->id }}">
             </div>
         </td>
     </tr>
@@ -99,7 +50,40 @@
 @endforelse
 
 
+<script>
 
+
+    $(document).ready(function () {
+        let originalAmount = parseFloat(@json(session('current_amount', 0)));
+
+        function updateTempTotal() {
+            let selectedTotal = 0;
+
+            $('input[name="add_product_ids[]"]:checked').each(function () {
+                let productId = $(this).val();
+                let priceInput = $('.add-product-price[data-product-id="' + productId + '"]');
+                let price = parseFloat(priceInput.val()) || 0;
+                selectedTotal += price;
+            });
+
+            let tempTotal = originalAmount + selectedTotal;
+            let invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
+            let discountAmount = 0;
+
+            if (tempTotal > invoiceAmount) {
+                discountAmount = tempTotal - invoiceAmount;
+            }
+
+            $('#temp_current_amount_text').text(tempTotal.toFixed(2));
+            $('#temp_discount_amount_text').text(discountAmount.toFixed(2));
+            $('#temp_invoice_amount_text').text(invoiceAmount.toFixed(2));
+        }
+
+        $(document).on('input change keyup', 'input[name="add_product_ids[]"], .add-product-price, #invoice_amount', function () {
+            updateTempTotal();
+        });
+    });
+</script>
 <script>
     $(document).on('keyup change', '.add-product-price', function () {
         const $priceInput = $(this);
@@ -107,11 +91,12 @@
 
         if (!productId) return;
 
-        // Fetch unit price and check if it's the editable one (we skip read-only)
+        // Skip read-only input
         if ($priceInput.prop('readonly')) return;
 
-        // Get the hidden bundle_first_amount value
+        // Get the hidden bundle_first_amount
         const $hiddenAmountInput = $(`input[name="custom_products[${productId}][bundle_first_amount]"]`);
+        //alert($hiddenAmountInput.val());
         let rawAmount = $hiddenAmountInput.val().toString().trim();
 
         // Normalize value
@@ -124,20 +109,22 @@
             numericAmount *= 1000000;
         }
 
-        // Get the current unit price
+        // Get current unit price
         const unitPrice = parseFloat($priceInput.val()) || 0;
 
-        // Final currency amount
-        const totalAmount = numericAmount * unitPrice;
+        // Final amount rounded to nearest whole number
+        const totalAmount = Math.round(numericAmount * unitPrice);
 
-        // Find the corresponding currency input (read-only one)
+        // Find the corresponding read-only currency input
         const $currencyInput = $(`input[data-product-id="${productId}"]`).filter(function () {
             return $(this).prop('readonly');
         });
 
-        $currencyInput.val(totalAmount.toFixed(2));
+        $currencyInput.val(totalAmount+'0'); // No decimals
     });
-    </script>
+</script>
+
+
 
 
 <script>
@@ -236,6 +223,7 @@
             // Get unit price (editable field)
             let unitPrice = parseFloat($row.find('.add-product-price:not([readonly])').val());
 
+
             // Validate unit price
             if (isNaN(unitPrice) || unitPrice <= 0) {
                 toastr.error('Please enter a valid price for ' + $row.find('td:nth-child(2)').text().trim());
@@ -257,11 +245,11 @@
 
             // Check if platform is required and selected
             let platformRequired = $collapseRow.find('.platform-section').length > 0;
-            if (platformRequired && (!selectedPlatform || selectedPlatform === '')) {
-                toastr.error('Please select a platform for ' + gameName);
-                hasValidData = false;
-                return false; // break the loop
-            }
+            // if (platformRequired && (!selectedPlatform || selectedPlatform === '')) {
+            //     toastr.error('Please select a platform for ' + gameName);
+            //     hasValidData = false;
+            //     return false; // break the loop
+            // }
 
             // Get all capture fields for the selected platform
             let platformFields = {};
@@ -297,7 +285,7 @@
             // Create game object
             selectedProducts.push({
                 id: productId,
-                game_currency_amount: currencyAmount,
+                game_currency_amount: document.querySelector(`.add-product-price[data-product-id="${productId}"]`).value,
                 unit_price: unitPrice,
                 bundle: 'custom'
             });
@@ -422,52 +410,29 @@
  }
 </script>
 <script>
-    // Function to handle platform selection change
-function handlePlatformChange(selectElement) {
-    const productId = $(selectElement).data('product-id');
-    const selectedPlatform = $(selectElement).val();
-
-    // Hide all platform sections for this product
-    $(`.platform-section[data-product-id="${productId}"]`).hide();
-
-    // Show the selected platform section
-    if (selectedPlatform) {
-        $(`.platform-section[data-product-id="${productId}"][data-platform="${selectedPlatform}"]`).show();
-
-        // Clear any validation styling
-        $(`.platform-section[data-product-id="${productId}"][data-platform="${selectedPlatform}"] input`).removeClass('is-invalid');
-
-        // Reset required attribute for all platform fields
-        $(`.platform-section[data-product-id="${productId}"] input`).prop('required', false);
-
-        // Make fields for selected platform required
-        $(`.platform-section[data-product-id="${productId}"][data-platform="${selectedPlatform}"] input`).prop('required', true);
+    // Checkbox Validation Function
+    function validateSelectedProducts() {
+        const selected = document.querySelectorAll('input[name="add_product_ids[]"]:checked');
+        if (selected.length === 0) {
+            alert('Please select at least one product to proceed.');
+            return false;
+        }
+        return true;
     }
-}
 
-// Initialize platform sections on page load
-$(document).ready(function() {
-    // Initialize all platform sections (hide them)
-    $('.platform-section').hide();
-
-    // For any pre-selected platforms, show their sections
-    $('.select-platform').each(function() {
-        const selectedPlatform = $(this).val();
-        if (selectedPlatform) {
-            handlePlatformChange(this);
+    // Example: Hook to a button (replace #your-submit-button with your actual button ID)
+    document.getElementById('add-custom-products')?.addEventListener('click', function(e) {
+        if (!validateSelectedProducts()) {
+            e.preventDefault();
         }
     });
 
-    // Add click event handler for product rows to prevent default collapse behavior
-    $('.product-row').on('click', function(e) {
-        // Only prevent default if clicking inside input fields or select elements
-        if ($(e.target).is('input, select, label, .form-check-input')) {
-            e.stopPropagation();
-        }
+    // Optional: Prevent row click toggles (since we removed collapse)
+    document.querySelectorAll('.product-row').forEach(row => {
+        row.addEventListener('click', function(e) {
+            if (e.target.closest('input, select, label')) {
+                e.stopPropagation();
+            }
+        });
     });
-});
     </script>
-
-
-
-
