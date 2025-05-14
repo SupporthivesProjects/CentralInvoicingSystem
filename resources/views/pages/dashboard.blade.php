@@ -32,7 +32,7 @@
                 <!-- Start::row-1 -->
                 <div class="row row-sm">
                     <div class="col-sm-12 col-lg-12 col-xl-12">
-                        
+
                         <!-- Start::row -->
                         <div class="row row-sm">
                             <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
@@ -114,7 +114,7 @@
 
 
                                             </div>
-                                           
+
                                             <div class="card-item-title  mb-2">
                                                 <label class="main-content-label fs-13 fw-bold mb-1">Invoices Created</label>
                                                 <p class="card-text">All created invoices</p>
@@ -145,7 +145,7 @@
                                             </svg>
 
                                             </div>
-                                           
+
                                             <div class="card-item-title  mb-2">
                                                 <label class="main-content-label fs-13 fw-bold mb-1">User List</label>
                                                 <p class="card-text">All admin and staff users</p>
@@ -173,7 +173,7 @@
                                     <div class="card custom-card overflow-hidden">
                                         <div class="card-header border-bottom-0">
                                             <div class="d-flex justify-content-between w-100">
-                                                <h4 class="mb-1"> Invoice Generation Analytics</h4> 
+                                                <h4 class="mb-1"> Invoice Generation Analytics</h4>
                                             </div>
                                             <div class="d-flex justify-content-between w-100">
                                                 <p class="text-muted mb-0" style="font-size: 14px;">
@@ -185,7 +185,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            
+
                             <div class="col-lg-12" id="listinvoices">
                                 <div class="card custom-card mg-b-20 tasks">
                                 <div class="card-body">
@@ -238,7 +238,7 @@
 
                     </div><!-- col end -->
 
-                    
+
                 </div>
                 <!-- End::row-1 -->
 
@@ -248,7 +248,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="generateReportModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" 
+<div class="modal fade" id="generateReportModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
      aria-labelledby="generateReportModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content shadow-lg border-0 rounded-4">
@@ -338,13 +338,13 @@
         series: [
             {
                 name: "Invoices Created Count",
-                type: 'line',  
+                type: 'line',
                 data: invoiceCounts,
                 color: "#FF5733"
             },
             {
                 name: "Price Changes Count",
-                type: 'line',  
+                type: 'line',
                 data: priceChangeCounts,
                 color: "#1E90FF"
             }
@@ -400,14 +400,14 @@
     $(document).ready(function () {
     $('#invoice-history').DataTable({
         responsive: true,
-        dom: 'Bfrtip',  
+        dom: 'Bfrtip',
         buttons: [
-            'copy',      
-            'csv',       
-            'excel',     
-            'pdf',        
+            'copy',
+            'csv',
+            'excel',
+            'pdf',
             {
-                extend: 'print',  
+                extend: 'print',
                 text: 'Print Table'
             }
         ]

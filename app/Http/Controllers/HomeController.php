@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Cache;
 
 class HomeController extends Controller
 {
-   
+
     public function index(Request $request)
     {
 
@@ -25,22 +25,22 @@ class HomeController extends Controller
         $businessmodels = Cache::rememberForever('businessmodels.all', function () {
             return BusinessModel::latest()->get();
         });
-        
+
         $sites = Cache::rememberForever('websites.all', function () {
             return Website::latest()->get();
         });
-        
+
         $invoices = Cache::remember('invoices.all', 300, function () {
             return InvoiceGenerationHistory::latest()->get();
         });
         return view('pages.dashboard', compact('invoices', 'dates', 'invoiceCounts','businessmodels','sites', 'priceChanges'));
     }
-    
+
     private function getInvoiceChartData()
     {
         $sevenDaysAgo = Carbon::now()->subDays(7)->startOfDay();
         $today = Carbon::now()->endOfDay();
-    
+
         $cacheKeyPriceHistory = 'price_history_' . $sevenDaysAgo . '_' . $today;
         $cacheKeyInvoiceStats = 'invoice_stats_' . $sevenDaysAgo . '_' . $today;
 
@@ -71,71 +71,71 @@ class HomeController extends Controller
         $dates = [];
         $priceChangeCounts = [];
         $invoiceCounts = [];
-    
+
         for ($i = 7; $i >= 0; $i--) {
             $date = Carbon::now()->subDays($i)->format('Y-m-d');
             $dates[] = $date;
-            $invoiceCounts[$date] = 0;  
-            $priceChangeCounts[$date] = 0;  
+            $invoiceCounts[$date] = 0;
+            $priceChangeCounts[$date] = 0;
         }
-    
-       
+
+
         foreach ($invoiceStats as $stat) {
             $invoiceCounts[$stat->date] = $stat->count;
         }
-    
-       
+
+
         foreach ($priceHistory as $stat) {
             $priceChangeCounts[$stat->date] = $stat->price_changes;
         }
-    
-       
+
+
         $invoiceCounts = array_values($invoiceCounts);
         $priceChanges = array_values($priceChangeCounts);
-    
+
         return [$dates, $invoiceCounts, $priceChanges];
     }
 
-    
+
     public function internalSearch(Request $request)
     {
         $keyword = $request->get('keyword', '');
         $type = $request->get('type', '');
-    
+
         if (empty($keyword) || empty($type)) {
             return response()->json([]);
         }
-    
+
         $output = [];
-    
+
         switch ($type) {
             case 'websites':
                 $results = Website::where('site_name', 'like', '%' . $keyword . '%')->limit(10)->get();
                 foreach ($results as $row) {
                     $output[] = [
                         'name' => $row->site_name,
-                        'url' => route('site.connect.db', $row->id), 
+                        'url' => route('site.connect.db', $row->id),
                         'icon' => 'bx-globe',
                     ];
                 }
                 break;
-    
+
             case 'business_models':
                 $results = BusinessModel::where('name', 'like', '%' . $keyword . '%')->limit(10)->get();
                 foreach ($results as $row) {
                     $output[] = [
                         'name' => $row->name,
-                        'url' => route('businessmodel.websites', $row->id), 
+                        'url' => route('businessmodel.websites', $row->id),
                         'icon' => 'bx-briefcase',
                     ];
                 }
                 break;
-    
+
             default:
                 return response()->json([]);
         }
-    
+
         return response()->json($output);
     }
-    
+
 }

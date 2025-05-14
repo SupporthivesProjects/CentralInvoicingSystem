@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\BusinessModels\EcommerceController;
 use App\Http\Controllers\BusinessModels\ContentWritingController;
 use App\Http\Controllers\BusinessModels\MarketingController;
-use App\Http\Controllers\BusinessModels\GamingController;
+use App\Http\Controllers\BusinessModels\GamingSiteController;
 use App\Http\Controllers\BusinessModels\GiftCardController;
 use App\Http\Controllers\BusinessModels\ImageStockController;
 use App\Http\Controllers\BusinessModels\TranslationController;
@@ -54,21 +54,21 @@ class InvoiceController extends Controller
             $sites = Website::all();
 
             session()->put('customer.site_id', $site->id);
-    
+
             return view('invoice.getCustomer', [
                 'site' => $site,
                 'sites' => $sites,
                 'customer' => session('customer'),
                 'invoice' => session('invoice'),
             ]);
-    
+
         } catch (ModelNotFoundException $e) {
             return redirect()->back()->with('error', 'Website not found!');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Something went wrong: ' . $e->getMessage());
         }
     }
-    
+
 
     public function saveCustomerDetails(Request $request)
     {
@@ -80,8 +80,8 @@ class InvoiceController extends Controller
             'customer_email' => 'nullable|email',
             'customer_mobile' => 'nullable|string|max:15',
         ]);
-        
-        
+
+
         session([
             'customer' => [
                 'site_id' => $request->hidden_site_id,
@@ -96,28 +96,28 @@ class InvoiceController extends Controller
                 'invoice_number' => $request->invoice_number,
             ],
             'products' => []
-        ]); 
+        ]);
 
         if (!$request->invoice_amount) {
 
             return redirect()->back()->with(['error','Invoice amount is required.']);
         }
-        
+
         if (!session('invoice.invoice_amount')) {
             session()->put('invoice.invoice_amount', $request->invoice_amount);
         }
-        
+
         return redirect()->route('product.selection')->with('success', 'Database connection established for the selected website.');
     }
-    
+
 
     public function productSelection(Request $request)
-    {   
+    {
         $invoice_id = $request->query('invoice_id');
 
         if ($invoice_id) {
             $invoiceHistory = InvoiceGenerationHistory::where('id', $invoice_id)->first();
-            
+
             if ($invoiceHistory) {
                 session([
                     'customer' => [
@@ -128,7 +128,7 @@ class InvoiceController extends Controller
                         'invoice_amount' => $invoiceHistory->invoice_amount,
                         'invoice_number' => $invoiceHistory->invoice_number,
                     ],
-                    'products' => []  
+                    'products' => []
                 ]);
             }
         }
@@ -153,9 +153,9 @@ class InvoiceController extends Controller
 
         try {
             $site = Website::findOrFail($site_id);
-            
+
             DynamicDatabaseService::connect($site);
-            DB::connection($this->connectionType)->getPdo(); 
+            DB::connection($this->connectionType)->getPdo();
 
             try {
                 $min_unit_price = DB::connection($this->connectionType)->table($this->productTable)->where('published', 1)->min('unit_price') ?? 10;
@@ -169,11 +169,11 @@ class InvoiceController extends Controller
             $sites = Website::all();
 
             return view("invoice.{$modelType}.productSelection", [
-                'customer' => session('customer'), 
-                'invoice' => session('invoice'), 
-                'site' => $site, 
-                'sites' => $sites, 
-                'min_unit_price' => $min_unit_price, 
+                'customer' => session('customer'),
+                'invoice' => session('invoice'),
+                'site' => $site,
+                'sites' => $sites,
+                'min_unit_price' => $min_unit_price,
                 'max_unit_price' => $max_unit_price
             ]);
 
@@ -213,7 +213,7 @@ class InvoiceController extends Controller
                 'customer_mobile' => $request->customer_mobile,
             ],
         ]);
-    }   
+    }
 
 
     public function randomProducts(Request $request)
@@ -222,21 +222,21 @@ class InvoiceController extends Controller
         $modelType = strtolower($site->businessModel->model_type);
         return $this->resolveModelController($modelType, 'randomProducts', $request);
     }
-    
+
     public function filterProducts(Request $request)
     {
         $site = Website::findOrFail(session('customer.site_id'));
         $modelType = strtolower($site->businessModel->model_type);
         return $this->resolveModelController($modelType, 'filterProducts', $request);
     }
-    
+
     public function addProducts(Request $request)
     {
         $site = Website::findOrFail(session('customer.site_id'));
         $modelType = strtolower($site->businessModel->model_type);
         return $this->resolveModelController($modelType, 'addProducts', $request);
     }
-    
+
     public function removeProduct(Request $request)
     {
         $site = Website::findOrFail(session('customer.site_id'));
@@ -257,16 +257,16 @@ class InvoiceController extends Controller
         $modelType = strtolower($site->businessModel->model_type);
         return $this->resolveModelController($modelType, 'clearProducts', $request);
     }
-    
+
     public function generateInvoice(Request $request)
     {
         $site = Website::findOrFail(session('customer.site_id'));
         $modelType = strtolower($site->businessModel->model_type);
         return $this->resolveModelController($modelType, 'generateInvoice', $request);
     }
-    
 
-    
+
+
     private function resolveModelController($modelType, $method, $request)
     {
         switch ($modelType) {
@@ -313,6 +313,6 @@ class InvoiceController extends Controller
         return response()->json(['success' => true,'new_invoice_number' => $newInvoiceNumber]);
     }
 
-    
-            
+
+
 }

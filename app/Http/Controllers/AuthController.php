@@ -12,7 +12,7 @@ class AuthController extends Controller
         return view('pages.login');
     }
 
-    
+
     public function login(Request $request)
     {
         $request->validate([
@@ -41,7 +41,6 @@ class AuthController extends Controller
     }
 
 
-    // Handle logout
     public function logout()
     {
         Auth::logout();
