@@ -565,7 +565,9 @@
             },
             error: function (xhr, textStatus) {
                 if (textStatus !== 'abort') {
+                    $('#randomize-product-table-body').html(getErrorRowHTML('Oops! Something went wrong. Please try again.'));
                     toastr.error('Failed to fetch random products.', 'Oops!');
+                    return;
                 }
             },
             complete: function () {
@@ -999,9 +1001,6 @@ $(document).ready(function() {
 </script>
 
 <script>
-    $.fn.dataTable.ext.type.search.string = function (data) {
-        return !data ? '' : data.toString().toLowerCase().replace(/-/g, '');
-    };
 
     function startVoiceSearch(inputId, micIconId) {
         const inputField = document.getElementById(inputId);
