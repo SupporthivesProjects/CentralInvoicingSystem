@@ -484,7 +484,7 @@
         customizeSliderTimer = setTimeout(() => {
             const [min, max] = values.map(v => Math.round(parseFloat(v.replace(currency, ''))));
             updateHiddenInputs(min, max, 'customize');
-            customizeProducts('search');
+            customizeProducts('reset');
         }, 1500);
     });
 
@@ -1053,7 +1053,7 @@ $(document).ready(function() {
     let discountManuallyChanged = false;
 
     $(document).on('input', '.product-price, input[name="product_ids[]"]', function () {
-        discountManuallyChanged = true;
+        discountManuallyChanged = false;
         calculateTotalPrice();
     });
 
