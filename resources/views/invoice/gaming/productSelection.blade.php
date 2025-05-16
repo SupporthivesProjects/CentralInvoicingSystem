@@ -241,7 +241,7 @@
                 <div class="container-fluid">
 
                     <!-- Search Section -->
-                    <div class="row g-3 mb-4">
+                    <div class="row g-3 mb-4 justify-content-center">
                         <div class="col-md-6">
                             <label for="keywordInput" class="form-label text-center fw-semibold mb-2">Search by Keyword</label>
                             <div class="input-group">
@@ -252,15 +252,6 @@
                                 </button>
                                 <button class="btn btn-outline-primary" type="button" onclick="customizeProducts('search')">Search</button>
                             </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label text-center fw-semibold mb-2">Search by Price</label>
-                            <div class="bg-white shadow-sm rounded p-2">
-                                <div id="customize-price-slider"></div>
-                            </div>
-                            <input type="hidden" id="hidden_customize_price_from_input_id_modal">
-                            <input type="hidden" id="hidden_customize_price_to_input_id_modal">
                         </div>
                     </div>
 
@@ -290,7 +281,7 @@
 
                     <!-- Products Table Section -->
                     <div class="table-responsive border rounded shadow-sm">
-                        <table class="table table-bordered table-hover align-middle mb-0" id="customize-products-table">
+                        <table class="table table-bordered table-hover align-middle mb-0" id="customize-products-table" style="width: 100%;">
                             <thead class="table-dark text-center">
                                 <tr>
                                     <th>SR. NO.</th>
@@ -553,86 +544,86 @@ function setCustomOnly() {
 }
 
 
-function filterProducts() {
-    const keyword = $('#keywordInput').val().trim();
-    const priceFrom = $('#hidden_price_from_input_id').val();
-    const priceTo = $('#hidden_price_to_input_id').val();
+// function filterProducts() {
+//     const keyword = $('#keywordInput').val().trim();
+//     const priceFrom = $('#hidden_price_from_input_id').val();
+//     const priceTo = $('#hidden_price_to_input_id').val();
 
-    // Don't fetch anything if both fields are empty
-    if (!keyword && !priceFrom && !priceTo) {
-        $('#product-table-body').html(
-            '<tr><td colspan="7" class="text-center text-muted">Please enter a keyword or price range to search.</td></tr>'
-        );
-        return;
-    }
+//     // Don't fetch anything if both fields are empty
+//     if (!keyword && !priceFrom && !priceTo) {
+//         $('#product-table-body').html(
+//             '<tr><td colspan="7" class="text-center text-muted">Please enter a keyword or price range to search.</td></tr>'
+//         );
+//         return;
+//     }
 
-    // Insert the Pacman loader inside the table body
-    $('#product-table-body').html(`
-        <tr>
-            <td colspan="7" class="text-center py-5">
-                <div class="pacman-loader">
-                    <div class="pacman"></div>
-                    <div class="dots">
-                        <div class="dot"></div>
-                        <div class="dot"></div>
-                        <div class="dot"></div>
-                        <div class="dot"></div>
-                        <div class="dot"></div>
-                    </div>
-                </div>
-            </td>
-        </tr>
-    `);
+//     // Insert the Pacman loader inside the table body
+//     $('#product-table-body').html(`
+//         <tr>
+//             <td colspan="7" class="text-center py-5">
+//                 <div class="pacman-loader">
+//                     <div class="pacman"></div>
+//                     <div class="dots">
+//                         <div class="dot"></div>
+//                         <div class="dot"></div>
+//                         <div class="dot"></div>
+//                         <div class="dot"></div>
+//                         <div class="dot"></div>
+//                     </div>
+//                 </div>
+//             </td>
+//         </tr>
+//     `);
 
-    $.ajax({
-        url: "{{ route('filter.products') }}",
-        type: 'GET',
-        data: {
-            keyword: keyword,
-            price_from: priceFrom,
-            price_to: priceTo
-        },
-        success: function (response) {
-            //alert(1);
-            $('#customize-product-table-body').html(response.tableRows);
-            selectedTotal = 0;
-            updateTotalDisplay();
-            attachCheckboxHandlers();
+//     $.ajax({
+//         url: "{{ route('filter.products') }}",
+//         type: 'GET',
+//         data: {
+//             keyword: keyword,
+//             price_from: priceFrom,
+//             price_to: priceTo
+//         },
+//         success: function (response) {
+//             //alert(1);
+//             $('#customize-product-table-body').html(response.tableRows);
+//             selectedTotal = 0;
+//             updateTotalDisplay();
+//             attachCheckboxHandlers();
 
-            //==
-            if ($.fn.DataTable.isDataTable('#customize-products-table')) {
-                $('#customize-products-table').DataTable().clear().destroy();
-                $('#customize-products-table').empty(); // optional cleanup
-            }
+//             //==
+//             if ($.fn.DataTable.isDataTable('#customize-products-table')) {
+//                 $('#customize-products-table').DataTable().clear().destroy();
+//                 $('#customize-products-table').empty(); // optional cleanup
+//             }
 
-            const customizeTable = $('#customize-products-table').DataTable({
-                responsive: true,
-                searchHighlight: true,
-                dom: 'lrtip', // removes built-in search bar
-                language: {
-                    search: "",
-                    searchPlaceholder: "Search..."
-                },
-                columnDefs: [
-                    { orderable: false, targets: [4, 5] }
-                ]
-            });
+//             const customizeTable = $('#customize-products-table').DataTable({
+//                 responsive: true,
+//                 searchHighlight: true,
+//                 dom: 'lrtip', // removes built-in search bar
+//                 language: {
+//                     search: "",
+//                     searchPlaceholder: "Search..."
+//                 },
+//                 columnDefs: [
+//                     { orderable: false, targets: [4, 5] }
+//                 ]
+//             });
 
-            // 🔍 Custom search input functionality
-            $('#keywordInput').on('input', function () {
-                customizeTable.search(this.value).draw();
-            });
+//             // 🔍 Custom search input functionality
+//             $('#keywordInput').on('input', function () {
+//                 customizeTable.search(this.value).draw();
+//             });
 
-            //==
-        },
-        error: function () {
-            toastr.error('Something went wrong while filtering.', 'Oops!');
-            $('#product-table-body').html(
-                '<tr><td colspan="7" class="text-center text-danger py-5">Failed to load products. Please try again.</td></tr>'
-            );
-        }
-    });
-}
+//             //==
+//         },
+//         error: function () {
+//             toastr.error('Something went wrong while filtering.', 'Oops!');
+//             $('#product-table-body').html(
+//                 '<tr><td colspan="7" class="text-center text-danger py-5">Failed to load products. Please try again.</td></tr>'
+//             );
+//         }
+//     });
+// }
 
 
 function attachCheckboxHandlers() {
@@ -697,16 +688,9 @@ function clearAllProducts() {
 
     $('#keywordInput, #hidden_price_from_input_id, #hidden_price_to_input_id').on('input change', function () {
         clearTimeout(filterTimer);
-        const isKeyword = $(this).attr('id') === 'keywordInput';
+        //const isKeyword = $(this).attr('id') === 'keywordInput';
         filterTimer = setTimeout(() => {
-            if (customMode) {
-                filterProducts();
-            } else {
-
-                if (!isKeyword) {
-                    generateRandomProducts('random');
-                }
-            }
+            generateRandomProducts('random');
         }, 1500);
     });
 </script>
@@ -767,11 +751,14 @@ function clearAllProducts() {
             return;
         }
 
-        if ((current_amount - discountAmount) !== invoiceAmount) {
-            const diff = (current_amount - invoiceAmount);
+        const expectedAmount = current_amount - discountAmount;
+        const epsilon = 0.01;
+
+        if (Math.abs(expectedAmount - invoiceAmount) > epsilon) {
+            const diff = current_amount - invoiceAmount;
             const diffFixed = diff.toFixed(2);
 
-            $('#discount_amount').val(discountAmount).addClass('border border-danger');
+            $('#discount_amount').addClass('border border-danger');
             setTimeout(() => {
                 $('#discount_amount').removeClass('border border-danger');
             }, 2000);
@@ -781,7 +768,6 @@ function clearAllProducts() {
             } else {
                 toastr.error(`Please apply a discount of $${diffFixed} to match the invoice amount.`, 'Give Discount');
             }
-
             return;
         }
 
@@ -907,9 +893,9 @@ slider.noUiSlider.on('update', function (values, handle) {
     let customizeProductsTimeout; // ⏳ for debounce
 
     function customizeProducts(search_type = 'search') {
-        const keyword = $('#keywordInput').val().trim();
-        const priceFrom = $('#hidden_customize_price_from_input_id_modal').val();
-        const priceTo = $('#hidden_customize_price_to_input_id_modal').val();
+        //const keyword = $('#keywordInput').val().trim();
+        //const priceFrom = $('#hidden_customize_price_from_input_id_modal').val();
+        //const priceTo = $('#hidden_customize_price_to_input_id_modal').val();
         const invoice_amount = parseFloat($('#invoice_amount').val()) || 0;
         const current_amount = parseFloat($('#current_amount').val()) || 0;
 
@@ -936,56 +922,53 @@ slider.noUiSlider.on('update', function (values, handle) {
             url: "{{ route('filter.products') }}",
             type: 'GET',
             data: {
-                keyword: keyword,
-                price_from: priceFrom,
-                price_to: priceTo,
+                //keyword: keyword,
+                //price_from: priceFrom,
+                //price_to: priceTo,
                 search_type: search_type
             },
             success: function (response) {
-                //alert(1);
-                if (response && response.tableRows && response.tableRows.trim() !== '') {
-                    $('#customize-product-table-body').html(response.tableRows);
+    if (response && response.tableRows && response.tableRows.trim() !== '') {
+        $('#customize-product-table-body').html(response.tableRows);
 
-                    //==
-                    let customizeTable; // Declare globally within your script scope
+        // Wait for DOM update
+        setTimeout(function () {
+            let customizeTable;
 
-                    if ($.fn.DataTable.isDataTable('#customize-products-table')) {
-                        $('#customize-products-table').DataTable().clear().destroy();
-                        $('#customize-products-table').empty(); // optional cleanup
-                    }
+            if ($.fn.DataTable.isDataTable('#customize-products-table')) {
+                $('#customize-products-table').DataTable().clear().destroy();
+            }
 
-                    customizeTable = $('#customize-products-table').DataTable({
-                        responsive: true,
-                        searchHighlight: true,
-                        dom: 'lrtip', // removes built-in search bar
-                        language: {
-                            search: "",
-                            searchPlaceholder: "Search..."
-                        },
-                        columnDefs: [
-                            { orderable: false, targets: [4, 5] }
-                        ]
-                    });
+            customizeTable = $('#customize-products-table').DataTable({
+                responsive: true,
+                searchHighlight: true,
+                dom: 'lrtip', // removes built-in search bar
+                language: {
+                    search: "",
+                    searchPlaceholder: "Search..."
+                },
+                columnDefs: [
+                    { orderable: false, targets: [4, 5] }
+                ]
+            });
 
-                    // ✅ Custom search input functionality (must be after initialization)
-                    $(document).ready(function() {
-                        // ✅ Custom search input functionality
-                        $('#modalkeywordInput').on('keyup', function() {
-                            customizeTable.search(this.value).draw();
-                        });
-                    });
+            // ✅ Custom search input functionality
+            $('#modalkeywordInput').off('keyup').on('keyup', function () {
+                customizeTable.search(this.value).draw();
+            });
 
-                    //==
-
-                    if (typeof calculateTotalPrice === 'function') {
-                        calculateTotalPrice();
-                    }
-                } else {
-                    $('#customize-product-table-body').html(
-                        getErrorRowHTML('No matching products found. Please try a different keyword or adjust your price range.')
-                    );
-                }
-            },
+            // Calculate totals
+            if (typeof calculateTotalPrice === 'function') {
+                calculateTotalPrice();
+            }
+        }, 0); // ⏳ Use timeout to ensure DOM is ready
+    } else {
+        $('#customize-product-table-body').html(
+            getErrorRowHTML('No matching products found. Please try a different keyword or adjust your price range.')
+        );
+    }
+}
+,
             error: function (xhr, status, error) {
                 console.error('Ajax Error:', status, error);
                 toastr.error('Failed to filter products. Please try again.', 'Error');
@@ -1003,11 +986,22 @@ slider.noUiSlider.on('update', function (values, handle) {
     $('#keywordInput').on('input', function () {
         clearTimeout(customizeProductsTimeout);
         customizeProductsTimeout = setTimeout(function () {
-            customizeProducts();
+            generateRandomProducts();
         }, 500); // 500ms delay after user stops typing
     });
 </script>
 
+<script>
+    $('#addgames').on('hidden.bs.modal', function () {
+    if ($.fn.DataTable.isDataTable('#customize-products-table')) {
+        $('#customize-products-table').DataTable().clear().destroy();
+    }
+
+    // Optional: Clear HTML rows to avoid leftover data
+    $('#customize-product-table-body').empty();
+});
+
+</script>
 <script>
     function validateAmounts() {
         const currentAmountInput = document.getElementById("current_amount");

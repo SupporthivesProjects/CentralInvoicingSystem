@@ -226,7 +226,7 @@ class LaravelController extends Controller
             'unit_price' => $game->unit_price,
             'game_currency_amount' => $game->game_currency_amount,
             'game_currency' => $game->game_currency,
-            'bundle' => 'defined',
+            'bundle' => 'Random',
         ];
     }
 
@@ -272,6 +272,7 @@ class LaravelController extends Controller
 
     // Update session
     session(['selected_games' => $updatedGames]);
+    //dd($updatedGames);
 
     if (empty($updatedGames)) {
         return response()->json([
@@ -307,14 +308,17 @@ class LaravelController extends Controller
                 'p.game_platform',
                 'p.game_server_region',
                 'p.game_need_to_capture',
-                'c.costs'
+                'c.costs',
+                'c.id as bundle_id',
             )
             ->first();
 
+            //dd($product);
         if ($product) {
             $finalProducts->push((object)[
                 'id'             => $product->id,
                 'name'           => $product->name,
+                'bundle_id'      => $product->bundle_id,
                 'unit_price'     => floatval($sessionGame['unit_price']),
                 'slug'           => Str::slug($product->name . '-' . ($sessionGame['game_currency_amount'] ?? '')),
                 'source'         => 'Random',
@@ -330,6 +334,7 @@ class LaravelController extends Controller
     }
     $bestTotal = $finalProducts->sum('unit_price');
     session(['current_amount' => $bestTotal]);
+    //dd($finalProducts);
 
     $tableRows = view("invoice.{$modelType}.random_product_rows", [
         'products' => $finalProducts,
@@ -357,22 +362,30 @@ public function filterProducts(Request $request)
     DynamicDatabaseService::connect($site);
 
     $hasKeyword = $request->filled('keyword');
-    $hasPriceRange = $request->filled('price_from') && $request->filled('price_to');
+    //$hasPriceRange = $request->filled('price_from') && $request->filled('price_to');
 
-    if (!$hasKeyword && !$hasPriceRange) {
-        return response()->json([
-            'tableRows' => '<tr><td colspan="7" class="text-center text-muted">Please enter a keyword or price range to search.</td></tr>'
-        ]);
-    }
+    // if (!$hasKeyword && !$hasPriceRange) {
+    //     return response()->json([
+    //         'tableRows' => '<tr><td colspan="7" class="text-center text-muted">Please enter a keyword or price range to search.</td></tr>'
+    //     ]);
+    // }
 
-    $priceFrom = $request->price_from;
-    $priceTo = $request->price_to;
+    // $priceFrom = $request->price_from;
+    // $priceTo = $request->price_to;
 
     // ✅ Subquery to get max(bundle_first_amount) per product
+    // $costSubquery = DB::connection($this->connectionType)
+    //     ->table('game_sever_based_cost')
+    //     ->select('game_id', DB::raw('MAX(bundle_first_amount) as bundle_first_amount'))
+    //     ->groupBy('game_id');
+
     $costSubquery = DB::connection($this->connectionType)
-        ->table('game_sever_based_cost')
-        ->select('game_id', DB::raw('MAX(bundle_first_amount) as bundle_first_amount'))
-        ->groupBy('game_id');
+    ->table('game_sever_based_cost')
+    ->select(
+        'game_id',
+        DB::raw('MAX(COALESCE(bundle_first_amount, avg_amount)) as bundle_first_amount')
+    )
+    ->groupBy('game_id');
 
     $products = DB::connection($this->connectionType)
         ->table('products as p')
@@ -382,9 +395,6 @@ public function filterProducts(Request $request)
         ->where('p.published', 1)
         ->when($hasKeyword, function ($query) use ($request) {
             $query->where('p.name', 'like', '%' . strtolower($request->keyword) . '%');
-        })
-        ->when($hasPriceRange, function ($query) use ($priceFrom, $priceTo) {
-            $query->whereBetween(DB::raw('CAST(c.bundle_first_amount AS DECIMAL(10,2))'), [$priceFrom, $priceTo]);
         })
         ->select(
             'p.id',
@@ -482,6 +492,7 @@ public function addProducts(Request $request)
     $finalProducts = $this->getGameDetails($existingAssoc);
     $bestTotal = $finalProducts->sum('unit_price');
     session(['current_amount' => $bestTotal]);
+    //dd($finalProducts);
 
 
     $modelType = $site->businessModel->model_type;
@@ -702,7 +713,7 @@ protected function updateProductPrice($productDataArray)
             isset($data['unit_price'])
         ) {
             $targetAmount = $data['game_currency_amount'];
-            $bundle_id = floatval($data['bundle_id']);
+            $bundle_id = floatval($data['bundle_id']) ?? rand(100000, 999999);
             $unit_price = floatval($data['unit_price']);
 
             $debugData[$index]['processing_steps'][] = [
@@ -1085,7 +1096,11 @@ protected function updateProductPrice($productDataArray)
                 'id' => $game['id'],
                 'unit_price' => $game['unit_price'],
                 'game_currency_amount' => $game['game_currency_amount'],
-                'bundle' => $game['bundle'],
+                //'bundle' => $game['bundle'],
+                'bundle_id' => rand(1000, 9999),
+                'source' => 'Custom',
+                'can_edit_price' => 1,
+                'remaining_days' => 1,
                 'name' => $product->name ?? 'Unknown',
                 'slug' => $product->slug ?? null,
                 'game_currency' => $product->game_currency ?? null,

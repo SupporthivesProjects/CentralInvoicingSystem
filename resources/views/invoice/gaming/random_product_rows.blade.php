@@ -3,6 +3,7 @@
     @php
         $captureFields = json_decode($product->game_need_to_capture ?? '{}', true);
         $platforms = array_keys($captureFields);
+
     @endphp
 
 
@@ -38,14 +39,20 @@
         <td>{{ $product->game_currency_amount . ' ' . $product->game_currency }}
             <input form="generate-invoice-form" type="hidden" name="products[{{ $product->id }}][game_currency_amount]" value="{{ $product->game_currency_amount }}">
         </td>
+        @if($product->source == 'Random')
         <td>{{ site_currency() }}{{ number_format($product->unit_price, 2) }}
             <input form="generate-invoice-form" type="hidden" name="products[{{ $product->id }}][unit_price]" value="{{ $product->unit_price }}">
             <input form="generate-invoice-form" type="hidden" name="products[{{ $product->id }}][bundle_id]" value="{{ $product->bundle_id }}">
         </td>
+        @else
+        <td>{{ site_currency() }}{{ number_format($product->unit_price, 2) }}
+            <input form="generate-invoice-form" type="hidden" name="products[{{ $product->id }}][unit_price]" value="{{ $product->unit_price }}">
+        </td>
+        @endif
+
         {{-- <td>
             <input form="generate-invoice-form" type="number" class="form-control edit-price" name="products[{{ $product->id }}][unit_price]" value="{{ $product->unit_price }}">
         </td> --}}
-
         <td>
             @php
                 // Check if price was updated in the last 90 days
@@ -150,6 +157,10 @@
         <td colspan="8" class="text-center text-muted py-3">No results found.</td>
     </tr>
 @endforelse
+
+@php
+//dd($products);
+@endphp
 
 <script>
     $(document).ready(function() {
