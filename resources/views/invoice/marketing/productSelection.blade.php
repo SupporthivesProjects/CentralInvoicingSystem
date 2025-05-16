@@ -405,13 +405,15 @@
 <script>
     function adjustNoOfProducts(id, step) {
         const input = document.getElementById(id);
-        let val = input.value === 'Auto' || input.value === '' ? 1 : parseInt(input.value) || 1;
-        val = Math.max(1, Math.min(20, val + step));
+        let val = input.value === 'Auto' || input.value.trim() === '' ? 0 : parseInt(input.value) || 0;
 
-        if (val === 1) {
+        val += step;
+
+        if (val <= 0) {
             input.value = '';
             input.placeholder = 'Auto';
         } else {
+            val = Math.min(val, 20);
             input.value = val;
             input.placeholder = '';
         }
@@ -427,9 +429,12 @@
         }, 1500);
     }
 
-    document.getElementById('noOfProducts').addEventListener('change', triggerRandomizeProducts);
-    document.getElementById('category_id').addEventListener('change', triggerRandomizeProducts);
+    document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById('noOfProducts').addEventListener('change', triggerRandomizeProducts);
+        document.getElementById('category_id').addEventListener('change', triggerRandomizeProducts);
+    });
 </script>
+
 
 <script>
     const randomizePriceSlider = document.getElementById('randomize-price-slider');

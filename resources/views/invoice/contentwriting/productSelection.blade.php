@@ -202,9 +202,9 @@
                             <small class="text-muted fw-semibold mb-2">Product Category</small>
                             <select class="form-select w-100 h-100" name="category_id" id="category_id">
                                 <option value="">All Categories</option>
-                                @foreach(getCategoryList($site->technology) as $category)
+                                {{-- @foreach(getCategoryList($site->technology) as $category)
                                     <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                @endforeach
+                                @endforeach --}}
                             </select>
                         </div>
                     </div>
@@ -216,8 +216,8 @@
                     <div class="table-responsive border rounded shadow-sm">
                         <table class="table table-bordered table-hover align-middle mb-0">
                             <thead class="table-dark">
-                                <tr>
-                                    <th style="width: 5%;">PID</th>
+                                <tr> 
+                                    <th style="width: 5%;">Params</th>
                                     <th style="width: 20%;">Name</th>
                                     <th style="width: 15%;">Word Count</th>
                                     <th style="width: 12%;">Turnaround</th>
@@ -228,6 +228,7 @@
                                             Unit Price <i class="bi bi-caret-down-fill"></i>
                                         </span>
                                     </th>
+                                   
                                     <th style="width: 5%;">Remove</th>
                                 </tr>
                             </thead>
@@ -314,7 +315,7 @@
                     <table id="customize-products-table" class="table table-bordered table-hover align-middle mb-0 table-responsive" style="width:100% !important;">
                     <thead class="table-dark text-center">
                         <tr>
-                            <th style="width: 5%;">PID</th>
+                            <th style="width: 5%;">Params</th>
                             <th style="width: 20%;">Name</th>
                             <th style="width: 15%;">Word Count</th>
                             <th style="width: 12%;">Turnaround</th>
@@ -390,6 +391,76 @@
     </div>
 </div>
 
+<div class="modal fade" id="productParamsModel" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 rounded-4 shadow-sm overflow-hidden">
+
+            <div class="modal-header bg-primary border-0 text-white py-2 px-3">
+                <h5 class="modal-title fw-bold">Product Parameters for <span id="productTitle">...</span></h5>
+                <button type="button" class="btn-close btn-close-white p-1" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <form method="POST" action="#" id="productParamsForm" class="needs-validation" novalidate>
+                @csrf
+                <div class="modal-body bg-light p-3">
+                    <div class="row g-2">
+                        <div class="col-md-4">
+                            <input type="text" name="project_title" class="form-control form-control-sm py-1" placeholder="Project Title" required>
+                            <div class="invalid-feedback">Please enter the project title.</div>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="url" name="reference_link" class="form-control form-control-sm py-1" placeholder="Reference Link">
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" name="subject" class="form-control form-control-sm py-1" placeholder="Subject" required>
+                            <div class="invalid-feedback">Please enter the subject.</div>
+                        </div>
+                        <div class="col-md-4">
+                            <select name="preferred_voice" class="form-select form-select-sm py-1">
+                                <option value="">Preferred Voice (optional)</option>
+                                <option value="1st Person">1st Person</option>
+                                <option value="2nd Person">2nd Person</option>
+                                <option value="3rd Person">3rd Person</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <select name="preferred_writing_style" class="form-select form-select-sm py-1">
+                                <option value="">Preferred Writing Style (optional)</option>
+                                <option value="educational">Educational</option>
+                                <option value="formal">Formal</option>
+                                <option value="informal">Informal</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" name="brand_name" class="form-control form-control-sm py-1" placeholder="Brand Name (optional)">
+                        </div>
+                        <div class="col-md-6">
+                            <select name="audience" class="form-select form-select-sm py-1">
+                                <option value="">Select Audience (optional)</option>
+                                <option value="customers">Customers</option>
+                                <option value="businessman">Businessmen</option>
+                                <option value="others">Others</option>
+                            </select>
+
+                        </div>
+                        <div class="col-md-6">
+                            <input type="text" name="note" class="form-control form-control-sm py-1" placeholder="Note" required>
+                            <div class="invalid-feedback">Please enter the note.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer bg-light border-0 rounded-bottom-4 d-flex justify-content-end gap-2 py-2 px-3">
+                    <button type="button" class="btn btn-outline-secondary btn-sm px-4" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary btn-sm px-4">Save Changes</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+
 @endsection
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
@@ -407,13 +478,15 @@
 <script>
     function adjustNoOfProducts(id, step) {
         const input = document.getElementById(id);
-        let val = input.value === 'Auto' || input.value === '' ? 1 : parseInt(input.value) || 1;
-        val = Math.max(1, Math.min(20, val + step));
+        let val = input.value === 'Auto' || input.value.trim() === '' ? 0 : parseInt(input.value) || 0;
 
-        if (val === 1) {
+        val += step;
+
+        if (val <= 0) {
             input.value = '';
             input.placeholder = 'Auto';
         } else {
+            val = Math.min(val, 20);
             input.value = val;
             input.placeholder = '';
         }
@@ -429,9 +502,12 @@
         }, 1500);
     }
 
-    document.getElementById('noOfProducts').addEventListener('change', triggerRandomizeProducts);
-    document.getElementById('category_id').addEventListener('change', triggerRandomizeProducts);
+    document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById('noOfProducts').addEventListener('change', triggerRandomizeProducts);
+        document.getElementById('category_id').addEventListener('change', triggerRandomizeProducts);
+    });
 </script>
+
 
 <script>
     const randomizePriceSlider = document.getElementById('randomize-price-slider');
@@ -540,7 +616,6 @@
                 invoice_amount: parseFloat($('#invoice_amount').val()) || 0,
                 price_from: $('#hidden_randomize_price_from_input_id').val(),
                 price_to: $('#hidden_randomize_price_to_input_id').val(),
-                category_id: $('#category_id').val().trim(),
                 noOfProducts: $('#noOfProducts').val()
             },
             beforeSend: function () {
@@ -1077,7 +1152,7 @@ $(document).ready(function() {
 
         $('input[name="product_ids[]"]:checked').each(function () {
             const productId = $(this).val();
-            const punitPrice = parseFloat($(`input[data-product-id="${productId}"]`).val()) || 0;
+            const punitPrice = parseFloat($(`input.product-price[data-product-id="${productId}"]`).val()) || 0;
             currentAmount += punitPrice;
         });
 
@@ -1088,7 +1163,6 @@ $(document).ready(function() {
             discountAmount = currentAmount > invoiceAmount ? currentAmount - invoiceAmount : 0;
             $('#discount_amount').val(discountAmount.toFixed(2));
         }
-
         $('#current_amount').val(currentAmount.toFixed(2));
         $('#temp_current_amount_text').text(currentAmount.toFixed(2));
         $('#temp_discount_amount_text').text(discountAmount.toFixed(2));
@@ -1104,6 +1178,102 @@ $(document).ready(function() {
     }
 </script>
 
+<script>
+    $(document).ready(function() {
+    const wcStep = 25;
+    const imgStep = 1;
+    const wcMin = 0;
+    const imgMin = 1;
+
+    function updateProduct(productId) {
+        const wc = parseInt($(`.wc-input[data-product-id="${productId}"]`).val()) || wcMin;
+        const turnaround = $(`.turnaround-select[data-product-id="${productId}"]`).val() || 'ta_standard';
+        const imgCount = parseInt($(`.img-input[data-product-id="${productId}"]`).val()) || imgMin;
+        const quality = $(`.quality-select[data-product-id="${productId}"]`).val() || 'q_standard';
+
+        $.ajax({
+            url: "{{ route('update.product') }}",
+            method: 'POST',
+            data: {
+                product_id: productId,
+                wordcount: wc,
+                turnaround: turnaround,
+                imagecount: imgCount,
+                quality: quality,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(response) {
+                if(response.success) {
+                    toastr.success(response.message || 'Product updated successfully');
+                } else {
+                    toastr.error(response.message || 'Failed to update product');
+                }
+            },
+            error: function() {
+                toastr.error('An error occurred. Please try again.');
+            }
+        });
+    }
+
+  
+    $(document).on('click', '.wc-decrease', function() {
+        const productId = $(this).data('product-id');
+        const $input = $(`.wc-input[data-product-id="${productId}"]`);
+        let val = parseInt($input.val()) || wcMin;
+        const min = parseInt($input.attr('min')) || wcMin;
+
+        if (val - wcStep >= min) {
+            $input.val(val - wcStep);
+            updateProduct(productId);
+        } else {
+            toastr.warning(`Minimum word count is ${min}`, 'Limit reached');
+        }
+    });
+
+    $(document).on('click', '.wc-increase', function() {
+        const productId = $(this).data('product-id');
+        const $input = $(`.wc-input[data-product-id="${productId}"]`);
+        let val = parseInt($input.val()) || wcMin;
+
+        $input.val(val + wcStep);
+        updateProduct(productId);
+    });
+
+    $(document).on('click', '.img-decrease', function() {
+        const productId = $(this).data('product-id');
+        const $input = $(`.img-input[data-product-id="${productId}"]`);
+        let val = parseInt($input.val()) || imgMin;
+        const min = parseInt($input.attr('min')) || imgMin;
+
+        if (val - imgStep >= min) {
+            $input.val(val - imgStep);
+            updateProduct(productId);
+        } else {
+            toastr.warning(`Minimum image count is ${min}`, 'Limit reached');
+        }
+    });
+
+    $(document).on('click', '.img-increase', function() {
+        const productId = $(this).data('product-id');
+        const $input = $(`.img-input[data-product-id="${productId}"]`);
+        let val = parseInt($input.val()) || imgMin;
+
+        $input.val(val + imgStep);
+        updateProduct(productId);
+    });
+
+    $(document).on('change', '.turnaround-select', function() {
+        const productId = $(this).data('product-id');
+        updateProduct(productId);
+    });
+
+    $(document).on('change', '.quality-select', function() {
+        const productId = $(this).data('product-id');
+        updateProduct(productId);
+    });
+});
+
+</script>
 
 
 @endpush

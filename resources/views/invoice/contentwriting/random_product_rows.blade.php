@@ -1,45 +1,51 @@
 @forelse($products as $index => $product)
-<tr class="product-row">
-    <td class="text-center" >{{ $product->id }}</td>
-    <td>
-        {{ $product->name }} 
+<tr class="product-row align-middle">
+    <td class="text-center align-middle">
+    @if($product->param_status)
+
+        <span onclick="getProductParams()" class="d-inline-flex justify-content-center align-items-center text-success" data-bs-toggle="tooltip" title="Parameter set, click to view" style="cursor: pointer; width: 100%;">
+            <i class="bi bi-check-circle-fill fs-4"></i>
+        </span>
+    @else
+        <span onclick="getProductParams()" class="d-inline-flex justify-content-center align-items-center text-danger" data-bs-toggle="tooltip" title="Parameter missing, click to add" style="cursor: pointer; width: 100%;">
+            <i class="bi bi-exclamation-circle-fill fs-4"></i>
+        </span>
+    @endif
+    </td>
+    <td class="text-capitalize">
+        {{ $product->name }}
         @if($site->site_link && $product->slug)
             <a href="{{ $site->site_link }}product/{{ $product->slug }}" target="_blank">🔗</a>
         @endif
     </td>
     <td class="text-center">
         <div class="input-group input-group-sm justify-content-center">
-            <button class="btn btn-outline-primary wc-decrease" type="button" data-product-id="{{ $product->id }}" >-</button>
-            <input type="text" readonly  class="form-control text-center wc-input"  data-product-id="{{ $product->id }}" value="{{ $product->default_wc }}" step="25" min="{{ $product->default_wc }}">
+            <button class="btn btn-outline-primary wc-decrease" type="button" data-product-id="{{ $product->id }}">-</button>
+            <input type="text" readonly class="form-control text-center wc-input border-primary" data-product-id="{{ $product->id }}" value="{{ $product->default_wc }}" step="25" min="{{ $product->default_wc }}">
             <button class="btn btn-outline-primary wc-increase" type="button" data-product-id="{{ $product->id }}">+</button>
         </div>
     </td>
-
-
     <td class="text-center p-2">
-        <select name="turnaround" id="turnaround" class="form-select form-select-sm text-center mx-0 turnaround-select" data-product-id="{{ $product->id }}">
-            <option value="ta_standard">Standard</option>
-            <option value="ta_express">Express</option>
+        <select name="turnaround" class="form-select form-select-sm text-center mx-0 turnaround-select input-or-select " data-product-id="{{ $product->id }}">
+            <option value="ta_standard" @selected($product->turnaround == 'ta_standard')>Standard</option>
+            <option value="ta_express" @selected($product->turnaround == 'ta_express')>Express</option>
         </select>
     </td>
-
     <td class="text-center">
         <div class="input-group input-group-sm justify-content-center">
             <button class="btn btn-outline-primary img-decrease" type="button" data-product-id="{{ $product->id }}">-</button>
-            <input type="text" readonly class="form-control text-center img-input" value="1" step="1" min="1" data-product-id="{{ $product->id }}">
+            <input type="text" readonly class="form-control text-center img-input border-primary" value="1" step="1" min="1" data-product-id="{{ $product->id }}">
             <button class="btn btn-outline-primary img-increase" type="button" data-product-id="{{ $product->id }}">+</button>
         </div>
     </td>
-
-
     <td class="text-center p-2">
-        <select name="quality" id="quality" class="form-select form-select-sm text-center mx-0 quality-select" data-product-id="{{ $product->id }}">
-            <option value="q_standard">Standard </option>
-            <option value="q_premium">Premium </option>
-            <option value="q_expert">Expert</option>
-        </select>
-    </td>
+    <select name="quality" class="form-select form-select-sm text-center mx-0 quality-select input-or-select" data-product-id="{{ $product->id }}">
+        <option value="q_standard" @selected($product->quality == 'q_standard')>Standard</option>
+        <option value="q_premium" @selected($product->quality == 'q_premium')>Premium</option>
+        <option value="q_expert" @selected($product->quality == 'q_expert')>Expert</option>
+    </select>
 
+    </td>
     <td>
         <div class="input-group d-flex">
             <span class="input-group-text">{{ site_currency() }}</span>
@@ -58,35 +64,36 @@
                 aria-label="Amount (to the nearest dollar)"
             >
             <span class="input-group-text d-flex align-items-center">
-                <i 
-                    class="{{ $product->can_edit_price == 0 ? 'fas fa-lock text-muted' : 'fas fa-edit' }}" 
+                <i class="{{ $product->can_edit_price == 0 ? 'fas fa-lock text-muted' : 'fas fa-edit' }}" 
                     style="font-size: 12px;" 
                     data-bs-toggle="tooltip"  
                     data-bs-placement="top"
-                    title="{{
-                        $product->can_edit_price == 0 
-                            ? 'Price update allowed after ' . $product->remaining_days . ' days.' 
-                            : 'Editable'
-                    }}"
-                ></i>
+                    title="{{ $product->can_edit_price == 0 ? 'Price update allowed after ' . $product->remaining_days . ' days.' : 'Editable' }}"></i>
             </span>
         </div>
     </td>
    
     <td class="text-center">
-        <button class="remove-product btn btn-danger btn-sm" data-product-name="{{ $product->name }}"  data-product-id="{{ $product->id }}">
-        <i class="fa fa-trash"></i>
+        <button class="remove-product btn btn-danger btn-sm me-2" data-product-name="{{ $product->name }}" data-product-id="{{ $product->id }}">
+            <i class="fa fa-trash"></i>
         </button>
     </td>
-
 </tr>
 @empty
 <tr>
-    <td colspan="7" class="text-center text-muted py-3 border-top">
+    <td colspan="9" class="text-center text-muted py-3 border-top">
         No results found. Try randomizing or use a different keyword.
     </td>
 </tr>
 @endforelse
+
+<script>
+    function getProductParams() {
+        var myModal = new bootstrap.Modal(document.getElementById('productParamsModel'));
+        myModal.show();
+    }
+
+</script>
 <script>
     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
     tooltipTriggerList.map(function (tooltipTriggerEl) {

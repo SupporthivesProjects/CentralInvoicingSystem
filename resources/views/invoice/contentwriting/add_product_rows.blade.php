@@ -1,8 +1,12 @@
 @forelse($products as $index => $product)
 <tr id="customize-product-row-{{ $product->id }}">
-    <td class="text-center">{{ $product->id }}</td> 
+    <td class="text-center align-middle">
+    <span class="d-inline-flex justify-content-center align-items-center text-danger" data-bs-toggle="tooltip" title="You can set parameters after adding the product to the cart." >
+        <i class="bi bi-exclamation-circle-fill fs-4"></i>
+    </span>
+    </td>
 
-    <td>
+    <td class="text-capitalize">
         {{ $product->name }} 
         @if($site->site_link && $product->slug)
             <a href="{{ $site->site_link }}product/{{ $product->slug }}" target="_blank">🔗</a>
@@ -12,33 +16,33 @@
     <td class="text-center">
         <div class="input-group input-group-sm justify-content-center">
             <button class="btn btn-outline-primary wc-decrease" type="button" data-product-id="{{ $product->id }}" >-</button>
-            <input type="text" readonly  class="form-control text-center wc-input"  data-product-id="{{ $product->id }}" value="{{ $product->default_wc }}" step="25" min="{{ $product->default_wc }}">
+            <input type="text" readonly  class="form-control text-center wc-input border-primary"  data-product-id="{{ $product->id }}" value="{{ $product->default_wc }}" step="25" min="{{ $product->default_wc }}">
             <button class="btn btn-outline-primary wc-increase" type="button" data-product-id="{{ $product->id }}">+</button>
         </div>
     </td>
 
 
     <td class="text-center p-2">
-        <select name="turnaround" id="turnaround" class="form-select form-select-sm text-center mx-0 turnaround-select" data-product-id="{{ $product->id }}">
-            <option value="ta_standard">Standard</option>
-            <option value="ta_express">Express</option>
+        <select name="turnaround" id="turnaround" class="form-select form-select-sm text-center mx-0 turnaround-select input-or-select" data-product-id="{{ $product->id }}">
+            <option value="ta_standard" @selected($product->turnaround == 'ta_standard')>Standard</option>
+            <option value="ta_express" @selected($product->turnaround == 'ta_express')>Express</option>
         </select>
     </td>
 
     <td class="text-center">
         <div class="input-group input-group-sm justify-content-center">
             <button class="btn btn-outline-primary img-decrease" type="button" data-product-id="{{ $product->id }}">-</button>
-            <input type="text" readonly class="form-control text-center img-input" value="1" step="1" min="1" data-product-id="{{ $product->id }}">
+            <input type="text" readonly class="form-control text-center img-input border-primary" value="1" step="1" min="1" data-product-id="{{ $product->id }}">
             <button class="btn btn-outline-primary img-increase" type="button" data-product-id="{{ $product->id }}">+</button>
         </div>
     </td>
 
 
     <td class="text-center p-2">
-        <select name="quality" id="quality" class="form-select form-select-sm text-center mx-0 quality-select" data-product-id="{{ $product->id }}">
-            <option value="q_standard">Standard </option>
-            <option value="q_premium">Premium </option>
-            <option value="q_expert">Expert</option>
+        <select name="quality" id="quality" class="form-select form-select-sm text-center mx-0 quality-select input-or-select" data-product-id="{{ $product->id }}">
+            <option value="q_standard" @selected($product->quality == 'q_standard')>Standard</option>
+            <option value="q_premium" @selected($product->quality == 'q_premium')>Premium</option>
+            <option value="q_expert" @selected($product->quality == 'q_expert')>Expert</option>
         </select>
     </td>
 
