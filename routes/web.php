@@ -10,6 +10,10 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\BusinessModels\TranslationController;
+use App\Http\Controllers\BusinessModels\Translation\LaravelController;
+use App\Http\Controllers\BusinessModels\Translation\WordPressController;
+use App\Http\Controllers\BusinessModels\Translation\CorePHPController;
 
 
 Route::middleware('guest')->group(function () {
@@ -78,6 +82,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/generate-new-invoice-number', [InvoiceController::class, 'generateInvoiceNumber'])->name('generate.invoice.number');
     Route::get('/invoice/chart', [HomeController::class, 'showInvoiceChart'])->name('invoice.chart');
     Route::get('/report/invoices', [ReportController::class, 'invoiceReport'])->name('invoice.report');
+
+    Route::post('update/product/pages', [LaravelController::class, 'updateProductPages'])->name('update.product.pages');
 
 });
 

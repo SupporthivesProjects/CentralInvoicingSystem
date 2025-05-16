@@ -373,7 +373,7 @@
 
 <script>
    function startVoiceSearch() {
-    const inputField = document.getElementById('keywordInput');
+    const inputField = document.getElementById('modalkeywordInput');
     inputField.placeholder = "Please speak product name or category";
 
     if (!('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
@@ -393,7 +393,8 @@
     recognition.onresult = function(event) {
         const transcript = event.results[0][0].transcript;
         inputField.style.color = "blue";
-        document.getElementById('keywordInput').value = transcript;
+        document.getElementById('modalkeywordInput').value = transcript;
+        $('#modalkeywordInput').val(transcript).trigger('keyup');
     };
 
     recognition.onerror = function(event) {

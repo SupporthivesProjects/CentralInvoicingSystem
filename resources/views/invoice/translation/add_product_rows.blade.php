@@ -3,7 +3,7 @@
     <td class="text-center" >{{ $product->id }}</td>
     <td>{{ $product->category_name }}</td>
     <td>
-        {{ $product->name }}
+        {{ $product->name }} 
         @if($site->site_link && $product->slug)
             <a href="{{ $site->site_link }}product/{{ $product->slug }}" target="_blank">🔗</a>
         @endif
@@ -21,14 +21,14 @@
     </td>
     <td class="text-center align-middle">
         <div class="form-check d-flex justify-content-center align-items-center m-0">
-            <input
-                class="form-check-input border narayan-checkbox border-1 border-primary"
-                type="checkbox"
-                name="add_product_ids[]"
-                data-unit_price="{{ $product->unit_price }}"
+            <input 
+                class="form-check-input border narayan-checkbox border-1 border-primary" 
+                type="checkbox" 
+                name="add_product_ids[]" 
+                data-unit_price="{{ $product->unit_price }}" 
                 value="{{ $product->id }}"
             >
-        </div>
+        </div>    
     </td>
 </tr>
 @empty
@@ -47,7 +47,7 @@
 </script>
 
 <script>
-
+  
 
     $(document).ready(function () {
         let originalAmount = parseFloat(@json(session('current_amount', 0)));
@@ -84,7 +84,7 @@
     $(document).ready(function () {
     $('#add-custom-products').off('click').on('click', function () {
         let selectedProducts = [];
-
+       
         $('input[name="add_product_ids[]"]:checked').each(function () {
             let productId = $(this).val();
             let unitPrice = parseFloat($('.add-product-price[data-product-id="' + productId + '"]').val()) || 0;
@@ -104,7 +104,7 @@
             $('#current_amount').removeClass('text-danger text-success');
             $('#discount_amount').removeClass('text-danger text-success');
             $('#invoice_amount').removeClass('text-danger text-success');
-
+           
             $.ajax({
                 url: "{{ route('add.products') }}",
                 type: 'POST',
@@ -124,9 +124,9 @@
                     if (current_amount > invoiceAmount) {
                         discountAmount = current_amount - invoiceAmount;
                     }
-
+                   
                     $('#addmoreproducts').modal('hide');
-                    $('#discount_amount').prop('readonly', false).prop('type', 'number')
+                    $('#discount_amount').prop('readonly', false).prop('type', 'number') 
                     $('#randomize-product-table-body').html(response.tableRows);
                     calculateTotalPrice();
                 },
