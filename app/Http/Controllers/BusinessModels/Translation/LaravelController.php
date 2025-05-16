@@ -35,9 +35,14 @@ class LaravelController extends Controller
     }
 
     public function randomProducts(Request $request)
-{
-    $site_id = $request->get('site_id');
-    $invoiceAmount = floatval($request->get('invoice_amount'));
+    {
+        $site_id = $request->get('site_id');
+        $invoiceAmount = floatval($request->get('invoice_amount'));
+        //$invoiceAmount = floatval(5);
+
+        // Add minimum pages for each type
+        $MIN_CERTIFIED_PAGES = 1;
+        $MIN_STANDARD_PAGES = 5; // Ensure at least some standard pages
 
     if (!$invoiceAmount || $invoiceAmount <= 0) {
         return response()->json([
@@ -54,7 +59,7 @@ class LaravelController extends Controller
     $translationProducts = DB::connection($this->connectionType)->table($this->productTable)
         ->select('id', 'category_id', 'name', 'unit_price', 'slug')
         ->where('published', 1)
-        ->whereIn('name', ['Certified Translation', 'Standard Translation'])
+        ->whereIn('name', ['Certified Translation', 'Standard Professional Translation'])
         ->get();
 
     if ($translationProducts->count() < 1) {
@@ -67,93 +72,94 @@ class LaravelController extends Controller
 
     // Find our translation products
     $certifiedTranslation = $translationProducts->where('name', 'Certified Translation')->first();
-    $standardTranslation = $translationProducts->where('name', 'Standard Translation')->first();
+    $standardTranslation = $translationProducts->where('name', 'Standard Professional Translation')->first();
 
     // Define base prices (in case products are not found)
     $certifiedPrice = $certifiedTranslation ? floatval($certifiedTranslation->unit_price) : 31.67;
     $standardPrice = $standardTranslation ? floatval($standardTranslation->unit_price) : 0.10;
 
-    // Calculate possible combinations
+    // Calculate possible combinations that MEET OR EXCEED invoice amount
     $bestMatch = null;
-    $bestTotal = 0;
+    $bestTotal = PHP_FLOAT_MAX; // We want the lowest total that still exceeds invoice amount
     $bestDistance = PHP_FLOAT_MAX;
 
-    // Option 1: Only Certified Translation
-    if ($certifiedTranslation) {
-        $certPages = floor($invoiceAmount / $certifiedPrice);
-        if ($certPages > 0) {
-            $total = $certPages * $certifiedPrice;
-            $distance = abs($invoiceAmount - $total);
-
-            if ($distance < $bestDistance) {
-                $bestDistance = $distance;
-                $bestTotal = $total;
-                $bestMatch = [
-                    [
-                        'product' => $certifiedTranslation,
-                        'pages' => $certPages,
-                        'total' => $total
-                    ]
-                ];
-            }
-        }
-    }
-
-    // Option 2: Only Standard Translation
-    if ($standardTranslation) {
-        $stdPages = floor($invoiceAmount / $standardPrice);
-        if ($stdPages > 0) {
-            $total = $stdPages * $standardPrice;
-            $distance = abs($invoiceAmount - $total);
-
-            if ($distance < $bestDistance) {
-                $bestDistance = $distance;
-                $bestTotal = $total;
-                $bestMatch = [
-                    [
-                        'product' => $standardTranslation,
-                        'pages' => $stdPages,
-                        'total' => $total
-                    ]
-                ];
-            }
-        }
-    }
-
-    // Option 3: Try combinations of Certified + Standard to get closer to the target amount
+    // ALWAYS try to include both types of translations
+    // Start with the combination approach first (preferred)
     if ($certifiedTranslation && $standardTranslation) {
-        // Try different numbers of certified pages and fill the rest with standard pages
-        $maxCertPages = floor($invoiceAmount / $certifiedPrice);
+        // Try different numbers of certified pages
+        $maxCertPages = ceil($invoiceAmount / $certifiedPrice) + 1; // +1 to ensure we explore options that exceed
 
-        for ($certPages = 0; $certPages <= $maxCertPages; $certPages++) {
-            $remainingAmount = $invoiceAmount - ($certPages * $certifiedPrice);
-            $stdPages = floor($remainingAmount / $standardPrice);
+        for ($certPages = 1; $certPages <= $maxCertPages; $certPages++) {
+            // Calculate how much is left after certified pages
+            $certTotal = $certPages * $certifiedPrice;
+            $remainingAmount = $invoiceAmount - $certTotal;
+
+            // If we need more to reach invoice amount, add standard pages
+            $stdPages = 0;
+            if ($remainingAmount > 0) {
+                $stdPages = ceil($remainingAmount / $standardPrice);
+            } else {
+                // We already exceed with just certified pages, try at least 1 standard page
+                $stdPages = 1;
+            }
 
             $total = ($certPages * $certifiedPrice) + ($stdPages * $standardPrice);
-            $distance = abs($invoiceAmount - $total);
 
-            if ($distance < $bestDistance) {
-                $bestDistance = $distance;
-                $bestTotal = $total;
-                $bestMatch = [];
+            // We prefer totals that meet or exceed invoice amount by smallest margin
+            if ($total >= $invoiceAmount) {
+                $distance = $total - $invoiceAmount;
 
-                if ($certPages > 0) {
-                    $bestMatch[] = [
-                        'product' => $certifiedTranslation,
-                        'pages' => $certPages,
-                        'total' => $certPages * $certifiedPrice
-                    ];
-                }
-
-                if ($stdPages > 0) {
-                    $bestMatch[] = [
-                        'product' => $standardTranslation,
-                        'pages' => $stdPages,
-                        'total' => $stdPages * $standardPrice
+                if ($distance < $bestDistance) {
+                    $bestDistance = $distance;
+                    $bestTotal = $total;
+                    $bestMatch = [
+                        [
+                            'product' => $certifiedTranslation,
+                            'pages' => $certPages,
+                            'total' => $certPages * $certifiedPrice
+                        ],
+                        [
+                            'product' => $standardTranslation,
+                            'pages' => $stdPages,
+                            'total' => $stdPages * $standardPrice
+                        ]
                     ];
                 }
             }
         }
+    }
+
+    // If we couldn't find a good combination match, try only Certified Translation
+    if (!$bestMatch && $certifiedTranslation) {
+        $certPages = ceil($invoiceAmount / $certifiedPrice);
+        $total = $certPages * $certifiedPrice;
+
+        // Only use if it meets or exceeds invoice amount
+        if ($total >= $invoiceAmount) {
+            $bestTotal = $total;
+            $bestMatch = [
+                [
+                    'product' => $certifiedTranslation,
+                    'pages' => $certPages,
+                    'total' => $total
+                ]
+            ];
+        }
+    }
+
+    // If we still don't have a match, try only Standard Translation
+    if (!$bestMatch && $standardTranslation) {
+        $stdPages = ceil($invoiceAmount / $standardPrice);
+        $total = $stdPages * $standardPrice;
+
+        $bestTotal = $total;
+        $bestMatch = [
+            [
+                'product' => $standardTranslation,
+                'pages' => $stdPages,
+                'total' => $total
+            ]
+        ];
     }
 
     if (!$bestMatch) {
@@ -169,6 +175,11 @@ class LaravelController extends Controller
     foreach ($bestMatch as $item) {
         $product = $item['product'];
         $pages = $item['pages'];
+
+        // Skip products with 0 pages
+        if ($pages <= 0) {
+            continue;
+        }
 
         // Get category name
         $product->category_name = DB::connection($this->connectionType)
@@ -214,6 +225,7 @@ class LaravelController extends Controller
     session(['current_amount' => $bestTotal]);
 
     // Generate view
+    // Use the translation_product_rows view for rendering
     $modelType = $site->businessModel->model_type;
     $tableRows = view("invoice.{$modelType}.random_product_rows", [
         'products' => $selectedProducts,
@@ -223,8 +235,7 @@ class LaravelController extends Controller
 
     return response()->json([
         'tableRows' => $tableRows,
-        'total' => $bestTotal,
-        'bestMatch' => $bestMatch
+        'total' => $bestTotal
     ]);
 }
 
@@ -233,6 +244,13 @@ public function updateProductPages(Request $request)
     $productId = $request->get('product_id');
     $pages = intval($request->get('pages'));
     $siteId = $request->get('site_id');
+
+    if ($pages <= 0) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Pages must be greater than zero'
+        ], 400);
+    }
 
     // Update the product pages in session
     $readyProducts = session('ready_products', []);
