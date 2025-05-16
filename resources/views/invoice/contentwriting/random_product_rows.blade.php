@@ -1,14 +1,45 @@
 @forelse($products as $index => $product)
 <tr class="product-row">
     <td class="text-center" >{{ $product->id }}</td>
-    <td>{{ $product->category_name }}</td>
     <td>
         {{ $product->name }} 
         @if($site->site_link && $product->slug)
             <a href="{{ $site->site_link }}product/{{ $product->slug }}" target="_blank">🔗</a>
         @endif
     </td>
-    <td  class="text-center">{{ site_currency() }}{{ number_format($product->unit_price, 2) }}</td>
+    <td class="text-center">
+        <div class="input-group input-group-sm justify-content-center">
+            <button class="btn btn-outline-primary wc-decrease" type="button" data-product-id="{{ $product->id }}" >-</button>
+            <input type="text" readonly  class="form-control text-center wc-input"  data-product-id="{{ $product->id }}" value="{{ $product->default_wc }}" step="25" min="{{ $product->default_wc }}">
+            <button class="btn btn-outline-primary wc-increase" type="button" data-product-id="{{ $product->id }}">+</button>
+        </div>
+    </td>
+
+
+    <td class="text-center p-2">
+        <select name="turnaround" id="turnaround" class="form-select form-select-sm text-center mx-0 turnaround-select" data-product-id="{{ $product->id }}">
+            <option value="ta_standard">Standard</option>
+            <option value="ta_express">Express</option>
+        </select>
+    </td>
+
+    <td class="text-center">
+        <div class="input-group input-group-sm justify-content-center">
+            <button class="btn btn-outline-primary img-decrease" type="button" data-product-id="{{ $product->id }}">-</button>
+            <input type="text" readonly class="form-control text-center img-input" value="1" step="1" min="1" data-product-id="{{ $product->id }}">
+            <button class="btn btn-outline-primary img-increase" type="button" data-product-id="{{ $product->id }}">+</button>
+        </div>
+    </td>
+
+
+    <td class="text-center p-2">
+        <select name="quality" id="quality" class="form-select form-select-sm text-center mx-0 quality-select" data-product-id="{{ $product->id }}">
+            <option value="q_standard">Standard </option>
+            <option value="q_premium">Premium </option>
+            <option value="q_expert">Expert</option>
+        </select>
+    </td>
+
     <td>
         <div class="input-group d-flex">
             <span class="input-group-text">{{ site_currency() }}</span>

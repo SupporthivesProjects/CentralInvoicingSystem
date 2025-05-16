@@ -198,10 +198,10 @@ function getProductsSearchRowHTML(colspan = 6) {
 }
 
 
-function getErrorRowHTML(message) {
+function getErrorRowHTML(message,colspan=7) {
     return `
         <tr id="error-row">
-            <td colspan="7" class="text-center text-muted">
+            <td colspan="${colspan}" class="text-center text-muted">
                 <div class="alert alert-danger" role="alert">
                     ${message}
                 </div>

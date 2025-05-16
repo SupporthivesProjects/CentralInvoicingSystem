@@ -38,53 +38,48 @@ class LaravelController extends Controller
     {
         $site_id = $request->get('site_id');
         $invoiceAmount = floatval($request->get('invoice_amount'));
-    
         $priceFrom = $request->get('price_from');
         $priceTo = $request->get('price_to');
-        $categoryId = $request->get('category_id');
+        $keyword = $request->get('keyword');
         $noOfProducts = intval($request->get('noOfProducts'));
-    
+
         $site = Website::findOrFail($site_id);
         $productstable = getProductTable($site->technology);
         DynamicDatabaseService::connect($site);
-    
+
         $query = DB::connection($this->connectionType)->table($this->productTable)
-            ->select('id', 'category_id', 'name', 'default_price', 'slug')
+            ->select('id', 'name', 'slug', 'default_wc', 'default_price', 'extra_word', 'ta_standard', 'ta_express', 'q_standard', 'q_premium', 'q_expert', 'img_price')
             ->where('published', 1);
-    
-        if ($priceFrom && $priceTo) {
-            $query->whereBetween('default_price', [$priceFrom, $priceTo]);
-        }
-    
-        if ($categoryId) {
-            $query->where('category_id', $categoryId);
-        }
-    
-        if ($categoryId || $noOfProducts) {
+
+
+        if ($keyword || $noOfProducts) {
             $minTotal = $invoiceAmount * 0.6;
             $allProducts = $query->orderByDesc('default_price')->get();
-        } else {
+            $query->where(function($q) use ($keyword) {
+                $q->where('name', 'LIKE', '%' . $keyword . '%')
+                  ->orWhere('slug', 'LIKE', '%' . $keyword . '%');
+            });            
+        }else{
             $minTotal = $invoiceAmount;
             $allProducts = $query->orderBy('default_price')->get();
         }
-    
+
         $maxTotal = $invoiceAmount * 1.10;
-    
         $bestMatch = null;
         $bestTotal = 0;
         $bestDistance = null;
-    
+
         for ($i = 0; $i < 20; $i++) {
             $shuffled = $allProducts->shuffle();
             $selected = [];
             $currentTotal = 0;
-    
+
             foreach ($shuffled as $product) {
                 $price = floatval($product->default_price);
-    
+
                 if ($noOfProducts) {
                     if (count($selected) >= $noOfProducts) break;
-    
+
                     if ($currentTotal + $price <= $invoiceAmount) {
                         $selected[] = $product;
                         $currentTotal += $price;
@@ -93,7 +88,7 @@ class LaravelController extends Controller
                     if (($currentTotal + $price) <= $maxTotal) {
                         $selected[] = $product;
                         $currentTotal += $price;
-    
+
                         if ($currentTotal >= $minTotal && $currentTotal <= $maxTotal) {
                             if ($currentTotal > $bestTotal) {
                                 $bestMatch = $selected;
@@ -103,22 +98,22 @@ class LaravelController extends Controller
                     }
                 }
             }
-    
+
             if ($noOfProducts && count($selected) === $noOfProducts) {
                 $distance = abs($invoiceAmount - $currentTotal);
-    
+
                 if ($bestMatch === null || $distance < $bestDistance) {
                     $bestMatch = $selected;
                     $bestTotal = $currentTotal;
                     $bestDistance = $distance;
-    
+
                     if ($currentTotal >= ($invoiceAmount * 0.9)) {
                         break;
                     }
                 }
             }
         }
-    
+
         if (!$bestMatch) {
             return response()->json([
                 'tableRows' => '',
@@ -126,56 +121,64 @@ class LaravelController extends Controller
                 'message' => 'No matching combination found, try again please'
             ]);
         }
-    
+
+        $wordCount  = (int) $request->input('wordcount', 0);
+        $imageCount = (int) $request->input('imagecount', 1);
+        $quantity   = (int) $request->input('quantity', 1);
+        $turnaround = $request->input('turnaround', 'ta_standard');
+        $quality    = $request->input('quality', 'standard');
+
         $bestMatch = collect($bestMatch);
-        $bestMatch->each(function ($product) {
-            $product->category_name = DB::connection($this->connectionType)
-                ->table('categories')
-                ->where('id', $product->category_id)
-                ->value('name') ?? 'unknown';
-        });
-    
+
         $bestMatch->each(function ($product) use ($site_id) {
             $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
                 ->where('product_id', $product->id)
                 ->orderByDesc('last_price_changed')
                 ->first();
-    
+
             if ($lastUpdate) {
                 $lastPriceChanged = Carbon::parse($lastUpdate->last_price_changed);
                 $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
                 $remainingDays = now()->diffInDays($nextPriceChangeDate, false);
                 $product->remaining_days = round(max($remainingDays, 0));
                 $product->can_edit_price = now()->greaterThanOrEqualTo($nextPriceChangeDate) ? 1 : 0;
+                $product->unit_price = 300;
             } else {
                 $product->can_edit_price = 1;
                 $product->remaining_days = 0;
+                $product->unit_price = 300;
             }
         });
-    
-        $productList = $bestMatch->map(function ($product) {
+
+        $productList = $bestMatch->map(function ($product) use ($wordCount, $imageCount, $quantity, $turnaround, $quality) {
             return [
-                'id' => $product->id,
-                'unit_price' => $product->default_price, // Note: using default_price
+                'id'         => $product->id,
+                'unit_price' => 300,
+                'wordcount'  => $wordCount,
+                'imagecount' => $imageCount,
+                'quantity'   => $quantity,
+                'turnaround' => $turnaround,
+                'quality'    => $quality
             ];
         })->toArray();
-    
+
         session()->forget('ready_products');
         session()->put('ready_products', $productList);
         session(['current_amount' => $bestTotal]);
-    
+
         $modelType = $site->businessModel->model_type;
         $tableRows = view("invoice.{$modelType}.random_product_rows", [
             'products' => $bestMatch,
             'site' => $site,
             'total' => $bestTotal
         ])->render();
-    
+
         return response()->json([
             'tableRows' => $tableRows,
             'total' => $bestTotal
         ]);
     }
+
     
 
     public function addProducts(Request $request)
@@ -330,77 +333,6 @@ class LaravelController extends Controller
         ]);
     }
 
-    public function updateProduct(Request $request)
-    {
-        $productId = $request->get('product_id');
-        $quantity = $request->get('quantity');
-        $site_id = $request->get('site_id');
-
-        $site = Website::findOrFail($site_id);
-        DynamicDatabaseService::connect($site);
-
-        $readyProducts = session()->get('ready_products', []);
-
-        foreach ($readyProducts as &$product) {
-            if ($product['id'] == $productId) {
-                $product['quantity'] = $quantity;
-                break;
-            }
-        }
-        session()->put('ready_products', $readyProducts);
-
-        $productIds = collect($readyProducts)->pluck('id')->toArray();
-
-        $products = DB::connection($this->connectionType)->table($this->productTable)
-            ->select('id', 'category_id', 'name', 'unit_price', 'slug')
-            ->whereIn('id', $productIds)
-            ->get();
-
-        $products = $products->map(function ($product) use ($readyProducts, $site_id) {
-            $sessionProduct = collect($readyProducts)->firstWhere('id', $product->id);
-            $product->unit_price = $sessionProduct['unit_price'] ?? $product->unit_price;
-            $product->quantity = $sessionProduct['quantity'] ?? 1;
-            $product->category_name = DB::connection($this->connectionType)->table('categories')->where('id', $product->category_id)->value('name') ?? 'unknown';
-
-            $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
-                ->where('product_id', $product->id)
-                ->orderByDesc('last_price_changed')
-                ->first();
-
-            if ($lastUpdate) {
-                $lastPriceChanged = Carbon::parse($lastUpdate->last_price_changed);
-                $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
-                $remainingDays = now()->diffInDays($nextPriceChangeDate, false);
-                $product->remaining_days = round(max($remainingDays, 0));
-                $product->can_edit_price = now()->greaterThanOrEqualTo($nextPriceChangeDate) ? 1 : 0;
-            } else {
-                $product->can_edit_price = 1;
-                $product->remaining_days = 0;
-            }
-
-            return $product;
-        });
-
-        $modelType = $site->businessModel->model_type;
-
-        $total = $products->sum(function ($product) {
-            return $product->unit_price * ($product->quantity ?? 1);
-        });
-
-        session(['current_amount' => $total]);
-
-        $tableRows = view("invoice.{$modelType}.random_product_rows", [
-            'products' => $products,
-            'site' => $site,
-            'total' => $total
-        ])->render();
-
-        return response()->json([
-            'tableRows' => $tableRows,
-            'total' => $total
-        ]);
-    }
-
 
     public function clearProducts(Request $request)
     {
@@ -416,46 +348,45 @@ class LaravelController extends Controller
 
     public function filterProducts(Request $request)
     {
-        $site_id = session('customer.site_id');
-        $hasPriceRange = $request->filled('price_from') && $request->filled('price_to');
+        $site_id     = session('customer.site_id');
         $search_type = $request->input('search_type');
-        $keyword = $request->input('keyword');
+        $keyword     = $request->input('keyword');
+        $hasPriceRange = $request->filled('price_from') && $request->filled('price_to');
+
+        $wordCount   = (int) $request->input('wordcount', 0);
+        $imageCount  = (int) $request->input('imagecount', 1);
+        $quantity    = (int) $request->input('quantity', 1);
+        $turnaround  = $request->input('turnaround', 'ta_standard');
+        $quality     = $request->input('quality', 'standard');
+    
         $site = Website::findOrFail($site_id);
         DynamicDatabaseService::connect($site);
-
+    
         if (!$hasPriceRange) {
             return response()->json([
-                'tableRows' => '<tr><td colspan="6" class="text-center text-muted">Please enter a price range to search.</td></tr>'
+                'tableRows' => '<tr><td colspan="9" class="text-center text-muted">Please enter a price range to search.</td></tr>'
             ]);
         }
-
+    
         $query = DB::connection($this->connectionType)
             ->table($this->productTable)
-            ->select('products.id',
-                     'products.name',
-                     'products.slug',
-                     'products.default_wc',
-                     'products.ta_standard',
-                     'products.q_standard',
-                     'products.img_price'
-                     )
+            ->select('id', 'name', 'slug', 'default_wc', 'default_price', 'extra_word', 'ta_standard', 'ta_express', 'q_standard', 'q_premium', 'q_expert', 'img_price')
             ->where('products.published', 1);
-
+    
         if (!empty($keyword)) {
             $normalizedSearch = strtolower(str_replace(['-', '_', ' '], '', $keyword));
-    
             $query->where(function ($q) use ($normalizedSearch) {
                 $q->whereRaw("LOWER(REPLACE(REPLACE(REPLACE(products.name, '-', ''), '_', ''), ' ', '')) LIKE ?", ["%{$normalizedSearch}%"]);
             });
         }
-
+    
         $readyProducts = session('ready_products', []);
         $readyProductIds = collect($readyProducts)->pluck('id')->toArray();
     
         if (count($readyProductIds) > 0) {
-            $query->whereNotIn('products.id', $readyProductIds);
+            $query->whereNotIn('id', $readyProductIds);
         }
-        
+    
         $totalCount = $query->count();
         $page = $request->input('page', 1);
         $perPage = 10;
@@ -466,15 +397,51 @@ class LaravelController extends Controller
     
         if ($products->isEmpty()) {
             return response()->json([
-                'tableRows' => '<tr><td colspan="7" class="text-center text-muted"> No results found. Try randomizing or use a different keyword.</td></tr>'
+                'tableRows' => '<tr><td colspan="9" class="text-center text-muted"> No results found. Try randomizing or use a different keyword.</td></tr>'
             ]);
         }
     
         $products = collect($products);
-        $products->each(function ($product) {
-            $product->category_name = DB::connection($this->connectionType)->table('categories')->where('id', $product->category_id)->value('name') ?? 'unknown';
+        $products->each(function ($product) use ($wordCount, $imageCount, $quantity, $turnaround, $quality) {
+            $wc = $wordCount ?: $product->default_wc;
+            $img = $imageCount ?: 1;
+            $qty = $quantity ?: 1;
+    
+            $default_wc = $product->default_wc;
+            $default_price = $product->default_price;
+            $extra_word = $product->extra_word;
+            $ta_standard = $product->ta_standard;
+            $ta_express = $product->ta_express;
+            $img_price = $product->img_price;
+    
+            $q_standard = $product->q_standard;
+            $q_premium = $product->q_premium;
+            $q_expert = $product->q_expert;
+    
+            $wc_price = 0;
+            if ($wc > $default_wc) {
+                $wc_diff = $wc - $default_wc;
+                $wc_price = ($wc_diff / 25) * $extra_word;
+            }
+    
+            $img_total = ($img > 1) ? ($img - 1) * $img_price : 0;
+    
+            $ta_total = ($turnaround == 'ta_express') ? 25 : 0;
+    
+            $qlty_factor = 0;
+            if ($quality == 'q_premium') {
+                $qlty_factor = $product->q_premium;
+            } elseif ($quality == 'q_expert') {
+                $qlty_factor =$product->q_expert;
+            }else{
+                $qlty_factor =$product->q_standard;
+            }
+    
+            $total = $default_price + $wc_price + $img_total + $ta_total;
+            $final_total = ($total + ($total * $qlty_factor)) * $qty;
+    
+            $product->unit_price = $final_total;
         });
-        
     
         $products->each(function ($product) use ($site_id) {
             $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
@@ -496,61 +463,35 @@ class LaravelController extends Controller
     
         $modelType = $site->businessModel->model_type;
         $random_amount = session('current_amount', 0);
-        
-        $tableRows = view( "invoice.{$modelType}.add_product_rows", ['products' => $products, 'site' => $site,'random_amount' => $random_amount])->render();
-        $paginationHtml = view("invoice.{$modelType}.pagination", ['totalPages' => $totalPages,'paginationPages' => $paginationPages, 'currentPage' => $page ])->render();
-       
-        return response()->json([ 'tableRows' => $tableRows,'paginationHtml' => $paginationHtml, 'random_amount' => $random_amount]);
-  
+    
+        $tableRows = view("invoice.{$modelType}.add_product_rows", ['products' => $products, 'site' => $site, 'random_amount' => $random_amount])->render();
+        $paginationHtml = view("invoice.{$modelType}.pagination", ['totalPages' => $totalPages, 'paginationPages' => $paginationPages, 'currentPage' => $page])->render();
+    
+        return response()->json([
+            'tableRows' => $tableRows,
+            'paginationHtml' => $paginationHtml,
+            'random_amount' => $random_amount
+        ]);
     }
-    public function calculateUnitPrice($productId, $params = [])
+
+    public function updateProduct(Request $request)
     {
-        $product = DB::connection($this->connectionType)
-            ->table($this->productTable)
-            ->where('id', $productId)
-            ->first();
+        $site_id     = session('customer.site_id');
+        $product_id   = (int) $request->input('product_id');
+        $wordCount   = (int) $request->input('wordcount', 0);
+        $imageCount  = (int) $request->input('imagecount', 1);
+        $quantity    = (int) $request->input('quantity', 1);
+        $turnaround  = $request->input('turnaround', 'ta_standard');
+        $quality     = $request->input('quality', 'standard');
+        $unit_price  = $request->input('unit_price');
+        
+    
+        $site = Website::findOrFail($site_id);
+        DynamicDatabaseService::connect($site);
 
-        if (!$product) {
-            return null;
-        }
-
-        $wordCount = $params['word_count'] ?? ($product->default_wc ?? 50);
-        $turnaround = $params['turnaround'] ?? 'standard';
-        $quality = $params['quality'] ?? 'standard';
-        $images = $params['images'] ?? 1;
-
-        $basePrice = $product->default_price ?? 0;
-        $extraWordCount = max($wordCount - ($product->default_wc ?? 50), 0);
-        $extraWordPrice = ($product->extra_word ?? 0) * $extraWordCount;
-
-        $turnaroundPrice = $turnaround === 'express' ? ($product->ta_express ?? 0) : ($product->ta_standard ?? 0);
-
-        switch ($quality) {
-            case 'premium':
-                $qualityMultiplier = 1 + ($product->q_premium ?? 0);
-                break;
-            case 'expert':
-                $qualityMultiplier = 1 + ($product->q_expert ?? 0);
-                break;
-            default:
-                $qualityMultiplier = 1 + ($product->q_standard ?? 0);
-                break;
-        }
-
-        $imagePrice = ($product->img_price ?? 0) * $images;
-
-        $unitPrice = $basePrice + $extraWordPrice + $imagePrice + $turnaroundPrice;
-        $unitPrice = $unitPrice * $qualityMultiplier;
-
-        return [
-            'unit_price' => round($unitPrice, 2),
-            'word_count' => $wordCount,
-            'turnaround' => $turnaround,
-            'quality' => $quality,
-            'images' => $images,
-        ];
+        
     }
-
+    
 
     private function smartPagination($currentPage, $totalPages)
     {

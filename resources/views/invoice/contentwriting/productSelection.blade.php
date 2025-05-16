@@ -217,16 +217,18 @@
                         <table class="table table-bordered table-hover align-middle mb-0">
                             <thead class="table-dark">
                                 <tr>
-                                    <th class="text-center" style="width: 10%;">PID</th>
-                                    <th class="text-center" style="width: 10%;">Category</th>
-                                    <th class="text-center" style="width: 35%;">Product Name</th>
-                                    <th class="text-center unit-price-header" data-column="3" data-order="desc">
+                                    <th style="width: 5%;">PID</th>
+                                    <th style="width: 20%;">Name</th>
+                                    <th style="width: 15%;">Word Count</th>
+                                    <th style="width: 12%;">Turnaround</th>
+                                    <th style="width: 13%;">Images</th>
+                                    <th style="width: 13%;">Quality</th>
+                                    <th class="text-center unit-price-header" style="width: 27%;" data-column="6" data-order="desc">
                                         <span class="d-inline-flex align-items-center justify-content-center gap-1">
                                             Unit Price <i class="bi bi-caret-down-fill"></i>
                                         </span>
                                     </th>
-                                    <th class="text-center" style="width: 20%;">Editable Price</th>
-                                    <th class="text-center" style="width: 10%;">Remove</th>
+                                    <th style="width: 5%;">Remove</th>
                                 </tr>
                             </thead>
                             <tbody id="randomize-product-table-body">
@@ -313,12 +315,12 @@
                     <thead class="table-dark text-center">
                         <tr>
                             <th style="width: 5%;">PID</th>
-                            <th style="width: 25%;">Name</th>
+                            <th style="width: 20%;">Name</th>
                             <th style="width: 15%;">Word Count</th>
-                            <th style="width: 15%;">Turnaround</th>
-                            <th style="width: 10%;">Images</th>
-                            <th style="width: 15%;">Quality</th>
-                            <th class="text-center unit-price-header" style="width: 10%;" data-column="6" data-order="desc">
+                            <th style="width: 12%;">Turnaround</th>
+                            <th style="width: 13%;">Images</th>
+                            <th style="width: 13%;">Quality</th>
+                            <th class="text-center unit-price-header" style="width: 27%;" data-column="6" data-order="desc">
                                 <span class="d-inline-flex align-items-center justify-content-center gap-1">
                                     Unit Price <i class="bi bi-caret-down-fill"></i>
                                 </span>
@@ -542,7 +544,7 @@
                 noOfProducts: $('#noOfProducts').val()
             },
             beforeSend: function () {
-                $('#randomize-product-table-body').html(getLoaderRowHTML());
+                $('#randomize-product-table-body').html(getLoaderRowHTML(8));
                 $('#current_amount').val('Calculating...');
                 $('#discount_amount').prop('type', 'text').val('Calculating...').prop('readonly', true);
                 $('#current_amount').removeClass('text-danger text-success');
@@ -553,7 +555,7 @@
                 Swal.close();
                 $('#discount_amount').val(0.00);
                 if (response.total === 0) {
-                    $('#randomize-product-table-body').html(getErrorRowHTML('No results found. Try randomizing or use a different keyword.'));
+                    $('#randomize-product-table-body').html(getErrorRowHTML('No results found. Try randomizing or use a different keyword.',9));
                     return;
                 } else {
                     const invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
@@ -568,7 +570,7 @@
             },
             error: function (xhr, textStatus) {
                 if (textStatus !== 'abort') {
-                    $('#randomize-product-table-body').html(getErrorRowHTML('Oops! Something went wrong. Please try again.'));
+                    $('#randomize-product-table-body').html(getErrorRowHTML('Oops! Something went wrong. Please try again.',9));
                     toastr.error('Failed to fetch random products.', 'Oops!');
                     return;
                 }
@@ -611,6 +613,7 @@
         const priceFrom = $('#hidden_customize_price_from_input_id').val();
         const priceTo = $('#hidden_customize_price_to_input_id').val();
         const customizeKeywordInput = $('#customizeKeywordInput').val();
+
         let invoice_amount = parseFloat($('#invoice_amount').val()) || 0;
         let current_amount = parseFloat($('#current_amount').val()) || 0;
 
@@ -622,7 +625,7 @@
 
         if (!priceFrom && !priceTo) {
             $('#customize-product-table-body').html(
-                getErrorRowHTML('No products found for your keyword. Try a different keyword or adjust the range filter.')
+                getErrorRowHTML('No products found for your keyword. Try a different keyword or adjust the range filter.',9)
             );
             $('#error-row').fadeIn(300).delay(3000).fadeOut(500);
             return;
@@ -633,7 +636,7 @@
         }
 
 
-        $('#customize-product-table-body').html(getProductsSearchRowHTML());
+        $('#customize-product-table-body').html(getProductsSearchRowHTML(9));
 
         customizeRequest = $.ajax({
             url: "{{ route('filter.products') }}",
@@ -648,7 +651,7 @@
             success: function (response) {
                 if (!response.tableRows) {
                     $('#customize-product-table-body').html(
-                        getErrorRowHTML('No products found for your keyword. Try a different keyword or adjust the range filter.')
+                        getErrorRowHTML('No products found for your keyword. Try a different keyword or adjust the range filter.',9)
                     );
                     return;
                 }
@@ -660,7 +663,7 @@
             error: function (xhr, textStatus) {
                 if (textStatus !== 'abort') {
                     console.error('AJAX Error:', textStatus);
-                    $('#customize-product-table-body').html(getErrorRowHTML('Something went wrong while filtering.'));
+                    $('#customize-product-table-body').html(getErrorRowHTML('Something went wrong while filtering.',9));
                     toastr.error('Something went wrong while filtering.', 'Oops!');
                 }
             },
@@ -692,7 +695,7 @@ function clearRandomizedFilter(button) {
             $('#temp_current_amount_text').text('0.00');
             $('#temp_discount_amount_text').text('0.00');
             $('#temp_invoice_amount_text').text($('#invoice_amount').val());
-            $('#randomize-product-table-body').html(getErrorRowHTML('Randomize filter cleared. You can now randomize products again or add custom products.'));
+            $('#randomize-product-table-body').html(getErrorRowHTML('Randomize filter cleared. You can now randomize products again or add custom products.',9));
             toastr.success('Randomized products filter has been reset');
             calculateTotalPrice();
             

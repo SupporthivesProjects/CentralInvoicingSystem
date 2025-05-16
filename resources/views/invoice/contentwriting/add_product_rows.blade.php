@@ -1,6 +1,6 @@
 @forelse($products as $index => $product)
 <tr id="customize-product-row-{{ $product->id }}">
-    <td class="text-center">{{ $product->id }}</td> <!-- PID -->
+    <td class="text-center">{{ $product->id }}</td> 
 
     <td>
         {{ $product->name }} 
@@ -9,26 +9,46 @@
         @endif
     </td>
 
-    <td class="text-center">{{ $product->default_wc }}</td> <!-- Word Count -->
+    <td class="text-center">
+        <div class="input-group input-group-sm justify-content-center">
+            <button class="btn btn-outline-primary wc-decrease" type="button" data-product-id="{{ $product->id }}" >-</button>
+            <input type="text" readonly  class="form-control text-center wc-input"  data-product-id="{{ $product->id }}" value="{{ $product->default_wc }}" step="25" min="{{ $product->default_wc }}">
+            <button class="btn btn-outline-primary wc-increase" type="button" data-product-id="{{ $product->id }}">+</button>
+        </div>
+    </td>
 
-    <td class="text-center">{{ $product->ta_standard }}</td> <!-- Turnaround -->
 
-    <td class="text-center">{{ number_format($product->img_price, 2, '.', '') }}</td> <!-- Images (as price) -->
+    <td class="text-center p-2">
+        <select name="turnaround" id="turnaround" class="form-select form-select-sm text-center mx-0 turnaround-select" data-product-id="{{ $product->id }}">
+            <option value="ta_standard">Standard</option>
+            <option value="ta_express">Express</option>
+        </select>
+    </td>
 
-    <td class="text-center">{{ $product->q_standard }}</td> <!-- Quality -->
+    <td class="text-center">
+        <div class="input-group input-group-sm justify-content-center">
+            <button class="btn btn-outline-primary img-decrease" type="button" data-product-id="{{ $product->id }}">-</button>
+            <input type="text" readonly class="form-control text-center img-input" value="1" step="1" min="1" data-product-id="{{ $product->id }}">
+            <button class="btn btn-outline-primary img-increase" type="button" data-product-id="{{ $product->id }}">+</button>
+        </div>
+    </td>
+
+
+    <td class="text-center p-2">
+        <select name="quality" id="quality" class="form-select form-select-sm text-center mx-0 quality-select" data-product-id="{{ $product->id }}">
+            <option value="q_standard">Standard </option>
+            <option value="q_premium">Premium </option>
+            <option value="q_expert">Expert</option>
+        </select>
+    </td>
+
 
     <td>
         <div class="input-group">
             <span class="input-group-text">{{ site_currency() }}</span>
-            <input type="text" class="form-control add-product-price text-center"  
-                   value="{{ number_format($product->img_price, 2, '.', '') }}"  
-                   data-product-id="{{ $product->id }}" 
-                   {{ $product->can_edit_price == 0 ? 'readonly' : '' }}>
+            <input type="text" class="form-control add-product-price text-center"  value="{{ number_format($product->unit_price, 2, '.', '') }}"  data-product-id="{{ $product->id }}" {{ $product->can_edit_price == 0 ? 'readonly' : '' }}>
             <span class="input-group-text d-flex align-items-center">
-                <i  class="{{ $product->can_edit_price == 0 ? 'fas fa-lock text-muted' : 'fas fa-edit' }}" 
-                    style="font-size: 12px;" 
-                    data-bs-toggle="tooltip"  
-                    data-bs-placement="top"
+                <i  class="{{ $product->can_edit_price == 0 ? 'fas fa-lock text-muted' : 'fas fa-edit' }}"  style="font-size: 12px;" data-bs-toggle="tooltip" data-bs-placement="top"
                     title="{{ $product->can_edit_price == 0 ? 'Price update allowed after ' . $product->remaining_days . ' days.' : 'Editable' }}" >
                 </i>
             </span>
@@ -37,13 +57,7 @@
 
     <td class="text-center align-middle">
         <div class="form-check d-flex justify-content-center align-items-center m-0">
-            <input 
-                class="form-check-input border narayan-checkbox border-1 border-primary" 
-                type="checkbox" 
-                name="add_product_ids[]" 
-                data-unit_price="{{ number_format($product->img_price, 2, '.', '') }}" 
-                value="{{ $product->id }}"
-            >
+            <input class="form-check-input border narayan-checkbox border-1 border-primary" type="checkbox"  name="add_product_ids[]" data-unit_price="{{ number_format($product->unit_price, 2, '.', '') }}" value="{{ $product->id }}">
         </div>    
     </td>
 </tr>
@@ -62,6 +76,7 @@
     });
 
 </script>
+
 
 <script>
   
@@ -161,4 +176,99 @@
     });
 });
 
+</script>
+
+<script>
+    $(document).ready(function() {
+        const wcStep = 25;
+        const imgStep = 1;
+        const wcMin = 0;
+        const imgMin = 1;
+
+        function updateProduct(productId) {
+            const wc = parseInt($(.wc-input[data-product-id="${productId}"]).val()) || wcMin;
+            const turnaround = $(.turnaround-select[data-product-id="${productId}"]).val() || 'ta_standard';
+            const imgCount = parseInt($(.img-input[data-product-id="${productId}"]).val()) || imgMin;
+            const quality = $(.quality-select[data-product-id="${productId}"]).val() || 'q_standard';
+
+            $.ajax({
+                url: "{{ route('update.product') }}",
+                method: 'POST',
+                data: {
+                    product_id: productId,
+                    wordcount: wc,
+                    turnaround: turnaround,
+                    imagecount: imgCount,
+                    quality: quality,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    if(response.success) {
+                        toastr.success(response.message || 'Product updated successfully');
+                    } else {
+                        toastr.error(response.message || 'Failed to update product');
+                    }
+                },
+                error: function() {
+                    toastr.error('An error occurred. Please try again.');
+                }
+            });
+        }
+
+        $('.wc-decrease').click(function() {
+            const productId = $(this).data('product-id');
+            const $input = $(.wc-input[data-product-id="${productId}"]);
+            let val = parseInt($input.val()) || wcMin;
+            const min = parseInt($input.attr('min')) || wcMin;
+
+            if (val - wcStep >= min) {
+                $input.val(val - wcStep);
+                updateProduct(productId);
+            } else {
+                toastr.warning(Minimum word count is ${min}, 'Limit reached');
+            }
+        });
+
+        $('.wc-increase').click(function() {
+            const productId = $(this).data('product-id');
+            const $input = $(.wc-input[data-product-id="${productId}"]);
+            let val = parseInt($input.val()) || wcMin;
+
+            $input.val(val + wcStep);
+            updateProduct(productId);
+        });
+
+        $('.img-decrease').click(function() {
+            const productId = $(this).data('product-id');
+            const $input = $(.img-input[data-product-id="${productId}"]);
+            let val = parseInt($input.val()) || imgMin;
+            const min = parseInt($input.attr('min')) || imgMin;
+
+            if (val - imgStep >= min) {
+                $input.val(val - imgStep);
+                updateProduct(productId);
+            } else {
+                toastr.warning(Minimum image count is ${min}, 'Limit reached');
+            }
+        });
+
+        $('.img-increase').click(function() {
+            const productId = $(this).data('product-id');
+            const $input = $(.img-input[data-product-id="${productId}"]);
+            let val = parseInt($input.val()) || imgMin;
+
+            $input.val(val + imgStep);
+            updateProduct(productId);
+        });
+
+        $('.turnaround-select').change(function() {
+            const productId = $(this).data('product-id');
+            updateProduct(productId);
+        });
+
+        $('.quality-select').change(function() {
+            const productId = $(this).data('product-id');
+            updateProduct(productId);
+        });
+    });
 </script>
