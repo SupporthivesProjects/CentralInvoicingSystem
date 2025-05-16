@@ -20,7 +20,7 @@ use Illuminate\View\ViewNotFoundException;
 use Carbon\Carbon;
 
 
-class CorePHPController extends Controller
+class WordPressController extends Controller
 {
     private $productTable;
     private $connectionType;

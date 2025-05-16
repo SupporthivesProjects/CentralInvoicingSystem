@@ -11,6 +11,7 @@ use App\Models\BusinessModel;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Schema;
 
 if (!function_exists('getWebsiteCountByModel')) {
     function getWebsiteCountByModel($modelId)
@@ -157,9 +158,14 @@ if (!function_exists('getProductTable')) {
     }
 }
 
+
 if (!function_exists('getCategoryList')) {
     function getCategoryList($technology)
     {
+        if (!Schema::connection('dynamic')->hasTable('categories')) {
+            return collect();
+        }
+
         $categories = [
             'wordpress' => DB::connection('dynamic')->table('categories')->select('id', 'name')->get(),
             'laravel'   => DB::connection('dynamic')->table('categories')->select('id', 'name')->get(),

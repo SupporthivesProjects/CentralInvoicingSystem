@@ -484,7 +484,7 @@
         customizeSliderTimer = setTimeout(() => {
             const [min, max] = values.map(v => Math.round(parseFloat(v.replace(currency, ''))));
             updateHiddenInputs(min, max, 'customize');
-            customizeProducts('search');
+            customizeProducts('reset');
         }, 1500);
     });
 
@@ -565,7 +565,9 @@
             },
             error: function (xhr, textStatus) {
                 if (textStatus !== 'abort') {
+                    $('#randomize-product-table-body').html(getErrorRowHTML('Oops! Something went wrong. Please try again.'));
                     toastr.error('Failed to fetch random products.', 'Oops!');
+                    return;
                 }
             },
             complete: function () {
@@ -999,9 +1001,6 @@ $(document).ready(function() {
 </script>
 
 <script>
-    $.fn.dataTable.ext.type.search.string = function (data) {
-        return !data ? '' : data.toString().toLowerCase().replace(/-/g, '');
-    };
 
     function startVoiceSearch(inputId, micIconId) {
         const inputField = document.getElementById(inputId);
@@ -1054,7 +1053,7 @@ $(document).ready(function() {
     let discountManuallyChanged = false;
 
     $(document).on('input', '.product-price, input[name="product_ids[]"]', function () {
-        discountManuallyChanged = true;
+        discountManuallyChanged = false;
         calculateTotalPrice();
     });
 
