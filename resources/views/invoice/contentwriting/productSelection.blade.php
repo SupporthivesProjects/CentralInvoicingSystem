@@ -402,61 +402,67 @@
         <div class="modal-content border-0 rounded-4 shadow-sm overflow-hidden">
 
             <div class="modal-header bg-primary border-0 text-white py-2 px-3">
-                <h5 class="modal-title fw-bold">Product Parameters for <span id="productTitle">...</span></h5>
+                <h5 class="modal-title fw-bold p-1">Product Parameters for <span id="productTitle">...</span></h5>
                 <button type="button" class="btn-close btn-close-white p-1" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+            <div id="productParamsLoader" class="text-center py-4" style="display: none;">
+                <div class="spinner-border text-primary" role="status"></div>
+                <p class="mt-2 mb-0 text-muted">Fetching old Params if any...</p>
+            </div>
 
-            <form method="POST" action="#" id="productParamsForm" class="needs-validation" novalidate>
+            <form method="POST" action="#" id="productParamsForm" class="needs-validation" novalidate style="display: none;">
                 @csrf
                 <div class="modal-body bg-light p-3">
-                    <div class="row g-2">
-                        <div class="col-md-4">
-                            <input type="text" name="project_title" class="form-control form-control-sm py-1" placeholder="Project Title" required>
-                            <div class="invalid-feedback">Please enter the project title.</div>
-                        </div>
-                        <div class="col-md-4">
-                            <input type="url" name="reference_link" class="form-control form-control-sm py-1" placeholder="Reference Link">
-                        </div>
-                        <div class="col-md-4">
-                            <input type="text" name="subject" class="form-control form-control-sm py-1" placeholder="Subject" required>
-                            <div class="invalid-feedback">Please enter the subject.</div>
-                        </div>
-                        <div class="col-md-4">
-                            <select name="preferred_voice" class="form-select form-select-sm py-1">
-                                <option value="">Preferred Voice (optional)</option>
-                                <option value="1st Person">1st Person</option>
-                                <option value="2nd Person">2nd Person</option>
-                                <option value="3rd Person">3rd Person</option>
-                            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <select name="preferred_writing_style" class="form-select form-select-sm py-1">
-                                <option value="">Preferred Writing Style (optional)</option>
-                                <option value="educational">Educational</option>
-                                <option value="formal">Formal</option>
-                                <option value="informal">Informal</option>
-                            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <input type="text" name="brand_name" class="form-control form-control-sm py-1" placeholder="Brand Name (optional)">
-                        </div>
-                        <div class="col-md-6">
-                            <select name="audience" class="form-select form-select-sm py-1">
-                                <option value="">Select Audience (optional)</option>
-                                <option value="customers">Customers</option>
-                                <option value="businessman">Businessmen</option>
-                                <option value="others">Others</option>
-                            </select>
 
+                   
+                        <div class="row g-2">
+                            <div class="col-md-4">
+                                <input type="text" name="project_title" class="form-control form-control-sm py-1" placeholder="Project Title" required>
+                                <div class="invalid-feedback">Please enter the project title.</div>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="url" name="reference_link" class="form-control form-control-sm py-1" placeholder="Reference Link">
+                            </div>
+                            <div class="col-md-4">
+                                <input type="text" name="subject" class="form-control form-control-sm py-1" placeholder="Subject" required>
+                                <div class="invalid-feedback">Please enter the subject.</div>
+                            </div>
+                            <div class="col-md-4">
+                                <select name="preferred_voice" class="form-select form-select-sm py-1">
+                                    <option value="">Preferred Voice (optional)</option>
+                                    <option value="1st Person">1st Person</option>
+                                    <option value="2nd Person">2nd Person</option>
+                                    <option value="3rd Person">3rd Person</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <select name="preferred_writing_style" class="form-select form-select-sm py-1">
+                                    <option value="">Preferred Writing Style (optional)</option>
+                                    <option value="educational">Educational</option>
+                                    <option value="formal">Formal</option>
+                                    <option value="informal">Informal</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="text" name="brand_name" class="form-control form-control-sm py-1" placeholder="Brand Name (optional)">
+                            </div>
+                            <div class="col-md-6">
+                                <select name="audience" class="form-select form-select-sm py-1">
+                                    <option value="">Select Audience (optional)</option>
+                                    <option value="customers">Customers</option>
+                                    <option value="businessman">Businessmen</option>
+                                    <option value="others">Others</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" name="note" class="form-control form-control-sm py-1" placeholder="Note" required>
+                                <div class="invalid-feedback">Please enter the note.</div>
+                            </div>
                         </div>
-                        <div class="col-md-6">
-                            <input type="text" name="note" class="form-control form-control-sm py-1" placeholder="Note" required>
-                            <div class="invalid-feedback">Please enter the note.</div>
-                        </div>
-                    </div>
+                   
                 </div>
 
-                <div class="modal-footer bg-light border-0 rounded-bottom-4 d-flex justify-content-end gap-2 py-2 px-3">
+                <div class="modal-footer bg-light border-0 rounded-bottom-4 d-flex justify-content-end gap-2 py-2 px-3" id="productParamsFooter" style="display: none;">
                     <button type="button" class="btn btn-outline-secondary btn-sm px-4" data-bs-dismiss="modal">Cancel</button>
                     <button type="button" class="btn btn-primary btn-sm px-4">Save Changes</button>
                 </div>
@@ -481,6 +487,7 @@
         $('#discount_amount').prop('type', 'text').val('loading...').prop('readonly', true);
     });
 </script>
+
 <script>
     function adjustNoOfProducts(id, step) {
         const input = document.getElementById(id);
@@ -1223,7 +1230,7 @@ $(document).ready(function() {
             const $row = $(rowSelector);
             let requestType = $row.data('request-type');
             $row.find('input, select, button').prop('disabled', true);
-            toastr.info('We will come back in a few seconds...', 'Please Wait...');
+            toastr.info('We will come back in a seconds...', 'Please Wait...');
             $.ajax({
                 url: "{{ route('update.product') }}",
                 method: 'POST',

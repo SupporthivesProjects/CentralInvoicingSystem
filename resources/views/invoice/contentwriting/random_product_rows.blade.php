@@ -3,11 +3,11 @@
     <td class="text-center align-middle">
     @if($product->param_status)
 
-        <span onclick="getProductParams()" class="d-inline-flex justify-content-center align-items-center text-success" data-bs-toggle="tooltip" title="Parameter set, click to view" style="cursor: pointer; width: 100%;">
+        <span onclick="getProductParams({{ $product->id }}, this)" data-product-name="{{ $product->name }}" class="d-inline-flex justify-content-center align-items-center text-success" data-bs-toggle="tooltip" title="Parameter set, click to view" style="cursor: pointer; width: 100%;">
             <i class="bi bi-check-circle-fill fs-4"></i>
         </span>
     @else
-        <span onclick="getProductParams()" class="d-inline-flex justify-content-center align-items-center text-danger" data-bs-toggle="tooltip" title="Parameter missing, click to add" style="cursor: pointer; width: 100%;">
+        <span onclick="getProductParams({{ $product->id }}, this)" data-product-name="{{ $product->name }}" class="d-inline-flex justify-content-center align-items-center text-danger" data-bs-toggle="tooltip" title="Parameter missing, click to add" style="cursor: pointer; width: 100%;">
             <i class="bi bi-exclamation-circle-fill fs-4"></i>
         </span>
     @endif
@@ -87,18 +87,59 @@
 </tr>
 @endforelse
 
-<script>
-    function getProductParams() {
-        var myModal = new bootstrap.Modal(document.getElementById('productParamsModel'));
-        myModal.show();
-    }
 
-</script>
+
 <script>
     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
     tooltipTriggerList.map(function (tooltipTriggerEl) {
         return new bootstrap.Tooltip(tooltipTriggerEl);
     });
+</script>
+<script>
+    function getProductParams(productId, element) {
+        const productName = $(element).data('product-name') || `Product #${productId}`;
+        $('#productTitle').text(productName);
+
+        const myModal = new bootstrap.Modal(document.getElementById('productParamsModel'));
+        myModal.show();
+
+        $('#productParamsForm')[0].reset();
+        $('#productParamsLoader').show();
+        $('#productParamsForm').css('display', 'none');
+        $('#productParamsFooter').css('display', 'noe');
+
+        $.ajax({
+            url: "{{ route('get.product') }}",
+            type: 'GET',
+            data: { product_id: productId },
+            success: function(response) {
+                if (response.success) {
+                    let product = response.product;
+
+                    $('input[name="project_title"]').val(product.project_title || '');
+                    $('input[name="reference_link"]').val(product.reference_link || '');
+                    $('input[name="subject"]').val(product.subject || '');
+                    $('select[name="preferred_voice"]').val(product.preferred_voice || '');
+                    $('select[name="preferred_writing_style"]').val(product.preferred_writing_style || '');
+                    $('input[name="brand_name"]').val(product.brand_name || '');
+                    $('select[name="audience"]').val(product.audience || '');
+                    $('input[name="note"]').val(product.note || '');
+                } else {
+                    toastr.error('Product not found or unavailable.');
+                }
+            },
+            error: function() {
+                toastr.error('An error occurred while fetching product details. Please try again later.');
+            },
+            complete: function() {
+                $('#productParamsLoader').hide();
+                $('#productParamsForm').css('display', 'block');
+                $('#productParamsFooter').css('display', 'flex');
+        }
+        });
+    }
+
+
 </script>
 
 <script>    

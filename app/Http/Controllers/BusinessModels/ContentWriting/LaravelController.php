@@ -594,6 +594,34 @@ class LaravelController extends Controller
         ]);
     }
     
+
+    public function getProduct(Request $request)
+    {
+        $productId = $request->input('product_id');
+
+        $readyProducts = session('ready_products', []);
+
+        $productData = null;
+        foreach ($readyProducts as $product) {
+            if ($product['id'] == $productId) {
+                $productData = $product;
+                break;
+            }
+        }
+
+        if (!$productData) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Product not found in session'
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'product' => $productData,
+        ]);
+    }
+
     
 
     private function smartPagination($currentPage, $totalPages)
