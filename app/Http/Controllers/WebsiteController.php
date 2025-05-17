@@ -508,6 +508,30 @@ class WebsiteController extends Controller
             ]);
         }
     }
+
+    public function updateWebsiteAjax(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|exists:websites,id',
+            'bank_name' => 'nullable|string|max:255',
+            'bank_code' => 'nullable|string|max:50',
+        ]);
+    
+        $website = Website::findOrFail($request->id);
+    
+        if ($request->has('bank_name')) {
+            $website->bank_name = $request->bank_name;
+        }
+    
+        if ($request->has('bank_code')) {
+            $website->bank_code = $request->bank_code;
+        }
+    
+        $website->save();
+    
+        return response()->json(['success' => true, 'message' => 'Website updated successfully.']);
+    }
+    
     
    
 }

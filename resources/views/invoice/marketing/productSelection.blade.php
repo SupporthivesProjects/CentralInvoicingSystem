@@ -261,32 +261,36 @@
             <!-- Modal Body -->
             <div class="modal-body bg-white">
                 <div class="container-fluid">
-                        <div class="row g-3 mb-4 mx-4">
-                          <div class="col-md-6 d-flex flex-column">
+                <div class="row g-3 mb-4 align-items-end">
+                        <div class="col-md-5">
                             <label for="customizeKeywordInput" class="form-label text-center fw-semibold">Search By Keyword</label>
                             <div class="input-group bg-light shadow-sm ms-2">
                                 <span class="input-group-text bg-transparent border-0">
                                     <i class="fas fa-search text-muted"></i>
                                 </span>
-                                <input type="text" class="form-control border-0" id="customizeKeywordInput" placeholder="Enter or Speak product or category name..." id="micBtn" title="Voice Search">
+                                <input type="text" class="form-control border-0" id="customizeKeywordInput" placeholder="Enter or Speak Keyword" id="micBtn" title="Voice Search">
                                 <button class="btn btn-light border-0" type="button" title="Voice Search" onclick="startVoiceSearch('customizeKeywordInput','customizeMicIcon')">
                                     <i class="fas fa-microphone text-primary" id="customizeMicIcon"></i>
-                                </button>
-                                <button class="btn btn-primary" type="button" title="Search" onclick="customizeProducts()">
-                                    <i class="fas fa-search"></i> Search
                                 </button>
                             
                             </div>
                         </div>
-                            <div class="col-md-6 d-flex flex-column">
-                                <label class="form-label text-center fw-semibold mb-2">Search By Price Range</label>
-                                <div class="align-items-center rounded bg-white shadow-sm ms-3">
-                                    <div class="w-100" id="customize-price-slider"></div>
-                                </div>
-                                <input type="hidden" id="hidden_customize_price_from_input_id">
-                                <input type="hidden" id="hidden_customize_price_to_input_id">
+                        <div class="col-md-5">
+                            <label class="form-label text-center fw-semibold mb-2">Search By Price Range</label>
+                            <div class="align-items-center rounded bg-white shadow-sm ms-3">
+                                <div class="w-100" id="customize-price-slider"></div>
                             </div>
+                            <input type="hidden" id="hidden_customize_price_from_input_id">
+                            <input type="hidden" id="hidden_customize_price_to_input_id">
                         </div>
+                        <div class="col-md-2">
+                            <label for="sort_unit_price" class="form-label text-center fw-semibold">Sort By Price</label>
+                            <select class="form-select" id="sort_unit_price" name="sort_unit_price"  aria-label="Sort By Price">
+                                <option value="asc" selected>Low to High</option>
+                                <option value="desc">High to Low</option>
+                            </select>
+                        </div>
+                    </div>
                         <div class="row g-3 mb-4">
                             <div class="col-md-4">
                                 <div class="bg-light rounded border shadow-sm p-1 text-center">
@@ -316,10 +320,10 @@
                                     <th class="text-center" style="width: 30%;">Package Name</th>
                                     <th class="text-center" style="width: 20%;">Subscription</th>
                                     <th class="text-center unit-price-header" style="width: 20%;"  data-column="3" data-order="desc">
-                                        <span class="d-inline-flex align-items-center justify-content-center gap-1">
-                                            Unit Price <i class="bi bi-caret-down-fill"></i>
-                                        </span>
-                                    </th>
+                                    <span class="d-inline-flex align-items-center justify-content-center gap-1">
+                                        Unit Price <i class="bi bi-caret-down-fill"></i>
+                                    </span>
+                                </th>
                                     <th class="text-center" style="width: 25%;">Editable Price</th>
                                     <th class="text-center" style="width: 10%;">Select</th>
                                 </tr>
@@ -483,6 +487,72 @@
 </script>
 
 <script>
+    let customizeSliderTimer;
+    let randomizeSliderTimer;
+    let sortUnitPriceTimer;
+    let lastSortUnitPrice = $('#sort_unit_price').val();
+
+    customizePriceSlider.noUiSlider.on('change', function (values) {
+        clearTimeout(customizeSliderTimer);
+        customizeSliderTimer = setTimeout(() => {
+            const [min, max] = values.map(v => Math.round(parseFloat(v.replace(currency, ''))));
+            updateHiddenInputs(min, max, 'customize');
+            customizeProducts('reset');
+        }, 1500);
+    });
+
+    $('#sort_unit_price').on('change', function () {
+        const currentSortValue = $(this).val();
+        
+        clearTimeout(sortUnitPriceTimer);
+        sortUnitPriceTimer = setTimeout(() => {
+            if (currentSortValue !== lastSortUnitPrice) {
+                lastSortUnitPrice = currentSortValue;
+                customizeProducts('reset');
+            }
+        }, 1000);
+    });
+
+    $('#customizeKeywordInput').on('keypress', function (e) {
+    if (e.which === 13) { 
+            e.preventDefault(); 
+            customizeProducts();
+        }
+    });
+
+
+    randomizePriceSlider.noUiSlider.on('change', function (values) {
+        clearTimeout(randomizeSliderTimer);
+        randomizeSliderTimer = setTimeout(() => {
+            const [min, max] = values.map(v => Math.round(parseFloat(v.replace(currency, ''))));
+            Swal.fire({
+                title: 'Apply new price range?',
+                text: 'This will reset your current filter settings.',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Apply',
+                cancelButtonText: 'Cancel',
+                customClass: {
+                    popup: 'p-2 text-sm',
+                    title: 'text-base',
+                    confirmButtonClass: 'btn btn-sm btn-success',
+                    cancelButtonClass: 'btn btn-sm btn-danger'
+                },
+            width: '350px',
+            padding: '1em'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    updateHiddenInputs(min, max, 'randomize');
+                    randomizeProducts('semi_random');
+                } else {
+                    randomizePriceSlider.noUiSlider.set([minUnitPrice, maxUnitPrice]);
+                }
+            });
+        }, 1000);
+    });
+</script>
+
+<script>
     let randomizeRequest = null;
 
     function randomizeProducts(mode = 'smart_random') {
@@ -544,49 +614,6 @@
     });
 </script>
 
-<script>
-    let customizeSliderTimer;
-    let randomizeSliderTimer;
-
-    customizePriceSlider.noUiSlider.on('change', function (values) {
-        clearTimeout(customizeSliderTimer);
-        customizeSliderTimer = setTimeout(() => {
-            const [min, max] = values.map(v => Math.round(parseFloat(v.replace(currency, ''))));
-            updateHiddenInputs(min, max, 'customize');
-            customizeProducts('reset');
-        }, 1500);
-    });
-
-    randomizePriceSlider.noUiSlider.on('change', function (values) {
-        clearTimeout(randomizeSliderTimer);
-        randomizeSliderTimer = setTimeout(() => {
-            const [min, max] = values.map(v => Math.round(parseFloat(v.replace(currency, ''))));
-            Swal.fire({
-                title: 'Apply new price range?',
-                text: 'This will reset your current filter settings.',
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonText: 'Apply',
-                cancelButtonText: 'Cancel',
-                customClass: {
-                    popup: 'p-2 text-sm',
-                    title: 'text-base',
-                    confirmButtonClass: 'btn btn-sm btn-success',
-                    cancelButtonClass: 'btn btn-sm btn-danger'
-                },
-            width: '350px',
-            padding: '1em'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    updateHiddenInputs(min, max, 'randomize');
-                    randomizeProducts('semi_random');
-                } else {
-                    randomizePriceSlider.noUiSlider.set([minUnitPrice, maxUnitPrice]);
-                }
-            });
-        }, 1000);
-    });
-</script>
 
 <script>
     customizeRequest = null;
@@ -614,6 +641,7 @@
         const priceFrom = $('#hidden_customize_price_from_input_id').val();
         const priceTo = $('#hidden_customize_price_to_input_id').val();
         const customizeKeywordInput = $('#customizeKeywordInput').val();
+        const sortUnitPrice = $('#sort_unit_price').val() || 'asc';
         let invoice_amount = parseFloat($('#invoice_amount').val()) || 0;
         let current_amount = parseFloat($('#current_amount').val()) || 0;
 
@@ -631,7 +659,7 @@
             return;
         }
         if (!customizeKeywordInput && search_type !== 'onload' && search_type !== 'reset') {
-            toastr.info('Enter or Speak product or category name...', 'Keyword missing');
+            toastr.info('Enter or Speak Keyword', 'Keyword missing');
             return;
         }
 
@@ -646,7 +674,8 @@
                 price_to: priceTo,
                 search_type: search_type,
                 keyword: customizeKeywordInput,
-                page: page
+                page: page,
+                sort_unit_price: sortUnitPrice
             },
             success: function (response) {
                 if (!response.tableRows) {
@@ -1042,14 +1071,14 @@ $(document).ready(function() {
             inputField.style.color = '';
             micIcon.classList.remove("text-danger");
             micIcon.classList.add("text-primary");
-            inputField.placeholder = "Enter or Speak product or category name...";
+            inputField.placeholder = "Enter or Speak Keyword";
         };
 
         recognition.onend = function() {
             micIcon.classList.remove("text-danger");
             micIcon.classList.add("text-primary");
             inputField.style.color = 'blue';
-            inputField.placeholder = "Enter or Speak product or category name...";
+            inputField.placeholder = "Enter or Speak Keyword";
         };
     }
 

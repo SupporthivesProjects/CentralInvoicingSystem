@@ -423,6 +423,7 @@ class LaravelController extends Controller
         $hasPriceRange = $request->filled('price_from') && $request->filled('price_to');
         $search_type = $request->input('search_type');
         $keyword = $request->input('keyword');
+        $sortUnitPrice = $request->input('sort_unit_price', 'asc');
         $site = Website::findOrFail($site_id);
         DynamicDatabaseService::connect($site);
 
@@ -443,6 +444,10 @@ class LaravelController extends Controller
                 (float) $request->price_to
             ]);
         }
+        if (in_array($sortUnitPrice, ['asc', 'desc'])) {
+            $query->orderBy('unit_price', $sortUnitPrice);
+        }
+        
         if (!empty($keyword)) {
             $normalizedSearch = strtolower(str_replace(['-', '_', ' '], '', $keyword));
     

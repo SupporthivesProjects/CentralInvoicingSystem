@@ -35,7 +35,7 @@
                     <div class="input-group-prepend">
                         <select class="form-select" name="internalSearchType" id="internalSearchType" aria-label="Search Type" data-trigger>
                             <option value="websites">Websites</option>
-                            <option value="business_models">Business Models</option>
+                            <option value="business_models">Models</option>
                         </select>
                     </div>
 

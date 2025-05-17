@@ -417,6 +417,7 @@ class LaravelController extends Controller
         $site_id = session('customer.site_id');
         $search_type = $request->input('search_type');
         $keyword = $request->input('keyword');
+        $sortUnitPrice = $request->input('sort_unit_price', 'asc');
         $site = Website::findOrFail($site_id);
         DynamicDatabaseService::connect($site);
     
@@ -439,6 +440,10 @@ class LaravelController extends Controller
                 (float) $request->price_to
             ]);
         }
+        if (in_array($sortUnitPrice, ['asc', 'desc'])) {
+            $query->orderBy('unit_price', $sortUnitPrice);
+        }
+        
         if (!empty($keyword)) {
             $normalizedSearch = strtolower(str_replace(['-', '_', ' '], '', $keyword));
     
@@ -506,8 +511,6 @@ class LaravelController extends Controller
     
         $modelType = $site->businessModel->model_type;
         $random_amount = session('current_amount', 0);
-    
-        $products = $products->shuffle();
         $tableRows = view( "invoice.{$modelType}.add_product_rows", ['products' => $products, 'site' => $site,'random_amount' => $random_amount])->render();
         $paginationHtml = view("invoice.{$modelType}.pagination", ['totalPages' => $totalPages,'paginationPages' => $paginationPages, 'currentPage' => $page ])->render();
        

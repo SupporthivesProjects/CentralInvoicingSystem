@@ -263,33 +263,38 @@
             <!-- Modal Body -->
             <div class="modal-body bg-white">
                 <div class="container-fluid">
-                <div class="row g-3 mb-4 mx-4">
+                <div class="row g-3 mb-4 align-items-end">
 
-                <div class="col-md-6 d-flex flex-column">
-                    <label for="customizeKeywordInput" class="form-label text-center fw-semibold">Search By Keyword</label>
-                    <div class="input-group bg-light shadow-sm ms-2">
-                        <span class="input-group-text bg-transparent border-0">
-                            <i class="fas fa-search text-muted"></i>
-                        </span>
-                        <input type="text" class="form-control border-0" id="customizeKeywordInput" placeholder="Enter or Speak product or category name..." id="micBtn" title="Voice Search">
-                        <button class="btn btn-light border-0" type="button" title="Voice Search" onclick="startVoiceSearch('customizeKeywordInput','customizeMicIcon')">
-                            <i class="fas fa-microphone text-primary" id="customizeMicIcon"></i>
-                        </button>
-                        <button class="btn btn-primary" type="button" title="Search" onclick="customizeProducts()">
-                            <i class="fas fa-search"></i> Search
-                        </button>
-                      
+                    <div class="col-md-5">
+                        <label for="customizeKeywordInput" class="form-label text-center fw-semibold">Search By Keyword</label>
+                        <div class="input-group bg-light shadow-sm ms-2">
+                            <span class="input-group-text bg-transparent border-0">
+                                <i class="fas fa-search text-muted"></i>
+                            </span>
+                            <input type="text" class="form-control border-0" id="customizeKeywordInput" placeholder="Enter or Speak Keyword" id="micBtn" title="Voice Search">
+                            <button class="btn btn-light border-0" type="button" title="Voice Search" onclick="startVoiceSearch('customizeKeywordInput','customizeMicIcon')">
+                                <i class="fas fa-microphone text-primary" id="customizeMicIcon"></i>
+                            </button>
+                        
+                        </div>
                     </div>
+                    <div class="col-md-5">
+                        <label class="form-label text-center fw-semibold mb-2">Search By Price Range</label>
+                        <div class="align-items-center rounded bg-white shadow-sm ms-3">
+                            <div class="w-100" id="customize-price-slider"></div>
+                        </div>
+                        <input type="hidden" id="hidden_customize_price_from_input_id">
+                        <input type="hidden" id="hidden_customize_price_to_input_id">
+                    </div>
+                    <div class="col-md-2">
+                        <label for="sort_unit_price" class="form-label text-center fw-semibold">Sort By Price</label>
+                        <select class="form-select" id="sort_unit_price" name="sort_unit_price"  aria-label="Sort By Price">
+                            <option value="asc" selected>Low to High</option>
+                            <option value="desc">High to Low</option>
+                        </select>
+                    </div>
+
                 </div>
-                <div class="col-md-6 d-flex flex-column">
-                    <label class="form-label text-center fw-semibold mb-2">Search By Price Range</label>
-                    <div class="align-items-center rounded bg-white shadow-sm ms-3">
-                        <div class="w-100" id="customize-price-slider"></div>
-                    </div>
-                    <input type="hidden" id="hidden_customize_price_from_input_id">
-                    <input type="hidden" id="hidden_customize_price_to_input_id">
-                </div>
-                    </div>
                     <div class="row g-3 mb-4">
                         <div class="col-md-4">
                             <div class="bg-light rounded border shadow-sm p-1 text-center">
@@ -321,7 +326,7 @@
                             <th style="width: 12%;">Turnaround</th>
                             <th style="width: 13%;">Images</th>
                             <th style="width: 13%;">Quality</th>
-                            <th class="text-center unit-price-header" style="width: 27%;" data-column="6" data-order="desc">
+                            <th class="text-center unit-price-header" style="width: 20%;"  data-column="3" data-order="desc">
                                 <span class="d-inline-flex align-items-center justify-content-center gap-1">
                                     Unit Price <i class="bi bi-caret-down-fill"></i>
                                 </span>
@@ -555,10 +560,11 @@
 
 </script>
 
-
 <script>
     let customizeSliderTimer;
     let randomizeSliderTimer;
+    let sortUnitPriceTimer;
+    let lastSortUnitPrice = $('#sort_unit_price').val();
 
     customizePriceSlider.noUiSlider.on('change', function (values) {
         clearTimeout(customizeSliderTimer);
@@ -568,6 +574,26 @@
             customizeProducts('reset');
         }, 1500);
     });
+
+    $('#sort_unit_price').on('change', function () {
+        const currentSortValue = $(this).val();
+        
+        clearTimeout(sortUnitPriceTimer);
+        sortUnitPriceTimer = setTimeout(() => {
+            if (currentSortValue !== lastSortUnitPrice) {
+                lastSortUnitPrice = currentSortValue;
+                customizeProducts('reset');
+            }
+        }, 1000);
+    });
+
+    $('#customizeKeywordInput').on('keypress', function (e) {
+    if (e.which === 13) { 
+            e.preventDefault(); 
+            customizeProducts();
+        }
+    });
+
 
     randomizePriceSlider.noUiSlider.on('change', function (values) {
         clearTimeout(randomizeSliderTimer);
@@ -688,7 +714,7 @@
         const priceFrom = $('#hidden_customize_price_from_input_id').val();
         const priceTo = $('#hidden_customize_price_to_input_id').val();
         const customizeKeywordInput = $('#customizeKeywordInput').val();
-
+        const sortUnitPrice = $('#sort_unit_price').val() || 'asc';
         let invoice_amount = parseFloat($('#invoice_amount').val()) || 0;
         let current_amount = parseFloat($('#current_amount').val()) || 0;
 
@@ -706,7 +732,7 @@
             return;
         }
         if (!customizeKeywordInput && search_type !== 'onload' && search_type !== 'reset') {
-            toastr.info('Enter or Speak product or category name...', 'Keyword missing');
+            toastr.info('Enter or Speak Keyword', 'Keyword missing');
             return;
         }
 
@@ -721,7 +747,8 @@
                 price_to: priceTo,
                 search_type: search_type,
                 keyword: customizeKeywordInput,
-                page: page
+                page: page,
+                sort_unit_price: sortUnitPrice
             },
             success: function (response) {
                 if (!response.tableRows) {
@@ -1116,14 +1143,14 @@ $(document).ready(function() {
             inputField.style.color = '';
             micIcon.classList.remove("text-danger");
             micIcon.classList.add("text-primary");
-            inputField.placeholder = "Enter or Speak product or category name...";
+            inputField.placeholder = "Enter or Speak Keyword";
         };
 
         recognition.onend = function() {
             micIcon.classList.remove("text-danger");
             micIcon.classList.add("text-primary");
             inputField.style.color = 'blue';
-            inputField.placeholder = "Enter or Speak product or category name...";
+            inputField.placeholder = "Enter or Speak Keyword";
         };
     }
 

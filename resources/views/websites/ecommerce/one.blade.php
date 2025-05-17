@@ -73,10 +73,10 @@
                                         <p style="color: black; font-family: Calibri; font-size: 10px; margin: 0;">{{ $invoice_number }}</p>
                                     </td>
                                     <td style="width: 100%; vertical-align: top;">
-                                        <p style="color: #2f5496; font-family: Calibri; font-size: 10px; margin: 0; text-align: center; font-weight: 700;padding-left:40px;">TO:</p>
+                                        <p style="color: #2f5496; font-family: Calibri; font-size: 10px; margin: 0; text-align: right; font-weight: 700;">TO: &nbsp;&nbsp;</p>
                                     </td>
                                     <td style="vertical-align: top;">
-                                        <p style="color: black; font-family: Calibri; font-size: 10px; margin: 0; text-align: right;white-space: nowrap;">{{ $customer_name }}</p>
+                                        <p style="color: black; font-family: Calibri; font-size: 10px; margin: 0; text-align: right;">{{ $customer_name }}</p>
                                     </td>
                                 </tr>
                             </table>

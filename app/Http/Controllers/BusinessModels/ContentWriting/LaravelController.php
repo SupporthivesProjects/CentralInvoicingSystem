@@ -381,6 +381,7 @@ class LaravelController extends Controller
         $site_id = session('customer.site_id');
         $keyword = $request->input('keyword');
         $hasPriceRange = $request->filled('price_from') && $request->filled('price_to');
+        $sortUnitPrice = $request->input('sort_unit_price', 'asc');
     
         $site = Website::findOrFail($site_id);
         DynamicDatabaseService::connect($site);
@@ -500,6 +501,13 @@ class LaravelController extends Controller
             $product->note = null;
             $product->param_status = false;
         });
+        
+        if (in_array($sortUnitPrice, ['asc', 'desc'])) {
+            $products = $sortUnitPrice === 'asc'
+                ? $products->sortBy('unit_price')->values()
+                : $products->sortByDesc('unit_price')->values();
+        }
+        
     
         $modelType = $site->businessModel->model_type;
         $random_amount = session('current_amount', 0);

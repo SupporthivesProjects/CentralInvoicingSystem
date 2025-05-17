@@ -110,7 +110,13 @@ class HomeController extends Controller
     
         switch ($type) {
             case 'websites':
-                $results = Website::where('site_name', 'like', '%' . $keyword . '%')->limit(10)->get();
+                $normalizedKeyword = preg_replace('/[^a-zA-Z0-9]/', '', strtolower($keyword));
+
+                $results = Website::whereRaw("REPLACE(LOWER(site_name), '-', '') LIKE ?", ['%' . $normalizedKeyword . '%'])
+                    ->orWhereRaw("REPLACE(LOWER(bank_name), '-', '') LIKE ?", ['%' . $normalizedKeyword . '%'])
+                    ->orWhereRaw("REPLACE(LOWER(bank_code), '-', '') LIKE ?", ['%' . $normalizedKeyword . '%'])
+                    ->limit(10)
+                    ->get();
                 foreach ($results as $row) {
                     $output[] = [
                         'name' => $row->site_name,
@@ -137,5 +143,26 @@ class HomeController extends Controller
     
         return response()->json($output);
     }
+
+    public function searchResult(Request $request)
+    {
+        $keyword = $request->input('keyword', '');
+        $type = $request->input('type', '');
+    
+        if (empty($keyword) || $type !== 'websites') {
+            return response()->json([]);
+        }
+    
+        $normalizedKeyword = preg_replace('/[^a-zA-Z0-9]/', '', strtolower($keyword));
+    
+        $websites = Website::whereRaw("REPLACE(LOWER(site_name), '-', '') LIKE ?", ['%' . $normalizedKeyword . '%'])
+            ->orWhereRaw("REPLACE(LOWER(bank_name), '-', '') LIKE ?", ['%' . $normalizedKeyword . '%'])
+            ->orWhereRaw("REPLACE(LOWER(bank_code), '-', '') LIKE ?", ['%' . $normalizedKeyword . '%'])
+            ->get();
+    
+        return view('business.searchresult', compact('websites'));
+    }
+    
+    
     
 }
