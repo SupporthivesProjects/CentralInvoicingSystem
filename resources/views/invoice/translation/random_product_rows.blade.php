@@ -52,6 +52,12 @@
             <input type="number" class="form-control product-pages text-center" value="{{ $product->pages }}"
                 min="1" data-product-id="{{ $product->id }}" aria-label="Number of pages" />
         </td>
+        <td class="text-center">
+            <input class="form-check-input urgency-checkbox border-primary" type="checkbox"
+                data-product-id="{{ $product->id }}"
+                data-urgent_amount="{{ number_format($product->urgent_amount ?? 24.24, 2, '.', '') }}" />
+
+        </td>
         <td class="text-center line-total" data-product-id="{{ $product->id }}">
             {{ site_currency() }}{{ number_format($product->line_total, 2) }}
         </td>
@@ -73,6 +79,50 @@
     const siteCurrency = @json(site_currency()); // Make currency available to JS
 </script>
 <script>
+    $(document).off('change', '.urgency-checkbox').on('change', '.urgency-checkbox', function() {
+        var $checkbox = $(this);
+        var productId = $checkbox.data('product-id');
+        var urgentAmount = parseFloat($checkbox.data('urgent_amount')) || 0;
+
+        var $row = $checkbox.closest('tr');
+        var pages = parseInt($row.find('.product-pages').val()) || 1;
+        var unitPrice = parseFloat($row.find('.product-price').val()) || 0;
+        var lineTotal = pages * unitPrice;
+
+        if ($checkbox.is(':checked')) {
+            lineTotal += urgentAmount;
+        }
+
+        $row.find('.line-total').text(siteCurrency + lineTotal.toFixed(2));
+
+        // ✅ Recalculate total
+        calculateTotalPrice();
+    });
+</script>
+<script>
+    function bindUrgencyCheckbox() {
+        $('.urgency-checkbox').off('change').on('change', function() {
+            var $checkbox = $(this);
+            var productId = $checkbox.data('product-id');
+            var urgentAmount = parseFloat($checkbox.data('urgent_amount')) || 0;
+
+            var $row = $checkbox.closest('tr');
+            var pages = parseInt($row.find('.product-pages').val()) || 1;
+            var unitPrice = parseFloat($row.find('.product-price').val()) || 0;
+            var lineTotal = pages * unitPrice;
+
+            if ($checkbox.is(':checked')) {
+                lineTotal += urgentAmount;
+            }
+
+            $row.find('.line-total').text(siteCurrency + lineTotal.toFixed(2));
+
+            // ✅ Recalculate total price
+            calculateTotalPrice();
+        });
+    }
+</script>
+<script>
     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
     tooltipTriggerList.map(function(tooltipTriggerEl) {
         return new bootstrap.Tooltip(tooltipTriggerEl);
@@ -91,8 +141,16 @@
 
             var unitPrice = parseFloat($('input.product-price[data-product-id="' + productId + '"]')
                 .val()) || 0;
-            var lineTotal = pages * unitPrice;
+            // 🔥 Get urgent amount if checked
+            var $row = $input.closest('tr');
+            var $urgentCheckbox = $row.find('.urgency-checkbox');
+            var urgentAmount = 0;
 
+            if ($urgentCheckbox.length && $urgentCheckbox.is(':checked')) {
+                urgentAmount = parseFloat($urgentCheckbox.data('urgent_amount')) || 0;
+            }
+            //var lineTotal = pages * unitPrice;
+            var lineTotal = (unitPrice * pages) + urgentAmount;
             // ✅ Update the correct line total column
             var $row = $input.closest('tr');
             $row.find('.line-total').text(siteCurrency + lineTotal.toFixed(2));
@@ -113,8 +171,12 @@
                 success: function(response) {
                     toastr.success('Pages updated successfully');
                     $('#randomize-product-table-body').html(response.tableRows);
+
+                    bindUrgencyCheckbox(); // <== Rebind after DOM update
+
                     setTimeout(() => {
-                        calculateTotalPrice(); // call *after* DOM update
+                        calculateTotalPrice
+                    (); // <== recalculate after table refresh
                     }, 100);
                 },
                 error: function() {
@@ -129,77 +191,77 @@
 
 
     $(document).off('click', '.remove-product').on('click', '.remove-product', function() {
-    var $button = $(this);
-    var productId = $button.data('product-id');
-    var productName = $button.data('product-name');
+        var $button = $(this);
+        var productId = $button.data('product-id');
+        var productName = $button.data('product-name');
 
-    Swal.fire({
-        title: 'Remove Product?',
-        text: `Are you sure you want to remove '${productName}' product?`,
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonText: 'Yes, Remove',
-        cancelButtonText: 'Cancel',
-        customClass: {
-            popup: 'p-2 text-sm',
-            title: 'text-base',
-            confirmButtonClass: 'btn btn-sm btn-success',
-            cancelButtonClass: 'btn btn-sm btn-danger'
-        },
-        width: '350px',
-        padding: '1em'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            $('.remove-product').prop('disabled', true);
-            $button.html('<i class="fas fa-spinner fa-spin"></i>');
-            $('#current_amount').val('Recalculating...');
-            $('#discount_amount').prop('type', 'text').val('Recalculating...').prop('readonly',
-                true);
-            $('#current_amount').removeClass('text-danger text-success');
-            $('#discount_amount').removeClass('text-danger text-success');
-            $('#invoice_amount').removeClass('text-danger text-success');
+        Swal.fire({
+            title: 'Remove Product?',
+            text: `Are you sure you want to remove '${productName}' product?`,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, Remove',
+            cancelButtonText: 'Cancel',
+            customClass: {
+                popup: 'p-2 text-sm',
+                title: 'text-base',
+                confirmButtonClass: 'btn btn-sm btn-success',
+                cancelButtonClass: 'btn btn-sm btn-danger'
+            },
+            width: '350px',
+            padding: '1em'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $('.remove-product').prop('disabled', true);
+                $button.html('<i class="fas fa-spinner fa-spin"></i>');
+                $('#current_amount').val('Recalculating...');
+                $('#discount_amount').prop('type', 'text').val('Recalculating...').prop('readonly',
+                    true);
+                $('#current_amount').removeClass('text-danger text-success');
+                $('#discount_amount').removeClass('text-danger text-success');
+                $('#invoice_amount').removeClass('text-danger text-success');
 
-            $.ajax({
-                url: "{{ route('remove.product') }}",
-                method: 'POST',
-                data: {
-                    product_id: productId,
-                    site_id: "{{ session('customer.site_id') }}",
-                    _token: '{{ csrf_token() }}'
-                },
-                success: function(response) {
-                    $button.html('<i class="fas fa-check-square"></i>');
-                    $button.removeClass('btn-danger').addClass('btn-success');
-                    $('#randomize-product-table-body').html(response.tableRows);
-                    toastr.success('Product has been removed successfully.',
-                        'Product Removed');
-                    $('#discount_amount').prop('readonly', false).prop('type',
-                    'number');
-                    calculateTotalPrice();
+                $.ajax({
+                    url: "{{ route('remove.product') }}",
+                    method: 'POST',
+                    data: {
+                        product_id: productId,
+                        site_id: "{{ session('customer.site_id') }}",
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        $button.html('<i class="fas fa-check-square"></i>');
+                        $button.removeClass('btn-danger').addClass('btn-success');
+                        $('#randomize-product-table-body').html(response.tableRows);
+                        toastr.success('Product has been removed successfully.',
+                            'Product Removed');
+                        $('#discount_amount').prop('readonly', false).prop('type',
+                            'number');
+                        calculateTotalPrice();
 
-                    setTimeout(() => {
+                        setTimeout(() => {
+                            $button.html('<i class="fas fa-trash-alt"></i>');
+                            $button.removeClass('btn-success').addClass(
+                                'btn-danger');
+                        }, 2000);
+                    },
+                    error: function() {
+                        $('.remove-product').prop('disabled', false);
                         $button.html('<i class="fas fa-trash-alt"></i>');
-                        $button.removeClass('btn-success').addClass(
-                            'btn-danger');
-                    }, 2000);
-                },
-                error: function() {
-                    $('.remove-product').prop('disabled', false);
-                    $button.html('<i class="fas fa-trash-alt"></i>');
-                    $button.removeClass('btn-success').addClass('btn-danger');
-                    calculateTotalPrice();
-                    toastr.error('Error removing product. Please try again.');
-                },
-                complete: function() {
-                    $('.remove-product').prop('disabled', false);
-                    setTimeout(() => {
-                        $button.html('<i class="fas fa-trash-alt"></i>');
-                        $button.removeClass('btn-success').addClass(
-                            'btn-danger');
-                    }, 1000);
-                }
-            });
-        }
-    });
+                        $button.removeClass('btn-success').addClass('btn-danger');
+                        calculateTotalPrice();
+                        toastr.error('Error removing product. Please try again.');
+                    },
+                    complete: function() {
+                        $('.remove-product').prop('disabled', false);
+                        setTimeout(() => {
+                            $button.html('<i class="fas fa-trash-alt"></i>');
+                            $button.removeClass('btn-success').addClass(
+                                'btn-danger');
+                        }, 1000);
+                    }
+                });
+            }
+        });
     });
 </script>

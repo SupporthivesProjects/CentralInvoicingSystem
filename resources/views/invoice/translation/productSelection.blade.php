@@ -4,6 +4,7 @@
 
 @section('content')
 
+
     <div class="page">
         <div class="main-content app-content">
             <div class="container-fluid">
@@ -263,17 +264,18 @@
                                     <tr>
                                         <th class="text-center" style="width: 8%;">PID</th>
                                         {{-- <th class="text-center" style="width: 10%;">Category</th> --}}
-                                        <th class="text-center" style="width: 20%;">Translation Type</th>
-                                        <th class="text-center" style="width: 20%;">From Language</th>
-                                        <th class="text-center" style="width: 20%;">To Language</th>
+                                        <th class="text-center" style="width: 15%;">Translation Type</th>
+                                        <th class="text-center" style="width: 15%;">From Language</th>
+                                        <th class="text-center" style="width: 15%;">To Language</th>
                                         <th class="text-center unit-price-header" data-column="3" data-order="desc">
                                             <span class="d-inline-flex align-items-center justify-content-center gap-1">
                                                 Unit Price <i class="bi bi-caret-down-fill"></i>
                                             </span>
                                         </th>
-                                        <th class="text-center" style="width: 20%;">Editable Price</th>
+                                        <th class="text-center" style="width: 20%;">Edit Price</th>
                                         <th class="text-center" style="width: 12%;">Pages</th>
-                                        <th class="text-center" style="width: 12%;">Line Total</th>
+                                        <th class="text-center" style="width: 8%;">Hurry</th>
+                                        <th class="text-center" style="width: 12%;">Total</th>
                                         <th class="text-center" style="width: 8%;">Remove</th>
                                     </tr>
                                 </thead>
@@ -450,6 +452,8 @@
 
 @endsection
 @push('scripts')
+<!-- Include Select2 JS -->
+
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
     <script src="https://unpkg.com/feather-icons"></script>
     <script>
@@ -1182,58 +1186,67 @@
         });
 
         function calculateTotalPrice() {
-            var total = 0;
+    var total = 0;
 
-            // Sum total of all products
-            $('.product-row').each(function() {
-                var unitPrice = parseFloat($(this).find('.product-price').val()) || 0;
-                var pages = parseInt($(this).find('.product-pages').val()) || 1;
-                total += unitPrice * pages;
-            });
+    // Sum total of all products
+    $('.product-row').each(function () {
+        var $row = $(this);
+        var unitPrice = parseFloat($row.find('.product-price').val()) || 0;
+        var pages = parseInt($row.find('.product-pages').val()) || 1;
+        var urgentAmount = 0;
 
-            // Display total product worth
-            $('#products-total').text('$' + total.toFixed(2));
-            $('#current_amount').val(total.toFixed(2));
-
-            // Fixed invoice amount (from hidden or readonly input)
-            var invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
-
-            // Calculate discount needed to match invoice
-            var discountAmount = total - invoiceAmount;
-            if (discountAmount < 0) discountAmount = 0;
-
-            // Auto-set discount field
-            $('#discount_amount').val(discountAmount.toFixed(2));
-
-            // Show final invoice value (should match invoiceAmount)
-            $('#invoice_amount').val(invoiceAmount.toFixed(2));
-
-            // --- Font Color Logic ---
-            var currentAmount = total;
-            var enteredDiscount = parseFloat($('#discount_amount').val()) || 0;
-            var sum = currentAmount - enteredDiscount;
-
-            var isMatching = Math.abs(sum - invoiceAmount) < 0.01; // floating point tolerance
-
-            if (isMatching) {
-                $('#current_amount').removeClass('text-danger').addClass('text-success');
-                $('#discount_amount').removeClass('text-danger').addClass('text-success');
-                $('#invoice_amount').removeClass('text-danger').addClass('text-success');
-            } else {
-                $('#current_amount').removeClass('text-success').addClass('text-danger');
-                $('#discount_amount').removeClass('text-success').addClass('text-danger');
-
-                // Keep invoice amount green if within 5%, else red
-                var difference = Math.abs(currentAmount - invoiceAmount);
-                var percentDiff = (difference / invoiceAmount) * 100;
-
-                if (percentDiff <= 5) {
-                    $('#invoice_amount').removeClass('text-danger').addClass('text-success');
-                } else {
-                    $('#invoice_amount').removeClass('text-success').addClass('text-danger');
-                }
-            }
+        var $urgentCheckbox = $row.find('.urgency-checkbox');
+        if ($urgentCheckbox.length && $urgentCheckbox.is(':checked')) {
+            urgentAmount = parseFloat($urgentCheckbox.data('urgent_amount')) || 0;
         }
+
+        total += (unitPrice * pages) + urgentAmount;
+    });
+
+    // Display total product worth
+    $('#products-total').text('$' + total.toFixed(2));
+    $('#current_amount').val(total.toFixed(2));
+
+    // Fixed invoice amount (from hidden or readonly input)
+    var invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
+
+    // Calculate discount needed to match invoice
+    var discountAmount = total - invoiceAmount;
+    if (discountAmount < 0) discountAmount = 0;
+
+    // Auto-set discount field
+    $('#discount_amount').val(discountAmount.toFixed(2));
+
+    // Show final invoice value (should match invoiceAmount)
+    $('#invoice_amount').val(invoiceAmount.toFixed(2));
+
+    // --- Font Color Logic ---
+    var currentAmount = total;
+    var enteredDiscount = parseFloat($('#discount_amount').val()) || 0;
+    var sum = currentAmount - enteredDiscount;
+
+    var isMatching = Math.abs(sum - invoiceAmount) < 0.01; // floating point tolerance
+
+    if (isMatching) {
+        $('#current_amount').removeClass('text-danger').addClass('text-success');
+        $('#discount_amount').removeClass('text-danger').addClass('text-success');
+        $('#invoice_amount').removeClass('text-danger').addClass('text-success');
+    } else {
+        $('#current_amount').removeClass('text-success').addClass('text-danger');
+        $('#discount_amount').removeClass('text-success').addClass('text-danger');
+
+        // Keep invoice amount green if within 5%, else red
+        var difference = Math.abs(currentAmount - invoiceAmount);
+        var percentDiff = (difference / invoiceAmount) * 100;
+
+        if (percentDiff <= 5) {
+            $('#invoice_amount').removeClass('text-danger').addClass('text-success');
+        } else {
+            $('#invoice_amount').removeClass('text-success').addClass('text-danger');
+        }
+    }
+}
+
 
 
 

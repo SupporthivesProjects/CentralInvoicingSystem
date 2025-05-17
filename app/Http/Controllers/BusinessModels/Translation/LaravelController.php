@@ -182,10 +182,10 @@ class LaravelController extends Controller
         }
 
         // Get category name
-        $product->category_name = DB::connection($this->connectionType)
-            ->table('categories')
-            ->where('id', $product->category_id)
-            ->value('name') ?? 'unknown';
+        // $product->category_name = DB::connection($this->connectionType)
+        //     ->table('categories')
+        //     ->where('id', $product->category_id)
+        //     ->value('name') ?? 'unknown';
 
         // Check price editing permissions
         $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
@@ -207,22 +207,26 @@ class LaravelController extends Controller
         // Add pages information
         $product->pages = $pages;
         $product->line_total = $pages * floatval($product->unit_price);
+        $product->urgent_amount = 24.24;
 
         $selectedProducts[] = $product;
     }
+    //dd($product);
 
     // Store in session
     $productList = collect($selectedProducts)->map(function ($product) {
         return [
             'id' => $product->id,
             'unit_price' => $product->unit_price,
-            'pages' => $product->pages
+            'pages' => $product->pages,
         ];
     })->toArray();
 
     session()->forget('ready_products');
     session()->put('ready_products', $productList);
     session(['current_amount' => $bestTotal]);
+
+    //dd($selectedProducts);
 
     // Generate view
     // Use the translation_product_rows view for rendering
