@@ -1,9 +1,10 @@
 @forelse($products as $index => $product)
 <tr  class="product-row align-middle" id="customize-product-row-{{ $product->id }}" data-product-row-id="{{ $product->id }}" data-request-type="customize">
     <td class="text-center align-middle">
-    <span class="d-inline-flex justify-content-center align-items-center text-danger" data-bs-toggle="tooltip" title="You can set parameters after adding the product to the cart." >
-        <i class="bi bi-exclamation-circle-fill fs-4"></i>
-    </span>
+    <button class="btn btn-warning btn-sm" data-bs-toggle="tooltip" title="You can set parameters after adding the product to the cart." >
+        <i class="bi bi-exclamation-circle-fill"></i>
+    </button>
+
     </td>
 
     <td class="text-capitalize">
@@ -118,69 +119,76 @@
 </script>
 <script>
     $(document).ready(function () {
-    $('#add-custom-products').off('click').on('click', function () {
-        let selectedProducts = [];
-       
-        $('input[name="add_product_ids[]"]:checked').each(function () {
-            let productId = $(this).val();
-            let unitPrice = parseFloat($('.add-product-price[data-product-id="' + productId + '"]').val()) || 0;
+        $('#add-custom-products').off('click').on('click', function () {
+            let selectedProducts = [];
 
-            selectedProducts.push({
-                product_id: productId,
-                unit_price: unitPrice
+            $('input[name="add_product_ids[]"]:checked').each(function () {
+                let productId = $(this).val();
+
+                let unitPrice = parseFloat($('.add-product-price[data-product-id="' + productId + '"]').val()) || 0;
+                let wordCount = parseInt($('.wc-input[data-product-id="' + productId + '"]').val()) || 0;
+                let quality = $('.quality-select[data-product-id="' + productId + '"]').val() || '';
+                let turnaround = $('.turnaround-select[data-product-id="' + productId + '"]').val() || '';
+                let imageCount = parseInt($('.img-input[data-product-id="' + productId + '"]').val()) || 0;
+
+                selectedProducts.push({
+                    product_id: productId,
+                    unit_price: unitPrice,
+                    word_count: wordCount,
+                    quality: quality,
+                    turnaround: turnaround,
+                    image_count: imageCount
+                });
             });
-        });
 
-        if (selectedProducts.length > 0) {
-            let btn = $('#add-custom-products');
-            btn.prop('disabled', true);
-            btn.html('<i class="fas fa-spinner fa-spin"></i> Adding to Cart...');
-            $('#current_amount').val('Calculating...');
-            $('#discount_amount').prop('type', 'text').val('Calculating...').prop('readonly', true);
-            $('#current_amount').removeClass('text-danger text-success');
-            $('#discount_amount').removeClass('text-danger text-success');
-            $('#invoice_amount').removeClass('text-danger text-success');
-           
-            $.ajax({
-                url: "{{ route('add.products') }}",
-                type: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    products: selectedProducts,
-                    site_id : "{{ session('customer.site_id') }}",
-                },
-                success: function(response) {
-                    selectedProducts.forEach(function (product) {
-                        $('#customize-product-row-' + product.product_id).remove();
-                    });
+            if (selectedProducts.length > 0) {
+                let btn = $('#add-custom-products');
+                btn.prop('disabled', true);
+                btn.html('<i class="fas fa-spinner fa-spin"></i> Adding to Cart...');
+                $('#current_amount').val('Calculating...');
+                $('#discount_amount').prop('type', 'text').val('Calculating...').prop('readonly', true);
+                $('#current_amount, #discount_amount, #invoice_amount').removeClass('text-danger text-success');
 
-                    let discountAmount = 0;
-                    let current_amount = response.total;
-                    let invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
-                    if (current_amount > invoiceAmount) {
-                        discountAmount = current_amount - invoiceAmount;
+                $.ajax({
+                    url: "{{ route('add.products') }}",
+                    type: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        products: selectedProducts,
+                        site_id: "{{ session('customer.site_id') }}"
+                    },
+                    success: function (response) {
+                        selectedProducts.forEach(function (product) {
+                            $('#customize-product-row-' + product.product_id).remove();
+                        });
+
+                        let discountAmount = 0;
+                        let current_amount = response.total;
+                        let invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
+                        if (current_amount > invoiceAmount) {
+                            discountAmount = current_amount - invoiceAmount;
+                        }
+
+                        $('#addmoreproducts').modal('hide');
+                        $('#discount_amount').prop('readonly', false).prop('type', 'number');
+                        $('#randomize-product-table-body').html(response.tableRows);
+                        calculateTotalPrice();
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error adding products to cart:', error);
+                    },
+                    complete: function () {
+                        btn.prop('disabled', false);
+                        btn.html('Add Selected to Cart');
                     }
-                   
-                    $('#addmoreproducts').modal('hide');
-                    $('#discount_amount').prop('readonly', false).prop('type', 'number') 
-                    $('#randomize-product-table-body').html(response.tableRows);
-                    calculateTotalPrice();
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error adding products to cart:', error);
-                },
-                complete: function() {
-                    btn.prop('disabled', false);
-                    btn.html('Add Selected to Cart');
-                }
-            });
-        } else {
-            toastr.error('Please select product(s) to add.');
-        }
+                });
+            } else {
+                toastr.error('Please select product(s) to add.');
+            }
+        });
     });
-});
-
 </script>
+
 
 <script>
     $(document).ready(function() {

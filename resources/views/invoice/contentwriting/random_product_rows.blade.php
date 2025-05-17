@@ -3,13 +3,13 @@
     <td class="text-center align-middle">
     @if($product->param_status)
 
-        <span onclick="getProductParams({{ $product->id }}, this)" data-product-name="{{ $product->name }}" class="d-inline-flex justify-content-center align-items-center text-success" data-bs-toggle="tooltip" title="Parameter set, click to view" style="cursor: pointer; width: 100%;">
-            <i class="bi bi-check-circle-fill fs-4"></i>
-        </span>
+        <button onclick="getProductParams({{ $product->id }}, this)" data-product-name="{{ $product->name }}" class="btn btn-success btn-sm" data-bs-toggle="tooltip" title="Parameter set, click to view">
+            <i class="bi bi-check-circle-fill"></i>
+        </button>
     @else
-        <span onclick="getProductParams({{ $product->id }}, this)" data-product-name="{{ $product->name }}" class="d-inline-flex justify-content-center align-items-center text-danger" data-bs-toggle="tooltip" title="Parameter missing, click to add" style="cursor: pointer; width: 100%;">
-            <i class="bi bi-exclamation-circle-fill fs-4"></i>
-        </span>
+        <button onclick="getProductParams({{ $product->id }}, this)" data-product-name="{{ $product->name }}" class="btn btn-warning btn-sm" data-bs-toggle="tooltip" title="Parameter missing, click to add">
+            <i class="bi bi-exclamation-circle-fill"></i>
+        </button>
     @endif
     </td>
     <td class="text-capitalize">
@@ -21,7 +21,7 @@
     <td class="text-center">
         <div class="input-group input-group-sm justify-content-center">
             <button class="btn btn-outline-primary wc-decrease" type="button" data-product-id="{{ $product->id }}">-</button>
-            <input type="text" readonly class="form-control text-center wc-input border-primary" data-product-id="{{ $product->id }}" value="{{ $product->default_wc }}" step="25" min="{{ $product->default_wc }}">
+            <input type="text" readonly class="form-control text-center wc-input border-primary" data-product-id="{{ $product->id }}" value="{{ $product->wordcount }}" step="25" min="{{ $product->default_wc }}">
             <button class="btn btn-outline-primary wc-increase" type="button" data-product-id="{{ $product->id }}">+</button>
         </div>
     </td>
@@ -34,7 +34,7 @@
     <td class="text-center">
         <div class="input-group input-group-sm justify-content-center">
             <button class="btn btn-outline-primary img-decrease" type="button" data-product-id="{{ $product->id }}">-</button>
-            <input type="text" readonly class="form-control text-center img-input border-primary" value="1" step="1" min="1" data-product-id="{{ $product->id }}">
+            <input type="text" readonly class="form-control text-center img-input border-primary" value="{{ $product->imagecount }}" step="1" min="1" data-product-id="{{ $product->id }}">
             <button class="btn btn-outline-primary img-increase" type="button" data-product-id="{{ $product->id }}">+</button>
         </div>
     </td>

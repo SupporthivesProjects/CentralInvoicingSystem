@@ -1230,7 +1230,7 @@ $(document).ready(function() {
             const $row = $(rowSelector);
             let requestType = $row.data('request-type');
             $row.find('input, select, button').prop('disabled', true);
-            toastr.info('We will come back in a seconds...', 'Please Wait...');
+            toastr.info('We will update & come back in a seconds...', 'Please Wait...');
             $.ajax({
                 url: "{{ route('update.product') }}",
                 method: 'POST',
