@@ -31,14 +31,14 @@
                 width: 100%;
         }
         .invoice_footer_image {
-        background: url('{{ $invoice_footer_image }}');
-        background-repeat: no-repeat; 
-        background-position: center;
-        background-size: cover;
-        height: 130px; 
-        padding: 10px;
-        width: 100%;
-     }
+            background: url('{{ $invoice_footer_image }}');
+            background-repeat: no-repeat; 
+            background-position: center;
+            background-size: cover;
+            height: 130px; 
+            padding: 10px;
+            width: 100%;
+        }
  </style>
 </head>
 <body>

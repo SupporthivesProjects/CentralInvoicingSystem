@@ -17,15 +17,20 @@
             width: 100%;
         }
 
+        @page {
+            margin: 20mm;
+        }
+
         .invoice_footer_image {
+            page-break-inside: avoid;
+            page-break-before: always; 
+            height: 150px;
             background-image: url('{{ $invoice_footer_image }}');
-            background-repeat: no-repeat; 
+            background-repeat: no-repeat;
             background-position: center;
             background-size: cover;
-            text-align: center;
-            height: 150px;
-            width: 100%;
         }
+
 
     
 

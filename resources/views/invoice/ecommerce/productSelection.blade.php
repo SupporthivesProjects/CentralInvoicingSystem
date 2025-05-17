@@ -285,6 +285,7 @@
                         </div>
                         <div class="col-md-2">
                             <label for="sort_unit_price" class="form-label text-center fw-semibold">Sort By Price</label>
+                            <input type="hidden" name="current_page_number" id="current_page_number" value="1">
                             <select class="form-select" id="sort_unit_price" name="sort_unit_price"  aria-label="Sort By Price">
                                 <option value="asc" selected>Low to High</option>
                                 <option value="desc">High to Low</option>
@@ -490,7 +491,7 @@
     let randomizeSliderTimer;
     let sortUnitPriceTimer;
     let lastSortUnitPrice = $('#sort_unit_price').val();
-
+   
     customizePriceSlider.noUiSlider.on('change', function (values) {
         clearTimeout(customizeSliderTimer);
         customizeSliderTimer = setTimeout(() => {
@@ -502,12 +503,11 @@
 
     $('#sort_unit_price').on('change', function () {
         const currentSortValue = $(this).val();
-        
         clearTimeout(sortUnitPriceTimer);
         sortUnitPriceTimer = setTimeout(() => {
             if (currentSortValue !== lastSortUnitPrice) {
                 lastSortUnitPrice = currentSortValue;
-                customizeProducts('reset');
+                customizeProducts('reset', $('#current_page_number').val() || 1);
             }
         }, 1000);
     });
@@ -685,6 +685,8 @@
 
                 $('#customize-product-table-body').html(response.tableRows);
                 $('#customize-pagination').html(response.paginationHtml);
+                $('#current_page_number').val(response.currentPage);
+                
                 calculateTotalPrice();
             },
             error: function (xhr, textStatus) {

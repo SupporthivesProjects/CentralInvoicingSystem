@@ -221,7 +221,7 @@
                                     <th style="width: 20%;">Name</th>
                                     <th style="width: 15%;">Word Count</th>
                                     <th style="width: 12%;">Turnaround</th>
-                                    <th style="width: 13%;">Images</th>
+                                    <th class="text-center" style="width: 13%;">Images</th>
                                     <th style="width: 13%;">Quality</th>
                                     <th class="text-center unit-price-header" style="width: 27%;" data-column="6" data-order="desc">
                                         <span class="d-inline-flex align-items-center justify-content-center gap-1">
@@ -288,6 +288,7 @@
                     </div>
                     <div class="col-md-2">
                         <label for="sort_unit_price" class="form-label text-center fw-semibold">Sort By Price</label>
+                        <input type="hidden" name="current_page_number" id="current_page_number" value="1">
                         <select class="form-select" id="sort_unit_price" name="sort_unit_price"  aria-label="Sort By Price">
                             <option value="asc" selected>Low to High</option>
                             <option value="desc">High to Low</option>
@@ -324,7 +325,7 @@
                             <th style="width: 20%;">Name</th>
                             <th style="width: 15%;">Word Count</th>
                             <th style="width: 12%;">Turnaround</th>
-                            <th style="width: 13%;">Images</th>
+                            <th class="text-center" style="width: 13%;">Images</th>
                             <th style="width: 13%;">Quality</th>
                             <th class="text-center unit-price-header" style="width: 20%;"  data-column="3" data-order="desc">
                                 <span class="d-inline-flex align-items-center justify-content-center gap-1">
@@ -565,7 +566,7 @@
     let randomizeSliderTimer;
     let sortUnitPriceTimer;
     let lastSortUnitPrice = $('#sort_unit_price').val();
-
+   
     customizePriceSlider.noUiSlider.on('change', function (values) {
         clearTimeout(customizeSliderTimer);
         customizeSliderTimer = setTimeout(() => {
@@ -582,7 +583,7 @@
         sortUnitPriceTimer = setTimeout(() => {
             if (currentSortValue !== lastSortUnitPrice) {
                 lastSortUnitPrice = currentSortValue;
-                customizeProducts('reset');
+                customizeProducts('reset', $('#current_page_number').val() || 1);
             }
         }, 1000);
     });
@@ -760,6 +761,7 @@
 
                 $('#customize-product-table-body').html(response.tableRows);
                 $('#customize-pagination').html(response.paginationHtml);
+                $('#current_page_number').val(response.currentPage);
                 calculateTotalPrice();
             },
             error: function (xhr, textStatus) {
@@ -1204,103 +1206,124 @@ $(document).ready(function() {
         $('#current_amount, #discount_amount, #invoice_amount').removeClass('text-success text-danger').addClass(colorClass);
     }
 </script>
-
 <script>
     $(document).ready(function() {
-    const wcStep = 25;
-    const imgStep = 1;
-    const wcMin = 0;
-    const imgMin = 1;
+        const wcStep = 25;
+        const imgStep = 1;
+        const wcMin = 0;
+        const imgMin = 1;
+        let debounceTimers = {};
 
-    function updateProduct(productId) {
-        const wc = parseInt($(`.wc-input[data-product-id="${productId}"]`).val()) || wcMin;
-        const turnaround = $(`.turnaround-select[data-product-id="${productId}"]`).val() || 'ta_standard';
-        const imgCount = parseInt($(`.img-input[data-product-id="${productId}"]`).val()) || imgMin;
-        const quality = $(`.quality-select[data-product-id="${productId}"]`).val() || 'q_standard';
-
-        $.ajax({
-            url: "{{ route('update.product') }}",
-            method: 'POST',
-            data: {
-                product_id: productId,
-                wordcount: wc,
-                turnaround: turnaround,
-                imagecount: imgCount,
-                quality: quality,
-                _token: '{{ csrf_token() }}'
-            },
-            success: function(response) {
-                if(response.success) {
-                    toastr.success(response.message || 'Product updated successfully');
-                } else {
-                    toastr.error(response.message || 'Failed to update product');
+        function updateProduct(productId) {
+            const wc = parseInt($(`.wc-input[data-product-id="${productId}"]`).val()) || wcMin;
+            const turnaround = $(`.turnaround-select[data-product-id="${productId}"]`).val() || 'ta_standard';
+            const imgCount = parseInt($(`.img-input[data-product-id="${productId}"]`).val()) || imgMin;
+            const quality = $(`.quality-select[data-product-id="${productId}"]`).val() || 'q_standard';
+            const rowSelector = `.product-row[data-product-row-id="${productId}"]`;
+            const $row = $(rowSelector);
+            let requestType = $row.data('request-type');
+            $row.find('input, select, button').prop('disabled', true);
+            toastr.info('We will come back in a few seconds...', 'Please Wait...');
+            $.ajax({
+                url: "{{ route('update.product') }}",
+                method: 'POST',
+                data: {
+                    product_id: productId,
+                    wordcount: wc,
+                    turnaround: turnaround,
+                    imagecount: imgCount,
+                    quality: quality,
+                    request_type: requestType,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    if(response.success) {
+                        if (requestType === 'customize') {
+                            $(`.add-product-price[data-product-id="${productId}"]`).val(response.unit_price.toFixed(2));
+                        } else {
+                            $(`.product-price[data-product-id="${productId}"]`).val(response.unit_price.toFixed(2));
+                        }
+                        calculateTotalPrice();
+                        $row.find('input, select, button').prop('disabled', false);
+                    } else {
+                        toastr.error(response.message || 'Failed to update product');
+                        $row.find('input, select, button').prop('disabled', false);
+                    }
+                },
+                error: function() {
+                    toastr.error('An error occurred. Please try again.');
+                    $row.find('input, select, button').prop('disabled', false);
                 }
-            },
-            error: function() {
-                toastr.error('An error occurred. Please try again.');
+            });
+        }
+
+        function debounceUpdate(productId) {
+            if (debounceTimers[productId]) {
+                clearTimeout(debounceTimers[productId]);
+            }
+            debounceTimers[productId] = setTimeout(() => {
+                updateProduct(productId);
+            }, 1000);
+        }
+
+        $(document).on('click', '.wc-decrease', function() {
+            const productId = $(this).data('product-id');
+            const $input = $(`.wc-input[data-product-id="${productId}"]`);
+            let val = parseInt($input.val()) || wcMin;
+            const min = parseInt($input.attr('min')) || wcMin;
+
+            if (val - wcStep >= min) {
+                $input.val(val - wcStep);
+                debounceUpdate(productId);
+            } else {
+                toastr.warning(`Minimum word count is ${min}`, 'Limit reached');
             }
         });
-    }
 
-  
-    $(document).on('click', '.wc-decrease', function() {
-        const productId = $(this).data('product-id');
-        const $input = $(`.wc-input[data-product-id="${productId}"]`);
-        let val = parseInt($input.val()) || wcMin;
-        const min = parseInt($input.attr('min')) || wcMin;
+        $(document).on('click', '.wc-increase', function() {
+            const productId = $(this).data('product-id');
+            const $input = $(`.wc-input[data-product-id="${productId}"]`);
+            let val = parseInt($input.val()) || wcMin;
 
-        if (val - wcStep >= min) {
-            $input.val(val - wcStep);
-            updateProduct(productId);
-        } else {
-            toastr.warning(`Minimum word count is ${min}`, 'Limit reached');
-        }
+            $input.val(val + wcStep);
+            debounceUpdate(productId);
+        });
+
+        $(document).on('click', '.img-decrease', function() {
+            const productId = $(this).data('product-id');
+            const $input = $(`.img-input[data-product-id="${productId}"]`);
+            let val = parseInt($input.val()) || imgMin;
+            const min = parseInt($input.attr('min')) || imgMin;
+
+            if (val - imgStep >= min) {
+                $input.val(val - imgStep);
+                debounceUpdate(productId);
+            } else {
+                toastr.warning(`Minimum image count is ${min}`, 'Limit reached');
+            }
+        });
+
+        $(document).on('click', '.img-increase', function() {
+            const productId = $(this).data('product-id');
+            const $input = $(`.img-input[data-product-id="${productId}"]`);
+            let val = parseInt($input.val()) || imgMin;
+
+            $input.val(val + imgStep);
+            debounceUpdate(productId);
+        });
+
+        $(document).on('change', '.turnaround-select', function() {
+            const productId = $(this).data('product-id');
+            debounceUpdate(productId);
+        });
+
+        $(document).on('change', '.quality-select', function() {
+            const productId = $(this).data('product-id');
+            debounceUpdate(productId);
+        });
     });
-
-    $(document).on('click', '.wc-increase', function() {
-        const productId = $(this).data('product-id');
-        const $input = $(`.wc-input[data-product-id="${productId}"]`);
-        let val = parseInt($input.val()) || wcMin;
-
-        $input.val(val + wcStep);
-        updateProduct(productId);
-    });
-
-    $(document).on('click', '.img-decrease', function() {
-        const productId = $(this).data('product-id');
-        const $input = $(`.img-input[data-product-id="${productId}"]`);
-        let val = parseInt($input.val()) || imgMin;
-        const min = parseInt($input.attr('min')) || imgMin;
-
-        if (val - imgStep >= min) {
-            $input.val(val - imgStep);
-            updateProduct(productId);
-        } else {
-            toastr.warning(`Minimum image count is ${min}`, 'Limit reached');
-        }
-    });
-
-    $(document).on('click', '.img-increase', function() {
-        const productId = $(this).data('product-id');
-        const $input = $(`.img-input[data-product-id="${productId}"]`);
-        let val = parseInt($input.val()) || imgMin;
-
-        $input.val(val + imgStep);
-        updateProduct(productId);
-    });
-
-    $(document).on('change', '.turnaround-select', function() {
-        const productId = $(this).data('product-id');
-        updateProduct(productId);
-    });
-
-    $(document).on('change', '.quality-select', function() {
-        const productId = $(this).data('product-id');
-        updateProduct(productId);
-    });
-});
-
 </script>
+
 
 
 @endpush

@@ -1,5 +1,5 @@
 @forelse($products as $index => $product)
-<tr id="customize-product-row-{{ $product->id }}">
+<tr  class="product-row align-middle" id="customize-product-row-{{ $product->id }}" data-product-row-id="{{ $product->id }}" data-request-type="customize">
     <td class="text-center align-middle">
     <span class="d-inline-flex justify-content-center align-items-center text-danger" data-bs-toggle="tooltip" title="You can set parameters after adding the product to the cart." >
         <i class="bi bi-exclamation-circle-fill fs-4"></i>

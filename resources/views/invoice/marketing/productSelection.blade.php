@@ -285,6 +285,7 @@
                         </div>
                         <div class="col-md-2">
                             <label for="sort_unit_price" class="form-label text-center fw-semibold">Sort By Price</label>
+                            <input type="hidden" name="current_page_number" id="current_page_number" value="1">
                             <select class="form-select" id="sort_unit_price" name="sort_unit_price"  aria-label="Sort By Price">
                                 <option value="asc" selected>Low to High</option>
                                 <option value="desc">High to Low</option>
@@ -497,7 +498,7 @@
         customizeSliderTimer = setTimeout(() => {
             const [min, max] = values.map(v => Math.round(parseFloat(v.replace(currency, ''))));
             updateHiddenInputs(min, max, 'customize');
-            customizeProducts('reset');
+            customizeProducts('reset', currentPageNumber);
         }, 1500);
     });
 
@@ -508,7 +509,7 @@
         sortUnitPriceTimer = setTimeout(() => {
             if (currentSortValue !== lastSortUnitPrice) {
                 lastSortUnitPrice = currentSortValue;
-                customizeProducts('reset');
+                customizeProducts('reset', $('#current_page_number').val() || 1);
             }
         }, 1000);
     });
@@ -687,6 +688,7 @@
 
                 $('#customize-product-table-body').html(response.tableRows);
                 $('#customize-pagination').html(response.paginationHtml);
+                $('#current_page_number').val(response.currentPage);
                 calculateTotalPrice();
             },
             error: function (xhr, textStatus) {

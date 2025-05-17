@@ -141,24 +141,9 @@ class LaravelController extends Controller
     
         $bestMatch = collect($bestMatch);
         $bestMatch->each(function ($product) use ($site_id) {
-            $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
-                ->where('product_id', $product->id)
-                ->orderByDesc('last_price_changed')
-                ->first();
-    
-            if ($lastUpdate) {
-                $lastPriceChanged = Carbon::parse($lastUpdate->last_price_changed);
-                $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
-                $remainingDays = now()->diffInDays($nextPriceChangeDate, false);
-                $product->remaining_days = round(max($remainingDays, 0));
-                $product->can_edit_price = now()->greaterThanOrEqualTo($nextPriceChangeDate) ? 1 : 0;
 
-            } else {
-                $product->can_edit_price = 1;
-                $product->remaining_days = 0;
-                
-            }
-    
+            $product->can_edit_price = 1;
+            $product->remaining_days = 0;
             $product->project_title = null;
             $product->reference_link = null;
             $product->subject = null;
@@ -207,10 +192,7 @@ class LaravelController extends Controller
         ]);
     }
     
-    
-
-    
-
+ 
     public function addProducts(Request $request)
     {
         $site_id = $request->get('site_id');
@@ -474,23 +456,9 @@ class LaravelController extends Controller
         });
     
         $products->each(function ($product) use ($site_id) {
-            $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
-                ->where('product_id', $product->id)
-                ->orderByDesc('last_price_changed')
-                ->first();
-    
-            if ($lastUpdate) {
-                $lastPriceChanged = Carbon::parse($lastUpdate->last_price_changed);
-                $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
-                $remainingDays = now()->diffInDays($nextPriceChangeDate, false);
-                $product->remaining_days = round(max($remainingDays, 0));
-                $product->can_edit_price = now()->greaterThanOrEqualTo($nextPriceChangeDate) ? 1 : 0;
-
-            } else {
-                $product->can_edit_price = 1;
-                $product->remaining_days = 0;
-               
-            }
+           
+            $product->can_edit_price = 1;
+            $product->remaining_days = 0;
             $product->project_title = null;
             $product->reference_link = null;
             $product->subject = null;
@@ -518,27 +486,114 @@ class LaravelController extends Controller
         return response()->json([
             'tableRows' => $tableRows,
             'paginationHtml' => $paginationHtml,
-            'random_amount' => $random_amount
+            'random_amount' => $random_amount,
+            'currentPage' => $page
         ]);
     }
     
     public function updateProduct(Request $request)
     {
-        $site_id     = session('customer.site_id');
-        $product_id   = (int) $request->input('product_id');
-        $wordCount   = (int) $request->input('wordcount', 0);
-        $imageCount  = (int) $request->input('imagecount', 1);
-        $quantity    = (int) $request->input('quantity', 1);
-        $turnaround  = $request->input('turnaround', 'ta_standard');
-        $quality     = $request->input('quality', 'standard');
-        $unit_price  = $request->input('unit_price');
+        $siteId = session('customer.site_id');
+        $productId = $request->get('product_id');
+        $wordCount = intval($request->get('wordcount', 1));
+        $imageCount = intval($request->get('imagecount', 1));
+        $quantity = intval($request->get('quantity', 1));
+        $turnaround = $request->get('turnaround');
+        $quality = $request->get('quality');
+        $requestType = $request->get('request_type'); 
+        
+        $projectTitle = $request->get('project_title');
+        $referenceLink = $request->get('reference_link');
+        $subject = $request->get('subject');
+        $preferredVoice = $request->get('preferred_voice');
+        $preferredWritingStyle = $request->get('preferred_writing_style');
+        $brandName = $request->get('brand_name');
+        $audience = $request->get('audience');
+        $note = $request->get('note');
+        if(!$siteId){
+            return response()->json(['success' => false, 'message' => 'Missing site Id.']);
+        }
+        $site = Website::findOrFail($siteId);
+        DynamicDatabaseService::connect($site);
+    
+        $product = DB::connection($this->connectionType)
+            ->table($this->productTable)
+            ->where('id', $productId)
+            ->first();
+    
+        if (!$product) {
+            return response()->json(['success' => false, 'message' => 'Product not found.']);
+        }
+    
+        $qlty_factor = match ($quality) {
+            'q_premium' => $product->q_premium,
+            'q_expert' => $product->q_expert,
+            default => $product->q_standard,
+        };
+    
+        $wc_price = max(0, (($wordCount - $product->default_wc) / 25) * $product->extra_word);
+        $img_total = max(0, ($imageCount - 1) * $product->img_price);
+        $ta_total = $turnaround === 'ta_express' ? 25 : 0;
+    
+        $base_total = $product->default_price + $wc_price + $img_total + $ta_total;
+        $unit_price = round(($base_total + ($base_total * $qlty_factor)) * $quantity, 2);
+    
+        if ($request->get('request_type') !== 'customize') {
+            $readyProducts = session('ready_products', []);
+        
+            foreach ($readyProducts as &$p) {
+                if ($p['id'] == $productId) {
+                    $p['wordcount'] = $wordCount;
+                    $p['imagecount'] = $imageCount;
+                    $p['quantity'] = $quantity;
+                    $p['turnaround'] = $turnaround;
+                    $p['quality'] = $quality;
+                    $p['unit_price'] = $unit_price;
+        
+                    if ($request->has('project_title')) {
+                        $p['project_title'] = $request->get('project_title');
+                    }
+                    if ($request->has('reference_link')) {
+                        $p['reference_link'] = $request->get('reference_link');
+                    }
+                    if ($request->has('subject')) {
+                        $p['subject'] = $request->get('subject');
+                    }
+                    if ($request->has('preferred_voice')) {
+                        $p['preferred_voice'] = $request->get('preferred_voice');
+                    }
+                    if ($request->has('preferred_writing_style')) {
+                        $p['preferred_writing_style'] = $request->get('preferred_writing_style');
+                    }
+                    if ($request->has('brand_name')) {
+                        $p['brand_name'] = $request->get('brand_name');
+                    }
+                    if ($request->has('audience')) {
+                        $p['audience'] = $request->get('audience');
+                    }
+                    if ($request->has('note')) {
+                        $p['note'] = $request->get('note');
+                    }
+                    break;
+                }
+            }
+        
+            session()->put('ready_products', $readyProducts);
+        }
         
     
-        $site = Website::findOrFail($site_id);
-        DynamicDatabaseService::connect($site);
-
-        
+        return response()->json([
+            'success' => true,
+            'product_id' => $productId,
+            'wordcount' => $wordCount,
+            'imagecount' => $imageCount,
+            'quantity' => $quantity,
+            'turnaround' => $turnaround,
+            'quality' => $quality,
+            'unit_price' => $unit_price
+        ]);
     }
+    
     
 
     private function smartPagination($currentPage, $totalPages)

@@ -1,5 +1,5 @@
 @forelse($products as $index => $product)
-<tr class="product-row align-middle">
+<tr class="product-row align-middle" data-product-row-id="{{ $product->id }}" data-request-type="randomize">
     <td class="text-center align-middle">
     @if($product->param_status)
 
