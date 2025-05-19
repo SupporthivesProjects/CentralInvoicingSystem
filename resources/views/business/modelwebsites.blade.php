@@ -45,7 +45,7 @@
                                                 <th>link</th>
                                                 <th>Bank Name</th>
                                                 <th>Bank Code</th>
-                                                <th>Actions</th>
+                                                <th class="text-center">Actions</th>
                                                
                                             </tr>
                                         </thead>

@@ -221,7 +221,7 @@
                                     <th style="width: 20%;">Name</th>
                                     <th style="width: 15%;">Word Count</th>
                                     <th style="width: 12%;">Turnaround</th>
-                                    <th class="text-center" style="width: 13%;">Images</th>
+                                    <th class="text-center" style="width: 13%;">Img Count</th>
                                     <th style="width: 13%;">Quality</th>
                                     <th class="text-center unit-price-header" style="width: 27%;" data-column="6" data-order="desc">
                                         <span class="d-inline-flex align-items-center justify-content-center gap-1">
@@ -325,7 +325,7 @@
                             <th style="width: 20%;">Name</th>
                             <th style="width: 15%;">Word Count</th>
                             <th style="width: 12%;">Turnaround</th>
-                            <th class="text-center" style="width: 13%;">Images</th>
+                            <th class="text-center" style="width: 13%;">Img Count</th>
                             <th style="width: 13%;">Quality</th>
                             <th class="text-center unit-price-header" style="width: 20%;"  data-column="3" data-order="desc">
                                 <span class="d-inline-flex align-items-center justify-content-center gap-1">
@@ -397,14 +397,15 @@
     </div>
 </div>
 
-<div class="modal fade" id="productParamsModel" data-bs-backdrop="static" data-bs-keyboard="false">
+<div class="modal fade" id="productParamsModal" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content border-0 rounded-4 shadow-sm overflow-hidden">
 
             <div class="modal-header bg-primary border-0 text-white py-2 px-3">
-                <h5 class="modal-title fw-bold p-1">Product Parameters for <span id="productTitle">...</span></h5>
+                <h5 class="modal-title fw-bold p-1">Product Parameters for <span id="productTitle">...</span> (Optional)</h5>
                 <button type="button" class="btn-close btn-close-white p-1" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+
             <div id="productParamsLoader" class="text-center py-4" style="display: none;">
                 <div class="spinner-border text-primary" role="status"></div>
                 <p class="mt-2 mb-0 text-muted">Fetching old Params if any...</p>
@@ -413,64 +414,77 @@
             <form method="POST" action="#" id="productParamsForm" class="needs-validation" novalidate style="display: none;">
                 @csrf
                 <div class="modal-body bg-light p-3">
-
-                   
-                        <div class="row g-2">
-                            <div class="col-md-4">
-                                <input type="text" name="project_title" class="form-control form-control-sm py-1" placeholder="Project Title" required>
-                                <div class="invalid-feedback">Please enter the project title.</div>
-                            </div>
-                            <div class="col-md-4">
-                                <input type="url" name="reference_link" class="form-control form-control-sm py-1" placeholder="Reference Link">
-                            </div>
-                            <div class="col-md-4">
-                                <input type="text" name="subject" class="form-control form-control-sm py-1" placeholder="Subject" required>
-                                <div class="invalid-feedback">Please enter the subject.</div>
-                            </div>
-                            <div class="col-md-4">
-                                <select name="preferred_voice" class="form-select form-select-sm py-1">
-                                    <option value="">Preferred Voice (optional)</option>
-                                    <option value="1st Person">1st Person</option>
-                                    <option value="2nd Person">2nd Person</option>
-                                    <option value="3rd Person">3rd Person</option>
-                                </select>
-                            </div>
-                            <div class="col-md-4">
-                                <select name="preferred_writing_style" class="form-select form-select-sm py-1">
-                                    <option value="">Preferred Writing Style (optional)</option>
-                                    <option value="educational">Educational</option>
-                                    <option value="formal">Formal</option>
-                                    <option value="informal">Informal</option>
-                                </select>
-                            </div>
-                            <div class="col-md-4">
-                                <input type="text" name="brand_name" class="form-control form-control-sm py-1" placeholder="Brand Name (optional)">
-                            </div>
-                            <div class="col-md-6">
-                                <select name="audience" class="form-select form-select-sm py-1">
-                                    <option value="">Select Audience (optional)</option>
-                                    <option value="customers">Customers</option>
-                                    <option value="businessman">Businessmen</option>
-                                    <option value="others">Others</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6">
-                                <input type="text" name="note" class="form-control form-control-sm py-1" placeholder="Note" required>
-                                <div class="invalid-feedback">Please enter the note.</div>
-                            </div>
+                    <div class="row g-2">
+                        <div class="col-md-4">
+                            <label for="project_title" class="form-label mb-0">Project Title <span class="text-danger">*</span></label>
+                            <input type="hidden" name="product_id" id="product_id">
+                            <input type="text" name="project_title" id="project_title" class="form-control form-control-sm py-1" required>
+                            <div class="invalid-feedback">Please enter the project title.</div>
                         </div>
-                   
+
+                        <div class="col-md-4">
+                            <label for="reference_link" class="form-label mb-0">Reference Link</label>
+                            <input type="url" name="reference_link" id="reference_link" class="form-control form-control-sm py-1">
+                        </div>
+
+                        <div class="col-md-4">
+                            <label for="subject" class="form-label mb-0">Subject <span class="text-danger">*</span></label>
+                            <input type="text" name="subject" id="subject" class="form-control form-control-sm py-1" required>
+                            <div class="invalid-feedback">Please enter the subject.</div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label for="preferred_voice" class="form-label mb-0">Preferred Voice</label>
+                            <select name="preferred_voice" id="preferred_voice" class="form-select form-select-sm py-1">
+                                <option value="" disabled selected>Preferred Voice (optional)</option>
+                                <option value="1st Person">1st Person</option>
+                                <option value="2nd Person">2nd Person</option>
+                                <option value="3rd Person">3rd Person</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label for="preferred_writing_style" class="form-label mb-0">Preferred Writing Style</label>
+                            <select name="preferred_writing_style" id="preferred_writing_style" class="form-select form-select-sm py-1">
+                                <option value="" disabled selected>Preferred Writing Style (optional)</option>
+                                <option value="educational">Educational</option>
+                                <option value="formal">Formal</option>
+                                <option value="informal">Informal</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label for="brand_name" class="form-label mb-0">Brand Name</label>
+                            <input type="text" name="brand_name" id="brand_name" class="form-control form-control-sm py-1" placeholder="Brand Name (optional)">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="audience" class="form-label mb-0">Audience</label>
+                            <select name="audience" id="audience" class="form-select form-select-sm py-1">
+                                <option value="" disabled selected>Select Audience (optional)</option>
+                                <option value="customers">Customers</option>
+                                <option value="businessman">Businessmen</option>
+                                <option value="others">Others</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="note" class="form-label mb-0">Note <span class="text-danger">*</span></label>
+                            <input type="text" name="note" id="note" class="form-control form-control-sm py-1" required>
+                            <div class="invalid-feedback">Please enter the note.</div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="modal-footer bg-light border-0 rounded-bottom-4 d-flex justify-content-end gap-2 py-2 px-3" id="productParamsFooter" style="display: none;">
                     <button type="button" class="btn btn-outline-secondary btn-sm px-4" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary btn-sm px-4">Save Changes</button>
+                    <button type="button" onclick="saveProductParams(this)" class="btn btn-primary btn-sm px-4">Save Changes</button>
                 </div>
             </form>
-
         </div>
     </div>
 </div>
+
 
 
 @endsection
@@ -1246,6 +1260,7 @@ $(document).ready(function() {
                 success: function(response) {
                     if(response.success) {
                         if (requestType === 'customize') {
+                                updateTempTotal();
                             $(`.add-product-price[data-product-id="${productId}"]`).val(response.unit_price.toFixed(2));
                         } else {
                             $(`.product-price[data-product-id="${productId}"]`).val(response.unit_price.toFixed(2));
@@ -1331,6 +1346,67 @@ $(document).ready(function() {
     });
 </script>
 
+<script>
+function saveProductParams(button) {
 
+    let $btn = $(button);
+    $btn.prop('disabled', true);
+    const originalHtml = $btn.html();
+    $btn.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Saving...');
+
+    let formData = $('#productParamsForm').serialize();
+
+    $.ajax({
+        url: "{{ route('update.product') }}",
+        method: 'POST',
+        data: formData,
+        dataType: 'json',
+        success: function(response) {
+            if (response.success && response.product_id) {
+                const productId = response.product_id;
+                const $paramBtn = $(`#param-btn-${response.product_id}`);
+                $('#productParamsModal').modal('hide');
+                if (response.param_status) {
+                $paramBtn
+                        .removeClass('btn-warning')
+                        .addClass('btn-success')
+                        .attr('title', 'Parameter set, click to view')
+                        .attr('data-bs-original-title', 'Parameter set, click to view') // also update this
+                        .find('i')
+                        .removeClass('bi-exclamation-circle-fill')
+                        .addClass('bi-check-circle-fill');
+                } else {
+                    $paramBtn
+                        .removeClass('btn-success')
+                        .addClass('btn-warning')
+                        .attr('title', 'Parameter missing, click to add')
+                        .attr('data-bs-original-title', 'Parameter missing, click to add')
+                        .find('i')
+                        .removeClass('bi-check-circle-fill')
+                        .addClass('bi-exclamation-circle-fill');
+                }
+                const btnEl = $paramBtn.get(0);
+                const tooltipInstance = bootstrap.Tooltip.getInstance(btnEl);
+                if (tooltipInstance) {
+                    tooltipInstance.setContent({ '.tooltip-inner': $paramBtn.attr('title') });
+                }
+                $paramBtn.tooltip('dispose').tooltip();
+                
+            } else {
+                toastr.error('Params update failed, Connect with Mr. Narayan', 'Update failed');
+                $('#productParamsModal').modal('hide');
+            }
+        },
+        error: function() {
+            toastr.error('Something went wrong with the request.');
+            $('#productParamsModal').modal('hide');
+        },
+        complete: function() {
+            $btn.prop('disabled', false);
+            $btn.html(originalHtml);
+        }
+    });
+}
+</script>
 
 @endpush

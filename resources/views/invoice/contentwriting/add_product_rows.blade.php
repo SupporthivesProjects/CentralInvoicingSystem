@@ -84,40 +84,6 @@
 
 
 <script>
-  
-
-    $(document).ready(function () {
-        let originalAmount = parseFloat(@json(session('current_amount', 0)));
-
-        function updateTempTotal() {
-            let selectedTotal = 0;
-
-            $('input[name="add_product_ids[]"]:checked').each(function () {
-                let productId = $(this).val();
-                let priceInput = $('.add-product-price[data-product-id="' + productId + '"]');
-                let price = parseFloat(priceInput.val()) || 0;
-                selectedTotal += price;
-            });
-
-            let tempTotal = originalAmount + selectedTotal;
-            let invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
-            let discountAmount = 0;
-
-            if (tempTotal > invoiceAmount) {
-                discountAmount = tempTotal - invoiceAmount;
-            }
-
-            $('#temp_current_amount_text').text(tempTotal.toFixed(2));
-            $('#temp_discount_amount_text').text(discountAmount.toFixed(2));
-            $('#temp_invoice_amount_text').text(invoiceAmount.toFixed(2));
-        }
-
-        $(document).on('input change', 'input[name="add_product_ids[]"], .add-product-price, #invoice_amount', function () {
-            updateTempTotal();
-        });
-    });
-</script>
-<script>
     $(document).ready(function () {
         $('#add-custom-products').off('click').on('click', function () {
             let selectedProducts = [];
@@ -188,99 +154,35 @@
         });
     });
 </script>
-
-
 <script>
-    $(document).ready(function() {
-        const wcStep = 25;
-        const imgStep = 1;
-        const wcMin = 0;
-        const imgMin = 1;
+  
+    function updateTempTotal() {
+        let originalAmount = parseFloat(@json(session('current_amount', 0)));
+        let selectedTotal = 0;
 
-        function updateProduct(productId) {
-            const wc = parseInt($(.wc-input[data-product-id="${productId}"]).val()) || wcMin;
-            const turnaround = $(.turnaround-select[data-product-id="${productId}"]).val() || 'ta_standard';
-            const imgCount = parseInt($(.img-input[data-product-id="${productId}"]).val()) || imgMin;
-            const quality = $(.quality-select[data-product-id="${productId}"]).val() || 'q_standard';
+        $('input[name="add_product_ids[]"]:checked').each(function () {
+            let productId = $(this).val();
+            let priceInput = $('.add-product-price[data-product-id="' + productId + '"]');
+            let price = parseFloat(priceInput.val()) || 0;
+            selectedTotal += price;
+        });
 
-            $.ajax({
-                url: "{{ route('update.product') }}",
-                method: 'POST',
-                data: {
-                    product_id: productId,
-                    wordcount: wc,
-                    turnaround: turnaround,
-                    imagecount: imgCount,
-                    quality: quality,
-                    _token: '{{ csrf_token() }}'
-                },
-                success: function(response) {
-                    if(response.success) {
-                        toastr.success(response.message || 'Product updated successfully');
-                    } else {
-                        toastr.error(response.message || 'Failed to update product');
-                    }
-                },
-                error: function() {
-                    toastr.error('An error occurred. Please try again.');
-                }
-            });
+        let tempTotal = originalAmount + selectedTotal;
+        let invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
+        let discountAmount = 0;
+
+        if (tempTotal > invoiceAmount) {
+            discountAmount = tempTotal - invoiceAmount;
         }
 
-        $('.wc-decrease').click(function() {
-            const productId = $(this).data('product-id');
-            const $input = $(.wc-input[data-product-id="${productId}"]);
-            let val = parseInt($input.val()) || wcMin;
-            const min = parseInt($input.attr('min')) || wcMin;
+        $('#temp_current_amount_text').text(tempTotal.toFixed(2));
+        $('#temp_discount_amount_text').text(discountAmount.toFixed(2));
+        $('#temp_invoice_amount_text').text(invoiceAmount.toFixed(2));
+    }
 
-            if (val - wcStep >= min) {
-                $input.val(val - wcStep);
-                updateProduct(productId);
-            } else {
-                toastr.warning(Minimum word count is ${min}, 'Limit reached');
-            }
-        });
-
-        $('.wc-increase').click(function() {
-            const productId = $(this).data('product-id');
-            const $input = $(.wc-input[data-product-id="${productId}"]);
-            let val = parseInt($input.val()) || wcMin;
-
-            $input.val(val + wcStep);
-            updateProduct(productId);
-        });
-
-        $('.img-decrease').click(function() {
-            const productId = $(this).data('product-id');
-            const $input = $(.img-input[data-product-id="${productId}"]);
-            let val = parseInt($input.val()) || imgMin;
-            const min = parseInt($input.attr('min')) || imgMin;
-
-            if (val - imgStep >= min) {
-                $input.val(val - imgStep);
-                updateProduct(productId);
-            } else {
-                toastr.warning(Minimum image count is ${min}, 'Limit reached');
-            }
-        });
-
-        $('.img-increase').click(function() {
-            const productId = $(this).data('product-id');
-            const $input = $(.img-input[data-product-id="${productId}"]);
-            let val = parseInt($input.val()) || imgMin;
-
-            $input.val(val + imgStep);
-            updateProduct(productId);
-        });
-
-        $('.turnaround-select').change(function() {
-            const productId = $(this).data('product-id');
-            updateProduct(productId);
-        });
-
-        $('.quality-select').change(function() {
-            const productId = $(this).data('product-id');
-            updateProduct(productId);
+    $(document).ready(function () {
+        $(document).on('input change', 'input[name="add_product_ids[]"], .add-product-price, #invoice_amount', function () {
+            updateTempTotal();
         });
     });
 </script>

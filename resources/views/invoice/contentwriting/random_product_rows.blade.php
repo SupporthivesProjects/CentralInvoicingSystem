@@ -1,16 +1,11 @@
 @forelse($products as $index => $product)
 <tr class="product-row align-middle" data-product-row-id="{{ $product->id }}" data-request-type="randomize">
     <td class="text-center align-middle">
-    @if($product->param_status)
-
-        <button onclick="getProductParams({{ $product->id }}, this)" data-product-name="{{ $product->name }}" class="btn btn-success btn-sm" data-bs-toggle="tooltip" title="Parameter set, click to view">
-            <i class="bi bi-check-circle-fill"></i>
-        </button>
-    @else
-        <button onclick="getProductParams({{ $product->id }}, this)" data-product-name="{{ $product->name }}" class="btn btn-warning btn-sm" data-bs-toggle="tooltip" title="Parameter missing, click to add">
-            <i class="bi bi-exclamation-circle-fill"></i>
-        </button>
-    @endif
+        @if($product->param_status)
+            <button id="param-btn-{{ $product->id }}" onclick="getProductParams({{ $product->id }}, this)" data-product-name="{{ $product->name }}" data-product-id="{{ $product->id }}" class="btn btn-sm btn-success" data-bs-toggle="tooltip" title="Parameter set, click to view"><i class="bi bi-check-circle-fill"></i></button>
+        @else
+            <button id="param-btn-{{ $product->id }}" onclick="getProductParams({{ $product->id }}, this)" data-product-name="{{ $product->name }}" data-product-id="{{ $product->id }}" class="btn btn-sm btn-warning" data-bs-toggle="tooltip" title="Parameter missing, click to add"><i class="bi bi-exclamation-circle-fill"></i></button>
+        @endif
     </td>
     <td class="text-capitalize">
         {{ $product->name }}
@@ -100,7 +95,7 @@
         const productName = $(element).data('product-name') || `Product #${productId}`;
         $('#productTitle').text(productName);
 
-        const myModal = new bootstrap.Modal(document.getElementById('productParamsModel'));
+        const myModal = new bootstrap.Modal(document.getElementById('productParamsModal'));
         myModal.show();
 
         $('#productParamsForm')[0].reset();
@@ -115,7 +110,7 @@
             success: function(response) {
                 if (response.success) {
                     let product = response.product;
-
+                    $('input[name="product_id"]').val(product.id);
                     $('input[name="project_title"]').val(product.project_title || '');
                     $('input[name="reference_link"]').val(product.reference_link || '');
                     $('input[name="subject"]').val(product.subject || '');

@@ -202,7 +202,6 @@ class LaravelController extends Controller
         DynamicDatabaseService::connect($site);
     
         $readyProducts = session()->get('ready_products', []);
-    
         foreach ($productsData as $productData) {
             $productId = $productData['product_id'];
             $unitPrice = floatval($productData['unit_price']);
@@ -216,7 +215,7 @@ class LaravelController extends Controller
                 if ($item['id'] == $productId) {
                     $item['unit_price'] = $unitPrice;
                     $item['turnaround'] = $turnaround;
-                    $item['image_count'] = $imageCount;
+                    $item['imagecount'] = $imageCount;
                     $item['quality'] = $quality;
                     $item['wordcount'] = $wordcount;
                     $item['quantity'] = 1;
@@ -238,7 +237,7 @@ class LaravelController extends Controller
                     'id' => $productId,
                     'unit_price' => $unitPrice,
                     'turnaround' => $turnaround,
-                    'image_count' => $imageCount,
+                    'imagecount' => $imageCount,
                     'quality' => $quality,
                     'wordcount' => $wordcount,
                     'quantity' => 1,
@@ -256,51 +255,29 @@ class LaravelController extends Controller
   
         session()->put('ready_products', $readyProducts);
         $recalculatedProducts = session('ready_products', []);
+
+       
         $productIds = collect($recalculatedProducts)->pluck('id')->reverse()->values()->toArray();
-    
+
         $products = DB::connection($this->connectionType)->table($this->productTable)
             ->select('id', 'name', 'slug', 'default_wc', 'default_price', 'extra_word', 'ta_standard', 'ta_express', 'q_standard', 'q_premium', 'q_expert', 'img_price')
             ->whereIn('id', $productIds)
             ->get()
             ->keyBy('id');
-    
-        $products = collect($productIds)->map(function ($id) use ($products) {
-            return $products[$id];
-        });
-    
+
         $recalculatedProducts = collect($recalculatedProducts)->map(function ($sessionProduct) use ($products) {
-            $product = $products->get($sessionProduct['id']);
+            $product = $products->get($sessionProduct['id']); 
             if (!$product) {
                 return null;
             }
-    
-            $wordCount = $sessionProduct['wordcount'] ?? 1;
-            $imageCount = $sessionProduct['imagecount'] ?? 1;
-            $quantity = $sessionProduct['quantity'] ?? 1;
-            $quality = $sessionProduct['quality'] ?? 'q_standard';
-            $turnaround = $sessionProduct['turnaround'] ?? 'ta_standard';
-    
-            $product->turnaround = $turnaround;
-            $product->quality = $quality;
-    
-            $qlty_factor = match ($product->quality) {
-                'q_premium' => $product->q_premium,
-                'q_expert' => $product->q_expert,
-                default => $product->q_standard,
-            };
-    
-            $wc_price = max(0, (($wordCount - $product->default_wc) / 25) * $product->extra_word);
-            $img_total = max(0, ($imageCount - 1) * $product->img_price);
-            $ta_total = $product->turnaround === 'ta_express' ? 25 : 0;
-    
-            $base_total = $product->default_price + $wc_price + $img_total + $ta_total;
-            $unit_price = ($base_total + ($base_total * $qlty_factor)) * $quantity;
-    
-            $product->unit_price = $unit_price;
-            $product->wordcount = $wordCount;
-            $product->imagecount = $imageCount;
-            $product->quantity = $quantity;
-    
+
+            $product->turnaround = $sessionProduct['turnaround'] ?? 'ta_standard';
+            $product->quality = $sessionProduct['quality'] ?? 'q_standard';
+            $product->unit_price = $sessionProduct['unit_price'] ?? 0.00;
+            $product->wordcount = $sessionProduct['wordcount'] ?? 1;
+            $product->imagecount = $sessionProduct['imagecount'] ?? $sessionProduct['image_count'] ?? 1;
+            $product->quantity = $sessionProduct['quantity'] ?? 1;
+
             $product->can_edit_price = 1;
             $product->remaining_days = 0;
             $product->project_title = $sessionProduct['project_title'] ?? null;
@@ -311,11 +288,12 @@ class LaravelController extends Controller
             $product->brand_name = $sessionProduct['brand_name'] ?? null;
             $product->audience = $sessionProduct['audience'] ?? null;
             $product->note = $sessionProduct['note'] ?? null;
+
             $product->param_status = !empty($product->project_title) && !empty($product->note) && !empty($product->subject);
-    
+
             return $product;
         })->filter()->values();
-    
+
         $modelType = $site->businessModel->model_type;
         session(['current_amount' => collect($recalculatedProducts)->sum('unit_price')]);
     
@@ -582,21 +560,24 @@ class LaravelController extends Controller
     {
         $siteId = session('customer.site_id');
         $productId = $request->get('product_id');
-        $wordCount = intval($request->get('wordcount', 1));
-        $imageCount = intval($request->get('imagecount', 1));
-        $quantity = intval($request->get('quantity', 1));
-        $turnaround = $request->get('turnaround');
-        $quality = $request->get('quality');
-        $requestType = $request->get('request_type'); 
-        
-        $projectTitle = $request->get('project_title');
-        $referenceLink = $request->get('reference_link');
-        $subject = $request->get('subject');
-        $preferredVoice = $request->get('preferred_voice');
-        $preferredWritingStyle = $request->get('preferred_writing_style');
-        $brandName = $request->get('brand_name');
-        $audience = $request->get('audience');
-        $note = $request->get('note');
+        $readyProducts = session('ready_products', []);
+        $oldProduct = collect($readyProducts)->firstWhere('id', $productId) ?? [];
+
+        $wordCount = intval($request->get('wordcount', $oldProduct['wordcount'] ?? 1));
+        $imageCount = intval($request->get('imagecount', $oldProduct['imagecount'] ?? 1));
+        $quantity = intval($request->get('quantity', $oldProduct['quantity'] ?? 1));
+        $turnaround = $request->get('turnaround', $oldProduct['turnaround'] ?? 'ta_standard');
+        $quality = $request->get('quality', $oldProduct['quality'] ?? 'q_standard');
+
+        $projectTitle = $request->get('project_title', $oldProduct['project_title'] ?? null);
+        $referenceLink = $request->get('reference_link', $oldProduct['reference_link'] ?? null);
+        $subject = $request->get('subject', $oldProduct['subject'] ?? null);
+        $preferredVoice = $request->get('preferred_voice', $oldProduct['preferred_voice'] ?? null);
+        $preferredWritingStyle = $request->get('preferred_writing_style', $oldProduct['preferred_writing_style'] ?? null);
+        $brandName = $request->get('brand_name', $oldProduct['brand_name'] ?? null);
+        $audience = $request->get('audience', $oldProduct['audience'] ?? null);
+        $note = $request->get('note', $oldProduct['note'] ?? null);
+
         if(!$siteId){
             return response()->json(['success' => false, 'message' => 'Missing site Id.']);
         }
@@ -636,36 +617,24 @@ class LaravelController extends Controller
                     $p['turnaround'] = $turnaround;
                     $p['quality'] = $quality;
                     $p['unit_price'] = $unit_price;
-        
-                    if ($request->has('project_title')) {
-                        $p['project_title'] = $request->get('project_title');
-                    }
-                    if ($request->has('reference_link')) {
-                        $p['reference_link'] = $request->get('reference_link');
-                    }
-                    if ($request->has('subject')) {
-                        $p['subject'] = $request->get('subject');
-                    }
-                    if ($request->has('preferred_voice')) {
-                        $p['preferred_voice'] = $request->get('preferred_voice');
-                    }
-                    if ($request->has('preferred_writing_style')) {
-                        $p['preferred_writing_style'] = $request->get('preferred_writing_style');
-                    }
-                    if ($request->has('brand_name')) {
-                        $p['brand_name'] = $request->get('brand_name');
-                    }
-                    if ($request->has('audience')) {
-                        $p['audience'] = $request->get('audience');
-                    }
-                    if ($request->has('note')) {
-                        $p['note'] = $request->get('note');
-                    }
+
+                    $p['project_title'] = $projectTitle;
+                    $p['reference_link'] = $referenceLink;
+                    $p['subject'] = $subject;
+                    $p['preferred_voice'] = $preferredVoice;
+                    $p['preferred_writing_style'] = $preferredWritingStyle;
+                    $p['brand_name'] = $brandName;
+                    $p['audience'] = $audience;
+                    $p['note'] = $note;
                     break;
                 }
             }
         
-            session()->put('ready_products', $readyProducts);
+            session()->put([
+                'ready_products' => $readyProducts,
+                'current_amount' => collect($readyProducts)->sum('unit_price'),
+            ]);
+            
         }
         
     
@@ -677,8 +646,18 @@ class LaravelController extends Controller
             'quantity' => $quantity,
             'turnaround' => $turnaround,
             'quality' => $quality,
-            'unit_price' => $unit_price
+            'unit_price' => $unit_price,
+            'project_title' => $projectTitle,
+            'reference_link' => $referenceLink,
+            'subject' => $subject,
+            'preferred_voice' => $preferredVoice,
+            'preferred_writing_style' => $preferredWritingStyle,
+            'brand_name' => $brandName,
+            'audience' => $audience,
+            'note' => $note,
+            'param_status' => !empty($projectTitle) && !empty($note) && !empty($subject)
         ]);
+        
     }
     
 
