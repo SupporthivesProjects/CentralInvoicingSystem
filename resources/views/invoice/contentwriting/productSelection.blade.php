@@ -836,129 +836,6 @@ function clearRandomizedFilter(button) {
 }
 </script>
 
-<script>
-    function generateInvoice(event) {
-        event.preventDefault();
-
-        const customer_name = $('input[name="customer_name"]');
-        const invoice_date = $('input[name="invoice_date"]');
-        const selectedProducts = $('input[name="product_ids[]"]:checked');
-        const invoiceNumber = $('input[name="invoice_number"]').val();
-
-        const invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
-        const currentAmount = parseFloat($('#current_amount').val()) || 0;
-        const discountAmount = parseFloat($('#discount_amount').val()) || 0;
-
-        if (selectedProducts.length === 0) {
-            toastr.error('Please select your products combo...', 'No Product Selected');
-            return;
-        }
-        if ($.trim(customer_name.val()) === '') {
-            toastr.error('Customer name cannot be empty.', 'Missing Customer Name');
-            return;
-        }
-
-        if ($.trim(invoice_date.val()) === '') {
-            toastr.error('Invoice date cannot be empty.', 'Missing Invoice Date');
-            return;
-        }
-
-        if (currentAmount < invoiceAmount) {
-            $('#current_amount').addClass('border border-danger');
-            setTimeout(() => {
-                $('#current_amount').removeClass('border border-danger');
-            }, 2000);
-            toastr.error('Total is less than invoice amount.', 'Mismatch');
-            return;
-        }
-
-        const expectedAmount = currentAmount - discountAmount;
-        const epsilon = 0.01;
-
-        if (Math.abs(expectedAmount - invoiceAmount) > epsilon) {
-            const diff = currentAmount - invoiceAmount;
-            const diffFixed = diff.toFixed(2);
-
-            $('#discount_amount').addClass('border border-danger');
-            setTimeout(() => {
-                $('#discount_amount').removeClass('border border-danger');
-            }, 2000);
-
-            if (discountAmount > diff) {
-                toastr.error(`The discount amount of $${discountAmount} exceeds the expected discount of $${diffFixed}.`, 'Discount Too High');
-            } else {
-                toastr.error(`Please apply a discount of $${diffFixed} to match the invoice amount.`, 'Give Discount');
-            }
-            return;
-        }
-
-        if (!invoiceNumber) {
-            toastr.error('Please enter your invoice number or generate one randomly.', 'Invoice Number Missing');
-            let blinkCount = 0;
-            const interval = setInterval(() => {
-                invoiceNumber.toggleClass('border border-danger');
-                blinkCount++;
-                if (blinkCount >= 10) { 
-                    clearInterval(interval);
-                    invoiceNumber.removeClass('border border-danger');
-                }
-            }, 200);
-            return;
-        }
-
-        $('#generate-invoice-form').find('input[name="product_data[]"]').remove();
-
-        selectedProducts.each(function () {
-            const productId = $(this).val();
-            const unitPrice = $(`input[data-product-id="${productId}"]`).val();
-
-            $('#generate-invoice-form').append($('<input>', {
-                type: 'hidden',
-                name: 'product_data[]',
-                value: JSON.stringify({ product_id: productId, unit_price: unitPrice })
-            }));
-        });
-
-       
-        let blinkCount = 0;
-        const maxBlinkCount = 30;
-        const blinkInterval = 500;
-
-        $('#discount_amount, #current_amount, #invoice_amount').css('transition', 'border-color 0.3s ease');
-
-        (function blinkBorder() {
-            $('#discount_amount, #current_amount, #invoice_amount').toggleClass('border border-success');
-            blinkCount++;
-            if (blinkCount < maxBlinkCount) {
-                setTimeout(blinkBorder, blinkInterval);
-            } else {
-                $('#discount_amount, #current_amount, #invoice_amount').removeClass('border border-success');
-            }
-        })();
-
-        Swal.fire({
-            title: 'Generating Invoice...',
-            html: getPrinterLoaderRowHTML(6),
-            showConfirmButton: false,
-            allowOutsideClick: false,
-            allowEscapeKey: false,
-            width: '334px',
-            height: '280px',
-            background: 'rgba(0, 0, 0, 0.1)',
-            customClass: {
-                popup: 'p-2 text-center',
-                title: 'text-white'
-            }
-        });
-
-        $('#generate-invoice-form')[0].submit();
-
-        setTimeout(() => {
-            Swal.close();
-            toastr.success('Invoice is ready and will download shortly.', 'Completed');
-        }, 20000);  
-    }
-</script>
 
 
 <script>
@@ -1407,6 +1284,132 @@ function saveProductParams(button) {
         }
     });
 }
+</script>
+
+
+<script>
+    function generateInvoice(event) {
+        event.preventDefault();
+
+        const customer_name = $('input[name="customer_name"]');
+        const invoice_date = $('input[name="invoice_date"]');
+        const selectedProducts = $('input[name="product_ids[]"]:checked');
+        const invoiceNumber = $('input[name="invoice_number"]').val();
+
+        const invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
+        const currentAmount = parseFloat($('#current_amount').val()) || 0;
+        const discountAmount = parseFloat($('#discount_amount').val()) || 0;
+
+        if (selectedProducts.length === 0) {
+            toastr.error('Please select your products combo...', 'No Product Selected');
+            return;
+        }
+        if ($.trim(customer_name.val()) === '') {
+            toastr.error('Customer name cannot be empty.', 'Missing Customer Name');
+            return;
+        }
+
+        if ($.trim(invoice_date.val()) === '') {
+            toastr.error('Invoice date cannot be empty.', 'Missing Invoice Date');
+            return;
+        }
+
+        if (currentAmount < invoiceAmount) {
+            $('#current_amount').addClass('border border-danger');
+            setTimeout(() => {
+                $('#current_amount').removeClass('border border-danger');
+            }, 2000);
+            toastr.error('Total is less than invoice amount.', 'Mismatch');
+            return;
+        }
+
+        const expectedAmount = currentAmount - discountAmount;
+        const epsilon = 0.01;
+
+        if (Math.abs(expectedAmount - invoiceAmount) > epsilon) {
+            const diff = currentAmount - invoiceAmount;
+            const diffFixed = diff.toFixed(2);
+
+            $('#discount_amount').addClass('border border-danger');
+            setTimeout(() => {
+                $('#discount_amount').removeClass('border border-danger');
+            }, 2000);
+
+            if (discountAmount > diff) {
+                toastr.error(`The discount amount of $${discountAmount} exceeds the expected discount of $${diffFixed}.`, 'Discount Too High');
+            } else {
+                toastr.error(`Please apply a discount of $${diffFixed} to match the invoice amount.`, 'Give Discount');
+            }
+            return;
+        }
+
+        if (!invoiceNumber) {
+            toastr.error('Please enter your invoice number or generate one randomly.', 'Invoice Number Missing');
+            let blinkCount = 0;
+            const interval = setInterval(() => {
+                invoiceNumber.toggleClass('border border-danger');
+                blinkCount++;
+                if (blinkCount >= 10) { 
+                    clearInterval(interval);
+                    invoiceNumber.removeClass('border border-danger');
+                }
+            }, 200);
+            return;
+        }
+
+        $('#generate-invoice-form').find('input[name="product_data[]"]').remove();
+
+        selectedProducts.each(function () {
+            const productId = $(this).val();
+            const unitPrice = $(`[data-product-id="${productId}"]`).closest('tr').find('.product-price').val();
+
+            $('#generate-invoice-form').append($('<input>', {
+                type: 'hidden',
+                name: 'product_data[]',
+                value: JSON.stringify({ product_id: productId, unit_price: unitPrice })
+            }));
+        });
+
+
+       
+        let blinkCount = 0;
+        const maxBlinkCount = 30;
+        const blinkInterval = 500;
+
+        $('#discount_amount, #current_amount, #invoice_amount').css('transition', 'border-color 0.3s ease');
+
+        (function blinkBorder() {
+            $('#discount_amount, #current_amount, #invoice_amount').toggleClass('border border-success');
+            blinkCount++;
+            if (blinkCount < maxBlinkCount) {
+                setTimeout(blinkBorder, blinkInterval);
+            } else {
+                $('#discount_amount, #current_amount, #invoice_amount').removeClass('border border-success');
+            }
+        })();
+
+        Swal.fire({
+            title: 'Generating Invoice...',
+            html: getPrinterLoaderRowHTML(6),
+            showConfirmButton: false,
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            width: '334px',
+            height: '280px',
+            background: 'rgba(0, 0, 0, 0.1)',
+            customClass: {
+                popup: 'p-2 text-center',
+                title: 'text-white'
+            }
+        });
+
+        $('#generate-invoice-form')[0].submit();
+
+        setTimeout(() => {
+            Swal.close();
+            toastr.success('Invoice is ready and will download shortly.', 'Completed');
+        }, 20000);  
+    }
 </script>
 
 @endpush

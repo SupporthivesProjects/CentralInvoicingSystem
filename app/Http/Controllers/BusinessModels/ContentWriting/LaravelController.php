@@ -233,7 +233,8 @@ class LaravelController extends Controller
             }
     
             if (!$exists) {
-                $readyProducts[] = [
+
+                array_unshift($readyProducts, [
                     'id' => $productId,
                     'unit_price' => $unitPrice,
                     'turnaround' => $turnaround,
@@ -249,35 +250,34 @@ class LaravelController extends Controller
                     'brand_name' => null,
                     'audience' => null,
                     'note' => null
-                ];
+                ]);
             }
         }
-  
+    
         session()->put('ready_products', $readyProducts);
         $recalculatedProducts = session('ready_products', []);
-
-       
-        $productIds = collect($recalculatedProducts)->pluck('id')->reverse()->values()->toArray();
-
+    
+        $productIds = collect($recalculatedProducts)->pluck('id')->toArray();
+    
         $products = DB::connection($this->connectionType)->table($this->productTable)
             ->select('id', 'name', 'slug', 'default_wc', 'default_price', 'extra_word', 'ta_standard', 'ta_express', 'q_standard', 'q_premium', 'q_expert', 'img_price')
             ->whereIn('id', $productIds)
             ->get()
             ->keyBy('id');
-
+    
         $recalculatedProducts = collect($recalculatedProducts)->map(function ($sessionProduct) use ($products) {
-            $product = $products->get($sessionProduct['id']); 
+            $product = $products->get($sessionProduct['id']);
             if (!$product) {
                 return null;
             }
-
+    
             $product->turnaround = $sessionProduct['turnaround'] ?? 'ta_standard';
             $product->quality = $sessionProduct['quality'] ?? 'q_standard';
             $product->unit_price = $sessionProduct['unit_price'] ?? 0.00;
             $product->wordcount = $sessionProduct['wordcount'] ?? 1;
             $product->imagecount = $sessionProduct['imagecount'] ?? $sessionProduct['image_count'] ?? 1;
             $product->quantity = $sessionProduct['quantity'] ?? 1;
-
+    
             $product->can_edit_price = 1;
             $product->remaining_days = 0;
             $product->project_title = $sessionProduct['project_title'] ?? null;
@@ -288,12 +288,12 @@ class LaravelController extends Controller
             $product->brand_name = $sessionProduct['brand_name'] ?? null;
             $product->audience = $sessionProduct['audience'] ?? null;
             $product->note = $sessionProduct['note'] ?? null;
-
+    
             $product->param_status = !empty($product->project_title) && !empty($product->note) && !empty($product->subject);
-
+    
             return $product;
         })->filter()->values();
-
+    
         $modelType = $site->businessModel->model_type;
         session(['current_amount' => collect($recalculatedProducts)->sum('unit_price')]);
     
@@ -308,6 +308,7 @@ class LaravelController extends Controller
             'total' => collect($recalculatedProducts)->sum('unit_price')
         ]);
     }
+    
     
     
     
@@ -532,7 +533,7 @@ class LaravelController extends Controller
             $product->brand_name = null;
             $product->audience = null;
             $product->note = null;
-            $product->param_status = false;
+            $product->param_status = !empty($product->project_title) && !empty($product->note) && !empty($product->subject);
         });
         
         if (in_array($sortUnitPrice, ['asc', 'desc'])) {
@@ -749,52 +750,80 @@ class LaravelController extends Controller
         $invoice_data['model_type'] = $site->businessModel->model_type;
         $invoice_data['site_id'] = $site->id;
     
-        $productDataArray = $request->input('product_data', []);
         DynamicDatabaseService::connect($site);
-    
-        $productIds = [];
-        $customPrices = [];
-    
-        foreach ($productDataArray as $item) {
-            $data = json_decode($item, true);
-            if (!empty($data['product_id'])) {
-                $productIds[] = $data['product_id'];
-                $customPrices[$data['product_id']] = $data['unit_price'];
+
+        $readyProducts = session('ready_products', []);
+        $productDataArray = $request->input('product_data', []);
+
+        foreach ($productDataArray as $productJson) {
+            $product = json_decode($productJson, true);
+            $productId = $product['product_id'];
+            $unitPrice = $product['unit_price'];
+            foreach ($readyProducts as $index => $readyProduct) {
+                if (isset($readyProduct['id']) && $readyProduct['id'] == $productId) {
+                    $readyProducts[$index]['unit_price'] = $unitPrice;
+                    break;  
+                }
             }
         }
-    
-        
+
+        session(['ready_products' => $readyProducts]);
+
+        $readyProducts = session('ready_products', []);
+
+        $productIds = array_column($readyProducts, 'id');
+        $readyProductsById = collect($readyProducts)->keyBy('id');
+
         $products = DB::connection($this->connectionType)->table($this->productTable)
-            ->whereIn('id', $productIds)
-            ->select('id', 'category_id', 'name', 'unit_price') 
-            ->get()
-            ->sortBy(function ($product) use ($productIds) {
-                return array_search($product->id, $productIds);
-            })
-            ->values()
-            ->map(function ($product) use ($customPrices) {
-                $product->unit_price = $customPrices[$product->id] ?? $product->unit_price;
-                return $product;
-            });
-            
-        $products->each(function ($product) {
-            $product->category_name = DB::connection($this->connectionType)->table('categories')->where('id', $product->category_id)->value('name') ?? 'unknown';
+        ->whereIn('id', $productIds)
+        ->select('id', 'name', 'slug')
+        ->get()
+        ->sortBy(function ($product) use ($productIds) {
+            return array_search($product->id, $productIds);
+        })
+        ->values()
+        ->map(function ($product) use ($readyProductsById) {
+            $sessionData = $readyProductsById->get($product->id);
+
+            if ($sessionData) {
+                $product->unit_price = $sessionData['unit_price'] ?? null;
+                $product->wordcount = $sessionData['wordcount'] ?? null;
+                $product->imagecount = $sessionData['imagecount'] ?? null;
+                $product->quantity = $sessionData['quantity'] ?? null;
+                $product->turnaround = $sessionData['turnaround'] ?? null;
+                $product->quality = $sessionData['quality'] ?? null;
+                $product->project_title = $sessionData['project_title'] ?? null;
+                $product->reference_link = $sessionData['reference_link'] ?? null;
+                $product->subject = $sessionData['subject'] ?? null;
+                $product->preferred_voice = $sessionData['preferred_voice'] ?? null;
+                $product->preferred_writing_style = $sessionData['preferred_writing_style'] ?? null;
+                $product->brand_name = $sessionData['brand_name'] ?? null;
+                $product->audience = $sessionData['audience'] ?? null;
+                $product->note = $sessionData['note'] ?? null;
+                $turnaround = $product->turnaround;
+                $product->delivery = match ($turnaround) {
+                    'ta_standard' => '5-7 Days',
+                    'ta_express' => '2-3 Days',
+                    default => 'N/A',
+                };
+            }
+
+            return $product;
         });
-        
-       
+
+
         $invoice_data['currency'] =  site_currency();
     
         $invoice_data['products'] = $products;
         $invoice_data['product_ids'] = $productIds;
-    
         $modelType = strtolower($site->businessModel->model_type);
         $siteIdInWords = numberToWords($site->id);
         $viewPath = "websites.{$modelType}.{$siteIdInWords}";
     
-      
+      dd($invoice_data);
         try {
 
-            $this->updateProductPrice($productDataArray);
+            //$this->updateProductPrice($productDataArray);
             InvoiceController::createInvoiceHistory($invoice_data);
             $pdf = PDF::loadView($viewPath, $invoice_data);
             $pdf->setPaper('A4', 'portrait');
