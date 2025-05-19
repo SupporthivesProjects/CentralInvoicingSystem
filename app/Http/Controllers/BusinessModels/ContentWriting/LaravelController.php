@@ -754,7 +754,7 @@ class LaravelController extends Controller
 
         $readyProducts = session('ready_products', []);
         $productDataArray = $request->input('product_data', []);
-
+  dd($productDataArray);
         foreach ($productDataArray as $productJson) {
             $product = json_decode($productJson, true);
             $productId = $product['product_id'];
@@ -786,12 +786,16 @@ class LaravelController extends Controller
             $sessionData = $readyProductsById->get($product->id);
 
             if ($sessionData) {
+                $turnaroundCode = $sessionData['turnaround'] ?? 'ta_standard';
+                $qualityCode = $sessionData['quality'] ?? 'q_standard';
+    
                 $product->unit_price = $sessionData['unit_price'] ?? null;
                 $product->wordcount = $sessionData['wordcount'] ?? null;
-                $product->imagecount = $sessionData['imagecount'] ?? null;
-                $product->quantity = $sessionData['quantity'] ?? null;
-                $product->turnaround = $sessionData['turnaround'] ?? null;
-                $product->quality = $sessionData['quality'] ?? null;
+                $product->imagecount = $sessionData['imagecount'] ?? 1;
+                $product->quantity = $sessionData['quantity'] ?? 1;
+                $product->turnaround = match ($turnaroundCode) { 'ta_standard' => 'Standard', 'ta_express' => 'Express' };
+                $product->quality = match ($qualityCode) { 'q_standard' => 'Standard', 'q_premium' => 'Premium', 'q_expert' => 'Expert' };
+                $product->delivery = match ($turnaroundCode) { 'ta_standard' => '5-7 Days', 'ta_express' => '2-3 Days' };
                 $product->project_title = $sessionData['project_title'] ?? null;
                 $product->reference_link = $sessionData['reference_link'] ?? null;
                 $product->subject = $sessionData['subject'] ?? null;
@@ -800,12 +804,6 @@ class LaravelController extends Controller
                 $product->brand_name = $sessionData['brand_name'] ?? null;
                 $product->audience = $sessionData['audience'] ?? null;
                 $product->note = $sessionData['note'] ?? null;
-                $turnaround = $product->turnaround;
-                $product->delivery = match ($turnaround) {
-                    'ta_standard' => '5-7 Days',
-                    'ta_express' => '2-3 Days',
-                    default => 'N/A',
-                };
             }
 
             return $product;
@@ -820,7 +818,6 @@ class LaravelController extends Controller
         $siteIdInWords = numberToWords($site->id);
         $viewPath = "websites.{$modelType}.{$siteIdInWords}";
     
-      dd($invoice_data);
         try {
 
             //$this->updateProductPrice($productDataArray);
