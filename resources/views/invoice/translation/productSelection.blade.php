@@ -187,11 +187,11 @@
                         </div>
 
                         <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
-                            <button type="button" class="btn btn-outline-primary d-flex align-items-center gap-1 me-1"
+                            {{-- <button type="button" class="btn btn-outline-primary d-flex align-items-center gap-1 me-1"
                                 data-bs-toggle="modal" data-bs-target="#addmoreproducts"
-                                onclick="customizeProducts('onload')">
+                                onclick="customizeProducts('onload')" disabled style="cursor: not-allowed;">
                                 <i class="fas fa-plus-square"></i> Add Products
-                            </button>
+                            </button> --}}
 
                             <button type="button" class="btn btn-outline-success d-flex align-items-center gap-1"
                                 onclick="randomizeProducts('semi_random')">
@@ -212,7 +212,7 @@
 
                     <div class="card-body">
                         <div class="container">
-                            <div class="row g-3 justify-content-center mb-3">
+                            {{-- <div class="row g-3 justify-content-center mb-3">
                                 <div class="col-md-3">
                                     <div class="d-flex flex-column align-items-center h-100">
                                         <small class="text-muted fw-semibold mb-2">No. of Products</small>
@@ -220,7 +220,7 @@
                                             <button class="btn btn-outline-primary" type="button"
                                                 onclick="adjustNoOfProducts('noOfProducts', -1)">−</button>
                                             <input type="text" class="form-control text-center" name="noOfProducts"
-                                                id="noOfProducts" min="1" max="20" placeholder="Auto"
+                                                id="noOfProducts" min="1" max="2" placeholder="Auto"
                                                 onfocus="this.placeholder = ''" onblur="this.placeholder = 'Auto'"
                                                 readonly>
                                             <button class="btn btn-outline-primary" type="button"
@@ -246,15 +246,13 @@
                                     <div class="d-flex flex-column align-items-center h-100">
                                         <small class="text-muted fw-semibold mb-2">Product Category</small>
                                         <select class="form-select w-100 h-100" name="category_id" id="category_id">
-                                            <option value="">All Categories</option>
-                                            @foreach (getCategoryList($site->technology) as $category)
-                                                <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                            @endforeach
+                                            <option value="" selected disabled>Not Applicable</option>
+
                                         </select>
                                     </div>
                                 </div>
 
-                            </div>
+                            </div> --}}
 
                         </div>
                         <!-- Product Table -->
@@ -506,7 +504,7 @@
         function adjustNoOfProducts(id, step) {
             const input = document.getElementById(id);
             let val = input.value === 'Auto' || input.value === '' ? 1 : parseInt(input.value) || 1;
-            val = Math.max(1, Math.min(20, val + step));
+            val = Math.max(1, Math.min(2, val + step));
 
             if (val === 1) {
                 input.value = '';
@@ -529,7 +527,7 @@
         }
 
         document.getElementById('noOfProducts').addEventListener('change', triggerRandomizeProducts);
-        document.getElementById('category_id').addEventListener('change', triggerRandomizeProducts);
+        //document.getElementById('category_id').addEventListener('change', triggerRandomizeProducts);
     </script>
 
     <script>
@@ -644,7 +642,7 @@
                     invoice_amount: parseFloat($('#invoice_amount').val()) || 0,
                     price_from: $('#hidden_randomize_price_from_input_id').val(),
                     price_to: $('#hidden_randomize_price_to_input_id').val(),
-                    category_id: $('#category_id').val().trim(),
+                    //category_id: $('#category_id').val().trim(),
                     noOfProducts: $('#noOfProducts').val()
                 },
                 beforeSend: function() {
@@ -685,6 +683,7 @@
         }
 
         $(document).ready(function() {
+            //alert(1);
             randomizeProducts('smart_random');
         });
     </script>
@@ -784,37 +783,51 @@
 
     <script>
         function clearRandomizedFilter(button) {
-            const icon = $(button).find('i');
-            const originalIconClass = 'fa-filter-circle-xmark';
-            icon.removeClass(originalIconClass).addClass('fa-spinner fa-spin');
+        const icon = $(button).find('i');
+        const originalIconClass = 'fa-filter-circle-xmark';
 
-            $.ajax({
-                url: "{{ route('clear.products') }}",
-                type: 'GET',
-                success: function(response) {
-                    $('input[name="product_ids[]"]').prop('checked', false);
+        // Show spinner while processing
+        icon.removeClass(originalIconClass).addClass('fa-spinner fa-spin');
+
+        $.ajax({
+            url: "{{ route('clear.products') }}",
+            type: 'GET',
+            success: function(response) {
+                if (response.success) {
+                    // Clear input values
                     $('.product-price').val('');
                     $('#current_amount').val('0.00');
                     $('#discount_amount').val('0.00');
+
+                    // Update display fields
                     $('#temp_current_amount_text').text('0.00');
                     $('#temp_discount_amount_text').text('0.00');
                     $('#temp_invoice_amount_text').text($('#invoice_amount').val());
+
+                    // Clear table body
                     $('#randomize-product-table-body').html(getErrorRowHTML(
                         'Randomize filter cleared. You can now randomize products again or add custom products.'
                     ));
-                    toastr.success('Randomized products filter has been reset');
-                    calculateTotalPrice();
 
-                },
-                error: function(xhr, status, error) {
-                    icon.removeClass('fa-spinner fa-spin').addClass(originalIconClass);
-                    toastr.error(error, 'Error clearing randomized products');
-                },
-                complete: function() {
-                    icon.removeClass('fa-spinner fa-spin').addClass(originalIconClass);
+                    // Show toast
+                    toastr.success(response.message || 'Randomized products filter has been reset');
+
+                    // Recalculate amounts
+                    calculateTotalPrice();
+                } else {
+                    toastr.error(response.message || 'Failed to clear randomized products.');
                 }
-            });
-        }
+            },
+            error: function() {
+                toastr.error('An error occurred while clearing randomized products. Please try again.');
+            },
+            complete: function() {
+                // Restore original icon
+                icon.removeClass('fa-spinner fa-spin').addClass(originalIconClass);
+            }
+        });
+    }
+
     </script>
 
     <script>
@@ -830,10 +843,42 @@
             const currentAmount = parseFloat($('#current_amount').val()) || 0;
             const discountAmount = parseFloat($('#discount_amount').val()) || 0;
 
-            if (selectedProducts.length === 0) {
-                toastr.error('Please select your products combo...', 'No Product Selected');
-                return;
+            let hasError = false;
+
+            $('.product-row').each(function () {
+                const row = $(this);
+                const from_language = row.find('.from-language-dropdown');
+                const to_language = row.find('.to-language-dropdown');
+
+                const from_language_value = from_language.val();
+                const to_language_value = to_language.val();
+
+                if (!from_language_value || !to_language_value) {
+                    toastr.error('Please select both From and To languages.', 'Language Missing');
+                    hasError = true;
+                    return false; // break loop early
+                }
+
+                if (from_language_value === to_language_value) {
+                    toastr.error('From and To languages cannot be the same.', 'Language Mismatch');
+                    hasError = true;
+                    return false; // break loop early
+                }
+            });
+
+            if (hasError) {
+                return; // stop further processing
             }
+
+// Continue with form submission or processing...
+
+
+
+
+            // if (selectedProducts.length === 0) {
+            //     toastr.error('Please select your products combo...', 'No Product Selected');
+            //     return;
+            // }
             if ($.trim(customer_name.val()) === '') {
                 toastr.error('Customer name cannot be empty.', 'Missing Customer Name');
                 return;
@@ -1188,9 +1233,9 @@
         function calculateTotalPrice() {
     var total = 0;
 
-    // Sum total of all products
     $('.product-row').each(function () {
         var $row = $(this);
+
         var unitPrice = parseFloat($row.find('.product-price').val()) || 0;
         var pages = parseInt($row.find('.product-pages').val()) || 1;
         var urgentAmount = 0;
@@ -1201,41 +1246,33 @@
         }
 
         total += (unitPrice * pages) + urgentAmount;
+
+        // Update per-row total
+        var rowTotal = (unitPrice * pages + urgentAmount).toFixed(2);
+        $row.find('.product-total').text('$' + rowTotal);
     });
 
-    // Display total product worth
     $('#products-total').text('$' + total.toFixed(2));
     $('#current_amount').val(total.toFixed(2));
 
-    // Fixed invoice amount (from hidden or readonly input)
     var invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
-
-    // Calculate discount needed to match invoice
     var discountAmount = total - invoiceAmount;
     if (discountAmount < 0) discountAmount = 0;
 
-    // Auto-set discount field
     $('#discount_amount').val(discountAmount.toFixed(2));
-
-    // Show final invoice value (should match invoiceAmount)
     $('#invoice_amount').val(invoiceAmount.toFixed(2));
 
-    // --- Font Color Logic ---
     var currentAmount = total;
     var enteredDiscount = parseFloat($('#discount_amount').val()) || 0;
     var sum = currentAmount - enteredDiscount;
 
-    var isMatching = Math.abs(sum - invoiceAmount) < 0.01; // floating point tolerance
+    var isMatching = Math.abs(sum - invoiceAmount) < 0.01;
 
     if (isMatching) {
-        $('#current_amount').removeClass('text-danger').addClass('text-success');
-        $('#discount_amount').removeClass('text-danger').addClass('text-success');
-        $('#invoice_amount').removeClass('text-danger').addClass('text-success');
+        $('#current_amount, #discount_amount, #invoice_amount').removeClass('text-danger').addClass('text-success');
     } else {
-        $('#current_amount').removeClass('text-success').addClass('text-danger');
-        $('#discount_amount').removeClass('text-success').addClass('text-danger');
+        $('#current_amount, #discount_amount').removeClass('text-success').addClass('text-danger');
 
-        // Keep invoice amount green if within 5%, else red
         var difference = Math.abs(currentAmount - invoiceAmount);
         var percentDiff = (difference / invoiceAmount) * 100;
 
@@ -1247,12 +1284,87 @@
     }
 }
 
+// Run when document is ready
+$(document).ready(function() {
+    console.log("Setting up event handlers for price changes");
+
+    // Initial calculation
+    calculateTotalPrice();
+
+    // IMPORTANT: Listen for input changes in edit price column
+    // Note: This targets ALL inputs in the EDIT PRICE column based on your screenshot
+    $(document).on('input', 'input[type="text"]', function() {
+        console.log("Input detected on text field:", $(this).val());
+        calculateTotalPrice();
+    });
+
+    // Standard listeners for other fields
+    $(document).on('input', '.product-pages', function() {
+        calculateTotalPrice();
+    });
+
+    $(document).on('change', '.urgency-checkbox', function() {
+        calculateTotalPrice();
+    });
+
+    // For the specific edit price field in your screenshot
+    $(document).on('input', '.edit-price-field', function() {
+        console.log("Edit price changed:", $(this).val());
+        calculateTotalPrice();
+    });
+
+    // Alternative selector in case the above doesn't match
+    $('td:contains("EDIT PRICE")').parent().find('input').on('input', function() {
+        console.log("Edit price field changed via column selector");
+        calculateTotalPrice();
+    });
+
+    // More general approach as fallback
+    $('input').on('input', function() {
+        console.log("Any input changed:", $(this).attr('class'), $(this).val());
+        calculateTotalPrice();
+    });
+});
+
+// Function to inspect the DOM and log all input elements
+function inspectInputFields() {
+    console.log("Inspecting all inputs on the page:");
+
+    $('input').each(function(i) {
+        var $input = $(this);
+        console.log(
+            "Input #" + (i+1),
+            "Type:", $input.attr('type'),
+            "Class:", $input.attr('class'),
+            "ID:", $input.attr('id'),
+            "Name:", $input.attr('name'),
+            "Value:", $input.val()
+        );
+    });
+
+    console.log("Inspecting table structure:");
+    $('table tr').each(function(i) {
+        console.log("Row #" + (i+1), "Classes:", $(this).attr('class'));
+        $(this).find('td').each(function(j) {
+            console.log("  Cell #" + (j+1), "Text:", $(this).text().trim(), "Input classes:", $(this).find('input').attr('class'));
+        });
+    });
+}
+
+// Run inspection on page load with a slight delay to ensure everything is loaded
+$(document).ready(function() {
+    setTimeout(inspectInputFields, 500);
+});
+
+
 
 
 
         // Re-run calculations when the document is ready
         $(document).ready(function() {
             calculateTotalPrice();
-        });
+        //     $(document).on('keyup', '.product-price', function() {
+        // calculateTotalPrice();
+    });
     </script>
 @endpush
