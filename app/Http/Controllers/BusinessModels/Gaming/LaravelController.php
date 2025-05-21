@@ -86,6 +86,7 @@ class LaravelController extends Controller
                 'p.game_server_region',
                 'p.game_need_to_capture',
                 'c.id as bundle_id',
+                'c.game_id',
                 'c.costs',
             )
             ->get();
@@ -146,6 +147,7 @@ class LaravelController extends Controller
 
         // Get the total price
         $totalPrice = $results->sum('unit_price');
+        //dd($totalPrice);
         session(['current_amount' => $totalPrice]);
 
         // Return the search results
@@ -239,6 +241,7 @@ class LaravelController extends Controller
         ->first();
 
     $modelType = $site->businessModel->model_type;
+    session(['current_amount' => $bestTotal]);
 
     $tableRows = view("invoice.{$modelType}.random_product_rows", [
         'products' => $bestMatch,
@@ -421,10 +424,12 @@ public function filterProducts(Request $request)
         ->first();
 
     $modelType = $site->businessModel->model_type;
+    //dd(session('current_amount'));
     $tableRows = view("invoice.{$modelType}.add_product_rows", [
         'products' => $products,
         'currency' => $currency,
-        'site'     => $site
+        'site'     => $site,
+        'current_amount' => session('current_amount'),
     ])->render();
 
     return response()->json([
@@ -1112,5 +1117,30 @@ protected function updateProductPrice($productDataArray)
 
 
         return $finalProducts;
+    }
+
+    public function clearProducts(Request $request)
+    {
+        session()->forget('selected_games');
+        session()->forget('current_amount');
+        return response()->json([
+            'success' => true,
+            'tableRows' => '',
+            'currency' => null,
+            'total' => 0
+        ]);
+    }
+
+    public function updateProduct(Request $request)
+    {
+        $current_amount = $request->get('current_amount');
+
+
+        session(['current_amount' => $current_amount]);
+
+        return response()->json([
+            'success' => true,
+            'current_amount' => $current_amount,
+        ]);
     }
 }

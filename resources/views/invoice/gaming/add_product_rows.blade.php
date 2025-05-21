@@ -23,7 +23,7 @@
         <td class="text-center">
             <div class="input-group">
                 <span class="input-group-text">{{ $product->game_currency }}</span>
-                <input type="text" class="form-control add-product-price text-center" value="0.00" data-product-id="{{ $product->id }}" readonly>
+                <input type="text" class="form-control add-currency-amount text-center" value="0.00" data-product-id="{{ $product->id }}" readonly>
                 <input type="hidden" name="custom_products[{{ $product->id }}][bundle_first_amount]" value="{{ $product->bundle_first_amount }}">
             </div>
         </td>
@@ -63,10 +63,15 @@
                 let productId = $(this).val();
                 let priceInput = $('.add-product-price[data-product-id="' + productId + '"]');
                 let price = parseFloat(priceInput.val()) || 0;
+                //alert("Before : " + selectedTotal);
                 selectedTotal += price;
+                //alert("After : " + selectedTotal);
             });
 
+            //alert(originalAmount);
+
             let tempTotal = originalAmount + selectedTotal;
+            //alert("Temp Total : " + tempTotal);
             let invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
             let discountAmount = 0;
 
@@ -234,7 +239,7 @@
             // Get game currency amount - convert from readonly field
             let bundleFirstAmount = parseFloat($row.find('input[name$="[bundle_first_amount]"]').val()) || 0;
             // Calculate currency amount based on unit price and any other logic if needed
-            let currencyAmount = bundleFirstAmount;
+            let currencyAmount = (bundleFirstAmount*unitPrice)+'0';
 
             // Get game name and currency
             let gameName = $row.find('td:nth-child(2)').clone().children().remove().end().text().trim();
@@ -285,7 +290,7 @@
             // Create game object
             selectedProducts.push({
                 id: productId,
-                game_currency_amount: document.querySelector(`.add-product-price[data-product-id="${productId}"]`).value,
+                game_currency_amount: document.querySelector(`.add-currency-amount[data-product-id="${productId}"]`).value,
                 unit_price: unitPrice,
                 bundle: 'custom'
             });
