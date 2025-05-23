@@ -1168,7 +1168,7 @@ $(document).ready(function() {
 
             debounceTimers[key] = setTimeout(() => {
                 updateProduct(productId);
-            }, 2000);
+            }, 3000);
         }
 
 
@@ -1238,8 +1238,7 @@ function saveProductParams(button) {
     const note = $('#note').val().trim();
 
     if (!projectTitle || !subject || !note) {
-        toastr.warning('Project Title, Subject, and Note are required.');
-        $btn.prop('disabled', false).html(originalHtml);
+        toastr.warning('At least Project Title, Subject, and Note are required.');
         return;
     }
 

@@ -148,10 +148,10 @@
                                         @if($product->note)<span class="badge bg-light text-dark"><strong>Additional Note:</strong> {{ $product->note }}</span>@endif
                                    
                                     </td>
-                                    <td class="text-center" style="text-align: right; padding-right: 10px; font-family: arial; font-size: 10px; border: 1px solid black; vertical-align: top;">
+                                    <td class="text-center" style="text-align: right; padding-right: 10px; font-family: arial; font-size: 10px; border: 1px solid black; vertical-align: middle;">
                                          {{ $product->quantity }}
                                     </td>
-                                    <td class="text-center" style="text-align: center; padding-right: 10px; font-family: arial; font-size: 10px; border: 1px solid black; vertical-align: top;">
+                                    <td class="text-center" style="text-align: center; padding-right: 10px; font-family: arial; font-size: 10px; border: 1px solid black; vertical-align: middle;">
                                         {{ site_currency() . number_format($product->unit_price, 2) }}
                                     </td>
 
