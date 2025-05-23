@@ -215,9 +215,9 @@ class WebsiteController extends Controller
             $uploadFile('invoice_header_image', 'headers', 'header');
             $uploadFile('invoice_footer_image', 'footers', 'footer');
             $uploadFile('invoice_signature', 'signitures', 'signiture');
-            $uploadFile('invoice_image1', 'images1', 'logo');
-            $uploadFile('invoice_image2', 'images2', 'logo');
-            $uploadFile('invoice_image3', 'images3', 'logo');
+            $uploadFile('invoice_image1', 'images1', 'image1');
+            $uploadFile('invoice_image2', 'images2', 'image2');
+            $uploadFile('invoice_image3', 'images3', 'image3');
 
             // Special case for invoice_template (blade file)
             if ($request->hasFile('invoice_template')) {

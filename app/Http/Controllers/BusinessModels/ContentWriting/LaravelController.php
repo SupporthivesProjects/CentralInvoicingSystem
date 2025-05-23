@@ -58,25 +58,24 @@ class LaravelController extends Controller
         }
     
         $allProducts = $query->orderByDesc('default_price')->get();
+        $wordcountOptions = [0, 25, 50, 75, 100];
         $turnaroundOptions = ['ta_standard', 'ta_express'];
         $qualityOptions = ['q_standard', 'q_premium', 'q_expert'];
-    
-        $quantity = 1;
-    
+
         $allProducts = collect($allProducts);
-        $allProducts->each(function ($product) use ($qualityOptions, $turnaroundOptions) {
+        $allProducts->each(function ($product) use ($wordcountOptions , $qualityOptions, $turnaroundOptions) {
+            $wordCount = $product->default_wc + $wordcountOptions[array_rand($wordcountOptions)];
             $product->turnaround = $turnaroundOptions[array_rand($turnaroundOptions)];
             $product->quality = $qualityOptions[array_rand($qualityOptions)];
-            $wordCount = $product->default_wc;
             $imageCount = rand(1, 5);
             $quantity = 1;
 
             $qlty_factor = match ($product->quality) {
-                'q_premium' => $product->q_premium,
-                'q_expert' => $product->q_expert,
-                default => $product->q_standard,
+                'q_premium' => 0.1,
+                'q_expert' => 0.25,
+                default => 0,
             };
-    
+
             $wc_price = max(0, (($wordCount - $product->default_wc) / 25) * $product->extra_word);
             $img_total = max(0, ($imageCount - 1) * $product->img_price);
             $ta_total = $product->turnaround === 'ta_express' ? 25 : 0;
@@ -360,9 +359,9 @@ class LaravelController extends Controller
             $product->quality = $quality;
 
             $qlty_factor = match ($product->quality) {
-                'q_premium' => $product->q_premium,
-                'q_expert' => $product->q_expert,
-                default => $product->q_standard,
+                'q_premium' => 0.1,
+                'q_expert' => 0.25,
+                default => 0,
             };
 
             $wc_price = max(0, (($wordCount - $product->default_wc) / 25) * $product->extra_word);
@@ -505,15 +504,12 @@ class LaravelController extends Controller
             $img_total = ($img > 1) ? ($img - 1) * $img_price : 0;
     
             $ta_total = ($turnaround == 'ta_express') ? 25 : 0;
-    
-            $qlty_factor = 0;
-            if ($quality == 'q_premium') {
-                $qlty_factor = $product->q_premium;
-            } elseif ($quality == 'q_expert') {
-                $qlty_factor = $product->q_expert;
-            } else {
-                $qlty_factor = $product->q_standard;
-            }
+
+            $qlty_factor = match ($quality) {
+                'q_premium' => 0.1,
+                'q_expert' => 0.25,
+                default => 0,
+            };
     
             $total = $default_price + $wc_price + $img_total + $ta_total;
             $final_total = ($total + ($total * $qlty_factor)) * $qty;
@@ -595,18 +591,18 @@ class LaravelController extends Controller
         }
     
         $qlty_factor = match ($quality) {
-            'q_premium' => $product->q_premium,
-            'q_expert' => $product->q_expert,
-            default => $product->q_standard,
+            'q_premium' => 0.1,
+            'q_expert' => 0.25,
+            default => 0,
         };
-    
+        
         $wc_price = max(0, (($wordCount - $product->default_wc) / 25) * $product->extra_word);
         $img_total = max(0, ($imageCount - 1) * $product->img_price);
         $ta_total = $turnaround === 'ta_express' ? 25 : 0;
-    
+        
         $base_total = $product->default_price + $wc_price + $img_total + $ta_total;
-        $unit_price = round(($base_total + ($base_total * $qlty_factor)) * $quantity, 2);
-    
+        $unit_price = ($base_total + ($base_total * $qlty_factor)) * $quantity;
+       
         if ($request->get('request_type') !== 'customize') {
             $readyProducts = session('ready_products', []);
         
@@ -754,7 +750,7 @@ class LaravelController extends Controller
 
         $readyProducts = session('ready_products', []);
         $productDataArray = $request->input('product_data', []);
-  dd($productDataArray);
+        //dd($productDataArray);
         foreach ($productDataArray as $productJson) {
             $product = json_decode($productJson, true);
             $productId = $product['product_id'];

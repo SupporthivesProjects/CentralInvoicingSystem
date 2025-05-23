@@ -5,7 +5,6 @@
     <style>
         body, table, td {
             background-color: transparent !important;
-            box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.6) !important;
         }
         .invoice_header_image {
             background-image: url('{{ $invoice_header_image }}');
@@ -17,22 +16,14 @@
             width: 100%;
         }
 
-        @page {
-            margin: 20mm;
-        }
-
         .invoice_footer_image {
             page-break-inside: avoid;
-            page-break-before: always; 
-            height: 150px;
+            height: 140px;
             background-image: url('{{ $invoice_footer_image }}');
             background-repeat: no-repeat;
             background-position: center;
             background-size: cover;
         }
-
-
-    
 
         .narayan td {
             padding-top:5px !important;

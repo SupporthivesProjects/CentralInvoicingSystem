@@ -497,7 +497,7 @@
         customizeSliderTimer = setTimeout(() => {
             const [min, max] = values.map(v => Math.round(parseFloat(v.replace(currency, ''))));
             updateHiddenInputs(min, max, 'customize');
-            customizeProducts('reset');
+            customizeProducts('range');
         }, 1500);
     });
 
@@ -507,7 +507,7 @@
         sortUnitPriceTimer = setTimeout(() => {
             if (currentSortValue !== lastSortUnitPrice) {
                 lastSortUnitPrice = currentSortValue;
-                customizeProducts('reset', $('#current_page_number').val() || 1);
+                customizeProducts('range', $('#current_page_number').val() || 1);
             }
         }, 1000);
     });
@@ -631,6 +631,9 @@
             customizeRequest.abort();
             customizeRequest = null;
         }
+        if (search_type === 'reset') {
+            $('#customizeKeywordInput').val('');
+        }
         
 
 
@@ -656,7 +659,7 @@
             $('#error-row').fadeIn(300).delay(3000).fadeOut(500);
             return;
         }
-        if (!customizeKeywordInput && search_type !== 'onload' && search_type !== 'reset') {
+        if (!customizeKeywordInput && search_type !== 'onload' && search_type !== 'reset' && search_type !== 'range') {
             toastr.info('Enter or Speak Keyword', 'Keyword missing');
             return;
         }

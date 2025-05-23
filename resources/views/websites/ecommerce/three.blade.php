@@ -87,15 +87,24 @@
                                         <p style="font-family: arial;font-size: 10px;margin: 0px;font-weight: 700;">
                                             <b>BILLED FROM:</b>
                                         </p>
-                                        <p style="font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;">
+                                        @if(!empty($site->site_name))
+                                        <p style="font-family: Arial; font-size: 10px; margin: 0; font-weight: 400;">
                                             {{ $site->site_name }}
                                         </p>
-                                        <p style="font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;">
-                                            Website: {{ $site->site_link ?? 'N/A' }}
+                                        @endif
+
+                                        @if(!empty($site->site_link))
+                                        <p style="font-family: Arial; font-size: 10px; margin: 0; font-weight: 400;">
+                                            Website: {{ $site->site_link }}
                                         </p>
-                                        <p style="font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;">
+                                        @endif
+
+                                        @if(!empty($company_email))
+                                        <p style="font-family: Arial; font-size: 10px; margin: 0; font-weight: 400;">
                                             Email: {{ $company_email }}
                                         </p>
+                                        @endif
+
                                     </td>
                                 </tr>
                             </table>

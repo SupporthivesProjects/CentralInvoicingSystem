@@ -201,7 +201,7 @@
                         <div class="d-flex flex-column align-items-center h-100">
                             <small class="text-muted fw-semibold mb-2">Product Category</small>
                             <select class="form-select w-100 h-100" name="category_id" id="category_id">
-                                <option value="">All Categories</option>
+                                <option value="" selected disabled>Not Applicable</option>
                                 {{-- @foreach(getCategoryList($site->technology) as $category)
                                     <option value="{{ $category->id }}">{{ $category->name }}</option>
                                 @endforeach --}}
@@ -321,7 +321,7 @@
                     <table id="customize-products-table" class="table table-bordered table-hover align-middle mb-0 table-responsive" style="width:100% !important;">
                     <thead class="table-dark text-center">
                         <tr>
-                            <th style="width: 5%;">Params</th>
+                            <th style="width: 5%;">PID</th>
                             <th style="width: 20%;">Name</th>
                             <th style="width: 15%;">Word Count</th>
                             <th style="width: 12%;">Turnaround</th>
@@ -593,7 +593,7 @@
         customizeSliderTimer = setTimeout(() => {
             const [min, max] = values.map(v => Math.round(parseFloat(v.replace(currency, ''))));
             updateHiddenInputs(min, max, 'customize');
-            customizeProducts('reset');
+            customizeProducts('range');
         }, 1500);
     });
 
@@ -604,7 +604,7 @@
         sortUnitPriceTimer = setTimeout(() => {
             if (currentSortValue !== lastSortUnitPrice) {
                 lastSortUnitPrice = currentSortValue;
-                customizeProducts('reset', $('#current_page_number').val() || 1);
+                customizeProducts('range', $('#current_page_number').val() || 1);
             }
         }, 1000);
     });
@@ -727,9 +727,10 @@
             customizeRequest.abort();
             customizeRequest = null;
         }
+        if (search_type === 'reset') {
+            $('#customizeKeywordInput').val('');
+        }
         
-
-
         let btn = $('#add-custom-products');
         btn.prop('disabled', false).html('Add Selected to Cart');
 
@@ -753,10 +754,11 @@
             $('#error-row').fadeIn(300).delay(3000).fadeOut(500);
             return;
         }
-        if (!customizeKeywordInput && search_type !== 'onload' && search_type !== 'reset') {
+        if (!customizeKeywordInput && search_type !== 'onload' && search_type !== 'reset' && search_type !== 'range') {
             toastr.info('Enter or Speak Keyword', 'Keyword missing');
             return;
         }
+        
 
 
         $('#customize-product-table-body').html(getProductsSearchRowHTML(9));
@@ -1156,14 +1158,19 @@ $(document).ready(function() {
             });
         }
 
-        function debounceUpdate(productId) {
-            if (debounceTimers[productId]) {
-                clearTimeout(debounceTimers[productId]);
+        function debounceUpdate(productId, fieldType) {
+
+            const key = `${productId}_${fieldType}`;
+
+            if (debounceTimers[key]) {
+                clearTimeout(debounceTimers[key]);
             }
-            debounceTimers[productId] = setTimeout(() => {
+
+            debounceTimers[key] = setTimeout(() => {
                 updateProduct(productId);
-            }, 1000);
+            }, 2000);
         }
+
 
         $(document).on('click', '.wc-decrease', function() {
             const productId = $(this).data('product-id');
@@ -1173,7 +1180,7 @@ $(document).ready(function() {
 
             if (val - wcStep >= min) {
                 $input.val(val - wcStep);
-                debounceUpdate(productId);
+                debounceUpdate(productId, 'wordcount');
             } else {
                 toastr.warning(`Minimum word count is ${min}`, 'Limit reached');
             }
@@ -1185,7 +1192,7 @@ $(document).ready(function() {
             let val = parseInt($input.val()) || wcMin;
 
             $input.val(val + wcStep);
-            debounceUpdate(productId);
+            debounceUpdate(productId, 'wordcount');
         });
 
         $(document).on('click', '.img-decrease', function() {
@@ -1196,7 +1203,7 @@ $(document).ready(function() {
 
             if (val - imgStep >= min) {
                 $input.val(val - imgStep);
-                debounceUpdate(productId);
+                debounceUpdate(productId, 'imagecount');
             } else {
                 toastr.warning(`Minimum image count is ${min}`, 'Limit reached');
             }
@@ -1208,23 +1215,33 @@ $(document).ready(function() {
             let val = parseInt($input.val()) || imgMin;
 
             $input.val(val + imgStep);
-            debounceUpdate(productId);
+            debounceUpdate(productId, 'imagecount');
         });
 
         $(document).on('change', '.turnaround-select', function() {
             const productId = $(this).data('product-id');
-            debounceUpdate(productId);
+            debounceUpdate(productId, 'turnaround');
         });
 
         $(document).on('change', '.quality-select', function() {
             const productId = $(this).data('product-id');
-            debounceUpdate(productId);
+            debounceUpdate(productId, 'quality');
         });
     });
 </script>
 
 <script>
 function saveProductParams(button) {
+
+    const projectTitle = $('#project_title').val().trim();
+    const subject = $('#subject').val().trim();
+    const note = $('#note').val().trim();
+
+    if (!projectTitle || !subject || !note) {
+        toastr.warning('Project Title, Subject, and Note are required.');
+        $btn.prop('disabled', false).html(originalHtml);
+        return;
+    }
 
     let $btn = $(button);
     $btn.prop('disabled', true);
