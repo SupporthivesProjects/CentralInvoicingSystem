@@ -1,7 +1,7 @@
 @forelse($products as $index => $product)
 <tr  class="product-row align-middle" id="customize-product-row-{{ $product->id }}" data-product-row-id="{{ $product->id }}" data-request-type="customize">
     <td class="text-center align-middle">
-    <button class="btn btn-warning btn-sm" data-bs-toggle="tooltip" title="You can set parameters after adding the product to the cart." >
+    <button class="btn btn-warning btn-sm" data-bs-toggle="tooltip" title="You can set metadata after adding the product to the cart." >
         <i class="bi bi-exclamation-circle-fill"></i>
     </button>
 

@@ -2,9 +2,9 @@
 <tr class="product-row align-middle" data-product-row-id="{{ $product->id }}" data-request-type="randomize">
     <td class="text-center align-middle">
         @if($product->param_status)
-            <button id="param-btn-{{ $product->id }}" onclick="getProductParams({{ $product->id }}, this)" data-product-name="{{ $product->name }}" data-product-id="{{ $product->id }}" class="btn btn-sm btn-success" data-bs-toggle="tooltip" title="Parameter set, click to view"><i class="bi bi-check-circle-fill"></i></button>
+            <button id="param-btn-{{ $product->id }}" onclick="getProductParams({{ $product->id }}, this)" data-product-name="{{ $product->name }}" data-product-id="{{ $product->id }}" class="btn btn-sm btn-success" data-bs-toggle="tooltip" title="Metadata set, click to view"><i class="bi bi-check-circle-fill"></i></button>
         @else
-            <button id="param-btn-{{ $product->id }}" onclick="getProductParams({{ $product->id }}, this)" data-product-name="{{ $product->name }}" data-product-id="{{ $product->id }}" class="btn btn-sm btn-warning" data-bs-toggle="tooltip" title="Parameter missing, click to add"><i class="bi bi-exclamation-circle-fill"></i></button>
+            <button id="param-btn-{{ $product->id }}" onclick="getProductParams({{ $product->id }}, this)" data-product-name="{{ $product->name }}" data-product-id="{{ $product->id }}" class="btn btn-sm btn-warning" data-bs-toggle="tooltip" title="Metadata missing, click to add"><i class="bi bi-exclamation-circle-fill"></i></button>
         @endif
     </td>
     <td class="text-capitalize">
@@ -69,7 +69,7 @@
     </td>
    
     <td class="text-center">
-        <button class="remove-product btn btn-danger btn-sm me-2" data-product-name="{{ $product->name }}" data-product-id="{{ $product->id }}">
+        <button class="remove-product btn btn-danger btn-sm me-2" data-product-name="{{ $product->name }}" data-product-id="{{ $product->id }}" data-bs-toggle="tooltip" title="Remove Product">
             <i class="fa fa-trash"></i>
         </button>
     </td>
