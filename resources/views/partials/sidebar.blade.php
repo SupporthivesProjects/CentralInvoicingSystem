@@ -37,51 +37,27 @@
                         <span class="side-menu__label">Dashboard</span>
                     </a>
                 </li>
-                
-                <li class="slide has-sub {{ request()->routeIs('businessmodels') ? 'active open' : '' }}">
-                    <a href="javascript:void(0);" class="side-menu__item {{ request()->routeIs('businessmodels') ? 'active' : '' }}">
+
+                <li class="slide {{ request()->routeIs('businessmodels') ? 'active open' : '' }}">
+                    <a href="{{ route('businessmodels') }}" class="side-menu__item {{ request()->routeIs('businessmodels') ? 'active' : '' }}">
                         <span class="shape1"></span>
                         <span class="shape2"></span>
-                        <i class="fe fe-layers side-menu__icon"></i>
-                        <span class="side-menu__label">All Models</span>
-                        <i class="fe fe-chevron-right side-menu__angle"></i>
+                        <i class="ti-bar-chart side-menu__icon"></i>
+                        <span class="side-menu__label">Business Models</span>
                     </a>
-                    <ul class="slide-menu child1">
-                        <li class="slide side-menu__label1"><a href="javascript:void(0)">All Models</a></li>
-                        <li class="slide">
-                            <a href="{{ route('businessmodels') }}" class="side-menu__item d-flex align-items-center justify-content-between">
-                                <span>Business Models</span>
-                                <span class="badge bg-success">{{ getModelsCount() }}</span>
-                            </a>
-                        </li>
-                      
-                    </ul>
-                    
                 </li>
 
-                <li class="slide has-sub {{ request()->routeIs('connectedwebsites') ? 'active open' : '' }}">
-                    <a href="javascript:void(0);" class="side-menu__item {{ request()->routeIs('connectedwebsites') ? 'active' : '' }}">
+                <li class="slide {{ request()->routeIs('connectedwebsites') ? 'active open' : '' }}">
+                    <a href="{{ route('connectedwebsites') }}" class="side-menu__item {{ request()->routeIs('connectedwebsites') ? 'active' : '' }}">
                         <span class="shape1"></span>
                         <span class="shape2"></span>
                         <i class="ti-world side-menu__icon"></i>
-                        <span class="side-menu__label">All Websites</span>
-                        <i class="fe fe-chevron-right side-menu__angle"></i>
+                        <span class="side-menu__label">Available Websites</span>
                     </a>
-                    <ul class="slide-menu child1">
-                        <li class="slide side-menu__label1"><a href="javascript:void(0)">All Websites</a></li>
-                       
-                        <li class="slide">
-                            <a href="{{ route('connectedwebsites') }}" class="side-menu__item d-flex align-items-center justify-content-between">
-                                <span>Available Websites</span>
-                                <span class="badge bg-success">{{ getAllWebsites() }}</span>
-                            </a>
-                        </li>
-                    </ul>
-                    
                 </li>
 
                 <!-- Business Models -->
-                <li class="slide__category"><span class="category-name">Business Models Websites</span></li>
+                <li class="slide__category"><span class="category-name">Models`s Websites</span></li>
                 <?php $models = getallModels(); ?>
                 @foreach($models as $model)
                 @php
@@ -113,7 +89,7 @@
                     <a href="javascript:void(0);" class="side-menu__item {{ request()->routeIs('users.index') || request()->routeIs('users.create') ? 'active' : '' }}">
                         <span class="shape1"></span>
                         <span class="shape2"></span>
-                        <i class="fe fe-users side-menu__icon"></i>
+                        <i class="ti-user side-menu__icon"></i>
                         <span class="side-menu__label">Users</span>
                         <i class="fe fe-chevron-right side-menu__angle"></i>
                     </a>
@@ -134,7 +110,7 @@
                     <a href="javascript:void(0);" class="side-menu__item {{ request()->routeIs('myprofile') || request()->routeIs('currency.index') || request()->routeIs('logout') ? 'active' : '' }}">
                         <span class="shape1"></span>
                         <span class="shape2"></span>
-                        <i class="fe fe-settings side-menu__icon"></i>
+                        <i class="ti-settings side-menu__icon"></i>
                         <span class="side-menu__label">Settings</span>
                         <i class="fe fe-chevron-right side-menu__angle"></i>
                     </a>
