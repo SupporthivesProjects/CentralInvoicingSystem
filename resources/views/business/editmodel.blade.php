@@ -43,9 +43,11 @@
 
                                 <div class="mb-3">
                                     <label class="form-label">Icon Class <span style="color:red">*</span></label>
-                                    <input type="text" name="icon_class" class="form-control" placeholder="e.g., fe fe-shopping-cart"  value="{{ $businessmodel->icon_class}}"  required>
-                                    <small class="form-text text-muted">Use icon class like <code>fe fe-shopping-cart</code>, <code>fe fe-globe</code>, etc.</small>
-                                </div>
+                                    <input type="text" name="icon_class" class="form-control" placeholder="e.g., ti ti-user" value="{{ $businessmodel->icon_class}}"  required>
+                                        <small class="form-text text-muted">
+                                            Use icon class like <code>ti ti-user</code>, <code>ti ti-briefcase</code>, <code>ti ti-settings</code>, etc.
+                                        </small>
+                                 </div>
 
                                 <div class="text-center">
                                 <button type="submit" class="btn btn-primary">Update</button>
