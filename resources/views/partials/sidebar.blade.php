@@ -47,8 +47,8 @@
                     </a>
                 </li>
 
-                <li class="slide {{ request()->routeIs('connectedwebsites')  || request()->routeIs('site.connect.db') || request()->routeIs('product.selection') ? 'active open' : '' }}">
-                    <a href="{{ route('connectedwebsites') }}" class="side-menu__item {{ request()->routeIs('connectedwebsites') ? 'active' : '' }}">
+                <li class="slide {{ request()->routeIs('connectedwebsites')  || request()->routeIs('site.connect.db') || request()->routeIs('product.selection') || request()->routeIs('search.result') || request()->routeIs('website.*')  ? 'active open' : '' }}">
+                    <a href="{{ route('connectedwebsites') }}" class="side-menu__item {{ request()->routeIs('connectedwebsites') || request()->routeIs('site.connect.db') || request()->routeIs('product.selection') || request()->routeIs('search.result') || request()->routeIs('website.*') ? 'active' : '' }}">
                         <span class="shape1"></span>
                         <span class="shape2"></span>
                         <i class="ti-world side-menu__icon"></i>
@@ -105,8 +105,8 @@
                 </li>
 
                 <!-- Settings -->
-                <li class="slide has-sub {{ request()->routeIs('myprofile') || request()->routeIs('currency.index') || request()->routeIs('logout') ? 'active open' : '' }}">
-                    <a href="javascript:void(0);" class="side-menu__item {{ request()->routeIs('myprofile') || request()->routeIs('currency.index') || request()->routeIs('logout') ? 'active' : '' }}">
+                <li class="slide has-sub {{ request()->routeIs('myprofile') || request()->routeIs('currency.index') || request()->routeIs('logout') || request()->routeIs('currency.*') ? 'active open' : '' }}">
+                    <a href="javascript:void(0);" class="side-menu__item {{ request()->routeIs('myprofile') || request()->routeIs('currency.index') || request()->routeIs('logout') || request()->routeIs('currency.*') ? 'active' : '' }}">
                         <span class="shape1"></span>
                         <span class="shape2"></span>
                         <i class="ti-settings side-menu__icon"></i>
