@@ -1168,7 +1168,7 @@ $(document).ready(function() {
 
             debounceTimers[key] = setTimeout(() => {
                 updateProduct(productId);
-            }, 3000);
+            }, 2000);
         }
 
 
