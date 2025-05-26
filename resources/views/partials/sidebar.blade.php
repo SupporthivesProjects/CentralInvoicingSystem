@@ -47,7 +47,7 @@
                     </a>
                 </li>
 
-                <li class="slide {{ request()->routeIs('connectedwebsites') ? 'active open' : '' }}">
+                <li class="slide {{ request()->routeIs('connectedwebsites')  || request()->routeIs('site.connect.db') || request()->routeIs('product.selection') ? 'active open' : '' }}">
                     <a href="{{ route('connectedwebsites') }}" class="side-menu__item {{ request()->routeIs('connectedwebsites') ? 'active' : '' }}">
                         <span class="shape1"></span>
                         <span class="shape2"></span>
@@ -58,10 +58,9 @@
 
                 <!-- Business Models -->
                 <li class="slide__category"><span class="category-name">Models`s Websites</span></li>
-                <?php $models = getallModels(); ?>
-                @foreach($models as $model)
+                @foreach(getallModels() as $model)
                 @php
-                    $isActive = request()->routeIs('businessmodel.websites') && request()->route('id') == $model->id;
+                    $isActive = (request()->routeIs('businessmodel.websites') && request()->route('id') == $model->id);
                 @endphp
                 <li class="slide has-sub {{ $isActive ? 'active open' : '' }}">
                     <a href="javascript:void(0);" class="side-menu__item {{ $isActive ? 'active' : '' }}">
