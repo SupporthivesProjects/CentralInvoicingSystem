@@ -38,8 +38,8 @@
                     </a>
                 </li>
 
-                <li class="slide {{ request()->routeIs('businessmodels') ? 'active open' : '' }}">
-                    <a href="{{ route('businessmodels') }}" class="side-menu__item {{ request()->routeIs('businessmodels') ? 'active' : '' }}">
+                <li class="slide {{ request()->routeIs('businessmodels') || request()->routeIs('businessmodel.*') ? 'active open' : '' }}">
+                    <a href="{{ route('businessmodels') }}" class="side-menu__item {{ request()->routeIs('businessmodels') || request()->routeIs('businessmodel.*') ? 'active' : '' }}">
                         <span class="shape1"></span>
                         <span class="shape2"></span>
                         <i class="ti-bar-chart side-menu__icon"></i>
@@ -84,8 +84,8 @@
 
                 <!-- User Management -->
                 <li class="slide__category"><span class="category-name">User Management</span></li>
-                <li class="slide has-sub  {{ request()->routeIs('users.index') || request()->routeIs('users.create') ? 'active open' : '' }}">
-                    <a href="javascript:void(0);" class="side-menu__item {{ request()->routeIs('users.index') || request()->routeIs('users.create') ? 'active' : '' }}">
+                <li class="slide has-sub  {{ request()->routeIs('users.index') || request()->routeIs('users.create')  || request()->routeIs('users.*') ? 'active open' : '' }}">
+                    <a href="javascript:void(0);" class="side-menu__item {{ request()->routeIs('users.index') || request()->routeIs('users.create')  || request()->routeIs('users.*') ? 'active' : '' }}">
                         <span class="shape1"></span>
                         <span class="shape2"></span>
                         <i class="ti-user side-menu__icon"></i>
