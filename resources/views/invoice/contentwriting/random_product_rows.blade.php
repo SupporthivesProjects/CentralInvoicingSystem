@@ -1,45 +1,46 @@
 @forelse($products as $index => $product)
-<tr class="product-row">
-    <td class="text-center" >{{ $product->id }}</td>
-    <td>
-        {{ $product->name }} 
+<tr class="product-row align-middle" data-product-row-id="{{ $product->id }}" data-request-type="randomize">
+    <td class="text-center align-middle">
+        @if($product->param_status)
+            <button id="param-btn-{{ $product->id }}" onclick="getProductParams({{ $product->id }}, this)" data-product-name="{{ $product->name }}" data-product-id="{{ $product->id }}" class="btn btn-sm btn-success" data-bs-toggle="tooltip" title="Metadata set, click to view"><i class="bi bi-check-circle-fill"></i></button>
+        @else
+            <button id="param-btn-{{ $product->id }}" onclick="getProductParams({{ $product->id }}, this)" data-product-name="{{ $product->name }}" data-product-id="{{ $product->id }}" class="btn btn-sm btn-warning" data-bs-toggle="tooltip" title="Metadata missing, click to add"><i class="bi bi-exclamation-circle-fill"></i></button>
+        @endif
+    </td>
+    <td class="text-capitalize">
+        {{ $product->name }}
         @if($site->site_link && $product->slug)
             <a href="{{ $site->site_link }}product/{{ $product->slug }}" target="_blank">🔗</a>
         @endif
     </td>
     <td class="text-center">
         <div class="input-group input-group-sm justify-content-center">
-            <button class="btn btn-outline-primary wc-decrease" type="button" data-product-id="{{ $product->id }}" >-</button>
-            <input type="text" readonly  class="form-control text-center wc-input"  data-product-id="{{ $product->id }}" value="{{ $product->default_wc }}" step="25" min="{{ $product->default_wc }}">
+            <button class="btn btn-outline-primary wc-decrease" type="button" data-product-id="{{ $product->id }}">-</button>
+            <input type="text" readonly class="form-control text-center wc-input border-primary" data-product-id="{{ $product->id }}" value="{{ $product->wordcount }}" step="25" min="{{ $product->default_wc }}">
             <button class="btn btn-outline-primary wc-increase" type="button" data-product-id="{{ $product->id }}">+</button>
         </div>
     </td>
-
-
     <td class="text-center p-2">
-        <select name="turnaround" id="turnaround" class="form-select form-select-sm text-center mx-0 turnaround-select" data-product-id="{{ $product->id }}">
-            <option value="ta_standard">Standard</option>
-            <option value="ta_express">Express</option>
+        <select name="turnaround" class="form-select form-select-sm text-center mx-0 turnaround-select input-or-select " data-product-id="{{ $product->id }}">
+            <option value="ta_standard" @selected($product->turnaround == 'ta_standard')>Standard</option>
+            <option value="ta_express" @selected($product->turnaround == 'ta_express')>Express</option>
         </select>
     </td>
-
     <td class="text-center">
         <div class="input-group input-group-sm justify-content-center">
             <button class="btn btn-outline-primary img-decrease" type="button" data-product-id="{{ $product->id }}">-</button>
-            <input type="text" readonly class="form-control text-center img-input" value="1" step="1" min="1" data-product-id="{{ $product->id }}">
+            <input type="text" readonly class="form-control text-center img-input border-primary" value="{{ $product->imagecount }}" step="1" min="1" data-product-id="{{ $product->id }}">
             <button class="btn btn-outline-primary img-increase" type="button" data-product-id="{{ $product->id }}">+</button>
         </div>
     </td>
-
-
     <td class="text-center p-2">
-        <select name="quality" id="quality" class="form-select form-select-sm text-center mx-0 quality-select" data-product-id="{{ $product->id }}">
-            <option value="q_standard">Standard </option>
-            <option value="q_premium">Premium </option>
-            <option value="q_expert">Expert</option>
-        </select>
-    </td>
+    <select name="quality" class="form-select form-select-sm text-center mx-0 quality-select input-or-select" data-product-id="{{ $product->id }}">
+        <option value="q_standard" @selected($product->quality == 'q_standard')>Standard</option>
+        <option value="q_premium" @selected($product->quality == 'q_premium')>Premium</option>
+        <option value="q_expert" @selected($product->quality == 'q_expert')>Expert</option>
+    </select>
 
+    </td>
     <td>
         <div class="input-group d-flex">
             <span class="input-group-text">{{ site_currency() }}</span>
@@ -58,40 +59,82 @@
                 aria-label="Amount (to the nearest dollar)"
             >
             <span class="input-group-text d-flex align-items-center">
-                <i 
-                    class="{{ $product->can_edit_price == 0 ? 'fas fa-lock text-muted' : 'fas fa-edit' }}" 
+                <i class="{{ $product->can_edit_price == 0 ? 'fas fa-lock text-muted' : 'fas fa-edit' }}" 
                     style="font-size: 12px;" 
                     data-bs-toggle="tooltip"  
                     data-bs-placement="top"
-                    title="{{
-                        $product->can_edit_price == 0 
-                            ? 'Price update allowed after ' . $product->remaining_days . ' days.' 
-                            : 'Editable'
-                    }}"
-                ></i>
+                    title="{{ $product->can_edit_price == 0 ? 'Price update allowed after ' . $product->remaining_days . ' days.' : 'Editable' }}"></i>
             </span>
         </div>
     </td>
    
     <td class="text-center">
-        <button class="remove-product btn btn-danger btn-sm" data-product-name="{{ $product->name }}"  data-product-id="{{ $product->id }}">
-        <i class="fa fa-trash"></i>
+        <button class="remove-product btn btn-danger btn-sm me-2" data-product-name="{{ $product->name }}" data-product-id="{{ $product->id }}" data-bs-toggle="tooltip" title="Remove Product">
+            <i class="fa fa-trash"></i>
         </button>
     </td>
-
 </tr>
 @empty
 <tr>
-    <td colspan="7" class="text-center text-muted py-3 border-top">
+    <td colspan="9" class="text-center text-muted py-3 border-top">
         No results found. Try randomizing or use a different keyword.
     </td>
 </tr>
 @endforelse
+
+
+
 <script>
     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
     tooltipTriggerList.map(function (tooltipTriggerEl) {
         return new bootstrap.Tooltip(tooltipTriggerEl);
     });
+</script>
+<script>
+    function getProductParams(productId, element) {
+        const productName = $(element).data('product-name') || `Product #${productId}`;
+        $('#productTitle').text(productName);
+
+        const myModal = new bootstrap.Modal(document.getElementById('productParamsModal'));
+        myModal.show();
+
+        $('#productParamsForm')[0].reset();
+        $('#productParamsLoader').show();
+        $('#productParamsForm').css('display', 'none');
+        $('#productParamsFooter').css('display', 'noe');
+
+        $.ajax({
+            url: "{{ route('get.product') }}",
+            type: 'GET',
+            data: { product_id: productId },
+            success: function(response) {
+                if (response.success) {
+                    let product = response.product;
+                    $('input[name="product_id"]').val(product.id);
+                    $('input[name="project_title"]').val(product.project_title || '');
+                    $('input[name="reference_link"]').val(product.reference_link || '');
+                    $('input[name="subject"]').val(product.subject || '');
+                    $('select[name="preferred_voice"]').val(product.preferred_voice || '');
+                    $('select[name="preferred_writing_style"]').val(product.preferred_writing_style || '');
+                    $('input[name="brand_name"]').val(product.brand_name || '');
+                    $('select[name="audience"]').val(product.audience || '');
+                    $('input[name="note"]').val(product.note || '');
+                } else {
+                    toastr.error('Product not found or unavailable.');
+                }
+            },
+            error: function() {
+                toastr.error('An error occurred while fetching product details. Please try again later.');
+            },
+            complete: function() {
+                $('#productParamsLoader').hide();
+                $('#productParamsForm').css('display', 'block');
+                $('#productParamsFooter').css('display', 'flex');
+        }
+        });
+    }
+
+
 </script>
 
 <script>    

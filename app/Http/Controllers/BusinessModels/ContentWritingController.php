@@ -44,6 +44,11 @@ class ContentWritingController extends Controller
         return $this->resolveByTechnology($request, 'updateProduct');
     }
 
+    public function getProduct(Request $request)
+    {
+        return $this->resolveByTechnology($request, 'getProduct');
+    }
+
     public function clearProducts(Request $request)
     {
         return $this->resolveByTechnology($request, 'clearProducts');

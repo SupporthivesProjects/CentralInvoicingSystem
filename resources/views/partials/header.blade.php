@@ -35,7 +35,7 @@
                     <div class="input-group-prepend">
                         <select class="form-select" name="internalSearchType" id="internalSearchType" aria-label="Search Type" data-trigger>
                             <option value="websites">Websites</option>
-                            <option value="business_models">Business Models</option>
+                            <option value="business_models">Models</option>
                         </select>
                     </div>
 
@@ -289,7 +289,7 @@
                 <a href="javascript:void(0);" class="header-link dropdown-toggle" id="mainHeaderProfile" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
                     <div class="d-flex align-items-center">
                         <div class="header-link-icon">
-                            <img src="{{ Auth::user()->profile->profile_image }}" alt="img" width="32" height="32" class="rounded-circle">
+                            <img src="{{ Auth::user()->profile->profile_image }}" alt="Profile Image" width="32" height="32" class="rounded-circle">
                         </div>
                         <div class="d-none">
                             <p class="fw-semibold mb-0">Angelica</p>

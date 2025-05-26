@@ -215,9 +215,9 @@ class WebsiteController extends Controller
             $uploadFile('invoice_header_image', 'headers', 'header');
             $uploadFile('invoice_footer_image', 'footers', 'footer');
             $uploadFile('invoice_signature', 'signitures', 'signiture');
-            $uploadFile('invoice_image1', 'images1', 'logo');
-            $uploadFile('invoice_image2', 'images2', 'logo');
-            $uploadFile('invoice_image3', 'images3', 'logo');
+            $uploadFile('invoice_image1', 'images1', 'image1');
+            $uploadFile('invoice_image2', 'images2', 'image2');
+            $uploadFile('invoice_image3', 'images3', 'image3');
 
             // Special case for invoice_template (blade file)
             if ($request->hasFile('invoice_template')) {
@@ -508,6 +508,30 @@ class WebsiteController extends Controller
             ]);
         }
     }
+
+    public function updateWebsiteAjax(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|exists:websites,id',
+            'bank_name' => 'nullable|string|max:255',
+            'bank_code' => 'nullable|string|max:50',
+        ]);
+    
+        $website = Website::findOrFail($request->id);
+    
+        if ($request->has('bank_name')) {
+            $website->bank_name = $request->bank_name;
+        }
+    
+        if ($request->has('bank_code')) {
+            $website->bank_code = $request->bank_code;
+        }
+    
+        $website->save();
+    
+        return response()->json(['success' => true, 'message' => 'Website updated successfully.']);
+    }
+    
     
    
 }

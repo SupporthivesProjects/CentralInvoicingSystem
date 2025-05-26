@@ -31,6 +31,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('/internal/search', [HomeController::class, 'internalSearch'])->name('internal.search');
+    Route::get('/websites/search/result', [HomeController::class, 'searchResult'])->name('search.result');
 
     Route::get('/my-profile', [ProfileController::class, 'index'])->name('myprofile');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -55,9 +56,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/available-websites', [WebsiteController::class, 'connectedwebsites'])->name('connectedwebsites');
     Route::get('/website/{id}/edit', [WebsiteController::class, 'editwebsite'])->name('website.edit');
     Route::patch('/website/{id}', [WebsiteController::class, 'updateWebsite'])->name('website.update');
+    Route::post('/website/update-ajax', [WebsiteController::class, 'updateWebsiteAjax'])->name('update.website.ajax');
     Route::delete('/website/{id}', [WebsiteController::class, 'deleteWebsite'])->name('website.delete');
     Route::get('/businessmodel/{id}/websites', [WebsiteController::class, 'websitesByBusinessModel'])->name('businessmodel.websites');
-
+   
     Route::get('/site/connect/{site_id}', [InvoiceController::class, 'getCustomerDetails'])->name('site.connect.db');
     Route::post('/site/connect/check-connectivity', [WebsiteController::class, 'checkRemoteDbConnectivity'])->name('check.db.connectivity');
     Route::post('/invoice/save-customerdetails', [InvoiceController::class, 'saveCustomerDetails'])->name('customerdetails.store');
@@ -78,7 +80,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/add-product', [InvoiceController::class, 'addProducts'])->name('add.products');
     Route::post('/remove-product', [InvoiceController::class, 'removeProduct'])->name('remove.product');
     Route::post('/update-product', [InvoiceController::class, 'updateProduct'])->name('update.product');
-
+    Route::get('/get-product', [InvoiceController::class, 'getProduct'])->name('get.product');
+    
     Route::get('/generate-new-invoice-number', [InvoiceController::class, 'generateInvoiceNumber'])->name('generate.invoice.number');
     Route::get('/invoice/chart', [HomeController::class, 'showInvoiceChart'])->name('invoice.chart');
     Route::get('/report/invoices', [ReportController::class, 'invoiceReport'])->name('invoice.report');

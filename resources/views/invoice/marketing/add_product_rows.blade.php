@@ -67,40 +67,6 @@
 </script>
 
 <script>
-  
-
-    $(document).ready(function () {
-        let originalAmount = parseFloat(@json(session('current_amount', 0)));
-
-        function updateTempTotal() {
-            let selectedTotal = 0;
-
-            $('input[name="add_product_ids[]"]:checked').each(function () {
-                let productId = $(this).val();
-                let priceInput = $('.add-product-price[data-product-id="' + productId + '"]');
-                let price = parseFloat(priceInput.val()) || 0;
-                selectedTotal += price;
-            });
-
-            let tempTotal = originalAmount + selectedTotal;
-            let invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
-            let discountAmount = 0;
-
-            if (tempTotal > invoiceAmount) {
-                discountAmount = tempTotal - invoiceAmount;
-            }
-
-            $('#temp_current_amount_text').text(tempTotal.toFixed(2));
-            $('#temp_discount_amount_text').text(discountAmount.toFixed(2));
-            $('#temp_invoice_amount_text').text(invoiceAmount.toFixed(2));
-        }
-
-        $(document).on('input change', 'input[name="add_product_ids[]"], .add-product-price, #invoice_amount', function () {
-            updateTempTotal();
-        });
-    });
-</script>
-<script>
     $(document).ready(function () {
     $('#add-custom-products').off('click').on('click', function () {
         let selectedProducts = [];
@@ -168,6 +134,37 @@
 
 
 
+<script>
+  
+    function updateTempTotal() {
+        let originalAmount = parseFloat(@json(session('current_amount', 0)));
+        let selectedTotal = 0;
 
+        $('input[name="add_product_ids[]"]:checked').each(function () {
+            let productId = $(this).val();
+            let priceInput = $('.add-product-price[data-product-id="' + productId + '"]');
+            let price = parseFloat(priceInput.val()) || 0;
+            selectedTotal += price;
+        });
+
+        let tempTotal = originalAmount + selectedTotal;
+        let invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
+        let discountAmount = 0;
+
+        if (tempTotal > invoiceAmount) {
+            discountAmount = tempTotal - invoiceAmount;
+        }
+
+        $('#temp_current_amount_text').text(tempTotal.toFixed(2));
+        $('#temp_discount_amount_text').text(discountAmount.toFixed(2));
+        $('#temp_invoice_amount_text').text(invoiceAmount.toFixed(2));
+    }
+
+    $(document).ready(function () {
+        $(document).on('input change', 'input[name="add_product_ids[]"], .add-product-price, #invoice_amount', function () {
+            updateTempTotal();
+        });
+    });
+</script>
 
 

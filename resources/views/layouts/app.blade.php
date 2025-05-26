@@ -213,6 +213,40 @@
         <script src="{{ asset('js/index.js') }}"></script>
         <script src="{{ asset('js/custom.js') }}"></script>
         
+        <script>
+            let debounceTimer;
+
+            $(document).on('input keyup', '.inline-edit', function () {
+                const $input = $(this);
+                const $iconSpan = $input.siblings('.update-icon');
+                const fieldName = $input.data('field');
+                const id = $input.data('id');
+                const value = $input.val();
+
+                clearTimeout(debounceTimer);
+
+                debounceTimer = setTimeout(() => {
+                    $iconSpan.html(`<i class="fas fa-spinner fa-spin"></i>`);
+
+                    $.post("{{ route('update.website.ajax') }}", {
+                        _token: '{{ csrf_token() }}',
+                        id: id,
+                        [fieldName]: value
+                    })
+                    .done(() => {
+                        $iconSpan.html(`<i class="fas fa-check text-success"></i>`);
+                        setTimeout(() => {
+                            $iconSpan.html(`<i class="fas fa-edit"></i>`);
+                        }, 2000);
+                    })
+                    .fail(() => {
+                        toastr.error('Update failed! Please try again.');
+                        $iconSpan.html(`<i class="fas fa-edit"></i>`);
+                    });
+                }, 500);
+            });
+
+       </script>
 
     @stack('scripts')
     

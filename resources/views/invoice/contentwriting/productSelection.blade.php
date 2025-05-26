@@ -201,10 +201,10 @@
                         <div class="d-flex flex-column align-items-center h-100">
                             <small class="text-muted fw-semibold mb-2">Product Category</small>
                             <select class="form-select w-100 h-100" name="category_id" id="category_id">
-                                <option value="">All Categories</option>
-                                @foreach(getCategoryList($site->technology) as $category)
+                                <option value="" selected disabled>Not Applicable</option>
+                                {{-- @foreach(getCategoryList($site->technology) as $category)
                                     <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                @endforeach
+                                @endforeach --}}
                             </select>
                         </div>
                     </div>
@@ -216,18 +216,19 @@
                     <div class="table-responsive border rounded shadow-sm">
                         <table class="table table-bordered table-hover align-middle mb-0">
                             <thead class="table-dark">
-                                <tr>
-                                    <th style="width: 5%;">PID</th>
+                                <tr> 
+                                    <th style="width: 5%;">Params</th>
                                     <th style="width: 20%;">Name</th>
                                     <th style="width: 15%;">Word Count</th>
                                     <th style="width: 12%;">Turnaround</th>
-                                    <th style="width: 13%;">Images</th>
+                                    <th class="text-center" style="width: 13%;">Img Count</th>
                                     <th style="width: 13%;">Quality</th>
                                     <th class="text-center unit-price-header" style="width: 27%;" data-column="6" data-order="desc">
                                         <span class="d-inline-flex align-items-center justify-content-center gap-1">
                                             Unit Price <i class="bi bi-caret-down-fill"></i>
                                         </span>
                                     </th>
+                                   
                                     <th style="width: 5%;">Remove</th>
                                 </tr>
                             </thead>
@@ -262,33 +263,39 @@
             <!-- Modal Body -->
             <div class="modal-body bg-white">
                 <div class="container-fluid">
-                <div class="row g-3 mb-4 mx-4">
+                <div class="row g-3 mb-4 align-items-end">
 
-                <div class="col-md-6 d-flex flex-column">
-                    <label for="customizeKeywordInput" class="form-label text-center fw-semibold">Search By Keyword</label>
-                    <div class="input-group bg-light shadow-sm ms-2">
-                        <span class="input-group-text bg-transparent border-0">
-                            <i class="fas fa-search text-muted"></i>
-                        </span>
-                        <input type="text" class="form-control border-0" id="customizeKeywordInput" placeholder="Enter or Speak product or category name..." id="micBtn" title="Voice Search">
-                        <button class="btn btn-light border-0" type="button" title="Voice Search" onclick="startVoiceSearch('customizeKeywordInput','customizeMicIcon')">
-                            <i class="fas fa-microphone text-primary" id="customizeMicIcon"></i>
-                        </button>
-                        <button class="btn btn-primary" type="button" title="Search" onclick="customizeProducts()">
-                            <i class="fas fa-search"></i> Search
-                        </button>
-                      
+                    <div class="col-md-5">
+                        <label for="customizeKeywordInput" class="form-label text-center fw-semibold">Search By Keyword</label>
+                        <div class="input-group bg-light shadow-sm ms-2">
+                            <span class="input-group-text bg-transparent border-0">
+                                <i class="fas fa-search text-muted"></i>
+                            </span>
+                            <input type="text" class="form-control border-0" id="customizeKeywordInput" placeholder="Enter or Speak Keyword" id="micBtn" title="Voice Search">
+                            <button class="btn btn-light border-0" type="button" title="Voice Search" onclick="startVoiceSearch('customizeKeywordInput','customizeMicIcon')">
+                                <i class="fas fa-microphone text-primary" id="customizeMicIcon"></i>
+                            </button>
+                        
+                        </div>
                     </div>
+                    <div class="col-md-5">
+                        <label class="form-label text-center fw-semibold mb-2">Search By Price Range</label>
+                        <div class="align-items-center rounded bg-white shadow-sm ms-3">
+                            <div class="w-100" id="customize-price-slider"></div>
+                        </div>
+                        <input type="hidden" id="hidden_customize_price_from_input_id">
+                        <input type="hidden" id="hidden_customize_price_to_input_id">
+                    </div>
+                    <div class="col-md-2">
+                        <label for="sort_unit_price" class="form-label text-center fw-semibold">Sort By Price</label>
+                        <input type="hidden" name="current_page_number" id="current_page_number" value="1">
+                        <select class="form-select" id="sort_unit_price" name="sort_unit_price"  aria-label="Sort By Price">
+                            <option value="asc" selected>Low to High</option>
+                            <option value="desc">High to Low</option>
+                        </select>
+                    </div>
+
                 </div>
-                <div class="col-md-6 d-flex flex-column">
-                    <label class="form-label text-center fw-semibold mb-2">Search By Price Range</label>
-                    <div class="align-items-center rounded bg-white shadow-sm ms-3">
-                        <div class="w-100" id="customize-price-slider"></div>
-                    </div>
-                    <input type="hidden" id="hidden_customize_price_from_input_id">
-                    <input type="hidden" id="hidden_customize_price_to_input_id">
-                </div>
-                    </div>
                     <div class="row g-3 mb-4">
                         <div class="col-md-4">
                             <div class="bg-light rounded border shadow-sm p-1 text-center">
@@ -318,9 +325,9 @@
                             <th style="width: 20%;">Name</th>
                             <th style="width: 15%;">Word Count</th>
                             <th style="width: 12%;">Turnaround</th>
-                            <th style="width: 13%;">Images</th>
+                            <th class="text-center" style="width: 13%;">Img Count</th>
                             <th style="width: 13%;">Quality</th>
-                            <th class="text-center unit-price-header" style="width: 27%;" data-column="6" data-order="desc">
+                            <th class="text-center unit-price-header" style="width: 20%;"  data-column="3" data-order="desc">
                                 <span class="d-inline-flex align-items-center justify-content-center gap-1">
                                     Unit Price <i class="bi bi-caret-down-fill"></i>
                                 </span>
@@ -390,6 +397,96 @@
     </div>
 </div>
 
+<div class="modal fade" id="productParamsModal" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 rounded-4 shadow-sm overflow-hidden">
+
+            <div class="modal-header bg-primary border-0 text-white py-2 px-3">
+                <h5 class="modal-title fw-bold p-1">Product Parameters for <span id="productTitle">...</span> (Optional)</h5>
+                <button type="button" class="btn-close btn-close-white p-1" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div id="productParamsLoader" class="text-center py-4" style="display: none;">
+                <div class="spinner-border text-primary" role="status"></div>
+                <p class="mt-2 mb-0 text-muted">Fetching old Params if any...</p>
+            </div>
+
+            <form method="POST" action="#" id="productParamsForm" class="needs-validation" novalidate style="display: none;">
+                @csrf
+                <div class="modal-body bg-light p-3">
+                    <div class="row g-2">
+                        <div class="col-md-4">
+                            <label for="project_title" class="form-label mb-0">Project Title <span class="text-danger">*</span></label>
+                            <input type="hidden" name="product_id" id="product_id">
+                            <input type="text" name="project_title" id="project_title" class="form-control form-control-sm py-1" required>
+                            <div class="invalid-feedback">Please enter the project title.</div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label for="reference_link" class="form-label mb-0">Reference Link</label>
+                            <input type="url" name="reference_link" id="reference_link" class="form-control form-control-sm py-1">
+                        </div>
+
+                        <div class="col-md-4">
+                            <label for="subject" class="form-label mb-0">Subject <span class="text-danger">*</span></label>
+                            <input type="text" name="subject" id="subject" class="form-control form-control-sm py-1" required>
+                            <div class="invalid-feedback">Please enter the subject.</div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label for="preferred_voice" class="form-label mb-0">Preferred Voice</label>
+                            <select name="preferred_voice" id="preferred_voice" class="form-select form-select-sm py-1">
+                                <option value="" disabled selected>Preferred Voice (optional)</option>
+                                <option value="1st Person">1st Person</option>
+                                <option value="2nd Person">2nd Person</option>
+                                <option value="3rd Person">3rd Person</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label for="preferred_writing_style" class="form-label mb-0">Preferred Writing Style</label>
+                            <select name="preferred_writing_style" id="preferred_writing_style" class="form-select form-select-sm py-1">
+                                <option value="" disabled selected>Preferred Writing Style (optional)</option>
+                                <option value="educational">Educational</option>
+                                <option value="formal">Formal</option>
+                                <option value="informal">Informal</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label for="brand_name" class="form-label mb-0">Brand Name</label>
+                            <input type="text" name="brand_name" id="brand_name" class="form-control form-control-sm py-1" placeholder="Brand Name (optional)">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="audience" class="form-label mb-0">Audience</label>
+                            <select name="audience" id="audience" class="form-select form-select-sm py-1">
+                                <option value="" disabled selected>Select Audience (optional)</option>
+                                <option value="customers">Customers</option>
+                                <option value="businessman">Businessmen</option>
+                                <option value="others">Others</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="note" class="form-label mb-0">Note <span class="text-danger">*</span></label>
+                            <input type="text" name="note" id="note" class="form-control form-control-sm py-1" required>
+                            <div class="invalid-feedback">Please enter the note.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer bg-light border-0 rounded-bottom-4 d-flex justify-content-end gap-2 py-2 px-3" id="productParamsFooter" style="display: none;">
+                    <button type="button" class="btn btn-outline-secondary btn-sm px-4" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" onclick="saveProductParams(this)" class="btn btn-primary btn-sm px-4">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
 @endsection
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
@@ -404,16 +501,19 @@
         $('#discount_amount').prop('type', 'text').val('loading...').prop('readonly', true);
     });
 </script>
+
 <script>
     function adjustNoOfProducts(id, step) {
         const input = document.getElementById(id);
-        let val = input.value === 'Auto' || input.value === '' ? 1 : parseInt(input.value) || 1;
-        val = Math.max(1, Math.min(20, val + step));
+        let val = input.value === 'Auto' || input.value.trim() === '' ? 0 : parseInt(input.value) || 0;
 
-        if (val === 1) {
+        val += step;
+
+        if (val <= 0) {
             input.value = '';
             input.placeholder = 'Auto';
         } else {
+            val = Math.min(val, 20);
             input.value = val;
             input.placeholder = '';
         }
@@ -429,9 +529,12 @@
         }, 1500);
     }
 
-    document.getElementById('noOfProducts').addEventListener('change', triggerRandomizeProducts);
-    document.getElementById('category_id').addEventListener('change', triggerRandomizeProducts);
+    document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById('noOfProducts').addEventListener('change', triggerRandomizeProducts);
+        document.getElementById('category_id').addEventListener('change', triggerRandomizeProducts);
+    });
 </script>
+
 
 <script>
     const randomizePriceSlider = document.getElementById('randomize-price-slider');
@@ -479,19 +582,40 @@
 
 </script>
 
-
 <script>
     let customizeSliderTimer;
     let randomizeSliderTimer;
-
+    let sortUnitPriceTimer;
+    let lastSortUnitPrice = $('#sort_unit_price').val();
+   
     customizePriceSlider.noUiSlider.on('change', function (values) {
         clearTimeout(customizeSliderTimer);
         customizeSliderTimer = setTimeout(() => {
             const [min, max] = values.map(v => Math.round(parseFloat(v.replace(currency, ''))));
             updateHiddenInputs(min, max, 'customize');
-            customizeProducts('reset');
+            customizeProducts('range');
         }, 1500);
     });
+
+    $('#sort_unit_price').on('change', function () {
+        const currentSortValue = $(this).val();
+        
+        clearTimeout(sortUnitPriceTimer);
+        sortUnitPriceTimer = setTimeout(() => {
+            if (currentSortValue !== lastSortUnitPrice) {
+                lastSortUnitPrice = currentSortValue;
+                customizeProducts('range', $('#current_page_number').val() || 1);
+            }
+        }, 1000);
+    });
+
+    $('#customizeKeywordInput').on('keypress', function (e) {
+    if (e.which === 13) { 
+            e.preventDefault(); 
+            customizeProducts();
+        }
+    });
+
 
     randomizePriceSlider.noUiSlider.on('change', function (values) {
         clearTimeout(randomizeSliderTimer);
@@ -540,7 +664,6 @@
                 invoice_amount: parseFloat($('#invoice_amount').val()) || 0,
                 price_from: $('#hidden_randomize_price_from_input_id').val(),
                 price_to: $('#hidden_randomize_price_to_input_id').val(),
-                category_id: $('#category_id').val().trim(),
                 noOfProducts: $('#noOfProducts').val()
             },
             beforeSend: function () {
@@ -604,16 +727,17 @@
             customizeRequest.abort();
             customizeRequest = null;
         }
+        if (search_type === 'reset') {
+            $('#customizeKeywordInput').val('');
+        }
         
-
-
         let btn = $('#add-custom-products');
         btn.prop('disabled', false).html('Add Selected to Cart');
 
         const priceFrom = $('#hidden_customize_price_from_input_id').val();
         const priceTo = $('#hidden_customize_price_to_input_id').val();
         const customizeKeywordInput = $('#customizeKeywordInput').val();
-
+        const sortUnitPrice = $('#sort_unit_price').val() || 'asc';
         let invoice_amount = parseFloat($('#invoice_amount').val()) || 0;
         let current_amount = parseFloat($('#current_amount').val()) || 0;
 
@@ -630,10 +754,11 @@
             $('#error-row').fadeIn(300).delay(3000).fadeOut(500);
             return;
         }
-        if (!customizeKeywordInput && search_type !== 'onload' && search_type !== 'reset') {
-            toastr.info('Enter or Speak product or category name...', 'Keyword missing');
+        if (!customizeKeywordInput && search_type !== 'onload' && search_type !== 'reset' && search_type !== 'range') {
+            toastr.info('Enter or Speak Keyword', 'Keyword missing');
             return;
         }
+        
 
 
         $('#customize-product-table-body').html(getProductsSearchRowHTML(9));
@@ -646,7 +771,8 @@
                 price_to: priceTo,
                 search_type: search_type,
                 keyword: customizeKeywordInput,
-                page: page
+                page: page,
+                sort_unit_price: sortUnitPrice
             },
             success: function (response) {
                 if (!response.tableRows) {
@@ -658,6 +784,7 @@
 
                 $('#customize-product-table-body').html(response.tableRows);
                 $('#customize-pagination').html(response.paginationHtml);
+                $('#current_page_number').val(response.currentPage);
                 calculateTotalPrice();
             },
             error: function (xhr, textStatus) {
@@ -711,129 +838,6 @@ function clearRandomizedFilter(button) {
 }
 </script>
 
-<script>
-    function generateInvoice(event) {
-        event.preventDefault();
-
-        const customer_name = $('input[name="customer_name"]');
-        const invoice_date = $('input[name="invoice_date"]');
-        const selectedProducts = $('input[name="product_ids[]"]:checked');
-        const invoiceNumber = $('input[name="invoice_number"]').val();
-
-        const invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
-        const currentAmount = parseFloat($('#current_amount').val()) || 0;
-        const discountAmount = parseFloat($('#discount_amount').val()) || 0;
-
-        if (selectedProducts.length === 0) {
-            toastr.error('Please select your products combo...', 'No Product Selected');
-            return;
-        }
-        if ($.trim(customer_name.val()) === '') {
-            toastr.error('Customer name cannot be empty.', 'Missing Customer Name');
-            return;
-        }
-
-        if ($.trim(invoice_date.val()) === '') {
-            toastr.error('Invoice date cannot be empty.', 'Missing Invoice Date');
-            return;
-        }
-
-        if (currentAmount < invoiceAmount) {
-            $('#current_amount').addClass('border border-danger');
-            setTimeout(() => {
-                $('#current_amount').removeClass('border border-danger');
-            }, 2000);
-            toastr.error('Total is less than invoice amount.', 'Mismatch');
-            return;
-        }
-
-        const expectedAmount = currentAmount - discountAmount;
-        const epsilon = 0.01;
-
-        if (Math.abs(expectedAmount - invoiceAmount) > epsilon) {
-            const diff = currentAmount - invoiceAmount;
-            const diffFixed = diff.toFixed(2);
-
-            $('#discount_amount').addClass('border border-danger');
-            setTimeout(() => {
-                $('#discount_amount').removeClass('border border-danger');
-            }, 2000);
-
-            if (discountAmount > diff) {
-                toastr.error(`The discount amount of $${discountAmount} exceeds the expected discount of $${diffFixed}.`, 'Discount Too High');
-            } else {
-                toastr.error(`Please apply a discount of $${diffFixed} to match the invoice amount.`, 'Give Discount');
-            }
-            return;
-        }
-
-        if (!invoiceNumber) {
-            toastr.error('Please enter your invoice number or generate one randomly.', 'Invoice Number Missing');
-            let blinkCount = 0;
-            const interval = setInterval(() => {
-                invoiceNumber.toggleClass('border border-danger');
-                blinkCount++;
-                if (blinkCount >= 10) { 
-                    clearInterval(interval);
-                    invoiceNumber.removeClass('border border-danger');
-                }
-            }, 200);
-            return;
-        }
-
-        $('#generate-invoice-form').find('input[name="product_data[]"]').remove();
-
-        selectedProducts.each(function () {
-            const productId = $(this).val();
-            const unitPrice = $(`input[data-product-id="${productId}"]`).val();
-
-            $('#generate-invoice-form').append($('<input>', {
-                type: 'hidden',
-                name: 'product_data[]',
-                value: JSON.stringify({ product_id: productId, unit_price: unitPrice })
-            }));
-        });
-
-       
-        let blinkCount = 0;
-        const maxBlinkCount = 30;
-        const blinkInterval = 500;
-
-        $('#discount_amount, #current_amount, #invoice_amount').css('transition', 'border-color 0.3s ease');
-
-        (function blinkBorder() {
-            $('#discount_amount, #current_amount, #invoice_amount').toggleClass('border border-success');
-            blinkCount++;
-            if (blinkCount < maxBlinkCount) {
-                setTimeout(blinkBorder, blinkInterval);
-            } else {
-                $('#discount_amount, #current_amount, #invoice_amount').removeClass('border border-success');
-            }
-        })();
-
-        Swal.fire({
-            title: 'Generating Invoice...',
-            html: getPrinterLoaderRowHTML(6),
-            showConfirmButton: false,
-            allowOutsideClick: false,
-            allowEscapeKey: false,
-            width: '334px',
-            height: '280px',
-            background: 'rgba(0, 0, 0, 0.1)',
-            customClass: {
-                popup: 'p-2 text-center',
-                title: 'text-white'
-            }
-        });
-
-        $('#generate-invoice-form')[0].submit();
-
-        setTimeout(() => {
-            Swal.close();
-            toastr.success('Invoice is ready and will download shortly.', 'Completed');
-        }, 20000);  
-    }
-</script>
 
 
 <script>
@@ -1041,14 +1045,14 @@ $(document).ready(function() {
             inputField.style.color = '';
             micIcon.classList.remove("text-danger");
             micIcon.classList.add("text-primary");
-            inputField.placeholder = "Enter or Speak product or category name...";
+            inputField.placeholder = "Enter or Speak Keyword";
         };
 
         recognition.onend = function() {
             micIcon.classList.remove("text-danger");
             micIcon.classList.add("text-primary");
             inputField.style.color = 'blue';
-            inputField.placeholder = "Enter or Speak product or category name...";
+            inputField.placeholder = "Enter or Speak Keyword";
         };
     }
 
@@ -1077,7 +1081,7 @@ $(document).ready(function() {
 
         $('input[name="product_ids[]"]:checked').each(function () {
             const productId = $(this).val();
-            const punitPrice = parseFloat($(`input[data-product-id="${productId}"]`).val()) || 0;
+            const punitPrice = parseFloat($(`input.product-price[data-product-id="${productId}"]`).val()) || 0;
             currentAmount += punitPrice;
         });
 
@@ -1088,7 +1092,6 @@ $(document).ready(function() {
             discountAmount = currentAmount > invoiceAmount ? currentAmount - invoiceAmount : 0;
             $('#discount_amount').val(discountAmount.toFixed(2));
         }
-
         $('#current_amount').val(currentAmount.toFixed(2));
         $('#temp_current_amount_text').text(currentAmount.toFixed(2));
         $('#temp_discount_amount_text').text(discountAmount.toFixed(2));
@@ -1103,7 +1106,326 @@ $(document).ready(function() {
         $('#current_amount, #discount_amount, #invoice_amount').removeClass('text-success text-danger').addClass(colorClass);
     }
 </script>
+<script>
+    $(document).ready(function() {
+        const wcStep = 25;
+        const imgStep = 1;
+        const wcMin = 0;
+        const imgMin = 1;
+        let debounceTimers = {};
+
+        function updateProduct(productId) {
+            const wc = parseInt($(`.wc-input[data-product-id="${productId}"]`).val()) || wcMin;
+            const turnaround = $(`.turnaround-select[data-product-id="${productId}"]`).val() || 'ta_standard';
+            const imgCount = parseInt($(`.img-input[data-product-id="${productId}"]`).val()) || imgMin;
+            const quality = $(`.quality-select[data-product-id="${productId}"]`).val() || 'q_standard';
+            const rowSelector = `.product-row[data-product-row-id="${productId}"]`;
+            const $row = $(rowSelector);
+            let requestType = $row.data('request-type');
+            $row.find('input, select, button').prop('disabled', true);
+            toastr.info('We will update & come back in a seconds...', 'Please Wait...');
+            $.ajax({
+                url: "{{ route('update.product') }}",
+                method: 'POST',
+                data: {
+                    product_id: productId,
+                    wordcount: wc,
+                    turnaround: turnaround,
+                    imagecount: imgCount,
+                    quality: quality,
+                    request_type: requestType,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    if(response.success) {
+                        if (requestType === 'customize') {
+                                updateTempTotal();
+                            $(`.add-product-price[data-product-id="${productId}"]`).val(response.unit_price.toFixed(2));
+                        } else {
+                            $(`.product-price[data-product-id="${productId}"]`).val(response.unit_price.toFixed(2));
+                        }
+                        calculateTotalPrice();
+                        $row.find('input, select, button').prop('disabled', false);
+                    } else {
+                        toastr.error(response.message || 'Failed to update product');
+                        $row.find('input, select, button').prop('disabled', false);
+                    }
+                },
+                error: function() {
+                    toastr.error('An error occurred. Please try again.');
+                    $row.find('input, select, button').prop('disabled', false);
+                }
+            });
+        }
+
+        function debounceUpdate(productId, fieldType) {
+
+            const key = `${productId}_${fieldType}`;
+
+            if (debounceTimers[key]) {
+                clearTimeout(debounceTimers[key]);
+            }
+
+            debounceTimers[key] = setTimeout(() => {
+                updateProduct(productId);
+            }, 3000);
+        }
 
 
+        $(document).on('click', '.wc-decrease', function() {
+            const productId = $(this).data('product-id');
+            const $input = $(`.wc-input[data-product-id="${productId}"]`);
+            let val = parseInt($input.val()) || wcMin;
+            const min = parseInt($input.attr('min')) || wcMin;
+
+            if (val - wcStep >= min) {
+                $input.val(val - wcStep);
+                debounceUpdate(productId, 'wordcount');
+            } else {
+                toastr.warning(`Minimum word count is ${min}`, 'Limit reached');
+            }
+        });
+
+        $(document).on('click', '.wc-increase', function() {
+            const productId = $(this).data('product-id');
+            const $input = $(`.wc-input[data-product-id="${productId}"]`);
+            let val = parseInt($input.val()) || wcMin;
+
+            $input.val(val + wcStep);
+            debounceUpdate(productId, 'wordcount');
+        });
+
+        $(document).on('click', '.img-decrease', function() {
+            const productId = $(this).data('product-id');
+            const $input = $(`.img-input[data-product-id="${productId}"]`);
+            let val = parseInt($input.val()) || imgMin;
+            const min = parseInt($input.attr('min')) || imgMin;
+
+            if (val - imgStep >= min) {
+                $input.val(val - imgStep);
+                debounceUpdate(productId, 'imagecount');
+            } else {
+                toastr.warning(`Minimum image count is ${min}`, 'Limit reached');
+            }
+        });
+
+        $(document).on('click', '.img-increase', function() {
+            const productId = $(this).data('product-id');
+            const $input = $(`.img-input[data-product-id="${productId}"]`);
+            let val = parseInt($input.val()) || imgMin;
+
+            $input.val(val + imgStep);
+            debounceUpdate(productId, 'imagecount');
+        });
+
+        $(document).on('change', '.turnaround-select', function() {
+            const productId = $(this).data('product-id');
+            debounceUpdate(productId, 'turnaround');
+        });
+
+        $(document).on('change', '.quality-select', function() {
+            const productId = $(this).data('product-id');
+            debounceUpdate(productId, 'quality');
+        });
+    });
+</script>
+
+<script>
+function saveProductParams(button) {
+
+    const projectTitle = $('#project_title').val().trim();
+    const subject = $('#subject').val().trim();
+    const note = $('#note').val().trim();
+
+    if (!projectTitle || !subject || !note) {
+        toastr.warning('At least Project Title, Subject, and Note are required.');
+        return;
+    }
+
+    let $btn = $(button);
+    $btn.prop('disabled', true);
+    const originalHtml = $btn.html();
+    $btn.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Saving...');
+
+    let formData = $('#productParamsForm').serialize();
+
+    $.ajax({
+        url: "{{ route('update.product') }}",
+        method: 'POST',
+        data: formData,
+        dataType: 'json',
+        success: function(response) {
+            if (response.success && response.product_id) {
+                const productId = response.product_id;
+                const $paramBtn = $(`#param-btn-${response.product_id}`);
+                $('#productParamsModal').modal('hide');
+                if (response.param_status) {
+                $paramBtn
+                        .removeClass('btn-warning')
+                        .addClass('btn-success')
+                        .attr('title', 'Parameter set, click to view')
+                        .attr('data-bs-original-title', 'Parameter set, click to view') // also update this
+                        .find('i')
+                        .removeClass('bi-exclamation-circle-fill')
+                        .addClass('bi-check-circle-fill');
+                } else {
+                    $paramBtn
+                        .removeClass('btn-success')
+                        .addClass('btn-warning')
+                        .attr('title', 'Parameter missing, click to add')
+                        .attr('data-bs-original-title', 'Parameter missing, click to add')
+                        .find('i')
+                        .removeClass('bi-check-circle-fill')
+                        .addClass('bi-exclamation-circle-fill');
+                }
+                const btnEl = $paramBtn.get(0);
+                const tooltipInstance = bootstrap.Tooltip.getInstance(btnEl);
+                if (tooltipInstance) {
+                    tooltipInstance.setContent({ '.tooltip-inner': $paramBtn.attr('title') });
+                }
+                $paramBtn.tooltip('dispose').tooltip();
+                
+            } else {
+                toastr.error('Params update failed, Connect with Mr. Narayan', 'Update failed');
+                $('#productParamsModal').modal('hide');
+            }
+        },
+        error: function() {
+            toastr.error('Something went wrong with the request.');
+            $('#productParamsModal').modal('hide');
+        },
+        complete: function() {
+            $btn.prop('disabled', false);
+            $btn.html(originalHtml);
+        }
+    });
+}
+</script>
+
+
+<script>
+    function generateInvoice(event) {
+        event.preventDefault();
+
+        const customer_name = $('input[name="customer_name"]');
+        const invoice_date = $('input[name="invoice_date"]');
+        const selectedProducts = $('input[name="product_ids[]"]:checked');
+        const invoiceNumber = $('input[name="invoice_number"]').val();
+
+        const invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
+        const currentAmount = parseFloat($('#current_amount').val()) || 0;
+        const discountAmount = parseFloat($('#discount_amount').val()) || 0;
+
+        if (selectedProducts.length === 0) {
+            toastr.error('Please select your products combo...', 'No Product Selected');
+            return;
+        }
+        if ($.trim(customer_name.val()) === '') {
+            toastr.error('Customer name cannot be empty.', 'Missing Customer Name');
+            return;
+        }
+
+        if ($.trim(invoice_date.val()) === '') {
+            toastr.error('Invoice date cannot be empty.', 'Missing Invoice Date');
+            return;
+        }
+
+        if (currentAmount < invoiceAmount) {
+            $('#current_amount').addClass('border border-danger');
+            setTimeout(() => {
+                $('#current_amount').removeClass('border border-danger');
+            }, 2000);
+            toastr.error('Total is less than invoice amount.', 'Mismatch');
+            return;
+        }
+
+        const expectedAmount = currentAmount - discountAmount;
+        const epsilon = 0.01;
+
+        if (Math.abs(expectedAmount - invoiceAmount) > epsilon) {
+            const diff = currentAmount - invoiceAmount;
+            const diffFixed = diff.toFixed(2);
+
+            $('#discount_amount').addClass('border border-danger');
+            setTimeout(() => {
+                $('#discount_amount').removeClass('border border-danger');
+            }, 2000);
+
+            if (discountAmount > diff) {
+                toastr.error(`The discount amount of $${discountAmount} exceeds the expected discount of $${diffFixed}.`, 'Discount Too High');
+            } else {
+                toastr.error(`Please apply a discount of $${diffFixed} to match the invoice amount.`, 'Give Discount');
+            }
+            return;
+        }
+
+        if (!invoiceNumber) {
+            toastr.error('Please enter your invoice number or generate one randomly.', 'Invoice Number Missing');
+            let blinkCount = 0;
+            const interval = setInterval(() => {
+                invoiceNumber.toggleClass('border border-danger');
+                blinkCount++;
+                if (blinkCount >= 10) { 
+                    clearInterval(interval);
+                    invoiceNumber.removeClass('border border-danger');
+                }
+            }, 200);
+            return;
+        }
+
+        $('#generate-invoice-form').find('input[name="product_data[]"]').remove();
+
+        selectedProducts.each(function () {
+            const productId = $(this).val();
+            const unitPrice = $(`[data-product-id="${productId}"]`).closest('tr').find('.product-price').val();
+
+            $('#generate-invoice-form').append($('<input>', {
+                type: 'hidden',
+                name: 'product_data[]',
+                value: JSON.stringify({ product_id: productId, unit_price: unitPrice })
+            }));
+        });
+
+
+       
+        let blinkCount = 0;
+        const maxBlinkCount = 30;
+        const blinkInterval = 500;
+
+        $('#discount_amount, #current_amount, #invoice_amount').css('transition', 'border-color 0.3s ease');
+
+        (function blinkBorder() {
+            $('#discount_amount, #current_amount, #invoice_amount').toggleClass('border border-success');
+            blinkCount++;
+            if (blinkCount < maxBlinkCount) {
+                setTimeout(blinkBorder, blinkInterval);
+            } else {
+                $('#discount_amount, #current_amount, #invoice_amount').removeClass('border border-success');
+            }
+        })();
+
+        Swal.fire({
+            title: 'Generating Invoice...',
+            html: getPrinterLoaderRowHTML(6),
+            showConfirmButton: false,
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            width: '334px',
+            height: '280px',
+            background: 'rgba(0, 0, 0, 0.1)',
+            customClass: {
+                popup: 'p-2 text-center',
+                title: 'text-white'
+            }
+        });
+
+        $('#generate-invoice-form')[0].submit();
+
+        setTimeout(() => {
+            Swal.close();
+            toastr.success('Invoice is ready and will download shortly.', 'Completed');
+        }, 20000);  
+    }
+</script>
 
 @endpush

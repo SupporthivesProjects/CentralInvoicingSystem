@@ -20,14 +20,16 @@
             height: 130px;
         }
         .invoice_footer_image {
+            position: relative;
+            bottom: 0;
+            width: 100%;
+            height: 130px;
             background: url('{{ $invoice_footer_image }}');
             background-repeat: no-repeat;
             background-position: center;
             background-size: cover;
-            width: 100%;
-            height:130px;
-            padding:50px;
         }
+
     </style>
 </head>
 <body>
@@ -53,7 +55,7 @@
 
                     <!-- Content -->
                     <tr>
-                        <td style="padding: 40px; padding-top: 0;min-height:300px !important;">
+                        <td style="padding: 40px; padding-top: 0;">
                             <table width= "100%">
                                 <tr>
                                     <td style="border-bottom: 1px solid #2f5496; width: 520px;">
@@ -72,11 +74,11 @@
                                         <p style="color: #2f5496; font-family: Calibri; font-size: 10px; margin: 0; font-weight: 700;">INVOICE #</p>
                                         <p style="color: black; font-family: Calibri; font-size: 10px; margin: 0;">{{ $invoice_number }}</p>
                                     </td>
-                                    <td style="width: 100%; vertical-align: top;">
-                                        <p style="color: #2f5496; font-family: Calibri; font-size: 10px; margin: 0; text-align: center; font-weight: 700;padding-left:40px;">TO:</p>
-                                    </td>
-                                    <td style="vertical-align: top;">
-                                        <p style="color: black; font-family: Calibri; font-size: 10px; margin: 0; text-align: right;white-space: nowrap;">{{ $customer_name }}</p>
+                                    <td colspan="2" style="text-align: right; vertical-align: top;">
+                                        <p style="font-family: Calibri; font-size: 10px; margin: 0;">
+                                            <span style="color: #2f5496; font-weight: 700;">TO:&nbsp;</span>
+                                            <span style="color: black;">{{ $customer_name }}</span>
+                                        </p>
                                     </td>
                                 </tr>
                             </table>

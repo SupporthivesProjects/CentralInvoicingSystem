@@ -251,6 +251,13 @@ class InvoiceController extends Controller
         return $this->resolveModelController($modelType, 'updateProduct', $request);
     }
 
+    public function getProduct(Request $request)
+    {
+        $site = Website::findOrFail(session('customer.site_id'));
+        $modelType = strtolower($site->businessModel->model_type);
+        return $this->resolveModelController($modelType, 'getProduct', $request);
+    }
+
     public function clearProducts(Request $request)
     {
         $site = Website::findOrFail(session('customer.site_id'));

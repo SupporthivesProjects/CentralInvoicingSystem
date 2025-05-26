@@ -48,14 +48,23 @@
                         <td style="padding: 10px 40px 40px;">
                             <p style="font-size: 16px; font-weight: 700; color: #0E0E0E; text-align: center;">Billing Details:</p>
                             <table width="100%">
-                                <tr style="color:#656565; line-height:26px;">
-                                    <td style="width:50%; text-align:center;">{{ $customer_name }}</td>
-                                    <td style="width:50%; text-align:center;">{{ $customer_email }}</td>
-                                </tr>
-                                <tr style="color:#656565; line-height:26px;">
-                                    <td style="text-align:center;">{{ $invoice_date }}</td>
-                                    <td style="text-align:center;">{{ $invoice_number }}</td>
-                                </tr>
+                            <tr style="color:#656565; line-height:26px;">
+                                <td style="width:50%; text-align:center;">
+                                    @if(!empty($customer_name)) {{ $customer_name }} @endif
+                                </td>
+                                <td style="width:50%; text-align:center;">
+                                    @if(!empty($customer_email)) {{ $customer_email }} @endif
+                                </td>
+                            </tr>
+                            <tr style="color:#656565; line-height:26px;">
+                                <td style="text-align:center;">
+                                    @if(!empty($invoice_date)) {{ $invoice_date }} @endif
+                                </td>
+                                <td style="text-align:center;">
+                                    @if(!empty($invoice_number)) {{ $invoice_number }} @endif
+                                </td>
+                            </tr>
+
                             </table>
 
                             <!-- Products Table -->

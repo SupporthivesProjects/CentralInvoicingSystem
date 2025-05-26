@@ -64,7 +64,7 @@
     </td>
    
     <td class="text-center">
-        <button class="remove-product btn btn-danger btn-sm" data-product-name="{{ $product->name }}"  data-product-id="{{ $product->id }}">
+        <button class="remove-product btn btn-danger btn-sm" data-product-name="{{ $product->name }}"  data-product-id="{{ $product->id }}" data-bs-toggle="tooltip" title="Remove Product">
         <i class="fa fa-trash"></i>
         </button>
     </td>

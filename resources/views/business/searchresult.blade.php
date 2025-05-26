@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Dashboard | Central Invoice System')
+@section('title', 'Search Result | Central Invoice System')
 
 @section('content')
 
@@ -9,9 +9,9 @@
                   <!-- Page Header -->
             <div class="d-md-flex d-block align-items-center justify-content-between page-header-breadcrumb">
                 <div>
-                    <h2 class="main-content-title fs-24 mb-1">Manage Websites</h2>
+                    <h2 class="main-content-title fs-24 mb-1">Dashabord</h2>
                     <ol class="breadcrumb mb-0">
-                        <li class="breadcrumb-item active" aria-current="page">Available Websites</li>
+                        <li class="breadcrumb-item active" aria-current="page">Search Result</li>
                     </ol>
                 </div>
             </div>
@@ -42,7 +42,7 @@
                                                 <th>link</th>
                                                 <th>Bank name</th>
                                                 <th>Bank Code</th>
-                                                <th  class="text-center">Actions</th>
+                                                <th class="text-center" >Actions</th>
                                                
                                             </tr>
                                         </thead>
@@ -53,7 +53,6 @@
                                                     <td>{{ $site->businessModel->name ?? '-' }}</td>
                                                     <td>{{ $site->site_name }}</td>
                                                     <td><a href="{{ $site->site_link }}" target="_blank" >View</a></td>
-                                                    
                                                     <td>
                                                         <div class="input-group">
                                                             <input type="text" class="form-control inline-edit" data-id="{{ $site->id }}" data-field="bank_name" value="{{ $site->bank_name }}">
@@ -71,7 +70,6 @@
                                                             </span>
                                                         </div>
                                                     </td>
-
                                                     <td>
                                                      
                                                         <a href="{{ route('site.connect.db', $site->id) }}" class="btn btn-sm btn-warning">
@@ -84,7 +82,7 @@
                                                             <i class="fas fa-trash-alt"></i> Delete
                                                         </button> --}}
                                                     </td>
-                                                   
+                                                    
                                                 </tr>
                                             @endforeach
                                         </tbody>

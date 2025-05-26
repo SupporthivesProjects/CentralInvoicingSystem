@@ -58,6 +58,43 @@ $(function (e) {
     });
     // file export datatable
 
+    $('#websites-datatables').DataTable({
+        dom: 'Bfrtip',
+        buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
+        language: {
+            searchPlaceholder: 'Search...',
+            sSearch: '',
+        },
+        columns: [
+            null,  // # - index column, default
+            null,  // Model column
+            null,  // Site Name
+            null,  // Site Link
+            {      // Bank Name (your input column)
+                render: function(data, type, row, meta) {
+                    if (type === 'filter') {
+                        // Extract the input value from the cell's HTML string
+                        let el = $.parseHTML(data);
+                        let input = $(el).find('input');
+                        return input.length ? input.val() : data;
+                    }
+                    return data;
+                }
+            },
+            {      // Bank Code (your input column)
+                render: function(data, type, row, meta) {
+                    if (type === 'filter') {
+                        let el = $.parseHTML(data);
+                        let input = $(el).find('input');
+                        return input.length ? input.val() : data;
+                    }
+                    return data;
+                }
+            },
+            null,  // Actions
+        ]
+    });
+
     // delete row datatable
     var table = $('#delete-datatable').DataTable({
         language: {
