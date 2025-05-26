@@ -121,8 +121,8 @@
                         <label class="form-label">Invoice Amount <span class="text-danger">*</span></label>
                         <div class="input-group mb-3">
                             <span class="input-group-text">{{ site_currency() }}</span>
-                            <input form="generate-invoice-form" name="invoice_amount" id="invoice_amount" class="form-control" value="{{ number_format($invoice['invoice_amount'], 2) }}" type="number" readonly>
-                            <span class="input-group-text"><i class="fas fa-file-invoice-dollar"></i></span>
+                            <input form="generate-invoice-form" name="invoice_amount" id="invoice_amount" class="form-control" value="{{ number_format($invoice['invoice_amount'], 2, '.', '') }}" type="number">
+                            <span class="input-group-text" id="update_invoice_amount" style="cursor:pointer;width: 40px;"><i data-feather="edit" id="icon"></i></span>
                         </div>
                     </div>
                 </div>
@@ -141,8 +141,9 @@
                         {{-- <button type="button" class="btn btn-outline-info me-1" onclick="setCustomOnly()">
                             <i class="bi bi-pencil-square"></i> Custom
                         </button> --}}
-                        <button type="button" class="btn btn-outline-danger me-1" onclick="clearAllProducts()">
-                            <i class="bi bi-trash3"></i> Clear
+                        <button type="button" class="btn btn-outline-secondary d-flex align-items-center gap-1 me-1"
+                                onclick="clearAllProducts(this)">
+                            <i class="fa-solid fa-filter-circle-xmark"></i>Clear All
                         </button>
                         <button type="button" class="btn btn-outline-warning me-1" onclick="generateRandomProducts('random')">
                             <i class="bi bi-shuffle"></i> Randomize
@@ -325,7 +326,105 @@
 @endsection
 @push('scripts')
 
+<script>
+$(document).ready(function () {
+    let sessionAmount = parseFloat("{{ session('invoice_amount') ?? 0 }}");
 
+    function setEditIcon() {
+        $('#update_invoice_amount')
+            .removeClass('bg-warning bg-success')
+            .addClass('bg-light')
+            .html('<i data-feather="edit" id="icon" style="color: black;width:20px;"></i>');
+        feather.replace();
+    }
+
+    function setUploadIcon() {
+        $('#update_invoice_amount')
+            .removeClass('bg-light bg-success')
+            .addClass('bg-warning')
+            .html('<i data-feather="upload-cloud" id="icon" style="color: black;width:20px;"></i>');
+        feather.replace();
+    }
+
+    function setLoader() {
+        $('#update_invoice_amount')
+            .removeClass('bg-warning bg-light bg-success')
+            .addClass('bg-warning')
+            .html(
+                '<div class="d-flex align-items-center justify-content-center" style="width:20px;">' +
+                    '<div class="spinner-border text-dark" style="width: 18px; height: 18px;" role="status">' +
+                        '<span class="visually-hidden">Loading...</span>' +
+                    '</div>' +
+                '</div>'
+            );
+    }
+
+    function setSuccessIcon() {
+        $('#update_invoice_amount')
+            .removeClass('bg-warning')
+            .addClass('bg-success')
+            .html('<i data-feather="check-circle" id="icon" style="color: white;width:20px;"></i>');
+        feather.replace();
+    }
+
+    $('#invoice_amount').on('input', function () {
+        let currentVal = parseFloat($(this).val());
+        if (!isNaN(currentVal) && currentVal !== sessionAmount) {
+            setUploadIcon();
+        } else {
+            setEditIcon();
+        }
+    });
+
+    $(document).on('click', '#update_invoice_amount', function () {
+        let currentVal = parseFloat($('#invoice_amount').val());
+        if (isNaN(currentVal) || currentVal === sessionAmount) {
+            return;
+        }
+
+        setLoader();
+
+        let invoice_amount = $('#invoice_amount').val();
+        let invoice_date = $('#invoice_date').val();
+        let customer_name = $('#customer_name').val();
+        let customer_email = $('#customer_email').val();
+        let customer_mobile = $('#customer_mobile').val();
+
+        $.ajax({
+            url: "{{ route('update.invoice.amount') }}",
+            type: 'POST',
+            data: {
+                invoice_amount,
+                invoice_date,
+                customer_name,
+                customer_email,
+                customer_mobile,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function (response) {
+                if (response.success) {
+                    sessionAmount = parseFloat(invoice_amount);
+                    setSuccessIcon();
+
+                    $('#invoice_amount').val(response.updated.invoice_amount);
+                    $('#invoice_date').val(response.updated.invoice_date);
+                    $('#customer_name').val(response.updated.customer_name);
+                    $('#customer_email').val(response.updated.customer_email);
+                    $('#customer_mobile').val(response.updated.customer_mobile);
+                    generateRandomProducts();
+
+                    setTimeout(() => {
+                        setEditIcon();
+                    }, 4000);
+                }
+            },
+            error: function () {
+                setEditIcon();
+            }
+        });
+    });
+});
+</script>
 
 <script>
     const priceSlider = document.getElementById('price-slider');
@@ -459,7 +558,8 @@
             type: 'GET',
             data: {
                 site_id: SITE_ID,
-                invoice_amount: "{{ $invoice['invoice_amount'] ?? '' }}",
+                //invoice_amount: "{{ $invoice['invoice_amount'] ?? '' }}",
+                invoice_amount: parseFloat($('#invoice_amount').val()) || 0,
                 price_from: priceFrom,
                 price_to: priceTo,
                 product_count: productCount, // 🔥 New line
@@ -479,7 +579,8 @@
 
 
 
-                    const invoiceAmount = parseFloat("{{ $invoice['invoice_amount'] ?? 0 }}");
+                    // const invoiceAmount = parseFloat("{{ $invoice['invoice_amount'] ?? 0 }}");
+                    const invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
                     const currentAmount = parseFloat(response.total.toFixed(2));
                     const discountAmount = currentAmount - invoiceAmount;
 
@@ -531,7 +632,7 @@ const SITE_ID = {{ session('customer.site_id') ?? 0 }};
 // Triggered when custom button is clicked
 function setCustomOnly() {
     customMode = true;
-    $('input[name="product_ids[]"]').prop('disabled', false);
+    $('input[name="products[]"]').prop('disabled', false);
     $('input[name="manual_keyword"]').prop('disabled', false);
     $('.product-price').prop('readonly', false);
     $('#product-table-body').empty();
@@ -672,14 +773,45 @@ function updateTotalDisplay() {
 
 
 <script>
-function clearAllProducts() {
-    $('#product-table-body').empty();
-    $('input[name="manual_keyword"]').val('');
-    $('#discount_amount').val('');
-    $('#current_amount').val('');
-    selectedTotal = 0;
-    updateTotalDisplay();
-    toastr.success('Your filter has been reset now', 'Filter Cleared');
+// function clearAllProducts() {
+//     $('#product-table-body').empty();
+//     $('input[name="manual_keyword"]').val('');
+//     $('#discount_amount').val('');
+//     $('#current_amount').val('');
+//     selectedTotal = 0;
+//     updateTotalDisplay();
+//     toastr.success('Your filter has been reset now', 'Filter Cleared');
+// }
+function clearAllProducts(button) {
+    const icon = $(button).find('i');
+    const originalIconClass = 'fa-filter-circle-xmark';
+    icon.removeClass(originalIconClass).addClass('fa-spinner fa-spin');
+
+    $.ajax({
+        url: "{{ route('clear.products') }}",
+        type: 'GET',
+        success: function(response) {
+            $('#product-table-body').empty();
+            $('input[name="manual_keyword"]').val('');
+            $('#discount_amount').val('');
+            $('#current_amount').val('');
+            $('#temp_current_amount_text').text('0.00');
+            $('#temp_discount_amount_text').text('0.00');
+            $('#temp_invoice_amount_text').text($('#invoice_amount').val());
+            $('#product-table-body').html(getErrorRowHTML('Randomize filter cleared. You can now randomize products again or add custom products.', 9));
+            toastr.success('Randomized products filter has been reset');
+            updateTotalDisplay();
+
+
+        },
+        error: function(xhr, status, error) {
+            icon.removeClass('fa-spinner fa-spin').addClass(originalIconClass);
+            toastr.error(error , 'Error clearing randomized products');
+        },
+        complete: function() {
+            icon.removeClass('fa-spinner fa-spin').addClass(originalIconClass);
+        }
+    });
 }
 
 </script>
