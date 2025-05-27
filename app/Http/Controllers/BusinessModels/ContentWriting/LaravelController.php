@@ -87,6 +87,13 @@ class LaravelController extends Controller
             $product->imagecount = $imageCount;
             $product->quantity = $quantity;
         });
+
+        $allProducts = $allProducts->filter(function ($product) use ($priceFrom, $priceTo) {
+            return $product->unit_price >= $priceFrom && $product->unit_price <= $priceTo;
+        });
+        
+        $allProducts = $allProducts->values();
+        
     
         $minTotal = ($noOfProducts || $keyword) ? ($invoiceAmount * 0.6) : $invoiceAmount;
         $maxTotal = $invoiceAmount * 1.10;
@@ -531,6 +538,18 @@ class LaravelController extends Controller
             $product->note = null;
             $product->param_status = !empty($product->project_title) && !empty($product->note) && !empty($product->subject);
         });
+
+        if ($hasPriceRange) {
+            $priceFrom = (float) $request->get('price_from');
+            $priceTo = (float) $request->get('price_to');
+        
+            $products = $products->filter(function ($product) use ($priceFrom, $priceTo) {
+                return $product->unit_price >= $priceFrom && $product->unit_price <= $priceTo;
+            });
+        
+            $products = $products->values();
+        }
+        
         
         if (in_array($sortUnitPrice, ['asc', 'desc'])) {
             $products = $sortUnitPrice === 'asc'
