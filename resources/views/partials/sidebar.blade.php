@@ -38,8 +38,8 @@
                     </a>
                 </li>
 
-                <li class="slide {{ request()->routeIs('businessmodels') || request()->routeIs('businessmodel.*') ? 'active open' : '' }}">
-                    <a href="{{ route('businessmodels') }}" class="side-menu__item {{ request()->routeIs('businessmodels') || request()->routeIs('businessmodel.*') ? 'active' : '' }}">
+                <li class="slide {{ request()->routeIs('businessmodels') || request()->routeIs('businessmodel.create') || request()->routeIs('businessmodel.edit') ? 'active open' : '' }}">
+                    <a href="{{ route('businessmodels') }}" class="side-menu__item {{ request()->routeIs('businessmodels') || request()->routeIs('businessmodel.create') || request()->routeIs('businessmodel.edit') ? 'active' : '' }}">
                         <span class="shape1"></span>
                         <span class="shape2"></span>
                         <i class="ti-bar-chart side-menu__icon"></i>
@@ -47,8 +47,8 @@
                     </a>
                 </li>
 
-                <li class="slide {{ request()->routeIs('connectedwebsites')  || request()->routeIs('site.connect.db') || request()->routeIs('product.selection') || request()->routeIs('search.result') || request()->routeIs('website.*')  ? 'active open' : '' }}">
-                    <a href="{{ route('connectedwebsites') }}" class="side-menu__item {{ request()->routeIs('connectedwebsites') || request()->routeIs('site.connect.db') || request()->routeIs('product.selection') || request()->routeIs('search.result') || request()->routeIs('website.*') ? 'active' : '' }}">
+                <li class="slide {{ request()->routeIs('connectedwebsites')  || request()->routeIs('site.connect.db') || request()->routeIs('product.selection') || request()->routeIs('search.result') || request()->routeIs('website.create') || request()->routeIs('website.edit')  ? 'active open' : '' }}">
+                    <a href="{{ route('connectedwebsites') }}" class="side-menu__item {{ request()->routeIs('connectedwebsites') || request()->routeIs('site.connect.db') || request()->routeIs('product.selection') || request()->routeIs('search.result') || request()->routeIs('website.create') || request()->routeIs('website.edit') ? 'active' : '' }}">
                         <span class="shape1"></span>
                         <span class="shape2"></span>
                         <i class="ti-world side-menu__icon"></i>
