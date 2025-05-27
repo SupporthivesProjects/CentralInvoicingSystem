@@ -64,7 +64,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/site/connect/check-connectivity', [WebsiteController::class, 'checkRemoteDbConnectivity'])->name('check.db.connectivity');
     Route::post('/invoice/save-customerdetails', [InvoiceController::class, 'saveCustomerDetails'])->name('customerdetails.store');
     Route::get('/invoice/product-selection', [InvoiceController::class, 'productSelection'])->name('product.selection');
-    Route::post('/invoice/product/reselection/', [InvoiceController::class, 'productReselection'])->name('product.reselection');
     Route::post('/invoice/update-invoice-amount', [InvoiceController::class, 'updateInvoiceAmount'])->name('update.invoice.amount');
     Route::get('/random-products', [InvoiceController::class, 'randomProducts'])->name('random.products');
     Route::get('/filter-products', [InvoiceController::class, 'filterProducts'])->name('filter.products');
