@@ -50,7 +50,9 @@
                                                     <td>{{ $index + 1 }}</td>
                                                     <td>{{ $model->name ?? '-' }}</td>
                                                     <td>{{ $model->model_type ?? '-' }}</td>
-                                                    <td class="text-center" > <i class="text-center"class="{{ !empty($model->icon_class) ? $model->icon_class : 'ti-wallet' }}  side-menu__icon"></i></td>
+                                                    <td class="text-center">
+                                                        <i class="{{ !empty($model->icon_class) ? $model->icon_class : 'ti-wallet' }} side-menu__icon text-center"></i>
+                                                    </td>
                                                     <td>{{ $model->created_at->format('Y-m-d') }}</td>
                                                     <td>
                                                     <a href="{{ route('businessmodel.websites', $model->id) }}" class="btn btn-sm btn-info">
@@ -59,9 +61,9 @@
                                                         <a href="{{ route('businessmodel.edit', $model->id) }}" class="btn btn-sm btn-primary">
                                                             <i class="fas fa-edit"></i> Edit
                                                         </a>
-                                                        <button class="btn btn-sm btn-danger delete-btn" data-id="{{ $model->id }}">
+                                                       {{-- <button class="btn btn-sm btn-danger delete-btn" data-id="{{ $model->id }}">
                                                             <i class="fas fa-trash-alt"></i> Delete
-                                                        </button>
+                                                        </button> --}}
                                                         
                                                     </td>
                                                 </tr>
