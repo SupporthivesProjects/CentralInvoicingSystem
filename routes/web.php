@@ -56,7 +56,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/website/{id}', [WebsiteController::class, 'deleteWebsite'])->name('website.delete');
     Route::get('/businessmodel/{id}/websites', [WebsiteController::class, 'websitesByBusinessModel'])->name('businessmodel.websites');
    
-    Route::get('/site/connect/{site_id}', [InvoiceController::class, 'getCustomerDetails'])->name('site.connect.db');
+    Route::get('/website/connect/{site_id}', [InvoiceController::class, 'getCustomerDetails'])->name('site.connect.db');
     Route::post('/site/connect/check-connectivity', [WebsiteController::class, 'checkRemoteDbConnectivity'])->name('check.db.connectivity');
     Route::post('/invoice/save-customerdetails', [InvoiceController::class, 'saveCustomerDetails'])->name('customerdetails.store');
     Route::get('/invoice/product-selection', [InvoiceController::class, 'productSelection'])->name('product.selection');
