@@ -135,17 +135,17 @@
                                     <td style="width: 10%; text-align: center; font-family: arial; font-size: 10px; border: 1px solid black;">
                                         {{ $loop->iteration }}
                                     </td>
-                                    <td style="width: 15%; text-align: center; font-family: arial; font-size: 10px; border: 1px solid black;">
+                                    <td style="width: 15%; padding-left: 10px; text-align: left; font-family: arial; font-size: 10px; border: 1px solid black;">
                                         {{ $product->category_name }}
                                     </td>
                                     <td style="width: 45%; text-align: left; padding-left: 10px; font-family: arial; font-size: 10px; border: 1px solid black;">
-                                        {{ $product->name }}
+                                        {{ $product->name }} @if($product->discount > 0) <small style="color: green; font-weight: bold;">({{ $product->discount }}% OFF)</small> @endif
                                     </td>
                                     <td style="width: 15%; text-align: right; padding-right: 10px; font-family: arial; font-size: 10px; border: 1px solid black;">
                                         {{ site_currency() . number_format($product->unit_price, 2) }}
                                     </td>
                                     
-                                    <td style="width: 15%; text-align: right; padding-right: 10px; font-family: arial; font-size: 10px; border: 1px solid black;">
+                                    <td style="width: 15%; text-align: center; padding-right: 10px; font-family: arial; font-size: 10px; border: 1px solid black;">
                                         {{ site_currency() . number_format($product->unit_price, 2) }}
                                     </td>
                                 </tr>
@@ -155,7 +155,7 @@
                                     <td colspan="4" style="text-align: right; font-family: arial; font-size: 10px; font-weight: 700; padding-right: 10px;">
                                         SUBTOTAL
                                     </td>
-                                    <td style="text-align: right; padding-right: 10px; font-family: arial; font-size: 10px; font-weight: 700; border: 1px solid black;">
+                                    <td style="text-align: center; padding-right: 10px; font-family: arial; font-size: 10px; font-weight: 700; border: 1px solid black;">
                                     {{ site_currency() . number_format(($invoice_amount + $discount_amount), 2) }}
                                     </td>
                                 </tr>
@@ -164,7 +164,7 @@
                                     <td colspan="4" style="text-align: right; font-family: arial; font-size: 10px; padding-right: 10px;">
                                         DISCOUNT
                                     </td>
-                                    <td style="text-align: right; padding-right: 10px; font-family: arial; font-size: 10px; color: green; border: 1px solid black;">
+                                    <td style="text-align: center; padding-right: 10px; font-family: arial; font-size: 10px; color: green; border: 1px solid black;">
                                         {{ site_currency() . number_format($discount_amount, 2) }}
                                     </td>
                                 </tr>
@@ -173,7 +173,7 @@
                                     <td colspan="4" style="text-align: right; font-family: arial; font-size: 10px; padding-right: 10px;">
                                         TOTAL DUE
                                     </td>
-                                    <td style="text-align: right; padding-right: 10px; font-family: arial; font-size: 10px; border: 1px solid black;">
+                                    <td style="text-align: center; padding-right: 10px; font-family: arial; font-size: 10px; border: 1px solid black;">
                                         {{ site_currency() . number_format($invoice_amount, 2) }}
                                     </td>
                                 </tr>

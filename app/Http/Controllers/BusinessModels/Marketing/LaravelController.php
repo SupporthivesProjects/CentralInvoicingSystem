@@ -55,7 +55,7 @@ class LaravelController extends Controller
             ->when($priceFrom && $priceTo, function ($query) use ($priceFrom, $priceTo) {
                 return $query->whereBetween('unit_price', [$priceFrom, $priceTo]);
             })
-            ->inRandomOrder()
+           // ->inRandomOrder()
             ->get();
         
         if ($categoryId || $noOfProducts) {

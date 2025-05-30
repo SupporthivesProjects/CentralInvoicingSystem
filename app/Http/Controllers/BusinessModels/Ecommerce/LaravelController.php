@@ -60,11 +60,11 @@ class LaravelController extends Controller
             $query->where('category_id', $categoryId);
         }
         $maxTotal = $invoiceAmount * 1.10;
-        $fetchLimit = $noOfProducts ? ($noOfProducts * 5) : 100;
+        $fetchLimit = $noOfProducts ? ($noOfProducts * 5) : 200;
 
         if ($categoryId || $noOfProducts) {
             $minTotal = $invoiceAmount * 0.6;
-            $allProducts = $query->inRandomOrder()->limit($fetchLimit)->get();
+            $allProducts = $query->orderByDesc('unit_price')->inRandomOrder()->get();
         } else {
             $minTotal = $invoiceAmount;
             $allProducts =  $query->orderByDesc('unit_price')->limit($fetchLimit)->get(); 
