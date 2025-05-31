@@ -1,5 +1,5 @@
 <?php
-namespace App\Http\Controllers\BusinessModels\ContentWriting;
+namespace App\Http\Controllers\BusinessModels\Ecommerce;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\InvoiceController;
@@ -20,7 +20,7 @@ use Illuminate\View\ViewNotFoundException;
 use Carbon\Carbon;
 
 
-class CorePHPController extends Controller
+class WordPressController extends Controller
 {
     private $productTable;
     private $connectionType;
@@ -33,43 +33,43 @@ class CorePHPController extends Controller
         $this->connectionType = 'dynamic';
     }
 
-
+ 
     public function randomProducts(Request $request)
     {
     }
-
+    
     public function addProducts(Request $request)
     {
-
+        
     }
-
-
+    
+    
     public function removeProduct(Request $request)
     {
-
+       
     }
-
+    
     public function updateProduct(Request $request)
     {
-
+       
     }
     public function clearProducts(Request $request)
     {
-
+       
     }
 
     public function filterProducts(Request $request)
     {
-
+       
     }
 
     public function generateInvoice(Request $request){
 
     }
 
-
+    
     protected function updateProductPrice(array $productDataArray)
     {
-
+       
     }
 }

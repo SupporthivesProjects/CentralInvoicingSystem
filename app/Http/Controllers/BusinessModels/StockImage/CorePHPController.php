@@ -33,43 +33,43 @@ class CorePHPController extends Controller
         $this->connectionType = 'dynamic';
     }
 
-
+ 
     public function randomProducts(Request $request)
     {
     }
-
+    
     public function addProducts(Request $request)
     {
-
+        
     }
-
-
+    
+    
     public function removeProduct(Request $request)
     {
-
+       
     }
-
+    
     public function updateProduct(Request $request)
     {
-
+       
     }
     public function clearProducts(Request $request)
     {
-
+       
     }
 
     public function filterProducts(Request $request)
     {
-
+       
     }
 
     public function generateInvoice(Request $request){
 
     }
 
-
+    
     protected function updateProductPrice(array $productDataArray)
     {
-
+       
     }
 }

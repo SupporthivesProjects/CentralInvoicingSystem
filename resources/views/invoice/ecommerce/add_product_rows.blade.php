@@ -112,7 +112,7 @@
 
 </script>
 <script>
-  
+
     function updateTempTotal() {
         let originalAmount = parseFloat(@json(session('current_amount', 0)));
         let selectedTotal = 0;

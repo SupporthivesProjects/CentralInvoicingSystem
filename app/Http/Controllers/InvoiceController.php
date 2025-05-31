@@ -19,7 +19,7 @@ use App\Http\Controllers\BusinessModels\ContentWritingController;
 use App\Http\Controllers\BusinessModels\MarketingController;
 use App\Http\Controllers\BusinessModels\GamingSiteController;
 use App\Http\Controllers\BusinessModels\GiftCardController;
-use App\Http\Controllers\BusinessModels\ImageStockController;
+use App\Http\Controllers\BusinessModels\StockImageController;
 use App\Http\Controllers\BusinessModels\TranslationController;
 
 
@@ -287,15 +287,15 @@ class InvoiceController extends Controller
                 return app(GamingSiteController::class)->$method($request);
             case 'giftcard':
                 return app(GiftCardController::class)->$method($request);
-            case 'imagestock':
-                return app(ImageStockController::class)->$method($request);
+            case 'stock_image':
+                return app(StockImageController::class)->$method($request);
             case 'translation':
                 return app(TranslationController::class)->$method($request);
             default:
                 return redirect()->back()->with('error', 'Invalid business model type, please contact developer.');
         }
     }
-    
+
 
     public static function createInvoiceHistory($invoice_data)
     {
