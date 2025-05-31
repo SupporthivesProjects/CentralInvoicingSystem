@@ -139,7 +139,7 @@
                                         {{ $product->category_name }}
                                     </td>
                                     <td style="width: 45%; text-align: left; padding-left: 10px; font-family: arial; font-size: 10px; border: 1px solid black;">
-                                        {{ $product->name }} @if($product->discount > 0) <small style="color: green; font-weight: bold;">({{ $product->discount }}% OFF)</small> @endif
+                                        {{ $product->name }}
                                     </td>
                                     <td style="width: 15%; text-align: right; padding-right: 10px; font-family: arial; font-size: 10px; border: 1px solid black;">
                                         {{ site_currency() . number_format($product->unit_price, 2) }}
