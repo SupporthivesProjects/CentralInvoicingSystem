@@ -49,8 +49,8 @@ class LaravelController extends Controller
         DynamicDatabaseService::connect($site);
     
         $query = DB::connection($this->connectionType)->table($this->productTable)
-            ->select('id', 'category_id', 'discount','name', 'unit_price', 'slug')
-            ->where('published', 1);
+                ->select('id', 'name', 'slug', 'category_id', 'card_currency', 'rrp', 'discount', 'unit_price', 'current_stock')
+                ->where('published', 1);
     
         if ($priceFrom && $priceTo) {
             $query->whereBetween('unit_price', [$priceFrom, $priceTo]);
@@ -227,7 +227,7 @@ class LaravelController extends Controller
         $productIds = collect($readyProducts)->pluck('id')->reverse()->values()->toArray();
 
         $products = DB::connection($this->connectionType)->table($this->productTable)
-            ->select('id', 'category_id', 'discount','name', 'unit_price', 'slug')
+            ->select('id', 'name', 'slug', 'category_id', 'card_currency', 'rrp', 'discount', 'unit_price', 'current_stock')
             ->whereIn('id', $productIds)
             ->get()
             ->keyBy('id');
@@ -300,7 +300,7 @@ class LaravelController extends Controller
         $productIds = array_column($updatedProducts, 'id');
 
         $products = DB::connection($this->connectionType)->table($this->productTable)
-            ->select('id', 'category_id', 'discount','name', 'unit_price', 'slug')
+            ->select('id', 'name', 'slug', 'category_id', 'card_currency', 'rrp', 'discount', 'unit_price', 'current_stock')
             ->whereIn('id', $productIds)
             ->get();
 
@@ -364,7 +364,7 @@ class LaravelController extends Controller
         $productIds = collect($readyProducts)->pluck('id')->toArray();
 
         $products = DB::connection($this->connectionType)->table($this->productTable)
-            ->select('id', 'category_id', 'name', 'discount', 'unit_price', 'slug')
+            ->select('id', 'name', 'slug', 'category_id', 'card_currency', 'rrp', 'discount', 'unit_price', 'current_stock')
             ->whereIn('id', $productIds)
             ->get();
 
@@ -446,11 +446,14 @@ class LaravelController extends Controller
             ->leftJoin('categories', 'products.category_id', '=', 'categories.id')
             ->select(
                 'products.id',
-                'products.category_id',
                 'products.name',
+                'products.slug',
+                'products.category_id',
+                'products.card_currency',
+                'products.rrp',
                 'products.discount',
                 'products.unit_price',
-                'products.slug',
+                'products.current_stock',
                 'categories.name as category_name'
             )
             ->where('products.published', 1);
@@ -580,7 +583,7 @@ class LaravelController extends Controller
     {
         $site_id = $request->input('site_id');
         $site = Website::findOrFail($site_id);
-        dd($site);
+       // dd($site);
         $invoice_data['site'] = $site;
         $invoice_data['invoice_number'] = $request->input('invoice_number');
         $invoice_data['invoice_date'] = $request->input('invoice_date');
@@ -623,7 +626,7 @@ class LaravelController extends Controller
         
         $products = DB::connection($this->connectionType)->table($this->productTable)
             ->whereIn('id', $productIds)
-            ->select('id', 'category_id', 'name','discount', 'unit_price','slug') 
+            ->select('id', 'name', 'slug', 'category_id', 'card_currency', 'rrp', 'discount', 'unit_price', 'current_stock')
             ->get()
             ->sortBy(function ($product) use ($productIds) {
                 return array_search($product->id, $productIds);
@@ -678,6 +681,8 @@ class LaravelController extends Controller
             if (!empty($data['product_id']) && isset($data['unit_price'])) {
                 $product_id = $data['product_id'];
                 $new_price = floatval($data['unit_price']);
+                $new_rrp = isset($data['product_rrp']) ? floatval($data['product_rrp']) : null;
+                $new_discount = isset($data['product_discount']) ? floatval($data['product_discount']) : null;
     
                 $product = DB::connection($this->connectionType)
                     ->table($this->productTable)
@@ -687,36 +692,48 @@ class LaravelController extends Controller
                 if (!$product) continue;
     
                 $current_price = floatval($product->unit_price);
+                $current_rrp = isset($product->unit_rrp) ? floatval($product->unit_rrp) : null;
+                $current_discount = isset($product->unit_discount) ? floatval($product->unit_discount) : null;
     
-               
-                if ($current_price == $new_price) continue;
+                $updateData = [];
     
-               
+                if ($current_price !== $new_price) {
+                    $updateData['unit_price'] = $new_price;
+                }
+    
+                if ($new_rrp !== null && $current_rrp !== $new_rrp) {
+                    $updateData['unit_rrp'] = $new_rrp;
+                }
+    
+                if ($new_discount !== null && $current_discount !== $new_discount) {
+                    $updateData['unit_discount'] = $new_discount;
+                }
+    
+                if (empty($updateData)) {
+                    continue; // Nothing to update
+                }
+    
                 $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
                     ->where('product_id', $product_id)
                     ->orderByDesc('last_price_changed')
                     ->first();
     
-                if (!$lastUpdate) {
-                    DB::connection($this->connectionType)
-                        ->table($this->productTable)
-                        ->where('id', $product_id)
-                        ->update(['unit_price' => $new_price]);
+                $shouldUpdate = false;
     
-                    ProductPriceHistory::create([
-                        'site_id' => $site_id,
-                        'product_id' => $product_id,
-                        'unit_price' => $new_price,
-                        'last_price_changed' => now(),
-                    ]);
-                    continue;
+                if (!$lastUpdate) {
+                    $shouldUpdate = true;
+                } else {
+                    $monthsSinceLastChange = Carbon::parse($lastUpdate->last_price_changed)->diffInMonths(now());
+                    if ($monthsSinceLastChange >= 3) {
+                        $shouldUpdate = true;
+                    }
                 }
-             
-                if (Carbon::parse($lastUpdate->last_price_changed)->diffInMonths(now()) >= 3) {
+    
+                if ($shouldUpdate) {
                     DB::connection($this->connectionType)
                         ->table($this->productTable)
                         ->where('id', $product_id)
-                        ->update(['unit_price' => $new_price]);
+                        ->update($updateData);
     
                     ProductPriceHistory::create([
                         'site_id' => $site_id,
@@ -729,6 +746,6 @@ class LaravelController extends Controller
         }
     }
     
-    
+  
     
 }

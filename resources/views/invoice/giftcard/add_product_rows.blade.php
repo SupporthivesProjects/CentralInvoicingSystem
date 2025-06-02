@@ -1,24 +1,26 @@
 @forelse($products as $index => $product)
 <tr id="customize-product-row-{{ $product->id }}">
     <td class="text-center" >{{ $product->id }}</td>
-    <td>{{ $product->category_name }}</td>
     <td>
         {{ $product->name }} 
         @if($site->site_link && $product->slug)
             <a href="{{ $site->site_link }}product/{{ $product->slug }}" target="_blank">🔗</a>
         @endif
     </td>
-    <td class="text-center">{{ site_currency() }}{{ number_format($product->unit_price, 2) }}</td>
+    <td  class="text-center">{{ site_currency() }}{{ number_format($product->rrp, 2) }}</td>
+    <td  class="text-center">{{  $product->discount }}%</td>
     <td>
-        <div class="input-group">
+    <div class="input-group">
             <span class="input-group-text">{{ site_currency() }}</span>
-            <input type="text" class="form-control add-product-price text-center"  value="{{ number_format($product->unit_price, 2, '.', '') }}"  data-product-id="{{ $product->id }}" {{ $product->can_edit_price == 0 ? 'readonly' : '' }}  aria-label="Amount (to the nearest dollar)">
+            <input type="text" class="form-control add-product-price text-center" 
+                value="{{ number_format($product->unit_price, 2, '.', '') }}"  
+                data-product-id="{{ $product->id }}"  >
             <span class="input-group-text d-flex align-items-center">
-                <i  class="{{ $product->can_edit_price == 0 ? 'fas fa-lock text-muted' : 'fas fa-edit' }}" style="font-size: 12px;" data-bs-toggle="tooltip"  data-bs-placement="top"
-                    title="{{ $product->can_edit_price == 0 ? 'Price update allowed after ' . $product->remaining_days . ' days.' : 'Editable' }}" ></i>
+                <i class="fas fa-lock text-muted" ></i>
             </span>
         </div>
     </td>
+
     <td class="text-center align-middle">
         <div class="form-check d-flex justify-content-center align-items-center m-0">
             <input 

@@ -231,18 +231,15 @@
                     <div class="table-responsive border rounded shadow-sm">
                         <table class="table table-bordered table-hover align-middle mb-0">
                             <thead class="table-dark">
-                                <tr>
-                                    <th class="text-center" style="width: 10%;">PID</th>
-                                    <th class="text-center" style="width: 15%;">Category</th>
-                                    <th class="text-center" style="width: 30%;">Product Name</th>
-                                    <th class="text-center unit-price-header" data-column="3" data-order="desc">
-                                        <span class="d-inline-flex align-items-center justify-content-center gap-1">
-                                            Unit Price <i class="bi bi-caret-down-fill"></i>
-                                        </span>
-                                    </th>
-                                    <th class="text-center" style="width: 20%;">Editable Price</th>
-                                    <th class="text-center" style="width: 10%;">Remove</th>
-                                </tr>
+                            <tr>
+                                <th class="text-center" style="width: 10%;">PID</th>
+                                <th class="text-center" style="width: 20%;">Product Name</th>
+                                <th class="text-center" style="width: 20%;"> RRP Price </th>
+                                <th class="text-center" style="width: 15%;">Discount</th>
+                                <th class="text-center" style="width: 20%;">Unit Price</th>
+                                <th class="text-center" style="width: 10%;">Remove</th>
+                            </tr>
+
                             </thead>
                             <tbody id="randomize-product-table-body">
                             </tbody>
@@ -332,17 +329,17 @@
                     <div class="rounded shadow-sm p-2"> 
                         <table id="customize-products-table" class="table table-bordered table-hover align-middle mb-0 table-responsive" style="width:100% !important;">
                             <thead class="table-dark text-center">
-                                <tr>
-                                <th style="width: 10%;">PID</th>
-                                <th style="width: 15%;">Category</th>
-                                <th style="width: 30%;">Product Name</th>
-                                <th class="text-center unit-price-header" style="width: 20%;"  data-column="3" data-order="desc">
-                                    <span class="d-inline-flex align-items-center justify-content-center gap-1">
-                                        Unit Price <i class="bi bi-caret-down-fill"></i>
-                                    </span>
-                                </th>
-                                <th style="width: 20%;">Editable Price</th>
-                                <th style="width: 10%;">Select</th>
+                            <tr>
+                                    <th class="text-center" style="width: 10%;">PID</th>
+                                    <th class="text-center" style="width: 20%;">Product Name</th>
+                                    <th class="text-center unit-price-header" style="width: 20%;" data-column="3" data-order="desc">
+                                        <span class="d-inline-flex align-items-center justify-content-center gap-1">
+                                            RRP Price <i class="bi bi-caret-down-fill"></i>
+                                        </span>
+                                    </th>
+                                    <th class="text-center" style="width: 15%;">Discount</th>
+                                    <th class="text-center" style="width: 20%;">Unit Price</th>
+                                    <th style="width: 10%;">Select</th>
                             </tr>
                             </thead>
                             <tbody id="customize-product-table-body">
@@ -833,14 +830,22 @@ function clearRandomizedFilter(button) {
 
         selectedProducts.each(function () {
             const productId = $(this).val();
-            const unitPrice = $(`input[data-product-id="${productId}"]`).val();
+            const unitPrice = $(`input.product-price[data-product-id="${productId}"]`).val() || 0;
+            const productRRP = $(`input.product-rrp[data-product-id="${productId}"]`).val() || 0;
+            const productDiscount = $(`input.product-discount[data-product-id="${productId}"]`).val() || 0;
 
             $('#generate-invoice-form').append($('<input>', {
                 type: 'hidden',
                 name: 'product_data[]',
-                value: JSON.stringify({ product_id: productId, unit_price: unitPrice })
+                value: JSON.stringify({ 
+                    product_id: productId, 
+                    unit_price: unitPrice,
+                    unit_rrp: productRRP,
+                    unit_discount: productDiscount
+                })
             }));
         });
+
 
        
         let blinkCount = 0;
@@ -1101,12 +1106,10 @@ $(document).ready(function() {
     }
 
 </script>
-
-
 <script>
     let discountManuallyChanged = false;
 
-    $(document).on('input', '.product-price, input[name="product_ids[]"]', function () {
+    $(document).on('input', '.product-price, input[name="product_ids[]"], .product-discount, .product-rrp', function () {
         discountManuallyChanged = false;
         calculateTotalPrice();
     });
@@ -1122,11 +1125,11 @@ $(document).ready(function() {
 
     function calculateTotalPrice() {
         let currentAmount = 0;
-
         $('input[name="product_ids[]"]:checked').each(function () {
             const productId = $(this).val();
-            const punitPrice = parseFloat($(`input[data-product-id="${productId}"]`).val()) || 0;
-            currentAmount += punitPrice;
+            const unitPriceInput = $(`.product-price[data-product-id="${productId}"]`);
+            const unitPrice = parseFloat(unitPriceInput.val()) || 0;
+            currentAmount += unitPrice;
         });
 
         let invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
@@ -1145,13 +1148,32 @@ $(document).ready(function() {
 
         const expectedTotal = invoiceAmount + discountAmount;
         const isMatch = Math.abs(currentAmount - expectedTotal) < 0.01;
-
         const colorClass = isMatch ? 'text-success' : 'text-danger';
 
         $('#current_amount, #discount_amount, #invoice_amount').removeClass('text-success text-danger').addClass(colorClass);
     }
-</script>
 
+    $(document).ready(function () {
+        function updateUnitPrice($row) {
+            const canEditRRP = !$row.find('.product-rrp').is('[readonly]');
+            const canEditDiscount = !$row.find('.product-discount').is('[readonly]');
+            if (!canEditRRP && !canEditDiscount) {
+                toastr.warning('Both RRP and Discount fields are not editable.');
+                return;
+            }
+
+            const rrp = parseFloat($row.find('.product-rrp').val()) || 0;
+            const discount = parseFloat($row.find('.product-discount').val()) || 0;
+            const discountedPrice = rrp - (rrp * discount / 100);
+            $row.find('.product-price').val(discountedPrice.toFixed(2)).trigger('input');
+        }
+
+        $(document).on('input change', '.product-rrp, .product-discount', function () {
+            const $row = $(this).closest('.product-row');
+            updateUnitPrice($row);
+        });
+    });
+</script>
 
 
 @endpush

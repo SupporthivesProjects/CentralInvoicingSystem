@@ -1,53 +1,80 @@
 @forelse($products as $index => $product)
 <tr class="product-row">
-    <td class="text-center" >{{ $product->id }}</td>
-    <td>{{ $product->category_name }}</td>
+    <td class="text-center">{{ $product->id }}</td>
     <td>
-        {{ $product->name }} 
+        {{ $product->name }}
         @if($site->site_link && $product->slug)
             <a href="{{ $site->site_link }}product/{{ $product->slug }}" target="_blank">🔗</a>
         @endif
     </td>
-    <td  class="text-center">{{ site_currency() }}{{ number_format($product->unit_price, 2) }}</td>
-    <td>
-        <div class="input-group d-flex">
+    <td class="text-center">
+        <div class="input-group d-flex justify-content-center">
             <span class="input-group-text">{{ site_currency() }}</span>
-            <input  style="display: none;"
-                class="form-check-input border narayan-checkbox border-1 border-primary" 
-                type="checkbox" 
-                name="product_ids[]" 
-                data-unit_price="{{ number_format($product->unit_price, 2, '.', '') }}" 
-                value="{{ $product->id }}" checked>
-            <input 
-                type="text" 
-                class="form-control product-price text-center" 
-                value="{{ number_format($product->unit_price, 2, '.', '') }}" 
-                data-product-id="{{ $product->id }}"
-                {{ $product->can_edit_price == 0 ? 'readonly' : '' }}  
-                aria-label="Amount (to the nearest dollar)"
-            >
-            <span class="input-group-text d-flex align-items-center">
-                <i 
-                    class="{{ $product->can_edit_price == 0 ? 'fas fa-lock text-muted' : 'fas fa-edit' }}" 
-                    style="font-size: 12px;" 
-                    data-bs-toggle="tooltip"  
-                    data-bs-placement="top"
-                    title="{{
-                        $product->can_edit_price == 0 
-                            ? 'Price update allowed after ' . $product->remaining_days . ' days.' 
-                            : 'Editable'
-                    }}"
-                ></i>
+            <input type="text" 
+                   class="form-control text-center product-rrp" 
+                   value="{{ number_format($product->rrp, 2, '.', '') }}" 
+                   data-product-id="{{ $product->id }}" 
+                   aria-label="RRP"
+                   {{ $product->can_edit_price == 0 ? 'readonly' : '' }}>
+            <span class="input-group-text d-flex align-items-center"
+                  data-bs-toggle="tooltip"
+                  data-bs-placement="top"
+                  title="{{ $product->can_edit_price == 0 ? 'Price update allowed after ' . $product->remaining_days . ' days.' : 'Editable' }}">
+                  @if($product->can_edit_price == 0)
+                        <i class="fas fa-lock text-muted"></i>
+                    @else
+                        <i class="fas fa-edit"></i>
+                    @endif
             </span>
         </div>
     </td>
-   
+
     <td class="text-center">
-        <button class="remove-product btn btn-danger btn-sm" data-product-name="{{ $product->name }}"  data-product-id="{{ $product->id }}" data-bs-toggle="tooltip" title="Remove Product">
-        <i class="fa fa-trash"></i>
-        </button>
+        <div class="input-group d-flex justify-content-center">
+        <span class="input-group-text"><i class="fas fa-percent"></i></span>
+            <input type="text" 
+                   class="form-control text-center product-discount" 
+                   value="{{ $product->discount }}" 
+                   data-product-id="{{ $product->id }}" 
+                   aria-label="Discount" 
+                   {{ $product->can_edit_price == 0 ? 'readonly' : '' }}>
+            <span class="input-group-text d-flex align-items-center"
+                  data-bs-toggle="tooltip"
+                  data-bs-placement="top"
+                  title="{{ $product->can_edit_price == 0 ? 'Discount update allowed after ' . $product->remaining_days . ' days.' : 'Editable' }}">
+                
+                  @if($product->can_edit_price == 0)
+                        <i class="fas fa-lock text-muted"></i>
+                    @else
+                      <i class="fas fa-edit"></i>
+                    @endif
+                 
+            </span>
+        </div>
     </td>
 
+    <td>
+        <div class="input-group d-flex">
+            <span class="input-group-text">{{ site_currency() }}</span>
+          
+            <input type="text" 
+                   class="form-control product-price text-center" 
+                   value="{{ number_format($product->unit_price, 2, '.', '') }}" 
+                   data-product-id="{{ $product->id }}" readonly>
+            <span class="input-group-text d-flex align-items-center">
+                <i class="fas fa-lock text-muted" style="font-size: 12px;"></i>
+            </span>
+        </div>
+    </td>
+
+    <td class="text-center">
+        <button class="remove-product btn btn-danger btn-sm" 
+                data-product-name="{{ $product->name }}" 
+                data-product-id="{{ $product->id }}">
+            <i class="fa fa-trash"></i>
+        </button>
+        <input style="display: none;"  class="form-check-input border narayan-checkbox border-1 border-primary"  type="checkbox" name="product_ids[]"  data-unit_price="{{ number_format($product->unit_price, 2, '.', '') }}" value="{{ $product->id }}" checked>
+    </td>
 </tr>
 @empty
 <tr>
@@ -139,3 +166,8 @@
     });
 
 </script>
+
+
+
+
+
