@@ -9,18 +9,11 @@
     </td>
     <td  class="text-center">{{ site_currency() }}{{ number_format($product->rrp, 2) }}</td>
     <td  class="text-center">{{  $product->discount }}%</td>
-    <td>
-    <div class="input-group">
-            <span class="input-group-text">{{ site_currency() }}</span>
-            <input type="text" class="form-control add-product-price text-center" 
-                value="{{ number_format($product->unit_price, 2, '.', '') }}"  
-                data-product-id="{{ $product->id }}"  >
-            <span class="input-group-text d-flex align-items-center">
-                <i class="fas fa-lock text-muted" ></i>
-            </span>
-        </div>
+    <td class="text-center">
+        {{ site_currency() }} 
+        <span id="temp_unit_price_text" class="unit-price-text" >{{ number_format($product->unit_price, 2, '.', '') }}</span>
+        <input type="hidden"  class="form-control add-product-price text-center"  value="{{ number_format($product->unit_price, 2, '.', '') }}"  data-product-id="{{ $product->id }}">
     </td>
-
     <td class="text-center align-middle">
         <div class="form-check d-flex justify-content-center align-items-center m-0">
             <input 

@@ -233,10 +233,14 @@
                             <thead class="table-dark">
                             <tr>
                                 <th class="text-center" style="width: 10%;">PID</th>
-                                <th class="text-center" style="width: 20%;">Product Name</th>
+                                <th class="text-center" style="width: 25%;">Product Name</th>
                                 <th class="text-center" style="width: 20%;"> RRP Price </th>
                                 <th class="text-center" style="width: 15%;">Discount</th>
-                                <th class="text-center" style="width: 20%;">Our Price</th>
+                                <th class="text-center  unit-price-header" style="width: 15%;cursor: pointer;" data-column="3" data-order="desc">
+                                    <span class="d-inline-flex align-items-center justify-content-center gap-1">
+                                        Our Price <i class="bi bi-caret-down-fill"></i>
+                                    </span>
+                                </th>
                                 <th class="text-center" style="width: 10%;">Remove</th>
                             </tr>
 
@@ -331,14 +335,14 @@
                             <thead class="table-dark text-center">
                             <tr>
                                     <th class="text-center" style="width: 10%;">PID</th>
-                                    <th class="text-center" style="width: 20%;">Product Name</th>
-                                    <th class="text-center unit-price-header" style="width: 20%;" data-column="3" data-order="desc">
-                                        <span class="d-inline-flex align-items-center justify-content-center gap-1">
-                                            RRP Price <i class="bi bi-caret-down-fill"></i>
+                                    <th class="text-center" style="width: 25%;">Product Name</th>
+                                    <th class="text-center" style="width: 20%;"> RRP Price  </th>
+                                    <th class="text-center" style="width: 15%;">Discount</th>
+                                    <th class="text-center  unit-price-header" style="width: 15%;cursor: pointer;" data-column="3" data-order="desc">
+                                       <span class="d-inline-flex align-items-center justify-content-center gap-1">
+                                            Our Price <i class="bi bi-caret-down-fill"></i>
                                         </span>
                                     </th>
-                                    <th class="text-center" style="width: 15%;">Discount</th>
-                                    <th class="text-center" style="width: 20%;">Our Price</th>
                                     <th style="width: 10%;">Select</th>
                             </tr>
                             </thead>
@@ -1036,8 +1040,8 @@ $(document).ready(function() {
         var order = $header.data('order');
 
         $rows.sort(function(a, b) {
-            var A = $(a).find('td').eq(column).text().trim();
-            var B = $(b).find('td').eq(column).text().trim();
+            var A = $(a).find('.unit-price-text').text().trim();
+            var B = $(b).find('.unit-price-text').text().trim();
 
             A = parseFloat(A.replace(/[^\d.-]/g, '')) || 0;
             B = parseFloat(B.replace(/[^\d.-]/g, '')) || 0;
@@ -1166,6 +1170,7 @@ $(document).ready(function() {
             const discount = parseFloat($row.find('.product-discount').val()) || 0;
             const discountedPrice = rrp - (rrp * discount / 100);
             $row.find('.product-price').val(discountedPrice.toFixed(2)).trigger('input');
+            $('#unit_price_text').text(discountedPrice.toFixed(2));
         }
 
         $(document).on('input change', '.product-rrp, .product-discount', function () {

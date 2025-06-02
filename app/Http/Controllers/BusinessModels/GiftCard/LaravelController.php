@@ -56,17 +56,17 @@ class LaravelController extends Controller
             $query->whereBetween('unit_price', [$priceFrom, $priceTo]);
         }
     
-        // if (!empty($categoryName)) {
-        //     $normalizedSearch = strtolower(str_replace(['-', '_', ' ', ','], '', $categoryName));
+        if (!empty($categoryName)) {
+            $normalizedSearch = strtolower(str_replace(['-', '_', ' ', ','], '', $categoryName));
         
-        //     $query->where(function ($q) use ($normalizedSearch) {
-        //         $q->whereIn('products.category_id', function ($sub) use ($normalizedSearch) {
-        //             $sub->select('id')
-        //                 ->from('categories')
-        //                 ->whereRaw("LOWER(REPLACE(REPLACE(REPLACE(REPLACE(tags, '-', ''), '_', ''), ' ', ''), ',', '')) LIKE ?", ["%{$normalizedSearch}%"]);
-        //         });
-        //     });
-        // }
+            $query->where(function ($q) use ($normalizedSearch) {
+                $q->whereIn('products.category_id', function ($sub) use ($normalizedSearch) {
+                    $sub->select('id')
+                        ->from('categories')
+                        ->whereRaw("LOWER(REPLACE(REPLACE(REPLACE(REPLACE(tags, '-', ''), '_', ''), ' ', ''), ',', '')) LIKE ?", ["%{$normalizedSearch}%"]);
+                });
+            });
+        }
     
         $minTotal = $categoryName || $noOfProducts ? $invoiceAmount * 0.6 : $invoiceAmount;
         $maxTotal = $invoiceAmount * 1.10;

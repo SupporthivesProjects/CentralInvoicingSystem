@@ -53,18 +53,9 @@
         </div>
     </td>
 
-    <td>
-        <div class="input-group d-flex">
-            <span class="input-group-text">{{ site_currency() }}</span>
-          
-            <input type="text" 
-                   class="form-control product-price text-center" 
-                   value="{{ number_format($product->unit_price, 2, '.', '') }}" 
-                   data-product-id="{{ $product->id }}" readonly>
-            <span class="input-group-text d-flex align-items-center">
-                <i class="fas fa-lock text-muted" style="font-size: 12px;"></i>
-            </span>
-        </div>
+    <td class="text-center">
+            {{ site_currency() }}<span class="unit-price-text" id="unit_price_text">{{ number_format($product->unit_price, 2, '.', '') }}</span>
+        <input type="hidden" class="form-control product-price text-center"  value="{{ number_format($product->unit_price, 2, '.', '') }}" data-product-id="{{ $product->id }}" readonly>
     </td>
 
     <td class="text-center">
