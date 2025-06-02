@@ -54,7 +54,7 @@
     </td>
 
     <td class="text-center">
-            {{ site_currency() }}<span class="unit-price-text" id="unit_price_text">{{ number_format($product->unit_price, 2, '.', '') }}</span>
+            {{ site_currency() }}<span class="unit-price-text">{{ number_format($product->unit_price, 2, '.', '') }}</span>
         <input type="hidden" class="form-control product-price text-center"  value="{{ number_format($product->unit_price, 2, '.', '') }}" data-product-id="{{ $product->id }}" readonly>
     </td>
 

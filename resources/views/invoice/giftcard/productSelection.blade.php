@@ -1170,7 +1170,7 @@ $(document).ready(function() {
             const discount = parseFloat($row.find('.product-discount').val()) || 0;
             const discountedPrice = rrp - (rrp * discount / 100);
             $row.find('.product-price').val(discountedPrice.toFixed(2)).trigger('input');
-            $('#unit_price_text').text(discountedPrice.toFixed(2));
+            $row.find('.unit-price-text').text(discountedPrice.toFixed(2));
         }
 
         $(document).on('input change', '.product-rrp, .product-discount', function () {
