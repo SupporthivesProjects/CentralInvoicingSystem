@@ -236,7 +236,7 @@
                                 <th class="text-center" style="width: 20%;">Product Name</th>
                                 <th class="text-center" style="width: 20%;"> RRP Price </th>
                                 <th class="text-center" style="width: 15%;">Discount</th>
-                                <th class="text-center" style="width: 20%;">Unit Price</th>
+                                <th class="text-center" style="width: 20%;">Our Price</th>
                                 <th class="text-center" style="width: 10%;">Remove</th>
                             </tr>
 
@@ -338,7 +338,7 @@
                                         </span>
                                     </th>
                                     <th class="text-center" style="width: 15%;">Discount</th>
-                                    <th class="text-center" style="width: 20%;">Unit Price</th>
+                                    <th class="text-center" style="width: 20%;">Our Price</th>
                                     <th style="width: 10%;">Select</th>
                             </tr>
                             </thead>

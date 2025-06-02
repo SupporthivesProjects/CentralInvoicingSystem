@@ -110,74 +110,51 @@
                             </table>
                             <br><br>
 
-                            <table style="width: 100%;height: 400px; width: 100%; border: 1px solid black; border-collapse: collapse;">
+                            <table style="width: 100%; height: 400px; border: 1px solid black; border-collapse: collapse;">
                                 <tr style="height: 24px;">
-                                    <td style="width: 10%; text-align: center; font-family: arial; font-size: 10px; font-weight: 400; border: 1px solid black;">
-                                        <b>SR. NO.</b>
-                                    </td>
-                                    <td style="width: 15%; text-align: center; font-family: arial; font-size: 10px; font-weight: 400; border: 1px solid black;">
-                                        <b>CATEGORY</b>
-                                    </td>
-                                    <td style="width: 45%; text-align: center; font-family: arial; font-size: 10px; font-weight: 400; border: 1px solid black;">
-                                        <b>PRODUCT NAME</b>
-                                    </td>
-                                    <td style="width: 15%; text-align: center; font-family: arial; font-size: 10px; font-weight: 400; border: 1px solid black;">
-                                        <b>UNIT PRICE</b>
-                                    </td>
-                                    
-                                    <td style="width: 15%; text-align: center; font-family: arial; font-size: 10px; font-weight: 400; border: 1px solid black;">
-                                        <b>TOTAL</b>
-                                    </td>
+                                    <td style="width: 5%; text-align: center; font-family: arial; font-size: 10px; font-weight: 400; border: 1px solid black;"><b>SR. NO.</b></td>
+                                    <td style="width: 35%; text-align: center; font-family: arial; font-size: 10px; font-weight: 400; border: 1px solid black;"><b>PRODUCT NAME</b></td>
+                                    <td style="width: 15%; text-align: center; font-family: arial; font-size: 10px; font-weight: 400; border: 1px solid black;"><b>RRP PRICE</b></td>
+                                    <td style="width: 10%; text-align: center; font-family: arial; font-size: 10px; font-weight: 400; border: 1px solid black;"><b>DISCOUNT</b></td>
+                                    <td style="width: 10%; text-align: center; font-family: arial; font-size: 10px; font-weight: 400; border: 1px solid black;"><b>QTY</b></td>
+                                    <td style="width: 10%; text-align: center; font-family: arial; font-size: 10px; font-weight: 400; border: 1px solid black;"><b>OUR PRICE</b></td>
+                                    <td style="width: 15%; text-align: center; font-family: arial; font-size: 10px; font-weight: 400; border: 1px solid black;"><b>TOTAL</b></td>
                                 </tr>
 
                                 @foreach($products as $product)
                                 <tr style="height: 24px;">
-                                    <td style="width: 10%; text-align: center; font-family: arial; font-size: 10px; border: 1px solid black;">
-                                        {{ $loop->iteration }}
-                                    </td>
-                                    <td style="width: 15%; padding-left: 10px; text-align: left; font-family: arial; font-size: 10px; border: 1px solid black;">
-                                        {{ $product->category_name }}
-                                    </td>
-                                    <td style="width: 45%; text-align: left; padding-left: 10px; font-family: arial; font-size: 10px; border: 1px solid black;">
-                                        {{ $product->name }}
-                                    </td>
-                                    <td style="width: 15%; text-align: right; padding-right: 10px; font-family: arial; font-size: 10px; border: 1px solid black;">
-                                        {{ site_currency() . number_format($product->unit_price, 2) }}
-                                    </td>
-                                    
-                                    <td style="width: 15%; text-align: center; padding-right: 10px; font-family: arial; font-size: 10px; border: 1px solid black;">
-                                        {{ site_currency() . number_format($product->unit_price, 2) }}
-                                    </td>
+                                    <td style="text-align: center; font-family: arial; font-size: 10px; border: 1px solid black;">{{ $loop->iteration }}</td>
+                                    <td style="text-align: left; padding-left: 10px; font-family: arial; font-size: 10px; border: 1px solid black;">{{ $product->name }}</td>
+                                    <td style="text-align: center; padding-left: 10px; font-family: arial; font-size: 10px; border: 1px solid black;">{{ site_currency() . number_format($product->rrp, 2) }}</td>
+                                    <td style="text-align: center; padding-right: 10px; font-family: arial; font-size: 10px; border: 1px solid black;">{{ $product->discount }}%</td>
+                                    <td style="text-align: center; font-family: arial; font-size: 10px; border: 1px solid black;">1</td>
+                                    <td style="text-align: center; font-family: arial; font-size: 10px; border: 1px solid black;">{{ site_currency() . number_format($product->unit_price, 2) }}</td>
+                                    <td style="text-align: center; font-family: arial; font-size: 10px; border: 1px solid black;">{{ site_currency() . number_format($product->unit_price , 2) }} </td>
                                 </tr>
                                 @endforeach
 
                                 <tr>
-                                    <td colspan="4" style="text-align: right; font-family: arial; font-size: 10px; font-weight: 700; padding-right: 10px;">
-                                        SUBTOTAL
-                                    </td>
-                                    <td style="text-align: center; padding-right: 10px; font-family: arial; font-size: 10px; font-weight: 700; border: 1px solid black;">
-                                    {{ site_currency() . number_format(($invoice_amount + $discount_amount), 2) }}
+                                    <td colspan="6" style="text-align: right; font-family: arial; font-size: 10px; font-weight: 700; padding-right: 10px;">SUBTOTAL</td>
+                                    <td style="text-align: center; font-family: arial; font-size: 10px; font-weight: 700; border: 1px solid black;">
+                                        {{ site_currency() . number_format(($invoice_amount + $discount_amount), 2) }}
                                     </td>
                                 </tr>
 
                                 <tr>
-                                    <td colspan="4" style="text-align: right; font-family: arial; font-size: 10px; padding-right: 10px;">
-                                        DISCOUNT
-                                    </td>
-                                    <td style="text-align: center; padding-right: 10px; font-family: arial; font-size: 10px; color: green; border: 1px solid black;">
+                                    <td colspan="6" style="text-align: right; font-family: arial; font-size: 10px; padding-right: 10px;">DISCOUNT</td>
+                                    <td style="text-align: center; font-family: arial; font-size: 10px; color: green; border: 1px solid black;">
                                         {{ site_currency() . number_format($discount_amount, 2) }}
                                     </td>
                                 </tr>
 
                                 <tr>
-                                    <td colspan="4" style="text-align: right; font-family: arial; font-size: 10px; padding-right: 10px;">
-                                        TOTAL DUE
-                                    </td>
-                                    <td style="text-align: center; padding-right: 10px; font-family: arial; font-size: 10px; border: 1px solid black;">
+                                    <td colspan="6" style="text-align: right; font-family: arial; font-size: 10px; padding-right: 10px;">TOTAL DUE</td>
+                                    <td style="text-align: center; font-family: arial; font-size: 10px; border: 1px solid black;">
                                         {{ site_currency() . number_format($invoice_amount, 2) }}
                                     </td>
                                 </tr>
                             </table>
+
                         </td>
                     </tr>
 
