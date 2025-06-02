@@ -1,0 +1,1005 @@
+@extends('layouts.app')
+
+@section('title', 'Product Selection | Central Invoice System')
+
+@section('content')
+
+<div class="page">
+    <div class="main-content app-content">
+        <div class="container-fluid">
+             <!-- Page Header -->
+             <div class="d-md-flex d-block align-items-center justify-content-between page-header-breadcrumb">
+             <div>
+                <h2 class="main-content-title fs-24 mb-3">Choose Products and Generate Invoice</h2>
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a href="{{ url()->previous() }}" class="text-primary">Select Site</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Choose Products and Generate Invoice</li>
+                </ol>
+            </div>
+
+                <div class="mt-3 mt-md-0">
+                <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
+                <a href="{{ url()->previous() }}" class="btn btn-outline-secondary btn-sm" >
+                    <i class="fas fa-arrow-left"></i> Go Back
+                </a>
+
+                </div>
+                </div>
+            </div>
+
+            <!-- Page Header Close -->
+
+            <div class="card custom-card">
+                <div class="card-body shadow rounded">
+                    <form id="generate-invoice-form" method="POST" action="{{ route('generate.invoice') }}">
+                        @csrf
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Selected Website <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                 <span class="input-group-text"><i class="fas fa-globe"></i></span>
+                                    <input type="text" form="generate-invoice-form" class="form-control" name="site_name" id="site_name" value="{{ $customer['site_name'] ?? 'N/A' }}" readonly>
+                                    <span class="input-group-text" data-bs-toggle="modal" data-bs-target="#sitechangemodel"><i class="fas fa-sync-alt text-primary" style="cursor: pointer;"></i></span>
+                                </div>
+                                <input type="hidden" form="generate-invoice-form" name="site_id" id="site_id" class="form-control" value="{{ $customer['site_id'] }}" readonly>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Customer Name <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                    <input type="text" form="generate-invoice-form" class="form-control" id="customer_name" name="customer_name" value="{{ $customer['customer_name'] ?? '' }}" placeholder="Enter Customer Name">
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="invoice_number" class="form-label">
+                                    Invoice Number <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-file-invoice"></i></span>
+                                    <input type="text" form="generate-invoice-form" id="invoice_number" name="invoice_number" class="form-control font-italic" value="{{ $invoice['invoice_number'] ?? '' }}" placeholder="Enter or generate invoice number">
+                                    <div class="btn-group">
+                                            <button type="button" class="btn input-group-text dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <span class="visually-hidden">Toggle Dropdown</span>
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-end">
+                                                <li><a class="dropdown-item py-1 px-3" href="#" id="generateInvoiceNumber"><i class="fas fa-sync-alt me-2"></i>Generate</a>
+                                                </li>
+                                                <li><a class="dropdown-item py-1 px-3" href="#" id="copyInvoicenumber"><i class="fas fa-copy me-2"></i>Copy</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Invoice Date <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                                    <input type="date" form="generate-invoice-form" name="invoice_date" class="form-control" value="{{ $invoice['invoice_date'] ?? now()->toDateString() }}">
+                                </div>
+                            </div>
+
+
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Customer Email</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                    <input type="email" form="generate-invoice-form" class="form-control" id="customer_email" name="customer_email" value="{{ $customer['customer_email'] ?? '' }}"  placeholder="Enter Customer email">
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Invoice File Name</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-file-invoice"></i></span>
+                                    <input type="text" form="generate-invoice-form" class="form-control" id="invoice_file_name" name="invoice_file_name" value="{{ old('invoice_file_name') }}" placeholder="Enter Invoice File Name">
+                                </div>
+                            </div>
+
+
+                        </div>
+
+
+
+                    </form>
+                </div>
+            </div>
+            <div class="card custom-card mt-4">
+                <div class="card-body shadow-lg rounded">
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Current Amount  <span class="text-danger">*</span></label>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">{{ site_currency() }}</span>
+                            <input type="text" form="generate-invoice-form" id="current_amount" name="current_amount" class="form-control bg-white" value="{{ $current_total ?? '00.00' }}" readonly>
+                            <span class="input-group-text" style="width: 40px;"><i class="fas fa-money-bill-wave"></i></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Discount Amount  <span class="text-danger">*</span></label>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">{{ site_currency() }}</span>
+                            <input type="number" form="generate-invoice-form" name="discount_amount" id="discount_amount" class="form-control bg-white" placeholder="Discount Amount" value="0">
+                            <span class="input-group-text" style="width: 40px;"><i class="fas fa-tags"></i></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Invoice Amount <span class="text-danger">*</span></label>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">{{ site_currency() }}</span>
+                            <input form="generate-invoice-form" name="invoice_amount" id="invoice_amount" class="form-control" value="{{ number_format($invoice['invoice_amount'], 2, '.', '') }}" type="number">
+                            <span class="input-group-text" id="update_invoice_amount" style="cursor:pointer;width: 40px;"><i data-feather="edit" id="icon"></i></span>
+                        </div>
+                    </div>
+                </div>
+
+
+                </div>
+            </div>
+
+            <div class="card custom-card mt-4 border-1 rounded shadow">
+                <div class="card-header bg-white shadow-sm rounded-3 p-3 d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-stars text-primary fs-4 me-2"></i>
+                        <h4 class="mb-0 fw-semibold text-dark">Build Your Product & Invoice</h4>
+                    </div>
+
+                    <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
+                        <button type="button" class="btn btn-outline-primary d-flex align-items-center gap-1 me-1"
+                                data-bs-toggle="modal" data-bs-target="#addmoreproducts" onclick="customizeProducts('onload')">
+                            <i class="fas fa-plus-square"></i> Add Products
+                        </button>
+
+                        <button type="button" class="btn btn-outline-success d-flex align-items-center gap-1"
+                                onclick="randomizeProducts('semi_random')">
+                            <i class="fas fa-random"></i> Randomize
+                        </button>
+
+                        <button type="button" class="btn btn-outline-secondary d-flex align-items-center gap-1 me-1"
+                                onclick="clearRandomizedFilter(this)">
+                            <i class="fa-solid fa-filter-circle-xmark"></i>
+                        </button>
+
+                        <button type="button" class="btn btn-primary d-flex align-items-center gap-1 me-1"
+                                onclick="generateInvoice(event)">
+                            <i class="bi bi-receipt-cutoff"></i> Generate Invoice
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                <div class="container">
+                {{-- <div class="row g-3 justify-content-center mb-3">
+                    <div class="col-md-3">
+                        <div class="d-flex flex-column align-items-center h-100">
+                            <small class="text-muted fw-semibold mb-2">No. of Products</small>
+                            <div class="input-group shadow-sm bg-white w-100">
+                                <button class="btn btn-outline-primary" type="button" onclick="adjustNoOfProducts('noOfProducts', -1)">−</button>
+                                <input type="text" class="form-control text-center" name="noOfProducts" id="noOfProducts" min="1" max="20" placeholder="Auto" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Auto'" readonly>
+                                <button class="btn btn-outline-primary" type="button" onclick="adjustNoOfProducts('noOfProducts', 1)">+</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="d-flex flex-column align-items-center h-100 ms-3">
+                            <small class="text-muted fw-semibold mb-2">Price Range</small>
+                            <div class="w-100 h-100">
+                                <div id="randomize-price-slider" class="w-100"></div>
+                                <input type="hidden" name="price_from" id="hidden_randomize_price_from_input_id">
+                                <input type="hidden" name="price_to" id="hidden_randomize_price_to_input_id">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="d-flex flex-column align-items-center h-100">
+                            <small class="text-muted fw-semibold mb-2">Product Category</small>
+                            <select class="form-select w-100 h-100" name="category_id" id="category_id">
+                                <option value="">All Categories</option>
+                                @foreach(getCategoryList($site->technology) as $category)
+                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
+                    </div>
+
+                </div>   --}}
+                    <!-- Product Table -->
+                    <div class="table-responsive border rounded shadow-sm">
+                        <table class="table table-bordered table-hover align-middle mb-0">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th class="text-center" style="width: 10%;">PID</th>
+                                    <th class="text-center" style="width: 35%;">Product Name</th>
+                                    <th class="text-center" style="width: 20%;">Credits</th>
+                                    <th class="text-center unit-price-header" data-column="3" data-order="desc">
+                                        <span class="d-inline-flex align-items-center justify-content-center gap-1">
+                                            Unit Price <i class="bi bi-caret-down-fill"></i>
+                                        </span>
+                                    </th>
+                                    <th class="text-center" style="width: 10%;">Remove</th>
+                                </tr>
+                            </thead>
+                            <tbody id="randomize-product-table-body">
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addmoreproducts" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" >
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header bg-white shadow-sm rounded-3 p-3 d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-sliders-h text-primary fs-4 me-2"></i>
+                    <h5 class="modal-title fw-semibold text-dark mb-0" id="staticBackdropLabel1">
+                        Customize Your Product Selection
+                    </h5>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+
+            <!-- Modal Body -->
+            <div class="modal-body bg-white">
+                <div class="container-fluid">
+                    <div class="row g-3 mb-4 align-items-end text-center">
+
+                    </div>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-4">
+                            <div class="bg-light rounded border shadow-sm p-1 text-center">
+                                <div class="text-muted small fw-semibold">Current Amount</div>
+                                <div class="fw-bold text-primary fs-5">{{ site_currency() }}<span id="temp_current_amount_text">0.00</span></div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="bg-light rounded border shadow-sm p-1 text-center">
+                                <div class="text-muted small fw-semibold">Discount Amount</div>
+                                <div class="fw-bold text-primary fs-5">{{ site_currency() }}<span id="temp_discount_amount_text">0.00</span></div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="bg-light rounded border shadow-sm p-1 text-center">
+                                <div class="text-muted small fw-semibold">Invoice Amount</div>
+                                <div class="fw-bold text-primary fs-5">{{ site_currency() }}<span id="temp_invoice_amount_text">0.00</span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="rounded shadow-sm p-2">
+                        @php
+                        // You need to pass the connection type and table name from your controller
+                        // Or define them here if they're consistent
+                        $connectionType = 'dynamic'; // Replace with actual connection name
+                        $productTable = 'pricing_packs'; // Replace with actual table name
+
+                        // Get all products from remote database
+                        $allProducts = DB::connection($connectionType)->table($productTable)
+                            ->select('id', 'name', 'credits', 'price')->get();
+
+                        // Check if any product has the exact invoice amount
+                        $exactPriceProduct = $allProducts->where('price', $invoice['invoice_amount'])->first();
+
+                        // Show custom pack only if no exact price product exists
+                        $showCustomPack = !$exactPriceProduct;
+                    @endphp
+
+                    @if($showCustomPack)
+                    <table class="table table-bordered table-hover align-middle mb-0 table-responsive" style="width:100% !important;">
+                        <tr>
+                            <td colspan="5" class="text-center">
+                                <h5 class="fw-semibold text-dark mb-0">Select Custom Pack</h5>
+                            </td>
+                        </tr>
+                        <tr id="customize-product-row-0">
+                            <td class="text-center">#</td>
+                            <td>
+                                Custom Pack
+                            </td>
+                            <td>
+                                <span class="badge bg-secondary" id="customcredit">No Credits</span>
+                            </td>
+                            <td class="text-center">
+                                {{ site_currency() }}
+                                <input type="hidden"
+                                    class="add-product-price form-control d-inline-block"
+                                    data-product-id="0"
+                                    value="{{ number_format($invoice['invoice_amount'], 2, '.', '') }}"
+                                    step="0.01"
+                                    min="0"
+                                    style="width: 80px;">
+                                    {{ number_format($invoice['invoice_amount'], 2, '.', '') }}
+                            </td>
+
+                            <td class="text-center align-middle">
+                                <div class="form-check d-flex justify-content-center align-items-center m-0">
+                                    <input
+                                        class="form-check-input border narayan-checkbox border-1 border-primary"
+                                        type="radio"
+                                        name="add_product_ids[]"
+                                        data-product-id="0"
+                                        value="0"
+                                    >
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                    @else
+                    <div class="alert alert-info text-center mb-3">
+                        <i class="fas fa-info-circle me-2"></i>
+                        A product with the exact invoice amount ({{ site_currency() }}{{ number_format($invoice['invoice_amount'], 2) }}) already exists in the system.
+                    </div>
+                    @endif
+                        <table id="customize-products-table" class="table table-bordered table-hover align-middle mb-0 table-responsive" style="width:100% !important;">
+                            <thead class="table-dark text-center">
+                                <tr>
+                                <th style="width: 10%;">PID</th>
+                                <th style="width: 35%;">Product Name</th>
+                                <th>Credits</th>
+                                <th class="text-center unit-price-header" style="width: 20%;"  data-column="3" data-order="desc">
+                                    <span class="d-inline-flex align-items-center justify-content-center gap-1">
+                                        Unit Price <i class="bi bi-caret-down-fill"></i>
+                                    </span>
+                                </th>
+                                <th style="width: 10%;">Select</th>
+                            </tr>
+                            </thead>
+                            <tbody id="customize-product-table-body">
+                            </tbody>
+                        </table>
+                        {{-- <div id="customize-pagination"></div> --}}
+                    </div>
+                </div>
+                </div>
+
+            <div class="modal-footer bg-light border-top">
+                <div class="d-flex flex-wrap gap-2">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" >
+                        <i class="bi bi-x-circle me-1"></i> Close
+                    </button>
+                    <button type="button" class="btn btn-danger" onclick="customizeProducts('reset')">
+                        <i class="bi bi-arrow-counterclockwise me-1"></i> Reset Filters
+                    </button>
+                    <button type="button" id="add-custom-products" class="btn btn-primary">
+                        <i class="bi bi-cart-plus me-1"></i> Add Selected to Cart
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="sitechangemodel" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 rounded-4 shadow-sm overflow-hidden">
+
+            <div class="modal-header bg-primary text-white border-0">
+                <h5 class="modal-title fw-bold" id="siteChangeModalLabel">Want to change website? </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <form method="GET" action="{{ route('product.selection') }}" id="sitechangemodel-form">
+                <div class="modal-body bg-light">
+                    <div class="mb-3">
+                        <label for="new_site_id" class="form-label fw-semibold">Select a New Site</label>
+                        <select name="new_site_id" id="new_site_id" class="form-select" required>
+                            <option value="">-- Select Site --</option>
+                            @foreach($sites as $s)
+                                <option value="{{ $s->id }}">{{ $s->site_name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="alert alert-warning small py-2 px-3" role="alert">
+                        Selecting a different site will refresh the page and re-establish the database connection.
+                    </div>
+                </div>
+
+                <div class="modal-footer bg-light border-0 rounded-bottom-4 d-flex justify-content-center gap-3">
+                    <button type="button" class="btn btn-outline-secondary px-4" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary px-4">Confirm</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@endsection
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+<script src="https://unpkg.com/feather-icons"></script>
+<script>
+    feather.replace();
+</script>
+
+<script>
+    $(document).ready(function() {
+        $('html, body').animate({ scrollTop: 200 }, 500);
+        $('#current_amount').val('loading...');
+        $('#discount_amount').prop('type', 'text').val('loading...').prop('readonly', true);
+    });
+</script>
+
+
+
+
+<script>
+    let randomizeRequest = null;
+
+    function randomizeProducts(mode = 'smart_random') {
+        if (randomizeRequest !== null) {
+            randomizeRequest.abort();
+        }
+
+        randomizeRequest = $.ajax({
+            url: "{{ route('random.products') }}",
+            type: 'GET',
+            data: {
+                site_id: "{{ $customer['site_id'] }}",
+                invoice_amount: parseFloat($('#invoice_amount').val()) || 0,
+            },
+            beforeSend: function () {
+                $('#randomize-product-table-body').html(getLoaderRowHTML());
+                $('#current_amount').val('Calculating...');
+                $('#discount_amount').prop('type', 'text').val('Calculating...').prop('readonly', true);
+                $('#current_amount').removeClass('text-danger text-success');
+                $('#discount_amount').removeClass('text-danger text-success');
+                $('#invoice_amount').removeClass('text-danger text-success');
+            },
+            success: function (response) {
+                Swal.close();
+                $('#discount_amount').val(0.00);
+                if (response.total === 0) {
+                    $('#randomize-product-table-body').html(getErrorRowHTML('No results found. Try randomizing or use a different keyword.'));
+                    return;
+                } else {
+                    const invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
+                    const currentAmount = parseFloat(response.total.toFixed(2));
+
+                    $('#temp_current_amount_text').text(currentAmount.toFixed(2));
+                    $('#temp_invoice_amount_text').text(invoiceAmount.toFixed(2));
+                    $('#randomize-product-table-body').html(response.tableRows);
+                    $('#current_amount').val(currentAmount.toFixed(2));
+                    $('#discount_amount').prop('readonly', false).prop('type', 'number');
+                    calculateTotalPrice();
+                    //alert(currentAmount);
+                }
+            },
+            error: function (xhr, textStatus) {
+                if (textStatus !== 'abort') {
+                    $('#randomize-product-table-body').html(getErrorRowHTML('Oops! Something went wrong. Please try again.'));
+                    toastr.error('Failed to fetch random products.', 'Oops!');
+                    return;
+                }
+            },
+            complete: function () {
+                randomizeRequest = null;
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        randomizeProducts('smart_random');
+    });
+</script>
+
+
+
+<script>
+    customizeRequest = null;
+
+    function customizeProducts(search_type = 'search', page = 1) {
+        console.log("Triggered with type:", search_type);
+        console.log("customizeRequest:", customizeRequest);
+
+        // Write js snippet for calculate credits, 1 credit = 5.75 amount
+        const invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
+        const credits = Math.round(invoiceAmount / 5.75);
+        $('#customcredit').text(credits + ' Credits');
+
+        let btn = $('#add-custom-products');
+        btn.prop('disabled', false).html('Add Selected to Cart');
+
+        let invoice_amount = parseFloat($('#invoice_amount').val()) || 0;
+        let current_amount = parseFloat($('#current_amount').val()) || 0;
+        let discountAmount = Math.max(current_amount - invoice_amount, 0);
+
+        $('#temp_current_amount_text').text(current_amount.toFixed(2));
+        $('#temp_invoice_amount_text').text(invoice_amount.toFixed(2));
+        $('#temp_discount_amount_text').text(discountAmount.toFixed(2));
+
+
+
+
+        $('#customize-product-table-body').html(getProductsSearchRowHTML());
+
+        customizeRequest = $.ajax({
+            url: "{{ route('filter.products') }}",
+            type: 'GET',
+            data: {
+                search_type: search_type,
+            },
+            success: function (response) {
+                if (!response.tableRows) {
+                    $('#customize-product-table-body').html(
+                        getErrorRowHTML('No products found for your keyword. Try a different keyword or adjust the range filter.')
+                    );
+                    return;
+                }
+
+                $('#customize-product-table-body').html(response.tableRows);
+
+                $('#current_page_number').val(response.currentPage);
+
+                calculateTotalPrice();
+            },
+            error: function (xhr, textStatus) {
+                if (textStatus !== 'abort') {
+                    console.error('AJAX Error:', textStatus);
+                    $('#customize-product-table-body').html(getErrorRowHTML('Something went wrong while filtering.'));
+                    toastr.error('Something went wrong while filtering.', 'Oops!');
+                }
+            },
+            complete: function () {
+                console.log("Request complete");
+                customizeRequest = null;
+            }
+        });
+    }
+
+</script>
+
+
+<script>
+
+function clearRandomizedFilter(button) {
+    const icon = $(button).find('i');
+    const originalIconClass = 'fa-filter-circle-xmark';
+    icon.removeClass(originalIconClass).addClass('fa-spinner fa-spin');
+
+    $.ajax({
+        url: "{{ route('clear.products') }}",
+        type: 'GET',
+        success: function(response) {
+            $('input[name="product_ids[]"]').prop('checked', false);
+            $('.product-price').val('');
+            $('#current_amount').val('0.00');
+            $('#discount_amount').val('0.00');
+            $('#temp_current_amount_text').text('0.00');
+            $('#temp_discount_amount_text').text('0.00');
+            $('#temp_invoice_amount_text').text($('#invoice_amount').val());
+            $('#randomize-product-table-body').html(getErrorRowHTML('Randomize filter cleared. You can now randomize products again or add custom products.'));
+            toastr.success('Randomized products filter has been reset');
+            calculateTotalPrice();
+
+        },
+        error: function(xhr, status, error) {
+            icon.removeClass('fa-spinner fa-spin').addClass(originalIconClass);
+            toastr.error(error , 'Error clearing randomized products');
+        },
+        complete: function() {
+            icon.removeClass('fa-spinner fa-spin').addClass(originalIconClass);
+        }
+    });
+}
+</script>
+
+<script>
+    function generateInvoice(event) {
+        event.preventDefault();
+
+        const customer_name = $('input[name="customer_name"]');
+        const invoice_date = $('input[name="invoice_date"]');
+        const selectedProducts = $('input[name="product_ids[]"]:checked');
+        const invoiceNumber = $('input[name="invoice_number"]').val();
+
+        const invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
+        const currentAmount = parseFloat($('#current_amount').val()) || 0;
+        const discountAmount = parseFloat($('#discount_amount').val()) || 0;
+
+        if (selectedProducts.length === 0) {
+            toastr.error('Please select your products combo...', 'No Product Selected');
+            return;
+        }
+        if ($.trim(customer_name.val()) === '') {
+            toastr.error('Customer name cannot be empty.', 'Missing Customer Name');
+            return;
+        }
+
+        if ($.trim(invoice_date.val()) === '') {
+            toastr.error('Invoice date cannot be empty.', 'Missing Invoice Date');
+            return;
+        }
+
+        if (currentAmount < invoiceAmount) {
+            $('#current_amount').addClass('border border-danger');
+            setTimeout(() => {
+                $('#current_amount').removeClass('border border-danger');
+            }, 2000);
+            toastr.error('Total is less than invoice amount.', 'Mismatch');
+            return;
+        }
+
+        const expectedAmount = currentAmount - discountAmount;
+        const epsilon = 0.01;
+
+        if (Math.abs(expectedAmount - invoiceAmount) > epsilon) {
+            const diff = currentAmount - invoiceAmount;
+            const diffFixed = diff.toFixed(2);
+
+            $('#discount_amount').addClass('border border-danger');
+            setTimeout(() => {
+                $('#discount_amount').removeClass('border border-danger');
+            }, 2000);
+
+            if (discountAmount > diff) {
+                toastr.error(`The discount amount of $${discountAmount} exceeds the expected discount of $${diffFixed}.`, 'Discount Too High');
+            } else {
+                toastr.error(`Please apply a discount of $${diffFixed} to match the invoice amount.`, 'Give Discount');
+            }
+            return;
+        }
+
+        if (!invoiceNumber) {
+            toastr.error('Please enter your invoice number or generate one randomly.', 'Invoice Number Missing');
+            let blinkCount = 0;
+            const interval = setInterval(() => {
+                invoiceNumber.toggleClass('border border-danger');
+                blinkCount++;
+                if (blinkCount >= 10) {
+                    clearInterval(interval);
+                    invoiceNumber.removeClass('border border-danger');
+                }
+            }, 200);
+            return;
+        }
+
+        $('#generate-invoice-form').find('input[name="product_data[]"]').remove();
+
+        // selectedProducts.each(function () {
+        //     const productId = $(this).val();
+        //     const unitPrice = $(`input[data-product-id="${productId}"]`).val();
+
+        //     $('#generate-invoice-form').append($('<input>', {
+        //         type: 'hidden',
+        //         name: 'product_data[]',
+        //         value: JSON.stringify({ product_id: productId, price: unitPrice })
+        //     }));
+        // });
+
+
+        let blinkCount = 0;
+        const maxBlinkCount = 30;
+        const blinkInterval = 500;
+
+        $('#discount_amount, #current_amount, #invoice_amount').css('transition', 'border-color 0.3s ease');
+
+        (function blinkBorder() {
+            $('#discount_amount, #current_amount, #invoice_amount').toggleClass('border border-success');
+            blinkCount++;
+            if (blinkCount < maxBlinkCount) {
+                setTimeout(blinkBorder, blinkInterval);
+            } else {
+                $('#discount_amount, #current_amount, #invoice_amount').removeClass('border border-success');
+            }
+        })();
+
+        Swal.fire({
+            title: 'Generating Invoice...',
+            html: getPrinterLoaderRowHTML(6),
+            showConfirmButton: false,
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            width: '334px',
+            height: '280px',
+            background: 'rgba(0, 0, 0, 0.1)',
+            customClass: {
+                popup: 'p-2 text-center',
+                title: 'text-white'
+            }
+        });
+
+        $('#generate-invoice-form')[0].submit();
+
+        setTimeout(() => {
+            Swal.close();
+            toastr.success('Invoice is ready and will download shortly.', 'Completed');
+        }, 20000);
+    }
+</script>
+
+
+<script>
+    $(document).ready(function() {
+    $('#generateInvoiceNumber').on('click', function() {
+        toastr.info('Generating an invoice number for you...', 'Please wait');
+        $.ajax({
+            url: "{{ route('generate.invoice.number') }}",
+            method: 'GET',
+            data: {
+                site_name : "{{ $customer['site_name'] }}",
+            },
+            success: function(response) {
+                if (response.success && response.new_invoice_number) {
+                    $('#invoice_number').val(response.new_invoice_number);
+                    toastr.success('Invoice number generated successfully.', 'Success');
+                } else {
+                    toastr.error('Failed to generate invoice number.', 'Error');
+                }
+            },
+            error: function() {
+                toastr.error('There was an error generating the invoice number.', 'Error');
+            }
+        });
+    });
+});
+
+</script>
+<script>
+    $('#sitechangemodel').on('shown.bs.modal', function () {
+        $('#new_site_id').select2({
+            dropdownParent: $('#sitechangemodel'),
+            placeholder: "-- Select Site --",
+            allowClear: true,
+            width: '100%'
+        });
+
+    });
+
+</script>
+<script>
+$(document).ready(function () {
+    let sessionAmount = parseFloat("{{ session('invoice_amount') ?? 0 }}");
+
+    function setEditIcon() {
+        $('#update_invoice_amount')
+            .removeClass('bg-warning bg-success')
+            .addClass('bg-light')
+            .html('<i data-feather="edit" id="icon" style="color: black;width:20px;"></i>');
+        feather.replace();
+    }
+
+    function setUploadIcon() {
+        $('#update_invoice_amount')
+            .removeClass('bg-light bg-success')
+            .addClass('bg-warning')
+            .html('<i data-feather="upload-cloud" id="icon" style="color: black;width:20px;"></i>');
+        feather.replace();
+    }
+
+    function setLoader() {
+        $('#update_invoice_amount')
+            .removeClass('bg-warning bg-light bg-success')
+            .addClass('bg-warning')
+            .html(
+                '<div class="d-flex align-items-center justify-content-center" style="width:20px;">' +
+                    '<div class="spinner-border text-dark" style="width: 18px; height: 18px;" role="status">' +
+                        '<span class="visually-hidden">Loading...</span>' +
+                    '</div>' +
+                '</div>'
+            );
+    }
+
+    function setSuccessIcon() {
+        $('#update_invoice_amount')
+            .removeClass('bg-warning')
+            .addClass('bg-success')
+            .html('<i data-feather="check-circle" id="icon" style="color: white;width:20px;"></i>');
+        feather.replace();
+    }
+
+    $('#invoice_amount').on('input', function () {
+        let currentVal = parseFloat($(this).val());
+        if (!isNaN(currentVal) && currentVal !== sessionAmount) {
+            setUploadIcon();
+        } else {
+            setEditIcon();
+        }
+    });
+
+    $(document).on('click', '#update_invoice_amount', function () {
+        let currentVal = parseFloat($('#invoice_amount').val());
+        if (isNaN(currentVal) || currentVal === sessionAmount) {
+            return;
+        }
+
+        setLoader();
+
+        let invoice_amount = $('#invoice_amount').val();
+        let invoice_date = $('#invoice_date').val();
+        let customer_name = $('#customer_name').val();
+        let customer_email = $('#customer_email').val();
+        let customer_mobile = $('#customer_mobile').val();
+
+        $.ajax({
+            url: "{{ route('update.invoice.amount') }}",
+            type: 'POST',
+            data: {
+                invoice_amount,
+                invoice_date,
+                customer_name,
+                customer_email,
+                customer_mobile,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function (response) {
+                if (response.success) {
+                    sessionAmount = parseFloat(invoice_amount);
+                    setSuccessIcon();
+
+                    $('#invoice_amount').val(response.updated.invoice_amount);
+                    $('#invoice_date').val(response.updated.invoice_date);
+                    $('#customer_name').val(response.updated.customer_name);
+                    $('#customer_email').val(response.updated.customer_email);
+                    $('#customer_mobile').val(response.updated.customer_mobile);
+                    //randomizeProducts();
+                    // setTimeout(() => {
+                    //     setEditIcon();
+                    // }, 4000);
+                    // reload the page after 4 seconds
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1000);
+
+                }
+            },
+            error: function () {
+                setEditIcon();
+            }
+        });
+    });
+});
+</script>
+<script>
+$(document).ready(function() {
+    $('.unit-price-header').click(function() {
+        var $header = $(this);
+        var $table = $header.closest('table');
+        var $tbody = $table.find('tbody');
+        var $rows = $tbody.find('tr').toArray();
+        var column = $header.data('column');
+        var order = $header.data('order');
+
+        $rows.sort(function(a, b) {
+            var A = $(a).find('td').eq(column).text().trim();
+            var B = $(b).find('td').eq(column).text().trim();
+
+            A = parseFloat(A.replace(/[^\d.-]/g, '')) || 0;
+            B = parseFloat(B.replace(/[^\d.-]/g, '')) || 0;
+
+            return (order === 'asc') ? (A - B) : (B - A);
+        });
+
+        $.each($rows, function(index, row) {
+            $tbody.append(row);
+        });
+
+        var newOrder = (order === 'asc') ? 'desc' : 'asc';
+        $header.data('order', newOrder);
+
+        $header.find('i')
+            .removeClass('bi-caret-down-fill bi-caret-up-fill')
+            .addClass(newOrder === 'asc' ? 'bi-caret-up-fill' : 'bi-caret-down-fill');
+    });
+});
+</script>
+
+<script>
+
+    function startVoiceSearch(inputId, micIconId) {
+        const inputField = document.getElementById(inputId);
+        const micIcon = document.getElementById(micIconId);
+        inputField.placeholder = "Please speak product name or category";
+
+        if (!('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
+            toastr.error("Your browser does not support voice recognition. Please try using a modern browser like Chrome.");
+            return;
+        }
+
+        inputField.value = '';
+        inputField.placeholder = "Listening to your voice search...";
+        micIcon.classList.remove("text-primary");
+        micIcon.classList.add("text-danger");
+
+        const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        recognition.lang = "en-US";
+        recognition.interimResults = false;
+
+        recognition.start();
+
+        recognition.onresult = function(event) {
+            const transcript = event.results[0][0].transcript;
+            inputField.style.color = "blue";
+            inputField.value = transcript;
+        };
+
+        recognition.onerror = function(event) {
+            toastr.error("Voice recognition error: " + event.error);
+            inputField.value = '';
+            inputField.style.color = '';
+            micIcon.classList.remove("text-danger");
+            micIcon.classList.add("text-primary");
+            inputField.placeholder = "Enter or Speak Keyword";
+        };
+
+        recognition.onend = function() {
+            micIcon.classList.remove("text-danger");
+            micIcon.classList.add("text-primary");
+            inputField.style.color = 'blue';
+            inputField.placeholder = "Enter or Speak Keyword";
+        };
+    }
+
+</script>
+
+
+<script>
+    let discountManuallyChanged = false;
+
+    $(document).on('input', '.product-price, input[name="product_ids[]"]', function () {
+        discountManuallyChanged = false;
+        calculateTotalPrice();
+    });
+
+    $(document).on('input', '#discount_amount', function () {
+        discountManuallyChanged = true;
+        calculateTotalPrice();
+    });
+
+    $(document).on('blur', '#discount_amount', function () {
+        calculateTotalPrice();
+    });
+
+    function calculateTotalPrice() {
+        let currentAmount = 0;
+
+        $('input[name="product_ids[]"]:checked').each(function () {
+            const productId = $(this).val();
+            const punitPrice = parseFloat($(`input[data-product-id="${productId}"]`).val()) || 0;
+            currentAmount += punitPrice;
+        });
+        //alert(currentAmount);
+        let invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
+        let discountAmount = parseFloat($('#discount_amount').val()) || 0;
+
+        if (!discountManuallyChanged) {
+            discountAmount = currentAmount > invoiceAmount ? currentAmount - invoiceAmount : 0;
+            $('#discount_amount').val(discountAmount.toFixed(2));
+        }
+
+        $('#current_amount').val(currentAmount.toFixed(2));
+        $('#temp_current_amount_text').text(currentAmount.toFixed(2));
+        $('#temp_discount_amount_text').text(discountAmount.toFixed(2));
+        $('#invoice_amount').val(invoiceAmount.toFixed(2));
+        $('#temp_invoice_amount_text').text(invoiceAmount.toFixed(2));
+
+        const expectedTotal = invoiceAmount + discountAmount;
+        const isMatch = Math.abs(currentAmount - expectedTotal) < 0.01;
+
+        const colorClass = isMatch ? 'text-success' : 'text-danger';
+
+        $('#current_amount, #discount_amount, #invoice_amount').removeClass('text-success text-danger').addClass(colorClass);
+    }
+</script>
+
+
+
+@endpush
