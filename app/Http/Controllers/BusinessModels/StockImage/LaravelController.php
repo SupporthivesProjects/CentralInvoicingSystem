@@ -236,8 +236,12 @@ class LaravelController extends Controller
 
         // Get ready products from session and remove matching product
         $readyProducts = session('ready_products', []);
+
+        // Fix: Handle both object and array formats in session data
         $readyProducts = array_filter($readyProducts, function($product) use ($productId) {
-            return $product->id != $productId;
+            // Handle both object and array formats
+            $id = is_array($product) ? $product['id'] : $product->id;
+            return $id != $productId;
         });
 
         // Store filtered products back in session
@@ -246,24 +250,48 @@ class LaravelController extends Controller
         // If no products left, return empty response
         if (empty($readyProducts)) {
             return response()->json([
-            'tableRows' => '<tr><td colspan="6" class="text-center text-muted">All products removed. Please add random or custom products.<br><button class="btn btn-primary mt-2" onclick="addCustomPacks()">Add Custom Packs</button></td></tr>',
-            'total' => 0
+                'tableRows' => '<tr><td colspan="6" class="text-center text-muted">All products removed. Please add random or custom products.<br><button class="btn btn-info mt-2 ms-2" data-bs-toggle="modal" data-bs-target="#addmoreproducts" onclick="customizeProducts(\'onload\')">Add Custom Pack</button></td></tr>',
+                'total' => 0
             ]);
         }
 
         DynamicDatabaseService::connect($site);
 
-        // Get remaining product details from DB
-        $products = DB::connection($this->connectionType)
-            ->table($this->productTable)
-            ->select('id', 'name', 'price', 'slug')
-            ->whereIn('id', array_column($readyProducts, 'id'))
-            ->get();
+        // Separate custom products from regular products
+        $customProducts = [];
+        $regularProductIds = [];
 
-        $products = $products->map(function ($product) use ($readyProducts, $site_id) {
+        foreach ($readyProducts as $product) {
+            $productData = is_array($product) ? $product : (array)$product;
+
+            // If product ID is 0 or negative, it's a custom product
+            if ($productData['id'] <= 0) {
+                $customProducts[] = (object)$productData;
+            } else {
+                $regularProductIds[] = $productData['id'];
+            }
+        }
+
+        // Get regular products from database
+        $regularProducts = collect();
+        if (!empty($regularProductIds)) {
+            $regularProducts = DB::connection($this->connectionType)
+                ->table($this->productTable)
+                ->select('id', 'name', 'price', 'credits')
+                ->whereIn('id', $regularProductIds)
+                ->get();
+        }
+
+        // Process regular products with price history
+        $regularProducts = $regularProducts->map(function ($product) use ($readyProducts, $site_id) {
             // Get price from session
-            $sessionProduct = collect($readyProducts)->firstWhere('id', $product->id);
-            $product->price = $sessionProduct['price'] ?? $product->price;
+            $sessionProduct = collect($readyProducts)->first(function($item) use ($product) {
+                $id = is_array($item) ? $item['id'] : $item->id;
+                return $id == $product->id;
+            });
+
+            $sessionData = is_array($sessionProduct) ? $sessionProduct : (array)$sessionProduct;
+            $product->price = $sessionData['price'] ?? $product->price;
 
             // Check price edit permissions
             $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
@@ -285,8 +313,18 @@ class LaravelController extends Controller
             return $product;
         });
 
+        // Process custom products (they can always be edited)
+        $customProducts = collect($customProducts)->map(function($product) {
+            $product->can_edit_price = 1;
+            $product->remaining_days = 0;
+            return $product;
+        });
+
+        // Combine both types of products
+        $products = $regularProducts->merge($customProducts);
+
         $modelType = $site->businessModel->model_type;
-        $total = collect($products)->sum('price');
+        $total = $products->sum('price');
 
         // Update session amount
         session(['current_amount' => $total]);
@@ -520,26 +558,25 @@ class LaravelController extends Controller
 
     //dd($productDataArray);
     foreach ($productDataArray as $item) {
-        $data = json_decode($item, true);
-        //dd($data);
-        if (!empty($data['product_id'])) {
-            //dd($data['product_id']);
-            if ($data['product_id'] == 0) {
-                // Handle custom pack
-                $customPacks[] = (object)[
-                    'id' => '0',
-                    'name' => 'Custom Pack',
-                    'price' => floatval($data['price']),
-                    'credits' => round(floatval($data['price']) / 5.75) // Calculate credits
+    $data = json_decode($item, true);
 
-                ];
-            } else {
-                // Handle regular products
-                $productIds[] = $data['product_id'];
-                $customPrices[$data['product_id']] = $data['price'];
-            }
+    if (isset($data['product_id'])) {
+        if ($data['product_id'] == 0) {
+            // Handle custom pack
+            $customPacks[] = (object)[
+                'id' => '0',
+                'name' => 'Custom Pack',
+                'price' => floatval($data['price']),
+                'credits' => round(floatval($data['price']) / 5.75)
+            ];
+        } else {
+            // Handle regular products
+            $productIds[] = $data['product_id'];
+            $customPrices[$data['product_id']] = $data['price'];
         }
     }
+}
+
 
     //dd($customPacks);
 

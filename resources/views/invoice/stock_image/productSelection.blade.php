@@ -284,45 +284,69 @@
                     </div>
 
                     <div class="rounded shadow-sm p-2">
-                        <table class="table table-bordered table-hover align-middle mb-0 table-responsive" style="width:100% !important;">
-                            <tr>
-                                <td colspan="5" class="text-center">
-                                    <h5 class="fw-semibold text-dark mb-0">Select Custom Pack</h5>
-                                </td>
-                            </tr>
-                            <tr id="customize-product-row-0">
-                                <td class="text-center">#</td>
-                                <td>
-                                    Custom Pack
-                                </td>
-                                <td>
-                                    <span class="badge bg-secondary" id="customcredit">No Credits</span>
-                                </td>
-                                <td class="text-center">
-                                    {{ site_currency() }}
-                                    <input type="hidden"
-                                        class="add-product-price form-control d-inline-block"
-                                        data-product-id="0"
-                                        value="{{ number_format($invoice['invoice_amount'], 2, '.', '') }}"
-                                        step="0.01"
-                                        min="0"
-                                        style="width: 80px;">
-                                        {{ number_format($invoice['invoice_amount'], 2, '.', '') }}
-                                </td>
+                        @php
+                        // You need to pass the connection type and table name from your controller
+                        // Or define them here if they're consistent
+                        $connectionType = 'dynamic'; // Replace with actual connection name
+                        $productTable = 'pricing_packs'; // Replace with actual table name
 
-                                <td class="text-center align-middle">
-                                    <div class="form-check d-flex justify-content-center align-items-center m-0">
-                                        <input
-                                            class="form-check-input border narayan-checkbox border-1 border-primary"
-                                            type="radio"
-                                            name="add_product_ids[]"
-                                            data-product-id="0"
-                                            value="0"
-                                        >
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
+                        // Get all products from remote database
+                        $allProducts = DB::connection($connectionType)->table($productTable)
+                            ->select('id', 'name', 'credits', 'price')->get();
+
+                        // Check if any product has the exact invoice amount
+                        $exactPriceProduct = $allProducts->where('price', $invoice['invoice_amount'])->first();
+
+                        // Show custom pack only if no exact price product exists
+                        $showCustomPack = !$exactPriceProduct;
+                    @endphp
+
+                    @if($showCustomPack)
+                    <table class="table table-bordered table-hover align-middle mb-0 table-responsive" style="width:100% !important;">
+                        <tr>
+                            <td colspan="5" class="text-center">
+                                <h5 class="fw-semibold text-dark mb-0">Select Custom Pack</h5>
+                            </td>
+                        </tr>
+                        <tr id="customize-product-row-0">
+                            <td class="text-center">#</td>
+                            <td>
+                                Custom Pack
+                            </td>
+                            <td>
+                                <span class="badge bg-secondary" id="customcredit">No Credits</span>
+                            </td>
+                            <td class="text-center">
+                                {{ site_currency() }}
+                                <input type="hidden"
+                                    class="add-product-price form-control d-inline-block"
+                                    data-product-id="0"
+                                    value="{{ number_format($invoice['invoice_amount'], 2, '.', '') }}"
+                                    step="0.01"
+                                    min="0"
+                                    style="width: 80px;">
+                                    {{ number_format($invoice['invoice_amount'], 2, '.', '') }}
+                            </td>
+
+                            <td class="text-center align-middle">
+                                <div class="form-check d-flex justify-content-center align-items-center m-0">
+                                    <input
+                                        class="form-check-input border narayan-checkbox border-1 border-primary"
+                                        type="radio"
+                                        name="add_product_ids[]"
+                                        data-product-id="0"
+                                        value="0"
+                                    >
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                    @else
+                    <div class="alert alert-info text-center mb-3">
+                        <i class="fas fa-info-circle me-2"></i>
+                        A product with the exact invoice amount ({{ site_currency() }}{{ number_format($invoice['invoice_amount'], 2) }}) already exists in the system.
+                    </div>
+                    @endif
                         <table id="customize-products-table" class="table table-bordered table-hover align-middle mb-0 table-responsive" style="width:100% !important;">
                             <thead class="table-dark text-center">
                                 <tr>
@@ -826,10 +850,15 @@ $(document).ready(function () {
                     $('#customer_name').val(response.updated.customer_name);
                     $('#customer_email').val(response.updated.customer_email);
                     $('#customer_mobile').val(response.updated.customer_mobile);
-                    randomizeProducts();
+                    //randomizeProducts();
+                    // setTimeout(() => {
+                    //     setEditIcon();
+                    // }, 4000);
+                    // reload the page after 4 seconds
                     setTimeout(() => {
-                        setEditIcon();
-                    }, 4000);
+                        location.reload();
+                    }, 1000);
+
                 }
             },
             error: function () {
