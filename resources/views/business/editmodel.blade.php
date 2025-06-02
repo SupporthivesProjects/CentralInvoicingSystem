@@ -12,7 +12,7 @@
             <!-- Page Header -->
             <div class="d-md-flex d-block align-items-center justify-content-between page-header-breadcrumb">
                 <div>
-                    <h2 class="main-content-title fs-24 mb-1">Manage Site</h2>
+                    <h2 class="main-content-title fs-24 mb-1">Business Models</h2>
                     <ol class="breadcrumb mb-0">
                         <li class="breadcrumb-item"><a href="javascript:void(0)">business model</a></li>
                         <li class="breadcrumb-item active" aria-current="page">Edit business model</li>

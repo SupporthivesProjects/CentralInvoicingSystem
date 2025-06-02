@@ -44,7 +44,7 @@
                                     <label class="form-label">Invoice Date <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
-                                        <input type="date" name="invoice_date" class="form-control" value="{{ $invoice['invoice_date'] ?? '' }}" required>
+                                        <input type="date" name="invoice_date" class="form-control" value="{{ $invoice['invoice_date'] ?? date('d-m-Y') }}" required>
                                     </div>
                                 </div>
 
@@ -83,7 +83,7 @@
                                     <label class="form-label">Invoice Amount <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <span class="input-group-text">{{ site_currency() }}</span>
-                                        <input type="number" name="invoice_amount" class="form-control" placeholder="Enter invoice target amount" value="{{ $invoice['invoice_amount'] ?? '' }}" required>
+                                        <input type="number" name="invoice_amount" class="form-control" placeholder="Enter invoice target amount" value="{{ $invoice['invoice_amount'] ?? '' }}"  step="0.01" required>
                                     </div>
                                 </div>
 

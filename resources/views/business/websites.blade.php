@@ -36,7 +36,7 @@
                                     <table id="websites-datatables" class="table table-bordered text-nowrap" style="width:100%">
                                     <thead>
                                             <tr>
-                                                <th>#</th>
+                                                <th>ID</th>
                                                 <th>Model</th>
                                                 <th>Site Name</th>
                                                 <th>link</th>
@@ -49,7 +49,7 @@
                                         <tbody>
                                             @foreach ($websites as $index => $site)
                                                 <tr>
-                                                    <td>{{ $index + 1 }}</td>
+                                                    <td>{{ $site->id }}</td>
                                                     <td>{{ $site->businessModel->name ?? '-' }}</td>
                                                     <td>{{ $site->site_name }}</td>
                                                     <td><a href="{{ $site->site_link }}" target="_blank" >View</a></td>

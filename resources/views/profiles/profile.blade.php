@@ -4,21 +4,21 @@
 
 @section('content')
 
-    <style>
-        .profile-cover__action {
-            display: flex;
-            padding-block-start: 216px;
-            padding-inline-end: 30px;
-            padding-block-end: 10px;
-            padding-inline-start: 185px;
-            border-radius: 5px;
-            flex-wrap: wrap;
-            justify-content: flex-end;
-            overflow: hidden;
-            background: url({{ asset($profile->cover_image) }}) no-repeat;
-            background-size: cover;
-        }
-    </style>
+<style>
+    .profile-cover__action {
+        display: flex;
+        padding-block-start: 216px;
+        padding-inline-end: 30px;
+        padding-block-end: 10px;
+        padding-inline-start: 185px;
+        border-radius: 5px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        overflow: hidden;
+        background: url('{{ asset($profile->cover_image) }}') no-repeat;
+        background-size: cover;
+    }
+</style>
     <div class="page">
 
 

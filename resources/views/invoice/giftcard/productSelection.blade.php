@@ -19,10 +19,11 @@
 
                 <div class="mt-3 mt-md-0">
                 <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
-                        <a href="{{ url()->previous() }}" class="btn btn-outline-secondary btn-sm" >
-                            <i class="fas fa-arrow-left"></i> Go Back
-                        </a>
-                 </div>
+                <a href="{{ url()->previous() }}" class="btn btn-outline-secondary btn-sm" >
+                    <i class="fas fa-arrow-left"></i> Go Back
+                </a>
+               
+                </div>
                 </div>
             </div>
 
@@ -55,7 +56,7 @@
                                 </label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="fas fa-file-invoice"></i></span>
-                                    <input type="text" form="generate-invoice-form" id="invoice_number" name="invoice_number" class="form-control font-italic" value="{{ $invoice['invoice_number'] ?? '' }}"  placeholder="Enter or generate invoice number">
+                                    <input type="text" form="generate-invoice-form" id="invoice_number" name="invoice_number" class="form-control font-italic" value="{{ $invoice['invoice_number'] ?? '' }}" placeholder="Enter or generate invoice number">
                                     <div class="btn-group">
                                             <button type="button" class="btn input-group-text dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
                                                 <span class="visually-hidden">Toggle Dropdown</span>
@@ -90,7 +91,6 @@
                                     <input type="email" form="generate-invoice-form" class="form-control" id="customer_email" name="customer_email" value="{{ $customer['customer_email'] ?? '' }}"  placeholder="Enter Customer email">
                                 </div>
                             </div>
-
                             <div class="col-md-4 mb-3">
                                 <label class="form-label">Invoice File Name</label>
                                 <div class="input-group">
@@ -98,7 +98,8 @@
                                     <input type="text" form="generate-invoice-form" class="form-control" id="invoice_file_name" name="invoice_file_name" value="{{ old('invoice_file_name') }}" placeholder="Enter Invoice File Name">
                                 </div>
                             </div>
-                          
+                            
+                           
                         </div>
 
 
@@ -142,21 +143,21 @@
             </div>
 
             <div class="card custom-card mt-4 border-1 rounded shadow">
-            <div class="card-header bg-white shadow-sm rounded-3 p-3 d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
-                <div class="d-flex align-items-center">
-                    <i class="bi bi-stars text-primary fs-4 me-2"></i>
-                    <h4 class="mb-0 fw-semibold text-dark">Build Your Product & Invoice</h4>
-                </div>
+                <div class="card-header bg-white shadow-sm rounded-3 p-3 d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-stars text-primary fs-4 me-2"></i>
+                        <h4 class="mb-0 fw-semibold text-dark">Build Your Product & Invoice</h4>
+                    </div>
 
-                <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
+                    <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
                         <button type="button" class="btn btn-outline-primary d-flex align-items-center gap-1 me-1" 
-                                data-bs-toggle="modal" data-bs-target="#addmoreproducts"  onclick="customizeProducts('onload')">
-                                <i class="fas fa-plus-square"></i> Add Products
+                                data-bs-toggle="modal" data-bs-target="#addmoreproducts" onclick="customizeProducts('onload')">
+                            <i class="fas fa-plus-square"></i> Add Gift Card
                         </button>
 
                         <button type="button" class="btn btn-outline-success d-flex align-items-center gap-1"
                                 onclick="randomizeProducts('semi_random')">
-                                <i class="fas fa-random"></i> Randomize
+                            <i class="fas fa-random"></i> Randomize
                         </button>
 
                         <button type="button" class="btn btn-outline-secondary d-flex align-items-center gap-1 me-1"
@@ -169,75 +170,89 @@
                             <i class="bi bi-receipt-cutoff"></i> Generate Invoice
                         </button>
                     </div>
-
-
-            </div>
+                </div>
 
                 <div class="card-body">
-                    <div class="container">
-                        <div class="row g-3 justify-content-center mb-3">
-                            <div class="col-md-3">
-                                <div class="d-flex flex-column align-items-center h-100">
-                                    <small class="text-muted fw-semibold mb-2">No. of Products</small>
-                                    <div class="input-group shadow-sm bg-white w-100">
-                                        <button class="btn btn-outline-primary" type="button" onclick="adjustNoOfProducts('noOfProducts', -1)">−</button>
-                                        <input type="text" class="form-control text-center" name="noOfProducts" id="noOfProducts" min="1" max="20" placeholder="Auto" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Auto'" readonly>
-                                        <button class="btn btn-outline-primary" type="button" onclick="adjustNoOfProducts('noOfProducts', 1)">+</button>
-                                    </div>
-                                </div>
+                <div class="container">
+                <div class="row g-3 justify-content-center mb-3">
+                    <div class="col-md-3">
+                        <div class="d-flex flex-column align-items-center h-100">
+                            <small class="text-muted fw-semibold mb-2">No. of Products</small>
+                            <div class="input-group shadow-sm bg-white w-100">
+                                <button class="btn btn-outline-primary" type="button" onclick="adjustNoOfProducts('noOfProducts', -1)">−</button>
+                                <input type="text" class="form-control text-center" name="noOfProducts" id="noOfProducts" min="1" max="20" placeholder="Auto" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Auto'" readonly>
+                                <button class="btn btn-outline-primary" type="button" onclick="adjustNoOfProducts('noOfProducts', 1)">+</button>
                             </div>
+                        </div>
+                    </div>
 
-                            <div class="col-md-6">
-                                <div class="d-flex flex-column align-items-center h-100 ms-3">
-                                    <small class="text-muted fw-semibold mb-2">Price Range</small>
-                                    <div class="w-100 h-100">
-                                        <div id="randomize-price-slider" class="w-100"></div>
-                                        <input type="hidden" name="price_from" id="hidden_randomize_price_from_input_id">
-                                        <input type="hidden" name="price_to" id="hidden_randomize_price_to_input_id">
-                                    </div>
-                                </div>
+                    <div class="col-md-6">
+                        <div class="d-flex flex-column align-items-center h-100 ms-3">
+                            <small class="text-muted fw-semibold mb-2">Price Range</small>
+                            <div class="w-100 h-100">
+                                <div id="randomize-price-slider" class="w-100"></div>
+                                <input type="hidden" name="price_from" id="hidden_randomize_price_from_input_id">
+                                <input type="hidden" name="price_to" id="hidden_randomize_price_to_input_id">
                             </div>
+                        </div>
+                    </div>
 
-                            <div class="col-md-3">
-                                <div class="d-flex flex-column align-items-center h-100">
-                                    <small class="text-muted fw-semibold mb-2">Product Category</small>
-                                    <select class="form-select w-100 h-100" name="category_id" id="category_id">
-                                        <option value="">All Categories</option>
-                                        @foreach(getCategoryList($site->technology) as $category)
-                                            <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
+                    <div class="col-md-3">
+                        <div class="d-flex flex-column align-items-center h-100">
+                            <small class="text-muted fw-semibold mb-2">Product Category</small>
+                            <select class="form-select w-100 h-100" name="category_name" id="category_name">
+                                <option value="">All Categories</option>
+                                <option value="Art and Craft">Art and Craft</option>
+                                <option value="Fashion">Fashion</option>
+                                <option value="Food and Drink">Food and Drink</option>
+                                <option value="General">General</option>
+                                <option value="Gifts and Occasions">Gifts and Occasions</option>
+                                <option value="Health and Beauty">Health and Beauty</option>
+                                <option value="Home and Garden">Home and Garden</option>
+                                <option value="Kids, Babies and Toys">Kids, Babies and Toys</option>
+                                <option value="Leisure">Leisure</option>
+                                <option value="Music, Books, Games and Movies">Music, Books, Games and Movies</option>
+                                <option value="Restaurants, Takeaways and Bars">Restaurants, Takeaways and Bars</option>
+                                <option value="Sports, Fitness and Outdoors">Sports, Fitness and Outdoors</option>
+                                <option value="Technology and Electrical">Technology and Electrical</option>
+                                <option value="Telecommunications">Telecommunications</option>
+                                <option value="Travel">Travel</option>
+                                {{-- @foreach(getCategoryList($site->technology) as $category)
+                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                @endforeach --}}
+                            </select>
+                        </div>
+                    </div>
 
-                     </div>
+                    </div>
 
                 </div>  
-                    </div>  
-                
+                    <!-- Product Table -->
                     <div class="table-responsive border rounded shadow-sm">
                         <table class="table table-bordered table-hover align-middle mb-0">
                             <thead class="table-dark">
                             <tr>
-                                <th class="w-10 text-center">PID</th>
-                                <th class="w-30">Package Name</th>
-                                <th class="w-20 text-center">Subscription</th>
-                                <th class="text-center unit-price-header" data-column="3" data-order="desc">
+                                <th class="text-center" style="width: 10%;">PID</th>
+                                <th class="text-center" style="width: 25%;">Product Name</th>
+                                <th class="text-center" style="width: 20%;"> RRP Price </th>
+                                <th class="text-center" style="width: 15%;">Discount</th>
+                                <th class="text-center  unit-price-header" style="width: 15%;cursor: pointer;" data-column="3" data-order="desc">
                                     <span class="d-inline-flex align-items-center justify-content-center gap-1">
-                                        Unit Price <i class="bi bi-caret-down-fill"></i>
+                                        Our Price <i class="bi bi-caret-down-fill"></i>
                                     </span>
                                 </th>
-                                <th class="w-25 text-center">Editable Price</th>
-                                <th class="w-10 text-center">Remove</th>
+                                <th class="text-center" style="width: 10%;">Remove</th>
                             </tr>
+
                             </thead>
                             <tbody id="randomize-product-table-body">
-                                
                             </tbody>
                         </table>
                     </div>
+
                 </div>
             </div>
+
         </div>
     </div>
 </div>
@@ -261,7 +276,8 @@
             <!-- Modal Body -->
             <div class="modal-body bg-white">
                 <div class="container-fluid">
-                <div class="row g-3 mb-4 align-items-end">
+                    <div class="row g-3 mb-4 align-items-end">
+
                         <div class="col-md-5">
                             <label for="customizeKeywordInput" class="form-label text-center fw-semibold">Search By Keyword</label>
                             <div class="input-group bg-light shadow-sm ms-2">
@@ -291,56 +307,56 @@
                                 <option value="desc">High to Low</option>
                             </select>
                         </div>
+
                     </div>
-                        <div class="row g-3 mb-4">
-                            <div class="col-md-4">
-                                <div class="bg-light rounded border shadow-sm p-1 text-center">
-                                    <div class="text-muted small fw-semibold">Current Amount</div>
-                                    <div class="fw-bold text-primary fs-5">{{ site_currency() }}<span id="temp_current_amount_text">0.00</span></div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="bg-light rounded border shadow-sm p-1 text-center">
-                                    <div class="text-muted small fw-semibold">Discount Amount</div>
-                                    <div class="fw-bold text-primary fs-5">{{ site_currency() }}<span id="temp_discount_amount_text">0.00</span></div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="bg-light rounded border shadow-sm p-1 text-center">
-                                    <div class="text-muted small fw-semibold">Invoice Amount</div>
-                                    <div class="fw-bold text-primary fs-5">{{ site_currency() }}<span id="temp_invoice_amount_text">0.00</span></div>
-                                </div>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-4">
+                            <div class="bg-light rounded border shadow-sm p-1 text-center">
+                                <div class="text-muted small fw-semibold">Current Amount</div>
+                                <div class="fw-bold text-primary fs-5">{{ site_currency() }}<span id="temp_current_amount_text">0.00</span></div>
                             </div>
                         </div>
-                        
-                        <div class="rounded shadow-sm p-2"> 
+                        <div class="col-md-4">
+                            <div class="bg-light rounded border shadow-sm p-1 text-center">
+                                <div class="text-muted small fw-semibold">Discount Amount</div>
+                                <div class="fw-bold text-primary fs-5">{{ site_currency() }}<span id="temp_discount_amount_text">0.00</span></div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="bg-light rounded border shadow-sm p-1 text-center">
+                                <div class="text-muted small fw-semibold">Invoice Amount</div>
+                                <div class="fw-bold text-primary fs-5">{{ site_currency() }}<span id="temp_invoice_amount_text">0.00</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="rounded shadow-sm p-2"> 
                         <table id="customize-products-table" class="table table-bordered table-hover align-middle mb-0 table-responsive" style="width:100% !important;">
-                                <thead class="table-dark text-center">
-                                <tr>
+                            <thead class="table-dark text-center">
+                            <tr>
                                     <th class="text-center" style="width: 10%;">PID</th>
-                                    <th class="text-center" style="width: 30%;">Package Name</th>
-                                    <th class="text-center" style="width: 20%;">Subscription</th>
-                                    <th class="text-center unit-price-header" style="width: 20%;"  data-column="3" data-order="desc">
-                                    <span class="d-inline-flex align-items-center justify-content-center gap-1">
-                                        Unit Price <i class="bi bi-caret-down-fill"></i>
-                                    </span>
-                                </th>
-                                    <th class="text-center" style="width: 25%;">Editable Price</th>
-                                    <th class="text-center" style="width: 10%;">Select</th>
-                                </tr>
-                                </thead>
-                                <tbody id="customize-product-table-body">
-                                
-                                </tbody>
-                            </table>
-                            <div id="customize-pagination"></div>
-                        </div>
+                                    <th class="text-center" style="width: 25%;">Product Name</th>
+                                    <th class="text-center" style="width: 20%;"> RRP Price  </th>
+                                    <th class="text-center" style="width: 15%;">Discount</th>
+                                    <th class="text-center  unit-price-header" style="width: 15%;cursor: pointer;" data-column="3" data-order="desc">
+                                       <span class="d-inline-flex align-items-center justify-content-center gap-1">
+                                            Our Price <i class="bi bi-caret-down-fill"></i>
+                                        </span>
+                                    </th>
+                                    <th style="width: 10%;">Select</th>
+                            </tr>
+                            </thead>
+                            <tbody id="customize-product-table-body">
+                            </tbody>
+                        </table>
+                        <div id="customize-pagination"></div>
                     </div>
-            </div>
+                </div>
+                </div>
             
             <div class="modal-footer bg-light border-top">
                 <div class="d-flex flex-wrap gap-2">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" >
                         <i class="bi bi-x-circle me-1"></i> Close
                     </button>
                     <button type="button" class="btn btn-danger" onclick="customizeProducts('reset')">
@@ -356,13 +372,12 @@
 </div>
 
 
-
-<div class="modal fade" id="sitechangemodel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" >
+<div class="modal fade" id="sitechangemodel" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 rounded-4 shadow-sm overflow-hidden">
             
             <div class="modal-header bg-primary text-white border-0">
-                <h5 class="modal-title fw-bold" id="siteChangeModalLabel">Want to change website?</h5>
+                <h5 class="modal-title fw-bold" id="siteChangeModalLabel">Want to change website? </h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
@@ -391,7 +406,6 @@
         </div>
     </div>
 </div>
-
 
 @endsection
 @push('scripts')
@@ -436,7 +450,7 @@
 
     document.addEventListener("DOMContentLoaded", function () {
         document.getElementById('noOfProducts').addEventListener('change', triggerRandomizeProducts);
-        document.getElementById('category_id').addEventListener('change', triggerRandomizeProducts);
+        document.getElementById('category_name').addEventListener('change', triggerRandomizeProducts);
     });
 </script>
 
@@ -447,7 +461,7 @@
     const minUnitPrice = @json($min_unit_price);
     const maxUnitPrice = @json($max_unit_price);
     const currency = "{{ site_currency() }}";
-
+    
     const updateHiddenInputs = (min, max, type) => {
         if (type === 'randomize') {
             $('#hidden_randomize_price_from_input_id').val(min).trigger('input');
@@ -463,7 +477,7 @@
         connect: true,
         step: 5,
         range: { min: minUnitPrice, max: maxUnitPrice },
-        tooltips: [true, true],
+        tooltips: [true , true], 
         format: {
             to: v => `${currency}${Math.round(v)}`,
             from: v => Number(v.replace(currency, ''))
@@ -475,7 +489,7 @@
         connect: true,
         step: 5,
         range: { min: minUnitPrice, max: maxUnitPrice },
-        tooltips: [true, true],
+        tooltips: [true, true], 
         format: {
             to: v => `${currency}${Math.round(v)}`,
             from: v => Number(v.replace(currency, ''))
@@ -487,24 +501,24 @@
 
 </script>
 
+
 <script>
     let customizeSliderTimer;
     let randomizeSliderTimer;
     let sortUnitPriceTimer;
     let lastSortUnitPrice = $('#sort_unit_price').val();
-
+   
     customizePriceSlider.noUiSlider.on('change', function (values) {
         clearTimeout(customizeSliderTimer);
         customizeSliderTimer = setTimeout(() => {
             const [min, max] = values.map(v => Math.round(parseFloat(v.replace(currency, ''))));
             updateHiddenInputs(min, max, 'customize');
-            customizeProducts('range', currentPageNumber);
+            customizeProducts('range');
         }, 1500);
     });
 
     $('#sort_unit_price').on('change', function () {
         const currentSortValue = $(this).val();
-        
         clearTimeout(sortUnitPriceTimer);
         sortUnitPriceTimer = setTimeout(() => {
             if (currentSortValue !== lastSortUnitPrice) {
@@ -520,10 +534,6 @@
             customizeProducts();
         }
     });
-
-    if (search_type === 'reset') {
-        $('#customizeKeywordInput').val('');
-    }
 
 
     randomizePriceSlider.noUiSlider.on('change', function (values) {
@@ -573,7 +583,7 @@
                 invoice_amount: parseFloat($('#invoice_amount').val()) || 0,
                 price_from: $('#hidden_randomize_price_from_input_id').val(),
                 price_to: $('#hidden_randomize_price_to_input_id').val(),
-                category_id: $('#category_id').val().trim(),
+                category_name: $('#category_name').val().trim(),
                 noOfProducts: $('#noOfProducts').val()
             },
             beforeSend: function () {
@@ -585,11 +595,11 @@
                 $('#invoice_amount').removeClass('text-danger text-success');
             },
             success: function (response) {
-                Swal.close();
                 $('#discount_amount').val(0.00);
-                calculateTotalPrice();
+                    calculateTotalPrice();
                 if (response.total === 0) {
                     $('#randomize-product-table-body').html(getErrorRowHTML('No results found. Try randomizing or use a different keyword.'));
+                    
                     return;
                 } else {
                     const invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
@@ -606,7 +616,7 @@
                 if (textStatus !== 'abort') {
                     $('#randomize-product-table-body').html(getErrorRowHTML('Oops! Something went wrong. Please try again.'));
                     toastr.error('Failed to fetch random products.', 'Oops!');
-                    return
+                    return;
                 }
             },
             complete: function () {
@@ -638,6 +648,9 @@
             customizeRequest.abort();
             customizeRequest = null;
         }
+        if (search_type === 'reset') {
+            $('#customizeKeywordInput').val('');
+        }
         
 
 
@@ -650,9 +663,8 @@
         const sortUnitPrice = $('#sort_unit_price').val() || 'asc';
         let invoice_amount = parseFloat($('#invoice_amount').val()) || 0;
         let current_amount = parseFloat($('#current_amount').val()) || 0;
-
         let discountAmount = Math.max(current_amount - invoice_amount, 0);
-
+        
         $('#temp_current_amount_text').text(current_amount.toFixed(2));
         $('#temp_invoice_amount_text').text(invoice_amount.toFixed(2));
         $('#temp_discount_amount_text').text(discountAmount.toFixed(2));
@@ -694,6 +706,7 @@
                 $('#customize-product-table-body').html(response.tableRows);
                 $('#customize-pagination').html(response.paginationHtml);
                 $('#current_page_number').val(response.currentPage);
+                
                 calculateTotalPrice();
             },
             error: function (xhr, textStatus) {
@@ -713,38 +726,38 @@
 </script>
 
 
-
 <script>
-    function clearRandomizedFilter(button) {
-        const icon = $(button).find('i');
-        const originalIconClass = 'fa-filter-circle-xmark';
-        icon.removeClass(originalIconClass).addClass('fa-spinner fa-spin');
 
-        $.ajax({
-            url: "{{ route('clear.products') }}",
-            type: 'GET',
-            success: function(response) {
-                $('input[name="product_ids[]"]').prop('checked', false);
-                $('.product-price').val('');
-                $('#current_amount').val('0.00');
-                $('#discount_amount').val('0.00');
-                $('#temp_current_amount_text').text('0.00');
-                $('#temp_discount_amount_text').text('0.00');
-                $('#temp_invoice_amount_text').text($('#invoice_amount').val());
-                $('#randomize-product-table-body').html(getErrorRowHTML('Randomize filter cleared. You can now randomize products again or add custom products.'));
-                toastr.success('Randomized products filter has been reset');
-                calculateTotalPrice();
-                
-            },
-            error: function(xhr, status, error) {
-                icon.removeClass('fa-spinner fa-spin').addClass(originalIconClass);
-                toastr.error(error , 'Error clearing randomized products');
-            },
-            complete: function() {
-                icon.removeClass('fa-spinner fa-spin').addClass(originalIconClass);
-            }
-        });
-    }
+function clearRandomizedFilter(button) {
+    const icon = $(button).find('i');
+    const originalIconClass = 'fa-filter-circle-xmark';
+    icon.removeClass(originalIconClass).addClass('fa-spinner fa-spin');
+
+    $.ajax({
+        url: "{{ route('clear.products') }}",
+        type: 'GET',
+        success: function(response) {
+            $('input[name="product_ids[]"]').prop('checked', false);
+            $('.product-price').val('');
+            $('#current_amount').val('0.00');
+            $('#discount_amount').val('0.00');
+            $('#temp_current_amount_text').text('0.00');
+            $('#temp_discount_amount_text').text('0.00');
+            $('#temp_invoice_amount_text').text($('#invoice_amount').val());
+            $('#randomize-product-table-body').html(getErrorRowHTML('Randomize filter cleared. You can now randomize products again or add custom products.'));
+            toastr.success('Randomized products filter has been reset');
+            calculateTotalPrice();
+            
+        },
+        error: function(xhr, status, error) {
+            icon.removeClass('fa-spinner fa-spin').addClass(originalIconClass);
+            toastr.error(error , 'Error clearing randomized products');
+        },
+        complete: function() {
+            icon.removeClass('fa-spinner fa-spin').addClass(originalIconClass);
+        }
+    });
+}
 </script>
 
 <script>
@@ -821,14 +834,22 @@
 
         selectedProducts.each(function () {
             const productId = $(this).val();
-            const unitPrice = $(`input[data-product-id="${productId}"]`).val();
+            const unitPrice = $(`input.product-price[data-product-id="${productId}"]`).val() || 0;
+            const productRRP = $(`input.product-rrp[data-product-id="${productId}"]`).val() || 0;
+            const productDiscount = $(`input.product-discount[data-product-id="${productId}"]`).val() || 0;
 
             $('#generate-invoice-form').append($('<input>', {
                 type: 'hidden',
                 name: 'product_data[]',
-                value: JSON.stringify({ product_id: productId, unit_price: unitPrice })
+                value: JSON.stringify({ 
+                    product_id: productId, 
+                    unit_price: unitPrice,
+                    unit_rrp: productRRP,
+                    unit_discount: productDiscount
+                })
             }));
         });
+
 
        
         let blinkCount = 0;
@@ -1019,8 +1040,8 @@ $(document).ready(function() {
         var order = $header.data('order');
 
         $rows.sort(function(a, b) {
-            var A = $(a).find('td').eq(column).text().trim();
-            var B = $(b).find('td').eq(column).text().trim();
+            var A = $(a).find('.unit-price-text').text().trim();
+            var B = $(b).find('.unit-price-text').text().trim();
 
             A = parseFloat(A.replace(/[^\d.-]/g, '')) || 0;
             B = parseFloat(B.replace(/[^\d.-]/g, '')) || 0;
@@ -1043,7 +1064,6 @@ $(document).ready(function() {
 </script>
 
 <script>
-   
 
     function startVoiceSearch(inputId, micIconId) {
         const inputField = document.getElementById(inputId);
@@ -1090,11 +1110,10 @@ $(document).ready(function() {
     }
 
 </script>
-
 <script>
     let discountManuallyChanged = false;
 
-    $(document).on('input', '.product-price, input[name="product_ids[]"]', function () {
+    $(document).on('input', '.product-price, input[name="product_ids[]"], .product-discount, .product-rrp', function () {
         discountManuallyChanged = false;
         calculateTotalPrice();
     });
@@ -1110,11 +1129,11 @@ $(document).ready(function() {
 
     function calculateTotalPrice() {
         let currentAmount = 0;
-
         $('input[name="product_ids[]"]:checked').each(function () {
             const productId = $(this).val();
-            const punitPrice = parseFloat($(`input[data-product-id="${productId}"]`).val()) || 0;
-            currentAmount += punitPrice;
+            const unitPriceInput = $(`.product-price[data-product-id="${productId}"]`);
+            const unitPrice = parseFloat(unitPriceInput.val()) || 0;
+            currentAmount += unitPrice;
         });
 
         let invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
@@ -1133,11 +1152,33 @@ $(document).ready(function() {
 
         const expectedTotal = invoiceAmount + discountAmount;
         const isMatch = Math.abs(currentAmount - expectedTotal) < 0.01;
-
         const colorClass = isMatch ? 'text-success' : 'text-danger';
 
         $('#current_amount, #discount_amount, #invoice_amount').removeClass('text-success text-danger').addClass(colorClass);
     }
+
+    $(document).ready(function () {
+        function updateUnitPrice($row) {
+            const canEditRRP = !$row.find('.product-rrp').is('[readonly]');
+            const canEditDiscount = !$row.find('.product-discount').is('[readonly]');
+            if (!canEditRRP && !canEditDiscount) {
+                toastr.warning('Both RRP and Discount fields are not editable.');
+                return;
+            }
+
+            const rrp = parseFloat($row.find('.product-rrp').val()) || 0;
+            const discount = parseFloat($row.find('.product-discount').val()) || 0;
+            const discountedPrice = rrp - (rrp * discount / 100);
+            $row.find('.product-price').val(discountedPrice.toFixed(2)).trigger('input');
+            $row.find('.unit-price-text').text(discountedPrice.toFixed(2));
+        }
+
+        $(document).on('input change', '.product-rrp, .product-discount', function () {
+            const $row = $(this).closest('.product-row');
+            updateUnitPrice($row);
+        });
+    });
 </script>
+
 
 @endpush

@@ -59,15 +59,17 @@ class LaravelController extends Controller
         if ($categoryId) {
             $query->where('category_id', $categoryId);
         }
+        $maxTotal = $invoiceAmount * 1.10;
+        $fetchLimit = $noOfProducts ? ($noOfProducts * 5) : 200;
 
         if ($categoryId || $noOfProducts) {
             $minTotal = $invoiceAmount * 0.6;
-            $allProducts = $query->orderByDesc('unit_price')->get();
+            $allProducts = $query->orderByDesc('unit_price')->inRandomOrder()->get();
         } else {
             $minTotal = $invoiceAmount;
-            $allProducts = $query->orderBy('unit_price')->get();
+            $allProducts =  $query->orderByDesc('unit_price')->limit($fetchLimit)->get(); 
         }
-        $maxTotal = $invoiceAmount * 1.10;
+       
       
         $bestMatch = null;
         $bestTotal = 0;
@@ -78,14 +80,13 @@ class LaravelController extends Controller
             $shuffled = $allProducts->shuffle();
             $selected = [];
             $currentTotal = 0;
-    
+        
             foreach ($shuffled as $product) {
                 $price = floatval($product->unit_price);
-    
+        
                 if ($noOfProducts) {
                     if (count($selected) >= $noOfProducts) break;
-    
-                    if ($currentTotal + $price <= $invoiceAmount) {
+                    if ($currentTotal + $price <= $invoiceAmount * 1.05) {
                         $selected[] = $product;
                         $currentTotal += $price;
                     }
@@ -93,7 +94,7 @@ class LaravelController extends Controller
                     if (($currentTotal + $price) <= $maxTotal) {
                         $selected[] = $product;
                         $currentTotal += $price;
-    
+        
                         if ($currentTotal >= $minTotal && $currentTotal <= $maxTotal) {
                             if ($currentTotal > $bestTotal) {
                                 $bestMatch = $selected;
@@ -103,15 +104,13 @@ class LaravelController extends Controller
                     }
                 }
             }
-    
-            if ($noOfProducts && count($selected) === $noOfProducts) {
+        
+            if ($noOfProducts && count($selected) == $noOfProducts) {
                 $distance = abs($invoiceAmount - $currentTotal);
-    
                 if ($bestMatch === null || $distance < $bestDistance) {
                     $bestMatch = $selected;
                     $bestTotal = $currentTotal;
                     $bestDistance = $distance;
-    
                     if ($currentTotal >= ($invoiceAmount * 0.9)) {
                         break;
                     }

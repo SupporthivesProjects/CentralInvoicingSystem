@@ -140,12 +140,19 @@
                             </div>
                             <hr>
                            <!-- First Row for Invoice Template -->
-                            <div class="row mb-4">
+                            <div class="row mb-4 mt-2">
                                 <div class="col-md-6 mx-auto">
                                     <label class="form-label">Invoice Template (HTML/HTM/PHP)</label>
                                     <input type="file" name="invoice_template" class="form-control" accept=".html,.htm,.php">
                                     @if ($website->invoice_template)
                                         <small class="text-muted">Current: <a href="{{ asset($website->invoice_template) }}" target="_blank" rel="noopener noreferrer"> {{ basename($website->invoice_template) }}</a></small>
+                                    @endif
+                                </div>
+                                <div class="col-md-6 mx-auto">
+                                    <label class="form-label">Invoice Signiture</label>
+                                    <input type="file" name="invoice_signature" class="form-control" accept=".jpeg,.png,.jpg">
+                                    @if ($website->invoice_signature)
+                                        <small class="text-muted">Current: <a href="{{ asset($website->invoice_signature) }}" target="_blank" rel="noopener noreferrer"> {{ basename($website->invoice_signature) }}</a></small>
                                     @endif
                                 </div>
                             </div>
@@ -154,7 +161,7 @@
                             <div class="row mb-4 mt-1">
                                 <!-- Company Logo -->
                                 <div class="col-md-4 mx-auto">
-                                    <label class="form-label">Company Logo</label>
+                                    <label class="form-label">Invoice Logo</label>
                                     <input type="file" name="company_logo" class="form-control" accept=".jpeg,.png,.jpg">
                                     @if ($website->company_logo)
                                         <small class="text-muted">Current: <a href="{{ asset($website->company_logo) }}" target="_blank" rel="noopener noreferrer"> {{ basename($website->company_logo) }}</a></small>

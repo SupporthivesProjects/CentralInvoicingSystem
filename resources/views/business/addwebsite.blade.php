@@ -135,10 +135,14 @@
 
                         <hr>
                         <!-- First Row for Invoice Template -->
-                        <div class="row mb-4 mt-1">
+                        <div class="row mb-4 mt-2">
                             <div class="col-md-6 mx-auto">
                                 <label class="form-label">Invoice Template (HTML/HTM/PHP)</label>
                                 <input type="file" name="invoice_template" class="form-control" accept=".html,.htm,.php">
+                            </div>
+                            <div class="col-md-6 mx-auto">
+                                <label class="form-label">Invoice Signiture</label>
+                                <input type="file" name="invoice_signature" class="form-control" accept=".jpeg,.png,.jpg">
                             </div>
                         </div>
 
@@ -146,7 +150,7 @@
                         <div class="row mb-4">
                             <!-- Company Logo -->
                             <div class="col-md-4 mx-auto">
-                                <label class="form-label">Company Logo</label>
+                                <label class="form-label">Invoice Logo</label>
                                 <input type="file" name="company_logo" class="form-control" accept=".jpeg,.png,.jpg">
                             </div>
                             

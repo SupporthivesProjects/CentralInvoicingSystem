@@ -675,8 +675,8 @@
                 $('#invoice_amount').removeClass('text-danger text-success');
             },
             success: function (response) {
-                Swal.close();
                 $('#discount_amount').val(0.00);
+                calculateTotalPrice();
                 if (response.total === 0) {
                     $('#randomize-product-table-body').html(getErrorRowHTML('No results found. Try randomizing or use a different keyword.',9));
                     return;
