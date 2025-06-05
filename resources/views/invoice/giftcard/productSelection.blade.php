@@ -836,7 +836,8 @@ function clearRandomizedFilter(button) {
 
         selectedProducts.each(function () {
             const productId = $(this).val();
-            const productName = $(`input.product-name[data-product-id="${productId}"]`).val() || '';
+            const productNameInput = $(`input.product-name[data-product-id="${productId}"]`);
+            const productName = productNameInput.val() || '';
             const unitPrice = $(`input.product-price[data-product-id="${productId}"]`).val() || 0;
             const productRRP = parseFloat($(`input.product-rrp[data-product-id="${productId}"]`).val()) || 0;
             const productDiscount = $(`input.product-discount[data-product-id="${productId}"]`).val() || 0;
@@ -847,7 +848,12 @@ function clearRandomizedFilter(button) {
                 const nameRRP = parseFloat(match[2]);
 
                 if (Math.abs(nameRRP - productRRP) > 0.01) {
-                    toastr.warning(`RRP mismatch for PID "${productId}"`);
+                    toastr.warning(`Name update pending for PID "${productId}" due to RRP change.`);
+                    productNameInput.css('border', '1px solid red');
+                    setTimeout(() => {
+                        productNameInput.css('border', '');
+                    }, 3000);
+
                     hasMismatch = true;
                     return false; 
                 }
