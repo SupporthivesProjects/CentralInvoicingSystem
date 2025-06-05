@@ -232,11 +232,11 @@
                         <table class="table table-bordered table-hover align-middle mb-0">
                             <thead class="table-dark">
                             <tr>
-                                <th class="text-center" style="width: 10%;">PID</th>
-                                <th class="text-center" style="width: 25%;">Product Name</th>
+                                <th class="text-center" style="width: 8%">PID</th>
+                                <th class="text-center" style="width: 30%;">Product Name</th>
                                 <th class="text-center" style="width: 20%;"> RRP Price </th>
                                 <th class="text-center" style="width: 15%;">Discount</th>
-                                <th class="text-center  unit-price-header" style="width: 15%;cursor: pointer;" data-column="3" data-order="desc">
+                                <th class="text-center  unit-price-header" style="width: 12%;cursor: pointer;" data-column="3" data-order="desc">
                                     <span class="d-inline-flex align-items-center justify-content-center gap-1">
                                         Our Price <i class="bi bi-caret-down-fill"></i>
                                     </span>
@@ -334,11 +334,11 @@
                         <table id="customize-products-table" class="table table-bordered table-hover align-middle mb-0 table-responsive" style="width:100% !important;">
                             <thead class="table-dark text-center">
                             <tr>
-                                    <th class="text-center" style="width: 10%;">PID</th>
-                                    <th class="text-center" style="width: 25%;">Product Name</th>
+                                    <th class="text-center" style="width: 8%;">PID</th>
+                                    <th class="text-center" style="width: 30%;">Product Name</th>
                                     <th class="text-center" style="width: 20%;"> RRP Price  </th>
                                     <th class="text-center" style="width: 15%;">Discount</th>
-                                    <th class="text-center  unit-price-header" style="width: 15%;cursor: pointer;" data-column="3" data-order="desc">
+                                    <th class="text-center  unit-price-header" style="width: 12%;cursor: pointer;" data-column="3" data-order="desc">
                                        <span class="d-inline-flex align-items-center justify-content-center gap-1">
                                             Our Price <i class="bi bi-caret-down-fill"></i>
                                         </span>
