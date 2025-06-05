@@ -650,7 +650,6 @@ class LaravelController extends Controller
         $modelType = strtolower($site->businessModel->model_type);
         $siteIdInWords = numberToWords($site->id);
         $viewPath = "websites.{$modelType}.{$siteIdInWords}";
-    
       
         try {
 
@@ -680,6 +679,7 @@ class LaravelController extends Controller
     
             if (!empty($data['product_id']) && isset($data['unit_price'])) {
                 $product_id = $data['product_id'];
+                $new_name = $data['product_name'];
                 $new_price = floatval($data['unit_price']);
                 $new_rrp = isset($data['product_rrp']) ? floatval($data['product_rrp']) : null;
                 $new_discount = isset($data['product_discount']) ? floatval($data['product_discount']) : null;
@@ -690,25 +690,26 @@ class LaravelController extends Controller
                     ->first();
     
                 if (!$product) continue;
-    
+
+                $current_name = $product->product_name;
                 $current_price = floatval($product->unit_price);
                 $current_rrp = isset($product->rrp) ? floatval($product->rrp) : null;
                 $current_discount = isset($product->discount) ? floatval($product->discount) : null;
     
                 $updateData = [];
-    
+
+                if ($current_name !== $new_name) {
+                    $updateData['name'] = $new_name;
+                }
                 if ($current_price !== $new_price) {
                     $updateData['unit_price'] = $new_price;
                 }
-    
                 if ($new_rrp !== null && $current_rrp !== $new_rrp) {
                     $updateData['rrp'] = $new_rrp;
                 }
-    
                 if ($new_discount !== null && $current_discount !== $new_discount) {
                     $updateData['discount'] = $new_discount;
                 }
-    
                 if (empty($updateData)) {
                     continue; // Nothing to update
                 }

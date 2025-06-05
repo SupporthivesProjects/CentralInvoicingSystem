@@ -2,10 +2,51 @@
 <tr class="product-row">
     <td class="text-center">{{ $product->id }}</td>
     <td>
-        {{ $product->name }}
+        <div class="input-group">
+
         @if($site->site_link && $product->slug)
-            <a href="{{ $site->site_link }}product/{{ $product->slug }}" target="_blank">🔗</a>
+            <a 
+                href="{{ $site->site_link }}product/{{ $product->slug }}" 
+                target="_blank" 
+                class="input-group-text"
+                data-bs-toggle="tooltip"
+                data-bs-placement="top"
+                title="View product page">
+                🔗
+            </a>
+        @else
+        <a 
+            href="{{ $site->site_link }}" 
+            target="_blank" 
+            class="input-group-text"
+            data-bs-toggle="tooltip"
+            data-bs-placement="top"
+            title="View Website">
+            🔗
+            </a>
         @endif
+        <input 
+            type="text"  
+            class="form-control product-name" 
+            value="{{ $product->name }}" 
+            data-product-id="{{ $product->id }}" 
+            aria-label="name" 
+            {{ $product->can_edit_price == 0 ? 'readonly' : '' }}>
+
+
+        <span 
+            class="input-group-text d-flex align-items-center"
+            data-bs-toggle="tooltip"
+            data-bs-placement="top"
+            title="{{ $product->can_edit_price == 0 ? 'Name update allowed after ' . $product->remaining_days . ' days.' : 'Editable' }}">
+            @if($product->can_edit_price == 0)
+                <i class="fas fa-lock text-muted"></i>
+            @else
+                <i class="fas fa-edit"></i>
+            @endif
+        </span>
+    </div>
+
     </td>
     <td class="text-center">
         <div class="input-group d-flex justify-content-center">

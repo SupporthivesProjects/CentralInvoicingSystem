@@ -832,17 +832,33 @@ function clearRandomizedFilter(button) {
 
         $('#generate-invoice-form').find('input[name="product_data[]"]').remove();
 
+        let hasMismatch = false;
+
         selectedProducts.each(function () {
             const productId = $(this).val();
+            const productName = $(`input.product-name[data-product-id="${productId}"]`).val() || '';
             const unitPrice = $(`input.product-price[data-product-id="${productId}"]`).val() || 0;
-            const productRRP = $(`input.product-rrp[data-product-id="${productId}"]`).val() || 0;
+            const productRRP = parseFloat($(`input.product-rrp[data-product-id="${productId}"]`).val()) || 0;
             const productDiscount = $(`input.product-discount[data-product-id="${productId}"]`).val() || 0;
+
+            const match = productName.match(/([A-Z]{3})\s*(\d+(\.\d+)?)/i);
+
+            if (match) {
+                const nameRRP = parseFloat(match[2]);
+
+                if (Math.abs(nameRRP - productRRP) > 0.01) {
+                    toastr.warning(`RRP mismatch for PID "${productId}"`);
+                    hasMismatch = true;
+                    return false; 
+                }
+            }
 
             $('#generate-invoice-form').append($('<input>', {
                 type: 'hidden',
                 name: 'product_data[]',
                 value: JSON.stringify({ 
-                    product_id: productId, 
+                    product_id: productId,
+                    product_name: productName,
                     unit_price: unitPrice,
                     unit_rrp: productRRP,
                     unit_discount: productDiscount
@@ -850,6 +866,9 @@ function clearRandomizedFilter(button) {
             }));
         });
 
+        if (hasMismatch) {
+            return false;
+        }
 
        
         let blinkCount = 0;
