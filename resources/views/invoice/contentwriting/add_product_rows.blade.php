@@ -1,10 +1,13 @@
 @forelse($products as $index => $product)
 <tr  class="product-row align-middle" id="customize-product-row-{{ $product->id }}" data-product-row-id="{{ $product->id }}" data-request-type="customize">
-    <td class="text-center align-middle">
+    {{-- <td class="text-center align-middle">
     <button class="btn btn-warning btn-sm" data-bs-toggle="tooltip" title="You can set metadata after adding the product to the cart." >
         <i class="bi bi-exclamation-circle-fill"></i>
     </button>
 
+    </td> --}}
+    <td class="text-center align-middle">
+        {{ $product->id }}
     </td>
 
     <td class="text-capitalize">
@@ -13,16 +16,16 @@
             <a href="{{ $site->site_link }}product/{{ $product->slug }}" target="_blank">🔗</a>
         @endif
     </td>
-
-    <td class="text-center">
+    <td class="text-center" style="padding-left: 10px;padding-right: 10px;">
         <div class="input-group input-group-sm justify-content-center">
-            <button class="btn btn-outline-primary wc-decrease" type="button" data-product-id="{{ $product->id }}" >-</button>
-            <input type="text" readonly  class="form-control text-center wc-input border-primary"  data-product-id="{{ $product->id }}" value="{{ $product->default_wc }}" step="25" min="{{ $product->default_wc }}">
-            <button class="btn btn-outline-primary wc-increase" type="button" data-product-id="{{ $product->id }}">+</button>
+            <button class="btn btn-outline-secondary wc-decrease-100" type="button" data-product-id="{{ $product->id }}">«</button>
+            <button class="btn btn-outline-primary wc-decrease-25" type="button" data-product-id="{{ $product->id }}">-</button>
+            <input type="text" readonly class="form-control text-center wc-input border-primary" data-product-id="{{ $product->id }}" value="{{ $product->default_wc }}" step="25" min="{{ $product->default_wc }}">
+            <button class="btn btn-outline-primary wc-increase-25" type="button" data-product-id="{{ $product->id }}">+</button>
+            <button class="btn btn-outline-secondary wc-increase-100" type="button" data-product-id="{{ $product->id }}">»</button>
         </div>
     </td>
-
-
+   
     <td class="text-center p-2">
         <select name="turnaround" id="turnaround" class="form-select form-select-sm text-center mx-0 turnaround-select input-or-select" data-product-id="{{ $product->id }}">
             <option value="ta_standard" @selected($product->turnaround == 'ta_standard')>Standard</option>
@@ -30,7 +33,7 @@
         </select>
     </td>
 
-    <td class="text-center">
+    <td class="text-center" style="padding-left: 10px;padding-right: 10px;">
         <div class="input-group input-group-sm justify-content-center">
             <button class="btn btn-outline-primary img-decrease" type="button" data-product-id="{{ $product->id }}">-</button>
             <input type="text" readonly class="form-control text-center img-input border-primary" value="1" step="1" min="1" data-product-id="{{ $product->id }}">
@@ -61,10 +64,18 @@
     </td>
 
     <td class="text-center align-middle">
-        <div class="form-check d-flex justify-content-center align-items-center m-0">
-            <input class="form-check-input border narayan-checkbox border-1 border-primary" type="checkbox"  name="add_product_ids[]" data-unit_price="{{ number_format($product->unit_price, 2, '.', '') }}" value="{{ $product->id }}">
-        </div>    
+        <div class="d-flex justify-content-center align-items-center gap-2">
+            <div class="form-check m-0">
+                <input class="form-check-input border narayan-checkbox border-1 border-primary" 
+                    type="checkbox" 
+                    name="add_product_ids[]" 
+                    data-unit_price="{{ number_format($product->unit_price, 2, '.', '') }}" 
+                    value="{{ $product->id }}">
+            </div>
+        </div>
     </td>
+
+
 </tr>
 
 @empty

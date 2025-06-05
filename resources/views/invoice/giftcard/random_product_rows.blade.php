@@ -79,11 +79,7 @@
                    data-product-id="{{ $product->id }}" 
                    aria-label="Discount" 
                    {{ $product->can_edit_price == 0 ? 'readonly' : '' }}>
-            <span class="input-group-text d-flex align-items-center"
-                  data-bs-toggle="tooltip"
-                  data-bs-placement="top"
-                  title="{{ $product->can_edit_price == 0 ? 'Discount update allowed after ' . $product->remaining_days . ' days.' : 'Editable' }}">
-                
+            <span class="input-group-text d-flex align-items-center" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $product->can_edit_price == 0 ? 'Discount update allowed after ' . $product->remaining_days . ' days.' : 'Editable' }}">
                   @if($product->can_edit_price == 0)
                         <i class="fas fa-lock text-muted"></i>
                     @else
@@ -100,9 +96,7 @@
     </td>
 
     <td class="text-center">
-        <button class="remove-product btn btn-danger btn-sm" 
-                data-product-name="{{ $product->name }}" 
-                data-product-id="{{ $product->id }}">
+        <button class="remove-product btn btn-danger btn-sm" data-product-name="{{ $product->name }}" data-product-id="{{ $product->id }}">
             <i class="fa fa-trash"></i>
         </button>
         <input style="display: none;"  class="form-check-input border narayan-checkbox border-1 border-primary"  type="checkbox" name="product_ids[]"  data-unit_price="{{ number_format($product->unit_price, 2, '.', '') }}" value="{{ $product->id }}" checked>

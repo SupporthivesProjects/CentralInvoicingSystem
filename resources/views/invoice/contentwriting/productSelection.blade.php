@@ -216,21 +216,21 @@
                     <div class="table-responsive border rounded shadow-sm">
                         <table class="table table-bordered table-hover align-middle mb-0">
                             <thead class="table-dark">
-                                <tr> 
-                                    <th style="width: 5%;">Params</th>
-                                    <th style="width: 20%;">Name</th>
-                                    <th style="width: 15%;">Word Count</th>
-                                    <th style="width: 12%;">Turnaround</th>
-                                    <th class="text-center" style="width: 13%;">Img Count</th>
-                                    <th style="width: 13%;">Quality</th>
-                                    <th class="text-center unit-price-header" style="width: 27%;" data-column="6" data-order="desc">
-                                        <span class="d-inline-flex align-items-center justify-content-center gap-1">
-                                            Total Price <i class="bi bi-caret-down-fill"></i>
-                                        </span>
-                                    </th>
-                                   
-                                    <th style="width: 5%;">Remove</th>
-                                </tr>
+                            <tr> 
+                                <th class="text-center" style="width: 2%;">PID</th>
+                                <th style="width: 20%;">Name</th>
+                                <th class="text-center" style="width: 20%;">Word Count</th>
+                                <th class="text-center" style="width: 12%;">Turnaround</th>
+                                <th class="text-center" style="width: 11%;">Img Count</th>
+                                <th class="text-center" style="width: 13%;">Quality</th>
+                                <th class="text-center unit-price-header" style="width: 17%;" data-column="6" data-order="desc">
+                                    <span class="d-inline-flex align-items-center justify-content-center gap-1">
+                                        Total Price <i class="bi bi-caret-down-fill"></i>
+                                    </span>
+                                </th>
+                                <th class="text-center" style="width: 15%;">Action</th>
+                            </tr>
+
                             </thead>
                             <tbody id="randomize-product-table-body">
                             </tbody>
@@ -320,19 +320,19 @@
                     <div class="rounded shadow-sm p-2"> 
                     <table id="customize-products-table" class="table table-bordered table-hover align-middle mb-0 table-responsive" style="width:100% !important;">
                     <thead class="table-dark text-center">
-                        <tr>
-                            <th style="width: 5%;">PID</th>
+                        <tr> 
+                            <th class="text-center" style="width: 2%;">PID</th>
                             <th style="width: 20%;">Name</th>
-                            <th style="width: 15%;">Word Count</th>
-                            <th style="width: 12%;">Turnaround</th>
-                            <th class="text-center" style="width: 13%;">Img Count</th>
-                            <th style="width: 13%;">Quality</th>
-                            <th class="text-center unit-price-header" style="width: 20%;"  data-column="3" data-order="desc">
+                            <th class="text-center" style="width: 20%;">Word Count</th>
+                            <th class="text-center" style="width: 12%;">Turnaround</th>
+                            <th class="text-center" style="width: 11%;">Img Count</th>
+                            <th class="text-center" style="width: 13%;">Quality</th>
+                            <th class="text-center unit-price-header" style="width: 17%;" data-column="6" data-order="desc">
                                 <span class="d-inline-flex align-items-center justify-content-center gap-1">
-                                Total Price <i class="bi bi-caret-down-fill"></i>
+                                    Total Price <i class="bi bi-caret-down-fill"></i>
                                 </span>
                             </th>
-                            <th style="width: 5%;">Select</th>
+                            <th class="text-center" style="width: 15%;">Action</th>
                         </tr>
                     </thead>
                     <tbody id="customize-product-table-body">
@@ -1109,6 +1109,7 @@ $(document).ready(function() {
 <script>
     $(document).ready(function() {
         const wcStep = 25;
+        const wcStepLarge = 100;
         const imgStep = 1;
         const wcMin = 0;
         const imgMin = 1;
@@ -1171,29 +1172,35 @@ $(document).ready(function() {
             }, 2000);
         }
 
+        $(document).on('click', '.wc-decrease-25', function() {
+            handleWordCountChange($(this), -wcStep);
+        });
 
-        $(document).on('click', '.wc-decrease', function() {
-            const productId = $(this).data('product-id');
+        $(document).on('click', '.wc-increase-25', function() {
+            handleWordCountChange($(this), wcStep);
+        });
+
+        $(document).on('click', '.wc-decrease-100', function() {
+            handleWordCountChange($(this), -wcStepLarge);
+        });
+        $(document).on('click', '.wc-increase-100', function() {
+            handleWordCountChange($(this), wcStepLarge);
+        });
+
+        function handleWordCountChange($btn, step) {
+            const productId = $btn.data('product-id');
             const $input = $(`.wc-input[data-product-id="${productId}"]`);
-            let val = parseInt($input.val()) || wcMin;
             const min = parseInt($input.attr('min')) || wcMin;
+            let current = parseInt($input.val()) || min;
+            let updated = current + step;
 
-            if (val - wcStep >= min) {
-                $input.val(val - wcStep);
+            if (updated >= min) {
+                $input.val(updated);
                 debounceUpdate(productId, 'wordcount');
             } else {
                 toastr.warning(`Minimum word count is ${min}`, 'Limit reached');
             }
-        });
-
-        $(document).on('click', '.wc-increase', function() {
-            const productId = $(this).data('product-id');
-            const $input = $(`.wc-input[data-product-id="${productId}"]`);
-            let val = parseInt($input.val()) || wcMin;
-
-            $input.val(val + wcStep);
-            debounceUpdate(productId, 'wordcount');
-        });
+        }
 
         $(document).on('click', '.img-decrease', function() {
             const productId = $(this).data('product-id');
