@@ -198,15 +198,15 @@
                     </div>
 
                     <div class="col-md-3">
-                        <div class="d-flex flex-column align-items-center h-100">
+                        {{-- <div class="d-flex flex-column align-items-center h-100">
                             <small class="text-muted fw-semibold mb-2">Product Category</small>
                             <select class="form-select w-100 h-100" name="category_id" id="category_id">
                                 <option value="" selected disabled>Not Applicable</option>
-                                {{-- @foreach(getCategoryList($site->technology) as $category)
+                                @foreach(getCategoryList($site->technology) as $category)
                                     <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                @endforeach --}}
+                                @endforeach 
                             </select>
-                        </div>
+                        </div> --}}
                     </div>
 
                     </div>
@@ -225,7 +225,7 @@
                                     <th style="width: 13%;">Quality</th>
                                     <th class="text-center unit-price-header" style="width: 27%;" data-column="6" data-order="desc">
                                         <span class="d-inline-flex align-items-center justify-content-center gap-1">
-                                            Unit Price <i class="bi bi-caret-down-fill"></i>
+                                            Total Price <i class="bi bi-caret-down-fill"></i>
                                         </span>
                                     </th>
                                    
@@ -329,7 +329,7 @@
                             <th style="width: 13%;">Quality</th>
                             <th class="text-center unit-price-header" style="width: 20%;"  data-column="3" data-order="desc">
                                 <span class="d-inline-flex align-items-center justify-content-center gap-1">
-                                    Unit Price <i class="bi bi-caret-down-fill"></i>
+                                Total Price <i class="bi bi-caret-down-fill"></i>
                                 </span>
                             </th>
                             <th style="width: 5%;">Select</th>

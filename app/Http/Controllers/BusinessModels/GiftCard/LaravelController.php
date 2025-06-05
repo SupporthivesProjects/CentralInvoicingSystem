@@ -692,8 +692,8 @@ class LaravelController extends Controller
                 if (!$product) continue;
     
                 $current_price = floatval($product->unit_price);
-                $current_rrp = isset($product->unit_rrp) ? floatval($product->unit_rrp) : null;
-                $current_discount = isset($product->unit_discount) ? floatval($product->unit_discount) : null;
+                $current_rrp = isset($product->rrp) ? floatval($product->rrp) : null;
+                $current_discount = isset($product->discount) ? floatval($product->discount) : null;
     
                 $updateData = [];
     
@@ -702,11 +702,11 @@ class LaravelController extends Controller
                 }
     
                 if ($new_rrp !== null && $current_rrp !== $new_rrp) {
-                    $updateData['unit_rrp'] = $new_rrp;
+                    $updateData['rrp'] = $new_rrp;
                 }
     
                 if ($new_discount !== null && $current_discount !== $new_discount) {
-                    $updateData['unit_discount'] = $new_discount;
+                    $updateData['discount'] = $new_discount;
                 }
     
                 if (empty($updateData)) {

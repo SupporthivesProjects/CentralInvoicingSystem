@@ -42,74 +42,83 @@ class LaravelController extends Controller
         $priceTo = $request->get('price_to');
         $keyword = $request->get('keyword');
         $noOfProducts = intval($request->get('noOfProducts'));
-    
+        
         $site = Website::findOrFail($site_id);
         DynamicDatabaseService::connect($site);
-    
+        
         $query = DB::connection($this->connectionType)->table($this->productTable)
             ->select('id', 'name', 'slug', 'default_wc', 'default_price', 'extra_word', 'ta_standard', 'ta_express', 'q_standard', 'q_premium', 'q_expert', 'img_price')
             ->where('published', 1);
-    
+        
         if ($keyword) {
             $query->where(function ($q) use ($keyword) {
                 $q->where('name', 'LIKE', '%' . $keyword . '%')
-                  ->orWhere('slug', 'LIKE', '%' . $keyword . '%');
+                ->orWhere('slug', 'LIKE', '%' . $keyword . '%');
             });
         }
-    
+        
         $allProducts = $query->orderByDesc('default_price')->get();
-        $wordcountOptions = [0, 25, 50, 75, 100];
+        $wordcountOptions = range(0, 1500, 25);
         $turnaroundOptions = ['ta_standard', 'ta_express'];
         $qualityOptions = ['q_standard', 'q_premium', 'q_expert'];
-
+        
         $allProducts = collect($allProducts);
-        $allProducts->each(function ($product) use ($wordcountOptions , $qualityOptions, $turnaroundOptions) {
-            $wordCount = $product->default_wc + $wordcountOptions[array_rand($wordcountOptions)];
+        
+        $allProducts->each(function ($product) use ($wordcountOptions, $qualityOptions, $turnaroundOptions, $invoiceAmount, $noOfProducts) {
+            if ($noOfProducts) {
+                $estimatedUnit = $invoiceAmount / $noOfProducts;
+                $variance = rand(80, 120) / 100;
+                $productBudget = $estimatedUnit * $variance;
+            
+                $counts = $this->adjustWordAndImageCount($productBudget, $product->default_wc);
+                $wordCount = $counts['wordCount'];
+                $imageCount = $counts['imageCount'];
+            } else {
+                $wordCount = $product->default_wc + $wordcountOptions[array_rand($wordcountOptions)];
+                $imageCount = rand(1, 15);
+            }
+            
             $product->turnaround = $turnaroundOptions[array_rand($turnaroundOptions)];
             $product->quality = $qualityOptions[array_rand($qualityOptions)];
-            $imageCount = rand(1, 5);
             $quantity = 1;
-
+            
             $qlty_factor = match ($product->quality) {
                 'q_premium' => 0.1,
                 'q_expert' => 0.25,
                 default => 0,
             };
-
+            
             $wc_price = max(0, (($wordCount - $product->default_wc) / 25) * $product->extra_word);
             $img_total = max(0, ($imageCount - 1) * $product->img_price);
             $ta_total = $product->turnaround === 'ta_express' ? 25 : 0;
-    
+            
             $base_total = $product->default_price + $wc_price + $img_total + $ta_total;
             $product->unit_price = ($base_total + ($base_total * $qlty_factor)) * $quantity;
-    
+            
             $product->wordcount = $wordCount;
             $product->imagecount = $imageCount;
             $product->quantity = $quantity;
         });
-
+        
         $allProducts = $allProducts->filter(function ($product) use ($priceFrom, $priceTo) {
             return $product->unit_price >= $priceFrom && $product->unit_price <= $priceTo;
-        });
+        })->values();
         
-        $allProducts = $allProducts->values();
-        
-    
-        $minTotal = ($noOfProducts || $keyword) ? ($invoiceAmount * 0.6) : $invoiceAmount;
+        $minTotal = ($noOfProducts || $keyword) ? $invoiceAmount * 0.90 : $invoiceAmount;
         $maxTotal = $invoiceAmount * 1.10;
         $bestMatch = null;
         $bestTotal = 0;
         $bestDistance = null;
-    
-        for ($i = 0; $i < 20; $i++) {
+        
+        for ($i = 0; $i < 10; $i++) {
             $shuffled = $allProducts->shuffle();
             $selected = [];
             $currentTotal = 0;
-    
+            
             foreach ($shuffled as $product) {
                 if ($noOfProducts) {
                     if (count($selected) >= $noOfProducts) break;
-    
+                    
                     if ($currentTotal + $product->unit_price <= $invoiceAmount) {
                         $selected[] = $product;
                         $currentTotal += $product->unit_price;
@@ -118,7 +127,7 @@ class LaravelController extends Controller
                     if ($currentTotal + $product->unit_price <= $maxTotal) {
                         $selected[] = $product;
                         $currentTotal += $product->unit_price;
-    
+                        
                         if ($currentTotal >= $minTotal && $currentTotal <= $maxTotal && $currentTotal > $bestTotal) {
                             $bestMatch = $selected;
                             $bestTotal = $currentTotal;
@@ -126,18 +135,18 @@ class LaravelController extends Controller
                     }
                 }
             }
-    
+            
             if ($noOfProducts && count($selected) === $noOfProducts) {
                 $distance = abs($invoiceAmount - $currentTotal);
                 if ($bestMatch === null || $distance < $bestDistance) {
                     $bestMatch = $selected;
                     $bestTotal = $currentTotal;
                     $bestDistance = $distance;
-                    if ($currentTotal >= ($invoiceAmount * 0.9)) break;
+                    if ($currentTotal >= $invoiceAmount * 0.90) break;
                 }
             }
         }
-    
+        
         if (!$bestMatch) {
             return response()->json([
                 'tableRows' => '',
@@ -145,10 +154,9 @@ class LaravelController extends Controller
                 'message' => 'No matching combination found, try again please'
             ]);
         }
-    
+        
         $bestMatch = collect($bestMatch);
-        $bestMatch->each(function ($product) use ($site_id) {
-
+        $bestMatch->each(function ($product) {
             $product->can_edit_price = 1;
             $product->remaining_days = 0;
             $product->project_title = null;
@@ -161,7 +169,7 @@ class LaravelController extends Controller
             $product->note = null;
             $product->param_status = !empty($product->project_title) && !empty($product->note) && !empty($product->subject);
         });
-    
+        
         $productList = $bestMatch->map(function ($product) {
             return [
                 'id' => $product->id,
@@ -181,23 +189,53 @@ class LaravelController extends Controller
                 'note' => null
             ];
         })->toArray();
-    
+        
         session()->forget('ready_products');
         session()->put('ready_products', $productList);
         session(['current_amount' => $bestTotal]);
-    
+        
         $modelType = $site->businessModel->model_type;
         $tableRows = view("invoice.{$modelType}.random_product_rows", [
             'products' => $bestMatch,
             'site' => $site,
             'total' => $bestTotal
         ])->render();
-    
+        
         return response()->json([
             'tableRows' => $tableRows,
             'total' => $bestTotal
         ]);
     }
+
+    function adjustWordAndImageCount(float $productBudget, int $defaultWordCount): array
+    {
+        $maxWordCount = 100000;
+        $extraWordCountMin = intval($productBudget * 1.10);
+        $extraWordCountMax = intval($productBudget * 1.15);
+    
+        $extraWordCount = rand($extraWordCountMin, $extraWordCountMax);
+        $wordCount = min($defaultWordCount + $extraWordCount, $maxWordCount);
+    
+        if ($productBudget <= 250) {
+            $imageCount = rand(1, 3);
+        } elseif ($productBudget <= 500) {
+            $imageCount = rand(4, 6);
+        } elseif ($productBudget <= 750) {
+            $imageCount = rand(7, 9);
+        } elseif ($productBudget <= 1000) {
+            $imageCount = rand(10, 12);
+        } else {
+            $imageCount = rand(13, 15);
+        }
+    
+        return [
+            'wordCount' => $wordCount,
+            'imageCount' => $imageCount,
+        ];
+    }
+    
+
+
     
  
     public function addProducts(Request $request)

@@ -54,17 +54,12 @@
                 type="text" 
                 class="form-control product-price text-center" 
                 value="{{ number_format($product->unit_price, 2, '.', '') }}" 
-                data-product-id="{{ $product->id }}"
-                {{ $product->can_edit_price == 0 ? 'readonly' : '' }}  
-                aria-label="Amount (to the nearest dollar)"
-            >
-            <span class="input-group-text d-flex align-items-center">
-                <i class="{{ $product->can_edit_price == 0 ? 'fas fa-lock text-muted' : 'fas fa-edit' }}" 
-                    style="font-size: 12px;" 
-                    data-bs-toggle="tooltip"  
-                    data-bs-placement="top"
-                    title="{{ $product->can_edit_price == 0 ? 'Price update allowed after ' . $product->remaining_days . ' days.' : 'Editable' }}"></i>
-            </span>
+                data-product-id="{{ $product->id }}" readonly >
+                <span class="input-group-text d-flex align-items-center"  data-bs-toggle="tooltip" 
+                    data-bs-placement="top" 
+                    title="Auto calculated Total Price">
+                    <i  class="fas fa-lock text-muted"  style="font-size: 12px;"></i>
+                </span>
         </div>
     </td>
    
