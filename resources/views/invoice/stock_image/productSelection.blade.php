@@ -266,13 +266,13 @@
                         <div class="col-md-4">
                             <div class="bg-light rounded border shadow-sm p-1 text-center">
                                 <div class="text-muted small fw-semibold">Current Amount</div>
-                                <div class="fw-bold text-primary fs-5">{{ site_currency() }}<span id="temp_current_amount_text">0.00</span></div>
+                                <div class="fw-bold text-primary fs-5">{{ site_currency() }}<span id="temp_discount_amount_text">0.00</span></div>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="bg-light rounded border shadow-sm p-1 text-center">
                                 <div class="text-muted small fw-semibold">Discount Amount</div>
-                                <div class="fw-bold text-primary fs-5">{{ site_currency() }}<span id="temp_discount_amount_text">0.00</span></div>
+                                <div class="fw-bold text-primary fs-5">{{ site_currency() }}<span id="modal_current_amount">0.00</span></div>
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -474,7 +474,7 @@
                     const invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
                     const currentAmount = parseFloat(response.total.toFixed(2));
 
-                    $('#temp_current_amount_text').text(currentAmount.toFixed(2));
+                    //$('#temp_current_amount_text').text(currentAmount.toFixed(2));
                     $('#temp_invoice_amount_text').text(invoiceAmount.toFixed(2));
                     $('#randomize-product-table-body').html(response.tableRows);
                     $('#current_amount').val(currentAmount.toFixed(2));
@@ -506,23 +506,36 @@
 <script>
     customizeRequest = null;
 
+    // Function to round a number to the nearest 0.5
+    function roundToNearestHalf(value) {
+        let rounded = Math.round(value * 2) / 2;
+        return parseFloat(rounded.toFixed(1)); // Ensures single decimal point
+    }
+
+
+    // Ensure only multiples of 0.5 are entered on keyup
+    function enforceStep(value) {
+        return roundToNearestHalf(value);
+    }
+
     function customizeProducts(search_type = 'search', page = 1) {
         console.log("Triggered with type:", search_type);
         console.log("customizeRequest:", customizeRequest);
 
-        // Write js snippet for calculate credits, 1 credit = 5.75 amount
+
         const invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
-        const credits = Math.round(invoiceAmount / 5.75);
-        $('#customcredit').text(credits + ' Credits');
+        const credits = Math.round((invoiceAmount / 5.75) * 10) / 10;
+        const final_credit = enforceStep(credits);
+        $('#customcredit').text(final_credit + ' Credits');
 
         let btn = $('#add-custom-products');
-        btn.prop('disabled', false).html('Add Selected to Cart');
+        btn.prop('disabled', false).html('Add Selected to List');
 
         let invoice_amount = parseFloat($('#invoice_amount').val()) || 0;
         let current_amount = parseFloat($('#current_amount').val()) || 0;
         let discountAmount = Math.max(current_amount - invoice_amount, 0);
 
-        $('#temp_current_amount_text').text(current_amount.toFixed(2));
+        //$('#temp_current_amount_text').text(current_amount.toFixed(2));
         $('#temp_invoice_amount_text').text(invoice_amount.toFixed(2));
         $('#temp_discount_amount_text').text(discountAmount.toFixed(2));
 
@@ -583,7 +596,7 @@ function clearRandomizedFilter(button) {
             $('.product-price').val('');
             $('#current_amount').val('0.00');
             $('#discount_amount').val('0.00');
-            $('#temp_current_amount_text').text('0.00');
+            //$('#temp_current_amount_text').text('0.00');
             $('#temp_discount_amount_text').text('0.00');
             $('#temp_invoice_amount_text').text($('#invoice_amount').val());
             $('#randomize-product-table-body').html(getErrorRowHTML('Randomize filter cleared. You can now randomize products again or add custom products.'));
@@ -986,7 +999,7 @@ $(document).ready(function() {
         }
 
         $('#current_amount').val(currentAmount.toFixed(2));
-        $('#temp_current_amount_text').text(currentAmount.toFixed(2));
+        //$('#temp_current_amount_text').text(currentAmount.toFixed(2));
         $('#temp_discount_amount_text').text(discountAmount.toFixed(2));
         $('#invoice_amount').val(invoiceAmount.toFixed(2));
         $('#temp_invoice_amount_text').text(invoiceAmount.toFixed(2));
