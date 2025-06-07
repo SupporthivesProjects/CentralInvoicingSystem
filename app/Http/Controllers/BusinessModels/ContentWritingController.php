@@ -49,9 +49,9 @@ class ContentWritingController extends Controller
         return $this->resolveByTechnology($request, 'getProduct');
     }
 
-    public function randomizeProduct(Request $request)
+    public function randomProduct(Request $request)
     {
-        return $this->resolveByTechnology($request, 'randomizeProduct');
+        return $this->resolveByTechnology($request, 'randomProduct');
     }
 
     public function clearProducts(Request $request)

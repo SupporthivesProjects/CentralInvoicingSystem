@@ -216,10 +216,10 @@ class LaravelController extends Controller
     }
 
 
-    public function randomizeProduct(Request $request)
+    public function randomProduct(Request $request)
     {
         $productId = $request->input('product_id');
-        dd($productId);
+        #dd($productId);
         $invoiceAmount = floatval(session('invoice.invoice_amount'));
         $site_id = session('customer.site_id');
         $site = Website::findOrFail($site_id);
@@ -258,7 +258,7 @@ class LaravelController extends Controller
             $remainingAmount -= $item['unit_price'];
         }
 
-        $maxWordCount = 30000;
+        $maxWordCount = 250000;
         $minWordCount = $product->default_wc;
         $maxImageCount = 15;
         $minImageCount = 1;
@@ -270,32 +270,72 @@ class LaravelController extends Controller
             $wc_price = max(0, (($wordCount - $product->default_wc) / 25) * $product->extra_word);
             $img_total = max(0, ($imageCount - 1) * $product->img_price);
             $ta_total = $turnaround === 'ta_express' ? 25 : 0;
-
+        
             $base_total = $product->default_price + $wc_price + $img_total + $ta_total;
             $unit_price = $base_total + ($base_total * $qlty_factor);
-
-            if (abs($unit_price - $remainingAmount) <= 0.1) {
+            $diff = $remainingAmount - $unit_price;
+        
+            if (abs($diff) <= 0) {
                 break;
             }
         
-            if ($unit_price < $remainingAmount) {
+            if ($diff > 0) {
+                if ($turnaround === 'ta_standard') {
+                    $turnaround = 'ta_express';
+                    continue;
+                }
+        
+                if ($quality === 'q_standard') {
+                    $quality = 'q_premium';
+                    $qlty_factor = 0.10;
+                    continue;
+                } elseif ($quality === 'q_premium') {
+                    $quality = 'q_expert';
+                    $qlty_factor = 0.25;
+                    continue;
+                }
+        
                 if ($imageCount < min(15, $maxImageCount)) {
                     $imageCount++;
-                } elseif ($wordCount + 25 <= $maxWordCount) {
-                    $wordCount += 25;
-                } else {
-                    break;
-                }                
-            } elseif ($unit_price > $remainingAmount) {
-                if ($wordCount - 25 >= $minWordCount) {
-                    $wordCount -= 25;
-                } elseif ($imageCount > $minImageCount) {
-                    $imageCount--;
+                    continue;
+                }
+        
+                if ($wordCount + 25 <= $maxWordCount) {
+                    $wordCount += ($diff > 20) ? 25 : (($diff > 10) ? 10 : 5);
                 } else {
                     break;
                 }
-            }            
+        
+            } else {
+                if ($wordCount - 25 >= $minWordCount) {
+                    $wordCount -= 25;
+                    continue;
+                }
+        
+                if ($imageCount > $minImageCount) {
+                    $imageCount--;
+                    continue;
+                }
+        
+                if ($quality === 'q_expert') {
+                    $quality = 'q_premium';
+                    $qlty_factor = 0.10;
+                    continue;
+                } elseif ($quality === 'q_premium') {
+                    $quality = 'q_standard';
+                    $qlty_factor = 0.00;
+                    continue;
+                }
+        
+                if ($turnaround === 'ta_express') {
+                    $turnaround = 'ta_standard';
+                    continue;
+                }
+        
+                break;
+            }
         }
+        
 
         $updatedProduct = [
             'id' => $product->id,

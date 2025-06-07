@@ -110,7 +110,7 @@
         $('[data-bs-toggle="tooltip"]').tooltip('hide');
 
         $.ajax({
-            url: "{{ route('randomize.product') }}",
+            url: "{{ route('random.product') }}",
             method: "POST",
             data: {
                 product_id: productId,
