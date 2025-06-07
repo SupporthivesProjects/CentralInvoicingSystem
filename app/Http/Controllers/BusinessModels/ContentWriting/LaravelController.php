@@ -216,6 +216,166 @@ class LaravelController extends Controller
     }
 
 
+    public function randomizeProduct(Request $request)
+    {
+        $productId = $request->input('product_id');
+        dd($productId);
+        $invoiceAmount = floatval(session('invoice.invoice_amount'));
+        $site_id = session('customer.site_id');
+        $site = Website::findOrFail($site_id);
+        DynamicDatabaseService::connect($site);
+    
+        $product = DB::connection($this->connectionType)
+            ->table($this->productTable)
+            ->select('id', 'name', 'slug', 'default_wc', 'default_price', 'extra_word', 'ta_standard', 'ta_express', 'q_standard', 'q_premium', 'q_expert', 'img_price')
+            ->where('published', 1)
+            ->where('id', $productId)
+            ->first();
+    
+        if (!$product) {
+            return response()->json(['status' => false, 'message' => 'Product not found'], 404);
+        }
+    
+        $readyProducts = session('ready_products', []);
+    
+        $targetProduct = collect($readyProducts)->firstWhere('id', $productId);
+        $turnaround = $targetProduct['turnaround'] ?? 'ta_standard';
+        $quality = $targetProduct['quality'] ?? 'q_standard';
+    
+        $otherProducts = collect($readyProducts)->filter(fn ($p) => $p['id'] != $product->id)->values();
+
+        $imageCount = rand(1, 15);
+        $wordCount = $product->default_wc;
+
+        $qlty_factor = match ($quality) {
+            'q_premium' => 0.1,
+            'q_expert' => 0.25,
+            default => 0,
+        };
+
+        $remainingAmount = $invoiceAmount;
+        foreach ($otherProducts as $item) {
+            $remainingAmount -= $item['unit_price'];
+        }
+
+        $maxWordCount = 30000;
+        $minWordCount = $product->default_wc;
+        $maxImageCount = 15;
+        $minImageCount = 1;
+
+        $maxIterations = 500;
+        $iterations = 0;
+        
+        while ($iterations++ < $maxIterations) {
+            $wc_price = max(0, (($wordCount - $product->default_wc) / 25) * $product->extra_word);
+            $img_total = max(0, ($imageCount - 1) * $product->img_price);
+            $ta_total = $turnaround === 'ta_express' ? 25 : 0;
+
+            $base_total = $product->default_price + $wc_price + $img_total + $ta_total;
+            $unit_price = $base_total + ($base_total * $qlty_factor);
+
+            if (abs($unit_price - $remainingAmount) <= 0.1) {
+                break;
+            }
+        
+            if ($unit_price < $remainingAmount) {
+                if ($imageCount < min(15, $maxImageCount)) {
+                    $imageCount++;
+                } elseif ($wordCount + 25 <= $maxWordCount) {
+                    $wordCount += 25;
+                } else {
+                    break;
+                }                
+            } elseif ($unit_price > $remainingAmount) {
+                if ($wordCount - 25 >= $minWordCount) {
+                    $wordCount -= 25;
+                } elseif ($imageCount > $minImageCount) {
+                    $imageCount--;
+                } else {
+                    break;
+                }
+            }            
+        }
+
+        $updatedProduct = [
+            'id' => $product->id,
+            'wordcount' => $wordCount,
+            'imagecount' => $imageCount,
+            'quantity' => 1,
+            'turnaround' => $turnaround,
+            'quality' => $quality,
+            'unit_price' => $unit_price,
+            'project_title' => $targetProduct['project_title'] ?? null,
+            'reference_link' => $targetProduct['reference_link'] ?? null,
+            'subject' => $targetProduct['subject'] ?? null,
+            'preferred_voice' => $targetProduct['preferred_voice'] ?? null,
+            'preferred_writing_style' => $targetProduct['preferred_writing_style'] ?? null,
+            'brand_name' => $targetProduct['brand_name'] ?? null,
+            'audience' => $targetProduct['audience'] ?? null,
+            'note' => $targetProduct['note'] ?? null
+        ];
+    
+        $foundIndex = collect($readyProducts)->search(fn ($p) => $p['id'] == $productId);
+        if ($foundIndex !== false) {
+            $readyProducts[$foundIndex] = $updatedProduct;
+        } else {
+            $readyProducts[] = $updatedProduct;
+        }
+    
+        session()->put('ready_products', $readyProducts);
+        $productIds = collect($readyProducts)->pluck('id')->toArray();
+    
+        $productsFromDb = DB::connection($this->connectionType)->table($this->productTable)
+            ->select('id', 'name', 'slug', 'default_wc', 'default_price', 'extra_word', 'ta_standard', 'ta_express', 'q_standard', 'q_premium', 'q_expert', 'img_price')
+            ->whereIn('id', $productIds)
+            ->get()
+            ->keyBy('id');
+    
+        $recalculatedProducts = collect($readyProducts)->map(function ($sessionProduct) use ($productsFromDb) {
+            $product = $productsFromDb->get($sessionProduct['id']);
+            if (!$product) {
+                return null;
+            }
+
+            $product->turnaround = $sessionProduct['turnaround'] ?? 'ta_standard';
+            $product->quality = $sessionProduct['quality'] ?? 'q_standard';
+            $product->unit_price = $sessionProduct['unit_price'] ?? 0.00;
+            $product->wordcount = $sessionProduct['wordcount'] ?? 1;
+            $product->imagecount = $sessionProduct['imagecount'] ?? $sessionProduct['image_count'] ?? 1;
+            $product->quantity = $sessionProduct['quantity'] ?? 1;
+    
+            $product->can_edit_price = 1;
+            $product->remaining_days = 0;
+            $product->project_title = $sessionProduct['project_title'] ?? null;
+            $product->reference_link = $sessionProduct['reference_link'] ?? null;
+            $product->subject = $sessionProduct['subject'] ?? null;
+            $product->preferred_voice = $sessionProduct['preferred_voice'] ?? null;
+            $product->preferred_writing_style = $sessionProduct['preferred_writing_style'] ?? null;
+            $product->brand_name = $sessionProduct['brand_name'] ?? null;
+            $product->audience = $sessionProduct['audience'] ?? null;
+            $product->note = $sessionProduct['note'] ?? null;
+    
+            $product->param_status = !empty($product->project_title) && !empty($product->note) && !empty($product->subject);
+    
+            return $product;
+        })->filter()->values();
+    
+        $modelType = $site->businessModel->model_type;
+        $totalAmount = $recalculatedProducts->sum('unit_price');
+        session(['current_amount' => $totalAmount]);
+    
+        $tableRows = view("invoice.{$modelType}.random_product_rows", [
+            'products' => $recalculatedProducts,
+            'site' => $site,
+            'total' => $totalAmount
+        ])->render();
+    
+        return response()->json([
+            'tableRows' => $tableRows,
+            'total' => $totalAmount
+        ]);
+    }
+    
    
     public function addProducts(Request $request)
     {
@@ -332,8 +492,7 @@ class LaravelController extends Controller
         ]);
     }
     
-    
-    
+   
     
    public function removeProduct(Request $request)
     {
@@ -692,7 +851,8 @@ class LaravelController extends Controller
         ]);
         
     }
-    
+
+
 
     public function getProduct(Request $request)
     {
@@ -721,7 +881,6 @@ class LaravelController extends Controller
         ]);
     }
 
-    
 
     private function smartPagination($currentPage, $totalPages)
     {
@@ -763,7 +922,6 @@ class LaravelController extends Controller
         $invoice_data['customer_name'] = $request->input('customer_name');
         $invoice_data['customer_mobile'] = $request->input('customer_mobile');
         $invoice_data['customer_email'] = $request->input('customer_email');
-        $invoice_data['company_email'] = $request->input('company_email');
         $invoice_data['invoice_amount'] = $request->input('invoice_amount');
         $invoice_data['current_amount'] = $request->input('current_amount');
         $invoice_data['discount_amount'] = $request->input('discount_amount');
@@ -820,7 +978,6 @@ class LaravelController extends Controller
             if ($sessionData) {
                 $turnaroundCode = $sessionData['turnaround'] ?? 'ta_standard';
                 $qualityCode = $sessionData['quality'] ?? 'q_standard';
-    
                 $product->unit_price = $sessionData['unit_price'] ?? null;
                 $product->wordcount = $sessionData['wordcount'] ?? null;
                 $product->imagecount = $sessionData['imagecount'] ?? 1;

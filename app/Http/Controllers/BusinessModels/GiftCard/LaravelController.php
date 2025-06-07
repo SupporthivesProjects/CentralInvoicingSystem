@@ -590,7 +590,6 @@ class LaravelController extends Controller
         $invoice_data['customer_name'] = $request->input('customer_name');
         $invoice_data['customer_mobile'] = $request->input('customer_mobile');
         $invoice_data['customer_email'] = $request->input('customer_email');
-        $invoice_data['company_email'] = $request->input('company_email');
         $invoice_data['invoice_amount'] = $request->input('invoice_amount');
         $invoice_data['current_amount'] = $request->input('current_amount');
         $invoice_data['discount_amount'] = $request->input('discount_amount');
@@ -611,58 +610,61 @@ class LaravelController extends Controller
     
         $productDataArray = $request->input('product_data', []);
         DynamicDatabaseService::connect($site);
-    
+
         $productIds = [];
         $customPrices = [];
-    
+
         foreach ($productDataArray as $item) {
             $data = json_decode($item, true);
             if (!empty($data['product_id'])) {
                 $productIds[] = $data['product_id'];
-                $customPrices[$data['product_id']] = $data['unit_price'];
+                $customPrices[$data['product_id']] = [
+                    'product_name' => $data['product_name'],
+                    'unit_rrp' => $data['unit_rrp'],
+                    'unit_discount' => $data['unit_discount'],
+                    'unit_price' => $data['unit_price'],
+                ];
             }
         }
-    
-        
+
         $products = DB::connection($this->connectionType)->table($this->productTable)
             ->whereIn('id', $productIds)
             ->select('id', 'name', 'slug', 'category_id', 'card_currency', 'rrp', 'discount', 'unit_price', 'current_stock')
             ->get()
-            ->sortBy(function ($product) use ($productIds) {
-                return array_search($product->id, $productIds);
-            })
+            ->sortBy(fn($product) => array_search($product->id, $productIds))
             ->values()
             ->map(function ($product) use ($customPrices) {
-                $product->unit_price = $customPrices[$product->id] ?? $product->unit_price;
+                $product->name = $customPrices[$product->id]['product_name'];
+                $product->rrp = $customPrices[$product->id]['unit_rrp'];
+                $product->discount = $customPrices[$product->id]['unit_discount'];
+                $product->unit_price = $customPrices[$product->id]['unit_price'];
                 return $product;
             });
-            
+
         $products->each(function ($product) {
-            $product->category_name = DB::connection($this->connectionType)->table('categories')->where('id', $product->category_id)->value('name') ?? 'unknown';
+            $product->category_name = DB::connection($this->connectionType)
+                ->table('categories')
+                ->where('id', $product->category_id)
+                ->value('name') ?? 'unknown';
         });
         
-       
         $invoice_data['currency'] =  site_currency();
-    
         $invoice_data['products'] = $products;
         $invoice_data['product_ids'] = $productIds;
-    
+
         $modelType = strtolower($site->businessModel->model_type);
         $siteIdInWords = numberToWords($site->id);
         $viewPath = "websites.{$modelType}.{$siteIdInWords}";
-      
-        try {
 
+        try {
             $this->updateProductPrice($productDataArray);
             InvoiceController::createInvoiceHistory($invoice_data);
-            $pdf = PDF::loadView($viewPath, $invoice_data);
-            $pdf->setPaper('A4', 'portrait');
-            if ($request->filled('invoice_file_name')) {
-                $filename = $request->input('invoice_file_name') . '.pdf';
-            } else {
-                $filename = $invoice_data['invoice_number'] . '.pdf';
-            }            
-            
+            $pdf = PDF::loadView($viewPath, $invoice_data)->setPaper('A4', 'portrait');
+
+            $filename = $request->filled('invoice_file_name')
+                ? $request->input('invoice_file_name') . '.pdf'
+                : $invoice_data['invoice_number'] . '.pdf';
+
             return $pdf->download($filename);
         } catch (\Illuminate\View\ViewNotFoundException $e) {
             abort(500, 'Please set up or upload your invoice template.');
@@ -678,68 +680,74 @@ class LaravelController extends Controller
             $data = json_decode($item, true);
     
             if (!empty($data['product_id']) && isset($data['unit_price'])) {
-                $product_id = $data['product_id'];
-                $new_name = $data['product_name'];
-                $new_price = floatval($data['unit_price']);
-                $new_rrp = isset($data['product_rrp']) ? floatval($data['product_rrp']) : null;
+                $product_id   = $data['product_id'];
+                $new_name     = $data['product_name'];
+                $new_price    = floatval($data['unit_price']);
+                $new_rrp      = isset($data['product_rrp']) ? floatval($data['product_rrp']) : null;
                 $new_discount = isset($data['product_discount']) ? floatval($data['product_discount']) : null;
     
                 $product = DB::connection($this->connectionType)
-                    ->table($this->productTable)
-                    ->where('id', $product_id)
-                    ->first();
+                             ->table($this->productTable)
+                             ->where('id', $product_id)
+                             ->first();
     
-                if (!$product) continue;
-
-                $current_name = $product->product_name;
-                $current_price = floatval($product->unit_price);
-                $current_rrp = isset($product->rrp) ? floatval($product->rrp) : null;
+                if (! $product) {
+                    continue;
+                }
+    
+                $current_name     = $product->name;
+                $current_price    = floatval($product->unit_price);
+                $current_rrp      = isset($product->rrp) ? floatval($product->rrp) : null;
                 $current_discount = isset($product->discount) ? floatval($product->discount) : null;
     
                 $updateData = [];
-
+    
                 if ($current_name !== $new_name) {
                     $updateData['name'] = $new_name;
                 }
+    
                 if ($current_price !== $new_price) {
                     $updateData['unit_price'] = $new_price;
                 }
+    
                 if ($new_rrp !== null && $current_rrp !== $new_rrp) {
                     $updateData['rrp'] = $new_rrp;
                 }
+    
                 if ($new_discount !== null && $current_discount !== $new_discount) {
                     $updateData['discount'] = $new_discount;
                 }
+    
                 if (empty($updateData)) {
-                    continue; // Nothing to update
+                    continue;
                 }
     
                 $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
-                    ->where('product_id', $product_id)
-                    ->orderByDesc('last_price_changed')
-                    ->first();
+                                   ->where('product_id', $product_id)
+                                   ->orderByDesc('last_price_changed')
+                                   ->first();
     
                 $shouldUpdate = false;
     
-                if (!$lastUpdate) {
+                if (! $lastUpdate) {
                     $shouldUpdate = true;
                 } else {
-                    $monthsSinceLastChange = Carbon::parse($lastUpdate->last_price_changed)->diffInMonths(now());
-                    if ($monthsSinceLastChange >= 3) {
+                    $monthsSinceLast = Carbon::parse($lastUpdate->last_price_changed)->diffInMonths(now());
+                    if ($monthsSinceLast >= 3) {
                         $shouldUpdate = true;
                     }
                 }
     
                 if ($shouldUpdate) {
                     DB::connection($this->connectionType)
-                        ->table($this->productTable)
-                        ->where('id', $product_id)
-                        ->update($updateData);
+                      ->table($this->productTable)
+                      ->where('id', $product_id)
+                      ->update($updateData);
     
                     ProductPriceHistory::create([
-                        'site_id' => $site_id,
-                        'product_id' => $product_id,
-                        'unit_price' => $new_price,
+                        'site_id'            => $site_id,
+                        'product_id'         => $product_id,
+                        'unit_price'         => $new_price,
                         'last_price_changed' => now(),
                     ]);
                 }

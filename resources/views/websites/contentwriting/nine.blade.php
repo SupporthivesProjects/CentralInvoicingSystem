@@ -115,7 +115,7 @@
                                     <td style="width: 10%; text-align: center; font-family: arial; font-size: 10px; font-weight: bold; border: 1px solid black;">SR. NO.</td>
                                     <td style="width: 60%; text-align: center; font-family: arial; font-size: 10px; font-weight: bold; border: 1px solid black;">PRODUCT DESCRIPTION</td>
                                     <td style="width: 15%; text-align: center; font-family: arial; font-size: 10px; font-weight: bold; border: 1px solid black;">QUANITY</td>
-                                    <td style="width: 15%; text-align: center; font-family: arial; font-size: 10px; font-weight: bold; border: 1px solid black;">UNIT PRICE</td>
+                                    <td style="width: 15%; text-align: center; font-family: arial; font-size: 10px; font-weight: bold; border: 1px solid black;">TOTAL PRICE</td>
                                 </tr>
 
                                 @foreach($products as $product)

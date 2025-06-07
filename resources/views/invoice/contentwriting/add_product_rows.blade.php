@@ -18,11 +18,13 @@
     </td>
     <td class="text-center" style="padding-left: 10px;padding-right: 10px;">
         <div class="input-group input-group-sm justify-content-center">
-            <button class="btn btn-outline-secondary wc-decrease-100" type="button" data-product-id="{{ $product->id }}">«</button>
-            <button class="btn btn-outline-primary wc-decrease-25" type="button" data-product-id="{{ $product->id }}">-</button>
+            <button class="btn btn-outline-secondary wc-decrease-100" type="button" data-product-id="{{ $product->id }}" data-bs-toggle="tooltip" title="Decrease by 100">«</button>
+            <button class="btn btn-outline-primary wc-decrease-25" type="button" data-product-id="{{ $product->id }}" data-bs-toggle="tooltip" title="Decrease by 25">-</button>
+            
             <input type="text" readonly class="form-control text-center wc-input border-primary" data-product-id="{{ $product->id }}" value="{{ $product->default_wc }}" step="25" min="{{ $product->default_wc }}">
-            <button class="btn btn-outline-primary wc-increase-25" type="button" data-product-id="{{ $product->id }}">+</button>
-            <button class="btn btn-outline-secondary wc-increase-100" type="button" data-product-id="{{ $product->id }}">»</button>
+            
+            <button class="btn btn-outline-primary wc-increase-25" type="button" data-product-id="{{ $product->id }}" data-bs-toggle="tooltip" title="Increase by 25">+</button>
+            <button class="btn btn-outline-secondary wc-increase-100" type="button" data-product-id="{{ $product->id }}" data-bs-toggle="tooltip" title="Increase by 100">»</button>
         </div>
     </td>
    

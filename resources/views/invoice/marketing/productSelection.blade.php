@@ -147,29 +147,36 @@
                     <i class="bi bi-stars text-primary fs-4 me-2"></i>
                     <h4 class="mb-0 fw-semibold text-dark">Build Your Product & Invoice</h4>
                 </div>
-
                 <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
-                        <button type="button" class="btn btn-outline-primary d-flex align-items-center gap-1 me-1" 
-                                data-bs-toggle="modal" data-bs-target="#addmoreproducts"  onclick="customizeProducts('onload')">
-                                <i class="fas fa-plus-square"></i> Add Products
+                       <!-- Add Products -->
+                        <button type="button" class="btn btn-outline-primary d-flex align-items-center gap-1 me-1"
+                                onclick="customizeProducts('onload')" 
+                                data-bs-toggle="tooltip" title="Add more products manually">
+                            <i class="fas fa-plus-square"></i> Add Products
                         </button>
 
+                        <!-- Randomize -->
                         <button type="button" class="btn btn-outline-success d-flex align-items-center gap-1"
-                                onclick="randomizeProducts('semi_random')">
-                                <i class="fas fa-random"></i> Randomize
+                                onclick="randomizeProducts('semi_random')" 
+                                data-bs-toggle="tooltip" title="Auto-select products randomly">
+                            <i class="fas fa-random"></i> Randomize
                         </button>
 
+                        <!-- Clear Filter -->
                         <button type="button" class="btn btn-outline-secondary d-flex align-items-center gap-1 me-1"
-                                onclick="clearRandomizedFilter(this)">
-                            <i class="fa-solid fa-filter-circle-xmark"></i>
+                                onclick="clearRandomizedFilter(this)" 
+                                data-bs-toggle="tooltip" title="Remove all filters and randomized items">
+                            <i class="fa-solid fa-filter-circle-xmark"></i> Clear
                         </button>
 
+                        <!-- Generate Invoice -->
                         <button type="button" class="btn btn-primary d-flex align-items-center gap-1 me-1"
-                                onclick="generateInvoice(event)">
+                                onclick="generateInvoice(event)" 
+                                data-bs-toggle="tooltip" title="Generate the invoice for selected products">
                             <i class="bi bi-receipt-cutoff"></i> Generate Invoice
                         </button>
-                    </div>
 
+                    </div>
 
             </div>
 
@@ -627,7 +634,7 @@
     function customizeProducts(search_type = 'search', page = 1) {
         console.log("Triggered with type:", search_type);
         console.log("customizeRequest:", customizeRequest);
-
+        $('#addmoreproducts').modal('show');
         if (search_type === 'onload' && customizeRequest !== null) {
             console.log("Blocked onload request because a request is ongoing");
             return;

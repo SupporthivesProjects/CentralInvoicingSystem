@@ -556,7 +556,6 @@ class LaravelController extends Controller
         $invoice_data['customer_name'] = $request->input('customer_name');
         $invoice_data['customer_mobile'] = $request->input('customer_mobile');
         $invoice_data['customer_email'] = $request->input('customer_email');
-        $invoice_data['company_email'] = $request->input('company_email');
         $invoice_data['invoice_amount'] = $request->input('invoice_amount');
         $invoice_data['current_amount'] = $request->input('current_amount');
         $invoice_data['discount_amount'] = $request->input('discount_amount');

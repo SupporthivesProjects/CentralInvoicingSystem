@@ -18,12 +18,15 @@
     </td>
     <td class="text-center" style="padding-left: 10px;padding-right: 10px;">
         <div class="input-group input-group-sm justify-content-center">
-            <button class="btn btn-outline-secondary wc-decrease-100" type="button" data-product-id="{{ $product->id }}">«</button>
-            <button class="btn btn-outline-primary wc-decrease-25" type="button" data-product-id="{{ $product->id }}">-</button>
+            <button class="btn btn-outline-secondary wc-decrease-100" type="button" data-product-id="{{ $product->id }}" data-bs-toggle="tooltip" title="Decrease by 100">«</button>
+            <button class="btn btn-outline-primary wc-decrease-25" type="button" data-product-id="{{ $product->id }}" data-bs-toggle="tooltip" title="Decrease by 25">-</button>
+            
             <input type="text" readonly class="form-control text-center wc-input border-primary" data-product-id="{{ $product->id }}" value="{{ $product->wordcount }}" step="25" min="{{ $product->default_wc }}">
-            <button class="btn btn-outline-primary wc-increase-25" type="button" data-product-id="{{ $product->id }}">+</button>
-            <button class="btn btn-outline-secondary wc-increase-100" type="button" data-product-id="{{ $product->id }}">»</button>
+            
+            <button class="btn btn-outline-primary wc-increase-25" type="button" data-product-id="{{ $product->id }}" data-bs-toggle="tooltip" title="Increase by 25">+</button>
+            <button class="btn btn-outline-secondary wc-increase-100" type="button" data-product-id="{{ $product->id }}" data-bs-toggle="tooltip" title="Increase by 100">»</button>
         </div>
+
     </td>
     <td class="text-center p-2">
         <select name="turnaround" class="form-select form-select-sm text-center mx-0 turnaround-select input-or-select " data-product-id="{{ $product->id }}">
@@ -95,6 +98,41 @@
     tooltipTriggerList.map(function (tooltipTriggerEl) {
         return new bootstrap.Tooltip(tooltipTriggerEl);
     });
+</script>
+
+<script>
+    $(document).off('click', '.randomize-product').on('click', '.randomize-product', function () {
+        const $button = $(this);
+        const productId = $button.data('product-id');
+
+        $button.prop('disabled', true);
+        $button.html('<i class="fas fa-spinner fa-spin"></i>');
+        $('[data-bs-toggle="tooltip"]').tooltip('hide');
+
+        $.ajax({
+            url: "{{ route('randomize.product') }}",
+            method: "POST",
+            data: {
+                product_id: productId,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(response) {
+                $('#randomize-product-table-body').html(response.tableRows);
+                calculateTotalPrice();
+            },
+            error: function() {
+                toastr.error('Something went wrong. Please try again.');
+                calculateTotalPrice();
+            },
+            complete: function() {
+                toastr.success('Randomize product completed.');
+                $button.html('<i class="fa fa-random"></i>');
+                $('[data-bs-toggle="tooltip"]').tooltip();
+                calculateTotalPrice();
+            }
+        });
+    });
+
 </script>
 <script>
     function getProductParams(productId, element) {
