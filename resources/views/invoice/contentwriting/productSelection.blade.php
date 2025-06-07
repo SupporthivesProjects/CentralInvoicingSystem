@@ -698,6 +698,9 @@
                     $('#current_amount').val(currentAmount.toFixed(2));
                     $('#discount_amount').prop('readonly', false).prop('type', 'number');
                     calculateTotalPrice();
+                    if (Math.abs(currentAmount - invoiceAmount) >= 10) {
+                        toastr.info("Try product-wise randomization for a closer match to invoice amount.");
+                    }
                 }
             },
             error: function (xhr, textStatus) {

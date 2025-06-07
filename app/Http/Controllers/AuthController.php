@@ -34,8 +34,8 @@ class AuthController extends Controller
 
         // Attempt login
         if (Auth::attempt($request->only('email', 'password'))) {
-            return redirect()->route('dashboard')->with('success', 'Login successful!');
-        }
+            return redirect()->intended(route('dashboard'))->with('success', 'Login successful!');
+        }        
 
         return back()->with('error', 'Invalid credentials');
     }

@@ -301,15 +301,36 @@ class LaravelController extends Controller
                 }
         
                 if ($wordCount + 25 <= $maxWordCount) {
-                    $wordCount += ($diff > 20) ? 25 : (($diff > 10) ? 10 : 5);
+                    $wordCount += 25;
                 } else {
                     break;
                 }
-        
             } else {
+                
                 if ($wordCount - 25 >= $minWordCount) {
-                    $wordCount -= 25;
-                    continue;
+                    $nextWordCount25 = $wordCount - 25;
+                    $priceWith25 = $product->default_price + max(0, (($nextWordCount25 - $product->default_wc) / 25) * $product->extra_word) + $img_total + $ta_total;
+                    $priceWith25 += $priceWith25 * $qlty_factor;
+        
+                    if ($priceWith25 < $remainingAmount) {
+                        $nextWordCount5 = $wordCount - 5;
+                        if ($nextWordCount5 >= $minWordCount) {
+                            $priceWith5 = $product->default_price + max(0, (($nextWordCount5 - $product->default_wc) / 25) * $product->extra_word) + $img_total + $ta_total;
+                            $priceWith5 += $priceWith5 * $qlty_factor;
+        
+                            if ($priceWith5 >= $remainingAmount && abs($remainingAmount - $priceWith5) < abs($diff)) {
+                                $wordCount = $nextWordCount5;
+                                continue;
+                            } else {
+                                break;
+                            }
+                        } else {
+                            break;
+                        }
+                    } else {
+                        $wordCount = $nextWordCount25;
+                        continue;
+                    }
                 }
         
                 if ($imageCount > $minImageCount) {
@@ -336,7 +357,6 @@ class LaravelController extends Controller
             }
         }
         
-
         $updatedProduct = [
             'id' => $product->id,
             'wordcount' => $wordCount,
