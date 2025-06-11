@@ -164,7 +164,7 @@ class LaravelController extends Controller
                     $bestMatch = $finalProducts;
                     $bestTotal = $currentTotal;
                     $bestDistance = $distance;
-                    if ($currentTotal >= ($invoiceAmount * 0.90)) break;
+                    if ($currentTotal >= ($minTotal)) break;
                 }
             } else {
                 $selected = [];
@@ -377,8 +377,23 @@ class LaravelController extends Controller
                     continue;
                 }
     
-                if ($wordCount + 25 <= $maxWordCount) {
-                    $wordCount += 25;
+                $increment = 25; 
+                if ($diff > 1000) {
+                    $increment = 500;
+                } elseif ($diff > 750) {
+                    $increment = 300;
+                } elseif ($diff > 500) {
+                    $increment = 200;
+                } elseif ($diff > 300) {
+                    $increment = 150;
+                } elseif ($diff > 200) {
+                    $increment = 100;
+                } elseif ($diff > 100) {
+                    $increment = 50;
+                }
+
+                if ($wordCount + $increment <= $maxWordCount) {
+                    $wordCount += $increment;
                 } else {
                     break;
                 }

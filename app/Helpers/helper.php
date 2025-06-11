@@ -98,6 +98,26 @@ if (!function_exists('site_currency')) {
     }
 }
 
+if (!function_exists('site_currency_code')) {
+    function site_currency_code()
+    {
+        $site_id = session('customer.site_id');
+        if (!$site_id) {
+            return 'USD';
+        }
+        try {
+            $site = \App\Models\Website::findOrFail($site_id);
+            \App\Services\DynamicDatabaseService::connect($site);
+            $site_currency = DB::connection('dynamic')->table('business_settings')->where('type', 'system_default_currency')->first()
+                ?? DB::connection('dynamic')->table('business_settings')->where('type', 'home_default_currency')->first();
+            $currency = DB::connection('dynamic')->table('currencies')->where('id', $site_currency->value)->first();
+            return $currency->code ?? 'USD';
+        } catch (\Exception $e) {
+            return 'USD';
+        }
+    }
+}
+
 
 
 if (!function_exists('admin_currency')) {
