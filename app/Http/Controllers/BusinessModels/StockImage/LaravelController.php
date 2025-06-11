@@ -114,6 +114,7 @@ class LaravelController extends Controller
     foreach ($productsData as $productData) {
         $productId = $productData['product_id'];
         $unitPrice = floatval($productData['unit_price']); // Changed from 'price' to 'unit_price'
+        //dd($unitPrice);
 
         // Handle custom pack (ID = 0) separately
         if ($productId == '0') {
@@ -182,7 +183,10 @@ class LaravelController extends Controller
     // Add custom products
     foreach ($customProducts as $customProduct) {
         $customPrice = $customProduct['price'];
-        $calculatedCredits = round($customPrice / 5.75); // 1 credit = 5.75 amount
+        $calculation = round(($customPrice / 5.75) * 10) / 10;
+        $calculation_2 = round($calculation * 2) / 2;
+        $calculatedCredits = (float)number_format($calculation_2, 1, '.', '');
+        //dd($calculation, $calculatedCredits);
 
         $customProductObj = (object)[
             'id' => 0,

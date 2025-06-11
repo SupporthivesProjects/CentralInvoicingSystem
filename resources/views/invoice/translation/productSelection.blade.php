@@ -212,7 +212,8 @@
 
                     <div class="card-body">
                         <div class="container">
-                            {{-- <div class="row g-3 justify-content-center mb-3">
+                            <div class="row g-3 justify-content-center mb-3">
+                                {{--
                                 <div class="col-md-3">
                                     <div class="d-flex flex-column align-items-center h-100">
                                         <small class="text-muted fw-semibold mb-2">No. of Products</small>
@@ -240,19 +241,20 @@
                                                 id="hidden_randomize_price_to_input_id">
                                         </div>
                                     </div>
-                                </div>
+                                </div>--}}
 
                                 <div class="col-md-3">
                                     <div class="d-flex flex-column align-items-center h-100">
                                         <small class="text-muted fw-semibold mb-2">Product Category</small>
-                                        <select class="form-select w-100 h-100" name="category_id" id="category_id">
-                                            <option value="" selected disabled>Not Applicable</option>
-
+                                        <select class="form-select w-100 h-100" name="filter_type" id="filter_type" onchange="randomizeProducts('semi_random')">
+                                            <option value="">Both (Balanced)</option>
+                                            <option value="certified">Certified Translation Only</option>
+                                            <option value="standard">Standard Translation Only</option>
                                         </select>
                                     </div>
                                 </div>
 
-                            </div> --}}
+                            </div>
 
                         </div>
                         <!-- Product Table -->
@@ -642,6 +644,7 @@
                     invoice_amount: parseFloat($('#invoice_amount').val()) || 0,
                     price_from: $('#hidden_randomize_price_from_input_id').val(),
                     price_to: $('#hidden_randomize_price_to_input_id').val(),
+                    filter_type: $('#filter_type').val(),
                     //category_id: $('#category_id').val().trim(),
                     noOfProducts: $('#noOfProducts').val()
                 },

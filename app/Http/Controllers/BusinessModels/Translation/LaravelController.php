@@ -38,104 +38,52 @@ class LaravelController extends Controller
     {
         $site_id = $request->get('site_id');
         $invoiceAmount = floatval($request->get('invoice_amount'));
-        //$invoiceAmount = floatval(5);
+        $filterType = $request->get('filter_type'); // 'certified', 'standard', or null/empty for both
 
-        // Add minimum pages for each type
-        $MIN_CERTIFIED_PAGES = 1;
-        $MIN_STANDARD_PAGES = 5; // Ensure at least some standard pages
-
-    if (!$invoiceAmount || $invoiceAmount <= 0) {
-        return response()->json([
-            'tableRows' => '',
-            'total' => 0,
-            'message' => 'Please provide a valid invoice amount'
-        ]);
-    }
-
-    $site = Website::findOrFail($site_id);
-    DynamicDatabaseService::connect($site);
-
-    // Get the two translation products from database
-    $translationProducts = DB::connection($this->connectionType)->table($this->productTable)
-        ->select('id', 'category_id', 'name', 'unit_price', 'slug')
-        ->where('published', 1)
-        ->whereIn('name', ['Certified Translation', 'Standard Professional Translation'])
-        ->get();
-
-    if ($translationProducts->count() < 1) {
-        return response()->json([
-            'tableRows' => '',
-            'total' => 0,
-            'message' => 'Translation products not found in the database'
-        ]);
-    }
-
-    // Find our translation products
-    $certifiedTranslation = $translationProducts->where('name', 'Certified Translation')->first();
-    $standardTranslation = $translationProducts->where('name', 'Standard Professional Translation')->first();
-
-    // Define base prices (in case products are not found)
-    $certifiedPrice = $certifiedTranslation ? floatval($certifiedTranslation->unit_price) : 31.67;
-    $standardPrice = $standardTranslation ? floatval($standardTranslation->unit_price) : 0.10;
-
-    // Calculate possible combinations that MEET OR EXCEED invoice amount
-    $bestMatch = null;
-    $bestTotal = PHP_FLOAT_MAX; // We want the lowest total that still exceeds invoice amount
-    $bestDistance = PHP_FLOAT_MAX;
-
-    // ALWAYS try to include both types of translations
-    // Start with the combination approach first (preferred)
-    if ($certifiedTranslation && $standardTranslation) {
-        // Try different numbers of certified pages
-        $maxCertPages = ceil($invoiceAmount / $certifiedPrice) + 1; // +1 to ensure we explore options that exceed
-
-        for ($certPages = 1; $certPages <= $maxCertPages; $certPages++) {
-            // Calculate how much is left after certified pages
-            $certTotal = $certPages * $certifiedPrice;
-            $remainingAmount = $invoiceAmount - $certTotal;
-
-            // If we need more to reach invoice amount, add standard pages
-            $stdPages = 0;
-            if ($remainingAmount > 0) {
-                $stdPages = ceil($remainingAmount / $standardPrice);
-            } else {
-                // We already exceed with just certified pages, try at least 1 standard page
-                $stdPages = 1;
-            }
-
-            $total = ($certPages * $certifiedPrice) + ($stdPages * $standardPrice);
-
-            // We prefer totals that meet or exceed invoice amount by smallest margin
-            if ($total >= $invoiceAmount) {
-                $distance = $total - $invoiceAmount;
-
-                if ($distance < $bestDistance) {
-                    $bestDistance = $distance;
-                    $bestTotal = $total;
-                    $bestMatch = [
-                        [
-                            'product' => $certifiedTranslation,
-                            'pages' => $certPages,
-                            'total' => $certPages * $certifiedPrice
-                        ],
-                        [
-                            'product' => $standardTranslation,
-                            'pages' => $stdPages,
-                            'total' => $stdPages * $standardPrice
-                        ]
-                    ];
-                }
-            }
+        if (!$invoiceAmount || $invoiceAmount <= 0) {
+            return response()->json([
+                'tableRows' => '',
+                'total' => 0,
+                'message' => 'Please provide a valid invoice amount'
+            ]);
         }
-    }
 
-    // If we couldn't find a good combination match, try only Certified Translation
-    if (!$bestMatch && $certifiedTranslation) {
-        $certPages = ceil($invoiceAmount / $certifiedPrice);
-        $total = $certPages * $certifiedPrice;
+        $site = Website::findOrFail($site_id);
+        DynamicDatabaseService::connect($site);
 
-        // Only use if it meets or exceeds invoice amount
-        if ($total >= $invoiceAmount) {
+        // Get the two translation products from database
+        $translationProducts = DB::connection($this->connectionType)->table($this->productTable)
+            ->select('id', 'category_id', 'name', 'unit_price', 'slug')
+            ->where('published', 1)
+            ->whereIn('name', ['Certified Translation', 'Standard Professional Translation'])
+            ->get();
+
+        if ($translationProducts->count() < 1) {
+            return response()->json([
+                'tableRows' => '',
+                'total' => 0,
+                'message' => 'Translation products not found in the database'
+            ]);
+        }
+
+        // Find our translation products
+        $certifiedTranslation = $translationProducts->where('name', 'Certified Translation')->first();
+        $standardTranslation = $translationProducts->where('name', 'Standard Professional Translation')->first();
+
+        // Get prices from database (no static fallback values)
+        $certifiedPrice = $certifiedTranslation ? floatval($certifiedTranslation->unit_price) : null;
+        $standardPrice = $standardTranslation ? floatval($standardTranslation->unit_price) : null;
+
+        $bestMatch = null;
+        $bestTotal = PHP_FLOAT_MAX;
+        $bestDistance = PHP_FLOAT_MAX;
+
+        // Handle filter-specific logic
+        if ($filterType === 'certified' && $certifiedTranslation && $certifiedPrice) {
+            // Only Certified Translation
+            $certPages = ceil($invoiceAmount / $certifiedPrice);
+            $total = $certPages * $certifiedPrice;
+
             $bestTotal = $total;
             $bestMatch = [
                 [
@@ -145,103 +93,226 @@ class LaravelController extends Controller
                 ]
             ];
         }
-    }
+        elseif ($filterType === 'standard' && $standardTranslation && $standardPrice) {
+            // Only Standard Translation
+            $stdPages = ceil($invoiceAmount / $standardPrice);
+            $total = $stdPages * $standardPrice;
 
-    // If we still don't have a match, try only Standard Translation
-    if (!$bestMatch && $standardTranslation) {
-        $stdPages = ceil($invoiceAmount / $standardPrice);
-        $total = $stdPages * $standardPrice;
+            $bestTotal = $total;
+            $bestMatch = [
+                [
+                    'product' => $standardTranslation,
+                    'pages' => $stdPages,
+                    'total' => $total
+                ]
+            ];
+        }
+        else {
+            // Both translations with balanced approach
+            if ($certifiedTranslation && $standardTranslation && $certifiedPrice && $standardPrice) {
 
-        $bestTotal = $total;
-        $bestMatch = [
-            [
-                'product' => $standardTranslation,
-                'pages' => $stdPages,
-                'total' => $total
-            ]
-        ];
-    }
+                // Start with ratio-based approach for better balance
+                $ratios = [
+                    ['cert_ratio' => 0.3, 'std_ratio' => 0.7],
+                    ['cert_ratio' => 0.5, 'std_ratio' => 0.5],
+                    ['cert_ratio' => 0.7, 'std_ratio' => 0.3],
+                    ['cert_ratio' => 0.2, 'std_ratio' => 0.8],
+                    ['cert_ratio' => 0.8, 'std_ratio' => 0.2],
+                    ['cert_ratio' => 0.4, 'std_ratio' => 0.6],
+                    ['cert_ratio' => 0.6, 'std_ratio' => 0.4],
+                ];
 
-    if (!$bestMatch) {
+                foreach ($ratios as $ratio) {
+                    $certAmount = $invoiceAmount * $ratio['cert_ratio'];
+                    $stdAmount = $invoiceAmount * $ratio['std_ratio'];
+
+                    $certPages = max(1, ceil($certAmount / $certifiedPrice));
+                    $stdPages = max(1, ceil($stdAmount / $standardPrice));
+
+                    $total = ($certPages * $certifiedPrice) + ($stdPages * $standardPrice);
+
+                    if ($total >= $invoiceAmount) {
+                        $distance = $total - $invoiceAmount;
+
+                        // Prefer combinations with better balance (closer to 50/50 value ratio)
+                        $certValue = $certPages * $certifiedPrice;
+                        $stdValue = $stdPages * $standardPrice;
+                        $balanceScore = abs(($certValue / $total) - 0.5); // Lower is more balanced
+
+                        if ($distance < $bestDistance || ($distance == $bestDistance && $balanceScore < 0.3)) {
+                            $bestDistance = $distance;
+                            $bestTotal = $total;
+                            $bestMatch = [
+                                [
+                                    'product' => $certifiedTranslation,
+                                    'pages' => $certPages,
+                                    'total' => $certPages * $certifiedPrice
+                                ],
+                                [
+                                    'product' => $standardTranslation,
+                                    'pages' => $stdPages,
+                                    'total' => $stdPages * $standardPrice
+                                ]
+                            ];
+                        }
+                    }
+                }
+
+                // Only try sequential approach if ratio approach didn't find good combinations
+                if (!$bestMatch) {
+                    $maxCertPages = min(20, ceil($invoiceAmount / ($certifiedPrice * 2))); // More conservative limit
+
+                    for ($certPages = 2; $certPages <= $maxCertPages; $certPages++) { // Start from 2, not 1
+                        $certTotal = $certPages * $certifiedPrice;
+
+                        if ($certTotal < $invoiceAmount) {
+                            // Calculate needed standard pages to reach or exceed invoice amount
+                            $remainingAmount = $invoiceAmount - $certTotal;
+                            $stdPages = ceil($remainingAmount / $standardPrice);
+
+                            $total = $certTotal + ($stdPages * $standardPrice);
+
+                            if ($total >= $invoiceAmount) {
+                                $distance = $total - $invoiceAmount;
+
+                                if ($distance < $bestDistance) {
+                                    $bestDistance = $distance;
+                                    $bestTotal = $total;
+                                    $bestMatch = [
+                                        [
+                                            'product' => $certifiedTranslation,
+                                            'pages' => $certPages,
+                                            'total' => $certTotal
+                                        ],
+                                        [
+                                            'product' => $standardTranslation,
+                                            'pages' => $stdPages,
+                                            'total' => $stdPages * $standardPrice
+                                        ]
+                                    ];
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Fallback: try only certified if no combination worked
+            if (!$bestMatch && $certifiedTranslation && $certifiedPrice) {
+                $certPages = ceil($invoiceAmount / $certifiedPrice);
+                $total = $certPages * $certifiedPrice;
+
+                if ($total >= $invoiceAmount) {
+                    $bestTotal = $total;
+                    $bestMatch = [
+                        [
+                            'product' => $certifiedTranslation,
+                            'pages' => $certPages,
+                            'total' => $total
+                        ]
+                    ];
+                }
+            }
+
+            // Final fallback: try only standard
+            if (!$bestMatch && $standardTranslation && $standardPrice) {
+                $stdPages = ceil($invoiceAmount / $standardPrice);
+                $total = $stdPages * $standardPrice;
+
+                $bestTotal = $total;
+                $bestMatch = [
+                    [
+                        'product' => $standardTranslation,
+                        'pages' => $stdPages,
+                        'total' => $total
+                    ]
+                ];
+            }
+        }
+
+        if (!$bestMatch) {
+            return response()->json([
+                'tableRows' => '',
+                'total' => 0,
+                'message' => 'No matching combination found, try again please'
+            ]);
+        }
+
+        // Prepare product data
+        $selectedProducts = [];
+        foreach ($bestMatch as $item) {
+            $product = $item['product'];
+            $pages = $item['pages'];
+
+            // Skip products with 0 pages
+            if ($pages <= 0) {
+                continue;
+            }
+
+            // Check price editing permissions
+            $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
+                ->where('product_id', $product->id)
+                ->orderByDesc('last_price_changed')
+                ->first();
+
+            if ($lastUpdate) {
+                $lastPriceChanged = Carbon::parse($lastUpdate->last_price_changed);
+                $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
+                $remainingDays = now()->diffInDays($nextPriceChangeDate, false);
+                $product->remaining_days = round(max($remainingDays, 0));
+                $product->can_edit_price = now()->greaterThanOrEqualTo($nextPriceChangeDate) ? 1 : 0;
+            } else {
+                $product->can_edit_price = 1;
+                $product->remaining_days = 0;
+            }
+
+            // Add pages information
+            $product->pages = $pages;
+            $product->line_total = $pages * floatval($product->unit_price);
+            $product->urgent_amount = 24.24;
+
+            // Randomly decide if this product should have urgent amount (30% chance)
+            $product->is_urgent = rand(1, 100) <= 30; // 30% chance of being urgent
+
+            // If urgent, add urgent amount to line total
+            if ($product->is_urgent) {
+                $product->line_total += $product->urgent_amount;
+            }
+
+            $selectedProducts[] = $product;
+        }
+
+        // Store in session
+        $productList = collect($selectedProducts)->map(function ($product) {
+            return [
+                'id' => $product->id,
+                'unit_price' => $product->unit_price,
+                'pages' => $product->pages,
+                'is_urgent' => $product->is_urgent,
+                'urgent_amount' => $product->urgent_amount,
+            ];
+        })->toArray();
+
+        // Calculate total including urgent amounts
+        $finalTotal = collect($selectedProducts)->sum('line_total');
+
+        session()->forget('ready_products');
+        session()->put('ready_products', $productList);
+        session(['current_amount' => $finalTotal]);
+
+        // Generate view
+        $modelType = $site->businessModel->model_type;
+        $tableRows = view("invoice.{$modelType}.random_product_rows", [
+            'products' => $selectedProducts,
+            'site' => $site,
+            'total' => $bestTotal
+        ])->render();
+
         return response()->json([
-            'tableRows' => '',
-            'total' => 0,
-            'message' => 'No matching combination found, try again please'
+            'tableRows' => $tableRows,
+            'total' => $finalTotal
         ]);
     }
-
-    // Prepare product data
-    $selectedProducts = [];
-    foreach ($bestMatch as $item) {
-        $product = $item['product'];
-        $pages = $item['pages'];
-
-        // Skip products with 0 pages
-        if ($pages <= 0) {
-            continue;
-        }
-
-        // Get category name
-        // $product->category_name = DB::connection($this->connectionType)
-        //     ->table('categories')
-        //     ->where('id', $product->category_id)
-        //     ->value('name') ?? 'unknown';
-
-        // Check price editing permissions
-        $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
-            ->where('product_id', $product->id)
-            ->orderByDesc('last_price_changed')
-            ->first();
-
-        if ($lastUpdate) {
-            $lastPriceChanged = Carbon::parse($lastUpdate->last_price_changed);
-            $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
-            $remainingDays = now()->diffInDays($nextPriceChangeDate, false);
-            $product->remaining_days = round(max($remainingDays, 0));
-            $product->can_edit_price = now()->greaterThanOrEqualTo($nextPriceChangeDate) ? 1 : 0;
-        } else {
-            $product->can_edit_price = 1;
-            $product->remaining_days = 0;
-        }
-
-        // Add pages information
-        $product->pages = $pages;
-        $product->line_total = $pages * floatval($product->unit_price);
-        $product->urgent_amount = 24.24;
-
-        $selectedProducts[] = $product;
-    }
-    //dd($product);
-
-    // Store in session
-    $productList = collect($selectedProducts)->map(function ($product) {
-        return [
-            'id' => $product->id,
-            'unit_price' => $product->unit_price,
-            'pages' => $product->pages,
-        ];
-    })->toArray();
-
-    session()->forget('ready_products');
-    session()->put('ready_products', $productList);
-    session(['current_amount' => $bestTotal]);
-
-    //dd($selectedProducts);
-
-    // Generate view
-    // Use the translation_product_rows view for rendering
-    $modelType = $site->businessModel->model_type;
-    $tableRows = view("invoice.{$modelType}.random_product_rows", [
-        'products' => $selectedProducts,
-        'site' => $site,
-        'total' => $bestTotal
-    ])->render();
-
-    return response()->json([
-        'tableRows' => $tableRows,
-        'total' => $bestTotal
-    ]);
-}
 
 public function updateProductPages(Request $request)
 {
