@@ -857,7 +857,7 @@ function clearRandomizedFilter(button) {
                 const nameRRP = parseFloat(match[2]);
 
                 if (Math.abs(nameRRP - productRRP) > 0.01) {
-                    toastr.warning(`Name update pending for PID "${productId}" due to RRP change.`);
+                    toastr.warning(`Name and RRP mismatch for Product ID (PID) "${productId}". Update pending.`);
                     productNameInput.css('border', '1px solid red');
                     setTimeout(() => {
                         productNameInput.css('border', '');

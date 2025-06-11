@@ -579,8 +579,10 @@
 <script>
     const randomizePriceSlider = document.getElementById('randomize-price-slider');
     const customizePriceSlider = document.getElementById('customize-price-slider');
-    const minUnitPrice = @json($min_unit_price);
-    const maxUnitPrice = @json($max_unit_price);
+    // const minUnitPrice = @json($min_unit_price);
+    // const maxUnitPrice = @json($max_unit_price);
+    const minUnitPrice = 5;
+    const maxUnitPrice = 150;
     const currency = "{{ site_currency() }}";
     
     const updateHiddenInputs = (min, max, type) => {
