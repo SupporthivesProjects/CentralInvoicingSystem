@@ -34,8 +34,8 @@ class AuthController extends Controller
 
         // Attempt login
         if (Auth::attempt($request->only('email', 'password'))) {
-            return redirect()->route('dashboard')->with('success', 'Login successful!');
-        }
+            return redirect()->intended(route('dashboard'))->with('success', 'Login successful!');
+        }        
 
         return back()->with('error', 'Invalid credentials');
     }
@@ -44,7 +44,7 @@ class AuthController extends Controller
     public function logout()
     {
         Auth::logout();
-        return redirect()->route('login')->with('success', 'Logged out successfully!');
+        return redirect()->route('login')->with('success', 'You’re now logged out. Take care!');
     }
 }
 

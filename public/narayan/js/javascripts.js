@@ -5,6 +5,8 @@ script.onload = function() {
     feather.replace();
 };
 
+  
+
 $(document).ready(function () {
     
     $('#internalSearchInput').on('input', performInternalSearch);

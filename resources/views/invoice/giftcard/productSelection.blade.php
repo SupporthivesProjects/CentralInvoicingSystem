@@ -150,25 +150,34 @@
                     </div>
 
                     <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
-                        <button type="button" class="btn btn-outline-primary d-flex align-items-center gap-1 me-1" 
-                                data-bs-toggle="modal" data-bs-target="#addmoreproducts" onclick="customizeProducts('onload')">
-                            <i class="fas fa-plus-square"></i> Add Gift Card
+                       <!-- Add Products -->
+                        <button type="button" class="btn btn-outline-primary d-flex align-items-center gap-1 me-1"
+                                onclick="customizeProducts('onload')" 
+                                data-bs-toggle="tooltip" title="Add more products manually">
+                            <i class="fas fa-plus-square"></i> Add Products
                         </button>
 
+                        <!-- Randomize -->
                         <button type="button" class="btn btn-outline-success d-flex align-items-center gap-1"
-                                onclick="randomizeProducts('semi_random')">
+                                onclick="randomizeProducts('semi_random')" 
+                                data-bs-toggle="tooltip" title="Auto-select products randomly">
                             <i class="fas fa-random"></i> Randomize
                         </button>
 
+                        <!-- Clear Filter -->
                         <button type="button" class="btn btn-outline-secondary d-flex align-items-center gap-1 me-1"
-                                onclick="clearRandomizedFilter(this)">
-                            <i class="fa-solid fa-filter-circle-xmark"></i>
+                                onclick="clearRandomizedFilter(this)" 
+                                data-bs-toggle="tooltip" title="Remove all filters and randomized items">
+                            <i class="fa-solid fa-filter-circle-xmark"></i> Clear
                         </button>
 
+                        <!-- Generate Invoice -->
                         <button type="button" class="btn btn-primary d-flex align-items-center gap-1 me-1"
-                                onclick="generateInvoice(event)">
+                                onclick="generateInvoice(event)" 
+                                data-bs-toggle="tooltip" title="Generate the invoice for selected products">
                             <i class="bi bi-receipt-cutoff"></i> Generate Invoice
                         </button>
+
                     </div>
                 </div>
 
@@ -232,11 +241,11 @@
                         <table class="table table-bordered table-hover align-middle mb-0">
                             <thead class="table-dark">
                             <tr>
-                                <th class="text-center" style="width: 10%;">PID</th>
-                                <th class="text-center" style="width: 25%;">Product Name</th>
+                                <th class="text-center" style="width: 8%">PID</th>
+                                <th class="text-center" style="width: 30%;">Product Name</th>
                                 <th class="text-center" style="width: 20%;"> RRP Price </th>
                                 <th class="text-center" style="width: 15%;">Discount</th>
-                                <th class="text-center  unit-price-header" style="width: 15%;cursor: pointer;" data-column="3" data-order="desc">
+                                <th class="text-center  unit-price-header" style="width: 12%;cursor: pointer;" data-column="3" data-order="desc">
                                     <span class="d-inline-flex align-items-center justify-content-center gap-1">
                                         Our Price <i class="bi bi-caret-down-fill"></i>
                                     </span>
@@ -334,11 +343,11 @@
                         <table id="customize-products-table" class="table table-bordered table-hover align-middle mb-0 table-responsive" style="width:100% !important;">
                             <thead class="table-dark text-center">
                             <tr>
-                                    <th class="text-center" style="width: 10%;">PID</th>
-                                    <th class="text-center" style="width: 25%;">Product Name</th>
+                                    <th class="text-center" style="width: 8%;">PID</th>
+                                    <th class="text-center" style="width: 30%;">Product Name</th>
                                     <th class="text-center" style="width: 20%;"> RRP Price  </th>
                                     <th class="text-center" style="width: 15%;">Discount</th>
-                                    <th class="text-center  unit-price-header" style="width: 15%;cursor: pointer;" data-column="3" data-order="desc">
+                                    <th class="text-center  unit-price-header" style="width: 12%;cursor: pointer;" data-column="3" data-order="desc">
                                        <span class="d-inline-flex align-items-center justify-content-center gap-1">
                                             Our Price <i class="bi bi-caret-down-fill"></i>
                                         </span>
@@ -637,7 +646,7 @@
     function customizeProducts(search_type = 'search', page = 1) {
         console.log("Triggered with type:", search_type);
         console.log("customizeRequest:", customizeRequest);
-
+        $('#addmoreproducts').modal('show');
         if (search_type === 'onload' && customizeRequest !== null) {
             console.log("Blocked onload request because a request is ongoing");
             return;
@@ -832,17 +841,39 @@ function clearRandomizedFilter(button) {
 
         $('#generate-invoice-form').find('input[name="product_data[]"]').remove();
 
+        let hasMismatch = false;
+
         selectedProducts.each(function () {
             const productId = $(this).val();
+            const productNameInput = $(`input.product-name[data-product-id="${productId}"]`);
+            const productName = productNameInput.val() || '';
             const unitPrice = $(`input.product-price[data-product-id="${productId}"]`).val() || 0;
-            const productRRP = $(`input.product-rrp[data-product-id="${productId}"]`).val() || 0;
+            const productRRP = parseFloat($(`input.product-rrp[data-product-id="${productId}"]`).val()) || 0;
             const productDiscount = $(`input.product-discount[data-product-id="${productId}"]`).val() || 0;
+
+            const match = productName.match(/([A-Z]{3})\s*(\d+(\.\d+)?)/i);
+
+            if (match) {
+                const nameRRP = parseFloat(match[2]);
+
+                if (Math.abs(nameRRP - productRRP) > 0.01) {
+                    toastr.warning(`Name and RRP mismatch for Product ID (PID) "${productId}". Update pending.`);
+                    productNameInput.css('border', '1px solid red');
+                    setTimeout(() => {
+                        productNameInput.css('border', '');
+                    }, 3000);
+
+                    hasMismatch = true;
+                    return false; 
+                }
+            }
 
             $('#generate-invoice-form').append($('<input>', {
                 type: 'hidden',
                 name: 'product_data[]',
                 value: JSON.stringify({ 
-                    product_id: productId, 
+                    product_id: productId,
+                    product_name: productName,
                     unit_price: unitPrice,
                     unit_rrp: productRRP,
                     unit_discount: productDiscount
@@ -850,6 +881,9 @@ function clearRandomizedFilter(button) {
             }));
         });
 
+        if (hasMismatch) {
+            return false;
+        }
 
        
         let blinkCount = 0;

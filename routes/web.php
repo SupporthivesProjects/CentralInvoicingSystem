@@ -80,6 +80,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/remove-product', [InvoiceController::class, 'removeProduct'])->name('remove.product');
     Route::post('/update-product', [InvoiceController::class, 'updateProduct'])->name('update.product');
     Route::get('/get-product', [InvoiceController::class, 'getProduct'])->name('get.product');
+    Route::post('/random-product', [InvoiceController::class, 'randomProduct'])->name('random.product');
     
     Route::get('/generate-new-invoice-number', [InvoiceController::class, 'generateInvoiceNumber'])->name('generate.invoice.number');
     Route::get('/invoice/chart', [HomeController::class, 'showInvoiceChart'])->name('invoice.chart');

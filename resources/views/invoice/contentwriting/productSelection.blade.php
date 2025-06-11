@@ -150,25 +150,34 @@
                     </div>
 
                     <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
-                        <button type="button" class="btn btn-outline-primary d-flex align-items-center gap-1 me-1" 
-                                data-bs-toggle="modal" data-bs-target="#addmoreproducts" onclick="customizeProducts('onload')">
+                       <!-- Add Products -->
+                        <button type="button" class="btn btn-outline-primary d-flex align-items-center gap-1 me-1"
+                                onclick="customizeProducts('onload')" 
+                                data-bs-toggle="tooltip" title="Add more products manually">
                             <i class="fas fa-plus-square"></i> Add Products
                         </button>
 
+                        <!-- Randomize -->
                         <button type="button" class="btn btn-outline-success d-flex align-items-center gap-1"
-                                onclick="randomizeProducts('semi_random')">
+                                onclick="randomizeProducts('semi_random')" 
+                                data-bs-toggle="tooltip" title="Auto-select products randomly">
                             <i class="fas fa-random"></i> Randomize
                         </button>
 
+                        <!-- Clear Filter -->
                         <button type="button" class="btn btn-outline-secondary d-flex align-items-center gap-1 me-1"
-                                onclick="clearRandomizedFilter(this)">
-                            <i class="fa-solid fa-filter-circle-xmark"></i>
+                                onclick="clearRandomizedFilter(this)" 
+                                data-bs-toggle="tooltip" title="Remove all filters and randomized items">
+                            <i class="fa-solid fa-filter-circle-xmark"></i> Clear
                         </button>
 
+                        <!-- Generate Invoice -->
                         <button type="button" class="btn btn-primary d-flex align-items-center gap-1 me-1"
-                                onclick="generateInvoice(event)">
+                                onclick="generateInvoice(event)" 
+                                data-bs-toggle="tooltip" title="Generate the invoice for selected products">
                             <i class="bi bi-receipt-cutoff"></i> Generate Invoice
                         </button>
+
                     </div>
                 </div>
 
@@ -198,15 +207,15 @@
                     </div>
 
                     <div class="col-md-3">
-                        <div class="d-flex flex-column align-items-center h-100">
+                        {{-- <div class="d-flex flex-column align-items-center h-100">
                             <small class="text-muted fw-semibold mb-2">Product Category</small>
                             <select class="form-select w-100 h-100" name="category_id" id="category_id">
                                 <option value="" selected disabled>Not Applicable</option>
-                                {{-- @foreach(getCategoryList($site->technology) as $category)
+                                @foreach(getCategoryList($site->technology) as $category)
                                     <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                @endforeach --}}
+                                @endforeach 
                             </select>
-                        </div>
+                        </div> --}}
                     </div>
 
                     </div>
@@ -216,21 +225,21 @@
                     <div class="table-responsive border rounded shadow-sm">
                         <table class="table table-bordered table-hover align-middle mb-0">
                             <thead class="table-dark">
-                                <tr> 
-                                    <th style="width: 5%;">Params</th>
-                                    <th style="width: 20%;">Name</th>
-                                    <th style="width: 15%;">Word Count</th>
-                                    <th style="width: 12%;">Turnaround</th>
-                                    <th class="text-center" style="width: 13%;">Img Count</th>
-                                    <th style="width: 13%;">Quality</th>
-                                    <th class="text-center unit-price-header" style="width: 27%;" data-column="6" data-order="desc">
-                                        <span class="d-inline-flex align-items-center justify-content-center gap-1">
-                                            Unit Price <i class="bi bi-caret-down-fill"></i>
-                                        </span>
-                                    </th>
-                                   
-                                    <th style="width: 5%;">Remove</th>
-                                </tr>
+                            <tr> 
+                                <th class="text-center" style="width: 2%;">PID</th>
+                                <th style="width: 20%;">Name</th>
+                                <th class="text-center" style="width: 20%;">Word Count</th>
+                                <th class="text-center" style="width: 12%;">Turnaround</th>
+                                <th class="text-center" style="width: 11%;">Img Count</th>
+                                <th class="text-center" style="width: 13%;">Quality</th>
+                                <th class="text-center unit-price-header" style="width: 17%;" data-column="6" data-order="desc">
+                                    <span class="d-inline-flex align-items-center justify-content-center gap-1">
+                                        Total Price <i class="bi bi-caret-down-fill"></i>
+                                    </span>
+                                </th>
+                                <th class="text-center" style="width: 15%;">Action</th>
+                            </tr>
+
                             </thead>
                             <tbody id="randomize-product-table-body">
                             </tbody>
@@ -320,19 +329,19 @@
                     <div class="rounded shadow-sm p-2"> 
                     <table id="customize-products-table" class="table table-bordered table-hover align-middle mb-0 table-responsive" style="width:100% !important;">
                     <thead class="table-dark text-center">
-                        <tr>
-                            <th style="width: 5%;">PID</th>
+                        <tr> 
+                            <th class="text-center" style="width: 2%;">PID</th>
                             <th style="width: 20%;">Name</th>
-                            <th style="width: 15%;">Word Count</th>
-                            <th style="width: 12%;">Turnaround</th>
-                            <th class="text-center" style="width: 13%;">Img Count</th>
-                            <th style="width: 13%;">Quality</th>
-                            <th class="text-center unit-price-header" style="width: 20%;"  data-column="3" data-order="desc">
+                            <th class="text-center" style="width: 20%;">Word Count</th>
+                            <th class="text-center" style="width: 12%;">Turnaround</th>
+                            <th class="text-center" style="width: 11%;">Img Count</th>
+                            <th class="text-center" style="width: 13%;">Quality</th>
+                            <th class="text-center unit-price-header" style="width: 17%;" data-column="6" data-order="desc">
                                 <span class="d-inline-flex align-items-center justify-content-center gap-1">
-                                    Unit Price <i class="bi bi-caret-down-fill"></i>
+                                    Total Price <i class="bi bi-caret-down-fill"></i>
                                 </span>
                             </th>
-                            <th style="width: 5%;">Select</th>
+                            <th class="text-center" style="width: 15%;">Action</th>
                         </tr>
                     </thead>
                     <tbody id="customize-product-table-body">
@@ -501,6 +510,37 @@
         $('#discount_amount').prop('type', 'text').val('loading...').prop('readonly', true);
     });
 </script>
+<script>
+    function initTooltips() {
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.forEach(function (el) {
+            if (!el._tooltipInitialized) {
+                new bootstrap.Tooltip(el);
+                el._tooltipInitialized = true;
+            }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        initTooltips();
+
+        const observer = new MutationObserver(() => {
+            initTooltips();
+        });
+
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+    });
+
+    document.addEventListener('click', function (e) {
+        const tooltipEl = e.target.closest('[data-bs-toggle="tooltip"]');
+        if (tooltipEl) {
+            e.stopPropagation();
+        }
+    });
+</script>
 
 <script>
     function adjustNoOfProducts(id, step) {
@@ -539,8 +579,10 @@
 <script>
     const randomizePriceSlider = document.getElementById('randomize-price-slider');
     const customizePriceSlider = document.getElementById('customize-price-slider');
-    const minUnitPrice = @json($min_unit_price);
-    const maxUnitPrice = @json($max_unit_price);
+    // const minUnitPrice = @json($min_unit_price);
+    // const maxUnitPrice = @json($max_unit_price);
+    const minUnitPrice = 5;
+    const maxUnitPrice = 150;
     const currency = "{{ site_currency() }}";
     
     const updateHiddenInputs = (min, max, type) => {
@@ -689,6 +731,9 @@
                     $('#current_amount').val(currentAmount.toFixed(2));
                     $('#discount_amount').prop('readonly', false).prop('type', 'number');
                     calculateTotalPrice();
+                    if (Math.abs(currentAmount - invoiceAmount) >= 10) {
+                        toastr.info("Try product-wise randomization for a closer match to invoice amount.");
+                    }
                 }
             },
             error: function (xhr, textStatus) {
@@ -700,6 +745,7 @@
             },
             complete: function () {
                 randomizeRequest = null;
+                initTooltips();
             }
         });
     }
@@ -716,6 +762,7 @@
     function customizeProducts(search_type = 'search', page = 1) {
         console.log("Triggered with type:", search_type);
         console.log("customizeRequest:", customizeRequest);
+        $('#addmoreproducts').modal('show');
 
         if (search_type === 'onload' && customizeRequest !== null) {
             console.log("Blocked onload request because a request is ongoing");
@@ -797,6 +844,7 @@
             complete: function () {
                 console.log("Request complete");
                 customizeRequest = null; 
+                initTooltips();
             }
         });
     }
@@ -825,6 +873,7 @@ function clearRandomizedFilter(button) {
             $('#randomize-product-table-body').html(getErrorRowHTML('Randomize filter cleared. You can now randomize products again or add custom products.',9));
             toastr.success('Randomized products filter has been reset');
             calculateTotalPrice();
+            initTooltips();
             
         },
         error: function(xhr, status, error) {
@@ -833,6 +882,7 @@ function clearRandomizedFilter(button) {
         },
         complete: function() {
             icon.removeClass('fa-spinner fa-spin').addClass(originalIconClass);
+            initTooltips();
         }
     });
 }
@@ -854,6 +904,7 @@ function clearRandomizedFilter(button) {
                 if (response.success && response.new_invoice_number) {
                     $('#invoice_number').val(response.new_invoice_number);
                     toastr.success('Invoice number generated successfully.', 'Success');
+                    initTooltips();
                 } else {
                     toastr.error('Failed to generate invoice number.', 'Error');
                 }
@@ -964,6 +1015,7 @@ $(document).ready(function () {
                     $('#customer_email').val(response.updated.customer_email);
                     $('#customer_mobile').val(response.updated.customer_mobile);
                     randomizeProducts();
+                    initTooltips();
                     setTimeout(() => {
                         setEditIcon();
                     }, 4000);
@@ -1109,6 +1161,7 @@ $(document).ready(function() {
 <script>
     $(document).ready(function() {
         const wcStep = 25;
+        const wcStepLarge = 100;
         const imgStep = 1;
         const wcMin = 0;
         const imgMin = 1;
@@ -1171,29 +1224,35 @@ $(document).ready(function() {
             }, 2000);
         }
 
+        $(document).on('click', '.wc-decrease-25', function() {
+            handleWordCountChange($(this), -wcStep);
+        });
 
-        $(document).on('click', '.wc-decrease', function() {
-            const productId = $(this).data('product-id');
+        $(document).on('click', '.wc-increase-25', function() {
+            handleWordCountChange($(this), wcStep);
+        });
+
+        $(document).on('click', '.wc-decrease-100', function() {
+            handleWordCountChange($(this), -wcStepLarge);
+        });
+        $(document).on('click', '.wc-increase-100', function() {
+            handleWordCountChange($(this), wcStepLarge);
+        });
+
+        function handleWordCountChange($btn, step) {
+            const productId = $btn.data('product-id');
             const $input = $(`.wc-input[data-product-id="${productId}"]`);
-            let val = parseInt($input.val()) || wcMin;
             const min = parseInt($input.attr('min')) || wcMin;
+            let current = parseInt($input.val()) || min;
+            let updated = current + step;
 
-            if (val - wcStep >= min) {
-                $input.val(val - wcStep);
+            if (updated >= min) {
+                $input.val(updated);
                 debounceUpdate(productId, 'wordcount');
             } else {
                 toastr.warning(`Minimum word count is ${min}`, 'Limit reached');
             }
-        });
-
-        $(document).on('click', '.wc-increase', function() {
-            const productId = $(this).data('product-id');
-            const $input = $(`.wc-input[data-product-id="${productId}"]`);
-            let val = parseInt($input.val()) || wcMin;
-
-            $input.val(val + wcStep);
-            debounceUpdate(productId, 'wordcount');
-        });
+        }
 
         $(document).on('click', '.img-decrease', function() {
             const productId = $(this).data('product-id');
@@ -1427,5 +1486,6 @@ function saveProductParams(button) {
         }, 20000);  
     }
 </script>
+
 
 @endpush

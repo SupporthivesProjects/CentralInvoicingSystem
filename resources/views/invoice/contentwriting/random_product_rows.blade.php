@@ -1,11 +1,14 @@
 @forelse($products as $index => $product)
 <tr class="product-row align-middle" data-product-row-id="{{ $product->id }}" data-request-type="randomize">
-    <td class="text-center align-middle">
+   {{--  <td class="text-center align-middle">
         @if($product->param_status)
             <button id="param-btn-{{ $product->id }}" onclick="getProductParams({{ $product->id }}, this)" data-product-name="{{ $product->name }}" data-product-id="{{ $product->id }}" class="btn btn-sm btn-success" data-bs-toggle="tooltip" title="Metadata set, click to view"><i class="bi bi-check-circle-fill"></i></button>
         @else
             <button id="param-btn-{{ $product->id }}" onclick="getProductParams({{ $product->id }}, this)" data-product-name="{{ $product->name }}" data-product-id="{{ $product->id }}" class="btn btn-sm btn-warning" data-bs-toggle="tooltip" title="Metadata missing, click to add"><i class="bi bi-exclamation-circle-fill"></i></button>
         @endif
+    </td> --}}
+    <td class="text-center align-middle">
+        {{ $product->id }}
     </td>
     <td class="text-capitalize">
         {{ $product->name }}
@@ -13,12 +16,17 @@
             <a href="{{ $site->site_link }}product/{{ $product->slug }}" target="_blank">🔗</a>
         @endif
     </td>
-    <td class="text-center">
+    <td class="text-center" style="padding-left: 10px;padding-right: 10px;">
         <div class="input-group input-group-sm justify-content-center">
-            <button class="btn btn-outline-primary wc-decrease" type="button" data-product-id="{{ $product->id }}">-</button>
+            <button class="btn btn-outline-secondary wc-decrease-100" type="button" data-product-id="{{ $product->id }}" data-bs-toggle="tooltip" title="Decrease by 100">«</button>
+            <button class="btn btn-outline-primary wc-decrease-25" type="button" data-product-id="{{ $product->id }}" data-bs-toggle="tooltip" title="Decrease by 25">-</button>
+            
             <input type="text" readonly class="form-control text-center wc-input border-primary" data-product-id="{{ $product->id }}" value="{{ $product->wordcount }}" step="25" min="{{ $product->default_wc }}">
-            <button class="btn btn-outline-primary wc-increase" type="button" data-product-id="{{ $product->id }}">+</button>
+            
+            <button class="btn btn-outline-primary wc-increase-25" type="button" data-product-id="{{ $product->id }}" data-bs-toggle="tooltip" title="Increase by 25">+</button>
+            <button class="btn btn-outline-secondary wc-increase-100" type="button" data-product-id="{{ $product->id }}" data-bs-toggle="tooltip" title="Increase by 100">»</button>
         </div>
+
     </td>
     <td class="text-center p-2">
         <select name="turnaround" class="form-select form-select-sm text-center mx-0 turnaround-select input-or-select " data-product-id="{{ $product->id }}">
@@ -26,7 +34,7 @@
             <option value="ta_express" @selected($product->turnaround == 'ta_express')>Express</option>
         </select>
     </td>
-    <td class="text-center">
+    <td class="text-center"  style="padding-left: 10px;padding-right: 10px;">
         <div class="input-group input-group-sm justify-content-center">
             <button class="btn btn-outline-primary img-decrease" type="button" data-product-id="{{ $product->id }}">-</button>
             <input type="text" readonly class="form-control text-center img-input border-primary" value="{{ $product->imagecount }}" step="1" min="1" data-product-id="{{ $product->id }}">
@@ -54,25 +62,26 @@
                 type="text" 
                 class="form-control product-price text-center" 
                 value="{{ number_format($product->unit_price, 2, '.', '') }}" 
-                data-product-id="{{ $product->id }}"
-                {{ $product->can_edit_price == 0 ? 'readonly' : '' }}  
-                aria-label="Amount (to the nearest dollar)"
-            >
-            <span class="input-group-text d-flex align-items-center">
-                <i class="{{ $product->can_edit_price == 0 ? 'fas fa-lock text-muted' : 'fas fa-edit' }}" 
-                    style="font-size: 12px;" 
-                    data-bs-toggle="tooltip"  
-                    data-bs-placement="top"
-                    title="{{ $product->can_edit_price == 0 ? 'Price update allowed after ' . $product->remaining_days . ' days.' : 'Editable' }}"></i>
-            </span>
+                data-product-id="{{ $product->id }}" readonly >
+                <span class="input-group-text d-flex align-items-center"  data-bs-toggle="tooltip" 
+                    data-bs-placement="top" 
+                    title="Auto calculated Total Price">
+                    <i  class="fas fa-lock text-muted"  style="font-size: 12px;"></i>
+                </span>
         </div>
     </td>
    
     <td class="text-center">
-        <button class="remove-product btn btn-danger btn-sm me-2" data-product-name="{{ $product->name }}" data-product-id="{{ $product->id }}" data-bs-toggle="tooltip" title="Remove Product">
-            <i class="fa fa-trash"></i>
-        </button>
+        <div class="d-flex justify-content-center gap-1">
+            <button class="randomize-product btn btn-outline-secondary btn-sm" data-product-id="{{ $product->id }}" data-bs-toggle="tooltip" title="Randomize">
+                <i class="fa fa-random"></i>
+            </button>
+            <button class="remove-product btn btn-outline-danger btn-sm" data-product-name="{{ $product->name }}" data-product-id="{{ $product->id }}" data-bs-toggle="tooltip" title="Remove">
+                <i class="fa fa-trash"></i>
+            </button>
+        </div>
     </td>
+
 </tr>
 @empty
 <tr>
@@ -85,10 +94,37 @@
 
 
 <script>
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl);
+    $(document).off('click', '.randomize-product').on('click', '.randomize-product', function () {
+        const $button = $(this);
+        const productId = $button.data('product-id');
+        $button.prop('disabled', true);
+        $button.html('<i class="fas fa-spinner fa-spin"></i>');
+        $('[data-bs-toggle="tooltip"]').tooltip('hide');
+
+        $.ajax({
+            url: "{{ route('random.product') }}",
+            method: "POST",
+            data: {
+                product_id: productId,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(response) {
+                $('#randomize-product-table-body').html(response.tableRows);
+                calculateTotalPrice();
+            },
+            error: function() {
+                toastr.error('Something went wrong. Please try again.');
+                calculateTotalPrice();
+            },
+            complete: function() {
+                toastr.success('Randomize product completed.');
+                $button.html('<i class="fa fa-random"></i>');
+                initTooltips();
+                calculateTotalPrice();
+            }
+        });
     });
+
 </script>
 <script>
     function getProductParams(productId, element) {
@@ -130,6 +166,7 @@
                 $('#productParamsLoader').hide();
                 $('#productParamsForm').css('display', 'block');
                 $('#productParamsFooter').css('display', 'flex');
+                initTooltips();
         }
         });
     }
@@ -199,7 +236,7 @@
                             toastr.error('Error removing product. Please try again.');
                         },
                         complete: function() {
-                       
+                        initTooltips();
                         $('.remove-product').prop('disabled', false);
                         setTimeout(() => {
                             $button.html('<i class="fas fa-trash-alt"></i>');
