@@ -53,29 +53,29 @@ class LaravelController extends Controller
         if ($keyword) {
             $query->where(function ($q) use ($keyword) {
                 $q->where('name', 'LIKE', '%' . $keyword . '%')
-                  ->orWhere('slug', 'LIKE', '%' . $keyword . '%');
+                    ->orWhere('slug', 'LIKE', '%' . $keyword . '%');
             });
         }
     
         $allProducts = $query->orderByDesc('default_price')->get();
-        $wordcountOptions = [0, 25, 50, 75, 100];
+        $wordcountOptions = range(0, 5000, 25);
         $turnaroundOptions = ['ta_standard', 'ta_express'];
         $qualityOptions = ['q_standard', 'q_premium', 'q_expert'];
-
+    
         $allProducts = collect($allProducts);
-        $allProducts->each(function ($product) use ($wordcountOptions , $qualityOptions, $turnaroundOptions) {
+        $allProducts->each(function ($product) use ($wordcountOptions, $qualityOptions, $turnaroundOptions) {
             $wordCount = $product->default_wc + $wordcountOptions[array_rand($wordcountOptions)];
             $product->turnaround = $turnaroundOptions[array_rand($turnaroundOptions)];
             $product->quality = $qualityOptions[array_rand($qualityOptions)];
-            $imageCount = rand(1, 5);
+            $imageCount = rand(1, 15);
             $quantity = 1;
-
+    
             $qlty_factor = match ($product->quality) {
                 'q_premium' => 0.1,
                 'q_expert' => 0.25,
                 default => 0,
             };
-
+    
             $wc_price = max(0, (($wordCount - $product->default_wc) / 25) * $product->extra_word);
             $img_total = max(0, ($imageCount - 1) * $product->img_price);
             $ta_total = $product->turnaround === 'ta_express' ? 25 : 0;
@@ -87,34 +87,92 @@ class LaravelController extends Controller
             $product->imagecount = $imageCount;
             $product->quantity = $quantity;
         });
-
+    
         $allProducts = $allProducts->filter(function ($product) use ($priceFrom, $priceTo) {
             return $product->unit_price >= $priceFrom && $product->unit_price <= $priceTo;
-        });
-        
-        $allProducts = $allProducts->values();
-        
+        })->values();
     
-        $minTotal = ($noOfProducts || $keyword) ? ($invoiceAmount * 0.6) : $invoiceAmount;
-        $maxTotal = $invoiceAmount * 1.10;
+        $minTotal = ($noOfProducts || $keyword) ? ($invoiceAmount * 0.9) : $invoiceAmount;
+        $maxTotal = $invoiceAmount * 1.05;
         $bestMatch = null;
         $bestTotal = 0;
         $bestDistance = null;
     
         for ($i = 0; $i < 20; $i++) {
             $shuffled = $allProducts->shuffle();
-            $selected = [];
-            $currentTotal = 0;
     
-            foreach ($shuffled as $product) {
-                if ($noOfProducts) {
-                    if (count($selected) >= $noOfProducts) break;
+            if ($noOfProducts) {
+                $selected = $shuffled->take($noOfProducts);
+                $currentTotal = 0;
+                $finalProducts = [];
     
-                    if ($currentTotal + $product->unit_price <= $invoiceAmount) {
-                        $selected[] = $product;
-                        $currentTotal += $product->unit_price;
+                foreach ($selected as $product) {
+                    $clone = clone $product;
+                    $clone->imagecount = rand(1, 15);
+                    $clone->turnaround = $turnaroundOptions[array_rand($turnaroundOptions)];
+                    $clone->quality = $qualityOptions[array_rand($qualityOptions)];
+                    $clone->quantity = 1;
+    
+                    $qlty_factor = match ($clone->quality) {
+                        'q_premium' => 0.1,
+                        'q_expert' => 0.25,
+                        default => 0,
+                    };
+    
+                    $img_total = ($clone->imagecount - 1) * $clone->img_price;
+                    $ta_total = $clone->turnaround === 'ta_express' ? 25 : 0;
+    
+                    $base_total = $clone->default_price + $img_total + $ta_total;
+                    $adjusted_base = $base_total + ($base_total * $qlty_factor);
+    
+                    $clone->wordcount = $clone->default_wc;
+                    $clone->unit_price = $adjusted_base;
+    
+                    $finalProducts[] = $clone;
+                    $currentTotal += $clone->unit_price;
+                }
+    
+                $remaining = $invoiceAmount - $currentTotal;
+                $remaining = max(0, $remaining);
+    
+                while ($remaining > 0.1) {
+                    foreach ($finalProducts as $product) {
+                        if ($remaining <= 0.1) break;
+    
+                        $qlty_factor = match ($product->quality) {
+                            'q_premium' => 0.1,
+                            'q_expert' => 0.25,
+                            default => 0,
+                        };
+    
+                        $effectiveWordPrice = $product->extra_word * (1 + $qlty_factor);
+                        if ($effectiveWordPrice <= 0) continue;
+    
+                        $increment = 25;
+                        $cost = ($increment / 25) * $effectiveWordPrice;
+    
+                        if ($remaining >= $cost) {
+                            $product->wordcount += $increment;
+                            $product->unit_price += $cost;
+                            $remaining -= $cost;
+                        }
                     }
-                } else {
+                }
+    
+                $currentTotal = array_sum(array_map(fn($p) => $p->unit_price, $finalProducts));
+                $distance = abs($invoiceAmount - $currentTotal);
+    
+                if ($bestMatch === null || $distance < $bestDistance) {
+                    $bestMatch = $finalProducts;
+                    $bestTotal = $currentTotal;
+                    $bestDistance = $distance;
+                    if ($currentTotal >= ($invoiceAmount * 0.99)) break;
+                }
+            } else {
+                $selected = [];
+                $currentTotal = 0;
+    
+                foreach ($shuffled as $product) {
                     if ($currentTotal + $product->unit_price <= $maxTotal) {
                         $selected[] = $product;
                         $currentTotal += $product->unit_price;
@@ -124,16 +182,6 @@ class LaravelController extends Controller
                             $bestTotal = $currentTotal;
                         }
                     }
-                }
-            }
-    
-            if ($noOfProducts && count($selected) === $noOfProducts) {
-                $distance = abs($invoiceAmount - $currentTotal);
-                if ($bestMatch === null || $distance < $bestDistance) {
-                    $bestMatch = $selected;
-                    $bestTotal = $currentTotal;
-                    $bestDistance = $distance;
-                    if ($currentTotal >= ($invoiceAmount * 0.9)) break;
                 }
             }
         }
@@ -148,7 +196,6 @@ class LaravelController extends Controller
     
         $bestMatch = collect($bestMatch);
         $bestMatch->each(function ($product) use ($site_id) {
-
             $product->can_edit_price = 1;
             $product->remaining_days = 0;
             $product->project_title = null;
@@ -199,6 +246,7 @@ class LaravelController extends Controller
         ]);
     }
     
+    
     public function randomProduct(Request $request)
     {
         $productId = $request->input('product_id');
@@ -238,12 +286,12 @@ class LaravelController extends Controller
             $remainingAmount -= $item['unit_price'];
         }
     
-        $maxWordCount = 250000;
+        $maxWordCount = 300000;
         $minWordCount = $product->default_wc;
         $maxImageCount = 15;
         $minImageCount = 1;
     
-        $maxIterations = 500;
+        $maxIterations = 700;
         $iterations = 0;
         $bestMatch = null;
         $smallestDiff = PHP_INT_MAX;

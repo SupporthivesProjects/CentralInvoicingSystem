@@ -94,17 +94,9 @@
 
 
 <script>
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl);
-    });
-</script>
-
-<script>
     $(document).off('click', '.randomize-product').on('click', '.randomize-product', function () {
         const $button = $(this);
         const productId = $button.data('product-id');
-
         $button.prop('disabled', true);
         $button.html('<i class="fas fa-spinner fa-spin"></i>');
         $('[data-bs-toggle="tooltip"]').tooltip('hide');
@@ -127,7 +119,7 @@
             complete: function() {
                 toastr.success('Randomize product completed.');
                 $button.html('<i class="fa fa-random"></i>');
-                $('[data-bs-toggle="tooltip"]').tooltip();
+                initTooltips();
                 calculateTotalPrice();
             }
         });
@@ -174,6 +166,7 @@
                 $('#productParamsLoader').hide();
                 $('#productParamsForm').css('display', 'block');
                 $('#productParamsFooter').css('display', 'flex');
+                initTooltips();
         }
         });
     }
@@ -243,7 +236,7 @@
                             toastr.error('Error removing product. Please try again.');
                         },
                         complete: function() {
-                       
+                        initTooltips();
                         $('.remove-product').prop('disabled', false);
                         setTimeout(() => {
                             $button.html('<i class="fas fa-trash-alt"></i>');

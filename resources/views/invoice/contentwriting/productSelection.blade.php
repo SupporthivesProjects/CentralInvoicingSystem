@@ -510,6 +510,37 @@
         $('#discount_amount').prop('type', 'text').val('loading...').prop('readonly', true);
     });
 </script>
+<script>
+    function initTooltips() {
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.forEach(function (el) {
+            if (!el._tooltipInitialized) {
+                new bootstrap.Tooltip(el);
+                el._tooltipInitialized = true;
+            }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        initTooltips();
+
+        const observer = new MutationObserver(() => {
+            initTooltips();
+        });
+
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+    });
+
+    document.addEventListener('click', function (e) {
+        const tooltipEl = e.target.closest('[data-bs-toggle="tooltip"]');
+        if (tooltipEl) {
+            e.stopPropagation();
+        }
+    });
+</script>
 
 <script>
     function adjustNoOfProducts(id, step) {
@@ -712,6 +743,7 @@
             },
             complete: function () {
                 randomizeRequest = null;
+                initTooltips();
             }
         });
     }
@@ -810,6 +842,7 @@
             complete: function () {
                 console.log("Request complete");
                 customizeRequest = null; 
+                initTooltips();
             }
         });
     }
@@ -838,6 +871,7 @@ function clearRandomizedFilter(button) {
             $('#randomize-product-table-body').html(getErrorRowHTML('Randomize filter cleared. You can now randomize products again or add custom products.',9));
             toastr.success('Randomized products filter has been reset');
             calculateTotalPrice();
+            initTooltips();
             
         },
         error: function(xhr, status, error) {
@@ -846,6 +880,7 @@ function clearRandomizedFilter(button) {
         },
         complete: function() {
             icon.removeClass('fa-spinner fa-spin').addClass(originalIconClass);
+            initTooltips();
         }
     });
 }
@@ -867,6 +902,7 @@ function clearRandomizedFilter(button) {
                 if (response.success && response.new_invoice_number) {
                     $('#invoice_number').val(response.new_invoice_number);
                     toastr.success('Invoice number generated successfully.', 'Success');
+                    initTooltips();
                 } else {
                     toastr.error('Failed to generate invoice number.', 'Error');
                 }
@@ -977,6 +1013,7 @@ $(document).ready(function () {
                     $('#customer_email').val(response.updated.customer_email);
                     $('#customer_mobile').val(response.updated.customer_mobile);
                     randomizeProducts();
+                    initTooltips();
                     setTimeout(() => {
                         setEditIcon();
                     }, 4000);
@@ -1447,5 +1484,6 @@ function saveProductParams(button) {
         }, 20000);  
     }
 </script>
+
 
 @endpush

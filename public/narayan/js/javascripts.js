@@ -5,28 +5,6 @@ script.onload = function() {
     feather.replace();
 };
 
-$(document).ready(function() {
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    tooltipTriggerList.forEach(function (tooltipTriggerEl) {
-        new bootstrap.Tooltip(tooltipTriggerEl);
-    });
-
-    function hideAllTooltips() {
-        tooltipTriggerList.forEach(function (el) {
-            var tooltipInstance = bootstrap.Tooltip.getInstance(el);
-            if (tooltipInstance) {
-                tooltipInstance.hide();
-            }
-        });
-    }
-
-    $(document).on('click', function(e) {
-        if (!$(e.target).closest('[data-bs-toggle="tooltip"]').length) {
-            hideAllTooltips();
-        }
-    });
-});
-
   
 
 $(document).ready(function () {
