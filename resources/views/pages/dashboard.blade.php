@@ -194,27 +194,28 @@
                                             <table id="invoice-history" class="table table-bordered text-nowrap" style="width:100%">
                                                 <thead>
                                                     <tr>
-                                                        <th class="text-center">#</th>
+                                                        <th class="text-center">ID</th>
                                                         <th class="text-center">Invoice No</th>
                                                         <th class="text-center">Model</th>
                                                         <th class="text-center">Website</th>
                                                         <th class="text-center">Discount</th>
                                                         <th class="text-center">Total</th>
-                                                        <th class="text-center">Created By</th>
                                                         <th class="text-center">Regenerate</th>
+                                                        <th class="text-center">User</th>
                                                         <th class="text-center">Created</th>
+                                                        
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     @foreach ($invoices as $index => $invoice)
                                                         <tr>
-                                                            <td class="text-center">{{ $index + 1 }}</td>
+                                                            <td class="text-center">{{ $invoice->id }}</td>
                                                             <td class="text-left">{{ $invoice->invoice_number }}</td>
                                                             <td class="text-center">{{ $invoice->model_type }}</td>
-                                                            <td class="text-center"><a target="_blank" href="{{ $invoice->website->site_link }}">View</a></td>
+                                                            <td class="text-center"><a target="_blank" href="{{ $invoice->website->site_link }}" data-bs-toggle="tooltip" title="{{ $invoice->website->site_link }}">View</a></td>
                                                             <td class="text-center">{{ $invoice->currency }}{{ number_format($invoice->discount_amount, 2) }} </td>
                                                             <td class="text-center">{{ $invoice->currency }}{{ number_format($invoice->invoice_amount, 2) }}</td>
-                                                            <td class="text-left">{{ getUserById($invoice->created_by)?->email ?? '-' }}</td>
+                                                           
                                                             <td class="text-center">
                                                                 <div class="d-flex justify-content-center">
                                                                     <a href="{{ route('product.selection', ['invoice_id' => $invoice->id]) }}"
@@ -224,9 +225,16 @@
                                                                 </div>
                                                             </td>
                                                             <td class="text-center">
-                                                                {{ $invoice->created_at->timezone('Asia/Kolkata')->format('Y-m-d H:i') }}
+                                                                @if(getUserById($invoice->created_by))
+                                                                    <img src="{{ getUserById($invoice->created_by)?->profile?->profile_image  ? asset(getUserById($invoice->created_by)->profile->profile_image) : asset('uploads/profile/default-profile.png') }}"
+                                                                        alt="Profile"  class="rounded-circle" style="width: 30px; height: 30px; object-fit: cover;" data-bs-toggle="tooltip" title="{{ trim(getUserById($invoice->created_by)?->name ) }}" >
+                                                                @else
+                                                                     <img src="{{ asset('uploads/profile/default-profile.png') }}" alt="Guest"  class="rounded-circle" style="width: 30px; height: 30px; object-fit: cover;" data-bs-toggle="tooltip" title="Guest">
+                                                                @endif
                                                             </td>
-
+                                                            <td class="text-center">
+                                                                {{ $invoice->created_at->setTimezone('Asia/Kolkata')->format('d-m-Y h:i A') }}
+                                                            </td>
                                                         </tr>
                                                     @endforeach
                                                 </tbody>

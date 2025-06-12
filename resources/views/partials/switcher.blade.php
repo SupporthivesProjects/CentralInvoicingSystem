@@ -38,7 +38,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="">
+                {{-- <div class="">
                     <p class="switcher-style-head">Directions:</p>
                     <div class="row switcher-style gx-0">
                         <div class="col-4">
@@ -58,7 +58,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> --}}
                 <div class="">
                     <p class="switcher-style-head">Navigation Styles:</p>
                     <div class="row switcher-style gx-0">

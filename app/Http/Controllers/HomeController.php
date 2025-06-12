@@ -30,10 +30,14 @@ class HomeController extends Controller
         $sites = Cache::rememberForever('websites.all', function () {
             return Website::latest()->get();
         });
-        
-        $invoices = Cache::remember('invoices.all', 300, function () {
-            return InvoiceGenerationHistory::latest()->get();
-        });
+        $currentHost = $request->getHost();
+        if ($currentHost === '127.0.0.1') {
+            $invoices = InvoiceGenerationHistory::orderBy('id', 'desc')->take(10)->get();
+        } else {
+            $invoices = Cache::remember('invoices.all', 300, function () {
+                return InvoiceGenerationHistory::orderBy('id', 'desc')->get();
+            });
+        }
         
         return view('pages.dashboard', compact('invoices', 'dates', 'invoiceCounts','businessmodels','sites', 'priceChanges'));
     }
