@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Cache;
 
 
 
+
 class HomeController extends Controller
 {
    
@@ -33,6 +34,7 @@ class HomeController extends Controller
         $invoices = Cache::remember('invoices.all', 300, function () {
             return InvoiceGenerationHistory::latest()->get();
         });
+        
         return view('pages.dashboard', compact('invoices', 'dates', 'invoiceCounts','businessmodels','sites', 'priceChanges'));
     }
     
