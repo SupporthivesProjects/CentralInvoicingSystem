@@ -194,25 +194,27 @@
                                             <table id="invoice-history" class="table table-bordered text-nowrap" style="width:100%">
                                                 <thead>
                                                     <tr>
-                                                        <th>#</th>
-                                                        <th>Invoice No</th>
-                                                        <th>Model</th>
-                                                        <th>Website</th>
-                                                        <th>Discount Amount</th>
-                                                        <th>Total Amount</th>
-                                                        <th>Regenerate</th>
-                                                        <th>Date</th>
+                                                        <th class="text-center">#</th>
+                                                        <th class="text-center">Invoice No</th>
+                                                        <th class="text-center">Model</th>
+                                                        <th class="text-center">Website</th>
+                                                        <th class="text-center">Discount</th>
+                                                        <th class="text-center">Total</th>
+                                                        <th class="text-center">Created By</th>
+                                                        <th class="text-center">Regenerate</th>
+                                                        <th class="text-center">Created</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     @foreach ($invoices as $index => $invoice)
                                                         <tr>
-                                                            <td>{{ $index + 1 }}</td>
-                                                            <td>{{ $invoice->invoice_number }}</td>
-                                                            <td>{{ $invoice->model_type }}</td>
-                                                            <td><a target="_blank" href="{{ $invoice->website->site_link }}">View</a></td>
-                                                            <td>{{ $invoice->currency }}{{ number_format($invoice->discount_amount, 2) }} </td>
-                                                            <td>{{ $invoice->currency }}{{ number_format($invoice->invoice_amount, 2) }}</td>
+                                                            <td class="text-center">{{ $index + 1 }}</td>
+                                                            <td class="text-center">{{ $invoice->invoice_number }}</td>
+                                                            <td class="text-center">{{ $invoice->model_type }}</td>
+                                                            <td class="text-center"><a target="_blank" href="{{ $invoice->website->site_link }}">View</a></td>
+                                                            <td class="text-center">{{ $invoice->currency }}{{ number_format($invoice->discount_amount, 2) }} </td>
+                                                            <td class="text-center">{{ $invoice->currency }}{{ number_format($invoice->invoice_amount, 2) }}</td>
+                                                            <td class="text-center">{{ getUserById($invoice->created_by)?->email ?? '-' }}</td>
                                                             <td class="text-center">
                                                                 <div class="d-flex justify-content-center">
                                                                     <a href="{{ route('product.selection', ['invoice_id' => $invoice->id]) }}"
@@ -221,7 +223,7 @@
                                                                     </a>
                                                                 </div>
                                                             </td>
-                                                            <td>{{ $invoice->created_at->format('Y-m-d') }}</td>
+                                                            <td class="text-center">{{ $invoice->created_at->format('Y-m-d H:i') }}</td>
 
                                                         </tr>
                                                     @endforeach
@@ -323,6 +325,15 @@
 
 @endsection
 @push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+    });
+</script>
+
 <script>
     const invoiceDates = @json($dates);  // Common dates
     const invoiceCounts = @json($invoiceCounts);  // Invoice counts per date

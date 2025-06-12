@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Website;
+use App\Models\User;
 
 class InvoiceGenerationHistory extends Model
 {
@@ -18,6 +19,7 @@ class InvoiceGenerationHistory extends Model
         'current_amount',
         'discount_amount',
         'invoice_amount',
+        'created_by',
     ];
 
     protected $casts = [
@@ -31,4 +33,9 @@ class InvoiceGenerationHistory extends Model
     {
         return $this->belongsTo(Website::class, 'site_id');
     }
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
 }

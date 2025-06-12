@@ -12,6 +12,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Artisan;
 
 if (!function_exists('getWebsiteCountByModel')) {
     function getWebsiteCountByModel($modelId)
@@ -47,6 +48,14 @@ if (!function_exists('userCount')) {
         return User::count();
     }
 }
+
+if (!function_exists('getUserById')) {
+    function getUserById($userId)
+    {
+        return User::find($userId);
+    }
+}
+
 
 if (!function_exists('currentUserName')) {
     function currentUserName()
@@ -94,6 +103,26 @@ if (!function_exists('site_currency')) {
             return $currency->symbol ?? '$';
         } catch (\Exception $e) {
             return '$';
+        }
+    }
+}
+
+if (!function_exists('site_currency_code')) {
+    function site_currency_code()
+    {
+        $site_id = session('customer.site_id');
+        if (!$site_id) {
+            return 'USD';
+        }
+        try {
+            $site = \App\Models\Website::findOrFail($site_id);
+            \App\Services\DynamicDatabaseService::connect($site);
+            $site_currency = DB::connection('dynamic')->table('business_settings')->where('type', 'system_default_currency')->first()
+                ?? DB::connection('dynamic')->table('business_settings')->where('type', 'home_default_currency')->first();
+            $currency = DB::connection('dynamic')->table('currencies')->where('id', $site_currency->value)->first();
+            return $currency->code ?? 'USD';
+        } catch (\Exception $e) {
+            return 'USD';
         }
     }
 }

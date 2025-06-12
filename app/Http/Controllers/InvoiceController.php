@@ -306,6 +306,7 @@ class InvoiceController extends Controller
 
     public static function createInvoiceHistory($invoice_data)
     {
+        $user = auth()->user();
         InvoiceGenerationHistory::create([
             'model_type'      => $invoice_data['model_type'],
             'site_id'         => $invoice_data['site_id'],
@@ -315,6 +316,7 @@ class InvoiceController extends Controller
             'current_amount'  => $invoice_data['current_amount'],
             'discount_amount' => $invoice_data['discount_amount'],
             'invoice_amount'  => $invoice_data['invoice_amount'],
+            'created_by' => $user->id,
         ]);
     }
 
