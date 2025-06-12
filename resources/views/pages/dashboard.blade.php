@@ -223,7 +223,9 @@
                                                                     </a>
                                                                 </div>
                                                             </td>
-                                                            <td class="text-center">{{ $invoice->created_at->format('Y-m-d H:i') }}</td>
+                                                            <td class="text-center">
+                                                                {{ $invoice->created_at->timezone('Asia/Kolkata')->format('Y-m-d H:i') }}
+                                                            </td>
 
                                                         </tr>
                                                     @endforeach
