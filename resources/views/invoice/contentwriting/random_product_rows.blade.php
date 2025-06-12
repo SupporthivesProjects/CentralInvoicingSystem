@@ -117,7 +117,7 @@
                 calculateTotalPrice();
             },
             complete: function() {
-                toastr.success('Randomize product completed.');
+                $button.prop('disabled', false);
                 $button.html('<i class="fa fa-random"></i>');
                 initTooltips();
                 calculateTotalPrice();
