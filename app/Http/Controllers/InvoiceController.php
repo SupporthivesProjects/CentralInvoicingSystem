@@ -304,23 +304,22 @@ class InvoiceController extends Controller
     }
     
 
-    public static function createInvoiceHistory(array $invoice_data): void
+    public static function createInvoiceHistory($invoice_data)
     {
         $user = auth()->user();
-    
         InvoiceGenerationHistory::create([
-            'model_type'      => $invoice_data['model_type'] ?? null,
-            'site_id'         => $invoice_data['site_id'] ?? null,
-            'currency'        => $invoice_data['currency'] ?? null,
-            'invoice_number'  => $invoice_data['invoice_number'] ?? null,
-            'product_ids'     => json_encode($invoice_data['product_ids'] ?? []),
-            'current_amount'  => $invoice_data['current_amount'] ?? 0,
-            'discount_amount' => $invoice_data['discount_amount'] ?? 0,
-            'invoice_amount'  => $invoice_data['invoice_amount'] ?? 0,
-            'created_by'      => $user?->id,
+            'model_type'      => $invoice_data['model_type'],
+            'site_id'         => $invoice_data['site_id'],
+            'currency'        => $invoice_data['currency'],
+            'invoice_number'  => $invoice_data['invoice_number'],
+            'product_ids'     => json_encode($invoice_data['product_ids']),
+            'current_amount'  => $invoice_data['current_amount'],
+            'discount_amount' => $invoice_data['discount_amount'],
+            'invoice_amount'  => $invoice_data['invoice_amount'],
+            'created_by' => $user->id,
         ]);
     }
-    
+
 
     public function generateInvoiceNumber(Request $request)
     {
