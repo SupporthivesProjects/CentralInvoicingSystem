@@ -49,6 +49,14 @@ if (!function_exists('userCount')) {
     }
 }
 
+if (!function_exists('getUserById')) {
+    function getUserById($userId)
+    {
+        return User::find($userId);
+    }
+}
+
+
 if (!function_exists('currentUserName')) {
     function currentUserName()
     {
