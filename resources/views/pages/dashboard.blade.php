@@ -223,7 +223,7 @@
                                                                     </a>
                                                                 </div>
                                                             </td>
-                                                            <td class="text-center">{{ $invoice->created_at->format('Y-m-d h:i A') }}                                                            </td>
+                                                            <td class="text-center">{{ $invoice->created_at->format('Y-m-d H:i') }}</td>
 
                                                         </tr>
                                                     @endforeach
