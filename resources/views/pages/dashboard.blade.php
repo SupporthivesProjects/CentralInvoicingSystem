@@ -209,12 +209,12 @@
                                                     @foreach ($invoices as $index => $invoice)
                                                         <tr>
                                                             <td class="text-center">{{ $index + 1 }}</td>
-                                                            <td class="text-center">{{ $invoice->invoice_number }}</td>
+                                                            <td class="text-left">{{ $invoice->invoice_number }}</td>
                                                             <td class="text-center">{{ $invoice->model_type }}</td>
                                                             <td class="text-center"><a target="_blank" href="{{ $invoice->website->site_link }}">View</a></td>
                                                             <td class="text-center">{{ $invoice->currency }}{{ number_format($invoice->discount_amount, 2) }} </td>
                                                             <td class="text-center">{{ $invoice->currency }}{{ number_format($invoice->invoice_amount, 2) }}</td>
-                                                            <td class="text-center">{{ getUserById($invoice->created_by)?->email ?? '-' }}</td>
+                                                            <td class="text-left">{{ getUserById($invoice->created_by)?->email ?? '-' }}</td>
                                                             <td class="text-center">
                                                                 <div class="d-flex justify-content-center">
                                                                     <a href="{{ route('product.selection', ['invoice_id' => $invoice->id]) }}"
