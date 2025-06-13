@@ -553,7 +553,7 @@ class LaravelController extends Controller
 
         $invoice_data['site'] = $site;
         $invoice_data['invoice_number'] = $request->input('invoice_number');
-        $invoice_data['invoice_date'] = $request->input('invoice_date');
+        $invoice_data['invoice_date'] = Carbon::parse($request->input('invoice_date'))->format('F d, Y');
         $invoice_data['customer_name'] = $request->input('customer_name');
         $invoice_data['customer_mobile'] = $request->input('customer_mobile');
         $invoice_data['customer_email'] = $request->input('customer_email');

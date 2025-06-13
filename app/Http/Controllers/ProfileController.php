@@ -31,7 +31,7 @@ class ProfileController extends Controller
     public function update(Request $request)
     {
         $user = Auth::user();
-
+    
         $validated = $request->validate([
             'bio' => 'nullable|string|max:1000',
             'experience' => 'nullable|string|max:255',
@@ -45,57 +45,52 @@ class ProfileController extends Controller
             'profile_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'cover_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
-
+    
         $profile = $user->profile ?? new Profile(['user_id' => $user->id]);
-
-        if (!$profile) {
-            $profile = new Profile(['user_id' => $user->id]);
-            $profile->save(); // 🔐 Important to get the ID
+    
+        if (!$profile->exists) {
+            $profile->save();
         }
-        $profile->fill($validated);
-        // === Profile Image ===
+    
+        $profileData = collect($validated)->except(['profile_image', 'cover_image'])->toArray();
+        $profile->fill($profileData);
+    
         if ($request->hasFile('profile_image') && $request->file('profile_image')->isValid()) {
-            // Delete old image if exists
             if ($profile->profile_image && File::exists(public_path($profile->profile_image))) {
                 File::delete(public_path($profile->profile_image));
             }
-
+    
             $filename = time() . '_' . $request->file('profile_image')->getClientOriginalName();
             $folder = "uploads/profiles/profilephoto/{$user->id}";
-
-            // Create directory if not exists
+    
             if (!File::exists(public_path($folder))) {
                 File::makeDirectory(public_path($folder), 0775, true);
             }
-
+    
             $request->file('profile_image')->move(public_path($folder), $filename);
             $profile->profile_image = '/' . $folder . '/' . $filename;
-            //$profile->save();
         }
-
-        // === Cover Image ===
-        if ($request->hasFile('cover_image')) {
-            // Delete old image if exists
+    
+        if ($request->hasFile('cover_image') && $request->file('cover_image')->isValid()) {
             if ($profile->cover_image && File::exists(public_path($profile->cover_image))) {
                 File::delete(public_path($profile->cover_image));
             }
-
+    
             $filename = time() . '_' . $request->file('cover_image')->getClientOriginalName();
             $folder = "uploads/profiles/coverphoto/{$user->id}";
-
-            // Create directory if not exists
+    
             if (!File::exists(public_path($folder))) {
                 File::makeDirectory(public_path($folder), 0775, true);
             }
-
+    
             $request->file('cover_image')->move(public_path($folder), $filename);
             $profile->cover_image = '/' . $folder . '/' . $filename;
         }
-
-        // $profile->fill($validated);
+    
         $profile->save();
-
+    
         return redirect()->route('myprofile')->with('success', 'Profile updated successfully!');
     }
+    
 
 }
