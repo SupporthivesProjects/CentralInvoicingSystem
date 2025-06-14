@@ -80,8 +80,8 @@
                                                         <a href="{{ route('website.edit', $site->id) }}" class="btn btn-sm btn-primary">
                                                             <i class="fas fa-edit"></i> Edit
                                                         </a>
-                                                        {{-- <button class="btn btn-sm btn-danger delete-btn" data-id="{{ $site->id }}">
-                                                            <i class="fas fa-trash-alt"></i> Delete
+                                                     {{-- <button class="btn btn-sm btn-danger delete-btn" data-id="{{ $site->id }}">
+                                                            <i class="fas fa-trash-alt"></i>
                                                         </button> --}}
                                                     </td>
                                                    
