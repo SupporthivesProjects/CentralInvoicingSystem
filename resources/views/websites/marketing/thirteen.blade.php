@@ -96,8 +96,8 @@
             <td width="50%">
                 <div class="section-title">Billed From:</div>
                 <p>Javago<br>
-                    Website: www.javago.com<br>
-                    Email: support@javago.com<br>
+                    Website: {{ $site->site_name ?? 'Company Name' }}<br>
+                    Email: {{ $company_email ?? 'support@writecontent4me.com' }}<br>
                     Address: FDRK0114 Compass Building,<br>
                     Al Shohada Road, AL Hamra Industrial Zone-FZ,<br>
                     Ras Al Khaimah, United Arab Emirates

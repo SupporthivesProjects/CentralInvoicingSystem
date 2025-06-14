@@ -49,7 +49,7 @@
                             <br>
                             <p style="font-size: 10px; font-weight: 700; margin: 0;">Invoice From</p>
                             <p style="font-size: 12px; font-weight: 700; margin: 0;">Digital Age Solutionz</p>
-                            <a style="font-size: 9px; color: #0563C1; text-decoration: underline;">Support@digitalagesolutionz.com</a>
+                            <a style="font-size: 9px; color: #0563C1; text-decoration: underline;">{{ $company_email ?? 'Support@digitalagesolutionz.com' }}</a>
                             <p style="font-size: 9px; margin: 0;">+971 50 956 0385<br>Properties, DSO-IFZA,<br>Dubai Silicon Oasis</p>
                         </td>
                     </tr>
