@@ -212,7 +212,14 @@
                                                             <td class="text-center">{{ $invoice->id }}</td>
                                                             <td class="text-left">{{ $invoice->invoice_number }}</td>
                                                             <td class="text-center">{{ $invoice->model_type }}</td>
-                                                            <td class="text-center"><a target="_blank" href="{{ $invoice->website->site_link }}" data-bs-toggle="tooltip" title="{{ $invoice->website->site_link }}">View</a></td>
+                                                            <td class="text-center">
+                                                                @if(!empty($invoice->website?->site_link))
+                                                                    <a target="_blank" href="{{ $invoice->website->site_link }}" data-bs-toggle="tooltip" title="{{ $invoice->website->site_link }}">View</a>
+                                                                @else
+                                                                    <span class="text-muted">Not set</span>
+                                                                @endif
+                                                            </td>
+
                                                             <td class="text-center">{{ $invoice->currency }}{{ number_format($invoice->discount_amount, 2) }} </td>
                                                             <td class="text-center">{{ $invoice->currency }}{{ number_format($invoice->invoice_amount, 2) }}</td>
                                                            
@@ -419,22 +426,23 @@
 
 <script>
     $(document).ready(function () {
-    $('#invoice-history').DataTable({
-        responsive: true,
-        dom: 'Bfrtip',
-        buttons: [
-            'copy',
-            'csv',
-            'excel',
-            'pdf',
-            {
-                extend: 'print',
-                text: 'Print Table'
-            }
-        ]
+        $('#invoice-history').DataTable({
+            responsive: true,
+            dom: 'Bfrtip',
+            order: [[0, 'desc']], 
+            buttons: [
+                'copy',
+                'csv',
+                'excel',
+                'pdf',
+                {
+                    extend: 'print',
+                    text: 'Print Table'
+                }
+            ]
+        });
     });
-});
-
 </script>
+
 
 @endpush
