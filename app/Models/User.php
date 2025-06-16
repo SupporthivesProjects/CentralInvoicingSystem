@@ -8,6 +8,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Models\Role;
 use App\Models\Profile;
+use App\Models\InvoiceGenerationHistory;
+
 
 class User extends Authenticatable
 {
@@ -56,4 +58,10 @@ class User extends Authenticatable
     {
         return $this->hasOne(Profile::class);
     }
+
+    public function createdInvoices()
+    {
+        return $this->hasMany(InvoiceGenerationHistory::class, 'created_by');
+    }
+
 }

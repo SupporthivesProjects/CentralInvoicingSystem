@@ -33,7 +33,7 @@ class ProfileController extends Controller
         $user = Auth::user();
     
         $validated = $request->validate([
-            'bio' => 'nullable|string|max:1000',
+            'bio' => 'nullable|string|max:10000',
             'experience' => 'nullable|string|max:255',
             'location' => 'nullable|string|max:255',
             'mobile' => 'nullable|string|max:20',
