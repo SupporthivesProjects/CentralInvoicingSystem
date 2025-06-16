@@ -51,7 +51,7 @@ class InvoiceController extends Controller
         try {
             $site_id = request()->get('site_id', $site_id_from_url);
             $site = Website::findOrFail($site_id);
-            $sites = Website::all();
+            $sites = Website::orderBy('id', 'DESC')->get();
 
             session()->put('customer.site_id', $site->id);
     
@@ -166,7 +166,7 @@ class InvoiceController extends Controller
             }
 
             $modelType = $site->businessModel->model_type;
-            $sites = Website::all();
+            $sites = Website::orderBy('id', 'DESC')->get();
 
             return view("invoice.{$modelType}.productSelection", [
                 'customer' => session('customer'), 
