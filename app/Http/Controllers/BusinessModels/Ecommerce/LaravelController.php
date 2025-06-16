@@ -591,7 +591,7 @@ class LaravelController extends Controller
         
         $products = DB::connection($this->connectionType)->table($this->productTable)
             ->whereIn('id', $productIds)
-            ->select('id', 'category_id', 'name', 'unit_price') 
+            ->select('id', 'category_id', 'name', 'description','unit_price') 
             ->get()
             ->sortBy(function ($product) use ($productIds) {
                 return array_search($product->id, $productIds);

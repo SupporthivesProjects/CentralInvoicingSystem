@@ -1115,7 +1115,7 @@ $(document).ready(function() {
 
     function calculateTotalPrice() {
         let currentAmount = 0;
-
+        initTooltips();
         $('input[name="product_ids[]"]:checked').each(function () {
             const productId = $(this).val();
             const punitPrice = parseFloat($(`input[data-product-id="${productId}"]`).val()) || 0;

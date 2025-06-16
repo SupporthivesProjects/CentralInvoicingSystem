@@ -1130,7 +1130,7 @@ $(document).ready(function() {
 
     function calculateTotalPrice(discountManual = false) {
         let currentAmount = 0;
-
+        initTooltips();
         $('input[name="product_ids[]"]:checked').each(function () {
             const productId = $(this).val();
             const punitPrice = parseFloat($(`input.product-price[data-product-id="${productId}"]`).val()) || 0;

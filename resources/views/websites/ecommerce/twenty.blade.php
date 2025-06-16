@@ -60,27 +60,26 @@
                     <tr class="invoice_image1" >
                         <td style="padding:40px;display: flex;flex-direction: column;">
                             
-                            <table style="margin-top: 40px;border-collapse: collapse;">
-                                <tr>
-                                    <td>
-                                        <h1 style="color: #2e74b1;font-size:36px;font-family:Calibri;font-weight:700;margin: 0px;text-transform: uppercase;letter-spacing:1px;">
-                                            invoice
+                        <table width="100%" style="margin-top: 40px; border-collapse: collapse;">
+                            <tr>
+                                <td style="width: 50%; vertical-align: middle;">
+                                    <h1 style="color: #2e74b1; font-size: 36px; font-family: Calibri; font-weight: 700; margin: 0px; text-transform: uppercase; letter-spacing: 1px;">
+                                        Invoice
+                                    </h1>
+                                </td>
+                                <td style="width: 50%; text-align: right; vertical-align: middle;">
+                                    <div style="display: inline-block; text-align: right;">
+                                        <h1 style="color: #2e74b1; font-size: 14px; font-family: Calibri; font-weight: 400; margin: 0px; text-transform: uppercase;">
+                                            INVOICENO: {{ $invoice_number }}
                                         </h1>
-                                    </td>
-                                    <td>
-                                        <h1 style="color: #2e74b1;font-size:14px;font-family:Calibri;font-weight:400;margin: 0px;text-transform: uppercase;text-align: right;">
-                                           INVOICENO:{{ $invoice_number }}
-                                        </h1>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2">
-                                        <p style="color:black;font-size:12px;font-family:Roboto Medium;font-weight: 400;margin: 0px;text-align:right;text-transform:capitalize;">
-                                              DATE: {{ $invoice_date }}
+                                        <p style="color: black; font-size: 12px; font-family: Roboto, sans-serif; font-weight: 400; margin: 4px 0 0; text-transform: capitalize;">
+                                            DATE: {{ $invoice_date }}
                                         </p>
-                                    </td>
-                                </tr>
-                            </table>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+
                             <table cellspacing="0" cellpadding="0" border="0" width="100%" style="border-collapse: collapse;margin-top:40px;">
                                 <tr>
                                     <td style="vertical-align: top;">
@@ -90,7 +89,7 @@
                                                 TOTAL DUES:
                                              </span>
                                              <p style="color:#2e74b1;font-size:24px;font-weight:400;font-family: Calibri;margin: 0px;">
-                                                £100.00
+                                                {{ site_currency_code() }} {{  number_format($invoice_amount, 2) }}
                                              </p>
                                           </div>
                                           <div style="display: flex;flex-direction: column;">
@@ -122,158 +121,75 @@
 
                                     </td>
                                     <td style="display: flex;">
-                                        <table border="1" style="border-collapse: collapse;margin-bottom:20px;">
-                                            <tr style="height:50px;">
-                                                <td style="width: 200px;padding-left: 10px;">
-                                                    <p style="color: rgb(128, 128, 128);font-size:11px;font-weight:600;font-family: Calibri;margin: 0px;">
-                                                        DESCRIPTIONS
-                                                    </p>
-                                                </td>
-                                                <td style="width: 70px;padding: 0px;">
-                                                    <p style="color: grey;font-size:11px;font-weight:600;font-family: Calibri;margin: 0px;text-align: center;border-bottom:3px solid #2e74b1;height:50px;display: flex;justify-content: center;align-items: center;">
-                                                        QTY
-                                                    </p>
-                                                </td>
-                                                <td style="width:100px;padding: 0px;">
-                                                    <p style="color: grey;font-size:11px;font-weight:600;font-family: Calibri;margin: 0px;text-align: center;border-bottom:3px solid #2e74b1;height:50px;display: flex;justify-content: center;align-items: center;">
-                                                        PRICE
-                                                    </p>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td style="width: 200px;padding: 10px;display: flex;flex-direction: column;">
-                                                    <p style="color:black;font-size:10px;font-weight:600;font-family: Calibri;margin: 0px;">
-                                                        Item Name Here
-                                                    </p>
-                                                    <span style="color:grey;font-size:8px;font-weight:600;font-family: Calibri;margin: 0px;">
-                                                        Item Description
-                                                    </span>
-                                                    <p style="color:black;font-size:10px;font-weight:400;font-family: Calibri;margin: 0px;">
-                                                        ELEGANY
-                                                    </p>
-                                                </td>
-                                                <td style="width: 70px;background: rgb(227, 227, 254);padding: 10px;">
-                                                    <p style="color: grey;font-size:9px;font-weight:400;font-family: Calibri;margin: 0px;text-align: center;">
-                                                        01
-                                                    </p>
-                                                </td>
-                                                <td style="width:100px;background: rgb(227, 227, 254);padding: 10px;">
-                                                    <p style="color: grey;font-size:12px;font-weight:400;font-family:Roboto Light;margin: 0px;text-align: center;">
-                                                        £10.00
-                                                    </p>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td style="width: 200px;padding: 10px;display: flex;flex-direction: column;">
-                                                    <p style="color:black;font-size:10px;font-weight:600;font-family: Calibri;margin: 0px;">
-                                                        Item Name Here
-                                                    </p>
-                                                    <span style="color:grey;font-size:8px;font-weight:600;font-family: Calibri;margin: 0px;">
-                                                        Item Description
-                                                    </span>
-                                                    <p style="color:black;font-size:10px;font-weight:400;font-family: Calibri;margin: 0px;">
-                                                        ELEGANY
-                                                    </p>
-                                                </td>
-                                                <td style="width: 70px;background: rgb(227, 227, 254);padding: 10px;">
-                                                    <p style="color: grey;font-size:9px;font-weight:400;font-family: Calibri;margin: 0px;text-align: center;">
-                                                        01
-                                                    </p>
-                                                </td>
-                                                <td style="width:100px;background: rgb(227, 227, 254);padding: 10px;">
-                                                    <p style="color: grey;font-size:12px;font-weight:400;font-family:Roboto Light;margin: 0px;text-align: center;">
-                                                        £10.00
-                                                    </p>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td style="width: 200px;padding: 10px;display: flex;flex-direction: column;">
-                                                    <p style="color:black;font-size:10px;font-weight:600;font-family: Calibri;margin: 0px;">
-                                                        Item Name Here
-                                                    </p>
-                                                    <span style="color:grey;font-size:8px;font-weight:600;font-family: Calibri;margin: 0px;">
-                                                        Item Description
-                                                    </span>
-                                                    <p style="color:black;font-size:10px;font-weight:400;font-family: Calibri;margin: 0px;">
-                                                        ELEGANY
-                                                    </p>
-                                                </td>
-                                                <td style="width: 70px;background: rgb(227, 227, 254);padding: 10px;">
-                                                    <p style="color: grey;font-size:9px;font-weight:400;font-family: Calibri;margin: 0px;text-align: center;">
-                                                        01
-                                                    </p>
-                                                </td>
-                                                <td style="width:100px;background: rgb(227, 227, 254);padding: 10px;">
-                                                    <p style="color: grey;font-size:12px;font-weight:400;font-family:Roboto Light;margin: 0px;text-align: center;">
-                                                        £10.00
-                                                    </p>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td style="width: 200px;padding: 10px;display: flex;flex-direction: column;">
-                                                    <p style="color:black;font-size:10px;font-weight:600;font-family: Calibri;margin: 0px;">
-                                                        Item Name Here
-                                                    </p>
-                                                    <span style="color:grey;font-size:8px;font-weight:600;font-family: Calibri;margin: 0px;">
-                                                        Item Description
-                                                    </span>
-                                                    <p style="color:black;font-size:10px;font-weight:400;font-family: Calibri;margin: 0px;">
-                                                        ELEGANY
-                                                    </p>
-                                                </td>
-                                                <td style="width: 70px;background: rgb(227, 227, 254);padding: 10px;">
-                                                    <p style="color: grey;font-size:9px;font-weight:400;font-family: Calibri;margin: 0px;text-align: center;">
-                                                        01
-                                                    </p>
-                                                </td>
-                                                <td style="width:100px;background: rgb(227, 227, 254);padding: 10px;">
-                                                    <p style="color: grey;font-size:12px;font-weight:400;font-family:Roboto Light;margin: 0px;text-align: center;">
-                                                        £10.00
-                                                    </p>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td style="width: 200px;padding: 10px;display: flex;flex-direction: column;">
-                                                    <p style="color:black;font-size:10px;font-weight:600;font-family: Calibri;margin: 0px;">
-                                                        Item Name Here
-                                                    </p>
-                                                    <span style="color:grey;font-size:8px;font-weight:600;font-family: Calibri;margin: 0px;">
-                                                        Item Description
-                                                    </span>
-                                                    <p style="color:black;font-size:10px;font-weight:400;font-family: Calibri;margin: 0px;">
-                                                        ELEGANY
-                                                    </p>
-                                                </td>
-                                                <td style="width: 70px;background: rgb(227, 227, 254);padding: 10px;">
-                                                    <p style="color: grey;font-size:9px;font-weight:400;font-family: Calibri;margin: 0px;text-align: center;">
-                                                        01
-                                                    </p>
-                                                </td>
-                                                <td style="width:100px;background: rgb(227, 227, 254);padding: 10px;">
-                                                    <p style="color: grey;font-size:12px;font-weight:400;font-family:Roboto Light;margin: 0px;text-align: center;">
-                                                        £10.00
-                                                    </p>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td style="width: 200px;padding: 10px;text-align: right;">
-                                                    <p style="color:grey;font-size:9px;font-weight:400;font-family: Calibri;margin: 0px;text-transform: uppercase;padding-right: 20px;">
-                                                        SUB TOTAl
-                                                    </p>
-                                                    <p style="color:grey;font-size:9px;font-weight:400;font-family: Calibri;margin: 0px;text-transform: uppercase;padding-right: 20px;">
-                                                        SUB TOTAl
-                                                    </p>
-                                                </td>
-                                                <td style="background: rgb(227, 227, 254);padding: 10px;text-align: right;border-bottom:3px solid #2e74b1;height:50px;" colspan="2">
-                                                    <p style="color: grey;font-size:12px;font-weight:400;font-family:Roboto Light;margin: 0px;padding-right: 10px;">
-                                                        £100.00
-                                                    </p>
-                                                    <p style="color: grey;font-size:12px;font-weight:400;font-family:Roboto Light;margin: 0px;padding-right: 10px;">
-                                                        £100.00
-                                                    </p>
-                                                </td>
-                                            </tr>
-                                        </table>
+                                    <table border="1" style="border-collapse: collapse; margin-bottom: 20px; width: 100%;min-height: 500px !important;border: 1px solid #ccc !important;">
+                                        <tr style="height: 50px;">
+                                            <td style="width: 200px; padding-left: 10px;border-bottom: 1px solid #ccc !important;">
+                                                <p style="color: rgb(128, 128, 128); font-size: 11px; font-weight: 600; font-family: Calibri; margin: 0px;">
+                                                    DESCRIPTIONS
+                                                </p>
+                                            </td>
+                                            <td style="width: 70px; text-align: center; border-bottom: 3px solid #2e74b1;">
+                                                <p style="color: grey; font-size: 11px; font-weight: 600; font-family: Calibri; margin: 0; line-height: 50px;">
+                                                    QTY
+                                                </p>
+                                            </td>
+                                            <td style="width: 100px; text-align: center; border-bottom: 3px solid #2e74b1;">
+                                                <p style="color: grey; font-size: 11px; font-weight: 600; font-family: Calibri; margin: 0; line-height: 50px;">
+                                                    PRICE
+                                                </p>
+                                            </td>
+                                        </tr>
+                                        @foreach($products as $product)
+                                        <tr>
+                                            <td style="width: 200px; padding: 10px;border-bottom: 1px solid #ccc !important;">
+                                                <p style="color: black; font-size: 10px; font-weight: 600; font-family: Calibri; margin: 0px;">
+                                                    {{ $product->name }}
+                                                </p>
+                                                <span style="color: grey; font-size: 8px; font-weight: 600; font-family: Calibri; margin: 0px;">
+                                                {{ $product->name }}...
+                                                </span>
+                                                <p style="color: black; font-size: 10px; font-weight: 400; font-family: Calibri; margin: 0px;">
+                                                {{ $product->category_name }}
+                                                </p>
+                                            </td>
+                                            <td style="border-bottom: 1px solid #ccc !important;width: 70px; background-color: #e3e3fe !important; padding: 10px; text-align: center;">
+                                                <p style="color: grey; font-size: 9px; font-weight: 400; font-family: Calibri; margin: 0px;">
+                                                   {{ $product->quantity ?? 1 }}
+                                                </p>
+                                            </td>
+                                            <td style="border-bottom: 1px solid #ccc !important;width: 100px; background-color: #e3e3fe !important; padding: 10px; text-align: center;">
+                                                <p style="color: grey; font-size: 12px; font-weight: 400; font-family: Roboto Light; margin: 0px;">
+                                                {{ site_currency_code() }} {{ number_format(($product->quantity ?? 1) * $product->unit_price, 2) }}
+                                                </p>
+                                            </td>
+                                        </tr>
+                                        @endforeach
+                                        <tr>
+                                            <td style="border-bottom: 1px solid #ccc !important;width: 200px; padding: 10px; text-align: right;">
+                                                <p style="color: grey; font-size: 9px; font-weight: 400; font-family: Calibri; margin: 0px; text-transform: uppercase; padding-right: 20px;">
+                                                    SUB TOTAL
+                                                </p>
+                                                <p style="color: grey; font-size: 9px; font-weight: 400; font-family: Calibri; margin: 0px; text-transform: uppercase; padding-right: 20px;">
+                                                    DISCOUNT
+                                                </p>
+                                                <p style="color: grey; font-size: 9px; font-weight: 400; font-family: Calibri; margin: 0px; text-transform: uppercase; padding-right: 20px;">
+                                                    TOTAL
+                                                </p>
+                                            </td>
+                                            <td colspan="2" style="border-bottom: 1px solid #ccc !important;background-color: #e3e3fe !important; padding: 10px; text-align: right; border-bottom: 3px solid #2e74b1;">
+                                                <p style="color: grey; font-size: 12px; font-weight: 400; font-family: Roboto Light; margin: 0px; padding-right: 10px;">
+                                                {{ site_currency_code() }} {{ number_format(($invoice_amount + $discount_amount), 2) }}
+                                                </p>
+                                                <p style="color: grey; font-size: 12px; font-weight: 400; font-family: Roboto Light; margin: 0px; padding-right: 10px;">
+                                                {{ site_currency_code() }} {{ number_format($discount_amount, 2) }}
+                                                </p>
+                                                <p style="color: grey; font-size: 12px; font-weight: 400; font-family: Roboto Light; margin: 0px; padding-right: 10px;">
+                                                {{ site_currency_code() }} {{  number_format($invoice_amount, 2) }}
+                                                </p>
+                                            </td>
+                                        </tr>
+                                    </table>
+
 
                                     </td>
                                 </tr>
@@ -286,21 +202,35 @@
                     <!-----------Footer----------->
                     <tr>
                         <td align="center" class="invoice_footer_image">
-                            <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;"> 
+                            <table width="100%" cellspacing="0" cellpadding="" border="0" style="border-collapse: collapse;"> 
                                 <tr>
-                                   <td style="padding-left: 40px;">
-                                    <div style="display: flex;flex-direction: column;gap:10px;">
-                                       <div style="display: flex;gap: 5px;">
-                                        <img src="{{ $invoice_image3 }} " alt="" style="height:24px;width:24px;">
-                                        <p style="color: black;margin: 0px;font-family: Calibri;font-size: 9px;font-weight: 400;">Support@developerguides4you.com</p>
-                                       </div>
-                                       <div style="display: flex;gap: 5px;">
-                                        <img src="{{ $invoice_image2 }}" alt="" style="height:24px;width:24px;">
-                                        <p style="color: black;margin: 0px;font-family: Calibri;font-size: 9px;font-weight: 400;">
-                                         {!! $company_address !!}
-                                       </div>
-                                    </div>
-                                   </td>
+                                <td style="padding-left: 40px;">
+                                    <table style="margin-bottom: 10px;">
+                                        <tr>
+                                            <td style="vertical-align: middle;">
+                                                <img src="{{ $invoice_image3 }}" alt="" style="height: 24px; width: 24px;">
+                                            </td>
+                                            <td style="vertical-align: middle; padding-left: 5px;">
+                                                <p style="color: black; margin: 0px; font-family: Calibri; font-size: 9px; font-weight: 400;">
+                                                    {{ $company_email }}
+                                                </p>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <table>
+                                        <tr>
+                                            <td style="vertical-align: top;">
+                                                <img src="{{ $invoice_image2 }}" alt="" style="height: 24px; width: 24px;">
+                                            </td>
+                                            <td style="vertical-align: top; padding-left: 5px;">
+                                                <p style="color: black; margin: 0px; font-family: Calibri; font-size: 9px; font-weight: 400;">
+                                                    {!! $company_address !!}
+                                                </p>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+
                                 </tr>              
                             </table>
                         </td>

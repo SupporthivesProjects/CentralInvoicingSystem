@@ -1162,7 +1162,8 @@ $(document).ready(function() {
     });
 
     function calculateTotalPrice() {
-        let currentAmount = 0;
+        let currentAmount = 0; 
+        initTooltips();
         $('input[name="product_ids[]"]:checked').each(function () {
             const productId = $(this).val();
             const unitPriceInput = $(`.product-price[data-product-id="${productId}"]`);
