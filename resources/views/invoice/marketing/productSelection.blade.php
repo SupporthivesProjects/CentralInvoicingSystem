@@ -156,7 +156,7 @@
                         </button>
 
                         <!-- Randomize -->
-                        <button type="button" class="btn btn-outline-success d-flex align-items-center gap-1"
+                        <button type="button" class="btn btn-outline-success d-flex align-items-center gap-1 me-1"
                                 onclick="randomizeProducts('semi_random')" 
                                 data-bs-toggle="tooltip" title="Auto-select products randomly">
                             <i class="fas fa-random"></i> Randomize
