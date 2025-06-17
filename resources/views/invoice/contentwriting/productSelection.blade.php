@@ -582,7 +582,7 @@
     // const minUnitPrice = @json($min_unit_price);
     // const maxUnitPrice = @json($max_unit_price);
     const minUnitPrice = 5;
-    const maxUnitPrice = 150;
+    const maxUnitPrice = 13000;
     const currency = "{{ site_currency() }}";
     
     const updateHiddenInputs = (min, max, type) => {
