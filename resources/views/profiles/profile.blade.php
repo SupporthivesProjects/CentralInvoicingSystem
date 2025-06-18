@@ -18,20 +18,14 @@
 
                 <!-- Page Header -->
 
-                <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between mb-4">
+                <div class="d-md-flex d-block align-items-center justify-content-between page-header-breadcrumb">
                     <div>
-                        <h2 class="fs-3 fw-semibold mb-1 text-dark">My Profile</h2>
-                        <nav aria-label="breadcrumb">
-                            <ol class="breadcrumb mb-0 small text-muted">
-                                <li class="breadcrumb-item">
-                                    <a href="javascript:void(0)" class="text-decoration-none text-primary">Profile</a>
-                                </li>
-                                <li class="breadcrumb-item active" aria-current="page">My Data</li>
-                            </ol>
-                        </nav>
+                        <h2 class="main-content-title fs-24 mb-1">User</h2>
+                        <ol class="breadcrumb mb-0">
+                            <li class="breadcrumb-item"><a href="javascript:void(0)">My Profile</a></li>
+                        </ol>
                     </div>
                 </div>
-
 
 
                 <div class="row">
