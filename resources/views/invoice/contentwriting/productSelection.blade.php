@@ -510,37 +510,6 @@
         $('#discount_amount').prop('type', 'text').val('loading...').prop('readonly', true);
     });
 </script>
-<script>
-    function initTooltips() {
-        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-        tooltipTriggerList.forEach(function (el) {
-            if (!el._tooltipInitialized) {
-                new bootstrap.Tooltip(el);
-                el._tooltipInitialized = true;
-            }
-        });
-    }
-
-    document.addEventListener('DOMContentLoaded', function () {
-        initTooltips();
-
-        const observer = new MutationObserver(() => {
-            initTooltips();
-        });
-
-        observer.observe(document.body, {
-            childList: true,
-            subtree: true
-        });
-    });
-
-    document.addEventListener('click', function (e) {
-        const tooltipEl = e.target.closest('[data-bs-toggle="tooltip"]');
-        if (tooltipEl) {
-            e.stopPropagation();
-        }
-    });
-</script>
 
 <script>
     function adjustNoOfProducts(id, step) {
@@ -1482,7 +1451,37 @@ function saveProductParams(button) {
         }, 20000);
     }
 </script>
+<script>
+    function initTooltips() {
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.forEach(function (el) {
+            if (!el._tooltipInitialized) {
+                new bootstrap.Tooltip(el);
+                el._tooltipInitialized = true;
+            }
+        });
+    }
 
+    document.addEventListener('DOMContentLoaded', function () {
+        initTooltips();
+
+        const observer = new MutationObserver(() => {
+            initTooltips();
+        });
+
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+    });
+
+    document.addEventListener('click', function (e) {
+        const tooltipEl = e.target.closest('[data-bs-toggle="tooltip"]');
+        if (tooltipEl) {
+            e.stopPropagation();
+        }
+    });
+</script>
 
 
 @endpush

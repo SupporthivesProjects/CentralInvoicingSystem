@@ -167,7 +167,7 @@
                                                     <p style="margin: 0px; font-family: Calibri; font-size: 10px; color: #041021;">1</p>
                                                 </td>
                                                 <td>
-                                                    <p style="margin: 0px; font-family: Calibri; font-size: 11px; color: #041021;">  {{  site_currency_code() }} {{ number_format($product->unit_price, 2) }}</p>
+                                                    <p style="margin: 0px; font-family: Calibri; font-size: 11px; color: #041021;">  {{  site_currency() }} {{ number_format($product->unit_price, 2) }}</p>
                                                 </td>
                                             </tr>
                                             @endforeach
@@ -177,7 +177,7 @@
                                                     <h1 style="margin: 0px; font-family: Calibri; font-size: 11px; color: #041021;">SUB-TOTAL</h1>
                                                 </td>
                                                 <td>
-                                                    <h1 style="margin: 0px; font-family: Calibri; font-size: 11px; color: #041021;"> {{ site_currency_code() }} {{ number_format(($invoice_amount + $discount_amount), 2) }}</h1>
+                                                    <h1 style="margin: 0px; font-family: Calibri; font-size: 11px; color: #041021;"> {{ site_currency() }} {{ number_format(($invoice_amount + $discount_amount), 2) }}</h1>
                                                 </td>
                                             </tr>
                                             <tr style="border-bottom: 1px solid black; height: 50px;">
@@ -185,7 +185,7 @@
                                                     <h1 style="margin: 0px; font-family: Calibri; font-size: 11px; color: #041021;">DISCOUNT</h1>
                                                 </td>
                                                 <td>
-                                                    <h1 style="margin: 0px; font-family: Calibri; font-size: 11px; color: #041021;">{{ site_currency_code() }} {{ number_format($discount_amount, 2) }}</h1>
+                                                    <h1 style="margin: 0px; font-family: Calibri; font-size: 11px; color: #041021;">{{ site_currency() }} {{ number_format($discount_amount, 2) }}</h1>
                                                 </td>
                                             </tr>
                                             <tr style="border-bottom: 1px solid black; height: 50px;">
@@ -193,7 +193,7 @@
                                                     <h1 style="margin: 0px; font-family: Calibri; font-size: 11px; color: #041021;">TOTAL</h1>
                                                 </td>
                                                 <td>
-                                                    <h1 style="margin: 0px; font-family: Calibri; font-size: 11px; color: #041021;"> {{  site_currency_code() }} {{ number_format($invoice_amount, 2) }}</h1>
+                                                    <h1 style="margin: 0px; font-family: Calibri; font-size: 11px; color: #041021;"> {{  site_currency() }} {{ number_format($invoice_amount, 2) }}</h1>
                                                 </td>
                                             </tr>
                                         </table>

@@ -83,7 +83,7 @@ style="background: #fff; margin: 0 auto; border-collapse: collapse; box-shadow: 
                                 INVOICE DATE: {{ $invoice_date ?? '-' }}
                             </p>
                             <br>
-                            <table cellspacing="0" cellpadding="0" border="0" width="100%" style="border-collapse: collapse; margin-bottom: 100px;">
+                            <table cellspacing="0" cellpadding="0" border="0" width="100%" style="border-collapse: collapse; margin-bottom: 30px;min-height:500px;">
                                 <tr style="height:40px; border-bottom: 2px solid black;">
                                     <td><p style="text-align:center; font-size:10px; font-weight:400;">Product & Service</p></td>
                                     <td><p style="text-align:center; font-size:10px; font-weight:400;">Qty</p></td>
@@ -97,8 +97,8 @@ style="background: #fff; margin: 0 auto; border-collapse: collapse; box-shadow: 
                                     <td><p style="text-align:center; font-size:10px;">{{ $product->name ?? '-' }}</p></td>
                                     <td><p style="text-align:center; font-size:10px;">{{ $product->quantity ?? 1 }}</p></td>
                                     <td><p style="text-align:center; font-size:10px;">{{ $product->subscription ?? '-' }}</p></td>
-                                    <td><p style="text-align:center; font-size:10px;">{{ site_currency_code() }} {{ number_format($product->unit_price ?? 0, 2) }}</p></td>
-                                    <td><p style="text-align:center; font-size:10px;">{{ site_currency_code() }} {{ number_format($product->unit_price ?? 0, 2) }}</p></td>
+                                    <td><p style="text-align:center; font-size:10px;">{{ site_currency() }} {{ number_format($product->unit_price ?? 0, 2) }}</p></td>
+                                    <td><p style="text-align:center; font-size:10px;">{{ site_currency() }} {{ number_format($product->unit_price ?? 0, 2) }}</p></td>
                                 </tr>
                                 @endforeach
 
@@ -109,19 +109,19 @@ style="background: #fff; margin: 0 auto; border-collapse: collapse; box-shadow: 
                                             <td width="33%" style="background-color:#F2F2F2 !important; text-align:center;">
                                                 <p style="font-size:10px;font-weight:700;">Subtotal</p>
                                                 <p style="font-size:14px;font-weight:700;">
-                                                    {{ site_currency_code() }} {{ number_format(($invoice_amount + $discount_amount) ?? 0, 2) }}
+                                                    {{ site_currency() }} {{ number_format(($invoice_amount + $discount_amount) ?? 0, 2) }}
                                                 </p>
                                             </td>
                                             <td width="33%" style="background-color:#F2F2F2 !important; text-align:center;">
                                                 <p style="font-size:10px;font-weight:700;">Discount</p>
                                                 <p style="font-size:14px;font-weight:700;">
-                                                    {{ site_currency_code() }} {{ number_format($discount_amount ?? 0, 2) }}
+                                                    {{ site_currency() }} {{ number_format($discount_amount ?? 0, 2) }}
                                                 </p>
                                             </td>
                                             <td width="34%" style="background-color:#E5443F !important; color:#ffffff !important; text-align:right; padding-right:10px;">
                                                 <p style="font-size:10px;font-weight:700;">Grand Total</p>
                                                 <p style="font-size:20px;font-weight:700;">
-                                                    {{ site_currency_code() }} {{ number_format($invoice_amount ?? 0, 2) }}
+                                                    {{ site_currency() }} {{ number_format($invoice_amount ?? 0, 2) }}
                                                 </p>
                                             </td>
                                         </tr>

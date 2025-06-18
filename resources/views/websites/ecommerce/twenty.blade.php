@@ -89,7 +89,7 @@
                                                 TOTAL DUES:
                                              </span>
                                              <p style="color:#2e74b1;font-size:24px;font-weight:400;font-family: Calibri;margin: 0px;">
-                                                {{ site_currency_code() }} {{  number_format($invoice_amount, 2) }}
+                                                {{ site_currency() }} {{  number_format($invoice_amount, 2) }}
                                              </p>
                                           </div>
                                           <div style="display: flex;flex-direction: column;">
@@ -159,7 +159,7 @@
                                             </td>
                                             <td style="border-bottom: 1px solid #ccc !important;width: 100px; background-color: #e3e3fe !important; padding: 10px; text-align: center;">
                                                 <p style="color: grey; font-size: 12px; font-weight: 400; font-family: Roboto Light; margin: 0px;">
-                                                {{ site_currency_code() }} {{ number_format(($product->quantity ?? 1) * $product->unit_price, 2) }}
+                                                {{ site_currency() }} {{ number_format(($product->quantity ?? 1) * $product->unit_price, 2) }}
                                                 </p>
                                             </td>
                                         </tr>
@@ -178,13 +178,13 @@
                                             </td>
                                             <td colspan="2" style="border-bottom: 1px solid #ccc !important;background-color: #e3e3fe !important; padding: 10px; text-align: right; border-bottom: 3px solid #2e74b1;">
                                                 <p style="color: grey; font-size: 12px; font-weight: 400; font-family: Roboto Light; margin: 0px; padding-right: 10px;">
-                                                {{ site_currency_code() }} {{ number_format(($invoice_amount + $discount_amount), 2) }}
+                                                {{ site_currency() }} {{ number_format(($invoice_amount + $discount_amount), 2) }}
                                                 </p>
                                                 <p style="color: grey; font-size: 12px; font-weight: 400; font-family: Roboto Light; margin: 0px; padding-right: 10px;">
-                                                {{ site_currency_code() }} {{ number_format($discount_amount, 2) }}
+                                                {{ site_currency() }} {{ number_format($discount_amount, 2) }}
                                                 </p>
                                                 <p style="color: grey; font-size: 12px; font-weight: 400; font-family: Roboto Light; margin: 0px; padding-right: 10px;">
-                                                {{ site_currency_code() }} {{  number_format($invoice_amount, 2) }}
+                                                {{ site_currency() }} {{  number_format($invoice_amount, 2) }}
                                                 </p>
                                             </td>
                                         </tr>

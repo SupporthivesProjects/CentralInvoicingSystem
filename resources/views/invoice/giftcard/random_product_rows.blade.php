@@ -109,28 +109,6 @@
     </td>
 </tr>
 @endforelse
-<script>
-    function initTooltips() {
-        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-        tooltipTriggerList.forEach(function (el) {
-            if (!el._tooltipInitialized) {
-                new bootstrap.Tooltip(el);
-                el._tooltipInitialized = true;
-            }
-        });
-    }
-
-    document.addEventListener('DOMContentLoaded', function () {
-        initTooltips();
-    });
-
-    document.addEventListener('click', function (e) {
-        const tooltipEl = e.target.closest('[data-bs-toggle="tooltip"]');
-        if (tooltipEl) {
-            e.stopPropagation();
-        }
-    });
-</script>
 
 <script>    
 

@@ -90,10 +90,10 @@
                                      {{ $product->name }}
                                     </td>
                                     <td style="width:300px;text-align:left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;border-left: 1px solid black;">
-                                   {{ site_currency_code() }} {{  number_format($product->unit_price, 2) }}
+                                   {{ site_currency() }} {{  number_format($product->unit_price, 2) }}
                                     </td>
                                     <td style="width:200px;text-align:left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;border-left: 1px solid black;border-right: 1px solid black;">
-                                    {{ site_currency_code() }} {{  number_format($product->unit_price, 2) }}
+                                    {{ site_currency() }} {{  number_format($product->unit_price, 2) }}
                                     </td>
                                 </tr>
                                 @endforeach
@@ -106,7 +106,7 @@
                                         <b>Subtotal</b>
                                     </td>
                                     <td style="width: 100px; text-align: left; font-family: arial; font-size: 10px; font-weight: 400; border: 1px solid black; border-top: 1px solid black;">
-                                    {{ site_currency_code() }} {{ number_format(($invoice_amount + $discount_amount), 2) }}
+                                    {{ site_currency() }} {{ number_format(($invoice_amount + $discount_amount), 2) }}
                                     </td>
                                 </tr>
 
@@ -121,7 +121,7 @@
                                        <b> Discount</b>
                                     </td>
                                     <td style="width:100px;text-align:left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;border: 1px solid black;">
-                                    {{ site_currency_code() }} {{ number_format($discount_amount, 2) }}
+                                    {{ site_currency() }} {{ number_format($discount_amount, 2) }}
                                     </td>
                                  <tr style="border-collapse: collapse;height: 30px;border-bottom: 0px;border: 0px;">
                                     <td style="width: 100px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;">
@@ -134,7 +134,7 @@
                                        <b> Total Due</b>
                                     </td>
                                     <td style="width: 100px; text-align: left; font-family: arial; font-size: 10px; margin: 0px; font-weight: 400; border-collapse: collapse; border: 1px solid black !important;">
-                                        {{ site_currency_code() }} {{ number_format($invoice_amount, 2) }}
+                                        {{ site_currency() }} {{ number_format($invoice_amount, 2) }}
                                     </td>
 
                                 </tr>
