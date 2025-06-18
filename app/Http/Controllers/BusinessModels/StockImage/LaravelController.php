@@ -19,6 +19,9 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\View\ViewNotFoundException;
 use Carbon\Carbon;
 use Yajra\DataTables\Facades\DataTables;
+use Api2Pdf\Api2Pdf;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Http;
 
 
 class LaravelController extends Controller
@@ -524,115 +527,160 @@ class LaravelController extends Controller
 
 
     public function generateInvoice(Request $request)
-{
-    $site_id = $request->input('site_id');
-    $site = Website::findOrFail($site_id);
+    {
+        $site_id = $request->input('site_id');
+        $site = Website::findOrFail($site_id);
 
-    $invoice_data['site'] = $site;
-    $invoice_data['invoice_number'] = $request->input('invoice_number');
-    $invoice_data['invoice_date'] = $request->input('invoice_date');
-    $invoice_data['customer_name'] = $request->input('customer_name');
-    $invoice_data['customer_mobile'] = $request->input('customer_mobile');
-    $invoice_data['customer_email'] = $request->input('customer_email');
-    $invoice_data['company_email'] = $request->input('company_email');
-    $invoice_data['invoice_amount'] = $request->input('invoice_amount');
-    $invoice_data['current_amount'] = $request->input('current_amount');
-    $invoice_data['discount_amount'] = $request->input('discount_amount');
-    $invoice_data['company_name'] = $site->company_name;
-    $invoice_data['company_email'] = $site->company_email;
-    $invoice_data['company_mobile'] = $site->company_mobile;
-    $invoice_data['company_address'] = $site->company_address;
-    $invoice_data['invoice_header_image'] = base64EncodeImage($site->invoice_header_image);
-    $invoice_data['invoice_footer_image'] = base64EncodeImage($site->invoice_footer_image);
-    $invoice_data['invoice_signature'] = base64EncodeImage($site->invoice_signature);
-    $invoice_data['company_logo'] = base64EncodeImage($site->company_logo);
-    $invoice_data['invoice_image1'] = base64EncodeImage($site->invoice_image1);
-    $invoice_data['invoice_image2'] = base64EncodeImage($site->invoice_image2);
-    $invoice_data['invoice_image3'] = base64EncodeImage($site->invoice_image3);
-    $invoice_data['invoice_template'] = $site->invoice_template;
-    $invoice_data['model_type'] = $site->businessModel->model_type;
-    $invoice_data['site_id'] = $site->id;
+        $invoice_data['site'] = $site;
+        $invoice_data['invoice_number'] = $request->input('invoice_number');
+        $invoice_data['invoice_date'] = $request->input('invoice_date');
+        $invoice_data['customer_name'] = $request->input('customer_name');
+        $invoice_data['customer_mobile'] = $request->input('customer_mobile');
+        $invoice_data['customer_email'] = $request->input('customer_email');
+        $invoice_data['company_email'] = $request->input('company_email');
+        $invoice_data['invoice_amount'] = $request->input('invoice_amount');
+        $invoice_data['current_amount'] = $request->input('current_amount');
+        $invoice_data['discount_amount'] = $request->input('discount_amount');
+        $invoice_data['company_name'] = $site->company_name;
+        $invoice_data['company_email'] = $site->company_email;
+        $invoice_data['company_mobile'] = $site->company_mobile;
+        $invoice_data['company_address'] = $site->company_address;
+        $invoice_data['invoice_header_image'] = base64EncodeImage($site->invoice_header_image);
+        $invoice_data['invoice_footer_image'] = base64EncodeImage($site->invoice_footer_image);
+        $invoice_data['invoice_signature'] = base64EncodeImage($site->invoice_signature);
+        $invoice_data['company_logo'] = base64EncodeImage($site->company_logo);
+        $invoice_data['invoice_image1'] = base64EncodeImage($site->invoice_image1);
+        $invoice_data['invoice_image2'] = base64EncodeImage($site->invoice_image2);
+        $invoice_data['invoice_image3'] = base64EncodeImage($site->invoice_image3);
+        $invoice_data['invoice_template'] = $site->invoice_template;
+        $invoice_data['model_type'] = $site->businessModel->model_type;
+        $invoice_data['site_id'] = $site->id;
 
-    $productDataArray = $request->input('product_data', []);
-    DynamicDatabaseService::connect($site);
+        $productDataArray = $request->input('product_data', []);
+        DynamicDatabaseService::connect($site);
 
-    $productIds = [];
-    $customPrices = [];
-    $customPacks = [];
+        $productIds = [];
+        $customPrices = [];
+        $customPacks = [];
 
-    //dd($productDataArray);
-    foreach ($productDataArray as $item) {
-    $data = json_decode($item, true);
+        //dd($productDataArray);
+        foreach ($productDataArray as $item) {
+        $data = json_decode($item, true);
 
-    if (isset($data['product_id'])) {
-        if ($data['product_id'] == 0) {
-            // Handle custom pack
-            $customPacks[] = (object)[
-                'id' => '0',
-                'name' => 'Custom Pack',
-                'price' => floatval($data['price']),
-                'credits' => round(floatval($data['price']) / 5.75)
-            ];
-        } else {
-            // Handle regular products
-            $productIds[] = $data['product_id'];
-            $customPrices[$data['product_id']] = $data['price'];
+        if (isset($data['product_id'])) {
+            if ($data['product_id'] == 0) {
+                // Handle custom pack
+                $customPacks[] = (object)[
+                    'id' => '0',
+                    'name' => 'Custom Pack',
+                    'price' => floatval($data['price']),
+                    'credits' => round(floatval($data['price']) / 5.75)
+                ];
+            } else {
+                // Handle regular products
+                $productIds[] = $data['product_id'];
+                $customPrices[$data['product_id']] = $data['price'];
+            }
         }
     }
-}
 
 
-    //dd($customPacks);
+        //dd($customPacks);
 
-    $products = collect();
+        $products = collect();
 
-    // Fetch regular products from database
-    if (!empty($productIds)) {
-        $dbProducts = DB::connection($this->connectionType)->table($this->productTable)
-            ->whereIn('id', $productIds)
-            ->select('id', 'name', 'price', 'credits')
-            ->get()
-            ->sortBy(function ($product) use ($productIds) {
-                return array_search($product->id, $productIds);
-            })
-            ->values()
-            ->map(function ($product) use ($customPrices) {
-                $product->price = $customPrices[$product->id] ?? $product->price;
-                return $product;
-            });
+        // Fetch regular products from database
+        if (!empty($productIds)) {
+            $dbProducts = DB::connection($this->connectionType)->table($this->productTable)
+                ->whereIn('id', $productIds)
+                ->select('id', 'name', 'price', 'credits')
+                ->get()
+                ->sortBy(function ($product) use ($productIds) {
+                    return array_search($product->id, $productIds);
+                })
+                ->values()
+                ->map(function ($product) use ($customPrices) {
+                    $product->price = $customPrices[$product->id] ?? $product->price;
+                    return $product;
+                });
 
-        $products = $products->concat($dbProducts);
-    }
+            $products = $products->concat($dbProducts);
+        }
 
-    // Add custom packs to products collection
-    foreach ($customPacks as $customPack) {
-        $products->push($customPack);
-    }
+        // Add custom packs to products collection
+        foreach ($customPacks as $customPack) {
+            $products->push($customPack);
+        }
 
-    $invoice_data['currency'] = site_currency();
-    $invoice_data['products'] = $products;
-    $invoice_data['product_ids'] = $products->pluck('id')->toArray();
+        $invoice_data['currency'] = site_currency();
+        $invoice_data['products'] = $products;
+        $invoice_data['product_ids'] = $products->pluck('id')->toArray();
 
-    $modelType = strtolower($site->businessModel->model_type);
-    $siteIdInWords = numberToWords($site->id);
-    $viewPath = "websites.{$modelType}.{$siteIdInWords}";
+        $modelType = strtolower($site->businessModel->model_type);
+        $siteIdInWords = numberToWords($site->id);
+        $viewPath = "websites.{$modelType}.{$siteIdInWords}";
 
-    try {
         $this->updateProductPrice($productDataArray);
-        InvoiceController::createInvoiceHistory($invoice_data);
-        $pdf = PDF::loadView($viewPath, $invoice_data);
-        $pdf->setPaper('A4', 'portrait');
+            InvoiceController::createInvoiceHistory($invoice_data);
         if ($request->filled('invoice_file_name')) {
             $filename = $request->input('invoice_file_name') . '.pdf';
         } else {
             $filename = $invoice_data['invoice_number'] . '.pdf';
         }
 
-        return $pdf->download($filename);
-    } catch (\Illuminate\View\ViewNotFoundException $e) {
-        abort(500, 'Please set up or upload your invoice template.');
+        try {
+            return $this->generateWithApi2Pdf($viewPath, $invoice_data, $filename);
+
+        } catch (\Exception $e) {
+            // Fallback to Dompdf if API2PDF fails
+            return $this->generateWithDompdf($viewPath, $invoice_data, $filename);
+        }
     }
-}
+
+    protected function generateWithDompdf($viewPath, $invoice_data, $filename)
+    {
+        $pdf = \PDF::loadView($viewPath, $invoice_data)->setPaper('A4', 'portrait');
+        return $pdf->download($filename);
+    }
+
+    protected function generateWithApi2Pdf($viewPath, $invoice_data, $filename)
+    {
+        $html = View::make($viewPath, $invoice_data)->render();
+
+        $response = Http::withHeaders([
+            'Authorization' => env('API2PDF_KEY')
+        ])->post('https://v2.api2pdf.com/chrome/html', [
+            'html' => $html,
+            'fileName' => $filename,
+            'options' => [
+                'format' => 'A4',
+                'landscape' => false
+            ]
+        ]);
+
+        if ($response->failed()) {
+            $error = $response->json('message') ?? $response->body();
+            throw new \Exception('API2PDF failed: ' . $error);
+        }
+
+        $pdfUrl = $response->json('pdf');
+
+        if (empty($pdfUrl)) {
+            throw new \Exception('API2PDF did not return a PDF URL.');
+        }
+
+        return response()->streamDownload(function () use ($pdfUrl) {
+            $pdfResponse = Http::timeout(60)->get($pdfUrl);
+
+            if ($pdfResponse->failed()) {
+                throw new \Exception("Failed to download PDF file from Api2Pdf.");
+            }
+
+            echo $pdfResponse->body();
+        }, $filename);
+    }
+
+
 
 
     protected function updateProductPrice(array $productDataArray)

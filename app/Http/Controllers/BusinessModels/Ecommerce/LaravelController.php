@@ -41,24 +41,24 @@ class LaravelController extends Controller
     {
         $site_id = $request->get('site_id');
         $invoiceAmount = floatval($request->get('invoice_amount'));
-    
+
         $priceFrom = $request->get('price_from');
         $priceTo = $request->get('price_to');
         $categoryId = $request->get('category_id');
         $noOfProducts = intval($request->get('noOfProducts'));
-    
+
         $site = Website::findOrFail($site_id);
         $productstable = getProductTable($site->technology);
         DynamicDatabaseService::connect($site);
-    
+
         $query = DB::connection($this->connectionType)->table($this->productTable)
             ->select('id', 'category_id', 'name', 'unit_price', 'slug')
             ->where('published', 1);
-    
+
         if ($priceFrom && $priceTo) {
             $query->whereBetween('unit_price', [$priceFrom, $priceTo]);
         }
-    
+
         if ($categoryId) {
             $query->where('category_id', $categoryId);
         }
@@ -72,38 +72,44 @@ class LaravelController extends Controller
             $allProducts = $query->orderByDesc('unit_price')->inRandomOrder()->get();
         } else {
             $minTotal = $invoiceAmount;
-            $maxTotal = $invoiceAmount * 1.10;
-            $iteration = 20;
-            $allProducts =  $query->orderByDesc('unit_price')->limit($fetchLimit)->get(); 
+            $allProducts =  $query->orderByDesc('unit_price')->limit($fetchLimit)->get();
         }
-        if ($noOfProducts) {
-            $targetAvg = $invoiceAmount / $noOfProducts;
-            $allProducts = $allProducts->sortBy(function ($product) use ($targetAvg) {
-                return abs($product->unit_price - $targetAvg);
-            });
-        }
-       
-      
+
+
         $bestMatch = null;
         $bestTotal = 0;
         $bestDistance = null;
-        
-    
-        for ($i = 0; $i < $iteration; $i++) {
+
+
+        for ($i = 0; $i < 20; $i++) {
             $shuffled = $allProducts->shuffle();
             $selected = [];
             $currentTotal = 0;
-        
+
             foreach ($shuffled as $product) {
                 $price = floatval($product->unit_price);
-        
-                if ($noOfProducts && count($selected) >= $noOfProducts) break;
-                if ($currentTotal + $price <= $maxTotal) {
-                    $selected[] = $product;
-                    $currentTotal += $price;
+
+                if ($noOfProducts) {
+                    if (count($selected) >= $noOfProducts) break;
+                    if ($currentTotal + $price <= $invoiceAmount * 1.05) {
+                        $selected[] = $product;
+                        $currentTotal += $price;
+                    }
+                } else {
+                    if (($currentTotal + $price) <= $maxTotal) {
+                        $selected[] = $product;
+                        $currentTotal += $price;
+
+                        if ($currentTotal >= $minTotal && $currentTotal <= $maxTotal) {
+                            if ($currentTotal > $bestTotal) {
+                                $bestMatch = $selected;
+                                $bestTotal = $currentTotal;
+                            }
+                        }
+                    }
                 }
             }
-        
+
             if ($noOfProducts && count($selected) == $noOfProducts) {
                 $distance = abs($invoiceAmount - $currentTotal);
                 if ($bestMatch === null || $distance < $bestDistance) {
@@ -119,8 +125,7 @@ class LaravelController extends Controller
                 }
             }
         }
-        
-    
+
         if (!$bestMatch) {
             return response()->json([
                 'tableRows' => '',
@@ -128,7 +133,7 @@ class LaravelController extends Controller
                 'message' => 'No matching combination found, try again please'
             ]);
         }
-    
+
         $bestMatch = collect($bestMatch);
         $bestMatch->each(function ($product) {
             $product->category_name = DB::connection($this->connectionType)
@@ -136,13 +141,13 @@ class LaravelController extends Controller
                 ->where('id', $product->category_id)
                 ->value('name') ?? 'unknown';
         });
-    
+
         $bestMatch->each(function ($product) use ($site_id) {
             $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
                 ->where('product_id', $product->id)
                 ->orderByDesc('last_price_changed')
                 ->first();
-    
+
             if ($lastUpdate) {
                 $lastPriceChanged = Carbon::parse($lastUpdate->last_price_changed);
                 $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
@@ -154,50 +159,50 @@ class LaravelController extends Controller
                 $product->remaining_days = 0;
             }
         });
-    
+
         $productList = $bestMatch->map(function ($product) {
             return [
                 'id' => $product->id,
                 'unit_price' => $product->unit_price,
             ];
         })->toArray();
-    
+
         session()->forget('ready_products');
         session()->put('ready_products', $productList);
         session(['current_amount' => $bestTotal]);
-    
+
         $modelType = $site->businessModel->model_type;
         $tableRows = view("invoice.{$modelType}.random_product_rows", [
             'products' => $bestMatch,
             'site' => $site,
             'total' => $bestTotal
         ])->render();
-    
+
         return response()->json([
             'tableRows' => $tableRows,
             'total' => $bestTotal
         ]);
     }
-    
-    
-    
- 
-    
+
+
+
+
+
     public function addProducts(Request $request)
     {
         $site_id = $request->get('site_id');
         $productsData = $request->get('products');
-    
+
         $site = Website::findOrFail($site_id);
         $productstable = getProductTable($site->technology);
         DynamicDatabaseService::connect($site);
-    
+
         $readyProducts = session()->get('ready_products', []);
-    
+
         foreach ($productsData as $productData) {
             $productId = $productData['product_id'];
             $unitPrice = floatval($productData['unit_price']);
-    
+
             $exists = false;
             foreach ($readyProducts as &$item) {
                 if ($item['id'] == $productId) {
@@ -206,7 +211,7 @@ class LaravelController extends Controller
                     break;
                 }
             }
-    
+
             if (!$exists) {
                 $readyProducts[] = [
                     'id' => $productId,
@@ -214,9 +219,9 @@ class LaravelController extends Controller
                 ];
             }
         }
-    
+
         session()->put('ready_products', $readyProducts);
-    
+
         $productIds = collect($readyProducts)->pluck('id')->reverse()->values()->toArray();
 
         $products = DB::connection($this->connectionType)->table($this->productTable)
@@ -228,17 +233,17 @@ class LaravelController extends Controller
         $products = collect($productIds)->map(function ($id) use ($products) {
             return $products[$id];
         });
-    
+
         $products = $products->map(function ($product) use ($readyProducts, $site_id) {
             $sessionProduct = collect($readyProducts)->firstWhere('id', $product->id);
             $product->unit_price = $sessionProduct['unit_price'] ?? $product->unit_price;
             $product->category_name = DB::connection($this->connectionType)->table('categories')->where('id', $product->category_id)->value('name') ?? 'unknown';
-    
+
             $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
                 ->where('product_id', $product->id)
                 ->orderByDesc('last_price_changed')
                 ->first();
-    
+
             if ($lastUpdate) {
                 $lastPriceChanged = Carbon::parse($lastUpdate->last_price_changed);
                 $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
@@ -249,25 +254,25 @@ class LaravelController extends Controller
                 $product->can_edit_price = 1;
                 $product->remaining_days = 0;
             }
-    
+
             return $product;
         });
         $modelType = $site->businessModel->model_type;
         session(['current_amount' => collect($products)->sum('unit_price')]);
-       
+
         $tableRows = view("invoice.{$modelType}.random_product_rows", [
             'products' => $products,
             'site' => $site,
             'total' => collect($products)->sum('unit_price')
         ])->render();
-    
+
         return response()->json([
             'tableRows' => $tableRows,
             'total' => collect($products)->sum('unit_price')
         ]);
     }
-    
-    
+
+
     public function removeProduct(Request $request)
     {
         $productId = $request->get('product_id');
@@ -449,13 +454,13 @@ class LaravelController extends Controller
         if (in_array($sortUnitPrice, ['asc', 'desc'])) {
             $query->orderBy('unit_price', $sortUnitPrice);
         }
-        
+
         if (!empty($keyword)) {
             $normalizedSearch = strtolower(str_replace(['-', '_', ' '], '', $keyword));
-    
+
             $query->where(function ($q) use ($normalizedSearch) {
                 $q->whereRaw("LOWER(REPLACE(REPLACE(REPLACE(products.name, '-', ''), '_', ''), ' ', '')) LIKE ?", ["%{$normalizedSearch}%"]);
-    
+
                 $q->orWhereIn('products.category_id', function ($sub) use ($normalizedSearch) {
                     $sub->select('id')
                         ->from('categories')
@@ -466,11 +471,11 @@ class LaravelController extends Controller
 
         $readyProducts = session('ready_products', []);
         $readyProductIds = collect($readyProducts)->pluck('id')->toArray();
-    
+
         if (count($readyProductIds) > 0) {
             $query->whereNotIn('products.id', $readyProductIds);
         }
-        
+
         $totalCount = $query->count();
         $page = $request->input('page', 1);
         $perPage = 10;
@@ -478,25 +483,25 @@ class LaravelController extends Controller
         $products = $query->skip($offset)->take($perPage)->get();
         $totalPages = ceil($totalCount / $perPage);
         $paginationPages = $this->smartPagination($page, $totalPages);
-    
+
         if ($products->isEmpty()) {
             return response()->json([
                 'tableRows' => '<tr><td colspan="7" class="text-center text-muted"> No results found. Try randomizing or use a different keyword.</td></tr>'
             ]);
         }
-    
+
         $products = collect($products);
         $products->each(function ($product) {
             $product->category_name = DB::connection($this->connectionType)->table('categories')->where('id', $product->category_id)->value('name') ?? 'unknown';
         });
-        
-    
+
+
         $products->each(function ($product) use ($site_id) {
             $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
                 ->where('product_id', $product->id)
                 ->orderByDesc('last_price_changed')
                 ->first();
-    
+
             if ($lastUpdate) {
                 $lastPriceChanged = Carbon::parse($lastUpdate->last_price_changed);
                 $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
@@ -508,15 +513,15 @@ class LaravelController extends Controller
                 $product->remaining_days = 0;
             }
         });
-    
+
         $modelType = $site->businessModel->model_type;
         $random_amount = session('current_amount', 0);
-        
+
         $tableRows = view( "invoice.{$modelType}.add_product_rows", ['products' => $products, 'site' => $site,'random_amount' => $random_amount])->render();
         $paginationHtml = view("invoice.{$modelType}.pagination", ['totalPages' => $totalPages,'paginationPages' => $paginationPages, 'currentPage' => $page ])->render();
-       
+
         return response()->json([ 'tableRows' => $tableRows,'paginationHtml' => $paginationHtml, 'random_amount' => $random_amount ,'currentPage' => $page ]);
-  
+
     }
 
     private function smartPagination($currentPage, $totalPages)
@@ -546,7 +551,7 @@ class LaravelController extends Controller
         return array_values(array_unique($pages));
     }
 
-    
+
 
     public function generateInvoice(Request $request)
     {
@@ -576,13 +581,13 @@ class LaravelController extends Controller
         $invoice_data['invoice_template'] = $site->invoice_template;
         $invoice_data['model_type'] = $site->businessModel->model_type;
         $invoice_data['site_id'] = $site->id;
-    
+
         $productDataArray = $request->input('product_data', []);
         DynamicDatabaseService::connect($site);
-    
+
         $productIds = [];
         $customPrices = [];
-    
+
         foreach ($productDataArray as $item) {
             $data = json_decode($item, true);
             if (!empty($data['product_id'])) {
@@ -590,11 +595,11 @@ class LaravelController extends Controller
                 $customPrices[$data['product_id']] = $data['unit_price'];
             }
         }
-    
-        
+
+
         $products = DB::connection($this->connectionType)->table($this->productTable)
             ->whereIn('id', $productIds)
-            ->select('id', 'category_id', 'name', 'description','unit_price') 
+            ->select('id', 'category_id', 'name', 'description','unit_price')
             ->get()
             ->sortBy(function ($product) use ($productIds) {
                 return array_search($product->id, $productIds);
@@ -604,17 +609,17 @@ class LaravelController extends Controller
                 $product->unit_price = $customPrices[$product->id] ?? $product->unit_price;
                 return $product;
             });
-            
+
         $products->each(function ($product) {
             $product->category_name = DB::connection($this->connectionType)->table('categories')->where('id', $product->category_id)->value('name') ?? 'unknown';
         });
-        
-       
+
+
         $invoice_data['currency'] =  site_currency();
-    
+
         $invoice_data['products'] = $products;
         $invoice_data['product_ids'] = $productIds;
-    
+
         $modelType = strtolower($site->businessModel->model_type);
         $siteIdInWords = numberToWords($site->id);
         $viewPath = "websites.{$modelType}.{$siteIdInWords}";
@@ -623,7 +628,7 @@ class LaravelController extends Controller
         $filename = $request->filled('invoice_file_name')
             ? $request->input('invoice_file_name') . '.pdf'
             : $invoice_data['invoice_number'] . '.pdf';
-    
+
         try {
             return $this->generateWithApi2Pdf($viewPath, $invoice_data, $filename);
 
@@ -661,11 +666,11 @@ class LaravelController extends Controller
 
         return response()->streamDownload(function () use ($pdfUrl) {
             $pdfResponse = Http::timeout(60)->get($pdfUrl);
-    
+
             if ($pdfResponse->failed()) {
                 throw new \Exception("Failed to download PDF file from Api2Pdf.");
             }
-    
+
             echo $pdfResponse->body();
         }, $filename);
     }
@@ -675,42 +680,42 @@ class LaravelController extends Controller
         $pdf = \PDF::loadView($viewPath, $invoice_data)->setPaper('A4', 'portrait');
         return $pdf->download($filename);
     }
-    
+
     protected function updateProductPrice(array $productDataArray)
     {
         $site_id = session('customer.site_id');
-    
+
         foreach ($productDataArray as $item) {
             $data = json_decode($item, true);
-    
+
             if (!empty($data['product_id']) && isset($data['unit_price'])) {
                 $product_id = $data['product_id'];
                 $new_price = floatval($data['unit_price']);
-    
+
                 $product = DB::connection($this->connectionType)
                     ->table($this->productTable)
                     ->where('id', $product_id)
                     ->first();
-    
+
                 if (!$product) continue;
-    
+
                 $current_price = floatval($product->unit_price);
-    
-               
+
+
                 if ($current_price == $new_price) continue;
-    
-               
+
+
                 $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
                     ->where('product_id', $product_id)
                     ->orderByDesc('last_price_changed')
                     ->first();
-    
+
                 if (!$lastUpdate) {
                     DB::connection($this->connectionType)
                         ->table($this->productTable)
                         ->where('id', $product_id)
                         ->update(['unit_price' => $new_price]);
-    
+
                     ProductPriceHistory::create([
                         'site_id' => $site_id,
                         'product_id' => $product_id,
@@ -719,13 +724,13 @@ class LaravelController extends Controller
                     ]);
                     continue;
                 }
-             
+
                 if (Carbon::parse($lastUpdate->last_price_changed)->diffInMonths(now()) >= 3) {
                     DB::connection($this->connectionType)
                         ->table($this->productTable)
                         ->where('id', $product_id)
                         ->update(['unit_price' => $new_price]);
-    
+
                     ProductPriceHistory::create([
                         'site_id' => $site_id,
                         'product_id' => $product_id,
@@ -736,6 +741,7 @@ class LaravelController extends Controller
             }
         }
     }
-       
-    
+
+
+
 }
