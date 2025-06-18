@@ -35,7 +35,7 @@
                         @csrf
                         <div class="row">
                             <div class="col-md-4 mb-3">
-                                <label class="form-label">Selected Website <span class="text-danger">*</span></label>
+                                <label class="form-label">Selected Website ({{ $customer['site_id'] }}) <span class="text-danger">*</span></label>
                                 <div class="input-group">
                                  <span class="input-group-text"><i class="fas fa-globe"></i></span> 
                                     <input type="text" form="generate-invoice-form" class="form-control" name="site_name" id="site_name" value="{{ $customer['site_name'] ?? 'N/A' }}" readonly>
