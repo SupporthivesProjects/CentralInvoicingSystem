@@ -19,6 +19,9 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\View\ViewNotFoundException;
 use Carbon\Carbon;
 use Yajra\DataTables\Facades\DataTables;
+use Api2Pdf\Api2Pdf;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Http;
 
 
 class LaravelController extends Controller
@@ -747,107 +750,149 @@ public function updateProductPages(Request $request)
 
 
     public function generateInvoice(Request $request)
-{
-    $site_id = $request->input('site_id');
-    $site = Website::findOrFail($site_id);
+    {
+        $site_id = $request->input('site_id');
+        $site = Website::findOrFail($site_id);
 
-    $invoice_data = [
-        'site' => $site,
-        'invoice_number' => $request->input('invoice_number'),
-        'invoice_date' => $request->input('invoice_date'),
-        'customer_name' => $request->input('customer_name'),
-        'customer_mobile' => $request->input('customer_mobile'),
-        'customer_email' => $request->input('customer_email'),
-        'company_email' => $request->input('company_email'),
-        'invoice_amount' => $request->input('invoice_amount'),
-        'current_amount' => $request->input('current_amount'),
-        'discount_amount' => $request->input('discount_amount'),
-        'company_name' => $site->company_name,
-        'company_email' => $site->company_email,
-        'company_mobile' => $site->company_mobile,
-        'company_address' => $site->company_address,
-        'invoice_header_image' => base64EncodeImage($site->invoice_header_image),
-        'invoice_footer_image' => base64EncodeImage($site->invoice_footer_image),
-        'invoice_signature' => base64EncodeImage($site->invoice_signature),
-        'company_logo' => base64EncodeImage($site->company_logo),
-        'invoice_image1' => base64EncodeImage($site->invoice_image1),
-        'invoice_image2' => base64EncodeImage($site->invoice_image2),
-        'invoice_image3' => base64EncodeImage($site->invoice_image3),
-        'invoice_template' => $site->invoice_template,
-        'model_type' => $site->businessModel->model_type,
-        'site_id' => $site->id,
-        'currency' => site_currency(),
-    ];
+        $invoice_data = [
+            'site' => $site,
+            'invoice_number' => $request->input('invoice_number'),
+            'invoice_date' => $request->input('invoice_date'),
+            'customer_name' => $request->input('customer_name'),
+            'customer_mobile' => $request->input('customer_mobile'),
+            'customer_email' => $request->input('customer_email'),
+            'company_email' => $request->input('company_email'),
+            'invoice_amount' => $request->input('invoice_amount'),
+            'current_amount' => $request->input('current_amount'),
+            'discount_amount' => $request->input('discount_amount'),
+            'company_name' => $site->company_name,
+            'company_email' => $site->company_email,
+            'company_mobile' => $site->company_mobile,
+            'company_address' => $site->company_address,
+            'invoice_header_image' => base64EncodeImage($site->invoice_header_image),
+            'invoice_footer_image' => base64EncodeImage($site->invoice_footer_image),
+            'invoice_signature' => base64EncodeImage($site->invoice_signature),
+            'company_logo' => base64EncodeImage($site->company_logo),
+            'invoice_image1' => base64EncodeImage($site->invoice_image1),
+            'invoice_image2' => base64EncodeImage($site->invoice_image2),
+            'invoice_image3' => base64EncodeImage($site->invoice_image3),
+            'invoice_template' => $site->invoice_template,
+            'model_type' => $site->businessModel->model_type,
+            'site_id' => $site->id,
+            'currency' => site_currency(),
+        ];
 
-    $productsInput = $request->input('products', []);
-    DynamicDatabaseService::connect($site);
+        $productsInput = $request->input('products', []);
+        DynamicDatabaseService::connect($site);
 
-    $productIds = array_keys($productsInput);
-    //dd($productsInput);
+        $productIds = array_keys($productsInput);
+        //dd($productsInput);
 
-    $products = DB::connection($this->connectionType)->table($this->productTable)
-        ->whereIn('id', $productIds)
-        ->select('id', 'category_id', 'name', 'unit_price')
-        ->get()
-        ->sortBy(function ($product) use ($productIds) {
-            return array_search($product->id, $productIds);
-        })
-        ->values()
-        ->map(function ($product) use ($productsInput) {
-            $input = $productsInput[$product->id];
+        $products = DB::connection($this->connectionType)->table($this->productTable)
+            ->whereIn('id', $productIds)
+            ->select('id', 'category_id', 'name', 'unit_price')
+            ->get()
+            ->sortBy(function ($product) use ($productIds) {
+                return array_search($product->id, $productIds);
+            })
+            ->values()
+            ->map(function ($product) use ($productsInput) {
+                $input = $productsInput[$product->id];
 
-            $product->name = $input['name'] ?? 'Unknown';
-            $product->unit_price = (float) ($input['price'] ?? $product->unit_price);
-            $product->line_total = (float) ($input['line_total'] ?? 0);
-            $product->pages = (int) ($input['pages'] ?? 1);
-            $product->is_urgent = isset($input['is_urgent']) ? 1 : 0;
-            $product->urgent_amount = (float) ($input['urgent_amount'] ?? 0);
-            $product->from_language = $input['from_language'] ?? null;
-            $product->to_language = $input['to_language'] ?? null;
-            $product->selected = isset($input['selected']) ? 1 : 0;
+                $product->name = $input['name'] ?? 'Unknown';
+                $product->unit_price = (float) ($input['price'] ?? $product->unit_price);
+                $product->line_total = (float) ($input['line_total'] ?? 0);
+                $product->pages = (int) ($input['pages'] ?? 1);
+                $product->is_urgent = isset($input['is_urgent']) ? 1 : 0;
+                $product->urgent_amount = (float) ($input['urgent_amount'] ?? 0);
+                $product->from_language = $input['from_language'] ?? null;
+                $product->to_language = $input['to_language'] ?? null;
+                $product->selected = isset($input['selected']) ? 1 : 0;
 
+                return $product;
+            });
+
+        // ✅ Replace language IDs with language names using site_languages()
+        $languages = site_languages()->pluck('name', 'id');
+
+        $products->transform(function ($product) use ($languages) {
+            $product->from_language = $languages[$product->from_language] ?? $product->from_language;
+            $product->to_language = $languages[$product->to_language] ?? $product->to_language;
             return $product;
         });
 
-    // ✅ Replace language IDs with language names using site_languages()
-    $languages = site_languages()->pluck('name', 'id');
+        //dd($products);
 
-    $products->transform(function ($product) use ($languages) {
-        $product->from_language = $languages[$product->from_language] ?? $product->from_language;
-        $product->to_language = $languages[$product->to_language] ?? $product->to_language;
-        return $product;
-    });
+        $invoice_data['products'] = $products;
+        $invoice_data['product_ids'] = $productIds;
+        //dd($productIds);
 
-    //dd($products);
+        $modelType = strtolower($site->businessModel->model_type);
+        $siteIdInWords = numberToWords($site->id);
+        $viewPath = "websites.{$modelType}.{$siteIdInWords}";
 
-    $invoice_data['products'] = $products;
-    $invoice_data['product_ids'] = $productIds;
-    //dd($productIds);
-
-    $modelType = strtolower($site->businessModel->model_type);
-    $siteIdInWords = numberToWords($site->id);
-    $viewPath = "websites.{$modelType}.{$siteIdInWords}";
-
-    try {
-
-        // Update product prices with 90-day lock if changed
         if (!empty($productsInput)) {
-            $this->updateProductPrice($productsInput);
+                $this->updateProductPrice($productsInput);
         }
         InvoiceController::createInvoiceHistory($invoice_data);
 
-        $pdf = PDF::loadView($viewPath, $invoice_data)->setPaper('A4', 'portrait');
+        if ($request->filled('invoice_file_name')) {
+            $filename = $request->input('invoice_file_name') . '.pdf';
+        } else {
+            $filename = $invoice_data['invoice_number'] . '.pdf';
+        }
 
-        $filename = $request->filled('invoice_file_name')
-            ? $request->input('invoice_file_name') . '.pdf'
-            : $invoice_data['invoice_number'] . '.pdf';
+        try {
+            return $this->generateWithApi2Pdf($viewPath, $invoice_data, $filename);
 
-        return $pdf->download($filename);
-
-    } catch (\Illuminate\View\ViewNotFoundException $e) {
-        abort(500, 'Please set up invoice template for the selected model and site.');
+        } catch (\Exception $e) {
+            // Fallback to Dompdf if API2PDF fails
+            return $this->generateWithDompdf($viewPath, $invoice_data, $filename);
+        }
     }
-}
+
+    protected function generateWithDompdf($viewPath, $invoice_data, $filename)
+    {
+        $pdf = \PDF::loadView($viewPath, $invoice_data)->setPaper('A4', 'portrait');
+        return $pdf->download($filename);
+    }
+
+    protected function generateWithApi2Pdf($viewPath, $invoice_data, $filename)
+    {
+        $html = View::make($viewPath, $invoice_data)->render();
+
+        $response = Http::withHeaders([
+            'Authorization' => env('API2PDF_KEY')
+        ])->post('https://v2.api2pdf.com/chrome/html', [
+            'html' => $html,
+            'fileName' => $filename,
+            'options' => [
+                'format' => 'A4',
+                'landscape' => false
+            ]
+        ]);
+
+        if ($response->failed()) {
+            $error = $response->json('message') ?? $response->body();
+            throw new \Exception('API2PDF failed: ' . $error);
+        }
+
+        $pdfUrl = $response->json('pdf');
+
+        if (empty($pdfUrl)) {
+            throw new \Exception('API2PDF did not return a PDF URL.');
+        }
+
+        return response()->streamDownload(function () use ($pdfUrl) {
+            $pdfResponse = Http::timeout(60)->get($pdfUrl);
+
+            if ($pdfResponse->failed()) {
+                throw new \Exception("Failed to download PDF file from Api2Pdf.");
+            }
+
+            echo $pdfResponse->body();
+        }, $filename);
+    }
 
 
 

@@ -586,107 +586,66 @@ public function addProducts(Request $request)
         $siteWords = numberToWords($site->id);
         $viewPath  = "websites.{$modelType}.{$siteWords}";
 
-        //dd($invoice_data);
-        // Generate and return PDF
+        $this->updateProductPrice($products);
+
+        InvoiceController::createInvoiceHistory($invoice_data, $processedProducts);
+        if ($request->filled('invoice_file_name')) {
+            $filename = $request->input('invoice_file_name') . '.pdf';
+        } else {
+            $filename = $invoice_data['invoice_number'] . '.pdf';
+        }
+
         try {
+            return $this->generateWithApi2Pdf($viewPath, $invoice_data, $filename);
 
-            $this->updateProductPrice($products);
-
-            InvoiceController::createInvoiceHistory($invoice_data, $processedProducts);
-            $pdf = PDF::loadView($viewPath, $invoice_data)->setPaper('A4', 'portrait');
-            $filename = preg_replace('/[^A-Za-z0-9_\-]/', '_', $invoice_data['invoice_number']) . '.pdf';
-            return $pdf->download($filename);
-        } catch (\Illuminate\View\ViewNotFoundException $e) {
-            abort(500, 'Please set up or upload your invoice template.');
         } catch (\Exception $e) {
-            // Add better error handling
-            \Log::error('PDF generation error: ' . $e->getMessage());
-            abort(500, 'Error generating invoice: ' . $e->getMessage());
+            // Fallback to Dompdf if API2PDF fails
+            return $this->generateWithDompdf($viewPath, $invoice_data, $filename);
         }
     }
 
+    protected function generateWithDompdf($viewPath, $invoice_data, $filename)
+    {
+        $pdf = \PDF::loadView($viewPath, $invoice_data)->setPaper('A4', 'portrait');
+        return $pdf->download($filename);
+    }
 
+    protected function generateWithApi2Pdf($viewPath, $invoice_data, $filename)
+    {
+        $html = View::make($viewPath, $invoice_data)->render();
 
+        $response = Http::withHeaders([
+            'Authorization' => env('API2PDF_KEY')
+        ])->post('https://v2.api2pdf.com/chrome/html', [
+            'html' => $html,
+            'fileName' => $filename,
+            'options' => [
+                'format' => 'A4',
+                'landscape' => false
+            ]
+        ]);
 
+        if ($response->failed()) {
+            $error = $response->json('message') ?? $response->body();
+            throw new \Exception('API2PDF failed: ' . $error);
+        }
 
-// protected function updateProductPrice($productDataArray)
-// {
-//     $site_id = session('customer.site_id');
-//     $site = Website::findOrFail($site_id);
+        $pdfUrl = $response->json('pdf');
 
-//     $userPrices = [];
-//     $dbPrices = [];
+        if (empty($pdfUrl)) {
+            throw new \Exception('API2PDF did not return a PDF URL.');
+        }
 
-//     foreach ($productDataArray as $data) {
-//         if (
-//             !empty($data['game_currency_amount']) &&
-//             isset($data['bundle_id']) &&
-//             isset($data['unit_price'])
-//         ) {
-//             $targetAmount = $data['game_currency_amount'];
-//             $bundle_id = floatval($data['bundle_id']);
-//             $unit_price = floatval($data['unit_price']);
+        return response()->streamDownload(function () use ($pdfUrl) {
+            $pdfResponse = Http::timeout(60)->get($pdfUrl);
 
-//             // Establish dynamic DB connection
-//             DynamicDatabaseService::connect($site);
+            if ($pdfResponse->failed()) {
+                throw new \Exception("Failed to download PDF file from Api2Pdf.");
+            }
 
-//             // Fetch row from game_sever_based_cost using bundle_id
-//             $costData = DB::connection($this->connectionType)
-//                 ->table('game_sever_based_cost')
-//                 ->where('id', $bundle_id)
-//                 ->first();
-
-//             if (!$costData) continue;
-
-//             $costs = json_decode($costData->costs, true);
-//             if (!isset($costs['bundles']) || !is_array($costs['bundles'])) continue;
-
-//             // Dynamically find matching key in bundles JSON
-//             $currencyKey = null;
-//             foreach ($costs['bundles'] as $key => $value) {
-//                 if (strval($key) === strval($targetAmount)) {
-//                     $currencyKey = $key;
-//                     break;
-//                 }
-//             }
-
-//             if (!$currencyKey) {
-//                 \Log::warning("No matching bundle key found for '{$targetAmount}' in bundle ID: {$bundle_id}");
-//                 continue;
-//             }
-
-//             $currentPrice = floatval($costs['bundles'][$currencyKey]);
-//             $dbPrices[$bundle_id] = $currentPrice;
-//             $userPrices[$bundle_id] = $unit_price;
-
-//             if ($currentPrice == $unit_price) continue;
-
-//             // Check last price update history
-//             $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
-//                 ->where('product_id', $bundle_id)
-//                 ->where('bundle', (string)$currencyKey)
-//                 ->orderByDesc('last_price_changed')
-//                 ->first();
-
-//             // Only update if never updated OR 3+ months old
-//             if (!$lastUpdate || Carbon::parse($lastUpdate->last_price_changed)->diffInMonths(now()) >= 3) {
-//                 DB::connection($this->connectionType)
-//                     ->table($this->productTable)
-//                     ->where('id', $bundle_id)
-//                     ->update(['unit_price' => $unit_price]);
-
-//                 ProductPriceHistory::create([
-//                     'site_id' => $site_id,
-//                     'product_id' => $bundle_id,
-//                     'bundle' => (string)$currencyKey,
-//                     'unit_price' => $unit_price,
-//                     'last_price_changed' => now(),
-//                 ]);
-//             }
-//         }
-//     }
-//     dd("DB Prices: ", $dbPrices, "User Prices: ", $userPrices);
-// }
+            echo $pdfResponse->body();
+        }, $filename);
+    }
 
 
 protected function updateProductPrice($productDataArray)
