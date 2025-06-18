@@ -143,12 +143,12 @@
                                     </td>
                                     <td>
                                         <p style="vertical-align: middle;color:black;font-size:8px;font-weight: 500;font-family: Calibri;margin: 0px;line-height:14px;text-align: left;padding-left:10px;">
-                                        {{ site_currency_code() }} {{ number_format($product->unit_price, 2) }}
+                                        {{ site_currency() }} {{ number_format($product->unit_price, 2) }}
                                         </p>
                                     </td>
                                     <td>
                                         <p style="vertical-align: middle;color:black;font-size:8px;font-weight: 500;font-family: Calibri;margin: 0px;line-height:14px;text-align:right;padding-right:10px;">
-                                        {{ site_currency_code() }} {{ number_format($product->unit_price, 2) }}
+                                        {{ site_currency() }} {{ number_format($product->unit_price, 2) }}
                                         </p>
                                     </td>
                                 </tr>
@@ -161,7 +161,7 @@
                                     </td>
                                     <td>
                                         <p style="vertical-align: middle;color:#000000;font-size: 10px;font-weight:400;font-family: Calibri;margin: 0px;line-height: 28px;text-transform: uppercase;text-align: center;">
-                                        {{ site_currency_code() }} {{  number_format(($invoice_amount + $discount_amount), 2) }}
+                                        {{ site_currency() }} {{  number_format(($invoice_amount + $discount_amount), 2) }}
                                         </p>
                                     </td>
                                 </tr>
@@ -173,7 +173,7 @@
                                     </td>
                                     <td>
                                         <p style="vertical-align: middle;color:#000000;font-size: 10px;font-weight:400;font-family: Calibri;margin: 0px;line-height: 28px;text-transform: uppercase;text-align: center;">
-                                        {{ site_currency_code() }} {{ number_format($discount_amount, 2) }}
+                                        {{ site_currency() }} {{ number_format($discount_amount, 2) }}
                                         </p>
                                     </td>
                                 </tr>
@@ -185,7 +185,7 @@
                                     </td>
                                     <td style="border-top-right-radius: 10px; border-bottom-right-radius: 10px;background-color: #9A96F4;">
                                         <p style="vertical-align: middle; color: #ffffff; font-size: 10px; font-weight: 400; font-family: Calibri; margin: 0px; line-height: 28px; text-align: center; text-transform: uppercase;">
-                                        {{ site_currency_code() }} {{ number_format($invoice_amount, 2) }}
+                                        {{ site_currency() }} {{ number_format($invoice_amount, 2) }}
                                         </p>
                                     </td>
                                 </tr>

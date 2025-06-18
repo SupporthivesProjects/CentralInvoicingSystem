@@ -146,7 +146,7 @@
                             </td>
                             <td>
                                 <p style="margin: 0px;color:#7F7F7F;font-family: Poppins;font-size: 10px;font-weight: 500;text-align: center;text-transform:capitalize;">
-                                {{  site_currency_code() }} {{ number_format($product->unit_price, 2) }}
+                                {{  site_currency() }} {{ number_format($product->unit_price, 2) }}
                                 </p>
                             </td>
                             </tr>
@@ -160,7 +160,7 @@
                             </td>
                             <td>
                                 <p style="margin: 0px;color:#7F7F7F;font-family: Poppins;font-size: 10px;font-weight: 500;text-align: center;text-transform:capitalize;">
-                                {{ site_currency_code() }} {{ number_format(($invoice_amount + $discount_amount), 2) }}
+                                {{ site_currency() }} {{ number_format(($invoice_amount + $discount_amount), 2) }}
                                 </p>
                             </td>
                             </tr>
@@ -173,7 +173,7 @@
                             </td>
                             <td>
                                 <p style="margin: 0px;color:#7F7F7F;font-family: Poppins;font-size: 10px;font-weight: 500;text-align: center;text-transform:capitalize;">
-                                {{ site_currency_code() }} {{ number_format($discount_amount, 2) }}
+                                {{ site_currency() }} {{ number_format($discount_amount, 2) }}
                                 </p>
                             </td>
                             </tr>
@@ -186,7 +186,7 @@
                             </td>
                             <td>
                                 <p style="margin: 0px;color:#4C483D;font-family: Poppins;font-size: 10px;font-weight: 500;text-align: center;text-transform:capitalize;">
-                                {{  site_currency_code() }} {{ number_format($invoice_amount, 2) }}
+                                {{  site_currency() }} {{ number_format($invoice_amount, 2) }}
                                 </p>
                             </td>
                             </tr>

@@ -1,5 +1,5 @@
 <?php
-namespace App\Http\Controllers\BusinessModels\ContentWriting;
+namespace App\Http\Controllers\BusinessModels\GiftCard;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\InvoiceController;

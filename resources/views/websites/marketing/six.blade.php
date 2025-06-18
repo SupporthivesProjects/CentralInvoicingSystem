@@ -68,7 +68,7 @@
                             <td style="border: 1px solid #ddd; padding: 8px; text-align: center;">{{ $product->subscription ?? '-' }}</td>
                             <td style="border: 1px solid #ddd; padding: 8px; text-align: center;">{{ $product->quantity ?? 1 }}</td>
                             <td style="border: 1px solid #ddd; padding: 8px; text-align: right;">
-                                {{ site_currency_code() }}{{ number_format($product->unit_price ?? 0, 2) }}
+                                {{ site_currency() }}{{ number_format($product->unit_price ?? 0, 2) }}
                             </td>
                         </tr>
                         @endforeach
@@ -77,19 +77,19 @@
                         <tr>
                             <td colspan="3" style="border: none; padding: 12px 8px; text-align: right; font-weight: 700;">Sub Total</td>
                             <td style="border: 1px solid #ddd; padding: 8px; text-align: right; color: #EE5921; font-weight: 700;">
-                                {{ site_currency_code() }}{{ number_format(($invoice_amount + $discount_amount) ?? 0, 2) }}
+                                {{ site_currency() }}{{ number_format(($invoice_amount + $discount_amount) ?? 0, 2) }}
                             </td>
                         </tr>
                         <tr>
                             <td colspan="3" style="border: none; padding: 12px 8px; text-align: right; font-weight: 700;">Discount</td>
                             <td style="border: 1px solid #ddd; padding: 8px; text-align: right; color: #EE5921; font-weight: 700;">
-                                {{ site_currency_code() }}{{ number_format($discount_amount ?? 0, 2) }}
+                                {{ site_currency() }}{{ number_format($discount_amount ?? 0, 2) }}
                             </td>
                         </tr>
                         <tr>
                             <td colspan="3" style="border: none; padding: 12px 8px; text-align: right; font-weight: 700;">Total</td>
                             <td style="border: 1px solid #ddd; padding: 8px; text-align: right; color: #EE5921; font-weight: 700;">
-                                {{ site_currency_code() }}{{ number_format($invoice_amount ?? 0, 2) }}
+                                {{ site_currency() }}{{ number_format($invoice_amount ?? 0, 2) }}
                             </td>
                         </tr>
                     </tfoot>
