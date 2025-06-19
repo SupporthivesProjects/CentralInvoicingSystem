@@ -4,12 +4,12 @@
     <!-- Start::main-sidebar-header -->
 
     <div class="main-sidebar-header" >
-     <a href="{{  route('dashboard') }}" class="header-logo">
-        <img src="{{ asset('images/brand-logos/desktop-logo.png') }}" alt="logo" class="desktop-logo">
+     <a href="{{  route('dashboard') }}" class="header-logo" style="background-color: unset !important;" >
+        <img src="{{ asset('images/brand-logos/invoice_genie_white.png') }}" alt="logo" class="desktop-logo">
         <img src="{{ asset('images/brand-logos/toggle-logo.png') }}" alt="logo" class="toggle-logo">
-        <img src="{{ asset('images/brand-logos/central_invoice.png') }}" alt="logo" class="desktop-dark">
+        <img src="{{ asset('images/brand-logos/invoice_genie_black.png') }}" alt="logo" class="desktop-dark" style="margin-top: -7px;height: 36px;">
         <img src="{{ asset('images/brand-logos/toggle-dark.png') }}" alt="logo" class="toggle-dark">
-        <img src="{{ asset('images/brand-logos/desktop-white.png') }}" alt="logo" class="desktop-white">
+        <img src="{{ asset('images/brand-logos/invoice_genie_white.png') }}" alt="logo" class="desktop-white">
         <img src="{{ asset('images/brand-logos/toggle-white.png') }}" alt="logo" class="toggle-white">
         </a> 
     </div>
@@ -17,7 +17,6 @@
 
     <!-- Start::main-sidebar -->
     <div class="main-sidebar" id="sidebar-scroll">
-
        <!-- Start::nav -->
         <nav class="main-menu-container nav nav-pills flex-column sub-open">
             <div class="slide-left" id="slide-left">

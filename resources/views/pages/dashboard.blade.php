@@ -431,14 +431,9 @@
             dom: 'Bfrtip',
             order: [[0, 'desc']], 
             buttons: [
-                'copy',
                 'csv',
                 'excel',
-                'pdf',
-                {
-                    extend: 'print',
-                    text: 'Print Table'
-                }
+                'pdf'
             ]
         });
     });
