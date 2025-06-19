@@ -139,6 +139,10 @@ class InvoiceController extends Controller
             $customer = session('customer');
             $customer['site_id'] = $new_site_id;
             $customer['site_name'] = $site->site_name;
+            $invoice = session('invoice', []);
+            $newInvoiceNumber = generateInvoiceNumber($site->site_name);
+            $invoice['invoice_number'] = $newInvoiceNumber;
+            session(['invoice' => $invoice]);
             session()->put('customer', $customer);
 
             session()->flash('success', 'Website has been changed');
@@ -167,6 +171,10 @@ class InvoiceController extends Controller
 
             $modelType = $site->businessModel->model_type;
             $sites = Website::orderBy('id', 'DESC')->get();
+            $invoice = session('invoice', []);
+            $newInvoiceNumber = generateInvoiceNumber($site->site_name);
+            $invoice['invoice_number'] = $newInvoiceNumber;
+            session(['invoice' => $invoice]);
 
             return view("invoice.{$modelType}.productSelection", [
                 'customer' => session('customer'), 

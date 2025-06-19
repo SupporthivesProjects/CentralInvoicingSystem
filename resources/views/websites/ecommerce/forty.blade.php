@@ -43,12 +43,12 @@
                                         </p>
                                         <br>
                                         <p style="font-family: arial;font-size: 10px;margin-bottom: 5px;font-weight: 400;">
-                                            <strong>Email:</strong> {{ $company_email}}
+                                            <strong>Email:</strong> {{ $company_email }}
                                         </p>
                                         <p style="font-family: arial;font-size: 10px;margin-bottom: 5px;font-weight: 400;">
                                             <b>Website:</b> {{ $site->site_link }}</p>
                                         <p style="font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;">
-                                            <b>Address</b>  {{ $company_address }}</p>
+                                            <b>Address</b>  {!! $company_address !!}</p>
                                     </td>
                                     <td style="width:300px;
                                     padding: 40px;padding-top: 0px;padding-right: 0px;
