@@ -18,7 +18,9 @@ use App\Services\DynamicDatabaseService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\View\ViewNotFoundException;
 use Carbon\Carbon;
-
+use Api2Pdf\Api2Pdf;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Http;
 
 class LaravelController extends Controller
 {
@@ -516,13 +518,6 @@ public function addProducts(Request $request)
         'products'  => $finalProducts,
     ]);
 }
-
-
-
-
-
-
-
 
 
 
