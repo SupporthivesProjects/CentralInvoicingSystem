@@ -356,7 +356,7 @@
     const invoiceCounts = @json($invoiceCounts);  // Invoice counts per date
     const priceChangeCounts = @json($priceChanges);  // Price change counts per date
     const siteCurrency = @json(site_currency());
-    const chartTypes = ['line', 'bar', 'area', 'column'];
+    const chartTypes = ['line', 'bar', 'area'];
 
     function getRandomType() {
         return chartTypes[Math.floor(Math.random() * chartTypes.length)];

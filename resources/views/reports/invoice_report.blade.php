@@ -6,44 +6,98 @@
     <title>Invoice Report</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 0;
+            background-color: #fff;
+            color: #333;
         }
-        .container {
-            width: 100%;
-            margin: 20px auto;
-            padding: 20px;
+
+        .report-wrapper {
+            padding: 30px 40px;
         }
+
+        .header {
+            display: flex;
+            align-items: center;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+        }
+
+        .header img {
+            height: 60px;
+            margin-right: 20px;
+        }
+
+        .header h2 {
+            font-size: 24px;
+            margin: 0;
+            color: #333;
+        }
+
+        .report-title {
+            text-align: center;
+            font-size: 22px;
+            margin-bottom: 20px;
+            color: #444;
+            font-weight: 600;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 10px;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
+            font-size: 14px;
         }
+
+        thead {
+            background-color: #2c3e50;
+            color: #fff;
+        }
+
         th, td {
-            padding: 10px;
-            text-align: left;
+            padding: 12px 10px;
             border: 1px solid #ddd;
+            text-align: left;
         }
-        th {
-            background-color: #f2f2f2;
+
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
         }
-        h4 {
+
+        .no-data {
             text-align: center;
+            font-style: italic;
+            color: #777;
+            margin-top: 30px;
         }
+
         .footer {
             text-align: center;
             font-size: 12px;
-            position: absolute;
-            bottom: 20px;
-            width: 100%;
+            color: #777;
+            margin-top: 60px;
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h4>Invoice Report</h4>
-        
+    <div class="report-wrapper">
+
+        <!-- Header -->
+        <div class="header">
+            <img src="{{ asset('images/brand-logos/invoice_genie_white.png') }}" alt="Invoice Genie Logo">
+            <h2>Invoice Genie</h2>
+        </div>
+
+        <!-- Title -->
+        <div class="report-title">Invoice Report</div>
+
+        <!-- Table or Message -->
         @if($invoices->isNotEmpty())
             <table>
                 <thead>
@@ -61,8 +115,8 @@
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $invoice->invoice_number }}</td>
-                            <td>{{ $invoice->website->site_name }}</td>
-                            <td>{{ $invoice->website->businessModel->name }}</td>
+                            <td>{{ optional($invoice->website)->site_name }}</td>
+                            <td>{{ optional(optional($invoice->website)->businessModel)->name }}</td>
                             <td>{{ number_format($invoice->invoice_amount, 2) }}</td>
                             <td>{{ $invoice->created_at->format('d M, Y') }}</td>
                         </tr>
@@ -70,12 +124,12 @@
                 </tbody>
             </table>
         @else
-            <p class="text-center"><center>No invoices found for the selected criteria.</center></p>
+            <div class="no-data">No invoices found for the selected criteria.</div>
         @endif
 
-        <!-- Footer Message with Date and Time -->
+        <!-- Footer -->
         <div class="footer">
-            <p>This report printed by Narayan Zade on {{ \Carbon\Carbon::now()->format('d M, Y \a\t h:i A') }}</p>
+            This report was printed by Narayan Zade on {{ \Carbon\Carbon::now()->format('d M, Y \a\t h:i A') }}
         </div>
     </div>
 </body>
