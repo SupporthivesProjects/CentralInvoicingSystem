@@ -51,7 +51,8 @@ class ProfileController extends Controller
         if (!$profile->exists) {
             $profile->save();
         }
-    
+        $user->name = $request->input('name');
+        $user->save();
         $profileData = collect($validated)->except(['profile_image', 'cover_image'])->toArray();
         $profile->fill($profileData);
     
