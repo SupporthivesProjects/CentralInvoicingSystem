@@ -6,11 +6,8 @@
     <div class="main-sidebar-header" >
      <a href="{{  route('dashboard') }}" class="header-logo" style="background-color: unset !important;" >
         <img src="{{ asset('images/brand-logos/invoice_genie_white.png') }}" alt="logo" class="desktop-logo">
-        <img src="{{ asset('images/brand-logos/toggle-logo.png') }}" alt="logo" class="toggle-logo">
         <img src="{{ asset('images/brand-logos/invoice_genie_black.png') }}" alt="logo" class="desktop-dark" style="margin-top: -7px;height: 36px;">
-        <img src="{{ asset('images/brand-logos/toggle-dark.png') }}" alt="logo" class="toggle-dark">
         <img src="{{ asset('images/brand-logos/invoice_genie_white.png') }}" alt="logo" class="desktop-white">
-        <img src="{{ asset('images/brand-logos/toggle-white.png') }}" alt="logo" class="toggle-white">
         </a> 
     </div>
     <!-- End::main-sidebar-header -->
