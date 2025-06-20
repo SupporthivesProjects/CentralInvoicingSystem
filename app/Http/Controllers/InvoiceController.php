@@ -52,9 +52,17 @@ class InvoiceController extends Controller
             $site_id = request()->get('site_id', $site_id_from_url);
             $site = Website::findOrFail($site_id);
             $sites = Website::orderBy('id', 'DESC')->get();
+            $newInvoiceNumber = generateInvoiceNumber($site->site_name);
 
-            session()->put('customer.site_id', $site->id);
-    
+            $invoice = session('invoice', []);
+            $customer = session('customer', []);
+            
+            $customer['site_id'] = $site->id;
+            $invoice['invoice_number'] = $newInvoiceNumber;
+            
+            session(['invoice' => $invoice]);
+            session(['customer' => $customer]);            
+
             return view('invoice.getCustomer', [
                 'site' => $site,
                 'sites' => $sites,

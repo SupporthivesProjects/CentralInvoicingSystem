@@ -55,7 +55,7 @@
                                     </label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="fas fa-file-invoice"></i></span>
-                                        <input type="text" id="invoice_number" name="invoice_number" class="form-control font-italic" value="{{ session('regenerate_invoice_number') ?? '' }}" placeholder="Enter or generate invoice number" required>
+                                        <input type="text" id="invoice_number" name="invoice_number" class="form-control font-italic" value="{{ $invoice['invoice_number'] ?? '' }}" placeholder="Enter or generate invoice number" required>
                                         <div class="btn-group">
                                                 <button type="button" class="btn input-group-text dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
                                                     <span class="visually-hidden">Toggle Dropdown</span>
