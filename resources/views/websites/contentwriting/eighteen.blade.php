@@ -5,20 +5,20 @@
     <style>
         body, table, td {
             /* background-color: transparent !important; */
-           
+
         }
         table td {
             padding-top: 10px !important;
             padding-bottom: 10px !important;
         }
-       
+
         .invoice_header_image {
             background-image: url('{{ $invoice_header_image }}') !important;
             background-repeat: no-repeat !important;
             background-position: center !important;
             background-size: cover !important;
             width: 100% !important;
-            height: 942px !important; 
+            height: 942px !important;
         }
 
 
@@ -29,7 +29,7 @@
         <tr>
             <td align="center" bgcolor="#f2f2f2" style="padding: 40px 0;">
             <table class="invoice_header_image" width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
-                
+
                 <tr >
                     <td  style="padding:80px 40px;padding-bottom: 0px;">
                         <table  width="100%"  style="width: 100%;margin-top:50px;">
@@ -42,19 +42,19 @@
                             <tr style="height:40px;border-top: 1px solid #FF444E;">
                                 <td style="width:300px;">
                                     <p style="color:#FF444E;font-size: 10px;font-weight:400;font-family:Poppins;margin: 0px;line-height:20px;text-align: left;padding-left:10px;">
-                                        DATE 
+                                        DATE
                                     </p>
                                 </td>
                                 <td style="width:120px;">
                                     <p style="color:#FF444E;font-size: 10px;font-weight:400;font-family:Poppins;margin: 0px;line-height:20px;text-align: left;padding-left:10px;">
-                                        TO 
+                                        TO
                                     </p>
                                 </td>
                                 <td style="width:100px;">
                                     <p style="color:#FF444E;font-size: 10px;font-weight:400;font-family:Poppins;margin: 0px;line-height:20px;text-align: left;padding-left:10px;">
                                         INVOICE NO.
                                     </p>
-                                </td>   
+                                </td>
                             </tr>
                             <tr style="height:50px;border-bottom: 1px solid #FF444E;vertical-align: top;">
                                 <td style="width:300px;">
@@ -71,7 +71,7 @@
                                     <p style="color:#4C483D;font-size: 10px;font-weight:400;font-family:Poppins;margin: 0px;line-height:20px;text-align: left;padding-left:10px;">
                                         #{{ $invoice_number }}
                                     </p>
-                                </td>   
+                                </td>
                             </tr>
                         </table>
                         <table width="100%"  style="border-collapse: collapse;margin-top:30px;min-height: 450px !important;">
@@ -225,7 +225,7 @@
 
                     </td>
                 </tr>
-                 
+
             </table>
             </td>
         </tr>

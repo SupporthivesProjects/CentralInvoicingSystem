@@ -205,6 +205,31 @@ if (!function_exists('getCategoryList')) {
     }
 }
 
+if (!function_exists('site_languages')) {
+    function site_languages()
+    {
+        $site_id = session('customer.site_id');
+
+        if (!$site_id) {
+            return collect();
+        }
+
+        try {
+            $site = \App\Models\Website::findOrFail($site_id);
+            \App\Services\DynamicDatabaseService::connect($site);
+
+            $languages = DB::connection('dynamic')
+                ->table('languages')
+                ->select('id', 'name')
+                ->orderBy('name')
+                ->get();
+
+            return $languages;
+        } catch (\Exception $e) {
+            return collect(); // Return empty collection on failure
+        }
+    }
+}
 
 
 

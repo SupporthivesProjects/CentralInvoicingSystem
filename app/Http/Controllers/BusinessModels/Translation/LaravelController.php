@@ -55,34 +55,54 @@ class LaravelController extends Controller
         DynamicDatabaseService::connect($site);
 
         // Get the two translation products from database
-        $translationProducts = DB::connection($this->connectionType)->table($this->productTable)
-            ->select('id', 'category_id', 'name', 'unit_price', 'slug')
-            ->where('published', 1)
-            ->whereIn('name', ['Certified Translation', 'Standard Professional Translation'])
-            ->get();
+        $translationProducts = DB::connection($this->connectionType)
+        ->table($this->productTable)
+        ->select('id', 'category_id', 'name', 'unit_price', 'slug')
+        ->where('published', 1)
+        ->where(function ($query) {
+            $query->where('name', 'like', '%Standard%')
+                ->orWhere('name', 'like', '%Certified%');
+        })
+        ->get();
 
-        if ($translationProducts->count() < 1) {
-            return response()->json([
-                'tableRows' => '',
-                'total' => 0,
-                'message' => 'Translation products not found in the database'
-            ]);
-        }
+    if ($translationProducts->isEmpty()) {
+        return response()->json([
+            'tableRows' => '',
+            'total' => 0,
+            'message' => 'Translation products not found in the database'
+        ]);
+    }
 
-        // Find our translation products
-        $certifiedTranslation = $translationProducts->where('name', 'Certified Translation')->first();
-        $standardTranslation = $translationProducts->where('name', 'Standard Professional Translation')->first();
+    // Trim and find "Certified Translation"
+    $certifiedTranslation = $translationProducts->first(function ($item) {
+        return Str::contains(Str::lower(trim($item->name)), 'certified translation');
+    });
+
+    // Try to find "Standard Professional Translation" or fallback to "Standard Translation"
+    $standardTranslation = $translationProducts->first(function ($item) {
+        return Str::contains(Str::lower(trim($item->name)), 'standard professional translation');
+    }) ?? $translationProducts->first(function ($item) {
+        return Str::contains(Str::lower(trim($item->name)), 'standard translation');
+    });
+
+        //dd($certifiedTranslation, $standardTranslation);
+
+
 
         // Get prices from database (no static fallback values)
         $certifiedPrice = $certifiedTranslation ? floatval($certifiedTranslation->unit_price) : null;
         $standardPrice = $standardTranslation ? floatval($standardTranslation->unit_price) : null;
 
+        //dd($certifiedPrice, $certifiedPrice);
+
         $bestMatch = null;
         $bestTotal = PHP_FLOAT_MAX;
         $bestDistance = PHP_FLOAT_MAX;
 
+        //dd($filterType, $certifiedTranslation, $certifiedPrice);
         // Handle filter-specific logic
         if ($filterType === 'certified' && $certifiedTranslation && $certifiedPrice) {
+            //dd("I am in certified filter");
             // Only Certified Translation
             $certPages = ceil($invoiceAmount / $certifiedPrice);
             $total = $certPages * $certifiedPrice;
