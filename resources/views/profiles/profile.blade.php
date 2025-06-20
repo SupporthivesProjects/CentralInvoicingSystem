@@ -20,67 +20,71 @@
 
                 <div class="d-md-flex d-block align-items-center justify-content-between page-header-breadcrumb">
                     <div>
-                        <h2 class="main-content-title fs-24 mb-1">User</h2>
+                        <h2 class="main-content-title fs-24 mb-1">User Profile</h2>
                         <ol class="breadcrumb mb-0">
-                            <li class="breadcrumb-item"><a href="javascript:void(0)">My Profile</a></li>
+                            <li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
+                            <li class="breadcrumb-item"><a href="javascript:void(0)">Profile</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">{{ old('name', $user->name ?? 'Unnamed User') }}</li>
                         </ol>
                     </div>
                 </div>
-
-
                 <div class="row">
                     <div class="col-lg-12">
-                        <div class="card custom-card overflow-hidden">
+                        <div class="card custom-card overflow-hidden shadow-sm border-0 rounded-4">
                             <div class="card-body p-0">
 
-                                <div class="bg-secondary position-relative" style="height: 220px;">
+                                <!-- Cover Photo -->
+                                <div class="bg-gradient position-relative" style="height: 150px; background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);">
                                     <div class="profile-cover__action"></div>
                                 </div>
 
-                                <div class="text-center mt-n5 mt-2">
+                                <!-- Profile Image (Overlapping) -->
+                                <div class="text-center" style="margin-top: 77px;">
                                     <img src="{{ $profile->profile_image ? asset($profile->profile_image) : asset('uploads/profile/default-profile.png') }}"
                                         alt="Profile Image"
-                                        class="rounded-circle border border-white shadow"
-                                        width="120" height="120"
+                                        class="rounded-circle border border-3 border-white shadow"
+                                        width="100" height="100"
                                         style="object-fit: cover;">
-                                    <h3 class="mt-3 mb-1">{{ $profile->username ?? $user->name }}</h3>
                                 </div>
 
-                                <div class="d-flex justify-content-center gap-2 mt-2">
-                                    <button class="btn btn-danger btn-sm rounded-pill px-4">
+                                <!-- Name & Designation -->
+                                <div class="text-center mt-2">
+                                    <h5 class="mb-0 fw-semibold text-dark">{{ $profile->username ?? $user->name }}</h5>
+                                    <span class="text-muted small">{{ $profile->experience ?? 'Designation not set' }}</span>
+                                </div>
+                                <div class="text-center mt-1">
+                                    <small class="text-muted d-inline-flex align-items-center gap-1">
+                                        <i class="bi bi-clock"></i>
+                                        Last updated  {{ $profile->updated_at ? $profile->updated_at->diffForHumans() : $profile->updated_at->format('F d, Y') }}
+                                    </small>
+                                </div>
+
+
+                                <!-- Action Buttons -->
+                                <div class="d-flex justify-content-center gap-3 mt-3">
+                                    <button class="btn btn-outline-primary btn-sm rounded-pill px-4 fw-medium">
                                         <i class="fa fa-plus me-1"></i> Follow
                                     </button>
-                                    <button class="btn btn-success btn-sm rounded-pill px-4">
+                                    <button class="btn btn-outline-success btn-sm rounded-pill px-4 fw-medium">
                                         <i class="fa fa-comment me-1"></i> Message
                                     </button>
                                 </div>
 
-                                <div class="mt-4 border-top pt-3">
-                                    <div class="d-flex justify-content-around text-center">
-                                        <div>
-                                            <h5 class="mb-0">{{ $user->createdInvoices()->count() }} </h5>
-                                            <small class="text-muted">Invices</small>
-                                        </div>
-                                        <div>
-                                            <h5 class="mb-0">33</h5>
-                                            <small class="text-muted">Followers</small>
-                                        </div>
-                                        <div>
-                                            <h5 class="mb-0">136</h5>
-                                            <small class="text-muted">Following</small>
-                                        </div>
-                                    </div>
+                                <!-- Stats -->
+                                <div class="mt-4 border-top pt-3 text-center">
+                                    <h6 class="text-primary fw-bold mb-0 fs-5">{{ $user->createdInvoices()->count() }}</h6>
+                                    <small class="text-muted">Invoices Created</small>
                                 </div>
 
-                                <div class="border-top mt-4">
-                                    <ul class="nav nav-pills justify-content-center py-3">
+                                <!-- Tabs -->
+                                <div class="border-top pt-2">
+                                    <ul class="nav nav-pills justify-content-center gap-2 py-2">
                                         <li class="nav-item">
-                                            <a class="nav-link active" data-bs-toggle="tab" href="#about">View Profile</a>
+                                            <a class="nav-link active rounded-pill px-3" data-bs-toggle="tab" href="#about">View Profile</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" data-bs-toggle="tab" href="#edit">Edit Profile</a>
+                                            <a class="nav-link rounded-pill px-3" data-bs-toggle="tab" href="#edit">Edit Profile</a>
                                         </li>
-
                                     </ul>
                                 </div>
 
@@ -90,29 +94,26 @@
                 </div>
 
 
+
                 <div class="row row-sm">
                     <div class="col-lg-12 col-md-12">
                     <div class="card custom-card main-content-body-profile">
                         <div class="tab-content">
                             <div class="main-content-body tab-pane p-4 active" id="about">
                                 <div class="border rounded-4 shadow-sm bg-white">
-                                    <div class="p-4">
-                                        <h5 class="text-uppercase text-primary fw-semibold mb-3">Bio Data</h5>
-                                        <p class="mb-0">{{ $profile->bio ?? 'Need to Update' }}</p>
-                                    </div>
+                                <div class="p-4">
+                                    <h5 class="text-uppercase text-primary fw-semibold mb-3">
+                                        <i class="bi bi-person-fill me-2"></i> Profile Overview
+                                    </h5>
+                                    <p class="mb-3">{{ $profile->bio ?? 'Need to Update' }}</p>
 
-                                    <hr class="my-0">
-
-                                    <div class="p-4">
-                                        <h5 class="text-uppercase text-primary fw-semibold mb-3">Experience</h5>
-                                        <div class="mb-4">
-                                            <h6 class="fw-bold text-dark mb-1">Lead Designer / Developer</h6>
-                                            <p class="mb-1">{{ $profile->experience ?? 'Need to Update' }}</p>
-                                            <p class="text-muted small mb-1"><strong>2010-2015</strong></p>
-                                            <p class="text-muted small">{{ old('bio', $profile->bio ?? '') }}</p>
-                                        </div>
-                                      
+                                    <h5 class="text-uppercase text-primary fw-semibold mb-3">
+                                        <i class="bi bi-briefcase-fill me-2"></i> Designation
+                                    </h5>
+                                    <div class="mb-4">
+                                        <h6 class="fw-bold text-dark mb-1">{{ $profile->experience ?? 'Need to Update' }}</h6>
                                     </div>
+                                </div>
 
                                     <hr class="my-0">
 
@@ -228,12 +229,15 @@
                                                         <img src="{{ $profile->cover_image }}" alt="Cover Image" class="rounded shadow-sm" width="150" height="80">
                                                     </div>
                                                 </div>
-
+                                                <div class="col-md-12">
+                                                    <label class="form-label">Your Good Name</label>
+                                                    <input type="text" name="name" class="form-control" value="{{ old('name', $user->name ?? '') }}">
+                                                </div>
                                                 <div class="col-12">
                                                     <label class="form-label">Bio</label>
                                                     <textarea name="bio" class="form-control" rows="3" placeholder="Write something...">{{ old('bio', $profile->bio ?? '') }}</textarea>
                                                 </div>
-
+                                               
                                                 <div class="col-md-6">
                                                     <label class="form-label">Experience</label>
                                                     <input type="text" name="experience" class="form-control" value="{{ old('experience', $profile->experience ?? '') }}">
