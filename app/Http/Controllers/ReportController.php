@@ -12,6 +12,9 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Api2Pdf\Api2Pdf;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Http;
 
 class ReportController extends Controller
 {
@@ -51,6 +54,7 @@ class ReportController extends Controller
         
        
         $invoices = $query->get();
+      
 
         if ($invoices->isEmpty()) {
             $invoices = collect(); 
@@ -58,14 +62,66 @@ class ReportController extends Controller
         
         if ($request->has('generate_pdf')) {
             $currentDate = \Carbon\Carbon::now()->format('Y-m-d h:i A');
-            $pdf = PDF::loadView('reports.invoice_report', compact('invoices'));
             $filename = 'invoicegeneratereport-' . $currentDate . '.pdf';
-            return $pdf->download($filename);
+            $viewPath = 'reports.invoice_report';
+        
+            try {
+                return $this->generateWithApi2Pdf($viewPath, $invoices, $filename);
+            } catch (\Exception $e) {
+                return $this->generateWithDompdf($viewPath, $invoices, $filename);
+            }
         }
         
-       
         return view('reports.invoice_report', compact('invoices'));
+        
     }
+
+
+
+    protected function generateWithApi2Pdf($viewPath, $invoice_data, $filename)
+    {
+        $html = View::make($viewPath, ['invoices' => $invoice_data])->render();
+    
+        $response = Http::withHeaders([
+            'Authorization' => env('API2PDF_KEY')
+        ])->post('https://v2.api2pdf.com/chrome/html', [
+            'html' => $html,
+            'fileName' => $filename,
+            'options' => [
+                'format' => 'A4',
+                'landscape' => false
+            ]
+        ]);
+    
+        if ($response->failed()) {
+            $error = $response->json('message') ?? $response->body();
+            throw new \Exception('API2PDF failed: ' . $error);
+        }
+    
+        $pdfUrl = $response->json('pdf');
+    
+        if (empty($pdfUrl)) {
+            throw new \Exception('API2PDF did not return a PDF URL.');
+        }
+    
+        return response()->streamDownload(function () use ($pdfUrl) {
+            $pdfResponse = Http::timeout(60)->get($pdfUrl);
+    
+            if ($pdfResponse->failed()) {
+                throw new \Exception("Failed to download PDF file from Api2Pdf.");
+            }
+    
+            echo $pdfResponse->body();
+        }, $filename);
+    }
+    
+
+    protected function generateWithDompdf($viewPath, $invoice_data, $filename)
+    {
+        $pdf = \PDF::loadView($viewPath, ['invoices' => $invoice_data])->setPaper('A4', 'portrait');
+        return $pdf->download($filename);
+    }
+
     
 
 }
