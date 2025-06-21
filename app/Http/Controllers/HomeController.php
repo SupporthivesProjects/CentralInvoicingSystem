@@ -46,7 +46,7 @@ class HomeController extends Controller
     {
         $sevenDaysAgo = Carbon::now()->subDays(7)->startOfDay();
         $today = Carbon::now()->endOfDay();
-    
+
         $cacheKeyPriceHistory = 'price_history_' . $sevenDaysAgo . '_' . $today;
         $cacheKeyInvoiceStats = 'invoice_stats_' . $sevenDaysAgo . '_' . $today;
 
@@ -77,30 +77,30 @@ class HomeController extends Controller
         $dates = [];
         $priceChangeCounts = [];
         $invoiceCounts = [];
-    
+
         for ($i = 7; $i >= 0; $i--) {
-            $date = Carbon::now()->subDays($i)->format('Y-m-d');
+            $date = Carbon::now()->subDays($i)->format('d-m-Y');
             $dates[] = $date;
-            $invoiceCounts[$date] = 0;  
-            $priceChangeCounts[$date] = 0;  
+            $invoiceCounts[$date] = 0;
+            $priceChangeCounts[$date] = 0;
         }
-    
-       
+
         foreach ($invoiceStats as $stat) {
-            $invoiceCounts[$stat->date] = $stat->count;
+            $formattedDate = Carbon::parse($stat->date)->format('d-m-Y');
+            $invoiceCounts[$formattedDate] = $stat->count;
         }
-    
-       
+
         foreach ($priceHistory as $stat) {
-            $priceChangeCounts[$stat->date] = $stat->price_changes;
+            $formattedDate = Carbon::parse($stat->date)->format('d-m-Y');
+            $priceChangeCounts[$formattedDate] = $stat->price_changes;
         }
-    
-       
+
         $invoiceCounts = array_values($invoiceCounts);
         $priceChanges = array_values($priceChangeCounts);
-    
+
         return [$dates, $invoiceCounts, $priceChanges];
     }
+
 
     
     public function internalSearch(Request $request)

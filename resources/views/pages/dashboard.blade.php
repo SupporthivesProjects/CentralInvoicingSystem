@@ -352,15 +352,17 @@
 </script>
 
 <script>
-    const invoiceDates = @json($dates);  // Common dates
-    const invoiceCounts = @json($invoiceCounts);  // Invoice counts per date
-    const priceChangeCounts = @json($priceChanges);  // Price change counts per date
+    const invoiceDates = @json($dates); 
+    const invoiceCounts = @json($invoiceCounts);  
+    const priceChangeCounts = @json($priceChanges); 
     const siteCurrency = @json(site_currency());
-    const chartTypes = ['line', 'bar', 'area'];
+    const chartTypes = ['line', 'column', 'area'];
 
     function getRandomType() {
         return chartTypes[Math.floor(Math.random() * chartTypes.length)];
     }
+    var chartType = getRandomType();
+    console.log("Random Chart Type:", chartType);
     var options = {
         chart: {
             height: 350,
@@ -370,13 +372,13 @@
         series: [
             {
                 name: "Invoices Created Count",
-                type: getRandomType(),  
+                type: chartType,  
                 data: invoiceCounts,
                 color: "#FF5733"
             },
             {
                 name: "Price Changes Count",
-                type: getRandomType(),  
+                type: chartType,  
                 data: priceChangeCounts,
                 color: "#1E90FF"
             }
