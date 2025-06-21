@@ -226,7 +226,7 @@
                                                             <td class="text-center">
                                                                 <div class="d-flex justify-content-center">
                                                                     <a href="{{ route('product.selection', ['invoice_id' => $invoice->id]) }}"
-                                                                    class="btn btn-outline-warning rounded-pill btn-sm">
+                                                                    class="btn btn-outline-warning rounded-pill btn-sm" data-bs-toggle="tooltip" title="Regenerate the invoice with the same invoice number and amount.">
                                                                         <i class="fas fa-redo-alt"></i> Regenerate
                                                                     </a>
                                                                 </div>
