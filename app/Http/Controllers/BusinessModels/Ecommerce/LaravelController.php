@@ -62,7 +62,7 @@ class LaravelController extends Controller
         if ($categoryId) {
             $query->where('category_id', $categoryId);
         }
-       
+
         $fetchLimit = $noOfProducts ? ($noOfProducts * 5) : 200;
 
         if ($categoryId || $noOfProducts) {
@@ -72,7 +72,15 @@ class LaravelController extends Controller
             $allProducts = $query->orderByDesc('unit_price')->inRandomOrder()->get();
         } else {
             $minTotal = $invoiceAmount;
+            $maxTotal = $invoiceAmount * 1.10;
+            $iteration = 20;
             $allProducts =  $query->orderByDesc('unit_price')->limit($fetchLimit)->get();
+        }
+        if ($noOfProducts) {
+            $targetAvg = $invoiceAmount / $noOfProducts;
+            $allProducts = $allProducts->sortBy(function ($product) use ($targetAvg) {
+                return abs($product->unit_price - $targetAvg);
+            });
         }
 
 
@@ -81,7 +89,7 @@ class LaravelController extends Controller
         $bestDistance = null;
 
 
-        for ($i = 0; $i < 20; $i++) {
+        for ($i = 0; $i < $iteration; $i++) {
             $shuffled = $allProducts->shuffle();
             $selected = [];
             $currentTotal = 0;
@@ -89,24 +97,10 @@ class LaravelController extends Controller
             foreach ($shuffled as $product) {
                 $price = floatval($product->unit_price);
 
-                if ($noOfProducts) {
-                    if (count($selected) >= $noOfProducts) break;
-                    if ($currentTotal + $price <= $invoiceAmount * 1.05) {
-                        $selected[] = $product;
-                        $currentTotal += $price;
-                    }
-                } else {
-                    if (($currentTotal + $price) <= $maxTotal) {
-                        $selected[] = $product;
-                        $currentTotal += $price;
-
-                        if ($currentTotal >= $minTotal && $currentTotal <= $maxTotal) {
-                            if ($currentTotal > $bestTotal) {
-                                $bestMatch = $selected;
-                                $bestTotal = $currentTotal;
-                            }
-                        }
-                    }
+                if ($noOfProducts && count($selected) >= $noOfProducts) break;
+                if ($currentTotal + $price <= $maxTotal) {
+                    $selected[] = $product;
+                    $currentTotal += $price;
                 }
             }
 
@@ -125,6 +119,7 @@ class LaravelController extends Controller
                 }
             }
         }
+
 
         if (!$bestMatch) {
             return response()->json([
@@ -741,7 +736,6 @@ class LaravelController extends Controller
             }
         }
     }
-
 
 
 }
