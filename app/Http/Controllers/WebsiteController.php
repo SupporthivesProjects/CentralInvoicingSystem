@@ -107,7 +107,6 @@ class WebsiteController extends Controller
  public function createBusinessModel(Request $request)
     {
         try {
-            // Validate input
             $request->validate([
                 'name' => 'required|string|max:255',
                 'icon_class' => 'nullable|string|max:255',
@@ -126,13 +125,10 @@ class WebsiteController extends Controller
                 'model_type' => $model_type,
             ]);
 
-            // Redirect with success message
             return redirect()->back()->with('success', 'Business Model Added Successfully!');
         } catch (\Illuminate\Validation\ValidationException $e) {
-            // Validation errors are automatically redirected back with errors, so just rethrow
             throw $e;
         } catch (\Exception $e) {
-            // Handle any other unexpected exception
             return redirect()->back()->with('error', 'Something went wrong! Please try again.');
         }
     }
@@ -181,6 +177,12 @@ class WebsiteController extends Controller
                 'invoice_image1' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
                 'invoice_image2' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
                 'invoice_image3' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
+                'invoice_image4' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
+                'invoice_image5' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
+                'invoice_image6' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
+                'invoice_image7' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
+                'invoice_image8' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
+                'invoice_image9' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
         ]);
 
         try {
@@ -192,7 +194,6 @@ class WebsiteController extends Controller
 
             $baseUploadPath = public_path("uploads/websites/{$modelType}/{$siteId}/");
 
-            // Upload helper function
             $uploadFile = function ($field, $subfolder, $prefix = null) use ($request, $website, $baseUploadPath, $modelType, $siteId) {
                 if ($request->hasFile($field)) {
                     $file = $request->file($field);
@@ -210,7 +211,6 @@ class WebsiteController extends Controller
                 }
             };
 
-            // Upload each field
             $uploadFile('company_logo', 'logos', 'logo');
             $uploadFile('invoice_header_image', 'headers', 'header');
             $uploadFile('invoice_footer_image', 'footers', 'footer');
@@ -218,8 +218,13 @@ class WebsiteController extends Controller
             $uploadFile('invoice_image1', 'images1', 'image1');
             $uploadFile('invoice_image2', 'images2', 'image2');
             $uploadFile('invoice_image3', 'images3', 'image3');
+            $uploadFile('invoice_image4', 'images4', 'image4');
+            $uploadFile('invoice_image5', 'images5', 'image5');
+            $uploadFile('invoice_image6', 'images6', 'image6');
+            $uploadFile('invoice_image7', 'images7', 'image7');
+            $uploadFile('invoice_image8', 'images8', 'image8');
+            $uploadFile('invoice_image9', 'images9', 'image9');
 
-            // Special case for invoice_template (blade file)
             if ($request->hasFile('invoice_template')) {
                 $oldTemplatePath = resource_path("views/websites/{$modelType}/{$siteIdInWords}.blade.php");
                 if (file_exists($oldTemplatePath)) {
@@ -236,7 +241,6 @@ class WebsiteController extends Controller
                 $website->invoice_template = "views/websites/{$modelType}/{$siteIdInWords}.blade.php";
             }
 
-                // Update fields
                 $website->update([
                     'business_model_id' => $request->business_model_id,
                     'technology' => $request->technology,
@@ -268,7 +272,7 @@ class WebsiteController extends Controller
     public function createWebsite(Request $request)
     {
         try {
-            // Validation rules, including newly added invoice images
+
             $validator = Validator::make($request->all(), [
                 'business_model_id' => 'required|exists:business_models,id',
                 'technology' => 'required|in:html,wordpress,corephp,laravel,django,other',
@@ -295,9 +299,14 @@ class WebsiteController extends Controller
                 'invoice_image1' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
                 'invoice_image2' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
                 'invoice_image3' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
+                'invoice_image4' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
+                'invoice_image5' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
+                'invoice_image6' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
+                'invoice_image7' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
+                'invoice_image8' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
+                'invoice_image9' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
             ]);
 
-            // Handling validation failure
             if ($validator->fails()) {
                 $errors = $validator->errors()->all();
                 $firstError = $errors[0] ?? 'Validation failed.';
@@ -307,7 +316,6 @@ class WebsiteController extends Controller
                     ->with('error', $firstError);
             }
 
-            // First, create the website record without files
             $website = Website::create([
                 'business_model_id' => $request->business_model_id,
                 'technology' => $request->technology,
@@ -327,15 +335,12 @@ class WebsiteController extends Controller
                 'bank_code' => $request->bank_code
             ]);
 
-            // Fetch the website model and business model type
             $modelType = strtolower($website->businessModel->model_type);
             $siteId = $website->id;
-            $siteIdInWords = numberToWords($siteId); // Convert site ID to words
+            $siteIdInWords = numberToWords($siteId); 
 
-            // Set base upload path
             $baseUploadPath = public_path("uploads/websites/{$modelType}/{$siteId}/");
 
-            // File upload helper function
             $uploadFile = function ($field, $subfolder, $prefix = null) use ($request, $website, $baseUploadPath, $modelType, $siteId) {
                 if ($request->hasFile($field)) {
                     $file = $request->file($field);
@@ -352,16 +357,20 @@ class WebsiteController extends Controller
                 }
             };
 
-            // Upload each file
             $uploadFile('company_logo', 'logos', 'logo');
             $uploadFile('invoice_header_image', 'headers', 'header');
             $uploadFile('invoice_footer_image', 'footers', 'footer');
             $uploadFile('invoice_signature', 'signitures', 'signiture');
-            $uploadFile('invoice_image1', 'images1', 'image1'); // New image field
-            $uploadFile('invoice_image2', 'images2', 'image2'); // New image field
-            $uploadFile('invoice_image3', 'images3', 'image3'); // New image field
+            $uploadFile('invoice_image1', 'images1', 'image1'); 
+            $uploadFile('invoice_image2', 'images2', 'image2'); 
+            $uploadFile('invoice_image3', 'images3', 'image3'); 
+            $uploadFile('invoice_image4', 'images4', 'image4');
+            $uploadFile('invoice_image5', 'images5', 'image5');
+            $uploadFile('invoice_image6', 'images6', 'image6');
+            $uploadFile('invoice_image7', 'images7', 'image7');
+            $uploadFile('invoice_image8', 'images8', 'image8');
+            $uploadFile('invoice_image9', 'images9', 'image9');
 
-            // Special case for invoice_template (blade file)
             if ($request->hasFile('invoice_template')) {
                 $oldTemplatePath = resource_path("views/websites/{$modelType}/{$siteIdInWords}.blade.php");
                 if (file_exists($oldTemplatePath)) {
@@ -381,14 +390,11 @@ class WebsiteController extends Controller
             
             $website->save();
 
-            // Redirect to website edit page with success message
             return redirect()->route('website.edit', $website->id)->with('success', 'Website added successfully.');
 
         } catch (\Exception $e) {
-            // Log any exception that occurs
             Log::error('Website creation error: ' . $e->getMessage());
 
-            // Redirect back with error message
             return redirect()->back()
                 ->withInput()
                 ->with('error', 'Something went wrong. Please try again.');

@@ -132,60 +132,235 @@
                             <label class="form-label">Bank Code</label>
                             <input type="text" name="bank_code" class="form-control" placeholder="Enter Bank Code (e.g., IFSC or SWIFT)">
                         </div>
-
-                        <hr>
-                        <!-- First Row for Invoice Template -->
-                        <div class="row mb-4 mt-2">
-                            <div class="col-md-6 mx-auto">
-                                <label class="form-label">Invoice Template (HTML/HTM/PHP)</label>
-                                <input type="file" name="invoice_template" class="form-control" accept=".html,.htm,.php">
-                            </div>
-                            <div class="col-md-6 mx-auto">
-                                <label class="form-label">Invoice Signiture</label>
-                                <input type="file" name="invoice_signature" class="form-control" accept=".jpeg,.png,.jpg">
+                        <div class="my-4">
+                            <div class="d-flex align-items-center text-muted">
+                                <div class="flex-grow-1 border-bottom"></div>
+                                <div class="px-3 fw-semibold">Invoice Template/Images</div>
+                                <div class="flex-grow-1 border-bottom"></div>
                             </div>
                         </div>
+                        <div class="row mb-1 mt-2">
+                                <div class="col-md-6">
+                                    <div class="p-4 border border-primary rounded-4 shadow-sm bg-white h-100">
+                                        <h6 class="text-primary fw-bold mb-3">
+                                            📄 Invoice Template (HTML/HTM/PHP)
+                                        </h6>
+                                        <input type="file" name="invoice_template" class="form-control" accept=".html,.htm,.php">
+                                    </div>
+                                </div>
 
-                        <!-- Second Row for Logo, Header, and Footer -->
-                        <div class="row mb-4">
-                            <!-- Company Logo -->
-                            <div class="col-md-4 mx-auto">
-                                <label class="form-label">Invoice Logo</label>
-                                <input type="file" name="company_logo" class="form-control" accept=".jpeg,.png,.jpg">
-                            </div>
-                            
-                            <!-- Invoice Header Image -->
-                            <div class="col-md-4 mx-auto">
-                                <label class="form-label">Invoice Header Image</label>
-                                <input type="file" name="invoice_header_image" class="form-control" accept=".jpeg,.png,.jpg">
-                            </div>
-                            
-                            <!-- Invoice Footer Image -->
-                            <div class="col-md-4 mx-auto">
-                                <label class="form-label">Invoice Footer Image</label>
-                                <input type="file" name="invoice_footer_image" class="form-control" accept=".jpeg,.png,.jpg">
-                            </div>
-                        </div>
+                                <div class="col-md-6">
+                                    <div class="p-4 border border-primary rounded-4 shadow-sm bg-white h-100">
+                                        <h6 class="text-primary fw-bold mb-3">
+                                            ✍️ Invoice Signature (Image)
+                                        </h6>
+                                        <input type="file" name="invoice_signature" class="form-control image-input" accept=".jpeg,.png,.jpg">
+                                        <div class="file-info mt-2 d-none">
+                                            <small class="text-muted d-flex align-items-center gap-2">
+                                                <span class="hover-preview-link file-name text-muted" style="cursor: pointer;"></span>
+                                                <button type="button" class="btn btn-sm text-danger p-0 remove-file-btn" title="Remove">
+                                                    <i class="bi bi-trash-fill"></i>
+                                                </button>
+                                            </small>
+                                        </div>
 
-                        <!-- Third Row for Invoice Image 1, Image 2, Image 3 -->
-                        <div class="row mb-4">
-                            <!-- Invoice Image 1 -->
-                            <div class="col-md-4 mx-auto">
-                                <label class="form-label">Invoice Image 1</label>
-                                <input type="file" name="invoice_image1" class="form-control" accept=".jpeg,.png,.jpg">
-                            </div>
-
-                            <!-- Invoice Image 2 -->
-                            <div class="col-md-4 mx-auto">
-                                <label class="form-label">Invoice Image 2</label>
-                                <input type="file" name="invoice_image2" class="form-control" accept=".jpeg,.png,.jpg">
+                                    </div>
+                                </div>
                             </div>
 
-                            <!-- Invoice Image 3 -->
-                            <div class="col-md-4 mx-auto">
-                                <label class="form-label">Invoice Image 3</label>
-                                <input type="file" name="invoice_image3" class="form-control" accept=".jpeg,.png,.jpg">
+                        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+                         
+                            <div class="col">
+                                <div class="p-3 border rounded-3 shadow-sm bg-white">
+                                    <label class="form-label fw-semibold text-dark">Company Logo</label>
+                                    <input type="file" name="company_logo" class="form-control image-input" accept=".jpeg,.png,.jpg">
+                                    <div class="file-info mt-2 d-none">
+                                        <small class="text-muted d-flex align-items-center gap-2">
+                                            <span class="hover-preview-link file-name text-muted" style="cursor: pointer;"></span>
+                                            <button type="button" class="btn btn-sm text-danger p-0 remove-file-btn" title="Remove">
+                                                <i class="bi bi-trash-fill"></i>
+                                            </button>
+                                        </small>
+                                    </div>
+
+                                </div>
                             </div>
+
+                            <div class="col">
+                                <div class="p-3 border rounded-3 shadow-sm bg-white">
+                                    <label class="form-label fw-semibold text-dark">Invoice Header Image</label>
+                                    <input type="file" name="invoice_header_image" class="form-control image-input" accept=".jpeg,.png,.jpg">
+                                    <div class="file-info mt-2 d-none">
+                                        <small class="text-muted d-flex align-items-center gap-2">
+                                            <span class="hover-preview-link file-name text-muted" style="cursor: pointer;"></span>
+                                            <button type="button" class="btn btn-sm text-danger p-0 remove-file-btn" title="Remove">
+                                                <i class="bi bi-trash-fill"></i>
+                                            </button>
+                                        </small>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="col">
+                                <div class="p-3 border rounded-3 shadow-sm bg-white">
+                                    <label class="form-label fw-semibold text-dark">Invoice Footer Image</label>
+                                    <input type="file" name="invoice_footer_image" class="form-control image-input" accept=".jpeg,.png,.jpg">
+                                    <div class="file-info mt-2 d-none">
+                                        <small class="text-muted d-flex align-items-center gap-2">
+                                            <span class="hover-preview-link file-name text-muted" style="cursor: pointer;"></span>
+                                            <button type="button" class="btn btn-sm text-danger p-0 remove-file-btn" title="Remove">
+                                                <i class="bi bi-trash-fill"></i>
+                                            </button>
+                                        </small>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="p-3 border rounded-3 shadow-sm bg-white">
+                                    <label class="form-label fw-semibold text-dark">Invoice Image 1</label>
+                                    <input type="file" name="invoice_image1" class="form-control image-input" accept=".jpeg,.png,.jpg">
+                                    <div class="file-info mt-2 d-none">
+                                        <small class="text-muted d-flex align-items-center gap-2">
+                                            <span class="hover-preview-link file-name text-muted" style="cursor: pointer;"></span>
+                                            <button type="button" class="btn btn-sm text-danger p-0 remove-file-btn" title="Remove">
+                                                <i class="bi bi-trash-fill"></i>
+                                            </button>
+                                        </small>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="col">
+                                <div class="p-3 border rounded-3 shadow-sm bg-white">
+                                    <label class="form-label fw-semibold text-dark">Invoice Image 2</label>
+                                    <input type="file" name="invoice_image2" class="form-control image-input" accept=".jpeg,.png,.jpg">
+                                    <div class="file-info mt-2 d-none">
+                                        <small class="text-muted d-flex align-items-center gap-2">
+                                            <span class="hover-preview-link file-name text-muted" style="cursor: pointer;"></span>
+                                            <button type="button" class="btn btn-sm text-danger p-0 remove-file-btn" title="Remove">
+                                                <i class="bi bi-trash-fill"></i>
+                                            </button>
+                                        </small>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="col">
+                                <div class="p-3 border rounded-3 shadow-sm bg-white">
+                                    <label class="form-label fw-semibold text-dark">Invoice Image 3</label>
+                                    <input type="file" name="invoice_image3" class="form-control image-input" accept=".jpeg,.png,.jpg">
+                                    <div class="file-info mt-2 d-none">
+                                        <small class="text-muted d-flex align-items-center gap-2">
+                                            <span class="hover-preview-link file-name text-muted" style="cursor: pointer;"></span>
+                                            <button type="button" class="btn btn-sm text-danger p-0 remove-file-btn" title="Remove">
+                                                <i class="bi bi-trash-fill"></i>
+                                            </button>
+                                        </small>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="col">
+                                <div class="p-3 border rounded-3 shadow-sm bg-white">
+                                    <label class="form-label fw-semibold text-dark">Invoice Image 4</label>
+                                    <input type="file" name="invoice_image4" class="form-control image-input" accept=".jpeg,.png,.jpg">
+                                    <div class="file-info mt-2 d-none">
+                                        <small class="text-muted d-flex align-items-center gap-2">
+                                            <span class="hover-preview-link file-name text-muted" style="cursor: pointer;"></span>
+                                            <button type="button" class="btn btn-sm text-danger p-0 remove-file-btn" title="Remove">
+                                                <i class="bi bi-trash-fill"></i>
+                                            </button>
+                                        </small>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="col">
+                                <div class="p-3 border rounded-3 shadow-sm bg-white">
+                                    <label class="form-label fw-semibold text-dark">Invoice Image 5</label>
+                                    <input type="file" name="invoice_image5" class="form-control image-input" accept=".jpeg,.png,.jpg">
+                                    <div class="file-info mt-2 d-none">
+                                        <small class="text-muted d-flex align-items-center gap-2">
+                                            <span class="hover-preview-link file-name text-muted" style="cursor: pointer;"></span>
+                                            <button type="button" class="btn btn-sm text-danger p-0 remove-file-btn" title="Remove">
+                                                <i class="bi bi-trash-fill"></i>
+                                            </button>
+                                        </small>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="col">
+                                <div class="p-3 border rounded-3 shadow-sm bg-white">
+                                    <label class="form-label fw-semibold text-dark">Invoice Image 6</label>
+                                    <input type="file" name="invoice_image6" class="form-control image-input" accept=".jpeg,.png,.jpg">
+                                    <div class="file-info mt-2 d-none">
+                                        <small class="text-muted d-flex align-items-center gap-2">
+                                            <span class="hover-preview-link file-name text-muted" style="cursor: pointer;"></span>
+                                            <button type="button" class="btn btn-sm text-danger p-0 remove-file-btn" title="Remove">
+                                                <i class="bi bi-trash-fill"></i>
+                                            </button>
+                                        </small>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="col">
+                                <div class="p-3 border rounded-3 shadow-sm bg-white">
+                                    <label class="form-label fw-semibold text-dark">Invoice Image 7</label>
+                                    <input type="file" name="invoice_image7" class="form-control image-input" accept=".jpeg,.png,.jpg">
+                                    <div class="file-info mt-2 d-none">
+                                        <small class="text-muted d-flex align-items-center gap-2">
+                                            <span class="hover-preview-link file-name text-muted" style="cursor: pointer;"></span>
+                                            <button type="button" class="btn btn-sm text-danger p-0 remove-file-btn" title="Remove">
+                                                <i class="bi bi-trash-fill"></i>
+                                            </button>
+                                        </small>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="col">
+                                <div class="p-3 border rounded-3 shadow-sm bg-white">
+                                    <label class="form-label fw-semibold text-dark">Invoice Image 8</label>
+                                    <input type="file" name="invoice_image8" class="form-control image-input" accept=".jpeg,.png,.jpg">
+                                    <div class="file-info mt-2 d-none">
+                                        <small class="text-muted d-flex align-items-center gap-2">
+                                            <span class="hover-preview-link file-name text-muted" style="cursor: pointer;"></span>
+                                            <button type="button" class="btn btn-sm text-danger p-0 remove-file-btn" title="Remove">
+                                                <i class="bi bi-trash-fill"></i>
+                                            </button>
+                                        </small>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="col">
+                                <div class="p-3 border rounded-3 shadow-sm bg-white">
+                                    <label class="form-label fw-semibold text-dark">Invoice Image 9</label>
+                                    <input type="file" name="invoice_image9" class="form-control image-input" accept=".jpeg,.png,.jpg">
+                                    <div class="file-info mt-2 d-none">
+                                        <small class="text-muted d-flex align-items-center gap-2">
+                                            <span class="hover-preview-link file-name text-muted" style="cursor: pointer;"></span>
+                                            <button type="button" class="btn btn-sm text-danger p-0 remove-file-btn" title="Remove">
+                                                <i class="bi bi-trash-fill"></i>
+                                            </button>
+                                        </small>
+                                    </div>
+
+                                </div>
+                            </div>
+
                         </div>
 
                         <div class="col-12 text-center">
@@ -199,6 +374,9 @@
             </div>
 
         </div>
+    </div>
+    <div id="hoverPreviewBox" style="display: none;position: fixed;z-index: 9999;background: #fff;padding: 8px;border-radius: 8px;box-shadow: 0 0 10px rgba(0,0,0,0.3);max-width: 300px;max-height: 300px; pointer-events: none;">
+        <img id="hoverPreviewImage" src="" alt="Preview" style="max-width: 100%; max-height: 250px;">
     </div>
 
 @endsection
@@ -293,6 +471,42 @@
             });
         });
     });
+</script>
+<script>
+$(document).ready(function () {
+    const offsetX = 30, offsetY = 20;
+
+    $('.image-input').on('change', function () {
+        const file = this.files[0];
+        const reader = new FileReader();
+        const $wrapper = $(this).siblings('.file-info');
+
+        if (file && file.type.startsWith('image/')) {
+            reader.onload = function (e) {
+                const $link = $wrapper.find('.hover-preview-link');
+                $link.text(file.name).attr('href', e.target.result).data('img', e.target.result);
+                $wrapper.removeClass('d-none');
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    $(document).on('mouseenter', '.hover-preview-link', function () {
+        $('#hoverPreviewImage').attr('src', $(this).data('img'));
+        $('#hoverPreviewBox').fadeIn(150);
+    }).on('mousemove', '.hover-preview-link', function (e) {
+        $('#hoverPreviewBox').css({ top: e.clientY + offsetY + 'px', left: e.clientX + offsetX + 'px' });
+    }).on('mouseleave', '.hover-preview-link', function () {
+        $('#hoverPreviewBox').fadeOut(100);
+    });
+
+    $(document).on('click', '.remove-file-btn', function () {
+        const $wrapper = $(this).closest('.file-info');
+        const $input = $wrapper.siblings('.image-input');
+        $input.val('');
+        $wrapper.addClass('d-none');
+    });
+});
 </script>
 
 
