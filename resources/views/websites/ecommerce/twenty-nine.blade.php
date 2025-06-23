@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-        <title>{{ $site->site_name }} - Invoice #{{ $invoice_number }}</title>
+        <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
 </head>
 <body>
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
@@ -48,7 +48,7 @@
                                         <p style="font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;">
                                             <b>BILLED FROM:</b>
                                         </p>
-                                        <p style="font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;">{{ $site->site_name }}</p>
+                                        <p style="font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;">{{ $site_name }}</p>
                                      <td style="padding-top: 10px;width: 300px;text-align: right;">
                                        <p style="font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;">
                                             <b>BILLED TO:</b>

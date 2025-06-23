@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>{{ $site->site_name }} - Invoice #{{ $invoice_number }}</title>
+    <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
     <style>
         body, table, td {
             background-color: transparent !important;
@@ -69,7 +69,7 @@
                                             <b>To:</b> {{ $customer_name }}
                                         </p>
                                         <p style="color:#474748;font-family: arial;font-size: 10px;">
-                                            <b>From:</b> {{ $site->site_name }}
+                                            <b>From:</b> {{ $site_name }}
                                         </p>
                                     </td>
                                     <td style="text-align: right;">

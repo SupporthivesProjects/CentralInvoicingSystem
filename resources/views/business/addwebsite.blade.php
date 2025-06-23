@@ -51,12 +51,14 @@
                                 @endforeach
                             </select>
                         </div>
-
                         <div class="col-md-6 mx-auto">
-                            <label class="form-label">Site Name <span style="color:red">*</span></label>
-                            <input type="text" name="site_name" class="form-control" required placeholder="Enter Site Name">
+                            <label class="form-label">Technology Stack <span style="color:red">*</span></label>
+                            <select name="technology" class="form-select" required>
+                                <option value="wordpress">WordPress</option>
+                                <option value="laravel" selected>Laravel</option>
+                                <option value="corephp">Core PHP</option>
+                            </select>
                         </div>
-
                         <div class="col-md-6 mx-auto">
                             <label class="form-label">Database Host <span style="color:red">*</span></label>
                             <input type="text" name="db_host" class="form-control" placeholder="Enter Database Host" required>
@@ -84,25 +86,18 @@
 
                         <div class="col-md-6 mx-auto">
                             <label class="form-label">Website Link <span style="color:red">*</span></label>
-                            <input type="text" name="site_link" class="form-control" placeholder="Enter Website link">
+                            <input type="text" name="site_link" class="form-control" placeholder="Enter Website link" required>
                         </div>
-
+                        <div class="col-md-6 mx-auto">
+                            <label class="form-label">Site Name <span style="color:red">*</span></label>
+                            <input type="text" name="site_name" class="form-control" placeholder="Enter Site Name" required>
+                        </div>
                         <div class="col-md-6 mx-auto">
                             <label class="form-label">Site Description</label>
                             <input type="text" name="site_description" class="form-control" placeholder="Enter Site Description (optional)">
                         </div>
 
-                        <!-- Add the Technology Field Here -->
-                        <div class="col-md-6 mx-auto">
-                            <label class="form-label">Technology <span style="color:red">*</span></label>
-                            <select name="technology" class="form-select" required>
-                                <option selected disabled>Choose Technology</option>
-                                <option value="wordpress">WordPress</option>
-                                <option value="laravel">Laravel</option>
-                                <option value="corephp">Core PHP</option>
-                            </select>
-                        </div>
-
+                        
                         <div class="col-md-6 mx-auto">
                             <label class="form-label">Company Name</label>
                             <input type="text" name="company_name" class="form-control" placeholder="Enter Company Name">

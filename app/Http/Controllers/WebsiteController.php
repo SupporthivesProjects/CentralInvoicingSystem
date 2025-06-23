@@ -155,7 +155,7 @@ class WebsiteController extends Controller
         $request->validate([
                 'business_model_id' => 'required|exists:business_models,id',
                 'technology' => 'required|in:html,wordpress,corephp,laravel,django,other',
-                'site_name' => 'required|string|max:255',
+                'site_name' => 'nullable|string|max:255',
                 'site_description' => 'nullable|string|max:500',
                 'db_host' => 'required|string|max:255',
                 'db_port' => 'required|numeric',
@@ -276,7 +276,7 @@ class WebsiteController extends Controller
             $validator = Validator::make($request->all(), [
                 'business_model_id' => 'required|exists:business_models,id',
                 'technology' => 'required|in:html,wordpress,corephp,laravel,django,other',
-                'site_name' => 'required|string|max:255',
+                'site_name' => 'nullable|string|max:255',
                 'site_description' => 'nullable|string|max:500',
                 'db_host' => 'required|string|max:255',
                 'db_port' => 'required|numeric',

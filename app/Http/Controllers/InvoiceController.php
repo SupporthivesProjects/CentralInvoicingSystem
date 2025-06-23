@@ -153,8 +153,16 @@ class InvoiceController extends Controller
             if (empty($invoice_id)) {
                 $newInvoiceNumber = generateInvoiceNumber($site->site_name);
                 $invoice['invoice_number'] = $newInvoiceNumber;
+                $invoice['invoice_amount'] = $invoice['invoice_amount'] ?? 0;
                 session(['invoice' => $invoice]);
             }
+            if (empty($invoice_id) && empty($new_site_id)) {
+                $invoice = session('invoice', []);
+                $invoice['invoice_amount'] = $invoice['invoice_amount'] ?? 0;
+                $invoice['invoice_number'] = $invoice['invoice_number'] ?? generateInvoiceNumber('DefaultSite');
+                session(['invoice' => $invoice]);
+            }
+            
     
             session()->put('customer', $customer);
             session()->flash('success', 'Website has been changed');
@@ -180,6 +188,13 @@ class InvoiceController extends Controller
                 $min_unit_price = 10;
                 $max_unit_price = 1000;
             }
+
+            try {
+                $remote_database = DB::connection($this->connectionType)->table('general_settings')->orderByDesc('updated_at')->first();
+            } catch (\Exception $e) {
+                $remote_database = null;
+            }
+            
     
             $modelType = $site->businessModel->model_type;
             $sites = Website::orderBy('id', 'DESC')->get();
@@ -190,7 +205,8 @@ class InvoiceController extends Controller
                 'site' => $site,
                 'sites' => $sites,
                 'min_unit_price' => $min_unit_price,
-                'max_unit_price' => $max_unit_price
+                'max_unit_price' => $max_unit_price,
+                'remote_database' =>$remote_database
             ]);
     
         } catch (\Exception $e) {

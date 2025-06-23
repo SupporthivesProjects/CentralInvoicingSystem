@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>{{ $site->site_name }} - Invoice #{{ $invoice_number }}</title>
+    <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
     <style>
         * {
             margin: 0px;
@@ -90,7 +90,7 @@
                                             <p>Email</p>
                                             <h6>{{ $company_email }}</h6>
                                             <p>Address</p>
-                                            <h6>{{ $site->site_name }}</h6>
+                                            <h6>{{ $site_name }}</h6>
                                             <p>
                                               {!! $company_address !!}
                                             </p>
