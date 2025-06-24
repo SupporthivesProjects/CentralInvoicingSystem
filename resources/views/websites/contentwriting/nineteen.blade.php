@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>{{ $site->site_name }} - Invoice #{{ $invoice_number }}</title>
+    <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <style>
         /* General Styles for DOMPDF */
@@ -147,9 +147,9 @@
                                         <p class="text-black font-size-12 font-arial font-weight-700 margin-0 text-left text-uppercase">
                                             Billed From:
                                         </p>
-                                        @if (!empty($site->site_name))
+                                        @if (!empty($site_name))
                                             <p class="text-black font-size-11 font-arial font-weight-400 margin-0 text-capitalize">
-                                                {{ $site->site_name }}
+                                                {{ $site_name }}
                                             </p>
                                         @endif
                                         @if (!empty($site->site_link))
@@ -299,8 +299,8 @@
                     <tr>
                         <td class="footer-address">
                             <p>
-                                @if (!empty($site->site_name))
-                                    {{ $site->site_name }}<br>
+                                @if (!empty($site_name))
+                                    {{ $site_name }}<br>
                                 @endif
                                 @if (!empty($site->site_link))
                                     {{ $site->site_link }}<br>

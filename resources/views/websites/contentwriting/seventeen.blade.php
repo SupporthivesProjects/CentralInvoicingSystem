@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>{{ $site->site_name }} - Invoice #{{ $invoice_number }}</title>
+    <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -53,7 +53,7 @@
                                             </tr>
                                             <tr>
                                                 <td style="font-size:6.5px; font-weight:600;">Address:</td>
-                                                <td style="font-size:6.5px;">{{ $site->site_name ?? 'Company Name' }}, Kenya</td>
+                                                <td style="font-size:6.5px;">{{ $site_name ?? 'Company Name' }}, Kenya</td>
                                             </tr>
                                             <tr>
                                                 <td style="font-size:6.5px; font-weight:600;">Email:</td>
@@ -157,7 +157,7 @@
                         <td align="center" style="height:110px;">
                             <p style="font-size:6.5px;">
                                 <b>Email:</b> {{ $company_email ?? 'support@writecontent4me.com' }} <br>
-                                {{ $site->site_name ?? 'Intergrated Consortium Company Limited' }}, Kenya <br>
+                                {{ $site_name ?? 'Intergrated Consortium Company Limited' }}, Kenya <br>
                                 {{ $site->site_link ?? 'www.writecontent4me.com' }}
                             </p>
                         </td>

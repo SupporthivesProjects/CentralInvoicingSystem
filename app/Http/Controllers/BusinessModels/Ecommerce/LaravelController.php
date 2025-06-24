@@ -613,6 +613,12 @@ class LaravelController extends Controller
         $invoice_data['invoice_image1'] = base64EncodeImage($site->invoice_image1);
         $invoice_data['invoice_image2'] = base64EncodeImage($site->invoice_image2);
         $invoice_data['invoice_image3'] = base64EncodeImage($site->invoice_image3);
+        $invoice_data['invoice_image4'] = base64EncodeImage($site->invoice_image4);
+        $invoice_data['invoice_image5'] = base64EncodeImage($site->invoice_image5);
+        $invoice_data['invoice_image6'] = base64EncodeImage($site->invoice_image6);
+        $invoice_data['invoice_image7'] = base64EncodeImage($site->invoice_image7);
+        $invoice_data['invoice_image8'] = base64EncodeImage($site->invoice_image8);
+        $invoice_data['invoice_image9'] = base64EncodeImage($site->invoice_image9);
     
         $productDataArray = $request->input('product_data', []);
         $productIds = [];

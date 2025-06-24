@@ -34,7 +34,7 @@
                                              BILLED FROM:
                                         </p>
                                         <p style="font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;">
-                                            {{ $site->company_name }} <br>
+                                            {{ $company_name }} <br>
                                             {{ $site_name }}
                                            
                                         </p>
