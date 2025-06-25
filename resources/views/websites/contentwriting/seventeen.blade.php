@@ -84,7 +84,7 @@
                                 </tr>
                                 <tr style="border: 1px solid #DEDFDE; height: 100px;">
                                     <td colspan="2" style="padding:10px; text-align:center; font-size:16px; font-weight:400;">
-                                        {{ site_currency_code() . number_format($invoice_amount, 2) }}
+                                        {{ site_currency() . number_format($invoice_amount, 2) }}
                                     </td>
                                 </tr>
                             </table>
@@ -125,27 +125,27 @@
                                         @if($product->audience)<span class="me-2 badge bg-light text-dark"><strong>Audience:</strong> {{ $product->audience }}</span>@endif
                                     </td>
                                     <td style="font-size:6.5px;">{{ $product->quantity }}</td>
-                                    <td style="font-size:6.5px;">{{ site_currency_code() . number_format($product->unit_price, 2) }}</td>
-                                    <td style="font-size:6.5px;">{{ site_currency_code() . number_format($product->unit_price * $product->quantity, 2) }}</td>
+                                    <td style="font-size:6.5px;">{{ site_currency() . number_format($product->unit_price, 2) }}</td>
+                                    <td style="font-size:6.5px;">{{ site_currency() . number_format($product->unit_price * $product->quantity, 2) }}</td>
                                 </tr>
                                 @endforeach
 
                                 <tr>
                                     <td colspan="2"></td>
                                     <td style="font-size:6.5px; font-weight:600;">SUB-TOTAL</td>
-                                    <td style="font-size:6.5px;">{{ site_currency_code() . number_format($invoice_amount + $discount_amount, 2) }}</td>
+                                    <td style="font-size:6.5px;">{{ site_currency() . number_format($invoice_amount + $discount_amount, 2) }}</td>
                                 </tr>
                                 <tr>
                                     <td colspan="2"></td>
                                     <td style="font-size:6.5px; font-weight:600;">DISCOUNT</td>
-                                    <td style="font-size:6.5px; color:green;">{{ site_currency_code() . number_format($discount_amount, 2) }}</td>
+                                    <td style="font-size:6.5px; color:green;">{{ site_currency() . number_format($discount_amount, 2) }}</td>
                                 </tr>
                                 <tr>
                                     <td colspan="2">
                                         <p style="font-size: 6.5px; padding-left: 10px;">Thank you for your order.</p>
                                     </td>
                                     <td style="font-size:6.5px; font-weight:600;">GRAND TOTAL</td>
-                                    <td style="font-size:6.5px;">{{ site_currency_code() . number_format($invoice_amount, 2) }}</td>
+                                    <td style="font-size:6.5px;">{{ site_currency() . number_format($invoice_amount, 2) }}</td>
                                 </tr>
                             </table>
                         </td>
