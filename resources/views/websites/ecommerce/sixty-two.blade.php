@@ -2,34 +2,25 @@
 <html>
 
 <head>
-    <title>BEEFITARO</title>
+    <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
 </head>
 
 <body>
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
-            <td align="center" bgcolor="#f2f2f2" style="padding: 20px 0;">
-                <table width="600" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
+            <td align="center" bgcolor="#f2f2f2" style="padding: 00px 0;">
+                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
                     style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
-                    <!-- Header -->
                     <tr>
                         <td style="padding: 0; height: 130px;">
                             <table width="100%" cellspacing="0" cellpadding="0" style="border-collapse: collapse;">
                                 <tr>
-                                    <td style="
-                                        background: url('./images/header.png') no-repeat center;
-                                        background-size: cover;
-                                        height: 130px;">
+                                    <td style="background: url('{{ $invoice_header_image }}') no-repeat center;background-size: cover;height: 130px;">
                                     </td>
                                 </tr>
                             </table>
                         </td>
                     </tr>
-
-                    <!-- Header End -->
-
-
-                    <!-- Content -->
                     <tr>
                         <td
                             style="padding:40px;padding-top:0px;background:#ffffff; background-repeat: no-repeat;background-position: center;background-size: cover;height:444px; font-family: 'Yu Gothic';">
@@ -59,7 +50,7 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td style="color: #000;">01/01/2023</td>
+                                                <td style="color: #000;">{{ $invoice_date }}</td>
                                             </tr>
                                             <tr>
                                                 <td style="height: 2px;"></td>
@@ -68,7 +59,7 @@
                                                 <td style="color: #E62E2D; font-weight: bold;">INVOICE #</td>
                                             </tr>
                                             <tr>
-                                                <td style="color: #000;">100</td>
+                                                <td style="color: #000;">{{ $invoice_number }}</td>
                                             </tr>
                                             <tr>
                                                 <td style="height: 20px;"></td>
@@ -81,84 +72,47 @@
                                         <span style="color: #E62E2D; font-weight: bold;  ">TO:</span>
                                     </td>
                                     <td align="right" style=" vertical-align: top; font-size: 9px;  padding-top: 0px;">
-                                        Customer Name
+                                        {{ $customer_name }}
                                     </td>
                                 </tr>
                             </table>
-
-                            <!-- Invoice Items Table -->
-                            <table width="100%" border="1" cellspacing="0" cellpadding="8"
-                                style="border-collapse: collapse; font-family:'Century Gothic (Headings)'; font-size: 9px; width: 800px; margin: auto; margin-top: 20px; text-align: left;">
-                                <tr>
-                                    <th style="color: red;">QTY</th>
-                                    <th style="color: red;">DESCRIPTION</th>
-                                    <th align="right" style="color: red;">UNIT PRICE</th>
-                                    <th align="right" style="color: red;">LINE TOTAL</th>
-                                </tr>
-                                <tr>
-                                    <td>1</td>
-                                    <td>Product title here</td>
-                                    <td align="right">15.00</td>
-                                    <td align="right">150.00</td>
-                                </tr>
-                                <tr>
-                                    <td>5</td>
-                                    <td>Product title here</td>
-                                    <td align="right">5.00</td>
-                                    <td align="right">250.00</td>
-                                </tr>
-                                <!-- Empty Rows for spacing -->
-                                <tr>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td align="right">&nbsp;</td>
-                                    <td align="right">&nbsp;</td>
-                                    
-                                </tr>
-                                <tr>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td align="right">&nbsp;</td>
-                                    <td align="right">&nbsp;</td>
-                                    
-                                </tr>
-                                <tr>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td align="right">&nbsp;</td>
-                                    <td align="right">&nbsp;</td>
-                                    
-                                </tr>
-                                <tr>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td align="right">&nbsp;</td>
-                                    <td align="right">&nbsp;</td>
-                                    
-                                </tr>
-                                
-
-                                <!-- Subtotal, Tax, Total -->
-                                <tr>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td style="color: red; font-weight: bold;" align="left">SUBTOTAL</td>
-                                    <td align="right" style="color: red; font-weight: bold; border: 2px solid red; background-color: #FAE5E5;">400.00</td>
-                                </tr>
-                                <tr>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td style="color: red; font-weight: bold;" align="left">SALES TAX</td>
-                                    <td align="right" style="color: red; font-weight: bold; border: 2px solid red; background-color: #FAE5E5;">20.00</td>
-                                </tr>
-                                <tr>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td style="color: red; font-weight: bold;" align="left">TOTAL</td>
-                                    <td align="right" style="color: red; font-weight: bold; border: 2px solid red; background-color: #FAE5E5;">420.00</td>
-                                </tr>
-                            </table>
-
+                            <div style="min-height: 500px !important;">
+                                <table width="100%" border="1" cellspacing="0" cellpadding="8"
+                                    style="border-collapse: collapse; font-family:'Century Gothic (Headings)'; font-size: 9px; width: 800px; margin: auto; margin-top: 20px; text-align: left;">
+                                    <tr>
+                                        <th style="color: red;">QTY</th>
+                                        <th style="color: red;">DESCRIPTION</th>
+                                        <th align="right" style="color: red;">UNIT PRICE</th>
+                                        <th align="right" style="color: red;">LINE TOTAL</th>
+                                    </tr>
+                                    @foreach ($products as $product)
+                                    <tr>
+                                        <td>{{ $product->quantity ?? 1 }}</td>
+                                        <td> {{ $product->name }}</td>
+                                        <td align="right"> {{ site_currency() . number_format($product->unit_price, 2) }}</td>
+                                        <td align="right"> {{ site_currency() . number_format(($product->quantity ?? 1) * $product->unit_price, 2) }}</td>
+                                    </tr>
+                                    @endforeach
+                                    <tr>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td style="color: red; font-weight: bold;" align="left">SUBTOTAL</td>
+                                        <td align="right" style="color: red; font-weight: bold; border: 2px solid red; background-color: #FAE5E5;">{{ site_currency() . number_format($invoice_amount + $discount_amount, 2) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td style="color: red; font-weight: bold;" align="left">DISCOUNT</td>
+                                        <td align="right" style="color: red; font-weight: bold; border: 2px solid red; background-color: #FAE5E5;">{{ site_currency() . number_format($discount_amount, 2) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td style="color: red; font-weight: bold;" align="left">TOTAL</td>
+                                        <td align="right" style="color: red; font-weight: bold; border: 2px solid red; background-color: #FAE5E5;">{{ site_currency() . number_format($invoice_amount, 2) }}</td>
+                                    </tr>
+                                </table>
+                            </div>
                             <!-- Footer -->
                             <table width="100%" cellpadding="8"
                                 style="font-family:'Century Gothic (Headings)'; font-size: 9px; width: 800px; margin: auto; margin-top: 20px; text-align: center;">
@@ -170,27 +124,17 @@
                                     <td style="color: red; padding-top: 0%;">Thank you for your business!</td>
                                 </tr>
                                 <tr>
-                                    <td style="color: red; font-weight: bold;">BEEFITARO.CO | AUTUMN COMMERCIAL LIMITED
-                                        | NIGERIA</td>
+                                    <td style="color: red; font-weight: bold;">{{ $site_name }}  | {!! $company_address ?? 'N/A' !!}</td>
                                 </tr>
                             </table>
-
-
-                            <!-- TOTALS SECTION -->
-
-
                         </td>
                     </tr>
-                    <!-- Content End-->
-
-
-                    <!-----------Footer----------->
                     <tr>
                         <td>
                             <table width="100%" cellspacing="0" cellpadding="" border="0px"
                                 style="border-collapse: collapse;">
                                 <tr
-                                    style="background: url(./images/footer.png) no-repeat;background-position: center;background-size: cover;height:141px;padding:50px;background-size:cover;width: 100%;">
+                                    style="background: url('{{ $invoice_footer_image }}') no-repeat;background-position: center;background-size: cover;height:141px;padding:50px;background-size:cover;width: 100%;">
                                     <td style="text-align:center;">
                                     </td>
                                 </tr>
@@ -198,7 +142,6 @@
                             </table>
                         </td>
                     </tr>
-                    <!-----------Footer End----------->
                 </table>
             </td>
         </tr>

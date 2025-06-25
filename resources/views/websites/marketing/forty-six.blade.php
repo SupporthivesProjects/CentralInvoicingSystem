@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>{{ $site->site_name }} - Invoice #{{ $invoice_number }}</title>
+    <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <style>
         * {
@@ -158,7 +158,7 @@
                                                                 <div>
                                                                     <h5>BILLED FROM:</h5>
                                                                     <p>
-                                                                     {{ $site->site_name }} 
+                                                                     {{ $site_name }} 
                                                                     </p>
                                                                     <p>{{ $site->site_link }} </p>
                                                                 </div>
@@ -278,7 +278,7 @@
                                 <tbody>
                                     <tr>
                                         <td style="border-bottom: 2px solid #008000ad;padding-bottom: 13px;">
-                                            <p style="text-align: left;">{{ $site->site_name }} </p>
+                                            <p style="text-align: left;">{{ $site_name }} </p>
                                         </td>
                                     </tr>
                                     <tr>

@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8" />
-  <title>{{ $site->site_name }} - Invoice #{{ $invoice_number }}</title>
+  <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
 </head>
   <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #ffffff;">
     <table width="90%" cellpadding="0" cellspacing="0" border="0" style="max-width: 90%; margin: 0 auto; border: 1px solid #ccc;">
@@ -38,7 +38,7 @@
               </td>
               <td align="right" style="border-bottom: 1px solid #ccc; padding-bottom: 10px;">
                 <strong style="text-transform: uppercase;">Billed From</strong><br />
-                {{ $site->site_name }} <br />
+                {{ $site_name }} <br />
                 {!! $company_address !!}<br />
                 <a href="mailto:{{ $company_email }}" style="color: #007bff;">{{ $company_email }}</a>
               </td>

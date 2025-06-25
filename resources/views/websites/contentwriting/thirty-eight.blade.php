@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>{{ $site->site_name }} - Invoice #{{ $invoice_number }}</title>
+    <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
 </head>
 
 <body>
@@ -64,7 +64,7 @@
                                     </td>
                                     <td
                                         style="width:220px;text-align:left;padding-right:10px;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;">
-                                        {{ $site->site_name }}
+                                        {{ $site_name }}
                                     </td>
                                 </tr>
                                 <tr style="border-collapse: collapse;height: 24px;">
@@ -299,7 +299,7 @@
         <tr>
             <td>
                 <p style="font-family: arial;font-size: 12px;font-weight: 400;padding-left: 40px;color: orange;">
-                    <b>{{ $site->site_name }}</b>
+                    <b>{{ $site_name }}</b>
                 </p>
                 <p style="font-family: arial;font-size: 10px;padding-left: 40px;">{!! $company_address !!} |<br>
                     {{ $company_email ?? 'support@writewayservices.com' }}</p>

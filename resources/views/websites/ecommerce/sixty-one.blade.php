@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>{{ $site->site_name }} - Invoice #{{ $invoice_number }}</title>
+    <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
 </head>
 
 <body>
@@ -31,7 +31,7 @@
                                     <td align="right"
                                         style="vertical-align: top; text-align: left; position: absolute; left: 301px;">
                                         <p style="margin: 0; font-size: 10px;"><strong>Invoice From</strong></p>
-                                        <p style="margin: 5px 0;"><strong style="font-size: 12px;">{{ $site->site_name }}</strong></p>
+                                        <p style="margin: 5px 0;"><strong style="font-size: 12px;">{{ $site_name }}</strong></p>
                                         <p style="margin: 5px 0; font-size: 9px;">
                                             <a
                                                 style="color: #007BFF; text-decoration: underline;">{{ $company_email }}</a>

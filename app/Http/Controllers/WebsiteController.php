@@ -196,6 +196,15 @@ class WebsiteController extends Controller
                 ->with('error', $firstError);
         }
 
+
+        if ($validator->fails()) {
+            $errors = $validator->errors()->all();
+            $firstError = $errors[0] ?? 'Validation failed.';
+
+            return redirect()->back()
+                ->with('error', $firstError);
+        }
+
         try {
             $website = Website::findOrFail($id);
 
@@ -285,48 +294,48 @@ class WebsiteController extends Controller
         try {
 
             $validator = Validator::make($request->all(), [
-            'business_model_id' => 'required|exists:business_models,id',
-            'technology' => 'required|in:html,wordpress,corephp,laravel,django,other',
-            'site_name' => 'nullable|string|max:255',
-            'site_description' => 'nullable|string|max:500',
-            'db_host' => 'required|string|max:255',
-            'db_port' => 'required|numeric',
-            'db_name' => 'required|string|max:255',
-            'db_username' => 'required|string|max:255',
-            'db_password' => 'required|string|max:255',
-            'site_link' => 'nullable|url|max:255',
-            'company_name' => 'nullable|string|max:255',
-            'company_email' => 'nullable|email|max:255',
-            'company_mobile' => 'nullable|string|max:20',
-            'company_address' => 'nullable|string|max:1000',
-            'bank_name' => 'nullable|string|max:255',
-            'bank_code' => 'nullable|string|max:255',
-            'company_logo' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
-            'invoice_header_image' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
-            'invoice_footer_image' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
-            'invoice_signature' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
-            'invoice_template' => 'nullable|file|mimes:html,htm,php|max:5120',
-            'invoice_image1' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
-            'invoice_image2' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
-            'invoice_image3' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
-            'invoice_image4' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
-            'invoice_image5' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
-            'invoice_image6' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
-            'invoice_image7' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
-            'invoice_image8' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
-            'invoice_image9' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
-        ], [
-            '*.max' => 'Each uploaded file must not exceed 5MB.',
-            '*.mimes' => 'Only jpeg, jpg, png, html, htm, or php file types are allowed.',
-        ]);
+                'business_model_id' => 'required|exists:business_models,id',
+                'technology' => 'required|in:html,wordpress,corephp,laravel,django,other',
+                'site_name' => 'nullable|string|max:255',
+                'site_description' => 'nullable|string|max:500',
+                'db_host' => 'required|string|max:255',
+                'db_port' => 'required|numeric',
+                'db_name' => 'required|string|max:255',
+                'db_username' => 'required|string|max:255',
+                'db_password' => 'required|string|max:255',
+                'site_link' => 'nullable|url|max:255',
+                'company_name' => 'nullable|string|max:255',
+                'company_email' => 'nullable|email|max:255',
+                'company_mobile' => 'nullable|string|max:20',
+                'company_address' => 'nullable|string|max:1000',
+                'bank_name' => 'nullable|string|max:255',
+                'bank_code' => 'nullable|string|max:255',
+                'company_logo' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
+                'invoice_header_image' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
+                'invoice_footer_image' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
+                'invoice_signature' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
+                'invoice_template' => 'nullable|file|mimes:html,htm,php|max:5120',
+                'invoice_image1' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
+                'invoice_image2' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
+                'invoice_image3' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
+                'invoice_image4' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
+                'invoice_image5' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
+                'invoice_image6' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
+                'invoice_image7' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
+                'invoice_image8' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
+                'invoice_image9' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
+            ], [
+                '*.max' => 'Each uploaded file must not exceed 5MB.',
+                '*.mimes' => 'Only jpeg, jpg, png, html, htm, or php file types are allowed.',
+            ]);
 
-        if ($validator->fails()) {
-            $errors = $validator->errors()->all();
-            $firstError = $errors[0] ?? 'Validation failed.';
+            if ($validator->fails()) {
+                $errors = $validator->errors()->all();
+                $firstError = $errors[0] ?? 'Validation failed.';
 
-            return redirect()->back()
-                ->with('error', $firstError);
-        }
+                return redirect()->back()
+                    ->with('error', $firstError);
+            }
 
             $website = Website::create([
                 'business_model_id' => $request->business_model_id,

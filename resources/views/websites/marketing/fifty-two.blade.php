@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8" />
-  <title>{{ $site->site_name }} - Invoice #{{ $invoice_number }}</title>
+  <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
 </head>
 <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #ffffff;">
   <table width="90%" cellpadding="0" cellspacing="0" border="0"
@@ -21,7 +21,7 @@
             <tr>
               <td valign="top" style="width: 60%;">
                 <p style="margin: 0; font-size: 18px; font-weight: bold; color: #000;">
-                  {{ $site->site_name }} 
+                  {{ $site_name }} 
                 </p>
                 <p style="margin: 16px 0px 0px 0px; font-size: 14px; color: #333;"> {{ $site->site_link }} <br/>
                   {!! $company_address !!}<br/>
@@ -87,7 +87,7 @@
     <!-- Note -->
       <tr>
         <td style="padding: 20px 30px; font-size: 14px;">
-          Make all checks payable to <strong>{{ $site->site_name }}</strong><br /><br />
+          Make all checks payable to <strong>{{ $site_name }}</strong><br /><br />
           <span style="font-variant: small-caps;">Thank you for your business!</span>
         </td>
       </tr>

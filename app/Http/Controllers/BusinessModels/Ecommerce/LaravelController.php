@@ -552,8 +552,10 @@ class LaravelController extends Controller
     {
         $site_id = $request->input('site_id');
         $site = Website::findOrFail($site_id);
-
+        DynamicDatabaseService::connect($site);
+    
         $invoice_data['site'] = $site;
+        $invoice_data['site_id'] = $site->id;
         $invoice_data['invoice_number'] = $request->input('invoice_number');
         $invoice_data['invoice_date'] = Carbon::parse($request->input('invoice_date'))->format('F d, Y');
         $invoice_data['customer_name'] = $request->input('customer_name');
@@ -562,10 +564,48 @@ class LaravelController extends Controller
         $invoice_data['invoice_amount'] = $request->input('invoice_amount');
         $invoice_data['current_amount'] = $request->input('current_amount');
         $invoice_data['discount_amount'] = $request->input('discount_amount');
-        $invoice_data['company_name'] = $site->company_name;
-        $invoice_data['company_email'] = $site->company_email;
-        $invoice_data['company_mobile'] = $site->company_mobile;
-        $invoice_data['company_address'] = $site->company_address;
+        $invoice_data['currency'] = site_currency();
+        $invoice_data['invoice_template'] = $site->invoice_template;
+        $invoice_data['model_type'] = $site->businessModel->model_type;
+    
+        $company_detail_type = $request->input('company_detail_type');
+    
+        if ($company_detail_type === 'remote') {
+
+            $invoice_data['site_name']    = $request->input('remote_site_name') ?? '';
+            $invoice_data['company_name']    = $request->input('remote_company_name') ?? '';
+            $invoice_data['company_email']   = $request->input('remote_company_email') ?? '';
+            $invoice_data['company_mobile']  = $request->input('remote_company_mobile') ?? '';
+            $invoice_data['company_address'] = $request->input('remote_company_address') ?? '';
+            $remote_database = DB::connection($this->connectionType)->table('general_settings')->orderByDesc('updated_at')->first();
+
+            if ($remote_database) {
+                DB::connection($this->connectionType)->table('general_settings') ->where('id', $remote_database->id)
+                    ->update([
+                        'site_name'    => $request->input('remote_site_name') ?? '',
+                        //'company_name' => $request->input('remote_company_name') ?? '',
+                        'email'        => $request->input('remote_company_email') ?? '',
+                        'phone'        => $request->input('remote_company_mobile') ?? '',
+                        'address'      => $request->input('remote_company_address') ?? '',
+                        'updated_at'   => now(),
+                    ]);
+            }
+
+        } else{
+
+            $invoice_data['site_name']    = $request->input('local_site_name') ?? '';
+            $invoice_data['company_name']    = $request->input('local_company_name') ?? '';
+            $invoice_data['company_email']   = $request->input('local_company_email') ?? '';
+            $invoice_data['company_mobile']  = $request->input('local_company_mobile') ?? '';
+            $invoice_data['company_address'] = $request->input('local_company_address') ?? '';
+            $site->site_name       = $invoice_data['site_name'];
+            $site->company_name    = $invoice_data['company_name'];
+            $site->company_email   = $invoice_data['company_email'];
+            $site->company_mobile  = $invoice_data['company_mobile'];
+            $site->company_address = $invoice_data['company_address'];
+            $site->save();
+        }
+        
         $invoice_data['invoice_header_image'] = base64EncodeImage($site->invoice_header_image);
         $invoice_data['invoice_footer_image'] = base64EncodeImage($site->invoice_footer_image);
         $invoice_data['invoice_signature'] = base64EncodeImage($site->invoice_signature);
@@ -573,16 +613,17 @@ class LaravelController extends Controller
         $invoice_data['invoice_image1'] = base64EncodeImage($site->invoice_image1);
         $invoice_data['invoice_image2'] = base64EncodeImage($site->invoice_image2);
         $invoice_data['invoice_image3'] = base64EncodeImage($site->invoice_image3);
-        $invoice_data['invoice_template'] = $site->invoice_template;
-        $invoice_data['model_type'] = $site->businessModel->model_type;
-        $invoice_data['site_id'] = $site->id;
-
+        $invoice_data['invoice_image4'] = base64EncodeImage($site->invoice_image4);
+        $invoice_data['invoice_image5'] = base64EncodeImage($site->invoice_image5);
+        $invoice_data['invoice_image6'] = base64EncodeImage($site->invoice_image6);
+        $invoice_data['invoice_image7'] = base64EncodeImage($site->invoice_image7);
+        $invoice_data['invoice_image8'] = base64EncodeImage($site->invoice_image8);
+        $invoice_data['invoice_image9'] = base64EncodeImage($site->invoice_image9);
+    
         $productDataArray = $request->input('product_data', []);
-        DynamicDatabaseService::connect($site);
-
         $productIds = [];
         $customPrices = [];
-
+    
         foreach ($productDataArray as $item) {
             $data = json_decode($item, true);
             if (!empty($data['product_id'])) {
@@ -590,11 +631,10 @@ class LaravelController extends Controller
                 $customPrices[$data['product_id']] = $data['unit_price'];
             }
         }
-
-
+    
         $products = DB::connection($this->connectionType)->table($this->productTable)
             ->whereIn('id', $productIds)
-            ->select('id', 'category_id', 'name', 'description','unit_price')
+            ->select('id', 'category_id', 'name', 'description', 'unit_price')
             ->get()
             ->sortBy(function ($product) use ($productIds) {
                 return array_search($product->id, $productIds);
@@ -604,34 +644,35 @@ class LaravelController extends Controller
                 $product->unit_price = $customPrices[$product->id] ?? $product->unit_price;
                 return $product;
             });
-
+    
         $products->each(function ($product) {
-            $product->category_name = DB::connection($this->connectionType)->table('categories')->where('id', $product->category_id)->value('name') ?? 'unknown';
+            $product->category_name = DB::connection($this->connectionType)
+                ->table('categories')
+                ->where('id', $product->category_id)
+                ->value('name') ?? 'unknown';
         });
-
-
-        $invoice_data['currency'] =  site_currency();
-
+    
         $invoice_data['products'] = $products;
         $invoice_data['product_ids'] = $productIds;
-
+    
+        $this->updateProductPrice($productDataArray);
+        InvoiceController::createInvoiceHistory($invoice_data);
+    
         $modelType = strtolower($site->businessModel->model_type);
         $siteIdInWords = numberToWords($site->id);
         $viewPath = "websites.{$modelType}.{$siteIdInWords}";
-        $this->updateProductPrice($productDataArray);
-        InvoiceController::createInvoiceHistory($invoice_data);
+    
         $filename = $request->filled('invoice_file_name')
             ? $request->input('invoice_file_name') . '.pdf'
             : $invoice_data['invoice_number'] . '.pdf';
-
+    
         try {
             return $this->generateWithApi2Pdf($viewPath, $invoice_data, $filename);
-
         } catch (\Exception $e) {
-            // Fallback to Dompdf if API2PDF fails
             return $this->generateWithDompdf($viewPath, $invoice_data, $filename);
         }
     }
+    
 
     protected function generateWithApi2Pdf($viewPath, $invoice_data, $filename)
     {
