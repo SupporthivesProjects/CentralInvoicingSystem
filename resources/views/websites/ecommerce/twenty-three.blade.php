@@ -2,7 +2,7 @@
 <html>
 <head>
 <!-- UpgradeUrSite -->
-<title>{{ $site->site_name }} - Invoice #{{ $invoice_number }}</title>
+<title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <style>
@@ -24,7 +24,7 @@
                     <!-- Header -->
                     <tr>
                         <td style="padding: 0px;">
-                            <table style="border-collapse: collapse;max-width: 600px;" border="0">
+                            <table  width="100%" cellspacing="0" cellpadding="0" style="border-collapse: collapse;max-width: 100%;" border="0">
                                     <td style="padding: 0px;">
                                         <img src="{{ $invoice_header_image }}" alt="" style="width: 100%;">
                                     </td>
@@ -175,7 +175,7 @@
                                                  Bill From:
                                                 </p>
                                                 <p style="font-size:8px;font-family: Arial;font-weight:400;margin: 0px;">
-                                                {{ $site->site_name }}  
+                                                {{ $site_name }}  
                                                 </p>
                                                 </td>
                                             </tr>

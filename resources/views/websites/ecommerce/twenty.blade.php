@@ -2,7 +2,7 @@
 <html>
 <head>
 <!-- developerguides4you -->
-    <title>{{ $site->site_name }} - Invoice #{{ $invoice_number }}</title>
+    <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
     <style>
         body, table, td {
             background-color: transparent !important;
@@ -108,7 +108,7 @@
                                                 Invoice From
                                              </span>
                                              <p style="color:#2e74b1;font-size:14px;font-weight:600;font-family: Calibri;margin: 0px;">
-                                                {{ $site->site_name }}
+                                                {{ $site_name }}
                                              </p>
                                              <span style="color: grey;font-size:10px;font-weight:400;font-family: Calibri;">
                                                 <b style="color: black;">Powered By Eromnet Hong Kong</b><br>

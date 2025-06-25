@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>{{ $site->site_name }} - Invoice #{{ $invoice_number }}</title>
+    <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
     <style>
         body {
             font-family: Arial, sans-serif;

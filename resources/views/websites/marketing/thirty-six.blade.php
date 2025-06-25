@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>{{ $site->site_name }} - Invoice #{{ $invoice_number }}</title>
+    <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
 </head>
 
 <body>
@@ -46,7 +46,7 @@
                                         <p style="font-size: 10px;">Invoice From</p>
                                         <p style="font-size: 10px;">
                                             <b>
-                                                {{ $site->site_name }}
+                                                {{ $site_name }}
                                             </b>
                                             <br>
                                             www.bluemoonmarketeers.com

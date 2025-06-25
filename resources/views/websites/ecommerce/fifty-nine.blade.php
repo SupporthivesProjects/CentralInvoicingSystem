@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>{{ $site->site_name }} - Invoice #{{ $invoice_number }}</title>
+    <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
 </head>
 
 <body>

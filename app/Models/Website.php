@@ -33,6 +33,12 @@ class Website extends Model
         'invoice_image1',
         'invoice_image2',
         'invoice_image3',
+        'invoice_image4',
+        'invoice_image5',
+        'invoice_image6',
+        'invoice_image7',
+        'invoice_image8',
+        'invoice_image9',
         'invoice_template',
     ];
 

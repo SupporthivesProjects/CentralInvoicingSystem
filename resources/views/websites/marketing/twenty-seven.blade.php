@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>{{ $site->site_name }} - Invoice #{{ $invoice_number }}</title>
+    <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <style>
         body {
@@ -143,7 +143,7 @@
                         <tr>
                             <td style="width: 35%; vertical-align: top;">
                                 <p><b>Invoice From</b></p>
-                                <p>{{ $site->site_name }}</p>
+                                <p>{{ $site_name }}</p>
                             </td>
                             <td style="width: 65%; vertical-align: top; text-align: right;">
                                  <p><b>Invoice Date:</b> {{ $invoice_date }}</p>

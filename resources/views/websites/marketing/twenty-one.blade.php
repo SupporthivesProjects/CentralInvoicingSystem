@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8" />
-    <title>{{ $site->site_name ?? 'Your Company' }} - Invoice #{{ $invoice_number ?? 'N/A' }}</title>
+    <title>{{ $site_name ?? 'Your Company' }} - Invoice #{{ $invoice_number ?? 'N/A' }}</title>
     <style>
         /* General Styles for DOMPDF */
         body {
@@ -225,7 +225,7 @@
                                 <tr>
                                     <td>
                                         <p class="text-black font-size-12 font-arial font-weight-400 margin-0 text-capitalize">
-                                            {{ $site->site_name ?? 'The Brand Monkey' }}
+                                            {{ $site_name ?? 'The Brand Monkey' }}
                                         </p>
                                     </td>
                                     <td style="text-align: right;">

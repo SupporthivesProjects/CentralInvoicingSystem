@@ -5,7 +5,22 @@ script.onload = function() {
     feather.replace();
 };
 
-  
+$(document).ready(function () {
+    $('#companyTypeTab .list-group-item.active .active-arrow').removeClass('d-none');
+    let activeText = $('#companyTypeTab .list-group-item.active span:first').text().trim();
+    $('#companySourceBadge').text(activeText);
+
+    $('#companyTypeTab .list-group-item').on('shown.bs.tab', function () {
+        $('.active-arrow').addClass('d-none'); 
+        $(this).find('.active-arrow').removeClass('d-none');
+        let selectedText = $(this).find('span:first').text().trim();
+        $('#companySourceBadge').text(selectedText);
+        toastr.clear();
+        toastr.info('Company details source changed to ' + selectedText);
+    });
+});
+
+
 
 $(document).ready(function () {
     
