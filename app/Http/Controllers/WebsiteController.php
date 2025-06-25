@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 
 class WebsiteController extends Controller
 {
-    
+
     protected $productTable = null;
     protected $connectionType = null;
 
@@ -31,11 +31,11 @@ class WebsiteController extends Controller
         }
     }
 
-    
-   
+
+
     public function addBusinessModel()
     {
-        
+
         return view('business.addmodel');
     }
 
@@ -51,7 +51,7 @@ class WebsiteController extends Controller
             'name' => 'required|string|max:255',
             'icon_class' => 'nullable|string|max:255',
             'model_type' => 'nullable|string|max:255',
-        ]); 
+        ]);
 
         $model = BusinessModel::findOrFail($id);
         $oldFolder = strtolower(str_replace(' ', '', $model->model_type));
@@ -87,23 +87,23 @@ class WebsiteController extends Controller
                 foreach ($files as $file) {
                     File::move($file->getPathname(), $trashPath . $file->getFilename());
                 }
-            }    
+            }
             $businessModel->delete();
-    
+
             return response()->json([
                 'success' => true,
                 'message' => 'Business Model Deleted Successfully!'
             ]);
         } catch (\Exception $e) {
             \Log::error('Error deleting business model: ' . $e->getMessage());
-    
+
             return response()->json([
                 'success' => false,
                 'message' => 'Something went wrong! Please try again.'
             ], 500);
         }
     }
- 
+
  public function createBusinessModel(Request $request)
     {
         try {
@@ -113,7 +113,7 @@ class WebsiteController extends Controller
                 'model_type' => 'nullable|string|max:255',
             ]);
 
-            $model_type = strtolower(str_replace(' ', '', $request->model_type)); 
+            $model_type = strtolower(str_replace(' ', '', $request->model_type));
             $folderPath = resource_path("views/invoice/$model_type");
 
             if (!File::exists($folderPath)) {
@@ -134,7 +134,7 @@ class WebsiteController extends Controller
     }
 
 
-   
+
     public function addwebsite()
     {
         $businessModels = BusinessModel::all();
@@ -152,45 +152,56 @@ class WebsiteController extends Controller
 
     public function updateWebsite(Request $request, $id)
     {
-        $request->validate([
-                'business_model_id' => 'required|exists:business_models,id',
-                'technology' => 'required|in:html,wordpress,corephp,laravel,django,other',
-                'site_name' => 'required|string|max:255',
-                'site_description' => 'nullable|string|max:500',
-                'db_host' => 'required|string|max:255',
-                'db_port' => 'required|numeric',
-                'db_name' => 'required|string|max:255',
-                'db_username' => 'required|string|max:255',
-                'db_password' => 'required|string|max:255',
-                'site_link' => 'nullable|url|max:255',
-                'company_name' => 'nullable|string|max:255',
-                'company_email' => 'nullable|email|max:255',
-                'company_mobile' => 'nullable|string|max:20',
-                'company_address' => 'nullable|string|max:1000',
-                'bank_name' => 'nullable|string|max:255',
-                'bank_code' => 'nullable|string|max:255',
-                'company_logo' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
-                'invoice_header_image' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
-                'invoice_footer_image' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
-                'invoice_signature' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
-                'invoice_template' => 'nullable|file|mimes:html,htm,php|max:2048',
-                'invoice_image1' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
-                'invoice_image2' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
-                'invoice_image3' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
-                'invoice_image4' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
-                'invoice_image5' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
-                'invoice_image6' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
-                'invoice_image7' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
-                'invoice_image8' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
-                'invoice_image9' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
+        $validator = Validator::make($request->all(), [
+            'business_model_id' => 'required|exists:business_models,id',
+            'technology' => 'required|in:html,wordpress,corephp,laravel,django,other',
+            'site_name' => 'nullable|string|max:255',
+            'site_description' => 'nullable|string|max:500',
+            'db_host' => 'required|string|max:255',
+            'db_port' => 'required|numeric',
+            'db_name' => 'required|string|max:255',
+            'db_username' => 'required|string|max:255',
+            'db_password' => 'required|string|max:255',
+            'site_link' => 'nullable|url|max:255',
+            'company_name' => 'nullable|string|max:255',
+            'company_email' => 'nullable|email|max:255',
+            'company_mobile' => 'nullable|string|max:20',
+            'company_address' => 'nullable|string|max:1000',
+            'bank_name' => 'nullable|string|max:255',
+            'bank_code' => 'nullable|string|max:255',
+            'company_logo' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
+            'invoice_header_image' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
+            'invoice_footer_image' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
+            'invoice_signature' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
+            'invoice_template' => 'nullable|file|mimes:html,htm,php|max:5120',
+            'invoice_image1' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
+            'invoice_image2' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
+            'invoice_image3' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
+            'invoice_image4' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
+            'invoice_image5' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
+            'invoice_image6' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
+            'invoice_image7' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
+            'invoice_image8' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
+            'invoice_image9' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
+        ], [
+            '*.max' => 'Each uploaded file must not exceed 5MB.',
+            '*.mimes' => 'Only jpeg, jpg, png, html, htm, or php file types are allowed.',
         ]);
+
+        if ($validator->fails()) {
+            $errors = $validator->errors()->all();
+            $firstError = $errors[0] ?? 'Validation failed.';
+
+            return redirect()->back()
+                ->with('error', $firstError);
+        }
 
         try {
             $website = Website::findOrFail($id);
-            
+
             $modelType = strtolower($website->businessModel->model_type);
             $siteId = $website->id;
-            $siteIdInWords = numberToWords($siteId); 
+            $siteIdInWords = numberToWords($siteId);
 
             $baseUploadPath = public_path("uploads/websites/{$modelType}/{$siteId}/");
 
@@ -274,47 +285,48 @@ class WebsiteController extends Controller
         try {
 
             $validator = Validator::make($request->all(), [
-                'business_model_id' => 'required|exists:business_models,id',
-                'technology' => 'required|in:html,wordpress,corephp,laravel,django,other',
-                'site_name' => 'required|string|max:255',
-                'site_description' => 'nullable|string|max:500',
-                'db_host' => 'required|string|max:255',
-                'db_port' => 'required|numeric',
-                'db_name' => 'required|string|max:255',
-                'db_username' => 'required|string|max:255',
-                'db_password' => 'required|string|max:255',
-                'site_link' => 'nullable|url|max:255',
-                'company_name' => 'nullable|string|max:255',
-                'company_email' => 'nullable|email|max:255',
-                'company_mobile' => 'nullable|string|max:20',
-                'company_address' => 'nullable|string|max:1000',
-                'bank_name' => 'nullable|string|max:255',
-                'bank_code' => 'nullable|string|max:255',
+            'business_model_id' => 'required|exists:business_models,id',
+            'technology' => 'required|in:html,wordpress,corephp,laravel,django,other',
+            'site_name' => 'nullable|string|max:255',
+            'site_description' => 'nullable|string|max:500',
+            'db_host' => 'required|string|max:255',
+            'db_port' => 'required|numeric',
+            'db_name' => 'required|string|max:255',
+            'db_username' => 'required|string|max:255',
+            'db_password' => 'required|string|max:255',
+            'site_link' => 'nullable|url|max:255',
+            'company_name' => 'nullable|string|max:255',
+            'company_email' => 'nullable|email|max:255',
+            'company_mobile' => 'nullable|string|max:20',
+            'company_address' => 'nullable|string|max:1000',
+            'bank_name' => 'nullable|string|max:255',
+            'bank_code' => 'nullable|string|max:255',
+            'company_logo' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
+            'invoice_header_image' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
+            'invoice_footer_image' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
+            'invoice_signature' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
+            'invoice_template' => 'nullable|file|mimes:html,htm,php|max:5120',
+            'invoice_image1' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
+            'invoice_image2' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
+            'invoice_image3' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
+            'invoice_image4' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
+            'invoice_image5' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
+            'invoice_image6' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
+            'invoice_image7' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
+            'invoice_image8' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
+            'invoice_image9' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
+        ], [
+            '*.max' => 'Each uploaded file must not exceed 5MB.',
+            '*.mimes' => 'Only jpeg, jpg, png, html, htm, or php file types are allowed.',
+        ]);
 
-                'company_logo' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
-                'invoice_header_image' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
-                'invoice_footer_image' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
-                'invoice_signature' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
-                'invoice_template' => 'nullable|file|mimes:html,htm,php|max:2048',
-                'invoice_image1' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
-                'invoice_image2' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
-                'invoice_image3' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
-                'invoice_image4' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
-                'invoice_image5' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
-                'invoice_image6' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
-                'invoice_image7' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
-                'invoice_image8' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
-                'invoice_image9' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
-            ]);
+        if ($validator->fails()) {
+            $errors = $validator->errors()->all();
+            $firstError = $errors[0] ?? 'Validation failed.';
 
-            if ($validator->fails()) {
-                $errors = $validator->errors()->all();
-                $firstError = $errors[0] ?? 'Validation failed.';
-                return redirect()->back()
-                    ->withErrors($validator)
-                    ->withInput()
-                    ->with('error', $firstError);
-            }
+            return redirect()->back()
+                ->with('error', $firstError);
+        }
 
             $website = Website::create([
                 'business_model_id' => $request->business_model_id,
@@ -337,7 +349,7 @@ class WebsiteController extends Controller
 
             $modelType = strtolower($website->businessModel->model_type);
             $siteId = $website->id;
-            $siteIdInWords = numberToWords($siteId); 
+            $siteIdInWords = numberToWords($siteId);
 
             $baseUploadPath = public_path("uploads/websites/{$modelType}/{$siteId}/");
 
@@ -361,9 +373,9 @@ class WebsiteController extends Controller
             $uploadFile('invoice_header_image', 'headers', 'header');
             $uploadFile('invoice_footer_image', 'footers', 'footer');
             $uploadFile('invoice_signature', 'signitures', 'signiture');
-            $uploadFile('invoice_image1', 'images1', 'image1'); 
-            $uploadFile('invoice_image2', 'images2', 'image2'); 
-            $uploadFile('invoice_image3', 'images3', 'image3'); 
+            $uploadFile('invoice_image1', 'images1', 'image1');
+            $uploadFile('invoice_image2', 'images2', 'image2');
+            $uploadFile('invoice_image3', 'images3', 'image3');
             $uploadFile('invoice_image4', 'images4', 'image4');
             $uploadFile('invoice_image5', 'images5', 'image5');
             $uploadFile('invoice_image6', 'images6', 'image6');
@@ -387,7 +399,7 @@ class WebsiteController extends Controller
                 $website->invoice_template = "views/websites/{$modelType}/{$siteIdInWords}.blade.php";
             }
 
-            
+
             $website->save();
 
             return redirect()->route('website.edit', $website->id)->with('success', 'Website added successfully.');
@@ -449,9 +461,9 @@ class WebsiteController extends Controller
         try {
             $businessModel = BusinessModel::findOrFail($id);
             $websites = Website::where('business_model_id', $id)->get();
-    
+
             return view('business.modelwebsites', compact('businessModel', 'websites'));
-    
+
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             // Specific error if BusinessModel not found
             return redirect()->back()->with('error', 'Business Model not found.');
@@ -467,12 +479,12 @@ class WebsiteController extends Controller
     public function checkRemoteDbConnectivity(Request $request)
     {
         try {
-          
-    
+
+
             Config::set('database.connections.' . $this->connectionType, [
                 'driver' => 'mysql',
                 'host' => $request->db_host,
-                'port' => $request->db_port ?? '3306', 
+                'port' => $request->db_port ?? '3306',
                 'database' => $request->db_name,
                 'username' => $request->db_username,
                 'password' => $request->db_password,
@@ -482,32 +494,32 @@ class WebsiteController extends Controller
                 'strict' => true,
                 'engine' => null,
             ]);
-    
-           
+
+
             $connection = DB::connection($this->connectionType);
-    
-         
+
+
             $pdo = $connection->getPdo();
-    
-         
+
+
             if ($pdo) {
                 return response()->json([
                     'success' => true,
                     'message' => 'Remote DB connection successful!',
                 ]);
             }
-    
+
             return response()->json([
                 'success' => false,
                 'message' => 'Could not establish connection to the database.',
             ]);
-    
+
         } catch (\Exception $e) {
             \Log::error('Error while connecting to remote DB', [
                 'error_message' => $e->getMessage(),
                 'stack_trace' => $e->getTraceAsString(),
             ]);
-    
+
             return response()->json([
                 'success' => false,
                 'message' => 'Error occurred while connecting to the DB: ' . $e->getMessage(),
@@ -522,22 +534,22 @@ class WebsiteController extends Controller
             'bank_name' => 'nullable|string|max:255',
             'bank_code' => 'nullable|string|max:50',
         ]);
-    
+
         $website = Website::findOrFail($request->id);
-    
+
         if ($request->has('bank_name')) {
             $website->bank_name = $request->bank_name;
         }
-    
+
         if ($request->has('bank_code')) {
             $website->bank_code = $request->bank_code;
         }
-    
+
         $website->save();
-    
+
         return response()->json(['success' => true, 'message' => 'Website updated successfully.']);
     }
-    
-    
-   
+
+
+
 }
