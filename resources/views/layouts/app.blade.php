@@ -255,7 +255,7 @@
                 const audio = document.getElementById("printerSound");
                 if (!audio) return;
 
-                audio.volume = 0.5;
+                audio.volume = 0.4;
 
                 if (action === 'play') {
                     audio.loop = true;
