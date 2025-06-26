@@ -9,11 +9,7 @@
             <td align="center" bgcolor="#f2f2f2" style="padding: 0px 0;">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
                       <!-- Header -->
-                      <tr style=" background: url('{{ $invoice_header_image }}');
-                      background-repeat: no-repeat;
-                      background-size: cover;
-                      background-position: center;
-                      height: 94px;">
+                      <tr style=" background: url('{{ $invoice_header_image }}');background-repeat: no-repeat;background-size: cover; background-position: center;height: 94px;">
                         <td >
                            
                         </td>
@@ -23,11 +19,7 @@
 
                      <!-- Content-->
 
-                     <tr style=" background: url('{{ $invoice_image1 }}');
-                     background-repeat: no-repeat;
-                     background-size: cover;
-                     background-position: center;
-                   ">
+                     <tr style=" background: url('{{ $invoice_image1 }}');background-repeat: no-repeat;background-size: cover;background-position: center;">
                         <td style="padding:40px;  font-family: arial;">
                             <p style="text-align: center; color: #2E75B5; font-size: 20px; margin: 0;"><b>I</b>nvoice<b> #{{ $invoice_number }}</b></p>
 
@@ -96,23 +88,13 @@
                             </p>
                         </td>
                     </tr>
-                     <!-- Content End-->
 
-
-                    <!-----------Footer----------->
-
-                    <tr style=" background: url('{{ $invoice_footer_image }}');
-                    background-repeat: no-repeat;
-                    background-size: cover;
-                    background-position: center;
-                    height: 136px">    
-                   
-                            <td >
+                    <tr style=" background: url('{{ $invoice_footer_image }}');background-repeat: no-repeat;background-size: cover;background-position: center;height: 136px">    
+                    <td >
                                
-                            </td>
+                    </td>
 
                       </tr>
-                    <!-----------Footer End----------->
                 </table>
             </td>
         </tr>
