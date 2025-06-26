@@ -70,7 +70,7 @@
                                         <div style="position: relative; display: inline-block;">
                                             <!-- SVG Shape -->
                                             <img src="{{ $invoice_image2 }}" alt=""
-                                                style="position: absolute; z-index: 0; width: 120px; right: 173px; top: -33px;">
+                                                style="position: absolute; z-index: 0; width: 120px; right: 113px; top: -33px;">
 
                                             <!-- Text Over SVG -->
                                             <h1
