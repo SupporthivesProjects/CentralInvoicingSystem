@@ -248,6 +248,28 @@
 
        </script>
 
+    <audio id="printerSound" src="{{ asset('audio/printer/3d-printer.mp3') }}" preload="auto"></audio>
+
+    <script>
+        function playPrinterSound(action = 'play') {
+                const audio = document.getElementById("printerSound");
+                if (!audio) return;
+
+                audio.volume = 0.4;
+
+                if (action === 'play') {
+                    audio.loop = true;
+                    audio.currentTime = 0; 
+                    audio.play().catch(err => console.warn("Audio play failed:", err));
+                } else if (action === 'stop') {
+                    audio.loop = false;
+                    audio.pause();
+                    audio.currentTime = 0;
+                }
+            }
+    </script>
+
+
     @stack('scripts')
     
 </body>

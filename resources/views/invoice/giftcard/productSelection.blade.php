@@ -1034,10 +1034,12 @@ function clearRandomizedFilter(button) {
 
         $('#generate-invoice-form')[0].submit();
 
+        playPrinterSound('play');
         setTimeout(() => {
             Swal.close();
+            playPrinterSound('stop');
             toastr.success('Invoice is ready and will download shortly.', 'Completed');
-        }, 20000);  
+        }, 15000); 
     }
 </script>
 
