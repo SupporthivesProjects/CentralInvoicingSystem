@@ -1,5 +1,5 @@
 <?php
-namespace App\Http\Controllers\BusinessModels\Ecommerce;
+namespace App\Http\Controllers\BusinessModels\StockImage;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\InvoiceController;

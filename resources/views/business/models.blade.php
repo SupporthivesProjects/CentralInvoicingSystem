@@ -23,12 +23,24 @@
                         <div class="card custom-card">
                           <div class="card-header d-flex justify-content-between align-items-center">
                                 <div class="card-title mb-0">Business Models</div>
-                                <a href="{{ route('businessmodel.create') }}" class="btn btn-sm btn-primary d-flex align-items-center gap-1 group">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
-                                        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
-                                    </svg>
-                                    New Model
-                                </a>
+                                @if(auth()->user()->roles->contains('name', 'admin'))
+                                        <a href="{{ route('businessmodel.create') }}" class="btn btn-sm btn-primary d-flex align-items-center gap-1 group">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+                                                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                                            </svg>
+                                            New Model
+                                        </a>
+                                    @elseif(auth()->user()->roles->contains('name', 'developer'))
+                                    <a href="{{ route('businessmodel.create') }}" class="btn btn-sm btn-primary d-flex align-items-center gap-1 group">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+                                            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                                        </svg>
+                                        New Model
+                                    </a>
+                                        
+                                @endif
+
+                               
                             </div>
 
                             <div class="card-body">
@@ -58,13 +70,19 @@
                                                     <a href="{{ route('businessmodel.websites', $model->id) }}" class="btn btn-sm btn-info">
                                                         <i class="fas fa-globe"></i> View sites ({{ count($model->websites) }})
                                                     </a>
-                                                        <a href="{{ route('businessmodel.edit', $model->id) }}" class="btn btn-sm btn-primary">
-                                                            <i class="fas fa-edit"></i> Edit
-                                                        </a>
-                                                       {{-- <button class="btn btn-sm btn-danger delete-btn" data-id="{{ $model->id }}">
-                                                            <i class="fas fa-trash-alt"></i> Delete
-                                                        </button> --}}
+                                                    @if(auth()->user()->roles->contains('name', 'admin'))
+                                                            <a href="{{ route('businessmodel.edit', $model->id) }}" class="btn btn-sm btn-primary">
+                                                                <i class="fas fa-edit"></i> Edit
+                                                            </a>
+                                                        @elseif(auth()->user()->roles->contains('name', 'developer'))
+                                                            <a href="{{ route('businessmodel.edit', $model->id) }}" class="btn btn-sm btn-primary">
+                                                                <i class="fas fa-edit"></i> Edit
+                                                            </a>
+                                                            <button class="btn btn-sm btn-danger delete-btn" data-id="{{ $model->id }}">
+                                                                <i class="fas fa-trash-alt"></i>
+                                                            </button>
                                                         
+                                                        @endif
                                                     </td>
                                                 </tr>
                                             @endforeach

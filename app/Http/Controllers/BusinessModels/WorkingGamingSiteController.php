@@ -20,7 +20,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\View\ViewNotFoundException;
 use Carbon\Carbon;
 
-class GamingSiteController extends Controller
+class WorkingGamingSiteController extends Controller
 {
     private $productTable;
     private $connectionType;
