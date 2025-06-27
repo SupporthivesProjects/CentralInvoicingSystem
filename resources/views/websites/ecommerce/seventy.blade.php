@@ -59,7 +59,7 @@
                                     </td>
                                 </tr>
                             </table>
-                            <div style="min-height: 470px !important;">
+                            <div style="min-height: 500px !important;">
                             <!-- Item Table -->
                             <table width="100%" cellspacing="0" cellpadding="8" style="border-collapse: collapse;">
                                 <tr style="background-color: #1b4d4f; color: white;">
