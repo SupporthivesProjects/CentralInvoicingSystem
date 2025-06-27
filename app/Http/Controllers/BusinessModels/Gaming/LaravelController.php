@@ -524,10 +524,49 @@ public function addProducts(Request $request)
     public function generateInvoice(Request $request)
     {
         $site = Website::findOrFail($request->input('site_id'));
+        DynamicDatabaseService::connect($site);
 
+        $company_detail_type = $request->input('company_detail_type');
+
+        if ($company_detail_type === 'remote') {
+
+            $site_name    = $request->input('remote_site_name') ?? '';
+            $company_name    = $request->input('remote_company_name') ?? '';
+            $company_email   = $request->input('remote_company_email') ?? '';
+            $company_mobile  = $request->input('remote_company_mobile') ?? '';
+            $company_address = $request->input('remote_company_address') ?? '';
+            $remote_database = DB::connection($this->connectionType)->table('general_settings')->orderByDesc('updated_at')->first();
+
+            if ($remote_database) {
+                DB::connection($this->connectionType)->table('general_settings') ->where('id', $remote_database->id)
+                    ->update([
+                        'site_name'    => $request->input('remote_site_name') ?? '',
+                        //'company_name' => $request->input('remote_company_name') ?? '',
+                        'email'        => $request->input('remote_company_email') ?? '',
+                        'phone'        => $request->input('remote_company_mobile') ?? '',
+                        'address'      => $request->input('remote_company_address') ?? '',
+                        'updated_at'   => now(),
+                    ]);
+            }
+
+        } else{
+
+            $site_name    = $request->input('local_site_name') ?? '';
+            $company_name    = $request->input('local_company_name') ?? '';
+            $company_email   = $request->input('local_company_email') ?? '';
+            $company_mobile  = $request->input('local_company_mobile') ?? '';
+            $company_address = $request->input('local_company_address') ?? '';
+            $site->site_name       = $site_name;
+            $site->company_name    = $company_name;
+            $site->company_email   = $company_email;
+            $site->company_mobile  = $company_mobile;
+            $site->company_address = $company_address;
+            $site->save();
+        }
         // 1️⃣ Build base invoice info
         $invoice_data = [
             'site'                 => $site,
+            'site_name'            => $site_name,
             'invoice_number'       => $request->input('invoice_number'),
             'invoice_date'         => $request->input('invoice_date'),
             'customer_name'        => $request->input('customer_name'),
@@ -539,10 +578,10 @@ public function addProducts(Request $request)
             'invoice_amount'       => $request->input('invoice_amount'),
             'current_amount'       => $request->input('current_amount'),
             'discount_amount'      => $request->input('discount_amount'),
-            'company_name'         => $site->company_name,
-            'company_email'        => $site->company_email,
-            'company_mobile'       => $site->company_mobile,
-            'company_address'      => $site->company_address,
+            'company_name'         => $company_name,
+            'company_email'        => $company_email,
+            'company_mobile'       => $company_mobile,
+            'company_address'      => $company_address,
             'invoice_header_image' => base64EncodeImage($site->invoice_header_image),
             'invoice_footer_image' => base64EncodeImage($site->invoice_footer_image),
             'invoice_signature'    => base64EncodeImage($site->invoice_signature),
@@ -550,6 +589,12 @@ public function addProducts(Request $request)
             'invoice_image1'       => base64EncodeImage($site->invoice_image1),
             'invoice_image2'       => base64EncodeImage($site->invoice_image2),
             'invoice_image3'       => base64EncodeImage($site->invoice_image3),
+            'invoice_image4'       => base64EncodeImage($site->invoice_image4),
+            'invoice_image5'       => base64EncodeImage($site->invoice_image5),
+            'invoice_image6'       => base64EncodeImage($site->invoice_image6),
+            'invoice_image7'       => base64EncodeImage($site->invoice_image7),
+            'invoice_image8'       => base64EncodeImage($site->invoice_image8),
+            'invoice_image9'       => base64EncodeImage($site->invoice_image9),
             'invoice_template'     => $site->invoice_template,
             'model_type'           => $site->businessModel->model_type,
             'site_id'              => $site->id,
