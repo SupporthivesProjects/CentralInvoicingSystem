@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Artisan;
+use App\Models\InvoiceGenerationHistory;
 
 if (!function_exists('getWebsiteCountByModel')) {
     function getWebsiteCountByModel($modelId)
@@ -46,6 +47,13 @@ if (!function_exists('userCount')) {
     function userCount()
     {
         return User::count();
+    }
+}
+
+if (!function_exists('invoiceCount')) {
+    function invoiceCount()
+    {
+        return InvoiceGenerationHistory::count();
     }
 }
 
@@ -231,6 +239,24 @@ if (!function_exists('site_languages')) {
     }
 }
 
+if (!function_exists('compact_number')) {
+    function compact_number($num)
+    {
+        $num = (float)$num;
+
+        if ($num >= 1_000_000_000_000) {
+            return rtrim(rtrim(number_format($num / 1_000_000_000_000, 1), '0'), '.') . 'T';
+        } elseif ($num >= 1_000_000_000) {
+            return rtrim(rtrim(number_format($num / 1_000_000_000, 1), '0'), '.') . 'B';
+        } elseif ($num >= 1_000_000) {
+            return rtrim(rtrim(number_format($num / 1_000_000, 1), '0'), '.') . 'M';
+        } elseif ($num >= 1000) {
+            return rtrim(rtrim(number_format($num / 1000, 1), '0'), '.') . 'k';
+        } else {
+            return (string)$num;
+        }
+    }
+}
 
 
 

@@ -52,7 +52,7 @@
                                             </div>
                                             <div class="card-item-body">
                                                 <div class="card-item-stat">
-                                                    <h4 class="fw-bold">{{ getAllWebsites() }} </h4>
+                                                    <h4 class="fw-bold">{{ compact_number(getAllWebsites()) }} </h4>
                                                     <a href="{{ route('connectedwebsites') }}" class="btn btn-sm btn-outline-primary mt-2">View
                                                     <svg xmlns="http://www.w3.org/2000/svg" class="arrow-icon" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                                         <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 1 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
@@ -86,7 +86,7 @@
                                             </div>
                                             <div class="card-item-body">
                                                 <div class="card-item-stat">
-                                                    <h4 class="fw-bold">{{ getModelsCount() }}</h4>
+                                                    <h4 class="fw-bold">{{ compact_number(getModelsCount()) }}</h4>
                                                     <a href="{{ route('businessmodels') }}" class="btn btn-sm btn-outline-primary mt-2">View
                                                     <svg xmlns="http://www.w3.org/2000/svg" class="arrow-icon" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                                         <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 1 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
@@ -121,7 +121,7 @@
                                             </div>
                                             <div class="card-item-body">
                                                 <div class="card-item-stat">
-                                                    <h4 class="fw-bold">{{ count($invoices) }}</h4>
+                                                    <h4 class="fw-bold">{{ compact_number(invoiceCount()) }}                                                    </h4>
                                                     <a href="#listinvoices" class="btn btn-sm btn-outline-primary mt-2">View
                                                     <svg xmlns="http://www.w3.org/2000/svg" class="arrow-icon" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                                         <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 1 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
@@ -152,7 +152,7 @@
                                             </div>
                                             <div class="card-item-body">
                                                 <div class="card-item-stat">
-                                                    <h4 class="fw-bold">{{ userCount() }}</h4>
+                                                    <h4 class="fw-bold">{{ compact_number(userCount()) }}</h4>
                                                     <a href="{{ route('users.index') }}" class="btn btn-sm btn-outline-primary mt-2">View
                                                         <svg xmlns="http://www.w3.org/2000/svg" class="arrow-icon" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                                             <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 1 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
