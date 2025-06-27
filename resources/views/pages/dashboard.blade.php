@@ -445,14 +445,12 @@
         xaxis: {
             categories: invoiceDates,
             title: {
-                text: 'Date',
-                style: { fontWeight: 600 }
+                text: 'Date'
             }
         },
         yaxis: {
             title: {
-                text: 'Counts',
-                style: { fontWeight: 600, fontSize: '14px', color: '#333' }
+                text: 'Invoice Count'
             },
             min: 0,
             labels: {
