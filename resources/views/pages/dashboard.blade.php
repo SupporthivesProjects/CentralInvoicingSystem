@@ -196,7 +196,6 @@
                                                     <tr>
                                                         <th class="text-center">ID</th>
                                                         <th class="text-center">Invoice No</th>
-                                                        <th class="text-center">Model</th>
                                                         <th class="text-center">Website</th>
                                                         <th class="text-center">Discount</th>
                                                         <th class="text-center">Total</th>
@@ -211,15 +210,11 @@
                                                         <tr>
                                                             <td class="text-center">{{ $invoice->id }}</td>
                                                             <td class="text-left">{{ $invoice->invoice_number }}</td>
-                                                            <td class="text-center">{{ $invoice->model_type }}</td>
-                                                            <td class="text-center">
-                                                                @if(!empty($invoice->website?->site_link))
-                                                                    <a target="_blank" href="{{ $invoice->website->site_link }}" data-bs-toggle="tooltip" title="{{ $invoice->website->site_link }}">View</a>
-                                                                @else
-                                                                    <span class="text-muted">Not set</span>
-                                                                @endif
+                                                            <td class="text-left">
+                                                                <a href="{{ $invoice->website->site_link }}" target="_blank" data-bs-toggle="tooltip" title="Model : {{ $invoice->model_type }}">
+                                                                    {{ $invoice->website->site_link }}
+                                                                </a>
                                                             </td>
-
                                                             <td class="text-center">{{ $invoice->currency }}{{ number_format($invoice->discount_amount, 2) }} </td>
                                                             <td class="text-center">{{ $invoice->currency }}{{ number_format($invoice->invoice_amount, 2) }}</td>
                                                            

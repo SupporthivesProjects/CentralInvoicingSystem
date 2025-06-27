@@ -62,7 +62,13 @@
 
         <!-- Start::header-content-right -->
         <div class="header-content-right">
-
+            <div class="header-element notifications-dropdown">
+                <a href="javascript:void(0);" class="header-link">
+                <span class="badge bg-primary text-white text-capitalize" data-bs-toggle="tooltip" data-bs-placement="bottom" title="You are {{ Auth::user()->roles->first()?->name }}">
+                    {{ Auth::user()->roles->first()?->name }}
+                </span>
+                </a>
+            </div>
             <!-- Start::header-element -->
             <div class="header-element header-theme-mode">
                 <!-- Start::header-link|layout-setting -->
@@ -81,7 +87,7 @@
                 <!-- End::header-link|layout-setting -->
             </div>
             <!-- End::header-element -->
-
+            
             <!-- Start::header-element -->
             <div class="header-element country-selector">
                 <!-- Start::header-link|dropdown-toggle -->

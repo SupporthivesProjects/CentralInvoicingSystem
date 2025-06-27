@@ -64,4 +64,9 @@ class User extends Authenticatable
         return $this->hasMany(InvoiceGenerationHistory::class, 'created_by');
     }
 
+    public function hasRole($roleName)
+    {
+        return $this->roles->contains('name', $roleName);
+    }
+
 }
