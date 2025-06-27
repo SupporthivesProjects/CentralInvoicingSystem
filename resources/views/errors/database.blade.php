@@ -8,8 +8,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>500 Internal Server Error</title>
-    <meta name="description" content="Something went wrong on our servers. Please try again later or contact support if the issue persists.">
+    <title>Database Connection Error</title>
+    <meta name="description" content="We are currently unable to connect to the database. This could be due to a network issue or a temporary outage.">
+
+
     <!-- Favicon -->
     <link rel="icon" href="{{ asset('images/brand-logos/favicon.ico') }}" type="image/x-icon">
 
@@ -75,9 +77,11 @@
 
     <div class="mb-4">
         <h1 class="display-1 fw-bold text-warning">500</h1>
-        <h2 class="fw-semibold mb-3">Internal Server Error</h2>
+        <h2 class="fw-semibold mb-3">Database Connection Error</h2>
         <p class="lead text-secondary">
-             Something went wrong. <br>Please check your internet connection or try again later.
+            We are currently unable to connect to the database.<br>
+            This could be due to a network issue or a temporary outage.<br>
+            Please try again later.
         </p>
     </div>
 

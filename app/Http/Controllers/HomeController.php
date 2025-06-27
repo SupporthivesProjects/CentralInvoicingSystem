@@ -23,6 +23,7 @@ class HomeController extends Controller
     {
 
         list($dates, $invoiceCounts, $priceChanges) = $this->getInvoiceChartData();
+        list($invoicedates, $userInvoices) = $this->getUserInvoiceChartData();
         $businessmodels = Cache::rememberForever('businessmodels.all', function () {
             return BusinessModel::latest()->get();
         });
@@ -39,8 +40,54 @@ class HomeController extends Controller
             });
         }
         
-        return view('pages.dashboard', compact('invoices', 'dates', 'invoiceCounts','businessmodels','sites', 'priceChanges'));
+        return view('pages.dashboard', compact('invoices', 'dates', 'invoiceCounts','businessmodels','sites', 'priceChanges', 'invoicedates','userInvoices'));
     }
+
+    public function getUserInvoiceChartData()
+    {
+        $startDate = now()->subDays(6)->startOfDay(); 
+        $endDate = now()->endOfDay();
+    
+       
+        $rawData = InvoiceGenerationHistory::selectRaw('DATE(created_at) as date, created_by, COUNT(*) as count')
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->groupBy('date', 'created_by')
+            ->orderBy('date')
+            ->get();
+    
+       
+        $invoicedates = collect();
+        for ($i = 0; $i < 7; $i++) {
+            $invoicedates->push(now()->subDays(6 - $i)->format('d-m-Y'));
+        }
+    
+        $users = $rawData->pluck('created_by')->unique();
+    
+        $series = [];
+    
+        foreach ($users as $userId) {
+            $user = User::find($userId);
+            $userData = [];
+    
+            foreach ($invoicedates as $formattedDate) {
+                $matching = $rawData->first(function ($item) use ($formattedDate, $userId) {
+                    return $item->created_by == $userId &&
+                        Carbon::parse($item->date)->format('d-m-Y') === $formattedDate;
+                });
+    
+                $userData[] = $matching ? (int) $matching->count : 0;
+            }
+    
+            $series[] = [
+                'name' => $user?->name ?? "User $userId",
+                'data' => $userData
+            ];
+        }
+    
+        return [$invoicedates, $series];
+    }
+
+
 
     private function getInvoiceChartData()
     {

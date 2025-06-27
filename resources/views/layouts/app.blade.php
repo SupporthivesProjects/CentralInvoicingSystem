@@ -248,6 +248,8 @@
             });
 
        </script>
+       
+
 
     <audio id="printerSound" src="{{ asset('audio/printer/3d-printer.mp3') }}" preload="auto"></audio>
 

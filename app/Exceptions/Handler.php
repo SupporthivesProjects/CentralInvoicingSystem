@@ -11,8 +11,15 @@ class Handler extends ExceptionHandler
 
     public function render($request, Throwable $exception)
     {
-        if (str_contains($exception->getMessage(), 'Network is unreachable')) {
+        $message = $exception->getMessage();
+    
+        if (str_contains($message, 'Network is unreachable') || 
+            str_contains($message, 'Connection refused') ||
+            str_contains($message, 'Class') && str_contains($message, 'not found')) {
             return response()->view('errors.database', [], 500);
         }
+    
+        return parent::render($request, $exception);
     }
+    
 }
