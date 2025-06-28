@@ -401,7 +401,7 @@
     const invoiceCounts = @json($invoiceCounts);  
     const priceChangeCounts = @json($priceChanges); 
     const siteCurrency = @json(site_currency());
-    const chartTypes = ['line', 'column', 'area'];
+    const chartTypes = ['line', 'column'];
 
     function getRandomType() {
         return chartTypes[Math.floor(Math.random() * chartTypes.length)];
