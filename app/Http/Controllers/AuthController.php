@@ -19,26 +19,26 @@ class AuthController extends Controller
             'email' => 'required|email',
             'password' => 'required'
         ]);
-
-        // Fetch user by email
+    
         $user = \App\Models\User::where('email', $request->email)->first();
-
+    
         if (!$user) {
             return back()->with('error', 'Invalid credentials');
         }
-
-        // Check if user is active
+    
         if ($user->status != 1) {
             return back()->with('error', 'Account is inactive. Please contact support.');
         }
-
-        // Attempt login
+    
         if (Auth::attempt($request->only('email', 'password'))) {
+            $user->update(['last_login_at' => now()]);
+    
             return redirect()->intended(route('dashboard'))->with('success', 'Login successful!');
-        }        
-
+        }
+    
         return back()->with('error', 'Invalid credentials');
     }
+    
 
 
     public function logout()

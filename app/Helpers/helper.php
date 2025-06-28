@@ -15,6 +15,30 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Artisan;
 use App\Models\InvoiceGenerationHistory;
 
+if (!function_exists('myinvoices')) {
+    function myinvoices()
+    {
+        if (!Auth::check()) {
+            return 0;
+        }
+
+        return InvoiceGenerationHistory::where('created_by', Auth::id())->count();
+    }
+}
+
+
+if (!function_exists('mywebsites')) {
+    function mywebsites()
+    {
+        if (!Auth::check()) {
+            return 0;
+        }
+
+        return Website::where('added_by', Auth::id())->count();
+    }
+}
+
+
 if (!function_exists('getWebsiteCountByModel')) {
     function getWebsiteCountByModel($modelId)
     {

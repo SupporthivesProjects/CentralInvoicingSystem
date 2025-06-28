@@ -1435,16 +1435,20 @@ class LaravelController extends Controller
             $filename = $invoice_data['invoice_number'] . '.pdf';
         }
 
+        $filename = $request->filled('invoice_file_name')
+                ? $request->input('invoice_file_name') . '.pdf'
+                : $invoice_data['invoice_number'] . '.pdf';
         try {
-            return $this->generateWithApi2Pdf($viewPath, $invoice_data, $filename);
+            return $this->generateWithApi2Pdf($site, $viewPath, $invoice_data, $filename);
 
         } catch (\Exception $e) {
             // Fallback to Dompdf if API2PDF fails
-            return $this->generateWithDompdf($viewPath, $invoice_data, $filename);
+            return $this->generateWithDompdf($site, $viewPath, $invoice_data, $filename);
         }
+       
     }
 
-    protected function generateWithApi2Pdf($viewPath, $invoice_data, $filename)
+    protected function generateWithApi2Pdf($site, $viewPath, $invoice_data, $filename)
     {
         $html = View::make($viewPath, $invoice_data)->render();
 
@@ -1454,8 +1458,8 @@ class LaravelController extends Controller
             'html' => $html,
             'fileName' => $filename,
             'options' => [
-                'format' => 'A4',
-                'landscape' => false
+                'format' => $site->pdf_size ?? 'A4',
+                'landscape' => ($site->pdf_orientation ?? 'portrait') === 'landscape',
             ]
         ]);
 
@@ -1472,18 +1476,18 @@ class LaravelController extends Controller
 
         return response()->streamDownload(function () use ($pdfUrl) {
             $pdfResponse = Http::timeout(60)->get($pdfUrl);
-
+    
             if ($pdfResponse->failed()) {
                 throw new \Exception("Failed to download PDF file from Api2Pdf.");
             }
-
+    
             echo $pdfResponse->body();
         }, $filename);
     }
 
-    protected function generateWithDompdf($viewPath, $invoice_data, $filename)
+    protected function generateWithDompdf($site, $viewPath, $invoice_data, $filename)
     {
-        $pdf = \PDF::loadView($viewPath, $invoice_data)->setPaper('A4', 'portrait');
+        $pdf = \PDF::loadView($viewPath, $invoice_data)->setPaper($site->pdf_size ?? 'A4', $site->pdf_orientation ?? 'portrait');
         return $pdf->download($filename);
     }
 

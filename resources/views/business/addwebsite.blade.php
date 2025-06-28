@@ -96,6 +96,23 @@
                             <label class="form-label">Site Description</label>
                             <input type="text" name="site_description" class="form-control" placeholder="Enter Site Description (optional)">
                         </div>
+                        <div class="col-md-6 mx-auto">
+                            <label class="form-label">PDF Size <span style="color:red">*</span></label>
+                            <select name="pdf_size" class="form-select" required>
+                                <option value="A4" selected>A4</option>
+                                <option value="A5">A5</option>
+                                <option value="Letter">Letter</option>
+                                <option value="Legal">Legal</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6 mx-auto">
+                            <label class="form-label">PDF Orientation <span style="color:red">*</span></label>
+                            <select name="pdf_orientation" class="form-select" required>
+                                <option value="portrait" selected>Portrait</option>
+                                <option value="landscape">Landscape</option>
+                            </select>
+                        </div>
 
                         
                         <div class="col-md-6 mx-auto">

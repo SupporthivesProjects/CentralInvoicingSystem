@@ -169,6 +169,8 @@ class WebsiteController extends Controller
             'company_address' => 'nullable|string|max:1000',
             'bank_name' => 'nullable|string|max:255',
             'bank_code' => 'nullable|string|max:255',
+            'pdf_size' => 'required|in:A4,A5,Letter,Legal',
+            'pdf_orientation' => 'required|in:portrait,landscape',
             'company_logo' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
             'invoice_header_image' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
             'invoice_footer_image' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
@@ -268,7 +270,11 @@ class WebsiteController extends Controller
                     'company_mobile' => $request->company_mobile,
                     'company_address' => $request->company_address,
                     'bank_name' => $request->bank_name,
-                    'bank_code' => $request->bank_code
+                    'bank_code' => $request->bank_code,
+                    'pdf_size' => $request->pdf_size, // e.g., A4, A5, Letter, Legal
+                    'pdf_orientation' => $request->pdf_orientation, // 'portrait' or 'landscape'
+                    'updated_at' => now(),
+                    'added_by' => auth()->id(),
                 ]);
 
                 $website->save();
@@ -301,6 +307,9 @@ class WebsiteController extends Controller
                 'company_address' => 'nullable|string|max:1000',
                 'bank_name' => 'nullable|string|max:255',
                 'bank_code' => 'nullable|string|max:255',
+                'pdf_size' => 'required|in:A4,A5,Letter,Legal',
+                'pdf_orientation' => 'required|in:portrait,landscape',
+                'added_by' => 'nullable|exists:users,id',
                 'company_logo' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
                 'invoice_header_image' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
                 'invoice_footer_image' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
@@ -344,7 +353,10 @@ class WebsiteController extends Controller
                 'company_mobile' => $request->company_mobile,
                 'company_address' => $request->company_address,
                 'bank_name' => $request->bank_name,
-                'bank_code' => $request->bank_code
+                'bank_code' => $request->bank_code,
+                'pdf_size' => $request->pdf_size, 
+                'pdf_orientation' => $request->pdf_orientation, 
+                'added_by' => auth()->id()
             ]);
 
             $modelType = strtolower($website->businessModel->model_type);

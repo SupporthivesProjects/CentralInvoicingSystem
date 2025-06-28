@@ -79,18 +79,12 @@
                                                         <a href="{{ route('site.connect.db', $site->id) }}" class="btn btn-sm btn-warning">
                                                             <i class="fas fa-file-invoice"></i> Generate Invoice
                                                         </a>
-                                                        @if(auth()->user()->roles->contains('name', 'admin'))
-                                                            <a href="{{ route('website.edit', $site->id) }}" class="btn btn-sm btn-primary">
-                                                                <i class="fas fa-edit"></i> Edit
-                                                            </a>
-                                                        @elseif(auth()->user()->roles->contains('name', 'developer'))
-                                                            <a href="{{ route('website.edit', $site->id) }}" class="btn btn-sm btn-primary">
-                                                                <i class="fas fa-edit"></i> Edit
-                                                            </a>
-                                                            <button class="btn btn-sm btn-danger delete-btn" data-id="{{ $site->id }}">
-                                                                <i class="fas fa-trash-alt"></i>
-                                                            </button>
-                                                        @endif
+                                                        <a href="{{ route('website.edit', $site->id) }}" class="btn btn-sm btn-primary">
+                                                            <i class="fas fa-edit"></i> Edit
+                                                        </a>
+                                                        <button class="btn btn-sm btn-danger delete-btn" data-id="{{ $site->id }}">
+                                                            <i class="fas fa-trash-alt"></i>
+                                                        </button>
                                                     </td>
                                                    
                                                 </tr>
