@@ -460,25 +460,10 @@
                 }
             }
         },
-        stroke: {
-            curve: 'smooth',
-            width: 4
-        },
-        markers: {
-            size: 6,
-            strokeColor: '#fff',
-            strokeWidth: 3
-        },
-        grid: {
-            borderColor: '#f1f1f1',
-            row: {
-                colors: ['#fff', '#f9f9f9'],
-                opacity: 0.5
-            }
-        },
-        tooltip: {
-            theme: 'dark'
-        }
+        stroke: { curve: 'smooth' },
+        dataLabels: { enabled: true },
+        tooltip: { shared: true },
+        colors: ['#00b3ff', '#28a745', '#ffc107', '#6610f2', '#17a2b8']
     };
 
     var chart = new ApexCharts(document.querySelector("#invoicechart"), options);

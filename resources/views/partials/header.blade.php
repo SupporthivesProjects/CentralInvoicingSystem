@@ -66,13 +66,13 @@
             <div class="header-element notifications-dropdown">
                 <a href="javascript:void(0);" class="header-link">
                     @if (request()->ip() === '127.0.0.1' || request()->getHost() === 'localhost')
-                        <span class="badge bg-danger"  data-bs-toggle="tooltip" data-bs-placement="bottom" title="You are on local server">Development</span>
+                        <span class="badge bg-danger text-capitalize"  data-bs-toggle="tooltip" data-bs-placement="bottom" title="You are on local server">Development</span>
                     @endif
                 </a>
             </div>
             <div class="header-element notifications-dropdown">
                 <a href="javascript:void(0);" class="header-link">
-                <span class="badge bg-primary text-white text-capitalize" data-bs-toggle="tooltip" data-bs-placement="bottom" title="You are {{ Auth::user()->roles->first()?->name }}">
+                <span class="badge bg-primary text-capitalize" data-bs-toggle="tooltip" data-bs-placement="bottom" title="You are {{ Auth::user()->roles->first()?->name }}">
                     {{ Auth::user()->roles->first()?->name }}
                 </span>
                 </a>
