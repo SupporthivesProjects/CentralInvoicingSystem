@@ -8,10 +8,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    @section('title', '403 Forbidden')
-    @section('meta_description', 'You do not have permission to access this page. Please contact the administrator for assistance.')
-
-
+    <title>403 Forbidden</title>
+    <meta name="description" content="You do not have permission to access this page. Please contact the administrator for assistance.">
     <!-- Favicon -->
     <link rel="icon" href="{{ asset('images/brand-logos/favicon.ico') }}" type="image/x-icon">
 

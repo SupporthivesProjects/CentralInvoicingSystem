@@ -52,7 +52,11 @@
                                             </div>
                                             <div class="card-item-body">
                                                 <div class="card-item-stat">
-                                                    <h4 class="fw-bold">{{ compact_number(getAllWebsites()) }} </h4>
+                                                    <h4 class="fw-bold">
+                                                        <span data-bs-toggle="tooltip" data-bs-placement="top" title="{{ getAllWebsites() }}">
+                                                            {{ compact_number(getAllWebsites()) }}
+                                                        </span>
+                                                    </h4>
                                                     <a href="{{ route('connectedwebsites') }}" class="btn btn-sm btn-outline-primary mt-2">View
                                                     <svg xmlns="http://www.w3.org/2000/svg" class="arrow-icon" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                                         <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 1 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
@@ -86,7 +90,12 @@
                                             </div>
                                             <div class="card-item-body">
                                                 <div class="card-item-stat">
-                                                    <h4 class="fw-bold">{{ compact_number(getModelsCount()) }}</h4>
+                                                    <h4 class="fw-bold">
+                                                        <span data-bs-toggle="tooltip" data-bs-placement="top" title="{{ getModelsCount() }}">
+                                                            {{ compact_number(getModelsCount()) }}
+                                                        </span>
+                                                    </h4>
+
                                                     <a href="{{ route('businessmodels') }}" class="btn btn-sm btn-outline-primary mt-2">View
                                                     <svg xmlns="http://www.w3.org/2000/svg" class="arrow-icon" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                                         <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 1 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
@@ -121,7 +130,12 @@
                                             </div>
                                             <div class="card-item-body">
                                                 <div class="card-item-stat">
-                                                    <h4 class="fw-bold">{{ compact_number(invoiceCount()) }}                                                    </h4>
+                                                    <h4 class="fw-bold">
+                                                        <span data-bs-toggle="tooltip" data-bs-placement="top" title="{{ invoiceCount() }}">
+                                                            {{ compact_number(invoiceCount()) }}
+                                                        </span>
+                                                    </h4>
+
                                                     <a href="#listinvoices" class="btn btn-sm btn-outline-primary mt-2">View
                                                     <svg xmlns="http://www.w3.org/2000/svg" class="arrow-icon" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                                         <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 1 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
@@ -152,7 +166,12 @@
                                             </div>
                                             <div class="card-item-body">
                                                 <div class="card-item-stat">
-                                                    <h4 class="fw-bold">{{ compact_number(userCount()) }}</h4>
+                                                    <h4 class="fw-bold">
+                                                        <span data-bs-toggle="tooltip" data-bs-placement="top" title="{{ userCount() }}">
+                                                            {{ compact_number(userCount()) }}
+                                                        </span>
+                                                    </h4>
+
                                                     <a href="{{ route('users.index') }}" class="btn btn-sm btn-outline-primary mt-2">View
                                                         <svg xmlns="http://www.w3.org/2000/svg" class="arrow-icon" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                                             <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 1 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
@@ -173,15 +192,35 @@
                                     <div class="card custom-card overflow-hidden">
                                         <div class="card-header border-bottom-0">
                                             <div class="d-flex justify-content-between w-100">
-                                                <h4 class="mb-1"> Invoice Generation Analytics</h4>
+                                                <h4 class="mb-1">Invoice Generation Analytics (Last 7 Days)</h4>
                                             </div>
                                             <div class="d-flex justify-content-between w-100">
                                                 <p class="text-muted mb-0" style="font-size: 14px;">
-                                                    This chart shows invoice counts (red) and price changes counts (blue) over the last 7 days.
+                                                    This chart displays the number of invoices created (in red) and the number of price changes (in blue) over the last 7 days.
                                                 </p>
                                             </div>
+                                        </div>
+
                                         <div class="card-body">
                                             <div id="invoicechart"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-12 col-lg-12 col-xl-12">
+                                    <div class="card custom-card overflow-hidden">
+                                        <div class="card-header border-bottom-0">
+                                        <div class="d-flex justify-content-between w-100">
+                                            <h4 class="mb-1">User-wise Invoice Generation (Last 7 Days)</h4>
+                                        </div>
+                                        <div class="d-flex justify-content-between w-100">
+                                            <p class="text-muted mb-0" style="font-size: 14px;">
+                                                This chart shows how many invoices each user has created over the last 7 days. Hover over the chart for daily breakdown.
+                                            </p>
+                                        </div>
+
+                                        <div class="card-body">
+                                            <div id="userInvoiceChart"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -259,12 +298,14 @@
                         </div>
                         <!-- End::row -->
 
+                        
+
                     </div><!-- col end -->
 
 
                 </div>
                 <!-- End::row-1 -->
-
+                
             </div>
         </div>
         <!-- End::app-content -->
@@ -360,44 +401,56 @@
     const invoiceCounts = @json($invoiceCounts);  
     const priceChangeCounts = @json($priceChanges); 
     const siteCurrency = @json(site_currency());
-    const chartTypes = ['line', 'column', 'area'];
+    const chartTypes = ['line', 'column'];
 
     function getRandomType() {
         return chartTypes[Math.floor(Math.random() * chartTypes.length)];
     }
+
     var chartType = getRandomType();
     console.log("Random Chart Type:", chartType);
+
     var options = {
         chart: {
             height: 350,
             zoom: { enabled: true },
-            toolbar: { show: false }
+            toolbar: {
+                show: true,
+                tools: {
+                    download: true,
+                    selection: true,
+                    zoom: true,
+                    zoomin: true,
+                    zoomout: true,
+                    pan: true,
+                    reset: true,
+                    customIcons: []
+                }
+            }
         },
         series: [
             {
                 name: "Invoices Created Count",
-                type: chartType,  
+                type: chartType,
                 data: invoiceCounts,
                 color: "#FF5733"
             },
             {
                 name: "Price Changes Count",
-                type: chartType,  
+                type: chartType,
                 data: priceChangeCounts,
                 color: "#1E90FF"
             }
         ],
         xaxis: {
-            categories: invoiceDates,  // Common dates for both series
+            categories: invoiceDates,
             title: {
-                text: 'Date',
-                style: { fontWeight: 600 }
+                text: 'Date'
             }
         },
         yaxis: {
             title: {
-                text: 'Counts',
-                style: { fontWeight: 600, fontSize: '14px', color: '#333' }
+                text: 'Invoice Count'
             },
             min: 0,
             labels: {
@@ -407,31 +460,42 @@
                 }
             }
         },
-        stroke: {
-            curve: 'smooth',
-            width: 4
-        },
-        markers: {
-            size: 6,
-            strokeColor: '#fff',
-            strokeWidth: 3
-        },
-        grid: {
-            borderColor: '#f1f1f1',
-            row: {
-                colors: ['#fff', '#f9f9f9'],
-                opacity: 0.5
-            }
-        },
-        tooltip: {
-            theme: 'dark'
-        }
+        stroke: { curve: 'smooth' },
+        dataLabels: { enabled: true },
+        tooltip: { shared: true },
+        colors: ['#00b3ff', '#28a745', '#ffc107', '#6610f2', '#17a2b8']
     };
 
     var chart = new ApexCharts(document.querySelector("#invoicechart"), options);
     chart.render();
 </script>
 
+
+
+<script>
+    var options = {
+        chart: {
+            type: 'area',
+            height: 350
+        },
+        series: @json($userInvoices),
+        xaxis: {
+            categories: @json($invoicedates),
+            title: { text: 'Date' },
+            labels: { rotate: -45 }
+        },
+        yaxis: {
+            title: { text: 'Invoice Count' }
+        },
+        stroke: { curve: 'smooth' },
+        dataLabels: { enabled: true },
+        tooltip: { shared: true },
+        colors: ['#00b3ff', '#28a745', '#ffc107', '#6610f2', '#17a2b8']
+    };
+
+    var chart = new ApexCharts(document.querySelector("#userInvoiceChart"), options);
+    chart.render();
+</script>
 
 
 <script>
@@ -448,6 +512,4 @@
         });
     });
 </script>
-
-
 @endpush
