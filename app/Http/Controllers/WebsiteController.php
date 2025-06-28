@@ -274,7 +274,6 @@ class WebsiteController extends Controller
                     'pdf_size' => $request->pdf_size, // e.g., A4, A5, Letter, Legal
                     'pdf_orientation' => $request->pdf_orientation, // 'portrait' or 'landscape'
                     'updated_at' => now(),
-                    'added_by' => auth()->id(),
                 ]);
 
                 $website->save();

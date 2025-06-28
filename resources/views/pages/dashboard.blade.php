@@ -244,12 +244,14 @@
                                     </svg>
                                 </div>
                                 <div>
-                                    <label class="fs-13 fw-bold mb-0">Last Login</label>
-                                    <p class="text-muted mb-1 small">Last active</p>
-                                    <h5 class="fw-bold mb-0">
-                                        {{ auth()->user()->last_login_at ? \Carbon\Carbon::parse(auth()->user()->last_login_at)->diffForHumans() : 'Never' }}
+                                    <label class="fs-13 fw-bold mb-0">Logged In Since</label>
+                                    <p class="text-muted mb-1 small">Time elapsed since last login</p>
+                                    <h5 class="fw-bold mb-0" id="lastLoginTimer"
+                                        data-last-login="{{ \Carbon\Carbon::parse(auth()->user()->last_login_at)->toIso8601String() }}">
+                                        Loading...
                                     </h5>
                                 </div>
+
                             </div>
                         </div>
                     </div>
@@ -265,12 +267,12 @@
                                 </div>
                                 <div>
                                     <label class="fs-13 fw-bold mb-0">Status</label>
-                                    <p class="text-muted mb-1 small">Active or Suspended</p>
+                                    <p class="text-muted mb-1 small">Active or Deactive</p>
                                     <h5 class="fw-bold mb-0">
                                         @if(auth()->user()->status)
                                             <span class="text-success">Active</span>
                                         @else
-                                            <span class="text-danger">Suspended</span>
+                                            <span class="text-danger">Deactive</span>
                                         @endif
                                     </h5>
                                 </div>
@@ -384,9 +386,7 @@
                                                                             style="width: 30px; height: 30px; object-fit: cover;"
                                                                             data-bs-toggle="tooltip" title="{{ $user->name }}">
                                                                     @else
-                                                                        <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center"
-                                                                            style="width: 30px; height: 30px; font-size: 14px;"
-                                                                            data-bs-toggle="tooltip" title="{{ $user->name }}">
+                                                                        <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center"style="width: 30px; height: 30px; font-size: 14px;"data-bs-toggle="tooltip" title="{{ $user->name }}">
                                                                             {{ strtoupper($user->name[0]) }}
                                                                         </div>
                                                                     @endif
@@ -629,4 +629,37 @@
         });
     });
 </script>
+
+<script>
+    function pad(num) {
+        return num.toString().padStart(2, '0');
+    }
+
+    function updateLiveTimer() {
+        const el = document.getElementById('lastLoginTimer');
+        const lastLogin = el.getAttribute('data-last-login');
+
+        if (!lastLogin) {
+            el.textContent = 'Never';
+            return;
+        }
+
+        const lastLoginDate = new Date(lastLogin); 
+        const now = new Date();
+
+        let diff = Math.floor((now.getTime() - lastLoginDate.getTime()) / 1000); 
+
+        const hrs = Math.floor(diff / 3600);
+        diff %= 3600;
+        const mins = Math.floor(diff / 60);
+        const secs = diff % 60;
+
+        el.textContent = `${pad(hrs)}:${pad(mins)}:${pad(secs)}`;
+    }
+
+    updateLiveTimer(); 
+    setInterval(updateLiveTimer, 1000); 
+</script>
+
+
 @endpush
