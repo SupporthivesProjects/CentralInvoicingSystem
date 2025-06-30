@@ -87,6 +87,7 @@
 
                     <tr style="background:#ffff ;">
                         <td style="padding:40px;display: flex;flex-direction: column;padding-bottom: 0px;">
+                          
                             <table cellspacing="0" cellpadding="0" border="0" width="100%" style="border-collapse: collapse;margin-top:100px;">
                                 <tr style="height:40px;background:#1F2139 ;">
                                     <td style="width:300px;vertical-align: middle;">
@@ -119,7 +120,7 @@
                                     </td>
                                     <td>
                                         <p style="color:black;font-size: 11px;font-weight: 500;font-family:Poppins;margin: 0px;line-height:16px;text-align:right;padding-right:10px;">
-                                           {{ $product->quantity ?? 1 }}
+                                        {{ $product->quantity ?? 1 }}
                                         </p>
                                     </td>
                                     <td>
@@ -134,7 +135,7 @@
                                     </td>
                                 </tr>
                                 @endforeach
-                                 <tr style="height:40px;border-bottom:1px solid grey ;">
+                                <tr style="height:40px;border-bottom:1px solid grey ;">
                                     <td colspan="3">
                                         <p style="color:#000000;font-size: 10px;font-weight:500;font-family:Poppins;margin: 0px;line-height: 28px;text-align:left;padding-left:10px;text-transform:capitalize;">
                                             Sub total
@@ -149,7 +150,7 @@
                                 <tr style="height:40px;border-bottom:1px solid grey ;">
                                     <td colspan="3">
                                         <p style="color:#000000;font-size: 10px;font-weight:500;font-family:Poppins;margin: 0px;line-height: 28px;text-align:left;padding-left:10px;text-transform:capitalize;">
-                                           Discount
+                                        Discount
                                         </p>
                                     </td>
                                     <td>
@@ -171,6 +172,7 @@
                                     </td>
                                 </tr>
                             </table>
+                           
                             <table style="border-collapse: collapse; width: 100%;margin-top:10px;">
                                 <tr>
                                     <!-- Left Column: Invoice To -->

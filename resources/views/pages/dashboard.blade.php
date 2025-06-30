@@ -37,7 +37,7 @@
                         <div class="row row-sm">
                             <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
                                 <div class="card custom-card">
-                                    <div class="card-body">
+                                    <div class="card-body p-3">
                                         <div class="card-item">
                                             <div class="card-item-icon card-icon">
                                             <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 0 24 24" fill="currentColor">
@@ -70,14 +70,14 @@
                             </div>
                             <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
                                 <div class="card custom-card">
-                                    <div class="card-body">
+                                    <div class="card-body p-3">
                                         <div class="card-item">
                                          <div class="card-item-icon card-icon">
                                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24" width="24">
                                             <g>
                                                 <rect fill="none" height="24" width="24"/>
                                                 <g>
-                                                <path fill="black" d="M20,6h-3V4c0-1.1-0.9-2-2-2h-6C7.9,2,7,2.9,7,4v2H4C2.9,6,2,6.9,2,8v12c0,1.1,0.9,2,2,2h16c1.1,0,2-0.9,2-2V8 C22,6.9,21.1,6,20,6z M9,4h6v2H9V4z M20,20H4V8h16V20z"/>
+                                                <path fill="currentColor" d="M20,6h-3V4c0-1.1-0.9-2-2-2h-6C7.9,2,7,2.9,7,4v2H4C2.9,6,2,6.9,2,8v12c0,1.1,0.9,2,2,2h16c1.1,0,2-0.9,2-2V8 C22,6.9,21.1,6,20,6z M9,4h6v2H9V4z M20,20H4V8h16V20z"/>
                                                 </g>
                                             </g>
                                             </svg>
@@ -98,7 +98,7 @@
 
                                                     <a href="{{ route('businessmodels') }}" class="btn btn-sm btn-outline-primary mt-2">View
                                                     <svg xmlns="http://www.w3.org/2000/svg" class="arrow-icon" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                                                        <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 1 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+                                                        <path fill="currentColor" fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 1 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
                                                     </svg>
                                                     </a>
                                                 </div>
@@ -109,14 +109,14 @@
                             </div>
                             <div class="col-sm-12 col-md-12 col-lg-12 col-xl-3">
                                 <div class="card custom-card">
-                                    <div class="card-body">
+                                    <div class="card-body p-3">
                                         <div class="card-item">
                                            <div class="card-item-icon card-icon">
                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24" width="24">
                                             <g>
                                                 <rect fill="none" height="24" width="24"/>
                                                 <g>
-                                                <path fill="black" d="M17,3H7C5.9,3,5,3.9,5,5v16l2-1.5L9,21l2-1.5L13,21l2-1.5L17,21l2-1.5l2,1.5V5C21,3.9,20.1,3,19,3H17z M17,9H7V7h10V9z M17,13H7v-2h10V13z M13,17H7v-2h6V17z"/>
+                                                <path fill="currentColor" d="M17,3H7C5.9,3,5,3.9,5,5v16l2-1.5L9,21l2-1.5L13,21l2-1.5L17,21l2-1.5l2,1.5V5C21,3.9,20.1,3,19,3H17z M17,9H7V7h10V9z M17,13H7v-2h10V13z M13,17H7v-2h6V17z"/>
                                                 </g>
                                             </g>
                                             </svg>
@@ -138,7 +138,7 @@
 
                                                     <a href="#listinvoices" class="btn btn-sm btn-outline-primary mt-2">View
                                                     <svg xmlns="http://www.w3.org/2000/svg" class="arrow-icon" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                                                        <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 1 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+                                                        <path fill="currentColor" fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 1 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
                                                     </svg>
                                                     </a>
                                                 </div>
@@ -149,16 +149,14 @@
                             </div>
                             <div class="col-sm-12 col-md-12 col-lg-12 col-xl-3">
                                 <div class="card custom-card">
-                                    <div class="card-body">
+                                    <div class="card-body p-3">
                                         <div class="card-item">
-                                           <div class="card-item-icon card-icon">
-                                           <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
-                                            <path d="M0 0h24v24H0V0z" fill="none" />
-                                            <path fill="black" d="M12 4c-4.41 0-8 3.59-8 8 0 1.82.62 3.49 1.64 4.83 1.43-1.74 4.9-2.33 6.36-2.33s4.93.59 6.36 2.33C19.38 15.49 20 13.82 20 12c0-4.41-3.59-8-8-8zm0 9c-1.94 0-3.5-1.56-3.5-3.5S10.06 6 12 6s3.5 1.56 3.5 3.5S13.94 13 12 13z"/>
-                                            <path fill="black" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM7.07 18.28c.43-.9 3.05-1.78 4.93-1.78s4.51.88 4.93 1.78C15.57 19.36 13.86 20 12 20s-3.57-.64-4.93-1.72zm11.29-1.45c-1.43-1.74-4.9-2.33-6.36-2.33s-4.93.59-6.36 2.33C4.62 15.49 4 13.82 4 12c0-4.41 3.59-8 8-8s8 3.59 8 8c0 1.82-.62 3.49-1.64 4.83zM12 6c-1.94 0-3.5 1.56-3.5 3.5S10.06 13 12 13s3.5-1.56 3.5-3.5S13.94 6 12 6zm0 5c-.83 0-1.5-.67-1.5-1.5S11.17 8 12 8s1.5.67 1.5 1.5S12.83 11 12 11z"/>
-                                            </svg>
-
+                                            <div class="card-item-icon card-icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 0 640 512" fill="currentColor">
+                                                    <path d="M96 128a80 80 0 1 0 160 0A80 80 0 1 0 96 128zm224 0a80 80 0 1 0 160 0A80 80 0 1 0 320 128zM32 384c0-53 43-96 96-96h64c53 0 96 43 96 96v16c0 8.8-7.2 16-16 16H48c-8.8 0-16-7.2-16-16v-16zm288 0c0-35.3 28.7-64 64-64h96c35.3 0 64 28.7 64 64v32c0 8.8-7.2 16-16 16H336c-8.8 0-16-7.2-16-16v-32z"/>
+                                                </svg>
                                             </div>
+
 
                                             <div class="card-item-title  mb-2">
                                                 <label class="main-content-label fs-13 fw-bold mb-1">User List</label>
@@ -167,15 +165,15 @@
                                             <div class="card-item-body">
                                                 <div class="card-item-stat">
                                                     <h4 class="fw-bold">
-                                                        <span data-bs-toggle="tooltip" data-bs-placement="top" title="{{ userCount() }}">
+                                                         <span data-bs-toggle="tooltip" data-bs-placement="top" title="{{ userCount() }}">
                                                             {{ compact_number(userCount()) }}
                                                         </span>
                                                     </h4>
 
-                                                    <a href="{{ route('users.index') }}" class="btn btn-sm btn-outline-primary mt-2">View
-                                                        <svg xmlns="http://www.w3.org/2000/svg" class="arrow-icon" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                                                            <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 1 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
-                                                        </svg>
+                                                    <a href="#listinvoices" class="btn btn-sm btn-outline-primary mt-2">View
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="arrow-icon" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                                        <path fill="currentColor" fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 1 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+                                                    </svg>
                                                     </a>
                                                 </div>
                                             </div>
@@ -183,16 +181,113 @@
                                     </div>
                                 </div>
                             </div>
+                           
                         </div>
                         <!-- End::row -->
 
+                        @if(auth()->user()->roles->contains('name', 'admin') || auth()->user()->roles->contains('name', 'developer'))
+                            <div class="row row-sm g-3">
+
+                                <!-- My Invoices -->
+                                <div class="col-sm-6 col-lg-3">
+                                    <div class="card custom-card shadow-sm">
+                                        <div class="card-body d-flex align-items-center">
+                                            <div class="card-icon me-3">
+                                                <svg xmlns="http://www.w3.org/2000/svg" height="26" width="26" fill="currentColor" viewBox="0 0 24 24">
+                                                    <path d="M17,3H7C5.9,3,5,3.9,5,5v16l2-1.5L9,21l2-1.5L13,21l2-1.5L17,21l2-1.5l2,1.5V5C21,3.9,20.1,3,19,3H17z M17,9H7V7h10V9z M17,13H7v-2h10V13z M13,17H7v-2h6V17z"/>
+                                                </svg>
+                                            </div>
+                                            <div>
+                                                <label class="fs-13 fw-bold mb-0">Invoices</label>
+                                                <p class="text-muted mb-1 small">Total created by you</p>
+                                                <h5 class="fw-bold mb-0">
+                                                    <span data-bs-toggle="tooltip" data-bs-placement="top" title="{{ myinvoices() }}">
+                                                        {{ compact_number(myinvoices()) }}
+                                                    </span>
+                                                </h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- My Websites -->
+                                <div class="col-sm-6 col-lg-3">
+                                    <div class="card custom-card shadow-sm">
+                                        <div class="card-body d-flex align-items-center">
+                                            <div class="card-icon me-3">
+                                                <svg xmlns="http://www.w3.org/2000/svg" height="26" width="26" viewBox="0 0 24 24" fill="currentColor">
+                                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5.93 6h-3.02c-.2-1.73-.8-3.3-1.64-4.47C16.37 4.28 18.05 5.87 17.93 8zM12 4.04c.84 1.07 1.44 2.64 1.64 4.47h-3.28c.2-1.83.8-3.4 1.64-4.47zM6.07 8c.12-2.13 1.8-3.72 3.66-4.47C8.8 4.7 8.2 6.27 8 8H6.07zM4.43 10h3.45c-.09.98-.14 1.98-.14 3s.05 2.02.14 3H4.43a8.056 8.056 0 0 1 0-6zm1.64 8h2.79c.31 1.19.76 2.27 1.33 3.18C7.16 20.9 5.65 19.6 6.07 18zM12 20c-.84-1.07-1.44-2.64-1.64-4.47h3.28c-.2 1.83-.8 3.4-1.64 4.47zm1.86-.82c.57-.91 1.02-1.99 1.33-3.18h2.79c.42 1.6-1.09 2.9-4.12 3.18zM16.12 16c.09-.98.14-1.98.14-3s-.05-2.02-.14-3h3.45a8.056 8.056 0 0 1 0 6h-3.45z"/>
+                                                </svg>
+                                            </div>
+                                            <div>
+                                                <label class="fs-13 fw-bold mb-0">Websites</label>
+                                                <p class="text-muted mb-1 small">Websites you've added</p>
+                                                <h5 class="fw-bold mb-0">
+                                                    <span data-bs-toggle="tooltip" data-bs-placement="top" title="{{ mywebsites() }}">
+                                                        {{ compact_number(mywebsites()) }}
+                                                    </span>
+                                                </h5>
+                                        
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Last Login -->
+                                <div class="col-sm-6 col-lg-3">
+                                    <div class="card custom-card shadow-sm">
+                                        <div class="card-body d-flex align-items-center">
+                                            <div class="card-icon me-3">
+                                                <svg xmlns="http://www.w3.org/2000/svg" height="26" width="26" fill="currentColor" viewBox="0 0 24 24">
+                                                    <path d="M12 7v5l3 3-.75.75L11 13V7h1zm0-5C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/>
+                                                </svg>
+                                            </div>
+                                            <div>
+                                                <label class="fs-13 fw-bold mb-0">Logged In Since</label>
+                                                <p class="text-muted mb-1 small">Time elapsed since last login</p>
+                                                <h5 class="fw-bold mb-0" id="lastLoginTimer"
+                                                    data-last-login="{{ \Carbon\Carbon::parse(auth()->user()->last_login_at)->toIso8601String() }}">
+                                                    Loading...
+                                                </h5>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Account Status -->
+                                <div class="col-sm-6 col-lg-3">
+                                    <div class="card custom-card shadow-sm">
+                                        <div class="card-body d-flex align-items-center">
+                                            <div class="card-icon me-3">
+                                                <svg xmlns="http://www.w3.org/2000/svg" height="26" width="26" fill="currentColor" viewBox="0 0 24 24">
+                                                    <path d="M12 12c2.21 0 4-1.79 4-4S14.21 4 12 4 8 5.79 8 8s1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                                                </svg>
+                                            </div>
+                                            <div>
+                                                <label class="fs-13 fw-bold mb-0">Status</label>
+                                                <p class="text-muted mb-1 small">Active or Deactive</p>
+                                                <h5 class="fw-bold mb-0">
+                                                    @if(auth()->user()->status)
+                                                        <span class="text-success">Active</span>
+                                                    @else
+                                                        <span class="text-danger">Deactive</span>
+                                                    @endif
+                                                </h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        @endif
                         <!-- Start::row -->
                         <div class="row" >
                         <div class="col-sm-12 col-lg-12 col-xl-12">
                                     <div class="card custom-card overflow-hidden">
                                         <div class="card-header border-bottom-0">
                                             <div class="d-flex justify-content-between w-100">
-                                                <h4 class="mb-1">Invoice Generation Analytics (Last 7 Days)</h4>
+                                                <h4 class="mb-1">Invoice Generation and Price Changes</h4>
                                             </div>
                                             <div class="d-flex justify-content-between w-100">
                                                 <p class="text-muted mb-0" style="font-size: 14px;">
@@ -206,12 +301,12 @@
                                         </div>
                                     </div>
                                 </div>
-
+                                @if(auth()->user()->roles->contains('name', 'admin') || auth()->user()->roles->contains('name', 'developer'))
                                 <div class="col-sm-12 col-lg-12 col-xl-12">
                                     <div class="card custom-card overflow-hidden">
                                         <div class="card-header border-bottom-0">
                                         <div class="d-flex justify-content-between w-100">
-                                            <h4 class="mb-1">User-wise Invoice Generation (Last 7 Days)</h4>
+                                            <h4 class="mb-1">User-wise Invoice Generation</h4>
                                         </div>
                                         <div class="d-flex justify-content-between w-100">
                                             <p class="text-muted mb-0" style="font-size: 14px;">
@@ -224,7 +319,7 @@
                                         </div>
                                     </div>
                                 </div>
-
+                                @endif
                             <div class="col-lg-12" id="listinvoices">
                                 <div class="card custom-card mg-b-20 tasks">
                                 <div class="card-body">
@@ -275,12 +370,27 @@
                                                                 </div>
                                                             </td>
                                                             <td class="text-center">
-                                                                @if(getUserById($invoice->created_by))
-                                                                    <img src="{{ getUserById($invoice->created_by)?->profile?->profile_image  ? asset(getUserById($invoice->created_by)->profile->profile_image) : asset('uploads/profile/default-profile.png') }}"
-                                                                        alt="Profile"  class="rounded-circle" style="width: 30px; height: 30px; object-fit: cover;" data-bs-toggle="tooltip" title="{{ trim(getUserById($invoice->created_by)?->name ) }}" >
+                                                                @php
+                                                                    $user = getUserById($invoice->created_by);
+                                                                    $img = $user?->profile?->profile_image;
+                                                                @endphp
+
+                                                                @if($user)
+                                                                    @if($img && file_exists(public_path($img)))
+                                                                        <img src="{{ asset($img) }}" alt="Profile" class="rounded-circle"
+                                                                            style="width: 30px; height: 30px; object-fit: cover;"
+                                                                            data-bs-toggle="tooltip" title="{{ $user->name }}">
+                                                                    @else
+                                                                        <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center"style="width: 30px; height: 30px; font-size: 14px;"data-bs-toggle="tooltip" title="{{ $user->name }}">
+                                                                            {{ strtoupper($user->name[0]) }}
+                                                                        </div>
+                                                                    @endif
                                                                 @else
-                                                                     <img src="{{ asset('uploads/profile/default-profile.png') }}" alt="Guest"  class="rounded-circle" style="width: 30px; height: 30px; object-fit: cover;" data-bs-toggle="tooltip" title="Guest">
+                                                                    <img src="{{ asset('uploads/profile/default-profile.png') }}" alt="Guest"
+                                                                        class="rounded-circle" style="width: 30px; height: 30px; object-fit: cover;"
+                                                                        data-bs-toggle="tooltip" title="Guest">
                                                                 @endif
+
                                                             </td>
                                                             <td class="text-center">
                                                                 {{ $invoice->created_at->setTimezone('Asia/Kolkata')->format('d-m-Y h:i A') }}
@@ -401,7 +511,7 @@
     const invoiceCounts = @json($invoiceCounts);  
     const priceChangeCounts = @json($priceChanges); 
     const siteCurrency = @json(site_currency());
-    const chartTypes = ['line', 'column'];
+    const chartTypes = ['line'];
 
     function getRandomType() {
         return chartTypes[Math.floor(Math.random() * chartTypes.length)];
@@ -426,7 +536,9 @@
                     reset: true,
                     customIcons: []
                 }
-            }
+            },
+            offsetX: 0,
+            offsetY: 0
         },
         series: [
             {
@@ -512,4 +624,37 @@
         });
     });
 </script>
+
+<script>
+    function pad(num) {
+        return num.toString().padStart(2, '0');
+    }
+
+    function updateLiveTimer() {
+        const el = document.getElementById('lastLoginTimer');
+        const lastLogin = el.getAttribute('data-last-login');
+
+        if (!lastLogin) {
+            el.textContent = 'Never';
+            return;
+        }
+
+        const lastLoginDate = new Date(lastLogin); 
+        const now = new Date();
+
+        let diff = Math.floor((now.getTime() - lastLoginDate.getTime()) / 1000); 
+
+        const hrs = Math.floor(diff / 3600);
+        diff %= 3600;
+        const mins = Math.floor(diff / 60);
+        const secs = diff % 60;
+
+        el.textContent = `${pad(hrs)}:${pad(mins)}:${pad(secs)}`;
+    }
+
+    updateLiveTimer(); 
+    setInterval(updateLiveTimer, 1000); 
+</script>
+
+
 @endpush

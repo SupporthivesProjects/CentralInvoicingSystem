@@ -111,7 +111,30 @@
                                 <input type="text" name="site_description" class="form-control" placeholder="Enter Site Description (optional)"
                                     value="{{ old('site_description', $website->site_description) }}">
                             </div>
-                           
+                            <div class="col-md-6 mx-auto">
+                                <label class="form-label">PDF Size <span style="color:red">*</span></label>
+                                <select name="pdf_size" class="form-select" required>
+                                    @php
+                                        $pdfSize = old('pdf_size', $website->pdf_size ?? 'A4');
+                                    @endphp
+                                    <option value="A4" {{ $pdfSize === 'A4' ? 'selected' : '' }}>A4</option>
+                                    <option value="A5" {{ $pdfSize === 'A5' ? 'selected' : '' }}>A5</option>
+                                    <option value="Letter" {{ $pdfSize === 'Letter' ? 'selected' : '' }}>Letter</option>
+                                    <option value="Legal" {{ $pdfSize === 'Legal' ? 'selected' : '' }}>Legal</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6 mx-auto">
+                                <label class="form-label">PDF Orientation <span style="color:red">*</span></label>
+                                <select name="pdf_orientation" class="form-select" required>
+                                    @php
+                                        $orientation = old('pdf_orientation', $website->pdf_orientation ?? 'portrait');
+                                    @endphp
+                                    <option value="portrait" {{ $orientation === 'portrait' ? 'selected' : '' }}>Portrait</option>
+                                    <option value="landscape" {{ $orientation === 'landscape' ? 'selected' : '' }}>Landscape</option>
+                                </select>
+                            </div>
+
                             <div class="col-md-6 mx-auto">
                                 <label class="form-label">Company Name</label>
                                 <input type="text" name="company_name" class="form-control" value="{{ old('company_name', $website->company_name) }}"  placeholder="Enter Company Name">

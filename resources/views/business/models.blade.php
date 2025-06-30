@@ -70,19 +70,16 @@
                                                     <a href="{{ route('businessmodel.websites', $model->id) }}" class="btn btn-sm btn-info">
                                                         <i class="fas fa-globe"></i> View sites ({{ count($model->websites) }})
                                                     </a>
-                                                    @if(auth()->user()->roles->contains('name', 'admin'))
-                                                            <a href="{{ route('businessmodel.edit', $model->id) }}" class="btn btn-sm btn-primary">
-                                                                <i class="fas fa-edit"></i> Edit
-                                                            </a>
-                                                        @elseif(auth()->user()->roles->contains('name', 'developer'))
-                                                            <a href="{{ route('businessmodel.edit', $model->id) }}" class="btn btn-sm btn-primary">
-                                                                <i class="fas fa-edit"></i> Edit
-                                                            </a>
-                                                            <button class="btn btn-sm btn-danger delete-btn" data-id="{{ $model->id }}">
-                                                                <i class="fas fa-trash-alt"></i>
-                                                            </button>
+                                                    @if(auth()->user()->roles->contains('name', 'admin') || auth()->user()->roles->contains('name', 'developer'))
+                                                   
+                                                    <a href="{{ route('businessmodel.edit', $model->id) }}" class="btn btn-sm btn-primary">
+                                                        <i class="fas fa-edit"></i> Edit
+                                                    </a>
+                                                    <button class="btn btn-sm btn-danger delete-btn" data-id="{{ $model->id }}">
+                                                        <i class="fas fa-trash-alt"></i>
+                                                    </button>
                                                         
-                                                        @endif
+                                                    @endif
                                                     </td>
                                                 </tr>
                                             @endforeach
