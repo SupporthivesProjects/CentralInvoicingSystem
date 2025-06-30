@@ -1,138 +1,149 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <title>Your Email Title</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 </head>
-
 <body>
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
             <td align="center" bgcolor="#f2f2f2" style="padding: 20px 0;">
-                <table width="600" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
-                    style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
-                    <!-- Header -->
-                    <tr>
-                        <td style="padding: 0px;max-height: 130px;">
-                            <table>
-                                <tr style="width: 100%;">
-                                    <td
-                                        style="height: 500px; background: url('{{ $invoice_image1 }}') no-repeat;background-position: 100% 100%;background-size:cover;width: 200px;position: relative;">
-
-                                        <p
-                                            style="text-align: center;padding-top: 20px;position: absolute;top: 10px;left: 60px;font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">
-                                            <b>INVOICE</b></p>
-
-
-                                        <p
-                                            style="position: absolute;top: 300px;left: 35px;border-bottom: 1px solid black;padding-bottom: 15px;width: 150px; font-size: 10px;font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">
-                                            <b>Date</b><br>06 December 2024</p>
-                                        <p
-                                            style="position: absolute;top: 370px;left: 35px;font-size: 10px;font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">
-                                            <b>BILLED TO</b></p>
-                                        <p
-                                            style="position: absolute;top: 400px;left: 35px;border-bottom: 1px solid black;padding-bottom: 35px;width: 150px;font-size: 10px;font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">
-                                            <b>Customer Name</b></p>
-                                        <p
-                                            style="position: absolute;top: 470px;left: 35px;font-size: 10px;font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">
-                                            <b>BILLED FORM</b></p>
-                                        <p
-                                            style="position: absolute;top: 510px;left: 35px;font-size: 10px;font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">
-                                            <b>Elite Content</b></p>
-                                        <p
-                                            style="position: absolute;top: 530px;left: 35px;font-size: 10px;font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">
-                                            Block B, Office-B27-011, SRTI Park,<br> in the Emirate of Sharjah, U.A.E</p>
-                                        <p
-                                            style="position: absolute;top: 600px;left: 35px; border-bottom: 1px solid black;padding-bottom: 15px;width: 150px;font-size: 10px;font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">
-                                            support@elitecontent.co</p>
-                                    </td>
-
-                                    <td style="text-align: right;">
-                                        <img src="{{ $company_logo }}" alt=""
-                                            style="padding-left: 170px;padding-top: 20px; display: block;height:85px;">
-                                        <br><br><br><br><br><br><br>
-                                        <p style="padding: 20px;padding-bottom: 5px;margin-bottom: 0px;"><b>Invoice
-                                                NO</b></p>
-
-                                        <table
-                                            style="border-collapse: collapse;border-bottom: 0px;border: 0px;padding: 20px;padding-left: 20px;">
-                                            <tr
-                                                style="border-collapse: collapse;height: 30px;background-color: rgb(3, 3, 124); color: white;border-bottom: 0px;border: 0px;">
-                                                <td
-                                                    style="width: 400px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
-                                                    <b>Services</b>
-                                                </td>
-                                                <td
-                                                    style="width: 250px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
-                                                    <b>Qty</b>
-                                                </td>
-                                                <td
-                                                    style="width: 150px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
-                                                    <b>Images</b>
-                                                </td>
-                                                <td
-                                                    style="width: 150px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
-                                                    <b>Total</b>
-                                                </td>
-                                            </tr>
-                                            @foreach($products as $product)
-                                            <tr
-                                                style="border-collapse: collapse;height: 30px;background-color: gainsboro; border-bottom: 0px;border: 0px;">
-                                                <td
-                                                    style="width: 400px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
-                                                    <b>{{$product->name}}</b>
-                                                </td>
-                                                <td
-                                                    style="width: 250px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
-                                                    <b>{{$product->quantity}}</b>
-                                                </td>
-                                                <td
-                                                    style="width: 150px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
-                                                    <b>{{$product->imagecount}}</b>
-                                                </td>
-                                                <td
-                                                    style="width: 150px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
-                                                    <b>{{ site_currency() . number_format($product->unit_price, 2) }}</b>
-                                                </td>
-                                            </tr>
-                                            @endforeach
-
-
-                                        </table>
-                                        <br><br><br><br><br><br>
-
-                                    </td>
-
-                                </tr>
-
-                            </table>
-
-                        </td>
-
-                    </tr>
-                    <tr>
+                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
+                    <!-- Content -->
+                    <tr style="background:#ffff ;">
                         <td>
-                            <table width="100%" cellspacing="0" cellpadding="" border="0px"
-                                style="border-collapse: collapse;">
-                                <tr
-                                    style="background: url('{{ $invoice_footer_image }}') no-repeat;background-position: center;height:30px; background-size:cover;width: 100%;">
-                                    <td style="text-align:center;">
-                                        <p
-                                            style="text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight:700;color:whitesmoke;">
+                            <table border="0" style="border-collapse: collapse;width: 100%;">
+                                  <tr align="right">
+                                    <td style="background: url('{{ $invoice_image1 }}');background-position: center;background-size: cover;background-repeat: no-repeat;padding:40px;width: 40%;vertical-align: top;">
+                                       <h1 style="margin: 0px;font-family: Calibri;font-size: 40px;color:#414042;">INVOICE</h1>
+                                       <table style="height:90px;"></table>
+                                       <table border="0" style="border-collapse: collapse;width: 100%;">
+                                            <tr>
+                                                <td>
+                                                    <h2 style="margin: 0px;font-family: Calibri;font-size:10px;color:#414042;">DATE</h2>
+                                                    <p style="margin: 0px;font-family: Calibri;font-size:8px;color: #808080;">{{ $invoice_date }}</p>
+                                                </td>
+                                            </tr>
+                                            <tr style="border-bottom: 1px solid #808080;height:14px;"></tr>
+                                            <tr style="height:14px;"></tr>
+                                             <tr>
+                                                <td>
+                                                    <h2 style="margin: 0px;font-family: Calibri;font-size:10px;color:#414042;">BILLED TO</h2>
+                                                    <p style="margin: 0px;font-family: Calibri;font-size:8px;color: #414042;font-weight:600;">{{ $customer_name }}</p>
+                                                </td>
+                                            </tr>
+                                            <tr style="border-bottom: 1px solid #808080;height:14px;"></tr>
+                                            <tr style="height:14px;"></tr>
+                                             <tr>
+                                                <td>
+                                                    <h2 style="margin: 0px;font-family: Calibri;font-size:10px;color:#414042;">BILLED FROM</h2>
+                                                </td>
+                                            </tr>
+                                            <tr style="height:14px;"></tr>
+                                            <tr>
+                                                <td>
+                                                     <h2 style="margin: 0px;font-family: Calibri;font-size:8px;color:#414042;">{{ $site_name }}</h2><br>
+                                                     <p style="margin: 0px;font-family: Calibri;font-size:8px;color: #808080;">
+                                                        {{ $company_address }}<br>
+                                                        {{ $company_mobile }}
+                                                     </p>
+                                                          <a href="mailto:{{ $company_email }}" target="_blank" style="margin: 0px;font-family: Calibri;font-size:8px;color: #808080;text-decoration: underline;">
+                                                       {{ $company_email }}
+                                                     </a>
 
-                                        </p>
+                                                </td>
+                                            </tr>
+                                       </table>
                                     </td>
-                                </tr>
-                                <tr>
+                                    <td align="right" style="padding:40px;padding-left: 10px;vertical-align: top;">
+                                       <img src="{{ $company_logo }}" alt="" style="height: 100px;">
+                                       <h2 style="margin: 0px;font-family: Calibri;font-size:8px;color:#414042;">Invoice No. # {{$invoice_number}}</h2><br>
+                                       <div style="min-height: 540px !important;">
+                                       <table border="0" style="border-collapse: collapse;width: 100%;">
+                                          <tr style="background-color: #19346F;">
+                                               <td style="padding: 10px;">
+                                                <h1 style="margin: 0px;font-family: Calibri;font-size:8px;color: #ffffff;">SERVICES</h1>
+                                               </td>
+                                               <td style="padding: 10px;" align="right">
+                                                <h1 style="margin: 0px;font-family: Calibri;font-size:8px;color: #ffffff;">QTY</h1>
+                                               </td>
+                                               <td style="padding: 10px;" align="right">
+                                                <h1 style="margin: 0px;font-family: Calibri;font-size:8px;color: #ffffff;">IMAGES</h1>
+                                               </td>
+                                               <td style="padding: 10px;" align="right">
+                                                <h1 style="margin: 0px;font-family: Calibri;font-size:8px;color: #ffffff;">TOTAL</h1>
+                                               </td>
+                                          </tr>
+                                          @foreach($products as $product)
+                                          <tr style="background-color: #F4F4F4;">
+                                               <td style="padding: 10px;">
+                                                <h1 style="margin: 0px;font-family: Calibri;font-size:8px;color:#414042;">{{ $product->name }}</h1>
+                                               </td>
+                                               <td style="padding: 10px;" align="right">
+                                                <h1 style="margin: 0px;font-family: Calibri;font-size:8px;color:#414042;">1</h1>
+                                               </td>
+                                               <td style="padding: 10px;" align="right">
+                                                <h1 style="margin: 0px;font-family: Calibri;font-size:8px;color: #414042;">{{ $product->imagecount ?? '0' }}</h1>
+                                               </td>
+                                               <td style="padding: 10px;" align="right">
+                                                <h1 style="margin: 0px;font-family: Calibri;font-size:8px;color:#414042;">{{ site_currency() }} {{ number_format($product->unit_price, 2) }}</h1>
+                                               </td>
+                                          </tr>
+                                          <tr style="height: 50px;">
+                                               <td style="padding: 10px;" colspan="4">
+                                                <p style="margin: 0px;font-family: Calibri;font-size:8px;color:#414042;">{{ $product->turnaround ?? '0' . "-" . $product->quantity ?? 'N/A' }}</p>
+                                               </td>
+                                          </tr>
+                                          @endforeach
+                                          <tr>
+                                               <td style="padding: 10px;" colspan="2"></td>
+                                               <td style="padding: 10px;" align="right">
+                                                <h1 style="margin: 0px;font-family: Calibri;font-size:8px;color: #414042;font-weight: 300;">Subtotal.</h1>
+                                               </td>
+                                               <td style="padding: 10px;" align="right">
+                                                <h1 style="margin: 0px;font-family: Calibri;font-size:8px;color:#414042;font-weight: 300;">{{ site_currency() }} {{ number_format($invoice_amount + $discount_amount, 2) }}</h1>
+                                               </td>
+                                          </tr>
+                                          <tr style="border-bottom: 1px solid #414042;">
+                                               <td style="padding: 10px;" colspan="2"></td>
+                                               <td style="padding: 10px;" align="right">
+                                                <h1 style="margin: 0px;font-family: Calibri;font-size:8px;color: #414042;font-weight: 300;">Discount.</h1>
+                                               </td>
+                                               <td style="padding: 10px;" align="right">
+                                                <h1 style="margin: 0px;font-family: Calibri;font-size:8px;color:#414042;font-weight: 300;">{{ site_currency() }} {{ number_format($discount_amount, 2) }}</h1>
+                                               </td>
+                                          </tr>
+                                          <tr>
+                                               <td style="padding: 10px;" colspan="2"></td>
+                                               <td style="padding: 10px;" align="right">
+                                                <h1 style="margin: 0px;font-family: Calibri;font-size:8px;color: #414042;">Total</h1>
+                                               </td>
+                                               <td style="padding: 10px;" align="right">
+                                                <h1 style="margin: 0px;font-family: Calibri;font-size:8px;color:#414042;">{{ site_currency() }} {{ number_format($invoice_amount, 2) }}</h1>
+                                               </td>
+                                          </tr>
+                                       </table>
+                                       </div>
+                                    </td>
+                                  </tr>
                             </table>
                         </td>
                     </tr>
+                    <!-- Content End-->
+                    <!-----------Footer----------->
+                    <tr>
+                        <td align="center" style="height:50px;background: #19346F;">
+                            <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;">
 
+                            </table>
+                        </td>
+                    </tr>
+                    <!-----------Footer End----------->
                 </table>
             </td>
         </tr>
-
     </table>
 </body>
-
 </html>
