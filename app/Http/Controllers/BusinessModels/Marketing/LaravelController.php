@@ -614,15 +614,6 @@ class LaravelController extends Controller
         $invoice_data['invoice_image1'] = base64EncodeImage($site->invoice_image1);
         $invoice_data['invoice_image2'] = base64EncodeImage($site->invoice_image2);
         $invoice_data['invoice_image3'] = base64EncodeImage($site->invoice_image3);
-<<<<<<< HEAD
-        $invoice_data['invoice_template'] = $site->invoice_template;
-        $invoice_data['model_type'] = $site->businessModel->model_type;
-        $invoice_data['site_id'] = $site->id;
-
-        $productDataArray = $request->input('product_data', []);
-        DynamicDatabaseService::connect($site);
-
-=======
         $invoice_data['invoice_image4'] = base64EncodeImage($site->invoice_image4);
         $invoice_data['invoice_image5'] = base64EncodeImage($site->invoice_image5);
         $invoice_data['invoice_image6'] = base64EncodeImage($site->invoice_image6);
@@ -631,7 +622,6 @@ class LaravelController extends Controller
         $invoice_data['invoice_image9'] = base64EncodeImage($site->invoice_image9);
     
         $productDataArray = $request->input('product_data', []);
->>>>>>> 07fd67a486b53bbf228cf1b506ef9bd2ebaef467
         $productIds = [];
         $customPrices = [];
 
