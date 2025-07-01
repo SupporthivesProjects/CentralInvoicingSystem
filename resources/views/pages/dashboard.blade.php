@@ -284,42 +284,43 @@
                         <!-- Start::row -->
                         <div class="row" >
                         <div class="col-sm-12 col-lg-12 col-xl-12">
-                                    <div class="card custom-card overflow-hidden">
-                                        <div class="card-header border-bottom-0">
-                                            <div class="d-flex justify-content-between w-100">
-                                                <h4 class="mb-1">Invoice Generation and Price Changes</h4>
-                                            </div>
-                                            <div class="d-flex justify-content-between w-100">
-                                                <p class="text-muted mb-0" style="font-size: 14px;">
-                                                    This chart displays the number of invoices created (in red) and the number of price changes (in blue) over the last 7 days.
-                                                </p>
-                                            </div>
+                                <div class="card custom-card overflow-hidden">
+                                    <div class="card-header border-bottom-0">
+                                        <div class="d-flex justify-content-between w-100">
+                                            <h4 class="mb-1">Invoice Generation and Price Changes</h4>
                                         </div>
-
-                                        <div class="card-body">
-                                            <div id="invoicechart"></div>
+                                        <div class="d-flex justify-content-between w-100">
+                                            <p class="text-muted mb-0" style="font-size: 14px;">
+                                                This chart displays the number of invoices created (in red) and the number of price changes (in blue) over the last 7 days.
+                                            </p>
                                         </div>
                                     </div>
+
+                                    <div class="card-body">
+                                        <div id="invoicechart"></div>
+                                    </div>
                                 </div>
-                                @if(auth()->user()->roles->contains('name', 'admin') || auth()->user()->roles->contains('name', 'developer'))
-                                <div class="col-sm-12 col-lg-12 col-xl-12">
-                                    <div class="card custom-card overflow-hidden">
-                                        <div class="card-header border-bottom-0">
+                            </div>
+                            @if(auth()->user()->roles->contains('name', 'admin') || auth()->user()->roles->contains('name', 'developer'))
+                            <div class="col-sm-12 col-lg-12 col-xl-12">
+                                <div class="card custom-card overflow-hidden">
+                                    <div class="card-header border-bottom-0">
                                         <div class="d-flex justify-content-between w-100">
                                             <h4 class="mb-1">User-wise Invoice Generation</h4>
                                         </div>
                                         <div class="d-flex justify-content-between w-100">
                                             <p class="text-muted mb-0" style="font-size: 14px;">
-                                                This chart shows how many invoices each user has created over the last 7 days. Hover over the chart for daily breakdown.
+                                            This chart shows how many invoices each user has created over the last 7 days. Hover over the chart for daily breakdown.
                                             </p>
                                         </div>
+                                    </div>
 
-                                        <div class="card-body">
-                                            <div id="userInvoiceChart"></div>
-                                        </div>
+                                    <div class="card-body">
+                                        <div id="userInvoiceChart"></div>
                                     </div>
                                 </div>
-                                @endif
+                            </div>
+                            @endif
                             <div class="col-lg-12" id="listinvoices">
                                 <div class="card custom-card mg-b-20 tasks">
                                 <div class="card-body">
@@ -369,7 +370,7 @@
                                                                     </a>
                                                                 </div>
                                                             </td>
-                                                            <td class="text-center">
+                                                            <td class="text-center align-middle">
                                                                 @php
                                                                     $user = getUserById($invoice->created_by);
                                                                     $img = $user?->profile?->profile_image;
@@ -381,7 +382,9 @@
                                                                             style="width: 30px; height: 30px; object-fit: cover;"
                                                                             data-bs-toggle="tooltip" title="{{ $user->name }}">
                                                                     @else
-                                                                        <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center"style="width: 30px; height: 30px; font-size: 14px;"data-bs-toggle="tooltip" title="{{ $user->name }}">
+                                                                        <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mx-auto"
+                                                                            style="width: 30px; height: 30px; font-size: 14px;"
+                                                                            data-bs-toggle="tooltip" title="{{ $user->name }}">
                                                                             {{ strtoupper($user->name[0]) }}
                                                                         </div>
                                                                     @endif
@@ -390,8 +393,8 @@
                                                                         class="rounded-circle" style="width: 30px; height: 30px; object-fit: cover;"
                                                                         data-bs-toggle="tooltip" title="Guest">
                                                                 @endif
-
                                                             </td>
+
                                                             <td class="text-center">
                                                                 {{ $invoice->created_at->setTimezone('Asia/Kolkata')->format('d-m-Y h:i A') }}
                                                             </td>

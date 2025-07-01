@@ -45,7 +45,7 @@ class HomeController extends Controller
 
     public function getUserInvoiceChartData()
     {
-        $startDate = now()->subDays(6)->startOfDay(); 
+        $startDate = now()->subDays(7)->startOfDay(); 
         $endDate = now()->endOfDay();
     
        
@@ -57,8 +57,8 @@ class HomeController extends Controller
     
        
         $invoicedates = collect();
-        for ($i = 0; $i < 7; $i++) {
-            $invoicedates->push(now()->subDays(6 - $i)->format('d-m-Y'));
+        for ($i = 0; $i < 8; $i++) {
+            $invoicedates->push(now()->subDays(7 - $i)->format('d-m-Y'));
         }
     
         $users = $rawData->pluck('created_by')->unique();
