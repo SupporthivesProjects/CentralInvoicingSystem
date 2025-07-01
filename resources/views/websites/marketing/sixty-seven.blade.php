@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
   <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #ffffff;">
-    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width: 700px; margin: 0 auto; border: 1px solid #ccc;">
+    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin: 0 auto; border: 1px solid #ccc;">
 
       <!-- Header -->
-      <tr style=" background: url('{{ $image_header_image }}');
+      <tr style=" background: url('{{ $invoice_header_image }}');
                       background-repeat: no-repeat;
                       background-size: contain;
                       background-position: center top;
@@ -36,9 +36,12 @@
               <td>{{ $invoice_date }}</td>
               <td>{{ $customer_name }}</td>
               <td>
-                Hallerose Solutions Limited<br/>
+                {{ $site_name }}<br/>
+                {{ $company_address }}<br/>
+                {{ $company_mobile }}<br/>
+                {{ $company_email }}<br/>
                 Emerald Eagle Media<br/>
-                <a href="http://www.emeraldeaglemedia.com" style="color: #007BFF;">www.emeraldeaglemedia.com</a>
+                <a href="{{ $site_name }}" style="color: #007BFF;">{{ $site_name }}</a>
               </td>
             </tr>
           </table>
@@ -89,7 +92,7 @@
       </tr>
 
       <!-- Updated Footer -->
-      <tr style=" background: url('{{ $image_footer_image }}');
+      <tr style=" background: url('{{ $invoice_footer_image }}');
                     background-repeat: no-repeat;
                     background-size: cover;
                     background-position: center;
@@ -99,18 +102,18 @@
             <tr>
               <!-- Left Column -->
               <td style="width: 33%; vertical-align: top;">
-                <span style="color: #173F7D;">HALLEROSE SOLUTIONS LIMITED</span><br/><br/>
+                <span style="color: #173F7D;">{{ $site_name }}</span><br/><br/>
                 <span style="color: #666666;">Web:</span>
-                <a href="http://www.emeraldeaglemedia.com" style="color: #4C483D; text-decoration: none;">www.emeraldeaglemedia.com</a>
+                <a href="http://www.emeraldeaglemedia.com" style="color: #4C483D; text-decoration: none;">{{ $site_name }}</a>
               </td>
 
               <!-- Middle Column -->
               <td style="width: 67%; vertical-align: top;">
                 <span style="color: #666666;">Email:</span>
-                <a href="mailto:support@emeraldeaglemedia.com" style="color: #4C483D; text-decoration: none;">support@emeraldeaglemedia.com</a><br/>
+                <a href="mailto:support@emeraldeaglemedia.com" style="color: #4C483D; text-decoration: none;">{{ $company_email }}</a><br/>
                 <br/>
                 <span style="color: #666666;">Address:</span>
-                <span style="color: #4C483D;">1, Theophilus Street, Iyana, Lagos, Lagos State, Nigeria</span>
+                <span style="color: #4C483D;">{{$company_address}}</span>
               </td>
 
             </tr>
