@@ -1,7 +1,6 @@
 @forelse($products as $index => $product)
 <tr class="product-row">
     <td class="text-center" >{{ $product->id }}</td>
-    <td>{{ $product->category_name }}</td>
     <td>
         {{ $product->name }} 
         @if($site->site_link && $product->slug)

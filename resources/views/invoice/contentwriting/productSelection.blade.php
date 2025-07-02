@@ -340,7 +340,7 @@
                     <!-- Product Table -->
                     <div class="table-responsive border rounded shadow-sm">
                         <table class="table table-bordered table-hover align-middle mb-0">
-                            <thead class="table-dark">
+                            <thead class="">
                             <tr> 
                                 <th class="text-center" style="width: 2%;">PID</th>
                                 <th style="width: 20%;">Name</th>
@@ -444,7 +444,7 @@
                     
                     <div class="rounded shadow-sm p-2"> 
                     <table id="customize-products-table" class="table table-bordered table-hover align-middle mb-0 table-responsive" style="width:100% !important;">
-                    <thead class="table-dark text-center">
+                    <thead class="text-center">
                         <tr> 
                             <th class="text-center" style="width: 2%;">PID</th>
                             <th style="width: 20%;">Name</th>
