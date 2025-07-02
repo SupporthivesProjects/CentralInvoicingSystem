@@ -39,13 +39,13 @@
                                     <table id="websites-datatables" class="table table-bordered text-nowrap" style="width:100%">
                                     <thead>
                                             <tr>
-                                                <th>#</th>
+                                                <th>ID</th>
                                                 <th>Model</th>
                                                 <th>Site Name</th>
                                                 <th>link</th>
-                                                <th>Bank Name</th>
+                                                <th>Bank name</th>
                                                 <th>Bank Code</th>
-                                                <th class="text-center">Actions</th>
+                                                <th  class="text-center">Actions</th>
                                                
                                             </tr>
                                         </thead>
@@ -56,6 +56,7 @@
                                                     <td>{{ $site->businessModel->name ?? '-' }}</td>
                                                     <td>{{ $site->site_name }}</td>
                                                     <td><a href="{{ $site->site_link }}" target="_blank" >View</a></td>
+                                                    
                                                     <td>
                                                         <div class="input-group">
                                                             <input type="text" class="form-control inline-edit" data-id="{{ $site->id }}" data-field="bank_name" value="{{ $site->bank_name }}">
@@ -74,20 +75,20 @@
                                                         </div>
                                                     </td>
 
-                                                        <td>
+                                                    <td>
                                                      
                                                         <a href="{{ route('site.connect.db', $site->id) }}" class="btn btn-sm btn-warning">
                                                             <i class="fas fa-file-invoice"></i> Generate Invoice
                                                         </a>
                                                         @if(auth()->user()->roles->contains('name', 'admin') || auth()->user()->roles->contains('name', 'developer'))
-
                                                         <a href="{{ route('website.edit', $site->id) }}" class="btn btn-sm btn-primary">
-                                                            <i class="fas fa-edit"></i> Edit
-                                                        </a>
+                                                                <i class="fas fa-edit"></i> Edit
+                                                            </a>
                                                         <button class="btn btn-sm btn-danger delete-btn" data-id="{{ $site->id }}">
                                                             <i class="fas fa-trash-alt"></i>
                                                         </button>
                                                         @endif
+                                                       
                                                     </td>
                                                    
                                                 </tr>

@@ -333,17 +333,16 @@
                     <!-- Product Table -->
                     <div class="table-responsive border rounded shadow-sm">
                         <table class="table table-bordered table-hover align-middle mb-0">
-                            <thead class="table-dark">
+                            <thead class="">
                                 <tr>
                                     <th class="text-center" style="width: 10%;">PID</th>
-                                    <th class="text-center" style="width: 10%;">Category</th>
-                                    <th class="text-center" style="width: 35%;">Product Name</th>
+                                    <th class="text-center" style="width: 40%;">Product Name</th>
                                     <th class="text-center unit-price-header" data-column="3" data-order="desc">
                                         <span class="d-inline-flex align-items-center justify-content-center gap-1">
                                             Unit Price <i class="bi bi-caret-down-fill"></i>
                                         </span>
                                     </th>
-                                    <th class="text-center" style="width: 20%;">Editable Price</th>
+                                    <th class="text-center" style="width: 25%;">Editable Price</th>
                                     <th class="text-center" style="width: 10%;">Remove</th>
                                 </tr>
                             </thead>
@@ -434,17 +433,16 @@
                     
                     <div class="rounded shadow-sm p-2"> 
                         <table id="customize-products-table" class="table table-bordered table-hover align-middle mb-0 table-responsive" style="width:100% !important;">
-                            <thead class="table-dark text-center">
+                            <thead class="text-center">
                                 <tr>
                                 <th style="width: 10%;">PID</th>
-                                <th style="width: 10%;">Category</th>
-                                <th style="width: 35%;">Product Name</th>
+                                <th style="width: 40%;">Product Name</th>
                                 <th class="text-center unit-price-header" style="width: 20%;"  data-column="3" data-order="desc">
                                     <span class="d-inline-flex align-items-center justify-content-center gap-1">
                                         Unit Price <i class="bi bi-caret-down-fill"></i>
                                     </span>
                                 </th>
-                                <th style="width: 20%;">Editable Price</th>
+                                <th style="width: 25%;">Editable Price</th>
                                 <th style="width: 10%;">Select</th>
                             </tr>
                             </thead>

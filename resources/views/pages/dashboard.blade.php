@@ -170,7 +170,7 @@
                                                         </span>
                                                     </h4>
 
-                                                    <a href="#listinvoices" class="btn btn-sm btn-outline-primary mt-2">View
+                                                    <a href="{{ route('users.index') }}" class="btn btn-sm btn-outline-primary mt-2">View
                                                     <svg xmlns="http://www.w3.org/2000/svg" class="arrow-icon" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                                         <path fill="currentColor" fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 1 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
                                                     </svg>
@@ -199,7 +199,7 @@
                                             </div>
                                             <div>
                                                 <label class="fs-13 fw-bold mb-0">Invoices</label>
-                                                <p class="text-muted mb-1 small">Total created by you</p>
+                                                <p class="text-muted mb-1 small">Total invoices created by you</p>
                                                 <h5 class="fw-bold mb-0">
                                                     <span data-bs-toggle="tooltip" data-bs-placement="top" title="{{ myinvoices() }}">
                                                         {{ compact_number(myinvoices()) }}
@@ -291,7 +291,7 @@
                                         </div>
                                         <div class="d-flex justify-content-between w-100">
                                             <p class="text-muted mb-0" style="font-size: 14px;">
-                                                This chart displays the number of invoices created (in red) and the number of price changes (in blue) over the last 7 days.
+                                            This chart displays the number of invoices created (in red) and the number of price changes (in blue) over the last 8 days (the past 7 days plus today).
                                             </p>
                                         </div>
                                     </div>
@@ -310,7 +310,7 @@
                                         </div>
                                         <div class="d-flex justify-content-between w-100">
                                             <p class="text-muted mb-0" style="font-size: 14px;">
-                                            This chart shows how many invoices each user has created over the last 7 days. Hover over the chart for daily breakdown.
+                                            This chart shows how many invoices each user has created over the last 8 days (the past 7 days plus today). Hover over the chart to see a daily breakdown.
                                             </p>
                                         </div>
                                     </div>

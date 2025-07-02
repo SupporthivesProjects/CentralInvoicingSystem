@@ -106,11 +106,22 @@
                                 <input type="text" name="site_name" class="form-control" required placeholder="Enter Site Name"
                                     value="{{ old('site_name', $website->site_name) }}">
                             </div>
+
                             <div class="col-md-6 mx-auto">
-                                <label class="form-label">Site Description</label>
-                                <input type="text" name="site_description" class="form-control" placeholder="Enter Site Description (optional)"
-                                    value="{{ old('site_description', $website->site_description) }}">
+                                <label class="form-label">Product Table Name <span style="color:red">*</span></label>
+                                <input type="text" name="product_table" class="form-control" placeholder="Enter Product Table Name"
+                                    value="{{ old('product_table', $website->product_table) }}" required>
                             </div>
+                            <div class="col-md-6 mx-auto">
+                                <label class="form-label">Bundle Table Name <span style="color:red">*</span></label>
+                                <input type="text" name="bundle_table" class="form-control" value="{{ old('bundle_table', $website->bundle_table) }}"  placeholder="Enter Bundle Table name for gaming site" required>
+                            </div>
+
+                            <div class="col-md-6 mx-auto">
+                                <label class="form-label">General Settings <span style="color:red">*</span></label>
+                                <input type="text" name="general_settings" class="form-control" value="{{ old('general_settings', $website->general_settings) }}" placeholder="Enter General setting table name for company address" required>
+                            </div>
+                           
                             <div class="col-md-6 mx-auto">
                                 <label class="form-label">PDF Size <span style="color:red">*</span></label>
                                 <select name="pdf_size" class="form-select" required>
@@ -134,7 +145,11 @@
                                     <option value="landscape" {{ $orientation === 'landscape' ? 'selected' : '' }}>Landscape</option>
                                 </select>
                             </div>
-
+                            <div class="col-md-6 mx-auto">
+                                <label class="form-label">Site Description</label>
+                                <input type="text" name="site_description" class="form-control" placeholder="Enter Site Description (optional)"
+                                    value="{{ old('site_description', $website->site_description) }}">
+                            </div>
                             <div class="col-md-6 mx-auto">
                                 <label class="form-label">Company Name</label>
                                 <input type="text" name="company_name" class="form-control" value="{{ old('company_name', $website->company_name) }}"  placeholder="Enter Company Name">
@@ -150,10 +165,6 @@
                                 <input type="text" name="company_mobile" class="form-control" value="{{ old('company_mobile', $website->company_mobile) }}" placeholder="Enter Company Mobile">
                             </div>
                             <div class="col-md-6 mx-auto">
-                                <label class="form-label">Company Address</label>
-                                <input type="text" name="company_address" class="form-control" value="{{ old('company_address', $website->company_address) }}" placeholder="Enter Company Address">
-                            </div>
-                            <div class="col-md-6 mx-auto">
                                 <label class="form-label">Bank Name</label>
                                 <input type="text" name="bank_name" class="form-control" value="{{ old('bank_name', $website->bank_name) }}"  placeholder="Enter Bank Name">
                             </div>
@@ -161,6 +172,10 @@
                             <div class="col-md-6 mx-auto">
                                 <label class="form-label">Bank Code</label>
                                 <input type="text" name="bank_code" class="form-control" value="{{ old('bank_code', $website->bank_code) }}"  placeholder="Enter Bank Code (e.g., IFSC or SWIFT)">
+                            </div>
+                            <div class="col-md-12 mx-auto">
+                                <label class="form-label">Company Address</label>
+                                <input type="text" name="company_address" class="form-control" value="{{ old('company_address', $website->company_address) }}" placeholder="Enter Company Address">
                             </div>
                             <div class="my-4">
                                 <div class="d-flex align-items-center text-muted">

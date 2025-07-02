@@ -52,8 +52,11 @@
                                                 <th>Business Model</th>
                                                 <th>Model Type</th>
                                                 <th class="text-center">Model Icon</th>
+                                                <th>Added By </th>
+                                                <th>Websites</th>
+                                                <th>Edit</th>
+                                                <th>Delete</th>
                                                 <th>Created At</th>
-                                                <th>Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -65,22 +68,29 @@
                                                     <td class="text-center">
                                                         <i class="{{ !empty($model->icon_class) ? $model->icon_class : 'ti-wallet' }} side-menu__icon text-center"></i>
                                                     </td>
-                                                    <td>{{ $model->created_at->format('Y-m-d') }}</td>
-                                                    <td>
-                                                    <a href="{{ route('businessmodel.websites', $model->id) }}" class="btn btn-sm btn-info">
-                                                        <i class="fas fa-globe"></i> View sites ({{ count($model->websites) }})
-                                                    </a>
-                                                    @if(auth()->user()->roles->contains('name', 'admin') || auth()->user()->roles->contains('name', 'developer'))
-                                                   
-                                                    <a href="{{ route('businessmodel.edit', $model->id) }}" class="btn btn-sm btn-primary">
-                                                        <i class="fas fa-edit"></i> Edit
-                                                    </a>
-                                                    <button class="btn btn-sm btn-danger delete-btn" data-id="{{ $model->id }}">
-                                                        <i class="fas fa-trash-alt"></i>
-                                                    </button>
-                                                        
-                                                    @endif
+                                                    <td>{{ $model->addedBy?->name ?? '—' }}</td>
+                                                    <td class="text-center"> 
+                                                        <a href="{{ route('businessmodel.websites', $model->id) }}" class="btn btn-sm btn-info">
+                                                            <i class="fas fa-globe"></i> View sites ({{ count($model->websites) }})
+                                                        </a>
                                                     </td>
+
+                                                    @if(auth()->user()->roles->contains('name', 'admin') || auth()->user()->roles->contains('name', 'developer'))
+                                                        <td class="text-center">
+                                                            <a href="{{ route('businessmodel.edit', $model->id) }}" class="btn btn-sm btn-primary">
+                                                                <i class="fas fa-edit"></i> Edit
+                                                            </a>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <button class="btn btn-sm btn-danger delete-btn" data-id="{{ $model->id }}">
+                                                                <i class="fas fa-trash-alt"></i>
+                                                            </button>
+                                                        </td>
+                                                    @else
+                                                        <td></td>
+                                                        <td></td>
+                                                    @endif
+                                                    <td class="text-center">{{ $model->created_at->format('Y-m-d') }}</td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
