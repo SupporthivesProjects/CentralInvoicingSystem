@@ -106,21 +106,6 @@
                                 <input type="text" name="site_name" class="form-control" required placeholder="Enter Site Name"
                                     value="{{ old('site_name', $website->site_name) }}">
                             </div>
-
-                            <div class="col-md-6 mx-auto">
-                                <label class="form-label">Product Table Name <span style="color:red">*</span></label>
-                                <input type="text" name="product_table" class="form-control" placeholder="Enter Product Table Name"
-                                    value="{{ old('product_table', $website->product_table) }}" required>
-                            </div>
-                            <div class="col-md-6 mx-auto">
-                                <label class="form-label">Bundle Table Name <span style="color:red">*</span></label>
-                                <input type="text" name="bundle_table" class="form-control" value="{{ old('bundle_table', $website->bundle_table) }}"  placeholder="Enter Bundle Table name for gaming site" required>
-                            </div>
-
-                            <div class="col-md-6 mx-auto">
-                                <label class="form-label">General Settings <span style="color:red">*</span></label>
-                                <input type="text" name="general_settings" class="form-control" value="{{ old('general_settings', $website->general_settings) }}" placeholder="Enter General setting table name for company address" required>
-                            </div>
                            
                             <div class="col-md-6 mx-auto">
                                 <label class="form-label">PDF Size <span style="color:red">*</span></label>
@@ -173,10 +158,64 @@
                                 <label class="form-label">Bank Code</label>
                                 <input type="text" name="bank_code" class="form-control" value="{{ old('bank_code', $website->bank_code) }}"  placeholder="Enter Bank Code (e.g., IFSC or SWIFT)">
                             </div>
-                            <div class="col-md-12 mx-auto">
+                            <div class="col-md-6 mx-auto">
                                 <label class="form-label">Company Address</label>
                                 <input type="text" name="company_address" class="form-control" value="{{ old('company_address', $website->company_address) }}" placeholder="Enter Company Address">
                             </div>
+
+                            <div class="accordion w-100" id="websiteTableAccordion">
+
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="tableConfigHeading">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#tableConfigCollapse">
+                                            Website Table Configuration
+                                        </button>
+                                    </h2>
+                                    <div id="tableConfigCollapse" class="accordion-collapse collapse" data-bs-parent="#websiteTableAccordion">
+                                        <div class="accordion-body">
+                                            <div class="alert alert-warning mb-4" role="alert" style="font-size: 14px;">
+                                                ⚠️ <strong>Warning:</strong> Please be careful when modifying table names. If the table is already in use and working, changing the name may break related features.
+                                            </div>
+                                            <div class="row g-3">
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Product Table Name <span class="text-danger">*</span></label>
+                                                    <input type="text" name="product_table" class="form-control" 
+                                                        value="{{ old('product_table', $website->product_table) }}" placeholder="Enter Product Table Name" required>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Bundle Table Name <span class="text-danger">*</span></label>
+                                                    <input type="text" name="bundle_table" class="form-control" 
+                                                        value="{{ old('bundle_table', $website->bundle_table) }}" placeholder="Enter Bundle Table Name" required>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <label class="form-label">General Settings Table Name <span class="text-danger">*</span></label>
+                                                    <input type="text" name="general_settings" class="form-control" 
+                                                        value="{{ old('general_settings', $website->general_settings) }}" placeholder="Enter General Settings Table Name" required>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Currency Table Name <span class="text-danger">*</span></label>
+                                                    <input type="text" name="currency_table" class="form-control" 
+                                                        value="{{ old('currency_table', $website->currency_table) }}" placeholder="Enter Currency Table Name" required>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Category Table Name <span class="text-danger">*</span></label>
+                                                    <input type="text" name="category_table" class="form-control" 
+                                                        value="{{ old('category_table', $website->category_table) }}" placeholder="Enter Category Table Name" required>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Tags Table Name <span class="text-danger">*</span></label>
+                                                    <input type="text" name="tags_table" class="form-control" 
+                                                        value="{{ old('tags_table', $website->tags_table) }}" placeholder="Enter Category and Product relational Table Name" required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div> 
                             <div class="my-4">
                                 <div class="d-flex align-items-center text-muted">
                                     <div class="flex-grow-1 border-bottom"></div>
@@ -417,6 +456,8 @@
                     <div class="card-footer d-none border-top-0"></div>
                 </div>
             </div>
+          
+           
 
         </div>
     </div>
@@ -545,6 +586,30 @@ $(document).ready(function () {
 });
 </script>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.add-column').forEach(button => {
+            button.addEventListener('click', function () {
+                const targetId = this.getAttribute('data-target');
+                const container = document.querySelector(targetId);
+                const prefix = targetId.replace('#', '').replace('Columns', '');
 
+                const newInput = document.createElement('div');
+                newInput.className = 'input-group mb-2';
+                newInput.innerHTML = `
+                    <input type="text" name="${prefix}_columns[]" class="form-control" placeholder="Enter column name">
+                    <button type="button" class="btn btn-danger remove-column">Remove</button>
+                `;
+                container.appendChild(newInput);
+            });
+        });
+
+        document.addEventListener('click', function (e) {
+            if (e.target && e.target.classList.contains('remove-column')) {
+                e.target.closest('.input-group').remove();
+            }
+        });
+    });
+</script>
 
 @endpush

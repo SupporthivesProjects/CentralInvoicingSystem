@@ -48,7 +48,7 @@
                                             </div>
                                             <div class="card-item-title mb-2">
                                                 <label class="main-content-label fs-13 fw-bold mb-1">Available Websites</label>
-                                                  <p class="card-text">All Available Websites</p>
+                                                  <p class="text-muted mb-1 small">All Available Websites</p>
                                             </div>
                                             <div class="card-item-body">
                                                 <div class="card-item-stat">
@@ -86,7 +86,7 @@
                                             </div>
                                             <div class="card-item-title mb-2">
                                                 <label class="main-content-label fs-13 fw-bold mb-1">Business Models</label>
-                                                <p class="card-text">All business models</p>
+                                                <p class="text-muted mb-1 small">All business models</p>
                                             </div>
                                             <div class="card-item-body">
                                                 <div class="card-item-stat">
@@ -126,7 +126,7 @@
 
                                             <div class="card-item-title  mb-2">
                                                 <label class="main-content-label fs-13 fw-bold mb-1">Invoices Created</label>
-                                                <p class="card-text">All created invoices</p>
+                                                <p class="text-muted mb-1 small">All created invoices</p>
                                             </div>
                                             <div class="card-item-body">
                                                 <div class="card-item-stat">
@@ -160,7 +160,7 @@
 
                                             <div class="card-item-title  mb-2">
                                                 <label class="main-content-label fs-13 fw-bold mb-1">User List</label>
-                                                <p class="card-text">All admin and staff users</p>
+                                                <p class="text-muted mb-1 small">All admin and staff users</p>
                                             </div>
                                             <div class="card-item-body">
                                                 <div class="card-item-stat">

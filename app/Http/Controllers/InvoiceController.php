@@ -206,7 +206,8 @@ class InvoiceController extends Controller
                 'sites' => $sites,
                 'min_unit_price' => $min_unit_price,
                 'max_unit_price' => $max_unit_price,
-                'remote_database' =>$remote_database
+                'remote_database' =>$remote_database,
+                'isWordPress' => $site->technology === 'wordpress',
             ]);
     
         } catch (\Exception $e) {
