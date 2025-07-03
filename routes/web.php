@@ -42,6 +42,7 @@ Route::middleware(['auth', 'role:admin,staff,developer'])->group(function () {
     Route::post('/users', [UserController::class, 'store'])->name('users.store');
     Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
     Route::patch('/users/{user}', [UserController::class, 'update'])->name('users.update');
+    Route::patch('/users/{user}/toggle-status', [UserController::class, 'toggleStatus'])->name('users.toggleStatus');
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
 
     Route::get('/businessmodel/create', [WebsiteController::class, 'addBusinessModel'])->name('businessmodel.create');
@@ -59,7 +60,7 @@ Route::middleware(['auth', 'role:admin,staff,developer'])->group(function () {
     Route::post('/website/update-ajax', [WebsiteController::class, 'updateWebsiteAjax'])->name('update.website.ajax');
     Route::delete('/website/{id}', [WebsiteController::class, 'deleteWebsite'])->name('website.delete');
     Route::get('/businessmodel/{id}/websites', [WebsiteController::class, 'websitesByBusinessModel'])->name('businessmodel.websites');
-   
+
     Route::get('/website/connect/{site_id}', [InvoiceController::class, 'getCustomerDetails'])->name('site.connect.db');
     Route::post('/site/connect/check-connectivity', [WebsiteController::class, 'checkRemoteDbConnectivity'])->name('check.db.connectivity');
     Route::post('/invoice/save-customerdetails', [InvoiceController::class, 'saveCustomerDetails'])->name('customerdetails.store');
@@ -81,28 +82,14 @@ Route::middleware(['auth', 'role:admin,staff,developer'])->group(function () {
     Route::post('/update-product', [InvoiceController::class, 'updateProduct'])->name('update.product');
     Route::get('/get-product', [InvoiceController::class, 'getProduct'])->name('get.product');
     Route::post('/random-product', [InvoiceController::class, 'randomProduct'])->name('random.product');
-    
+
     Route::get('/generate-new-invoice-number', [InvoiceController::class, 'generateInvoiceNumber'])->name('generate.invoice.number');
     Route::get('/invoice/chart', [HomeController::class, 'showInvoiceChart'])->name('invoice.chart');
     Route::get('/report/invoices', [ReportController::class, 'invoiceReport'])->name('invoice.report');
 
     Route::post('update/product/pages', [LaravelController::class, 'updateProductPages'])->name('update.product.pages');
-
 });
 
-Route::middleware(['auth', 'role:admin,developer'])->group(function () {
-    Route::get('/users', [UserController::class, 'index'])->name('users.index');
-    Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
-    Route::post('/users', [UserController::class, 'store'])->name('users.store');
-    Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
-    Route::patch('/users/{user}', [UserController::class, 'update'])->name('users.update');
-    Route::patch('/users/{user}/toggle-status', [UserController::class, 'toggleStatus'])->name('users.toggleStatus');
-    Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
-});
-
-Route::middleware(['auth', 'role:admin,staff,developer'])->group(function () {
-    Route::get('/users', [UserController::class, 'index'])->name('users.index');
-});
 
 Route::get('/', function () {
     return redirect()->route(auth()->check() ? 'dashboard' : 'login');

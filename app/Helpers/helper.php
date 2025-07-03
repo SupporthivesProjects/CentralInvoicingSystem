@@ -123,21 +123,38 @@ if (!function_exists('site_currency')) {
     function site_currency()
     {
         $site_id = session('customer.site_id');
+
         if (!$site_id) {
             return '$';
         }
+
         try {
             $site = \App\Models\Website::findOrFail($site_id);
             \App\Services\DynamicDatabaseService::connect($site);
+
+            if ($site->technology === 'wordpress') {
+                $currencyTable = $site->currency_table ?? 'wp_options';
+            
+                $currencyRow = DB::connection('dynamic')
+                    ->table($currencyTable)
+                    ->where('option_name', 'woocommerce_currency')
+                    ->first();
+            
+                return $currencyRow?->option_value ?? '$';
+            }
+            
             $site_currency = DB::connection('dynamic')->table('business_settings')->where('type', 'system_default_currency')->first()
                 ?? DB::connection('dynamic')->table('business_settings')->where('type', 'home_default_currency')->first();
-            $currency = DB::connection('dynamic')->table('currencies')->where('id', $site_currency->value)->first();
+
+            $currency = DB::connection('dynamic')->table('currencies')->where('id', $site_currency->value ?? null)->first();
+
             return $currency->symbol ?? '$';
         } catch (\Exception $e) {
             return '$';
         }
     }
 }
+
 
 if (!function_exists('site_currency_code')) {
     function site_currency_code()
@@ -223,19 +240,43 @@ if (!function_exists('getProductTable')) {
 if (!function_exists('getCategoryList')) {
     function getCategoryList($technology)
     {
-        if (!Schema::connection('dynamic')->hasTable('categories')) {
+        $siteId = session('customer.site_id');
+        $site = Website::find($siteId);
+
+        if (!$site) {
             return collect();
         }
 
-        $categories = [
-            'wordpress' => DB::connection('dynamic')->table('categories')->select('id', 'name')->get(),
-            'laravel'   => DB::connection('dynamic')->table('categories')->select('id', 'name')->get(),
-            'corephp'   => DB::connection('dynamic')->table('categories')->select('id', 'name')->get(),
-        ];
+        $categoryTable = $site->category_table ?? 'categories';
 
-        return $categories[$technology] ?? collect();
+        if (!Schema::connection('dynamic')->hasTable($categoryTable)) {
+            return collect();
+        }
+
+        $query = DB::connection('dynamic')->table($categoryTable);
+
+        switch ($technology) {
+            case 'wordpress':
+                $categories = $query->orderByDesc('term_id')->select('term_id as id', 'name')->get();
+                break;
+
+            case 'laravel':
+                $categories = $query->select('id', 'name')->get();
+                break;
+                
+            case 'corephp':
+                $categories = $query->select('id', 'name')->get();
+                break;
+
+            default:
+                $categories = collect();
+                break;
+        }
+
+        return $categories;
     }
 }
+
 
 if (!function_exists('site_languages')) {
     function site_languages()

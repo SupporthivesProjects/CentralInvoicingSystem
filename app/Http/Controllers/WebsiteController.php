@@ -147,8 +147,10 @@ class WebsiteController extends Controller
         $website = Website::findOrFail($id);
         $businessModels = BusinessModel::all();
         $technologies = ['html', 'wordpress', 'corephp', 'laravel', 'django', 'other'];
-        return view('business.editwebsite', compact('website', 'businessModels','technologies'));
+
+        return view('business.editwebsite', compact('website','businessModels','technologies'));
     }
+
 
     public function updateWebsite(Request $request, $id)
     {
@@ -163,8 +165,11 @@ class WebsiteController extends Controller
             'db_username' => 'required|string|max:255',
             'db_password' => 'required|string|max:255',
             'product_table' => 'required|string|max:255',
+            'currency_table' => 'required|string|max:255',
             'bundle_table' => 'required|string|max:255',
             'general_settings' => 'required|string|max:255',
+            'category_table'  => 'required|string|max:255',
+            'tags_table'  => 'required|string|max:255',
             'site_link' => 'nullable|url|max:255',
             'company_name' => 'nullable|string|max:255',
             'company_email' => 'nullable|email|max:255',
@@ -277,8 +282,11 @@ class WebsiteController extends Controller
                     'db_username' => $request->db_username,
                     'db_password' => $request->db_password,
                     'product_table' => $request->product_table,
+                    'currency_table' => $request->currency_table,
                     'bundle_table' => $request->bundle_table,
                     'general_settings' => $request->general_settings,
+                    'category_table' => $request->category_table,
+                    'tags_table' => $request->tags_table,
                     'site_link' => $request->site_link,
                     'company_name' => $request->company_name,
                     'company_email' => $request->company_email,
@@ -286,8 +294,8 @@ class WebsiteController extends Controller
                     'company_address' => $request->company_address,
                     'bank_name' => $request->bank_name,
                     'bank_code' => $request->bank_code,
-                    'pdf_size' => $request->pdf_size, // e.g., A4, A5, Letter, Legal
-                    'pdf_orientation' => $request->pdf_orientation, // 'portrait' or 'landscape'
+                    'pdf_size' => $request->pdf_size, 
+                    'pdf_orientation' => $request->pdf_orientation, 
                     'updated_at' => now(),
                 ]);
 

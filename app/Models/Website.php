@@ -20,8 +20,11 @@ class Website extends Model
         'db_username',
         'db_password',
         'product_table',
+        'currency_table',
         'bundle_table',
         'general_settings',
+        'category_table',
+        'tags_table',
         'site_link',
         'remark',
         'company_name',
@@ -56,4 +59,5 @@ class Website extends Model
     {
         return $this->belongsTo(BusinessModel::class, 'business_model_id');
     }
+
 }

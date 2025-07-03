@@ -44,7 +44,7 @@
                                             <th>Email</th>
                                             <th class="text-center">Assigned Role</th>
                                             <th>Status</th>
-                                            @if (auth()->user()->roles->contains('name', 'admin'))
+                                            @if (auth()->user()->roles->contains('name', 'admin') || auth()->user()->roles->contains('name', 'developer'))
                                                 <th class="text-center">Action</th>
                                             @endif
                                         </tr>
@@ -70,7 +70,7 @@
                                                     @endif
                                                 </td>
 
-                                                @if (auth()->user()->roles->contains('name', 'admin'))
+                                                @if (auth()->user()->roles->contains('name', 'admin') || auth()->user()->roles->contains('name', 'developer'))
                                                     <!-- Action Buttons Centered -->
                                                     <td class="text-center">
                                                         <a href="{{ route('users.edit', $user->id) }}"
