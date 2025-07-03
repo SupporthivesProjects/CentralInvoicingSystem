@@ -44,7 +44,7 @@
                                             <th>Email</th>
                                             <th class="text-center">Assigned Role</th>
                                             <th>Status</th>
-                                            @if (auth()->user()->roles->contains('name', 'admin'))
+                                            @if (auth()->user()->roles->contains('name', 'admin') || auth()->user()->roles->contains('name', 'developer'))
                                                 <th class="text-center">Action</th>
                                             @endif
                                         </tr>
