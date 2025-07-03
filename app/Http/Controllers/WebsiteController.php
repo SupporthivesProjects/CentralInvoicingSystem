@@ -179,7 +179,7 @@ class WebsiteController extends Controller
             'bank_code' => 'nullable|string|max:255',
             'pdf_size' => 'required|in:A4,A5,Letter,Legal',
             'pdf_orientation' => 'required|in:portrait,landscape',
-            'site_status' => 'required|in:live,tdown,pdown',
+            'site_status' => 'nullable|in:live,tdown,pdown',
             'company_logo' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
             'invoice_header_image' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
             'invoice_footer_image' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
