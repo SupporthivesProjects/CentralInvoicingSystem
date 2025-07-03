@@ -24,12 +24,14 @@
                         <div class="card custom-card">
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <div class="card-title mb-0">Available Websites</div>
-                                <a href="{{ route('website.create') }}" class="btn btn-sm btn-primary d-flex align-items-center gap-1 group">
+                                @if(auth()->user()->roles->contains('name', 'developer'))
+                                    <a href="{{ route('website.create') }}" class="btn btn-sm btn-primary d-flex align-items-center gap-1 group">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
-                                        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                                    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
                                     </svg>
                                     New Website
-                                </a>
+                                    </a>
+                                @endif
                               </div>
                             <div class="card-body">
                                 <div class="table-responsive">
@@ -75,14 +77,15 @@
                                                         <a href="{{ route('site.connect.db', $site->id) }}" class="btn btn-sm btn-warning">
                                                             <i class="fas fa-file-invoice"></i> Generate Invoice
                                                         </a>
-                                                        @if(auth()->user()->roles->contains('name', 'admin') || auth()->user()->roles->contains('name', 'developer'))
-                                                            <a href="{{ route('website.edit', $site->id) }}" class="btn btn-sm btn-primary">
+                                                        @if(auth()->user()->roles->contains('name', 'developer'))
+                                                        <a href="{{ route('website.edit', $site->id) }}" class="btn btn-sm btn-primary">
                                                                 <i class="fas fa-edit"></i> Edit
                                                             </a>
-                                                            <button class="btn btn-sm btn-danger delete-btn" data-id="{{ $site->id }}">
-                                                                <i class="fas fa-trash-alt"></i>
-                                                            </button>
+                                                        <button class="btn btn-sm btn-danger delete-btn" data-id="{{ $site->id }}">
+                                                            <i class="fas fa-trash-alt"></i>
+                                                        </button>
                                                         @endif
+                                                       
                                                     </td>
                                                     
                                                 </tr>

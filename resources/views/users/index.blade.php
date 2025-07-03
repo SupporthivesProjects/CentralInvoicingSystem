@@ -70,7 +70,7 @@
                                                     @endif
                                                 </td>
 
-                                                @if (auth()->user()->roles->contains('name', 'admin'))
+                                                @if (auth()->user()->roles->contains('name', 'admin') || auth()->user()->roles->contains('name', 'developer'))
                                                     <!-- Action Buttons Centered -->
                                                     <td class="text-center">
                                                         <a href="{{ route('users.edit', $user->id) }}"

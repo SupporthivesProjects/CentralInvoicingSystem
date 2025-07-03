@@ -605,7 +605,24 @@
         stroke: { curve: 'smooth' },
         dataLabels: { enabled: true },
         tooltip: { shared: true },
-        colors: ['#00b3ff', '#28a745', '#ffc107', '#6610f2', '#17a2b8']
+        colors: [
+            '#00b3ff', // Bright Sky Blue
+            '#28a745', // Medium Green
+            '#ffc107', // Amber
+            '#6610f2', // Purple
+            '#17a2b8', // Teal Cyan
+            '#e83e8c', // Deep Pink
+            '#fd7e14', // Vibrant Orange
+            '#6c757d', // Gray
+            '#20c997', // Medium Turquoise
+            '#dc3545', // Crimson Red
+            '#343a40', // Charcoal Gray
+            '#198754', // Emerald Green
+            '#0dcaf0', // Light Cyan
+            '#ff5733', // Coral Orange
+            '#8e44ad'  // Amethyst Purple
+        ]
+
     };
 
     var chart = new ApexCharts(document.querySelector("#userInvoiceChart"), options);

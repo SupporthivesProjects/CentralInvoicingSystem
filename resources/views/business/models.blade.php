@@ -23,21 +23,13 @@
                         <div class="card custom-card">
                           <div class="card-header d-flex justify-content-between align-items-center">
                                 <div class="card-title mb-0">Business Models</div>
-                                @if(auth()->user()->roles->contains('name', 'admin'))
-                                        <a href="{{ route('businessmodel.create') }}" class="btn btn-sm btn-primary d-flex align-items-center gap-1 group">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
-                                                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
-                                            </svg>
-                                            New Model
-                                        </a>
-                                    @elseif(auth()->user()->roles->contains('name', 'developer'))
+                                @if(auth()->user()->roles->contains('name', 'developer'))
                                     <a href="{{ route('businessmodel.create') }}" class="btn btn-sm btn-primary d-flex align-items-center gap-1 group">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
                                             <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
                                         </svg>
                                         New Model
                                     </a>
-                                        
                                 @endif
 
                                
@@ -47,53 +39,55 @@
                                 <div class="table-responsive">
                                     <table id="file-export" class="table table-bordered text-nowrap" style="width:100%">
                                     <thead>
-                                            <tr>
-                                                <th>#</th>
-                                                <th>Business Model</th>
-                                                <th>Model Type</th>
-                                                <th class="text-center">Model Icon</th>
-                                                <th>Added By </th>
-                                                <th>Websites</th>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Business Model</th>
+                                            <th>Model Type</th>
+                                            <th class="text-center">Model Icon</th>
+                                            <th>Websites</th>
+                                            @if(auth()->user()->roles->contains('name', 'developer'))
+                                                <th>Added By</th>
                                                 <th>Edit</th>
                                                 <th>Delete</th>
-                                                <th>Created At</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($businessModels as $index => $model)
-                                                <tr>
-                                                    <td>{{ $index + 1 }}</td>
-                                                    <td>{{ $model->name ?? '-' }}</td>
-                                                    <td>{{ $model->model_type ?? '-' }}</td>
-                                                    <td class="text-center">
-                                                        <i class="{{ !empty($model->icon_class) ? $model->icon_class : 'ti-wallet' }} side-menu__icon text-center"></i>
-                                                    </td>
+                                            @else
+                                            <th>Created At</th>
+                                            @endif
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($businessModels as $index => $model)
+                                            <tr>
+                                                <td>{{ $index + 1 }}</td>
+                                                <td>{{ $model->name ?? '-' }}</td>
+                                                <td>{{ $model->model_type ?? '-' }}</td>
+                                                <td class="text-center">
+                                                    <i class="{{ !empty($model->icon_class) ? $model->icon_class : 'ti-wallet' }} side-menu__icon text-center"></i>
+                                                </td>
+                                                <td class="text-center">
+                                                    <a href="{{ route('businessmodel.websites', $model->id) }}" class="btn btn-sm btn-info">
+                                                        <i class="fas fa-globe"></i> View sites ({{ count($model->websites) }})
+                                                    </a>
+                                                </td>
+
+                                                @if(auth()->user()->roles->contains('name', 'developer'))
                                                     <td>{{ $model->addedBy?->name ?? '—' }}</td>
-                                                    <td class="text-center"> 
-                                                        <a href="{{ route('businessmodel.websites', $model->id) }}" class="btn btn-sm btn-info">
-                                                            <i class="fas fa-globe"></i> View sites ({{ count($model->websites) }})
+                                                    <td class="text-center">
+                                                        <a href="{{ route('businessmodel.edit', $model->id) }}" class="btn btn-sm btn-primary">
+                                                            <i class="fas fa-edit"></i> Edit
                                                         </a>
                                                     </td>
+                                                    <td class="text-center">
+                                                        <button class="btn btn-sm btn-danger delete-btn" data-id="{{ $model->id }}">
+                                                            <i class="fas fa-trash-alt"></i>
+                                                        </button>
+                                                    </td>
+                                                @else
+                                                <td class="text-center">{{ $model->created_at->format('Y-m-d') }}</td>
+                                                @endif
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
 
-                                                    @if(auth()->user()->roles->contains('name', 'admin') || auth()->user()->roles->contains('name', 'developer'))
-                                                        <td class="text-center">
-                                                            <a href="{{ route('businessmodel.edit', $model->id) }}" class="btn btn-sm btn-primary">
-                                                                <i class="fas fa-edit"></i> Edit
-                                                            </a>
-                                                        </td>
-                                                        <td class="text-center">
-                                                            <button class="btn btn-sm btn-danger delete-btn" data-id="{{ $model->id }}">
-                                                                <i class="fas fa-trash-alt"></i>
-                                                            </button>
-                                                        </td>
-                                                    @else
-                                                        <td></td>
-                                                        <td></td>
-                                                    @endif
-                                                    <td class="text-center">{{ $model->created_at->format('Y-m-d') }}</td>
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
 
                                     </table>
                                 </div>
