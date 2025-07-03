@@ -23,11 +23,22 @@
                     </ol>
                 </div>
 
-                <div class="mt-3 mt-md-0">
-                    <button type="button" id="check-remote-db" class="btn btn-outline-warning">
+                <div class="d-flex flex-wrap align-items-center gap-2 mt-3">
+
+                <div>
+                    <select class="form-select form-select-sm site-status-selector" name="site_status" form="addwebsite-form">
+                        <option value="live" selected>Website Live</option>
+                        <option value="tdown" >Temporary Down</option>
+                        <option value="pdown" >Permanent Down</option>
+                    </select>
+                </div>
+
+                <div>
+                    <button type="button" id="check-remote-db" class="btn btn-outline-warning btn-sm w-100">
                         Check DB Connectivity
                     </button>
                 </div>
+            </div>
             </div>
             <div class="col-xl-12">
                 <div id="db-status-wrapper" class="text-center mt-3 mb-3">

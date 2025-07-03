@@ -39,25 +39,30 @@
                                 <div class="table-responsive">
                                     <table id="websites-datatables" class="table table-bordered text-nowrap" style="width:100%">
                                     <thead>
-                                            <tr>
-                                                <th>ID</th>
-                                                <th>Model</th>
-                                                <th>Site Name</th>
-                                                <th>link</th>
-                                                <th>Bank name</th>
-                                                <th>Bank Code</th>
-                                                <th  class="text-center">Actions</th>
-                                               
-                                            </tr>
-                                        </thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Business Model</th>
+                                            <th>Site Name</th>
+                                            <th>Bank Name</th>
+                                            <th>Bank Code</th>
+                                            <th class="text-center">Actions</th>
+                                            <th class="text-center">Status</th>
+                                        </tr>
+                                    </thead>
+
                                         <tbody>
                                             @foreach ($websites as $index => $site)
                                                 <tr>
                                                     <td>{{ $site->id }}</td>
                                                     <td>{{ $site->businessModel->name ?? '-' }}</td>
-                                                    <td>{{ $site->site_name }}</td>
-                                                    <td><a href="{{ $site->site_link }}" target="_blank" >View</a></td>
-                                                    
+                                                    <td>
+                                                        {{ $site->site_name }}
+                                                        @if($site->site_link)
+                                                            <a href="{{ $site->site_link }}" target="_blank">
+                                                                <i class="bi bi-box-arrow-up-right ms-1"></i>
+                                                            </a>
+                                                        @endif
+                                                    </td>
                                                     <td>
                                                         <div class="input-group">
                                                             <input type="text" class="form-control inline-edit" data-id="{{ $site->id }}" data-field="bank_name" value="{{ $site->bank_name }}">
@@ -75,22 +80,45 @@
                                                             </span>
                                                         </div>
                                                     </td>
-
-                                                    <td>
+                                                   
+                                                    <td class="text-center">
                                                      
-                                                        <a href="{{ route('site.connect.db', $site->id) }}" class="btn btn-sm btn-warning">
-                                                            <i class="fas fa-file-invoice"></i> Generate Invoice
-                                                        </a>
-                                                        @if(auth()->user()->roles->contains('name', 'developer'))
-                                                        <a href="{{ route('website.edit', $site->id) }}" class="btn btn-sm btn-primary">
-                                                                <i class="fas fa-edit"></i> Edit
+                                                        <span @if($site->site_status === 'pdown') data-bs-toggle="tooltip" data-bs-placement="top" title="Site is permanently down. Invoice cannot be generated." @endif>
+                                                            <button onclick="window.location.href='{{ route('site.connect.db', $site->id) }}'" class="btn btn-sm btn-warning" @if($site->site_status === 'pdown') disabled @endif>
+                                                                <i class="fas fa-file-invoice"></i> Generate Invoice
+                                                            </button>
+                                                        </span>
+
+
+                                                        @if(auth()->user()->roles->contains('name', 'admin'))
+                                                            <a href="{{ route('website.edit', $site->id) }}" class="btn btn-sm btn-primary">
+                                                                    <i class="fas fa-edit"></i> Edit
                                                             </a>
-                                                        <button class="btn btn-sm btn-danger delete-btn" data-id="{{ $site->id }}">
-                                                            <i class="fas fa-trash-alt"></i>
-                                                        </button>
+                                                        @endif
+                                                        @if(auth()->user()->roles->contains('name', 'developer'))
+                                                            <a href="{{ route('website.edit', $site->id) }}" class="btn btn-sm btn-primary">
+                                                                    <i class="fas fa-edit"></i> Edit
+                                                                </a>
+                                                            <button class="btn btn-sm btn-danger delete-btn" data-id="{{ $site->id }}">
+                                                                <i class="fas fa-trash-alt"></i>
+                                                            </button>
                                                         @endif
                                                        
                                                     </td>
+                                                    <td class="text-center">
+                                                        @php
+                                                            $statusMap = [
+                                                                'live' => ['class' => 'success', 'title' => 'Site is live'],
+                                                                'tdown' => ['class' => 'warning', 'title' => 'Site is temporarily down'],
+                                                                'pdown' => ['class' => 'danger', 'title' => 'Site is permanently down'],
+                                                            ];
+                                                        @endphp
+
+                                                        <span class="badge bg-{{ $statusMap[$site->site_status]['class'] }}" data-bs-toggle="tooltip" title="{{ $statusMap[$site->site_status]['title'] }}">
+                                                            {{ $site->site_status }}
+                                                        </span>
+                                                    </td>
+
                                                    
                                                 </tr>
                                             @endforeach

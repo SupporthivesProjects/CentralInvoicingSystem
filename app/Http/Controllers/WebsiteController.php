@@ -179,6 +179,7 @@ class WebsiteController extends Controller
             'bank_code' => 'nullable|string|max:255',
             'pdf_size' => 'required|in:A4,A5,Letter,Legal',
             'pdf_orientation' => 'required|in:portrait,landscape',
+            'site_status' => 'required|in:live,tdown,pdown',
             'company_logo' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
             'invoice_header_image' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
             'invoice_footer_image' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
@@ -292,6 +293,7 @@ class WebsiteController extends Controller
                     'company_email' => $request->company_email,
                     'company_mobile' => $request->company_mobile,
                     'company_address' => $request->company_address,
+                    'site_status' => $request->site_status,
                     'bank_name' => $request->bank_name,
                     'bank_code' => $request->bank_code,
                     'pdf_size' => $request->pdf_size, 
@@ -331,6 +333,7 @@ class WebsiteController extends Controller
                 'bank_code' => 'nullable|string|max:255',
                 'pdf_size' => 'required|in:A4,A5,Letter,Legal',
                 'pdf_orientation' => 'required|in:portrait,landscape',
+                'site_status' => 'required|in:live,tdown,pdown',
                 'added_by' => 'nullable|exists:users,id',
                 'company_logo' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
                 'invoice_header_image' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
@@ -377,7 +380,8 @@ class WebsiteController extends Controller
                 'bank_name' => $request->bank_name,
                 'bank_code' => $request->bank_code,
                 'pdf_size' => $request->pdf_size, 
-                'pdf_orientation' => $request->pdf_orientation, 
+                'pdf_orientation' => $request->pdf_orientation,
+                'site_status' => $request->site_status,
                 'added_by' => auth()->id()
             ]);
 
@@ -465,6 +469,24 @@ class WebsiteController extends Controller
                 'message' => 'Something went wrong while deleting the website.'
             ], 500);
         }
+    }
+
+    public function updateStatusAjax(Request $request, $id)
+    {
+        $request->validate([
+            'site_status' => 'required|in:live,tdown,pdown',
+        ]);
+
+        $website = Website::find($id);
+
+        if (!$website) {
+            return response()->json(['success' => false, 'message' => 'Website not found.'], 404);
+        }
+
+        $website->site_status = $request->site_status;
+        $website->save();
+
+        return response()->json(['success' => true, 'message' => 'Site status updated successfully.']);
     }
 
 

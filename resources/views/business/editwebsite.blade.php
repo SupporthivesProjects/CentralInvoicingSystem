@@ -23,15 +23,31 @@
                     </ol>
                 </div>
 
-                <div class="mt-3 mt-md-0">
-                    <button type="button" id="check-remote-db" class="btn btn-outline-warning">
+                <div class="d-flex flex-wrap align-items-center gap-2 mt-3">
+
+                <div>
+                    <select class="form-select form-select-sm site-status-selector" data-id="{{ $website->id }}" data-current="{{ $website->site_status }}">
+                        <option value="live" {{ $website->site_status == 'live' ? 'selected' : '' }}>Website Live</option>
+                        <option value="tdown" {{ $website->site_status == 'tdown' ? 'selected' : '' }}>Temporary Down</option>
+                        <option value="pdown" {{ $website->site_status == 'pdown' ? 'selected' : '' }}>Permanent Down</option>
+                    </select>
+                </div>
+
+                <div>
+                    <button type="button" id="check-remote-db" class="btn btn-outline-warning btn-sm w-100">
                         Check DB Connectivity
                     </button>
-                    <a  href="{{ route('site.connect.db', $website->id) }}" class="btn btn-outline-success">
+                </div>
+
+                <div>
+                    <a href="{{ route('site.connect.db', $website->id) }}" class="btn btn-outline-success btn-sm w-100">
                         Generate Invoice
                     </a>
-                   
                 </div>
+
+            </div>
+
+
             </div>
             <div class="col-xl-12">
                 <div id="db-status-wrapper" class="text-center mt-3 mb-3">
@@ -585,31 +601,63 @@ $(document).ready(function () {
     });
 });
 </script>
-
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        document.querySelectorAll('.add-column').forEach(button => {
-            button.addEventListener('click', function () {
-                const targetId = this.getAttribute('data-target');
-                const container = document.querySelector(targetId);
-                const prefix = targetId.replace('#', '').replace('Columns', '');
+    $(document).ready(function () {
+        $('.site-status-selector').on('change', function () {
+            const $this = $(this);
+            const siteId = $this.data('id');
+            const updateUrl = "{{ route('website.updateStatus.ajax', ':id') }}".replace(':id', siteId);
+            const newStatus = $this.val();
+            const prevStatus = $this.data('current');
 
-                const newInput = document.createElement('div');
-                newInput.className = 'input-group mb-2';
-                newInput.innerHTML = `
-                    <input type="text" name="${prefix}_columns[]" class="form-control" placeholder="Enter column name">
-                    <button type="button" class="btn btn-danger remove-column">Remove</button>
-                `;
-                container.appendChild(newInput);
+            Swal.fire({
+                title: 'Are you sure?',
+                text: `Change site status to "${newStatus}"?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, change it!',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Updating Status...',
+                        text: 'Please wait while we update the site status.',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
+                    $.ajax({
+                        url: updateUrl,
+                        method: 'POST',
+                        data: {
+                            site_status: newStatus,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function (response) {
+                            Swal.close();
+                            if (response.success) {
+                                toastr.success(response.message);
+                                $this.data('current', newStatus);
+                            } else {
+                                toastr.error(response.message || 'Unexpected response.');
+                                $this.val(prevStatus);
+                            }
+                        },
+                        error: function () {
+                            Swal.close();
+                            toastr.error('Failed to update site status.');
+                            $this.val(prevStatus);
+                        }
+                    });
+                } else {
+                    $this.val(prevStatus);
+                }
             });
-        });
-
-        document.addEventListener('click', function (e) {
-            if (e.target && e.target.classList.contains('remove-column')) {
-                e.target.closest('.input-group').remove();
-            }
         });
     });
 </script>
+
 
 @endpush
