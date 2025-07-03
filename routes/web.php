@@ -57,6 +57,8 @@ Route::middleware(['auth', 'role:admin,staff,developer'])->group(function () {
     Route::get('/available-websites', [WebsiteController::class, 'connectedwebsites'])->name('connectedwebsites');
     Route::get('/website/{id}/edit', [WebsiteController::class, 'editwebsite'])->name('website.edit');
     Route::patch('/website/{id}', [WebsiteController::class, 'updateWebsite'])->name('website.update');
+    Route::post('/websites/{id}/update-status', [WebsiteController::class, 'updateStatusAjax'])->name('website.updateStatus.ajax');
+
     Route::post('/website/update-ajax', [WebsiteController::class, 'updateWebsiteAjax'])->name('update.website.ajax');
     Route::delete('/website/{id}', [WebsiteController::class, 'deleteWebsite'])->name('website.delete');
     Route::get('/businessmodel/{id}/websites', [WebsiteController::class, 'websitesByBusinessModel'])->name('businessmodel.websites');

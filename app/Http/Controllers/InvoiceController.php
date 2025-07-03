@@ -50,7 +50,12 @@ class InvoiceController extends Controller
     {
         try {
             $site_id = request()->get('site_id', $site_id_from_url);
+
             $site = Website::findOrFail($site_id);
+            if ($site->site_status === 'pdown') {
+                return redirect()->back()->with('error', 'Site is permanently down. Invoice cannot be generated.');
+            }
+            
             $sites = Website::orderBy('id', 'DESC')->get();
             $newInvoiceNumber = generateInvoiceNumber($site->site_name);
 
@@ -177,6 +182,10 @@ class InvoiceController extends Controller
     
         try {
             $site = Website::findOrFail($site_id);
+
+            if ($site->site_status === 'pdown') {
+                return redirect()->back()->with('error', 'Site is permanently down. Invoice cannot be generated.');
+            }
 
             DynamicDatabaseService::connect($site);
             DB::connection($this->connectionType)->getPdo(); 

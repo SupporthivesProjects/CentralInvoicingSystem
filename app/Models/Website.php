@@ -35,6 +35,7 @@ class Website extends Model
         'bank_code',
         'pdf_size',
         'pdf_orientation',
+        'site_status',
         'added_by',
         'invoice_header_image',
         'invoice_footer_image',
