@@ -89,7 +89,7 @@ class ReportController extends Controller
             'fileName' => $filename,
             'options' => [
                 'format' => 'A4',
-                'landscape' => false
+                'landscape' => true
             ]
         ]);
     
@@ -118,7 +118,7 @@ class ReportController extends Controller
 
     protected function generateWithDompdf($viewPath, $invoice_data, $filename)
     {
-        $pdf = \PDF::loadView($viewPath, ['invoices' => $invoice_data])->setPaper('A4', 'portrait');
+        $pdf = \PDF::loadView($viewPath, ['invoices' => $invoice_data])->setPaper('A4', 'landscape');
         return $pdf->download($filename);
     }
 

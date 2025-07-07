@@ -80,12 +80,15 @@
                                                     </td>
                                                    
                                                     <td class="text-center">
-                                                     
-                                                        <span @if($site->site_status === 'pdown') data-bs-toggle="tooltip" data-bs-placement="top" title="Site is permanently down. Invoice cannot be generated." @endif>
-                                                            <button onclick="window.location.href='{{ route('site.connect.db', $site->id) }}'" class="btn btn-sm btn-warning" @if($site->site_status === 'pdown') disabled @endif>
-                                                                <i class="fas fa-file-invoice"></i> Generate Invoice
-                                                            </button>
-                                                        </span>
+                                                        <button onclick="window.location.href='{{ route('site.connect.db', $site->id) }}'"  class="btn btn-sm {{ $site->site_status === 'pdown' ? 'btn-danger' : 'btn-warning' }}"
+                                                            @if($site->site_status === 'pdown') 
+                                                                data-bs-toggle="tooltip" 
+                                                                data-bs-placement="top" 
+                                                                title="Site is permanently down. Invoice cannot be generated."
+                                                            @endif >
+                                                            <i class="fas fa-file-invoice"></i> Generate Invoice
+                                                        </button>
+                                                       
                                                         @if(auth()->user()->roles->contains('name', 'admin'))
                                                             <a href="{{ route('website.edit', $site->id) }}" class="btn btn-sm btn-primary">
                                                                     <i class="fas fa-edit"></i> Edit
