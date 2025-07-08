@@ -247,7 +247,11 @@ if (!function_exists('getCategoryList')) {
             return collect();
         }
 
-        $categoryTable = $site->category_table ?? 'categories';
+        \App\Services\DynamicDatabaseService::connect($site);
+
+        $categoryTable = $technology === 'wordpress' 
+            ? ($site->category_table ?? 'categories') 
+            : 'categories';
 
         if (!Schema::connection('dynamic')->hasTable($categoryTable)) {
             return collect();
@@ -257,25 +261,20 @@ if (!function_exists('getCategoryList')) {
 
         switch ($technology) {
             case 'wordpress':
-                $categories = $query->orderByDesc('term_id')->select('term_id as id', 'name')->get();
-                break;
+                return $query->orderByDesc('term_id')
+                             ->select('term_id as id', 'name')
+                             ->get();
 
             case 'laravel':
-                $categories = $query->select('id', 'name')->get();
-                break;
-                
             case 'corephp':
-                $categories = $query->select('id', 'name')->get();
-                break;
+                return $query->select('id', 'name')->get();
 
             default:
-                $categories = collect();
-                break;
+                return collect();
         }
-
-        return $categories;
     }
 }
+
 
 
 if (!function_exists('site_languages')) {
