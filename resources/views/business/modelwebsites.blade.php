@@ -83,12 +83,8 @@
                                                     </td>
                                                    
                                                     <td class="text-center">
-                                                        <button onclick="window.location.href='{{ route('site.connect.db', $site->id) }}'"  class="btn btn-sm {{ $site->site_status === 'pdown' ? 'btn-danger' : 'btn-warning' }}"
-                                                            @if($site->site_status === 'pdown') 
-                                                                data-bs-toggle="tooltip" 
-                                                                data-bs-placement="top" 
-                                                                title="Site is permanently down. Invoice cannot be generated."
-                                                            @endif >
+                                                        <button onclick="window.location.href='{{ route('site.connect.db', $site->id) }}'" class="btn btn-sm btn-warning" 
+                                                            @if($site->site_status === 'pdown') disabled @endif>
                                                             <i class="fas fa-file-invoice"></i> Generate Invoice
                                                         </button>
                                                        

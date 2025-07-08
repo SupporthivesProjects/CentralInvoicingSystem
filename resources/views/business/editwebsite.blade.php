@@ -26,7 +26,7 @@
                 <div class="d-flex flex-wrap align-items-center gap-2 mt-3">
 
                 <div>
-                    <select class="form-select form-select-sm site-status-selector" form="editwebsite-form"  name="site_status" data-id="{{ $website->id }}" data-current="{{ $website->site_status }}">
+                    <select class="form-select form-select-sm site-status-selector" form="editwebsite-form" name="site_status" data-id="{{ $website->id }}" data-current="{{ $website->site_status }}">
                         <option value="live" {{ $website->site_status == 'live' ? 'selected' : '' }}>Website Live</option>
                         <option value="tdown" {{ $website->site_status == 'tdown' ? 'selected' : '' }}>Temporary Down</option>
                         <option value="pdown" {{ $website->site_status == 'pdown' ? 'selected' : '' }}>Permanent Down</option>
