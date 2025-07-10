@@ -96,7 +96,7 @@
                                        {{ $currency . number_format($product['unit_price'], 2) }}
                                     </td>
                                     <td style="width:100px;text-align:right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-right: 10px;">
-                                       {{ $currency . number_format($product['line_total'], 2) }}
+                                       {{ $currency . number_format($product['unit_price'], 2) }}
                                     </td>
                                 </tr>
                                 @endforeach

@@ -33,7 +33,7 @@
                                     </a>
                                 @endif
 
-                               
+
                               </div>
                             <div class="card-body">
                                 <div class="table-responsive">
@@ -67,7 +67,7 @@
                                                         <div class="input-group">
                                                             <input type="text" class="form-control inline-edit" data-id="{{ $site->id }}" data-field="bank_name" value="{{ $site->bank_name }}">
                                                             <span class="input-group-text update-icon">
-                                                            <i class="fas fa-edit"></i> 
+                                                            <i class="fas fa-edit"></i>
                                                             </span>
                                                         </div>
                                                         </td>
@@ -80,9 +80,9 @@
                                                             </span>
                                                         </div>
                                                     </td>
-                                                   
+
                                                     <td class="text-center">
-                                                        <button onclick="window.location.href='{{ route('site.connect.db', $site->id) }}'" class="btn btn-sm btn-warning" 
+                                                        <button onclick="window.location.href='{{ route('site.connect.db', $site->id) }}'" class="btn btn-sm btn-warning"
                                                             @if($site->site_status === 'pdown') disabled @endif>
                                                             <i class="fas fa-file-invoice"></i> Generate Invoice
                                                         </button>
@@ -99,7 +99,7 @@
                                                                 <i class="fas fa-trash-alt"></i>
                                                             </button>
                                                         @endif
-                                                       
+
                                                     </td>
                                                     <td class="text-center">
                                                         @php
@@ -115,7 +115,7 @@
                                                         </span>
                                                     </td>
 
-                                                   
+
                                                 </tr>
                                             @endforeach
                                         </tbody>
@@ -127,12 +127,12 @@
                     </div>
                 </div>
                 <!-- End:: row-4 -->
-             
+
             </div>
         </div>
-    
 
-   
+
+
 @endsection
 @push('scripts')
 <script>
@@ -147,7 +147,7 @@
                 confirmButtonText: 'Yes, delete it!',
                 showLoaderOnConfirm: true,
                 preConfirm: () => {
-                    return fetch(`/website/${id}`, {
+                    return fetch(`/website/delete/${id}`, {
                         method: 'DELETE',
                         headers: {
                             'X-CSRF-TOKEN': '{{ csrf_token() }}',
@@ -169,7 +169,7 @@
                 if (result.isConfirmed && result.value?.success) {
                     toastr.success(result.value.message || "Deleted successfully!");
                     setTimeout(() => {
-                        location.reload(); 
+                        location.reload();
                     }, 1500);
                 } else if (result.value && !result.value.success) {
                     toastr.error(result.value.message || "Failed to delete!");
