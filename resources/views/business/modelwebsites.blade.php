@@ -151,7 +151,7 @@
                     confirmButtonText: 'Yes, delete it!',
                     showLoaderOnConfirm: true,
                     preConfirm: () => {
-                        return fetch(`/website/${id}`, {
+                        return fetch(`/website/delete/${id}`, {
                             method: 'DELETE',
                             headers: {
                                 'X-CSRF-TOKEN': '{{ csrf_token() }}',

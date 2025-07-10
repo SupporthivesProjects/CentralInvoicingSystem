@@ -496,8 +496,6 @@
 </div>
 
 
-
-
 @endsection
 @push('scripts')
 <script>

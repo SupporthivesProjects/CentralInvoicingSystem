@@ -43,6 +43,7 @@ class HomeController extends Controller
         return view('pages.dashboard', compact('invoices', 'dates', 'invoiceCounts','businessmodels','sites', 'priceChanges', 'invoicedates','userInvoices'));
     }
 
+    
     public function getUserInvoiceChartData()
     {
         $startDate = now()->subDays(7)->startOfDay(); 
@@ -86,8 +87,6 @@ class HomeController extends Controller
     
         return [$invoicedates, $series];
     }
-
-
 
     private function getInvoiceChartData()
     {
