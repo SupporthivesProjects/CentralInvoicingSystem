@@ -60,7 +60,7 @@ Route::middleware(['auth', 'role:admin,staff,developer'])->group(function () {
     Route::post('/websites/{id}/update-status', [WebsiteController::class, 'updateStatusAjax'])->name('website.updateStatus.ajax');
 
     Route::post('/website/update-ajax', [WebsiteController::class, 'updateWebsiteAjax'])->name('update.website.ajax');
-    Route::delete('/website/{id}', [WebsiteController::class, 'deleteWebsite'])->name('website.delete');
+    Route::delete('/website/delete/{id}', [WebsiteController::class, 'deleteWebsite'])->name('website.delete');
     Route::get('/businessmodel/{id}/websites', [WebsiteController::class, 'websitesByBusinessModel'])->name('businessmodel.websites');
 
     Route::get('/website/connect/{site_id}', [InvoiceController::class, 'getCustomerDetails'])->name('site.connect.db');
