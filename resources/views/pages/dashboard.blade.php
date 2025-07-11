@@ -355,7 +355,7 @@
                                                                     {{ $invoice->website->site_name }}
                                                                 </a>
                                                             @else
-                                                                <span class="text-muted">No site info</span>
+                                                                <span class="text-muted">Site not found or deleted</span>
                                                             @endif
 
                                                             </td>
