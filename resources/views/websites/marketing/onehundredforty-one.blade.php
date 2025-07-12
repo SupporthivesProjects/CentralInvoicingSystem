@@ -209,9 +209,7 @@
                                     <tr>
                                         <td class="addrss" style="width: 40%;">
                                             <h4>BILLED TO:</h4>
-                                            <p>Name:</p>
                                             <p>{{ $customer_name }}</p>
-                                            <p>Email:</p>
                                             <p>{{ $customer_email }}</p>
                                         </td>
                                         <td class="addrss" style="display: flex;">
