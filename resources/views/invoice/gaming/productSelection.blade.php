@@ -1068,12 +1068,8 @@ function clearAllProducts(button) {
                             toastr.options = {
                                 timeOut: 4000
                             };
-                            toastr.success('Invoice is ready and will download shortly. The page will refresh in 30 seconds.', 'Completed');
-                            setInterval(() => {
-                                location.reload();
-                            }, 30000);
-
-
+                            toastr.success('Invoice is ready and will download shortly.', 'Completed');
+                           
                         }
                     };
 
