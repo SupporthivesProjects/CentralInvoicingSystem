@@ -296,8 +296,8 @@ class WebsiteController extends Controller
                     'site_status' => $request->site_status,
                     'bank_name' => $request->bank_name,
                     'bank_code' => $request->bank_code,
-                    'pdf_size' => $request->pdf_size, 
-                    'pdf_orientation' => $request->pdf_orientation, 
+                    'pdf_size' => $request->pdf_size,
+                    'pdf_orientation' => $request->pdf_orientation,
                     'updated_at' => now(),
                 ]);
 
@@ -379,7 +379,7 @@ class WebsiteController extends Controller
                 'company_address' => $request->company_address,
                 'bank_name' => $request->bank_name,
                 'bank_code' => $request->bank_code,
-                'pdf_size' => $request->pdf_size, 
+                'pdf_size' => $request->pdf_size,
                 'pdf_orientation' => $request->pdf_orientation,
                 'site_status' => $request->site_status,
                 'added_by' => auth()->id()
