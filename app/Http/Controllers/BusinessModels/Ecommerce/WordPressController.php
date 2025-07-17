@@ -26,20 +26,24 @@ use Illuminate\Support\Facades\Http;
 
 class WordPressController extends Controller
 {
+   
     private $productTable;
+    private $productPriceTable;
     private $tagsTable;
     private $categoryTable;
-    private $connection;
-    private $site;
+    private $termTaxonomyTable;
     private $connectionType;
+    private $site;
 
     public function __construct()
     {
         $site_id = session('customer.site_id');
         $this->site = Website::findOrFail($site_id);
-        $this->productTable = $this->site->product_table;
-        $this->tagsTable = $this->site->tags_table;
-        $this->categoryTable = $this->site->category_table;
+        $this->productTable = $site->product_table ?? 'wp_posts';
+        $this->productPriceTable = $site->product_price_table ?? 'wp_wc_product_meta_lookup';
+        $this->tagsTable = $site->tags_table ?? 'wp_term_relationships';
+        $this->termTaxonomyTable = $site->term_taxonomy_table ?? 'wp_term_taxonomy';
+        $this->categoryTable = $site->category_table ?? 'wp_terms';
         $this->connectionType = 'dynamic';
     }
 
@@ -51,76 +55,74 @@ class WordPressController extends Controller
         $priceTo = $request->get('price_to');
         $noOfProducts = intval($request->get('noOfProducts'));
         $categoryId = $request->get('category_id');
-    
+
         $site = Website::findOrFail($site_id);
-        $productTable = $this->productTable;
-        $tagsTable = $this->tagsTable;
-        $categoryTable = $this->categoryTable;
-        $connection = 'dynamic';
-    
+        $connection = $this->connectionType;
+
         DynamicDatabaseService::connect($site);
-    
-        if (empty($productTable)) {
-            return response()->json([
-                'tableRows' => '',
-                'total' => 0,
-                'message' => 'Product table is not set.'
-            ]); 
-        }
-    
-        $query = DB::connection($connection)->table($productTable)
+
+        $postsTable = $this->productTable;
+        $priceTable = $this->productPriceTable;
+
+        $query = DB::connection($connection)
+            ->table($postsTable)
+            ->join($priceTable, "$postsTable.ID", '=', "$priceTable.product_id")
             ->select(
-                "$productTable.product_id",
-                "$productTable.sku",
-                "$productTable.max_price"
+                "$postsTable.ID as id",
+                "$postsTable.post_title as name",
+                "$postsTable.post_excerpt as description",
+                "$postsTable.post_name as slug",
+                "$priceTable.max_price as unit_price"
             )
-            ->where("$productTable.max_price", '>', 0);
+            ->where("$postsTable.post_status", 'publish')
+            ->where("$postsTable.post_type", 'product')
+            ->where("$priceTable.max_price", '>', 0);
 
-        if ($categoryId) {
-            $query->join($tagsTable, "$productTable.product_id", '=', "$tagsTable.object_id")
-                ->join($categoryTable, "$tagsTable.term_order", '=', "$categoryTable.term_id")
-                ->where("$tagsTable.term_order", $categoryId)
-                ->addSelect("$categoryTable.name as category_name");
-        }
-
-        
         if ($priceFrom && $priceTo) {
-            $query->whereBetween("$productTable.max_price", [$priceFrom, $priceTo]);
+            $query->whereBetween("$priceTable.max_price", [$priceFrom, $priceTo]);
         }
-    
+
+        if (!empty($categoryId)) {
+            $query->join($this->tagsTable . ' as tr', "$postsTable.ID", '=', 'tr.object_id')
+                ->join($this->termTaxonomyTable . 'as tt', 'tr.term_taxonomy_id', '=', 'tt.term_taxonomy_id')
+                ->where('tt.taxonomy', 'product_cat') 
+                ->where('tt.term_id', $categoryId); 
+        }
+
+
+
         $fetchLimit = $noOfProducts ? ($noOfProducts * 5) : 200;
         $minTotal = $invoiceAmount;
         $maxTotal = $invoiceAmount * 1.10;
         $iteration = $noOfProducts ? 30 : 20;
-    
-        $allProducts = $query->orderByDesc("$productTable.max_price")->limit($fetchLimit)->get();
-    
+
+        $allProducts = $query->orderByDesc("$priceTable.max_price")->limit($fetchLimit)->get();
+
         if ($noOfProducts) {
             $targetAvg = $invoiceAmount / $noOfProducts;
             $allProducts = $allProducts->sortBy(function ($product) use ($targetAvg) {
-                return abs($product->max_price - $targetAvg);
+                return abs($product->unit_price - $targetAvg);
             });
         }
-    
+
         $bestMatch = null;
         $bestTotal = 0;
         $bestDistance = null;
-    
+
         for ($i = 0; $i < $iteration; $i++) {
             $shuffled = $allProducts->shuffle();
             $selected = [];
             $currentTotal = 0;
-    
+
             foreach ($shuffled as $product) {
-                $price = floatval($product->max_price);
-    
+                $price = floatval($product->unit_price);
                 if ($noOfProducts && count($selected) >= $noOfProducts) break;
                 if ($currentTotal + $price <= $maxTotal) {
                     $selected[] = $product;
                     $currentTotal += $price;
                 }
             }
-    
+
             if ($noOfProducts && count($selected) == $noOfProducts) {
                 $distance = abs($invoiceAmount - $currentTotal);
                 if ($bestMatch === null || $distance < $bestDistance) {
@@ -136,7 +138,7 @@ class WordPressController extends Controller
                 }
             }
         }
-    
+
         if (!$bestMatch) {
             return response()->json([
                 'tableRows' => '',
@@ -144,75 +146,49 @@ class WordPressController extends Controller
                 'message' => 'No matching combination found, try again please'
             ]);
         }
-    
-        $bestMatch = collect($bestMatch);
-        $bestMatch->each(function ($product) {
-            $product->unit_price = $product->max_price;
-        });
-    
-        $bestMatch = $bestMatch->map(function ($product) use ($site_id) {
-            $product->unit_price = $product->max_price;
-            $product->name = str_replace('-', ' ', $product->sku);
-            $product->id = $product->product_id;
-            $product->slug = $product->sku;
-            $product->category_name = "-";
-    
-            $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
-                ->where('product_id', $product->id)
-                ->orderByDesc('last_price_changed')
-                ->first();
-    
-            if ($lastUpdate) {
-                $lastPriceChanged = Carbon::parse($lastUpdate->last_price_changed);
-                $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
-                $remainingDays = now()->diffInDays($nextPriceChangeDate, false);
-                $product->remaining_days = round(max($remainingDays, 0));
-                $product->can_edit_price = now()->greaterThanOrEqualTo($nextPriceChangeDate) ? 1 : 0;
-            } else {
-                $product->can_edit_price = 1;
-                $product->remaining_days = 0;
-            }
-    
+
+        $bestMatch = collect($bestMatch)->map(function ($product) {
+            $product->can_edit_price = 1;
+            $product->remaining_days = 0;
             return $product;
         });
-    
+
         $productList = $bestMatch->map(function ($product) {
             return [
                 'id' => $product->id,
                 'unit_price' => $product->unit_price,
             ];
         })->toArray();
-    
+
         session()->forget('ready_products');
         session()->put('ready_products', $productList);
         session(['current_amount' => $bestTotal]);
-    
+
         $modelType = $site->businessModel->model_type;
         $tableRows = view("invoice.{$modelType}.random_product_rows", [
             'products' => $bestMatch,
             'site' => $site,
             'total' => $bestTotal
         ])->render();
-    
+
         return response()->json([
             'tableRows' => $tableRows,
             'total' => $bestTotal
         ]);
     }
-    
-    
 
 
     public function addProducts(Request $request)
     {
-        $site_id = $request->get('site_id');
-        $productsData = $request->get('products');
+        $site_id = $request->get('site_id') ?? session('customer.site_id');
+        $productsData = $request->get('products', []);
     
         $site = Website::findOrFail($site_id);
-        $productTable = $site->product_table;
-        $connection = 'dynamic';
-    
         DynamicDatabaseService::connect($site);
+    
+        $postsTable = $this->productTable;
+        $priceTable = $this->productPriceTable;
+        $connection = $this->connectionType;
     
         $readyProducts = session()->get('ready_products', []);
     
@@ -241,36 +217,44 @@ class WordPressController extends Controller
     
         $productIds = collect($readyProducts)->pluck('id')->reverse()->values()->toArray();
     
-        $products = DB::connection($connection)->table($productTable)
-            ->select('product_id', 'sku', 'max_price')
-            ->whereIn('product_id', $productIds)
+        $products = DB::connection($connection)
+            ->table($postsTable)
+            ->join($priceTable, "$postsTable.ID", '=', "$priceTable.product_id")
+            ->select(
+                "$postsTable.ID as id",
+                "$postsTable.post_title as name",
+                "$postsTable.post_excerpt as description",
+                "$postsTable.post_name as slug",
+                "$priceTable.max_price as unit_price"
+            )
+            ->whereIn("$postsTable.ID", $productIds)
+            ->where("$postsTable.post_status", 'publish')
+            ->where("$postsTable.post_type", 'product')
             ->get()
-            ->keyBy('product_id');
+            ->keyBy('id');
     
         $products = collect($productIds)->map(function ($id) use ($products) {
             return $products[$id] ?? null;
         })->filter();
     
         $products = $products->map(function ($product) use ($readyProducts, $site_id) {
-            $sessionProduct = collect($readyProducts)->firstWhere('id', $product->product_id);
+            $sessionProduct = collect($readyProducts)->firstWhere('id', $product->id);
     
-            $product->id = $product->product_id;
-            $product->unit_price = $sessionProduct['unit_price'] ?? $product->max_price;
-            $product->name = str_replace('-', ' ', $product->sku);
-            $product->slug = $product->sku;
+            $product->unit_price = $sessionProduct['unit_price'] ?? $product->unit_price;
             $product->category_name = '-';
     
-            $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
+            $lastUpdate = DB::table('product_price_histories')
+                ->where('site_id', $site_id)
                 ->where('product_id', $product->id)
                 ->orderByDesc('last_price_changed')
                 ->first();
     
             if ($lastUpdate) {
                 $lastPriceChanged = Carbon::parse($lastUpdate->last_price_changed);
-                $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
-                $remainingDays = now()->diffInDays($nextPriceChangeDate, false);
-                $product->remaining_days = round(max($remainingDays, 0));
-                $product->can_edit_price = now()->greaterThanOrEqualTo($nextPriceChangeDate) ? 1 : 0;
+                $nextChange = $lastPriceChanged->copy()->addMonths(3);
+                $remaining = now()->diffInDays($nextChange, false);
+                $product->remaining_days = round(max($remaining, 0));
+                $product->can_edit_price = now()->greaterThanOrEqualTo($nextChange) ? 1 : 0;
             } else {
                 $product->can_edit_price = 1;
                 $product->remaining_days = 0;
@@ -296,21 +280,21 @@ class WordPressController extends Controller
     }
     
 
+    
 
     public function removeProduct(Request $request)
     {
         $productId = $request->get('product_id');
         $site_id = $request->get('site_id');
         $site = Website::findOrFail($site_id);
-        $productTable = $site->product_table;
-        $connection = 'dynamic';
+    
+        $postsTable = $this->productTable;
+        $priceTable = $this->productPriceTable;
+        $connection = $this->connectionType;
     
         $readyProducts = session('ready_products', []);
     
-        $updatedProducts = collect($readyProducts)->filter(function ($product) use ($productId) {
-            return $product['id'] != $productId;
-        })->values()->toArray();
-    
+        $updatedProducts = collect($readyProducts)->reject(fn($product) => $product['id'] == $productId)->values()->toArray();
         session()->put('ready_products', $updatedProducts);
     
         if (empty($updatedProducts)) {
@@ -324,23 +308,28 @@ class WordPressController extends Controller
     
         $productIds = array_column($updatedProducts, 'id');
     
-        $products = DB::connection($connection)->table($productTable)
-            ->select('product_id', 'sku', 'max_price')
-            ->whereIn('product_id', $productIds)
+        $products = DB::connection($connection)
+            ->table($postsTable)
+            ->join($priceTable, "$postsTable.ID", '=', "$priceTable.product_id")
+            ->select(
+                "$postsTable.ID as id",
+                "$postsTable.post_title as name",
+                "$postsTable.post_excerpt as description",
+                "$postsTable.post_name as slug",
+                "$priceTable.max_price as unit_price"
+            )
+            ->whereIn("$postsTable.ID", $productIds)
+            ->where("$postsTable.post_status", 'publish')
+            ->where("$postsTable.post_type", 'product')
             ->get()
-            ->keyBy('product_id');
+            ->keyBy('id');
     
-        $products = collect($productIds)->map(function ($id) use ($products) {
-            return $products[$id] ?? null;
-        })->filter();
+        $products = collect($productIds)->map(fn($id) => $products[$id] ?? null)->filter();
     
         $products = $products->map(function ($product) use ($updatedProducts, $site_id) {
-            $sessionProduct = collect($updatedProducts)->firstWhere('id', $product->product_id);
+            $sessionProduct = collect($updatedProducts)->firstWhere('id', $product->id);
     
-            $product->id = $product->product_id;
-            $product->unit_price = $sessionProduct['unit_price'] ?? $product->max_price;
-            $product->name = str_replace('-', ' ', $product->sku);
-            $product->slug = $product->sku;
+            $product->unit_price = $sessionProduct['unit_price'] ?? $product->unit_price;
             $product->category_name = '-';
     
             $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
@@ -349,11 +338,10 @@ class WordPressController extends Controller
                 ->first();
     
             if ($lastUpdate) {
-                $lastPriceChanged = Carbon::parse($lastUpdate->last_price_changed);
-                $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
-                $remainingDays = now()->diffInDays($nextPriceChangeDate, false);
-                $product->remaining_days = round(max($remainingDays, 0));
-                $product->can_edit_price = now()->greaterThanOrEqualTo($nextPriceChangeDate) ? 1 : 0;
+                $nextDate = Carbon::parse($lastUpdate->last_price_changed)->addMonths(3);
+                $remaining = now()->diffInDays($nextDate, false);
+                $product->remaining_days = max($remaining, 0);
+                $product->can_edit_price = now()->gte($nextDate) ? 1 : 0;
             } else {
                 $product->can_edit_price = 1;
                 $product->remaining_days = 0;
@@ -377,6 +365,7 @@ class WordPressController extends Controller
             'total' => $total
         ]);
     }
+    
     
 
     public function updateProduct(Request $request)
@@ -400,16 +389,28 @@ class WordPressController extends Controller
 
         $productIds = collect($readyProducts)->pluck('id')->toArray();
 
-        $products = DB::connection($this->connectionType)->table($this->productTable)
-            ->select('id', 'category_id', 'name', 'unit_price', 'slug')
-            ->whereIn('id', $productIds)
+        $postsTable = $this->productTable;
+        $priceTable = $this->productPriceTable;
+        $connection = $this->connectionType;
+
+        $products = DB::connection($connection)
+            ->table($postsTable)
+            ->join($priceTable, "$postsTable.ID", '=', "$priceTable.product_id")
+            ->whereIn("$postsTable.ID", $productIds)
+            ->select([
+                "$postsTable.ID as id",
+                "$postsTable.post_title as name",
+                "$postsTable.post_excerpt as description",
+                "$postsTable.post_name as slug",
+                "$priceTable.max_price as unit_price"
+            ])
             ->get();
 
         $products = $products->map(function ($product) use ($readyProducts, $site_id) {
             $sessionProduct = collect($readyProducts)->firstWhere('id', $product->id);
             $product->unit_price = $sessionProduct['unit_price'] ?? $product->unit_price;
             $product->quantity = $sessionProduct['quantity'] ?? 1;
-            $product->category_name = DB::connection($this->connectionType)->table('categories')->where('id', $product->category_id)->value('name') ?? 'unknown';
+            $product->category_name = '-';
 
             $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
                 ->where('product_id', $product->id)
@@ -469,98 +470,107 @@ class WordPressController extends Controller
         $hasPriceRange = $request->filled('price_from') && $request->filled('price_to');
         $keyword = $request->input('keyword');
         $sortUnitPrice = $request->input('sort_unit_price', 'asc');
-    
+
         $site = Website::findOrFail($site_id);
         DynamicDatabaseService::connect($site);
-    
+
         if (!$hasPriceRange) {
             return response()->json([
                 'tableRows' => '<tr><td colspan="6" class="text-center text-muted">Please enter a price range to search.</td></tr>'
             ]);
         }
-    
-        $query = DB::connection($this->connectionType)
-            ->table($this->productTable)
-            ->select('product_id', 'sku', 'max_price')
-            ->where('max_price', '>', 0);
-    
-        $query->whereBetween('max_price', [
+
+        $postsTable = $this->productTable;
+        $priceTable = $this->productPriceTable;
+        $connection = $this->connectionType;
+
+        $query = DB::connection($connection)
+            ->table($postsTable)
+            ->join($priceTable, "$postsTable.ID", '=', "$priceTable.product_id")
+            ->select([
+                "$postsTable.ID as id",
+                "$postsTable.post_title as name",
+                "$postsTable.post_excerpt as description",
+                "$postsTable.post_name as slug",
+                "$priceTable.max_price as unit_price"
+            ])
+            ->where("$postsTable.post_status", 'publish')
+            ->where("$postsTable.post_type", 'product')
+            ->where("$priceTable.max_price", '>', 0);
+
+        $query->whereBetween("$priceTable.max_price", [
             (float) $request->price_from,
             (float) $request->price_to
         ]);
-    
+
         if (in_array($sortUnitPrice, ['asc', 'desc'])) {
-            $query->orderBy('max_price', $sortUnitPrice);
+            $query->orderBy("$priceTable.max_price", $sortUnitPrice);
         }
-    
+
         if (!empty($keyword)) {
             $normalizedSearch = strtolower(str_replace(['-', '_', ' '], '', $keyword));
-            $query->whereRaw("LOWER(REPLACE(REPLACE(REPLACE(sku, '-', ''), '_', ''), ' ', '')) LIKE ?", ["%{$normalizedSearch}%"]);
+            $query->whereRaw("LOWER(REPLACE(REPLACE(REPLACE($postsTable.post_name, '-', ''), '_', ''), ' ', '')) LIKE ?", ["%{$normalizedSearch}%"]);
         }
-    
+
         $readyProducts = session('ready_products', []);
         $readyProductIds = collect($readyProducts)->pluck('id')->toArray();
-    
-        if (count($readyProductIds) > 0) {
-            $query->whereNotIn('product_id', $readyProductIds);
+
+        if (!empty($readyProductIds)) {
+            $query->whereNotIn("$postsTable.ID", $readyProductIds);
         }
-    
+
         $totalCount = $query->count();
         $page = $request->input('page', 1);
         $perPage = 10;
         $offset = ($page - 1) * $perPage;
-    
+
         $products = $query->skip($offset)->take($perPage)->get();
-    
+
         if ($products->isEmpty()) {
             return response()->json([
                 'tableRows' => '<tr><td colspan="7" class="text-center text-muted">No results found. Try randomizing or use a different keyword.</td></tr>'
             ]);
         }
-    
-        $products = collect($products)->map(function ($product) use ($site_id) {
-            $product->id = $product->product_id;
-            $product->slug = $product->sku;
-            $product->name = str_replace('-', ' ', $product->sku);
-            $product->unit_price = $product->max_price;
+
+        $products = $products->map(function ($product) use ($site_id) {
             $product->category_name = '-';
-    
+
             $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
                 ->where('product_id', $product->id)
                 ->orderByDesc('last_price_changed')
                 ->first();
-    
+
             if ($lastUpdate) {
                 $lastPriceChanged = Carbon::parse($lastUpdate->last_price_changed);
                 $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
                 $remainingDays = now()->diffInDays($nextPriceChangeDate, false);
-                $product->remaining_days = round(max($remainingDays, 0));
-                $product->can_edit_price = now()->greaterThanOrEqualTo($nextPriceChangeDate) ? 1 : 0;
+                $product->remaining_days = max($remainingDays, 0);
+                $product->can_edit_price = now()->gte($nextPriceChangeDate) ? 1 : 0;
             } else {
                 $product->can_edit_price = 1;
                 $product->remaining_days = 0;
             }
-    
+
             return $product;
         });
-    
+
         $totalPages = ceil($totalCount / $perPage);
         $paginationPages = $this->smartPagination($page, $totalPages);
         $modelType = $site->businessModel->model_type;
         $random_amount = session('current_amount', 0);
-    
+
         $tableRows = view("invoice.{$modelType}.add_product_rows", [
             'products' => $products,
             'site' => $site,
             'random_amount' => $random_amount
         ])->render();
-    
+
         $paginationHtml = view("invoice.{$modelType}.pagination", [
             'totalPages' => $totalPages,
             'paginationPages' => $paginationPages,
             'currentPage' => $page
         ])->render();
-    
+
         return response()->json([
             'tableRows' => $tableRows,
             'paginationHtml' => $paginationHtml,
@@ -568,6 +578,7 @@ class WordPressController extends Controller
             'currentPage' => $page
         ]);
     }
+
     
 
     private function smartPagination($currentPage, $totalPages)
@@ -682,23 +693,33 @@ class WordPressController extends Controller
                 $customPrices[$data['product_id']] = $data['unit_price'];
             }
         }
-        $products = DB::connection($this->connectionType)->table($this->productTable)
-            ->whereIn('product_id', $productIds)
-            ->select('product_id', 'sku', 'max_price')
-            ->get()
-            ->sortBy(function ($product) use ($productIds) {
-                return array_search($product->product_id, $productIds);
-            })
-            ->values()
-            ->map(function ($product) use ($customPrices) {
-                $product->id = $product->product_id;
-                $product->unit_price = $customPrices[$product->id] ?? $product->max_price;
-                $product->name = str_replace('-', ' ', $product->sku);
-                $product->slug = $product->sku;
-                $product->category_name = '-';
-                return $product;
-            });
-        
+
+    $postsTable = $this->productTable;
+    $priceTable = $this->productPriceTable;
+    $connection = $this->connectionType;
+
+    $products = DB::connection($connection)
+        ->table($postsTable)
+        ->join($priceTable, "$postsTable.ID", '=', "$priceTable.product_id")
+        ->whereIn("$postsTable.ID", $productIds)
+        ->select([
+            "$postsTable.ID as id",
+            "$postsTable.post_title as name",
+            "$postsTable.post_excerpt as description",
+            "$postsTable.post_name as slug",
+            "$priceTable.max_price as unit_price"
+        ])
+        ->get()
+        ->sortBy(function ($product) use ($productIds) {
+            return array_search($product->id, $productIds);
+        })
+        ->values()
+        ->map(function ($product) use ($customPrices) {
+            $product->unit_price = $customPrices[$product->id] ?? $product->unit_price;
+            $product->category_name = '-';
+            return $product;
+        });
+
         $invoice_data['products'] = $products;
         $invoice_data['product_ids'] = $productIds;
     
@@ -773,51 +794,55 @@ class WordPressController extends Controller
     protected function updateProductPrice(array $productDataArray)
     {
         $site_id = session('customer.site_id');
-
+    
         foreach ($productDataArray as $item) {
             $data = json_decode($item, true);
-
-            if (!empty($data['product_id']) && isset($data['unit_price'])) {
-                $product_id = $data['product_id'];
-                $new_price = floatval($data['unit_price']);
-
-                $product = DB::connection($this->connectionType)
-                    ->table($this->productTable)
+    
+            if (empty($data['product_id']) || !isset($data['unit_price'])) {
+                continue;
+            }
+    
+            $product_id = $data['product_id'];
+            $new_price = floatval($data['unit_price']);
+    
+            $product = DB::connection($this->connectionType)
+                ->table($this->productPriceTable)
+                ->select('max_price')
+                ->where('product_id', $product_id)
+                ->first();
+    
+            if (!$product) continue;
+    
+            $current_price = floatval($product->max_price ?? 0);
+    
+            if ($current_price === $new_price) continue;
+    
+            $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
+                ->where('product_id', $product_id)
+                ->orderByDesc('last_price_changed')
+                ->first();
+    
+            $canUpdate = !$lastUpdate || Carbon::parse($lastUpdate->last_price_changed)->diffInMonths(now()) >= 3;
+    
+            if ($canUpdate) {
+                DB::connection($this->connectionType)
+                    ->table($this->priceTable)
                     ->where('product_id', $product_id)
-                    ->first();
-
-                if (!$product) continue;
-
-                $current_price = floatval($product->max_price ?? 0);
-
-                if ($current_price == $new_price) continue;
-
-                $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
-                    ->where('product_id', $product_id)
-                    ->orderByDesc('last_price_changed')
-                    ->first();
-
-                $canUpdate = !$lastUpdate || Carbon::parse($lastUpdate->last_price_changed)->diffInMonths(now()) >= 3;
-
-                if ($canUpdate) {
-                    DB::connection($this->connectionType)
-                        ->table($this->productTable)
-                        ->where('product_id', $product_id)
-                        ->update([
-                            'min_price' => $new_price,
-                            'max_price' => $new_price,
-                        ]);
-
-                    ProductPriceHistory::create([
-                        'site_id' => $site_id,
-                        'product_id' => $product_id,
-                        'unit_price' => $new_price,
-                        'last_price_changed' => now(),
+                    ->update([
+                        'min_price' => $new_price,
+                        'max_price' => $new_price,
                     ]);
-                }
+    
+                ProductPriceHistory::create([
+                    'site_id' => $site_id,
+                    'product_id' => $product_id,
+                    'unit_price' => $new_price,
+                    'last_price_changed' => now(),
+                ]);
             }
         }
     }
+    
 
 
 }

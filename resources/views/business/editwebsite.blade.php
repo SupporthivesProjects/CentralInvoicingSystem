@@ -188,46 +188,65 @@
                                         </button>
                                     </h2>
                                     <div id="tableConfigCollapse" class="accordion-collapse collapse" data-bs-parent="#websiteTableAccordion">
-                                        <div class="accordion-body">
-                                            <div class="alert alert-warning mb-4" role="alert" style="font-size: 14px;">
-                                                ⚠️ <strong>Warning:</strong> Please be careful when modifying table names. If the table is already in use and working, changing the name may break related features.
-                                            </div>
+                                    <div class="accordion-body">
+                                        <div class="alert alert-warning mb-4" role="alert" style="font-size: 14px;">
+                                            ⚠️ <strong>Important:</strong> Modifying table names can disrupt existing functionality. Only change these values if you are certain of the impact.
+                                        </div>
+
+                                        <div class="container-fluid px-0">
                                             <div class="row g-3">
                                                 <div class="col-md-6">
-                                                    <label class="form-label">Product Table Name <span class="text-danger">*</span></label>
-                                                    <input type="text" name="product_table" class="form-control" 
-                                                        value="{{ old('product_table', $website->product_table) }}" placeholder="Enter Product Table Name" required>
+                                                    <label class="form-label">Main Product Table <span class="text-danger">*</span></label>
+                                                    <input type="text" name="product_table" class="form-control"
+                                                        value="{{ old('product_table', $website->product_table) }}" placeholder="e.g., wp_posts" required>
                                                 </div>
 
                                                 <div class="col-md-6">
-                                                    <label class="form-label">Bundle Table Name <span class="text-danger">*</span></label>
-                                                    <input type="text" name="bundle_table" class="form-control" 
-                                                        value="{{ old('bundle_table', $website->bundle_table) }}" placeholder="Enter Bundle Table Name" required>
+                                                    <label class="form-label">Product Pricing Table <span class="text-danger">*</span></label>
+                                                    <input type="text" name="product_price_table" class="form-control"
+                                                        value="{{ old('product_price_table', $website->product_price_table) }}" placeholder="e.g., wp_wc_product_meta_lookup" required>
                                                 </div>
 
                                                 <div class="col-md-6">
-                                                    <label class="form-label">General Settings Table Name <span class="text-danger">*</span></label>
-                                                    <input type="text" name="general_settings" class="form-control" 
-                                                        value="{{ old('general_settings', $website->general_settings) }}" placeholder="Enter General Settings Table Name" required>
+                                                    <label class="form-label">Currency Settings Table <span class="text-danger">*</span></label>
+                                                    <input type="text" name="currency_table" class="form-control"
+                                                        value="{{ old('currency_table', $website->currency_table) }}" placeholder="e.g., wp_options" required>
                                                 </div>
 
                                                 <div class="col-md-6">
-                                                    <label class="form-label">Currency Table Name <span class="text-danger">*</span></label>
-                                                    <input type="text" name="currency_table" class="form-control" 
-                                                        value="{{ old('currency_table', $website->currency_table) }}" placeholder="Enter Currency Table Name" required>
+                                                    <label class="form-label">Product Category Table <span class="text-danger">*</span></label>
+                                                    <input type="text" name="category_table" class="form-control"
+                                                        value="{{ old('category_table', $website->category_table) }}" placeholder="e.g., wp_terms" required>
                                                 </div>
+
                                                 <div class="col-md-6">
-                                                    <label class="form-label">Category Table Name <span class="text-danger">*</span></label>
-                                                    <input type="text" name="category_table" class="form-control" 
-                                                        value="{{ old('category_table', $website->category_table) }}" placeholder="Enter Category Table Name" required>
+                                                    <label class="form-label">Game Bundle Table <span class="text-danger">*</span></label>
+                                                    <input type="text" name="bundle_table" class="form-control"
+                                                        value="{{ old('bundle_table', $website->bundle_table) }}" placeholder="e.g., game_sever_based_cost" required>
                                                 </div>
+
                                                 <div class="col-md-6">
-                                                    <label class="form-label">Tags Table Name <span class="text-danger">*</span></label>
-                                                    <input type="text" name="tags_table" class="form-control" 
-                                                        value="{{ old('tags_table', $website->tags_table) }}" placeholder="Enter Category and Product relational Table Name" required>
+                                                    <label class="form-label">Site Settings Table <span class="text-danger">*</span></label>
+                                                    <input type="text" name="general_settings" class="form-control"
+                                                        value="{{ old('general_settings', $website->general_settings) }}" placeholder="e.g., general_settings" required>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Product Tags Table <span class="text-danger">*</span></label>
+                                                    <input type="text" name="tags_table" class="form-control"
+                                                        value="{{ old('tags_table', $website->tags_table) }}" placeholder="e.g., wp_term_relationships" required>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Taxonomy Mapping Table <span class="text-danger">*</span></label>
+                                                    <input type="text" name="term_taxonomy_table" class="form-control"
+                                                        value="{{ old('term_taxonomy_table', $website->term_taxonomy_table) }}" placeholder="e.g., wp_term_taxonomy" required>
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
+
+
                                     </div>
                                 </div>
 

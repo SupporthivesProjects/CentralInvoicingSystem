@@ -52,9 +52,14 @@
                                             @foreach ($websites as $index => $site)
                                                 <tr>
                                                     <td>{{ $site->id }}</td>
-                                                    <td>{{ $site->businessModel->name ?? '-' }}</td>
+                                                    <td>{{ $site->businessModel->name ?? '-' }}
+                                                     @if($site->technology === 'wordpress')
+                                                            <span class="badge bg-primary text-white badge-sm ms-1" style="font-size: 10px;">WP</span>
+                                                        @endif
+                                                    </td>
                                                     <td>
                                                         {{ $site->site_name }}
+                                                       
                                                         @if($site->site_link)
                                                             <a href="{{ $site->site_link }}" target="_blank">
                                                                 <i class="bi bi-box-arrow-up-right ms-1"></i>
