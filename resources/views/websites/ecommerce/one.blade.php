@@ -35,8 +35,8 @@
 <body>
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
-            <td align="center" bgcolor="#f2f2f2" style="padding: 20px 0;">
-                <table width="80%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
+            <td align="center" bgcolor="#f2f2f2" style="padding: 0px 0;">
+                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
                     <!-- Header -->
                     <tr class="invoice_header_image">
                         <td>
@@ -83,61 +83,63 @@
                                 </tr>
                             </table>
                             <br>
-                            <table style="border: 1px solid #2f5496; border-collapse: collapse;">
-                                <tr style="height: 20px;">
-                                    <td style="width: 100px; text-align: left; padding-left: 10px; font-family: Calibri; font-size: 10px; font-weight: 400; border: 1px solid #2f5496;">
-                                        <b style="color:#2f5496;">QTY</b>
-                                    </td>
-                                    <td style="width: 250px; text-align: left; padding-left: 10px; font-family: Calibri; font-size: 10px; font-weight: 400; border: 1px solid #2f5496;">
-                                        <b style="color:#2f5496;">PRODUCT NAME</b>
-                                    </td>
-                                    <td style="width: 150px; text-align: right; padding-right: 10px; font-family: Calibri; font-size: 10px; font-weight: 400; border: 1px solid #2f5496;">
-                                        <b style="color:#2f5496;">UNIT PRICE</b>
-                                    </td>
-                                    <td style="width: 100px; text-align: right; padding-right: 10px; font-family: Calibri; font-size: 10px; font-weight: 400; border: 1px solid #2f5496;">
-                                        <b style="color:#2f5496;">LINE TOTAL</b>
-                                    </td>
-                                </tr>
-                                @foreach($products as $product)
+                            <div style="min-height: 500px !important;">
+                                <table style="border: 1px solid #2f5496; border-collapse: collapse;">
                                     <tr style="height: 20px;">
-                                        <td style="padding-left:10px; font-size:10px; font-family:Calibri; border:1px solid #2f5496;">
-                                            {{ $product->quantity ?? 1 }}
+                                        <td style="width: 100px; text-align: left; padding-left: 10px; font-family: Calibri; font-size: 10px; font-weight: 400; border: 1px solid #2f5496;">
+                                            <b style="color:#2f5496;">QTY</b>
                                         </td>
-                                        <td style="padding-left:10px; font-size:10px; font-family:Calibri; border:1px solid #2f5496;">
-                                            {{ $product->name }}
+                                        <td style="width: 250px; text-align: left; padding-left: 10px; font-family: Calibri; font-size: 10px; font-weight: 400; border: 1px solid #2f5496;">
+                                            <b style="color:#2f5496;">PRODUCT NAME</b>
                                         </td>
-                                        <td style="text-align:right; padding-right:10px; font-size:10px; font-family:Calibri; border:1px solid #2f5496;">
-                                            {{ site_currency() . number_format($product->unit_price, 2) }}
+                                        <td style="width: 150px; text-align: right; padding-right: 10px; font-family: Calibri; font-size: 10px; font-weight: 400; border: 1px solid #2f5496;">
+                                            <b style="color:#2f5496;">UNIT PRICE</b>
                                         </td>
-                                        <td style="text-align:right; padding-right:10px; font-size:10px; font-family:Calibri; border:1px solid #2f5496;">
-                                            {{ site_currency() . number_format(($product->quantity ?? 1) * $product->unit_price, 2) }}
+                                        <td style="width: 100px; text-align: right; padding-right: 10px; font-family: Calibri; font-size: 10px; font-weight: 400; border: 1px solid #2f5496;">
+                                            <b style="color:#2f5496;">LINE TOTAL</b>
                                         </td>
                                     </tr>
-                                @endforeach
+                                    @foreach($products as $product)
+                                        <tr style="height: 20px;">
+                                            <td style="padding-left:10px; font-size:10px; font-family:Calibri; border:1px solid #2f5496;">
+                                                {{ $product->quantity ?? 1 }}
+                                            </td>
+                                            <td style="padding-left:10px; font-size:10px; font-family:Calibri; border:1px solid #2f5496;">
+                                                {{ $product->name }}
+                                            </td>
+                                            <td style="text-align:right; padding-right:10px; font-size:10px; font-family:Calibri; border:1px solid #2f5496;">
+                                                {{ site_currency() . number_format($product->unit_price, 2) }}
+                                            </td>
+                                            <td style="text-align:right; padding-right:10px; font-size:10px; font-family:Calibri; border:1px solid #2f5496;">
+                                                {{ site_currency() . number_format(($product->quantity ?? 1) * $product->unit_price, 2) }}
+                                            </td>
+                                        </tr>
+                                    @endforeach
 
-                                <!-- Totals -->
-                                <tr>
-                                    <td colspan="2"></td>
-                                    <td style="padding-left:10px; font-family: Calibri; font-size: 10px;"><b style="color:#2f5496;">SUBTOTAL</b></td>
-                                    <td style="text-align:right; padding-right:10px; font-family: Calibri; font-size: 10px; background: #d9e2f3 !important; border-bottom: 2px solid #2f5496 !important;">
-                                    {{ site_currency() . number_format(($invoice_amount + $discount_amount), 2) }}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2"></td>
-                                    <td style="padding-left:10px; font-family: Calibri; font-size: 10px;"><b style="color:#2f5496;">DISCOUNT</b></td>
-                                    <td style="text-align:right; padding-right:10px; font-family: Calibri; font-size: 10px; background: #d9e2f3 !important; border-bottom: 2px solid #2f5496 !important;">
-                                        {{ site_currency() . number_format($discount_amount, 2) }}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2"></td>
-                                    <td style="padding-left:10px; font-family: Calibri; font-size: 10px;"><b style="color:#2f5496;">TOTAL</b></td>
-                                    <td style="text-align:right; padding-right:10px; font-family: Calibri; font-size: 10px; background: #d9e2f3 !important; border-bottom: 2px solid #2f5496 !important;">
-                                        {{ site_currency() . number_format($invoice_amount, 2) }}
-                                    </td>
-                                </tr>
-                            </table>
+                                    <!-- Totals -->
+                                    <tr>
+                                        <td colspan="2"></td>
+                                        <td style="padding-left:10px; font-family: Calibri; font-size: 10px;"><b style="color:#2f5496;">SUBTOTAL</b></td>
+                                        <td style="text-align:right; padding-right:10px; font-family: Calibri; font-size: 10px; background: #d9e2f3 !important; border-bottom: 2px solid #2f5496 !important;">
+                                        {{ site_currency() . number_format(($invoice_amount + $discount_amount), 2) }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2"></td>
+                                        <td style="padding-left:10px; font-family: Calibri; font-size: 10px;"><b style="color:#2f5496;">DISCOUNT</b></td>
+                                        <td style="text-align:right; padding-right:10px; font-family: Calibri; font-size: 10px; background: #d9e2f3 !important; border-bottom: 2px solid #2f5496 !important;">
+                                            {{ site_currency() . number_format($discount_amount, 2) }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2"></td>
+                                        <td style="padding-left:10px; font-family: Calibri; font-size: 10px;"><b style="color:#2f5496;">TOTAL</b></td>
+                                        <td style="text-align:right; padding-right:10px; font-family: Calibri; font-size: 10px; background: #d9e2f3 !important; border-bottom: 2px solid #2f5496 !important;">
+                                            {{ site_currency() . number_format($invoice_amount, 2) }}
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
                         </td>
                     </tr>
 
