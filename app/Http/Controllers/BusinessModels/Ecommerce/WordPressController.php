@@ -72,14 +72,14 @@ class WordPressController extends Controller
                 "$postsTable.post_title as name",
                 "$postsTable.post_excerpt as description",
                 "$postsTable.post_name as slug",
-                "$priceTable.max_price as unit_price"
+                "$priceTable.min_price as unit_price"
             )
             ->where("$postsTable.post_status", 'publish')
             ->where("$postsTable.post_type", 'product')
-            ->where("$priceTable.max_price", '>', 0);
+            ->where("$priceTable.min_price", '>', 0);
 
         if ($priceFrom && $priceTo) {
-            $query->whereBetween("$priceTable.max_price", [$priceFrom, $priceTo]);
+            $query->whereBetween("$priceTable.min_price", [$priceFrom, $priceTo]);
         }
 
         if (!empty($categoryId)) {
@@ -96,7 +96,7 @@ class WordPressController extends Controller
         $maxTotal = $invoiceAmount * 1.05;
         $iteration = $noOfProducts ? 30 : 20;
 
-        $allProducts = $query->orderByDesc("$priceTable.max_price")->limit($fetchLimit)->get();if ($noOfProducts) {
+        $allProducts = $query->orderByDesc("$priceTable.min_price")->limit($fetchLimit)->get();if ($noOfProducts) {
             $targetAvg = $invoiceAmount / $noOfProducts;
             $allProducts = $allProducts->sortBy(function ($product) use ($targetAvg) {
                 return abs($product->unit_price - $targetAvg);
@@ -242,7 +242,7 @@ class WordPressController extends Controller
                 "$postsTable.post_title as name",
                 "$postsTable.post_excerpt as description",
                 "$postsTable.post_name as slug",
-                "$priceTable.max_price as unit_price"
+                "$priceTable.min_price as unit_price"
             )
             ->whereIn("$postsTable.ID", $productIds)
             ->where("$postsTable.post_status", 'publish')
@@ -333,7 +333,7 @@ class WordPressController extends Controller
                 "$postsTable.post_title as name",
                 "$postsTable.post_excerpt as description",
                 "$postsTable.post_name as slug",
-                "$priceTable.max_price as unit_price"
+                "$priceTable.min_price as unit_price"
             )
             ->whereIn("$postsTable.ID", $productIds)
             ->where("$postsTable.post_status", 'publish')
@@ -419,7 +419,7 @@ class WordPressController extends Controller
                 "$postsTable.post_title as name",
                 "$postsTable.post_excerpt as description",
                 "$postsTable.post_name as slug",
-                "$priceTable.max_price as unit_price"
+                "$priceTable.min_price as unit_price"
             ])
             ->get();
 
@@ -509,19 +509,19 @@ class WordPressController extends Controller
                 "$postsTable.post_title as name",
                 "$postsTable.post_excerpt as description",
                 "$postsTable.post_name as slug",
-                "$priceTable.max_price as unit_price"
+                "$priceTable.min_price as unit_price"
             ])
             ->where("$postsTable.post_status", 'publish')
             ->where("$postsTable.post_type", 'product')
-            ->where("$priceTable.max_price", '>', 0);
+            ->where("$priceTable.min_price", '>', 0);
 
-        $query->whereBetween("$priceTable.max_price", [
+        $query->whereBetween("$priceTable.min_price", [
             (float) $request->price_from,
             (float) $request->price_to
         ]);
 
         if (in_array($sortUnitPrice, ['asc', 'desc'])) {
-            $query->orderBy("$priceTable.max_price", $sortUnitPrice);
+            $query->orderBy("$priceTable.min_price", $sortUnitPrice);
         }
 
         if (!empty($keyword)) {
@@ -724,7 +724,7 @@ class WordPressController extends Controller
             "$postsTable.post_title as name",
             "$postsTable.post_excerpt as description",
             "$postsTable.post_name as slug",
-            "$priceTable.max_price as unit_price"
+            "$priceTable.min_price as unit_price"
         ])
         ->get()
         ->sortBy(function ($product) use ($productIds) {
@@ -824,13 +824,13 @@ class WordPressController extends Controller
     
             $product = DB::connection($this->connectionType)
                 ->table($this->productPriceTable)
-                ->select('max_price')
+                ->select('min_price')
                 ->where('product_id', $product_id)
                 ->first();
     
             if (!$product) continue;
     
-            $current_price = floatval($product->max_price ?? 0);
+            $current_price = floatval($product->min_price ?? 0);
     
             if ($current_price === $new_price) continue;
     
@@ -842,12 +842,25 @@ class WordPressController extends Controller
             $canUpdate = !$lastUpdate || Carbon::parse($lastUpdate->last_price_changed)->diffInMonths(now()) >= 3;
     
             if ($canUpdate) {
+
                 DB::connection($this->connectionType)
-                    ->table($this->priceTable)
-                    ->where('product_id', $product_id)
-                    ->update([
-                        'max_price' => $new_price,
-                    ]);
+                ->table($this->priceTable)
+                ->where('product_id', $product_id)
+                ->update([
+                    'min_price' => $new_price,
+                ]);
+
+                $prefix = explode('_', $this->priceTable)[0] ?? 'wp';
+                $postMetaTable = $prefix . '_postmeta';
+
+                DB::connection($connection)
+                ->table($postMetaTable)
+                ->where('post_id', $product_id)
+                ->where('meta_key', '_price')
+                ->update([
+                    'meta_value' => $new_price,
+                ]);
+
     
                 ProductPriceHistory::create([
                     'site_id' => $site_id,
