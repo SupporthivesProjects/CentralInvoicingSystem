@@ -15,11 +15,12 @@
                     <tr>
                         <td style="padding: 0px;max-height: 130px;">
                             <table>
-                                <tr>
-                                    <img src="{{ $invoice_header_image }}" alt="" style="">
-                                    <td>
-                                    </td>
-                                </tr>
+                            <tr>
+                                <td>
+                                    <img src="{{ $invoice_header_image }}" alt="" style="max-width: 100%; display: block;">
+                                </td>
+                            </tr>
+
                             </table>
                         </td>
                     </tr>
@@ -54,7 +55,7 @@
 
                             <br>
                             <br>
-                            <div style="min-height: 550px !important;">
+                            <div style="min-height: 400px !important;">
                             <table style="width: 100%; border: 1px solid red; border-collapse: collapse; text-align: center; font-size: 9px;">
                                 <tr style="background-color: #f9dede;">
                                     <th style="border: 1px solid red; font-family: arial;">Qty.</th>
@@ -105,7 +106,7 @@
                             <table width="100%" cellspacing="0" cellpadding="" border="0px"
                                 style="border-collapse: collapse;">
                                 <tr>
-                                    <img src="{{ $invoice_footer_image }}" alt="">
+                                    <img src="{{ $invoice_footer_image }}" alt="" style="max-width: 100%; display: block;">
                                 </tr>
                             </table>
                         </td>

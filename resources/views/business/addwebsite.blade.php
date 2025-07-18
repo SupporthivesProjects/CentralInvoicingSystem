@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Connect New Website | Central Invoice System')
+@section('title', 'Add New Website | Central Invoice System')
 
 @section('content')
 

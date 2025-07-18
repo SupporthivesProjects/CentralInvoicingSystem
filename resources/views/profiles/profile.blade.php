@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Dashboard | Central Invoice System')
+@section('title', 'My Profile | Central Invoice System')
 
 @section('content')
 <style>

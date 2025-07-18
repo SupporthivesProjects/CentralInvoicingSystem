@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Artisan;
 use App\Models\InvoiceGenerationHistory;
 
+
 if (!function_exists('myinvoices')) {
     function myinvoices()
     {
@@ -140,7 +141,7 @@ if (!function_exists('site_currency')) {
                     ->where('option_name', 'woocommerce_currency')
                     ->first();
             
-                return $currencyRow?->option_value ?? '$';
+                return $currencyRow?->option_value ?? 'USD';
             }
             
             $site_currency = DB::connection('dynamic')->table('business_settings')->where('type', 'system_default_currency')->first()
@@ -150,6 +151,12 @@ if (!function_exists('site_currency')) {
 
             return $currency->symbol ?? '$';
         } catch (\Exception $e) {
+            Log::error('Exception caught: '.$e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
             return '$';
         }
     }
@@ -171,6 +178,13 @@ if (!function_exists('site_currency_code')) {
             $currency = DB::connection('dynamic')->table('currencies')->where('id', $site_currency->value)->first();
             return $currency->code ?? 'USD';
         } catch (\Exception $e) {
+            
+            Log::error('Exception caught: '.$e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
             return 'USD';
         }
     }
@@ -261,13 +275,21 @@ if (!function_exists('getCategoryList')) {
 
         switch ($technology) {
             case 'wordpress':
-                return $query->orderByDesc('term_id')
-                             ->select('term_id as id', 'name')
-                             ->get();
-
+                return $query->join($site->term_taxonomy_table . ' as tt', "$categoryTable.term_id", '=', 'tt.term_id')
+                            ->where('tt.taxonomy', 'product_cat')
+                            ->orderByDesc("$categoryTable.term_id")
+                            ->select([
+                                "$categoryTable.term_id as id",
+                                "$categoryTable.name"
+                            ])
+                            ->get();
+                            
             case 'laravel':
             case 'corephp':
-                return $query->select('id', 'name')->get();
+                return $query->join($site->product_table, "$categoryTable.id", '=', "$site->product_table.category_id")
+                                ->select("$categoryTable.id", "$categoryTable.name")
+                                ->distinct()
+                                ->get();
 
             default:
                 return collect();

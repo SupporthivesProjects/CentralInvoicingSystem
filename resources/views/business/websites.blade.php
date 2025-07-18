@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Dashboard | Central Invoice System')
+@section('title', 'Available Websites | Central Invoice System')
 
 @section('content')
 
@@ -54,7 +54,14 @@
                                             @foreach ($websites as $index => $site)
                                                 <tr>
                                                     <td>{{ $site->id }}</td>
-                                                    <td>{{ $site->businessModel->name ?? '-' }}</td>
+                                                    <td data-bs-toggle="tooltip" title="{{ $site->technology }}">
+                                                        {{ $site->businessModel->name ?? '-' }}
+                                                        
+                                                        @if($site->technology === 'wordpress')
+                                                            <span class="badge bg-primary text-white badge-sm ms-1" style="font-size: 10px;">WP</span>
+                                                        @endif
+                                                    </td>
+
                                                     <td>
                                                         {{ $site->site_name }}
                                                         @if($site->site_link)
@@ -63,6 +70,7 @@
                                                             </a>
                                                         @endif
                                                     </td>
+
                                                     <td>
                                                         <div class="input-group">
                                                             <input type="text" class="form-control inline-edit" data-id="{{ $site->id }}" data-field="bank_name" value="{{ $site->bank_name }}">
