@@ -52,11 +52,14 @@
                                             @foreach ($websites as $index => $site)
                                                 <tr>
                                                     <td>{{ $site->id }}</td>
-                                                    <td>{{ $site->businessModel->name ?? '-' }}
-                                                     @if($site->technology === 'wordpress')
+                                                    <td data-bs-toggle="tooltip" title="{{ $site->technology }}">
+                                                        {{ $site->businessModel->name ?? '-' }}
+                                                        
+                                                        @if($site->technology === 'wordpress')
                                                             <span class="badge bg-primary text-white badge-sm ms-1" style="font-size: 10px;">WP</span>
                                                         @endif
                                                     </td>
+
                                                     <td>
                                                         {{ $site->site_name }}
                                                        

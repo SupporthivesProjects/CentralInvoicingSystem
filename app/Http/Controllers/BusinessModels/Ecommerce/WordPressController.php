@@ -96,33 +96,36 @@ class WordPressController extends Controller
         $maxTotal = $invoiceAmount * 1.10;
         $iteration = $noOfProducts ? 30 : 20;
 
-        $allProducts = $query->orderByDesc("$priceTable.max_price")->limit($fetchLimit)->get();
-
-        if ($noOfProducts) {
+        $allProducts = $query->orderByDesc("$priceTable.max_price")->limit($fetchLimit)->get();if ($noOfProducts) {
             $targetAvg = $invoiceAmount / $noOfProducts;
             $allProducts = $allProducts->sortBy(function ($product) use ($targetAvg) {
                 return abs($product->unit_price - $targetAvg);
             });
         }
-
+        
         $bestMatch = null;
         $bestTotal = 0;
         $bestDistance = null;
-
+        
         for ($i = 0; $i < $iteration; $i++) {
             $shuffled = $allProducts->shuffle();
             $selected = [];
             $currentTotal = 0;
-
+        
             foreach ($shuffled as $product) {
                 $price = floatval($product->unit_price);
+        
                 if ($noOfProducts && count($selected) >= $noOfProducts) break;
-                if ($currentTotal + $price <= $maxTotal) {
+        
+                if ($noOfProducts) {
+                    $selected[] = $product;
+                    $currentTotal += $price;
+                } elseif ($currentTotal + $price <= $maxTotal) {
                     $selected[] = $product;
                     $currentTotal += $price;
                 }
             }
-
+        
             if ($noOfProducts && count($selected) == $noOfProducts) {
                 $distance = abs($invoiceAmount - $currentTotal);
                 if ($bestMatch === null || $distance < $bestDistance) {
@@ -138,6 +141,7 @@ class WordPressController extends Controller
                 }
             }
         }
+        
 
         if (!$bestMatch) {
             return response()->json([
