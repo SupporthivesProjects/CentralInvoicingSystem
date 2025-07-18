@@ -54,10 +54,6 @@
                                                     <td>{{ $site->id }}</td>
                                                     <td data-bs-toggle="tooltip" title="{{ $site->technology }}">
                                                         {{ $site->businessModel->name ?? '-' }}
-                                                        
-                                                        @if($site->technology === 'wordpress')
-                                                            <span class="badge bg-primary text-white badge-sm ms-1" style="font-size: 10px;">WP</span>
-                                                        @endif
                                                     </td>
 
                                                     <td>

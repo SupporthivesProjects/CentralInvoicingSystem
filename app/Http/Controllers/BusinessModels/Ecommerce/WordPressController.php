@@ -38,7 +38,7 @@ class WordPressController extends Controller
     public function __construct()
     {
         $site_id = session('customer.site_id');
-        $this->site = Website::findOrFail($site_id);
+        $site = Website::findOrFail($site_id);
         $this->productTable = $site->product_table ?? 'wp_posts';
         $this->productPriceTable = $site->product_price_table ?? 'wp_wc_product_meta_lookup';
         $this->tagsTable = $site->tags_table ?? 'wp_term_relationships';
@@ -84,7 +84,7 @@ class WordPressController extends Controller
 
         if (!empty($categoryId)) {
             $query->join($this->tagsTable . ' as tr', "$postsTable.ID", '=', 'tr.object_id')
-                ->join($this->termTaxonomyTable . 'as tt', 'tr.term_taxonomy_id', '=', 'tt.term_taxonomy_id')
+                ->join($this->termTaxonomyTable . ' as tt', 'tr.term_taxonomy_id', '=', 'tt.term_taxonomy_id')
                 ->where('tt.taxonomy', 'product_cat') 
                 ->where('tt.term_id', $categoryId); 
         }
@@ -93,7 +93,7 @@ class WordPressController extends Controller
 
         $fetchLimit = $noOfProducts ? ($noOfProducts * 5) : 200;
         $minTotal = $invoiceAmount;
-        $maxTotal = $invoiceAmount * 1.10;
+        $maxTotal = $invoiceAmount * 1.05;
         $iteration = $noOfProducts ? 30 : 20;
 
         $allProducts = $query->orderByDesc("$priceTable.max_price")->limit($fetchLimit)->get();if ($noOfProducts) {
@@ -151,18 +151,31 @@ class WordPressController extends Controller
             ]);
         }
 
-        $bestMatch = collect($bestMatch)->map(function ($product) {
-            $product->can_edit_price = 1;
-            $product->remaining_days = 0;
-            return $product;
+        collect($bestMatch)->each(function ($product) use ($site_id) {
+            $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
+                ->where('product_id', $product->id)
+                ->orderByDesc('last_price_changed')
+                ->first();
+        
+            if ($lastUpdate) {
+                $lastPriceChanged = Carbon::parse($lastUpdate->last_price_changed);
+                $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
+                $remainingDays = now()->diffInDays($nextPriceChangeDate, false);
+                $product->remaining_days = round(max($remainingDays, 0));
+                $product->can_edit_price = now()->greaterThanOrEqualTo($nextPriceChangeDate) ? 1 : 0;
+            } else {
+                $product->can_edit_price = 1;
+                $product->remaining_days = 0;
+            }
         });
+        
 
-        $productList = $bestMatch->map(function ($product) {
+        $productList = collect($bestMatch)->map(function ($product) {
             return [
                 'id' => $product->id,
                 'unit_price' => $product->unit_price,
             ];
-        })->toArray();
+        })->toArray();        
 
         session()->forget('ready_products');
         session()->put('ready_products', $productList);
@@ -513,7 +526,7 @@ class WordPressController extends Controller
 
         if (!empty($keyword)) {
             $normalizedSearch = strtolower(str_replace(['-', '_', ' '], '', $keyword));
-            $query->whereRaw("LOWER(REPLACE(REPLACE(REPLACE($postsTable.post_name, '-', ''), '_', ''), ' ', '')) LIKE ?", ["%{$normalizedSearch}%"]);
+            $query->whereRaw("LOWER(REPLACE(REPLACE(REPLACE($postsTable.post_title, '-', ''), '_', ''), ' ', '')) LIKE ?", ["%{$normalizedSearch}%"]);
         }
 
         $readyProducts = session('ready_products', []);
@@ -833,7 +846,6 @@ class WordPressController extends Controller
                     ->table($this->priceTable)
                     ->where('product_id', $product_id)
                     ->update([
-                        'min_price' => $new_price,
                         'max_price' => $new_price,
                     ]);
     
