@@ -106,3 +106,6 @@ Route::get('/test-403', function () {
 Route::get('/test-500', function () {
     abort(500);
 });
+
+Route::get('/woocommerce-products', [HomeController::class, 'fetchWooCommerceProducts']);
+

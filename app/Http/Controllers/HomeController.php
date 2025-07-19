@@ -12,6 +12,8 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
+
 
 
 
@@ -215,6 +217,75 @@ class HomeController extends Controller
         return view('business.searchresult', compact('websites'));
     }
     
+
+    public function fetchWooCommerceProducts()
+    {
+        $consumerKey = 'ck_cdde416de55f08fd2849000081ea380da09dbe07';
+        $consumerSecret = 'cs_a4d86e30abca2386762d40339a6c112940ef4239';
+        $siteUrl = 'https://gm3boot.jkt-mainos.com';
+        $auth = base64_encode($consumerKey . ':' . $consumerSecret);
+
+        $products = [];
+        $page = 1;
+
+        do {
+            $response = Http::withHeaders([
+                'Authorization' => 'Basic ' . $auth,
+                'Content-Type' => 'application/json',
+                'User-Agent' => 'LaravelApp/1.0'
+            ])->get($siteUrl . '/wp-json/wc/v3/products', [
+                'per_page' => 100,
+                'page' => $page,
+            ]);
+
+            if ($response->failed()) {
+                return response()->json(['error' => 'Failed to fetch products'], 500);
+            }
+
+            $productData = $response->json();
+
+            foreach ($productData as $product) {
+                $productEntry = [
+                    'id' => $product['id'],
+                    'name' => $product['name'],
+                    'type' => $product['type'],
+                    'price' => $product['price'] ?? null,
+                    'variations' => [],
+                ];
+
+                if ($product['type'] === 'variable') {
+                    $variationResponse = Http::withHeaders([
+                        'Authorization' => 'Basic ' . $auth,
+                        'Content-Type' => 'application/json',
+                        'User-Agent' => 'LaravelApp/1.0'
+                    ])->get($siteUrl . '/wp-json/wc/v3/products/' . $product['id'] . '/variations');
+
+                    if ($variationResponse->successful()) {
+                        $variations = $variationResponse->json();
+                        foreach ($variations as $variation) {
+                            $attrs = [];
+                            foreach ($variation['attributes'] as $attribute) {
+                                $attrs[$attribute['name']] = $attribute['option'];
+                            }
+
+                            $productEntry['variations'][] = [
+                                'id' => $variation['id'],
+                                'price' => $variation['price'],
+                                'attributes' => $attrs,
+                            ];
+                        }
+                    }
+                }
+
+                $products[] = $productEntry;
+            }
+
+            $page++;
+        } while (!empty($productData));
+
+        return response()->json($products);
+    }
+
     
     
 }
