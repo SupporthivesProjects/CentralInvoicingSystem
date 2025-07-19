@@ -36,7 +36,7 @@
                                                         Website</h2>
                                                     <p
                                                         style="margin: 0px;color: #58595B;font-family: Arial;font-size:8px;">
-                                                        {{ $site_name }}</p>
+                                                        {{ $site->site_link }}</p>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -115,7 +115,7 @@
                                                     <p style="border-bottom: 1px solid #808080;margin: 0px;"></p>
                                                     <h2
                                                         style="margin: 0px;color: #58595B;font-family: Arial;font-size:10px;line-height: 24px;">
-                                                        Johnathan Smith</h2>
+                                                        {{ $customer_name }}</h2>
                                                 </td>
                                             </tr>
                                         </table>
@@ -129,7 +129,7 @@
                                                     <p style="border-bottom: 1px solid #808080;margin: 0px;"></p>
                                                     <h2
                                                         style="margin: 0px;color: #58595B;font-family: Arial;font-size:10px;line-height: 24px;">
-                                                        The Web Design Crowd</h2>
+                                                        {{ $site_name }}</h2>
                                                     <p
                                                         style="margin: 0px;color: #58595B;font-family: Arial;font-size:8px;">
                                                         Powered By Eromnet Hong Kong</p>
@@ -211,7 +211,7 @@
                                                 <td>
                                                     <p
                                                         style="margin: 0px;color: #58595B;font-family: Arial;font-size:10px;">
-                                                        {{ site_currency() . number_format($invoice_amount + $discount_amount, 2) }}$100.00
+                                                        {{ site_currency() . number_format($invoice_amount + $discount_amount, 2) }}
                                                     </p>
                                                 </td>
                                             </tr>

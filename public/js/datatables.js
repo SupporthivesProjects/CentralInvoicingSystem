@@ -60,7 +60,7 @@ $(function (e) {
 
     $('#websites-datatables').DataTable({
         dom: 'Bfrtip',
-        order: [[0, 'desc']], 
+        order: [[0, 'desc']],
         buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
         language: {
             searchPlaceholder: 'Search...',
@@ -151,10 +151,10 @@ $(function (e) {
         // scrollX: true
     });
     // hidden columns
-    
+
     // add row datatable
     var t = $('#add-row').DataTable({
-        
+
         language: {
             searchPlaceholder: 'Search...',
             sSearch: '',
