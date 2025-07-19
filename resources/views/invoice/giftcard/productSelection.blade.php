@@ -122,23 +122,30 @@
                         <div class="row g-2">
                         <div class="col-md-1 border-end">
                             <div class="list-group list-group-flush h-100 d-flex flex-column justify-content-center" id="companyTypeTab" role="tablist">
-                            <label class="rounded-end-0 list-group-item list-group-item-action d-flex align-items-center gap-2 py-2 active" data-bs-toggle="list" href="#websiteDetails" role="tab" style="cursor:pointer;">
-                                <input class="form-check-input visually-hidden" form="generate-invoice-form" type="radio" name="company_detail_type" id="radioWebsite" value="remote" checked>
+                            @if(!$isWordPress)
+                            <label class="rounded-end-0 list-group-item list-group-item-action d-flex align-items-center gap-2 py-2 {{ !$isWordPress ? 'active' : '' }}"
+                                data-bs-toggle="list" href="#websiteDetails" role="tab" style="cursor:pointer;">
+                                <input class="form-check-input visually-hidden" form="generate-invoice-form" type="radio" name="company_detail_type"
+                                    id="radioWebsite" value="remote" @checked(!$isWordPress)>
                                 <span class="flex-grow-1 fw-semibold text-center rounded d-flex justify-content-center align-items-center">
-                                Remote <span class="ms-1 d-none active-arrow"><i class="fas fa-check"></i></span>
+                                    Remote <span class="ms-1 d-none active-arrow"><i class="fas fa-check"></i></span>
                                 </span>
                             </label>
-                            <label class="rounded-end-0 list-group-item list-group-item-action d-flex align-items-center gap-2 py-2" data-bs-toggle="list" href="#customDetails" role="tab" style="cursor:pointer;">
-                                <input class="form-check-input visually-hidden" form="generate-invoice-form" type="radio" name="company_detail_type" id="radioCustom" value="local">
+                            @endif
+                            <label class="rounded-end-0 list-group-item list-group-item-action d-flex align-items-center gap-2 py-2 {{ $isWordPress ? 'active' : '' }}"
+                                data-bs-toggle="list" href="#customDetails" role="tab" style="cursor:pointer;">
+                                <input class="form-check-input visually-hidden" form="generate-invoice-form" type="radio" name="company_detail_type"
+                                    id="radioCustom" value="local" @checked($isWordPress)>
                                 <span class="flex-grow-1 fw-semibold text-center rounded d-flex justify-content-center align-items-center">
-                                Local <span class="ms-1 d-none active-arrow"><i class="fas fa-check"></i></span>
+                                    Local <span class="ms-1 d-none active-arrow"><i class="fas fa-check"></i></span>
                                 </span>
                             </label>
+
                             </div>
                         </div>
                         <div class="col-md-11">
                             <div class="tab-content">
-                            <div class="tab-pane p-0 fade show active" id="websiteDetails" role="tabpanel">
+                            <div class="tab-pane p-0 fade {{ !$isWordPress ? 'show active' : '' }}" id="websiteDetails" role="tabpanel">
                                 <div class="p-2 bg-white">
                                 <div class="row g-1 mb-2">
                                     <div class="col-4">
@@ -176,7 +183,7 @@
                                 </div>
                                 </div>
                             </div>
-                            <div class="tab-pane p-0 fade" id="customDetails" role="tabpanel">
+                            <div class="tab-pane p-0 fade {{ $isWordPress ? 'show active' : '' }}" id="customDetails" role="tabpanel">
                                 <div class="p-2 bg-white">
                                 <div class="row g-1 mb-2">
                                     <div class="col-4">
@@ -326,25 +333,30 @@
                             <small class="text-muted fw-semibold mb-2">Product Category</small>
                             <select class="form-select w-100 h-100" name="category_name" id="category_name">
                                 <option value="">All Categories</option>
-                                <option value="Art and Craft">Art and Craft</option>
-                                <option value="Fashion">Fashion</option>
-                                <option value="Food and Drink">Food and Drink</option>
-                                <option value="General">General</option>
-                                <option value="Gifts and Occasions">Gifts and Occasions</option>
-                                <option value="Health and Beauty">Health and Beauty</option>
-                                <option value="Home and Garden">Home and Garden</option>
-                                <option value="Kids, Babies and Toys">Kids, Babies and Toys</option>
-                                <option value="Leisure">Leisure</option>
-                                <option value="Music, Books, Games and Movies">Music, Books, Games and Movies</option>
-                                <option value="Restaurants, Takeaways and Bars">Restaurants, Takeaways and Bars</option>
-                                <option value="Sports, Fitness and Outdoors">Sports, Fitness and Outdoors</option>
-                                <option value="Technology and Electrical">Technology and Electrical</option>
-                                <option value="Telecommunications">Telecommunications</option>
-                                <option value="Travel">Travel</option>
-                                {{-- @foreach(getCategoryList($site->technology) as $category)
-                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                @endforeach --}}
+
+                                @if($site->technology !== 'wordpress')
+                                    <option value="Art and Craft">Art and Craft</option>
+                                    <option value="Fashion">Fashion</option>
+                                    <option value="Food and Drink">Food and Drink</option>
+                                    <option value="General">General</option>
+                                    <option value="Gifts and Occasions">Gifts and Occasions</option>
+                                    <option value="Health and Beauty">Health and Beauty</option>
+                                    <option value="Home and Garden">Home and Garden</option>
+                                    <option value="Kids, Babies and Toys">Kids, Babies and Toys</option>
+                                    <option value="Leisure">Leisure</option>
+                                    <option value="Music, Books, Games and Movies">Music, Books, Games and Movies</option>
+                                    <option value="Restaurants, Takeaways and Bars">Restaurants, Takeaways and Bars</option>
+                                    <option value="Sports, Fitness and Outdoors">Sports, Fitness and Outdoors</option>
+                                    <option value="Technology and Electrical">Technology and Electrical</option>
+                                    <option value="Telecommunications">Telecommunications</option>
+                                    <option value="Travel">Travel</option>
+                                @else
+                                    @foreach(getCategoryList($site->technology) as $category)
+                                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                    @endforeach
+                                @endif
                             </select>
+
                         </div>
                     </div>
 

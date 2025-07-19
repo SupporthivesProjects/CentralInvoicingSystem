@@ -56,10 +56,6 @@
                                                     <td>{{ $site->id }}</td>
                                                     <td data-bs-toggle="tooltip" title="{{ $site->technology }}">
                                                         {{ $site->businessModel->name ?? '-' }}
-                                                        
-                                                        @if($site->technology === 'wordpress')
-                                                            <span class="badge bg-primary text-white badge-sm ms-1" style="font-size: 10px;">WP</span>
-                                                        @endif
                                                     </td>
 
                                                     <td>
@@ -144,45 +140,48 @@
 @endsection
 @push('scripts')
 <script>
-        $(document).on('click', '.delete-btn', function () {
-            const id = $(this).data('id');
+    $(document).on('click', '.delete-btn', function () {
+        const id = $(this).data('id');
 
-            Swal.fire({
-                title: 'Are you sure?',
-                text: 'This action cannot be undone!',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Yes, delete it!',
-                showLoaderOnConfirm: true,
-                preConfirm: () => {
-                    return fetch(`/website/delete/${id}`, {
-                        method: 'DELETE',
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                            'Accept': 'application/json'
-                        }
-                    })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error(response.statusText);
-                        }
-                        return response.json();
-                    })
-                    .catch(error => {
-                        Swal.showValidationMessage(`Delete failed: ${error}`);
-                    });
-                },
-                allowOutsideClick: () => !Swal.isLoading()
-            }).then((result) => {
-                if (result.isConfirmed && result.value?.success) {
-                    toastr.success(result.value.message || "Deleted successfully!");
-                    setTimeout(() => {
-                        location.reload();
-                    }, 1500);
-                } else if (result.value && !result.value.success) {
-                    toastr.error(result.value.message || "Failed to delete!");
-                }
-            });
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'This action cannot be undone!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            showLoaderOnConfirm: true,
+            preConfirm: () => {
+                const url = `{{ route('website.delete', ':id') }}`.replace(':id', id);
+
+                return fetch(url, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json'
+                    }
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(response.statusText);
+                    }
+                    return response.json();
+                })
+                .catch(error => {
+                    Swal.showValidationMessage(`Delete failed: ${error}`);
+                });
+            },
+            allowOutsideClick: () => !Swal.isLoading()
+        }).then((result) => {
+            if (result.isConfirmed && result.value?.success) {
+                toastr.success(result.value.message || "Deleted successfully!");
+                setTimeout(() => {
+                    location.reload(); 
+                }, 1500);
+            } else if (result.value && !result.value.success) {
+                toastr.error(result.value.message || "Failed to delete!");
+            }
         });
+    });
 </script>
+
 @endpush

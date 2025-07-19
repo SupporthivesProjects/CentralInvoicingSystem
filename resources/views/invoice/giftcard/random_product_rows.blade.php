@@ -6,7 +6,7 @@
 
         @if($site->site_link && $product->slug)
             <a 
-                href="{{ $site->site_link }}product/{{ $product->slug }}" 
+                href="{{ $site->site_link }}/product/{{ $product->slug }}" 
                 target="_blank" 
                 class="input-group-text"
                 data-bs-toggle="tooltip"

@@ -38,7 +38,7 @@ class WordPressController extends Controller
     public function __construct()
     {
         $site_id = session('customer.site_id');
-        $this->site = Website::findOrFail($site_id);
+        $site = Website::findOrFail($site_id);
         $this->productTable = $site->product_table ?? 'wp_posts';
         $this->productPriceTable = $site->product_price_table ?? 'wp_wc_product_meta_lookup';
         $this->tagsTable = $site->tags_table ?? 'wp_term_relationships';
@@ -72,19 +72,19 @@ class WordPressController extends Controller
                 "$postsTable.post_title as name",
                 "$postsTable.post_excerpt as description",
                 "$postsTable.post_name as slug",
-                "$priceTable.max_price as unit_price"
+                "$priceTable.min_price as unit_price"
             )
             ->where("$postsTable.post_status", 'publish')
             ->where("$postsTable.post_type", 'product')
-            ->where("$priceTable.max_price", '>', 0);
+            ->where("$priceTable.min_price", '>', 0);
 
         if ($priceFrom && $priceTo) {
-            $query->whereBetween("$priceTable.max_price", [$priceFrom, $priceTo]);
+            $query->whereBetween("$priceTable.min_price", [$priceFrom, $priceTo]);
         }
 
         if (!empty($categoryId)) {
             $query->join($this->tagsTable . ' as tr', "$postsTable.ID", '=', 'tr.object_id')
-                ->join($this->termTaxonomyTable . 'as tt', 'tr.term_taxonomy_id', '=', 'tt.term_taxonomy_id')
+                ->join($this->termTaxonomyTable . ' as tt', 'tr.term_taxonomy_id', '=', 'tt.term_taxonomy_id')
                 ->where('tt.taxonomy', 'product_cat') 
                 ->where('tt.term_id', $categoryId); 
         }
@@ -93,10 +93,10 @@ class WordPressController extends Controller
 
         $fetchLimit = $noOfProducts ? ($noOfProducts * 5) : 200;
         $minTotal = $invoiceAmount;
-        $maxTotal = $invoiceAmount * 1.10;
+        $maxTotal = $invoiceAmount * 1.05;
         $iteration = $noOfProducts ? 30 : 20;
 
-        $allProducts = $query->orderByDesc("$priceTable.max_price")->limit($fetchLimit)->get();if ($noOfProducts) {
+        $allProducts = $query->orderByDesc("$priceTable.min_price")->limit($fetchLimit)->get();if ($noOfProducts) {
             $targetAvg = $invoiceAmount / $noOfProducts;
             $allProducts = $allProducts->sortBy(function ($product) use ($targetAvg) {
                 return abs($product->unit_price - $targetAvg);
@@ -151,18 +151,31 @@ class WordPressController extends Controller
             ]);
         }
 
-        $bestMatch = collect($bestMatch)->map(function ($product) {
-            $product->can_edit_price = 1;
-            $product->remaining_days = 0;
-            return $product;
+        collect($bestMatch)->each(function ($product) use ($site_id) {
+            $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
+                ->where('product_id', $product->id)
+                ->orderByDesc('last_price_changed')
+                ->first();
+        
+            if ($lastUpdate) {
+                $lastPriceChanged = Carbon::parse($lastUpdate->last_price_changed);
+                $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
+                $remainingDays = now()->diffInDays($nextPriceChangeDate, false);
+                $product->remaining_days = round(max($remainingDays, 0));
+                $product->can_edit_price = now()->greaterThanOrEqualTo($nextPriceChangeDate) ? 1 : 0;
+            } else {
+                $product->can_edit_price = 1;
+                $product->remaining_days = 0;
+            }
         });
+        
 
-        $productList = $bestMatch->map(function ($product) {
+        $productList = collect($bestMatch)->map(function ($product) {
             return [
                 'id' => $product->id,
                 'unit_price' => $product->unit_price,
             ];
-        })->toArray();
+        })->toArray();        
 
         session()->forget('ready_products');
         session()->put('ready_products', $productList);
@@ -229,7 +242,7 @@ class WordPressController extends Controller
                 "$postsTable.post_title as name",
                 "$postsTable.post_excerpt as description",
                 "$postsTable.post_name as slug",
-                "$priceTable.max_price as unit_price"
+                "$priceTable.min_price as unit_price"
             )
             ->whereIn("$postsTable.ID", $productIds)
             ->where("$postsTable.post_status", 'publish')
@@ -320,7 +333,7 @@ class WordPressController extends Controller
                 "$postsTable.post_title as name",
                 "$postsTable.post_excerpt as description",
                 "$postsTable.post_name as slug",
-                "$priceTable.max_price as unit_price"
+                "$priceTable.min_price as unit_price"
             )
             ->whereIn("$postsTable.ID", $productIds)
             ->where("$postsTable.post_status", 'publish')
@@ -406,7 +419,7 @@ class WordPressController extends Controller
                 "$postsTable.post_title as name",
                 "$postsTable.post_excerpt as description",
                 "$postsTable.post_name as slug",
-                "$priceTable.max_price as unit_price"
+                "$priceTable.min_price as unit_price"
             ])
             ->get();
 
@@ -496,24 +509,24 @@ class WordPressController extends Controller
                 "$postsTable.post_title as name",
                 "$postsTable.post_excerpt as description",
                 "$postsTable.post_name as slug",
-                "$priceTable.max_price as unit_price"
+                "$priceTable.min_price as unit_price"
             ])
             ->where("$postsTable.post_status", 'publish')
             ->where("$postsTable.post_type", 'product')
-            ->where("$priceTable.max_price", '>', 0);
+            ->where("$priceTable.min_price", '>', 0);
 
-        $query->whereBetween("$priceTable.max_price", [
+        $query->whereBetween("$priceTable.min_price", [
             (float) $request->price_from,
             (float) $request->price_to
         ]);
 
         if (in_array($sortUnitPrice, ['asc', 'desc'])) {
-            $query->orderBy("$priceTable.max_price", $sortUnitPrice);
+            $query->orderBy("$priceTable.min_price", $sortUnitPrice);
         }
 
         if (!empty($keyword)) {
             $normalizedSearch = strtolower(str_replace(['-', '_', ' '], '', $keyword));
-            $query->whereRaw("LOWER(REPLACE(REPLACE(REPLACE($postsTable.post_name, '-', ''), '_', ''), ' ', '')) LIKE ?", ["%{$normalizedSearch}%"]);
+            $query->whereRaw("LOWER(REPLACE(REPLACE(REPLACE($postsTable.post_title, '-', ''), '_', ''), ' ', '')) LIKE ?", ["%{$normalizedSearch}%"]);
         }
 
         $readyProducts = session('ready_products', []);
@@ -711,7 +724,7 @@ class WordPressController extends Controller
             "$postsTable.post_title as name",
             "$postsTable.post_excerpt as description",
             "$postsTable.post_name as slug",
-            "$priceTable.max_price as unit_price"
+            "$priceTable.min_price as unit_price"
         ])
         ->get()
         ->sortBy(function ($product) use ($productIds) {
@@ -811,13 +824,13 @@ class WordPressController extends Controller
     
             $product = DB::connection($this->connectionType)
                 ->table($this->productPriceTable)
-                ->select('max_price')
+                ->select('min_price')
                 ->where('product_id', $product_id)
                 ->first();
     
             if (!$product) continue;
     
-            $current_price = floatval($product->max_price ?? 0);
+            $current_price = floatval($product->min_price ?? 0);
     
             if ($current_price === $new_price) continue;
     
@@ -829,13 +842,25 @@ class WordPressController extends Controller
             $canUpdate = !$lastUpdate || Carbon::parse($lastUpdate->last_price_changed)->diffInMonths(now()) >= 3;
     
             if ($canUpdate) {
+
                 DB::connection($this->connectionType)
-                    ->table($this->priceTable)
-                    ->where('product_id', $product_id)
-                    ->update([
-                        'min_price' => $new_price,
-                        'max_price' => $new_price,
-                    ]);
+                ->table($this->priceTable)
+                ->where('product_id', $product_id)
+                ->update([
+                    'min_price' => $new_price,
+                ]);
+
+                $prefix = explode('_', $this->priceTable)[0] ?? 'wp';
+                $postMetaTable = $prefix . '_postmeta';
+
+                DB::connection($connection)
+                ->table($postMetaTable)
+                ->where('post_id', $product_id)
+                ->where('meta_key', '_price')
+                ->update([
+                    'meta_value' => $new_price,
+                ]);
+
     
                 ProductPriceHistory::create([
                     'site_id' => $site_id,

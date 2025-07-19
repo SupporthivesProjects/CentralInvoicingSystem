@@ -33,7 +33,8 @@ class LaravelController extends Controller
     {
         $site_id = session('customer.site_id');
         $site = Website::findOrFail($site_id);
-        $this->productTable = getProductTable($site->technology);
+        $this->productTable = getProductTable($site->technology) ?? 'products';
+        $this->categoryTable = $site->category_table ?? 'categories';
         $this->connectionType = 'dynamic';
     }
 
@@ -48,7 +49,6 @@ class LaravelController extends Controller
         $noOfProducts = intval($request->get('noOfProducts'));
 
         $site = Website::findOrFail($site_id);
-        $productstable = getProductTable($site->technology);
         DynamicDatabaseService::connect($site);
 
         $query = DB::connection($this->connectionType)->table($this->productTable)
@@ -189,7 +189,6 @@ class LaravelController extends Controller
         $productsData = $request->get('products');
 
         $site = Website::findOrFail($site_id);
-        $productstable = getProductTable($site->technology);
         DynamicDatabaseService::connect($site);
 
         $readyProducts = session()->get('ready_products', []);
