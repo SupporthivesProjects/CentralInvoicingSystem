@@ -125,17 +125,25 @@
                             </select>
                         </div>
 
-                        
+                        <div class="col-md-6 mx-auto">
+                            <label class="form-label">Company Email <span style="color:red">*</span></label>
+                            <input type="email" name="company_email" class="form-control" placeholder="Enter Company Email" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Consumer Key for WP site only</label>
+                            <input type="text" name="consumer_key" class="form-control" placeholder="Enter Consumer Key">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Consumer Secret for WP site only</label>
+                            <input type="text" name="consumer_secret" class="form-control" placeholder="Enter Consumer Secret">
+                        </div>
+
                         <div class="col-md-6 mx-auto">
                             <label class="form-label">Company Name</label>
                             <input type="text" name="company_name" class="form-control" placeholder="Enter Company Name">
                         </div>
-
-                        <div class="col-md-6 mx-auto">
-                            <label class="form-label">Company Email</label>
-                            <input type="email" name="company_email" class="form-control" placeholder="Enter Company Email">
-                        </div>
-
                         <div class="col-md-6 mx-auto">
                             <label class="form-label">Company Mobile</label>
                             <input type="text" name="company_mobile" class="form-control" placeholder="Enter Company Mobile">

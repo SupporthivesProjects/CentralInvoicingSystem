@@ -147,6 +147,19 @@
                                 </select>
                             </div>
                             <div class="col-md-6 mx-auto">
+                                <label class="form-label">Company Email <span style="color:red">*</span></label>
+                                <input type="email" name="company_email" class="form-control" value="{{ old('company_email', $website->company_email) }}" placeholder="Enter Company Email" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Consumer Key for WP site only</label>
+                                <input type="text" name="consumer_key" class="form-control" placeholder="Enter Consumer Key" value="{{ old('consumer_key', $website->consumer_key) }}">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Consumer Secret for WP site only</label>
+                                <input type="text" name="consumer_secret" class="form-control" placeholder="Enter Consumer Secret" value="{{ old('consumer_secret', $website->consumer_secret) }}">
+                            </div>
+                            <div class="col-md-6 mx-auto">
                                 <label class="form-label">Site Description</label>
                                 <input type="text" name="site_description" class="form-control" placeholder="Enter Site Description (optional)"
                                     value="{{ old('site_description', $website->site_description) }}">
@@ -155,12 +168,6 @@
                                 <label class="form-label">Company Name</label>
                                 <input type="text" name="company_name" class="form-control" value="{{ old('company_name', $website->company_name) }}"  placeholder="Enter Company Name">
                             </div>
-
-                            <div class="col-md-6 mx-auto">
-                                <label class="form-label">Company Email</label>
-                                <input type="email" name="company_email" class="form-control" value="{{ old('company_email', $website->company_email) }}" placeholder="Enter Company Email">
-                            </div>
-
                             <div class="col-md-6 mx-auto">
                                 <label class="form-label">Company Mobile</label>
                                 <input type="text" name="company_mobile" class="form-control" value="{{ old('company_mobile', $website->company_mobile) }}" placeholder="Enter Company Mobile">

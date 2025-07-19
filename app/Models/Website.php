@@ -27,6 +27,8 @@ class Website extends Model
         'category_table',
         'tags_table',
         'term_taxonomy_table',
+        'consumer_key',
+        'consumer_secret',
         'site_link',
         'remark',
         'company_name',
