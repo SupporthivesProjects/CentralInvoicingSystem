@@ -155,6 +155,7 @@ class WebsiteController extends Controller
     public function updateWebsite(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
+            'site_connectivity' => 'required|in:db,api',
             'business_model_id' => 'required|exists:business_models,id',
             'technology' => 'required|in:html,wordpress,corephp,laravel,django,other',
             'site_name' => 'nullable|string|max:255',
@@ -327,6 +328,7 @@ class WebsiteController extends Controller
                 'technology' => 'required|in:html,wordpress,corephp,laravel,django,other',
                 'site_name' => 'nullable|string|max:255',
                 'site_description' => 'nullable|string|max:500',
+                'site_connectivity' => 'required|in:db,api',
                 'db_host' => 'required|string|max:255',
                 'db_port' => 'required|numeric',
                 'db_name' => 'required|string|max:255',

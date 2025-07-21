@@ -70,10 +70,10 @@
         <td class="text-center">
             <input form="generate-invoice-form" class="form-check-input urgency-checkbox border-primary" type="checkbox"
                 name="products[{{ $product->id }}][is_urgent]" value="1" data-product-id="{{ $product->id }}"
-                data-urgent_amount="{{ number_format($product->urgent_amount ?? 24.24, 2, '.', '') }}"
+                data-urgent_amount="{{ number_format($product->urgent_amount ?? 99.75 , 2, '.', '') }}"
                 {{ isset($product->is_urgent) && $product->is_urgent ? 'checked' : '' }} />
             <input form="generate-invoice-form" type="hidden" name="products[{{ $product->id }}][urgent_amount]"
-                value="{{ number_format($product->urgent_amount ?? 24.24, 2, '.', '') }}">
+                value="{{ number_format($product->urgent_amount ?? 99.75 , 2, '.', '') }}">
         </td>
         <td class="text-center line-total" data-product-id="{{ $product->id }}">
             {{ site_currency() }}{{ number_format($product->line_total, 2) }}

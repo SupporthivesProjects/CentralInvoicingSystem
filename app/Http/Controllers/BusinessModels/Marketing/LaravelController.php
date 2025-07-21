@@ -695,6 +695,12 @@ class LaravelController extends Controller
             'options' => [
                 'format' => $site->pdf_size ?? 'A4',
                 'landscape' => ($site->pdf_orientation ?? 'portrait') === 'landscape',
+                'marginTop' => '0mm',
+                'marginBottom' => '0mm',
+                'marginLeft' => '0mm',
+                'marginRight' => '0mm',
+                'disableSmartShrinking' => true,
+                'zoom' => 1,
             ]
         ]);
 
