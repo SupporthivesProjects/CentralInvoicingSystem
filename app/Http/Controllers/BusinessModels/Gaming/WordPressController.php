@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\BusinessModels\Gaming;
 
 use App\Http\Controllers\Controller;
@@ -18,58 +19,1073 @@ use App\Services\DynamicDatabaseService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\View\ViewNotFoundException;
 use Carbon\Carbon;
-
+use Api2Pdf\Api2Pdf;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Http;
 
 class WordPressController extends Controller
 {
     private $productTable;
     private $connectionType;
+    private $bundleTable;
 
     public function __construct()
     {
+        ini_set('max_execution_time', 300);
         $site_id = session('customer.site_id');
         $site = Website::findOrFail($site_id);
         $this->productTable = getProductTable($site->technology);
         $this->connectionType = 'dynamic';
+        $this->bundleTable = 'game_sever_based_cost';
     }
 
- 
+    public function getPriceRange(Request $request)
+    {
+        $site_id = session('customer.site_id');
+        $site = Website::findOrFail($site_id);
+        DynamicDatabaseService::connect($site);
+        $min_unit_price = DB::connection($this->connectionType)->table($this->productTable)->where('published', 1)->min('unit_price');
+        $max_unit_price = DB::connection($this->connectionType)->table($this->productTable)->where('published', 1)->max('unit_price');
+        return response()->json(['minProductPrice' => $min_unit_price, 'maxProductPrice' => $max_unit_price]);
+    }
+
     public function randomProducts(Request $request)
     {
+        Session::forget('selected_products');
+
+        $site_id = $request->get('site_id');
+        $invoiceAmount = floatval($request->get('invoice_amount'));
+        $priceFrom = $request->get('price_from');
+        $priceTo = $request->get('price_to');
+        $productCount = intval($request->get('product_count'));
+        $searchQuery = $request->get('search_query');
+
+        $minTotal = $invoiceAmount;
+        $maxTotal = $invoiceAmount * 1.05;
+
+        $site = Website::findOrFail($site_id);
+
+        $consumerKey = $site->consumer_key;
+        $consumerSecret = $site->consumer_secret;
+        $base = rtrim($site->site_link, '/') . '/wp-json/wc/v3/products';
+
+        $response = Http::withBasicAuth($consumerKey, $consumerSecret)
+            ->get($base, ['type' => 'variable', 'per_page' => 100, 'search' => $searchQuery]);
+
+        if ($response->failed()) {
+            return response()->json(['tableRows' => '', 'total' => 0, 'message' => 'Failed to fetch products']);
+        }
+
+        $allProducts = collect();
+
+        foreach ($response->json() as $product) {
+            // Fetch variations manually
+            $variationRes = Http::withBasicAuth($consumerKey, $consumerSecret)
+                ->get($base . '/' . $product['id'] . '/variations');
+
+            if ($variationRes->failed()) continue;
+
+            foreach ($variationRes->json() as $var) {
+                $attrs = collect($var['attributes'])->pluck('option', 'name')->toArray();
+                $bundleAmount = preg_replace('/\D/', '', $attrs['Amount'] ?? '0');
+                $unitPrice = floatval($var['price']);
+
+                if ($priceFrom && $priceTo && ($unitPrice < $priceFrom || $unitPrice > $priceTo)) continue;
+
+                $allProducts->push((object)[
+                    'id' => $product['id'],
+                    'bundle_id' => $var['id'],
+                    'name' => $product['name'],
+                    'unit_price' => $unitPrice,
+                    'slug' => Str::slug($product['name'] . '-' . $bundleAmount),
+                    'source' => 'Random',
+                    'can_edit_price' => 0,
+                    'remaining_days' => 0,
+                    'game_currency' => $product['sku'] ?? '',
+                    'game_currency_amount' => $bundleAmount,
+                    'game_platform' => $attrs['Platform'] ?? '',
+                    'game_region' => null,
+                    'game_need_to_capture' => null,
+                ]);
+            }
+        }
+
+        if ($searchQuery && !$request->has('randomize')) {
+            $results = $allProducts->sortBy('unit_price');
+            $results = $productCount > 0 ? $results->take($productCount) : $results->take(60);
+            $totalPrice = $results->sum('unit_price');
+
+            session(['current_amount' => $totalPrice]);
+            $currency = DB::connection($this->connectionType)->table('currencies')->where('status', 1)->first();
+            $modelType = $site->businessModel->model_type;
+            $tableRows = view("invoice.{$modelType}.random_product_rows", compact('results', 'currency', 'site'))->render();
+
+            return response()->json([
+                'tableRows' => $tableRows,
+                'total' => $totalPrice,
+                'currency' => $currency,
+                'is_random' => false
+            ]);
+        }
+
+        //dd($allProducts);
+        //$allProducts = $allProducts->shuffle()->take(60);
+        $bestMatch = null;
+        $bestTotal = 0;
+
+        for ($i = 0; $i < 10; $i++) {
+            $shuffled = $allProducts->shuffle();
+            $sel = [];
+            $cur = 0;
+
+            foreach ($shuffled as $p) {
+                $price = floatval($p->unit_price);
+                if ($cur + $price <= $maxTotal) {
+                    $sel[] = $p;
+                    $cur += $price;
+
+                    if ($productCount > 0) {
+                        if (count($sel) == $productCount && $cur >= $minTotal) {
+                            $bestMatch = $sel;
+                            $bestTotal = $cur;
+                            break 2;
+                        }
+                    } else {
+                        if ($cur >= $minTotal && $cur <= $maxTotal) {
+                            $bestMatch = $sel;
+                            $bestTotal = $cur;
+                            break 2;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (!$bestMatch) {
+            return response()->json([
+                'tableRows' => '',
+                'total' => 0,
+                'message' => 'No matching combination found, try again please'
+            ]);
+        }
+
+        session()->forget('selected_games');
+
+        $selected_games = array_map(function ($g) {
+            return [
+                'id' => $g->id,
+                'unit_price' => $g->unit_price,
+                'game_currency_amount' => $g->game_currency_amount,
+                'game_currency' => $g->game_currency,
+                'bundle' => 'Random'
+            ];
+        }, $bestMatch);
+
+        session(['selected_games' => $selected_games, 'current_amount' => $bestTotal]);
+
+
+        $modelType = $site->businessModel->model_type;
+
+        $tableRows = view("invoice.{$modelType}.random_product_rows", [
+            'products' => $bestMatch,
+            'currency' => site_currency(),
+            'site' => $site
+        ])->render();
+
+        return response()->json([
+            'tableRows' => $tableRows,
+            'total' => $bestTotal,
+            'currency' => site_currency(),
+            'is_random' => true
+        ]);
     }
-    
-    public function addProducts(Request $request)
-    {
-        
-    }
-    
-    
+
     public function removeProduct(Request $request)
     {
-       
+        $id = $request->get('product_id');
+        $unitPrice = $request->get('unit_price');
+        $site_id = $request->get('site_id');
+
+        $selectedGames = session('selected_games', []);
+        //dd($selectedGames);
+
+        // Remove matching bundle (id + unit_price)
+        $updatedGames = array_filter($selectedGames, function ($game) use ($id, $unitPrice) {
+            return !($game['id'] == $id && floatval($game['unit_price']) == floatval($unitPrice));
+        });
+
+        $updatedGames = array_values($updatedGames);
+
+        // Update session
+        session(['selected_games' => $updatedGames]);
+        //dd($updatedGames);
+
+        if (empty($updatedGames)) {
+            return response()->json([
+                'tableRows' => '',
+                'total'     => 0,
+                'currency'  => null,
+                'message'   => 'No products remaining'
+            ]);
+        }
+
+        $site = Website::findOrFail($site_id);
+        DynamicDatabaseService::connect($site);
+
+        $currency = DB::connection($this->connectionType)
+            ->table('currencies')->where('status', 1)->first();
+
+        $modelType = $site->businessModel->model_type;
+
+        $productIds = array_column($updatedGames, 'id');
+
+        $finalProducts = collect();
+
+        foreach ($updatedGames as $sessionGame) {
+            $product = DB::connection($this->connectionType)
+                ->table('products as p')
+                ->join('game_sever_based_cost as c', 'p.id', '=', 'c.game_id')
+                ->where('p.id', $sessionGame['id'])
+                ->select(
+                    'p.id',
+                    'p.name',
+                    'p.slug',
+                    'p.game_currency',
+                    'p.game_platform',
+                    'p.game_server_region',
+                    'p.game_need_to_capture',
+                    'c.costs',
+                    'c.id as bundle_id',
+                )
+                ->first();
+
+            //dd($product);
+            if ($product) {
+                $finalProducts->push((object)[
+                    'id'             => $product->id,
+                    'name'           => $product->name,
+                    'bundle_id'      => $product->bundle_id,
+                    'unit_price'     => floatval($sessionGame['unit_price']),
+                    'slug'           => Str::slug($product->name . '-' . ($sessionGame['game_currency_amount'] ?? '')),
+                    'source'         => 'Random',
+                    'can_edit_price' => 0,
+                    'remaining_days' => 0,
+                    'game_currency'  => $product->game_currency,
+                    'game_currency_amount' => $sessionGame['game_currency_amount'] ?? '',
+                    'game_platform'  => $product->game_platform,
+                    'game_region'    => $product->game_server_region,
+                    'game_need_to_capture' => $product->game_need_to_capture
+                ]);
+            }
+        }
+        $bestTotal = $finalProducts->sum('unit_price');
+        session(['current_amount' => $bestTotal]);
+        //dd($finalProducts);
+
+        $tableRows = view("invoice.{$modelType}.random_product_rows", [
+            'products' => $finalProducts,
+            'currency' => $currency,
+            'site'     => $site
+        ])->render();
+
+        $total = $finalProducts->sum('unit_price');
+
+        return response()->json([
+            'tableRows' => $tableRows,
+            'total'     => $total,
+            'currency'  => $currency
+        ]);
     }
-    
-    public function updateProduct(Request $request)
-    {
-       
-    }
-    public function clearProducts(Request $request)
-    {
-       
-    }
+
+
+
+
 
     public function filterProducts(Request $request)
     {
-       
+        $site_id = session('customer.site_id');
+        $site = Website::findOrFail($site_id);
+
+        $hasKeyword = $request->filled('keyword');
+        $keyword = strtolower($request->keyword);
+
+        // WooCommerce REST API credentials
+        $wp_api_url = 'https://gm3boot.jkt-mainos.com/wp-json/wc/v3/products';
+        $consumer_key = $site->consumer_key;
+        $consumer_secret = $site->consumer_secret;
+
+        // Build API URL with search keyword if provided
+        $api_url = $wp_api_url . '?per_page=50';
+        if ($hasKeyword) {
+            $api_url .= '&search=' . urlencode($keyword);
+        }
+
+        // Setup cURL
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $api_url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_USERPWD, $consumer_key . ':' . $consumer_secret);
+        curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+
+        $response = curl_exec($ch);
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        //dd($response, $http_code);
+
+        $products = collect();
+        if ($http_code == 200 && $response) {
+            $wp_products = json_decode($response, true);
+            foreach ($wp_products as $p) {
+                $products->push((object)[
+                    'id' => $p['id'],
+                    'name' => $p['name'],
+                    'slug' => $p['slug'],
+                    'game_currency' => $p['sku'] ?? '',
+                    'game_platform' => $p['categories'][0]['name'] ?? '',
+                    'game_server_region' => '',
+                    'game_need_to_capture' => '',
+                    'bundle_first_amount' => $p['price'] ?? '',
+                ]);
+            }
+        }
+        //dd($products);
+
+        if ($products->isEmpty()) {
+            return response()->json([
+                'tableRows' => '<tr><td colspan="7" class="text-center text-muted">No results found. Try randomizing or use a different keyword.</td></tr>'
+            ]);
+        }
+
+        $modelType = $site->businessModel->model_type;
+        $tableRows = view("invoice.{$modelType}.add_product_rows", [
+            'products' => $products,
+            'currency' => site_currency(),
+            'site'     => $site,
+            'current_amount' => session('current_amount'),
+        ])->render();
+
+        return response()->json([
+            'tableRows' => $tableRows,
+            'currency'  => site_currency(),
+            'is_random' => false
+        ]);
     }
 
-    public function generateInvoice(Request $request){
-
-    }
-
-    
-    protected function updateProductPrice(array $productDataArray)
+    public function addProducts(Request $request)
     {
-       
+        $site_id = session('customer.site_id');
+        $site = Website::findOrFail($site_id);
+
+        $woocommerceBaseUrl = rtrim($site->site_link, '/') . '/wp-json/wc/v3/products/';
+        $consumerKey = $site->consumer_key;
+        $consumerSecret = $site->consumer_secret;
+
+        $selected = $request->input('selected_games');
+        $existing = session('selected_games', []);
+
+        $existingAssoc = [];
+        $seenKeys = [];
+
+        foreach ($existing as $item) {
+            $game_id = $item['id'];
+            $bundle_amount = (float) $item['game_currency_amount'];
+            $key = "{$game_id}-{$bundle_amount}-custom";
+
+            if (!in_array($key, $seenKeys)) {
+                $existingAssoc[] = [
+                    'id' => (int) $game_id,
+                    'unit_price' => (float) $item['unit_price'],
+                    'game_currency_amount' => (string) $bundle_amount,
+                    'bundle' => 'custom',
+                ];
+                $seenKeys[] = $key;
+            }
+        }
+
+        foreach ($selected as $gameData) {
+            $game_id = $gameData['product_id'] ?? $gameData['id'];
+            $bundle_amount = (float) $gameData['game_currency_amount'];
+            $key = "{$game_id}-{$bundle_amount}-custom";
+
+            if (!in_array($key, $seenKeys)) {
+                $existingAssoc[] = [
+                    'id' => (int) $game_id,
+                    'unit_price' => (float) $gameData['unit_price'],
+                    'game_currency_amount' => (string) $bundle_amount,
+                    'bundle' => 'custom',
+                ];
+                $seenKeys[] = $key;
+            }
+        }
+
+        session(['selected_games' => $existingAssoc]);
+
+        // ✅ Fetch product details one by one
+        $finalProducts = collect($existingAssoc)->map(function ($item) use ($woocommerceBaseUrl, $consumerKey, $consumerSecret) {
+            $productResponse = Http::withBasicAuth($consumerKey, $consumerSecret)
+                ->get($woocommerceBaseUrl . $item['id']);
+
+            if ($productResponse->failed()) {
+                return null;
+            }
+
+            $product = $productResponse->json();
+            $meta = collect($product['meta_data'] ?? []);
+            $getMeta = fn($key) => $meta->firstWhere('key', $key)['value'] ?? null;
+
+            return (object) [
+                'id' => $item['id'],
+                'unit_price' => $item['unit_price'],
+                'game_currency_amount' => $item['game_currency_amount'],
+                'bundle_id' => $getMeta('bundle_id'),
+                'source' => 'Custom',
+                'can_edit_price' => 1,
+                'remaining_days' => 1,
+                'name' => $product['name'] ?? 'Unknown',
+                'slug' => $product['slug'] ?? '',
+                'game_currency' => $product['sku'] ?? '',
+                'game_platform' => $product['categories'][0]['name'] ?? '',
+                'game_region' => $getMeta('game_region'),
+                'game_need_to_capture' => $getMeta('game_need_to_capture') ?? '{}',
+            ];
+        })->filter(); // remove nulls if any request failed
+
+        $bestTotal = $finalProducts->sum('unit_price');
+        session(['current_amount' => $bestTotal]);
+
+        $modelType = $site->businessModel->model_type;
+
+        $tableRows = view("invoice.{$modelType}.random_product_rows", [
+            'products' => $finalProducts,
+            'site'     => $site,
+        ])->render();
+
+        return response()->json([
+            'success' => true,
+            'tableRows' => $tableRows,
+            'total' => $bestTotal,
+            'is_random' => false,
+            'products' => $finalProducts,
+        ]);
+    }
+
+
+
+    public function generateInvoice(Request $request)
+    {
+        $site = Website::findOrFail($request->input('site_id'));
+        DynamicDatabaseService::connect($site);
+
+        $company_detail_type = $request->input('company_detail_type');
+
+        if ($company_detail_type === 'remote') {
+
+            $site_name    = $request->input('remote_site_name') ?? '';
+            $company_name    = $request->input('remote_company_name') ?? '';
+            $company_email   = $request->input('remote_company_email') ?? '';
+            $company_mobile  = $request->input('remote_company_mobile') ?? '';
+            $company_address = $request->input('remote_company_address') ?? '';
+            $remote_database = DB::connection($this->connectionType)->table('general_settings')->orderByDesc('updated_at')->first();
+
+            if ($remote_database) {
+                DB::connection($this->connectionType)->table('general_settings')->where('id', $remote_database->id)
+                    ->update([
+                        'site_name'    => $request->input('remote_site_name') ?? '',
+                        //'company_name' => $request->input('remote_company_name') ?? '',
+                        'email'        => $request->input('remote_company_email') ?? '',
+                        'phone'        => $request->input('remote_company_mobile') ?? '',
+                        'address'      => $request->input('remote_company_address') ?? '',
+                        'updated_at'   => now(),
+                    ]);
+            }
+        } else {
+
+            $site_name    = $request->input('local_site_name') ?? '';
+            $company_name    = $request->input('local_company_name') ?? '';
+            $company_email   = $request->input('local_company_email') ?? '';
+            $company_mobile  = $request->input('local_company_mobile') ?? '';
+            $company_address = $request->input('local_company_address') ?? '';
+            $site->site_name       = $site_name;
+            $site->company_name    = $company_name;
+            $site->company_email   = $company_email;
+            $site->company_mobile  = $company_mobile;
+            $site->company_address = $company_address;
+            $site->save();
+        }
+        // 1️⃣ Build base invoice info
+        $invoice_data = [
+            'site'                 => $site,
+            'site_name'            => $site_name,
+            'invoice_number'       => $request->input('invoice_number'),
+            'invoice_date'         => $request->input('invoice_date'),
+            'customer_name'        => $request->input('customer_name'),
+            'customer_mobile'      => $request->input('customer_mobile'),
+            'customer_email'       => $request->input('customer_email'),
+            'company_email'        => $request->input('company_email'),
+            'currency'             => site_currency(),
+            'product_ids'          => [],
+            'invoice_amount'       => $request->input('invoice_amount'),
+            'current_amount'       => $request->input('current_amount'),
+            'discount_amount'      => $request->input('discount_amount'),
+            'company_name'         => $company_name,
+            'company_email'        => $company_email,
+            'company_mobile'       => $company_mobile,
+            'company_address'      => $company_address,
+            'invoice_header_image' => base64EncodeImage($site->invoice_header_image),
+            'invoice_footer_image' => base64EncodeImage($site->invoice_footer_image),
+            'invoice_signature'    => base64EncodeImage($site->invoice_signature),
+            'company_logo'         => base64EncodeImage($site->company_logo),
+            'invoice_image1'       => base64EncodeImage($site->invoice_image1),
+            'invoice_image2'       => base64EncodeImage($site->invoice_image2),
+            'invoice_image3'       => base64EncodeImage($site->invoice_image3),
+            'invoice_image4'       => base64EncodeImage($site->invoice_image4),
+            'invoice_image5'       => base64EncodeImage($site->invoice_image5),
+            'invoice_image6'       => base64EncodeImage($site->invoice_image6),
+            'invoice_image7'       => base64EncodeImage($site->invoice_image7),
+            'invoice_image8'       => base64EncodeImage($site->invoice_image8),
+            'invoice_image9'       => base64EncodeImage($site->invoice_image9),
+            'invoice_template'     => $site->invoice_template,
+            'model_type'           => $site->businessModel->model_type,
+            'site_id'              => $site->id,
+        ];
+
+        // Retrieve the products array from the form
+        $products = $request->input('products', []);
+        //dd($products);
+
+        // Process products - remove any debugging echo statements
+        $processedProducts = [];
+        foreach ($products as $productId => $productData) {
+            // Skip if selected check was implemented and not selected
+            // if (isset($productData['selected']) && $productData['selected'] !== "1") {
+            //    continue;
+            // }
+
+            // Add product to processed array with all necessary data
+            $processedProducts[] = $productData;
+        }
+
+        // Add products to the invoice data
+        //dd($processedProducts);
+        $invoice_data['products'] = $processedProducts;
+        //dd($invoice_data['products']);
+
+        // Determine view
+        $modelType = strtolower($site->businessModel->model_type);
+        $siteWords = numberToWords($site->id);
+        $viewPath  = "websites.{$modelType}.{$siteWords}";
+
+        $this->updateProductPrice($products);
+
+        InvoiceController::createInvoiceHistory($invoice_data, $processedProducts);
+        if ($request->filled('invoice_file_name')) {
+            $filename = $request->input('invoice_file_name') . '.pdf';
+        } else {
+            $filename = $invoice_data['invoice_number'] . '.pdf';
+        }
+
+        try {
+            return $this->generateWithApi2Pdf($viewPath, $invoice_data, $filename);
+        } catch (\Exception $e) {
+            // Fallback to Dompdf if API2PDF fails
+            return $this->generateWithDompdf($viewPath, $invoice_data, $filename);
+        }
+    }
+
+    protected function generateWithDompdf($viewPath, $invoice_data, $filename)
+    {
+        $pdf = \PDF::loadView($viewPath, $invoice_data)->setPaper('A4', 'portrait');
+        return $pdf->download($filename);
+    }
+
+    protected function generateWithApi2Pdf($viewPath, $invoice_data, $filename)
+    {
+        $html = View::make($viewPath, $invoice_data)->render();
+
+        $response = Http::withHeaders([
+            'Authorization' => env('API2PDF_KEY')
+        ])->post('https://v2.api2pdf.com/chrome/html', [
+            'html' => $html,
+            'fileName' => $filename,
+            'options' => [
+                'format' => 'A4',
+                'landscape' => false
+            ]
+        ]);
+
+        if ($response->failed()) {
+            $error = $response->json('message') ?? $response->body();
+            throw new \Exception('API2PDF failed: ' . $error);
+        }
+
+        $pdfUrl = $response->json('pdf');
+
+        if (empty($pdfUrl)) {
+            throw new \Exception('API2PDF did not return a PDF URL.');
+        }
+
+        return response()->streamDownload(function () use ($pdfUrl) {
+            $pdfResponse = Http::timeout(60)->get($pdfUrl);
+
+            if ($pdfResponse->failed()) {
+                throw new \Exception("Failed to download PDF file from Api2Pdf.");
+            }
+
+            echo $pdfResponse->body();
+        }, $filename);
+    }
+
+
+    protected function updateProductPrice($productDataArray)
+    {
+        $site_id = session('customer.site_id');
+        $site = Website::findOrFail($site_id);
+
+        \Log::info("Starting updateProductPrice with site_id: {$site_id}");
+        \Log::info("Product Data Array:", ['count' => count($productDataArray)]);
+
+        $userPrices = [];
+        $dbPrices = [];
+        $updatedProducts = [];
+        $blockedProducts = [];
+        $errors = [];
+        $debugData = []; // Add a debug array to collect all relevant information
+
+        foreach ($productDataArray as $index => $data) {
+            $debugData[$index] = [
+                'input' => $data,
+                'processing_steps' => []
+            ];
+
+            \Log::info("Processing product data: ", ['index' => $index, 'data' => $data]);
+
+            if (
+                !empty($data['game_currency_amount']) &&
+                isset($data['bundle_id']) &&
+                isset($data['unit_price'])
+            ) {
+                $targetAmount = $data['game_currency_amount'];
+                $bundle_id = floatval($data['bundle_id']) ?? rand(100000, 999999);
+                $unit_price = floatval($data['unit_price']);
+
+                $debugData[$index]['processing_steps'][] = [
+                    'step' => 'initial_params',
+                    'targetAmount' => $targetAmount,
+                    'bundle_id' => $bundle_id,
+                    'unit_price' => $unit_price
+                ];
+
+                \Log::info("Product parameters:", [
+                    'targetAmount' => $targetAmount,
+                    'bundle_id' => $bundle_id,
+                    'unit_price' => $unit_price
+                ]);
+
+                // Establish dynamic DB connection
+                try {
+                    DynamicDatabaseService::connect($site);
+                    $debugData[$index]['processing_steps'][] = [
+                        'step' => 'db_connection',
+                        'status' => 'success',
+                        'connection_type' => $this->connectionType
+                    ];
+                    \Log::info("DB Connection established for: {$this->connectionType}");
+                } catch (\Exception $e) {
+                    $debugData[$index]['processing_steps'][] = [
+                        'step' => 'db_connection',
+                        'status' => 'error',
+                        'message' => $e->getMessage()
+                    ];
+                    \Log::error("DB Connection failed: " . $e->getMessage());
+                    $errors[] = "Database connection failed: " . $e->getMessage();
+                    continue;
+                }
+
+                // Fetch row from game_sever_based_cost using bundle_id
+                try {
+                    $costData = DB::connection($this->connectionType)
+                        ->table('game_sever_based_cost')
+                        ->where('id', $bundle_id)
+                        ->first();
+
+                    if (!$costData) {
+                        $debugData[$index]['processing_steps'][] = [
+                            'step' => 'fetch_cost_data',
+                            'status' => 'error',
+                            'message' => "Bundle ID {$bundle_id} not found"
+                        ];
+                        \Log::warning("Bundle ID {$bundle_id} not found");
+                        $errors[] = "Bundle ID {$bundle_id} not found";
+                        continue;
+                    }
+
+                    $debugData[$index]['processing_steps'][] = [
+                        'step' => 'fetch_cost_data',
+                        'status' => 'success',
+                        'cost_data' => $costData
+                    ];
+                    \Log::info("Cost data found for bundle ID {$bundle_id}");
+                } catch (\Exception $e) {
+                    $debugData[$index]['processing_steps'][] = [
+                        'step' => 'fetch_cost_data',
+                        'status' => 'error',
+                        'message' => $e->getMessage()
+                    ];
+                    \Log::error("Error fetching cost data: " . $e->getMessage());
+                    $errors[] = "Error fetching cost data: " . $e->getMessage();
+                    continue;
+                }
+
+                // Parse JSON costs
+                try {
+                    $costs = json_decode($costData->costs, true);
+                    if (!isset($costs['bundles']) || !is_array($costs['bundles'])) {
+                        $debugData[$index]['processing_steps'][] = [
+                            'step' => 'parse_costs',
+                            'status' => 'error',
+                            'message' => "Invalid bundle structure for ID {$bundle_id}"
+                        ];
+                        \Log::warning("Invalid bundle structure for ID {$bundle_id}");
+                        $errors[] = "Invalid bundle structure for ID {$bundle_id}";
+                        continue;
+                    }
+
+                    $debugData[$index]['processing_steps'][] = [
+                        'step' => 'parse_costs',
+                        'status' => 'success',
+                        'bundles_count' => count($costs['bundles']),
+                        'bundles_keys' => array_keys($costs['bundles'])
+                    ];
+                    \Log::info("Costs parsed successfully for bundle ID {$bundle_id}", [
+                        'bundles_count' => count($costs['bundles']),
+                        'bundles_keys' => array_keys($costs['bundles'])
+                    ]);
+                } catch (\Exception $e) {
+                    $debugData[$index]['processing_steps'][] = [
+                        'step' => 'parse_costs',
+                        'status' => 'error',
+                        'message' => $e->getMessage()
+                    ];
+                    \Log::error("Error parsing costs: " . $e->getMessage());
+                    $errors[] = "Error parsing costs: " . $e->getMessage();
+                    continue;
+                }
+
+                // Find currency key
+                $currencyKey = null;
+                $keyFound = false;
+
+                foreach ($costs['bundles'] as $key => $value) {
+                    \Log::info("Comparing keys: ", ['json_key' => $key, 'target' => $targetAmount]);
+
+                    if (strval($key) === strval($targetAmount)) {
+                        $currencyKey = $key;
+                        $keyFound = true;
+                        break;
+                    }
+                }
+
+                if (!$keyFound) {
+                    $debugData[$index]['processing_steps'][] = [
+                        'step' => 'find_currency_key',
+                        'status' => 'error',
+                        'target' => $targetAmount,
+                        'available_keys' => array_keys($costs['bundles'])
+                    ];
+                    \Log::warning("No matching bundle key found for '{$targetAmount}' in bundle ID: {$bundle_id}", [
+                        'available_keys' => array_keys($costs['bundles'])
+                    ]);
+                    $errors[] = "No matching bundle key found for '{$targetAmount}' in bundle ID: {$bundle_id}";
+                    continue;
+                }
+
+                $debugData[$index]['processing_steps'][] = [
+                    'step' => 'find_currency_key',
+                    'status' => 'success',
+                    'currency_key' => $currencyKey
+                ];
+                \Log::info("Currency key found: {$currencyKey}");
+
+                $currentPrice = floatval($costs['bundles'][$currencyKey]);
+                $dbPrices[$bundle_id] = $currentPrice;
+                $userPrices[$bundle_id] = $unit_price;
+
+                $debugData[$index]['processing_steps'][] = [
+                    'step' => 'price_check',
+                    'current_price' => $currentPrice,
+                    'user_price' => $unit_price,
+                    'difference' => abs($currentPrice - $unit_price)
+                ];
+                \Log::info("Price comparison:", [
+                    'current_price' => $currentPrice,
+                    'user_price' => $unit_price,
+                    'difference' => abs($currentPrice - $unit_price)
+                ]);
+
+                // Skip if price hasn't changed
+                if (abs($currentPrice - $unit_price) < 0.01) {
+                    $debugData[$index]['processing_steps'][] = [
+                        'step' => 'price_check',
+                        'status' => 'skipped',
+                        'reason' => 'Price difference too small'
+                    ];
+                    \Log::info("Skipping update - price difference too small");
+                    continue;
+                }
+
+                // Check last price update history
+                try {
+                    $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
+                        ->where('product_id', $bundle_id)
+                        ->where('bundle', (string)$currencyKey)
+                        ->orderByDesc('last_price_changed')
+                        ->first();
+
+                    $debugData[$index]['processing_steps'][] = [
+                        'step' => 'check_history',
+                        'status' => 'success',
+                        'last_update' => $lastUpdate ? [
+                            'id' => $lastUpdate->id,
+                            'last_changed' => $lastUpdate->last_price_changed,
+                            'days_ago' => Carbon::parse($lastUpdate->last_price_changed)->diffInDays(now())
+                        ] : null
+                    ];
+
+                    \Log::info("Last update check:", [
+                        'found' => $lastUpdate ? true : false,
+                        'last_update' => $lastUpdate ? $lastUpdate->toArray() : null
+                    ]);
+                } catch (\Exception $e) {
+                    $debugData[$index]['processing_steps'][] = [
+                        'step' => 'check_history',
+                        'status' => 'error',
+                        'message' => $e->getMessage()
+                    ];
+                    \Log::error("Error checking price history: " . $e->getMessage());
+                    $errors[] = "Error checking price history: " . $e->getMessage();
+                    continue;
+                }
+
+                // Only update if never updated OR 3+ months old
+                if (!$lastUpdate || Carbon::parse($lastUpdate->last_price_changed)->diffInDays(now()) >= 90) {
+                    $debugData[$index]['processing_steps'][] = [
+                        'step' => 'update_allowed',
+                        'status' => 'proceed'
+                    ];
+                    \Log::info("Update allowed - proceeding with update");
+
+                    // THIS IS THE KEY CHANGE - Update the price in the JSON structure
+                    try {
+                        $costs['bundles'][$currencyKey] = strval($unit_price);
+
+                        // Update the entire costs JSON in the database
+                        $updated = DB::connection($this->connectionType)
+                            ->table('game_sever_based_cost')
+                            ->where('id', $bundle_id)
+                            ->update(['costs' => json_encode($costs)]);
+
+                        $debugData[$index]['processing_steps'][] = [
+                            'step' => 'update_db',
+                            'status' => $updated ? 'success' : 'error',
+                            'rows_affected' => $updated
+                        ];
+
+                        \Log::info("Database update result:", [
+                            'success' => $updated ? true : false,
+                            'rows_affected' => $updated
+                        ]);
+
+                        if (!$updated) {
+                            $errors[] = "Failed to update bundle ID {$bundle_id} - no rows affected";
+                            continue;
+                        }
+                    } catch (\Exception $e) {
+                        $debugData[$index]['processing_steps'][] = [
+                            'step' => 'update_db',
+                            'status' => 'exception',
+                            'message' => $e->getMessage()
+                        ];
+                        \Log::error("Error updating database: " . $e->getMessage());
+                        $errors[] = "Error updating database: " . $e->getMessage();
+                        continue;
+                    }
+
+                    // Create price history record
+                    try {
+                        \Log::info("Creating price history with:", [
+                            'site_id' => $site_id,
+                            'product_id' => $bundle_id,
+                            'bundle' => (string)$currencyKey,
+                            'unit_price' => $unit_price
+                        ]);
+
+                        $historyRecord = ProductPriceHistory::create([
+                            'site_id' => $site_id,
+                            'product_id' => $bundle_id,
+                            'bundle' => (string)$currencyKey,
+                            'unit_price' => $unit_price,
+                            'last_price_changed' => now(),
+                        ]);
+
+                        $debugData[$index]['processing_steps'][] = [
+                            'step' => 'create_history',
+                            'status' => 'success',
+                            'history_id' => $historyRecord->id
+                        ];
+
+                        \Log::info("Price history created:", [
+                            'id' => $historyRecord->id
+                        ]);
+
+                        $updatedProducts[] = [
+                            'bundle_id' => $bundle_id,
+                            'currency_key' => $currencyKey,
+                            'old_price' => $currentPrice,
+                            'new_price' => $unit_price
+                        ];
+                    } catch (\Exception $e) {
+                        $debugData[$index]['processing_steps'][] = [
+                            'step' => 'create_history',
+                            'status' => 'error',
+                            'message' => $e->getMessage(),
+                            'trace' => $e->getTraceAsString()
+                        ];
+                        \Log::error("Error creating price history: " . $e->getMessage() . "\n" . $e->getTraceAsString());
+                        $errors[] = "Error creating price history: " . $e->getMessage();
+                        // Don't continue here, we already updated the price in database
+                    }
+                } else {
+                    $daysRemaining = 90 - Carbon::parse($lastUpdate->last_price_changed)->diffInDays(now());
+
+                    $debugData[$index]['processing_steps'][] = [
+                        'step' => 'update_blocked',
+                        'status' => 'blocked',
+                        'days_remaining' => $daysRemaining
+                    ];
+
+                    \Log::info("Update blocked - price changed too recently", [
+                        'days_remaining' => $daysRemaining
+                    ]);
+
+                    $blockedProducts[] = [
+                        'bundle_id' => $bundle_id,
+                        'currency_key' => $currencyKey,
+                        'current_price' => $currentPrice,
+                        'requested_price' => $unit_price,
+                        'days_remaining' => $daysRemaining
+                    ];
+                }
+            } else {
+                $debugData[$index]['processing_steps'][] = [
+                    'step' => 'validate_input',
+                    'status' => 'error',
+                    'missing_fields' => [
+                        'game_currency_amount' => empty($data['game_currency_amount']),
+                        'bundle_id' => !isset($data['bundle_id']),
+                        'unit_price' => !isset($data['unit_price'])
+                    ]
+                ];
+                \Log::warning("Missing required fields in product data", [
+                    'index' => $index,
+                    'data' => $data
+                ]);
+            }
+        }
+
+        \Log::info("updateProductPrice finished", [
+            'updated_count' => count($updatedProducts),
+            'blocked_count' => count($blockedProducts),
+            'errors_count' => count($errors)
+        ]);
+
+        // Save the debug data to a file for inspection
+        \Storage::disk('local')->put('price_update_debug_' . now()->format('Y-m-d_H-i-s') . '.json', json_encode($debugData, JSON_PRETTY_PRINT));
+        //dd($debugData);
+        return [
+            'db_prices' => $dbPrices,
+            'user_prices' => $userPrices,
+            'updated_products' => $updatedProducts,
+            'blocked_products' => $blockedProducts,
+            'errors' => $errors,
+            'debug_data' => $debugData // Include debug data in the response
+        ];
+    }
+
+
+
+    private function getGameDetails(array $sessongames)
+    {
+        $site_id = session('customer.site_id');
+        $site = Website::findOrFail($site_id);
+        DynamicDatabaseService::connect($site);
+        // Extract unique product IDs from session data
+        $ids = collect($sessongames)->pluck('id')->unique();
+
+        // Fetch product details from the database
+        $productsData = DB::connection($this->connectionType)
+            ->table('products')
+            ->whereIn('id', $ids)
+            ->select(
+                'id',
+                'name',
+                'slug',
+                'game_currency',
+                'game_platform',
+                'game_server_region',
+                'game_need_to_capture'
+            )
+            ->get()
+            ->keyBy('id');
+
+        // Combine session data with DB data
+        $finalProducts = collect($sessongames)->map(function ($game) use ($productsData) {
+            $product = $productsData[$game['id']] ?? null;
+
+            return (object)[
+                'id' => $game['id'],
+                'unit_price' => $game['unit_price'],
+                'game_currency_amount' => $game['game_currency_amount'],
+                //'bundle' => $game['bundle'],
+                'bundle_id' => rand(1000, 9999),
+                'source' => 'Custom',
+                'can_edit_price' => 1,
+                'remaining_days' => 1,
+                'name' => $product->name ?? 'Unknown',
+                'slug' => $product->slug ?? null,
+                'game_currency' => $product->game_currency ?? null,
+                'game_platform' => $product->game_platform ?? null,
+                'game_region' => $product->game_server_region ?? null,
+                'game_need_to_capture' => $product->game_need_to_capture ?? null,
+            ];
+        });
+
+
+        return $finalProducts;
+    }
+
+    public function clearProducts(Request $request)
+    {
+        session()->forget('selected_games');
+        session()->forget('current_amount');
+        return response()->json([
+            'success' => true,
+            'tableRows' => '',
+            'currency' => null,
+            'total' => 0
+        ]);
+    }
+
+    public function updateProduct(Request $request)
+    {
+        $current_amount = $request->get('current_amount');
+
+
+        session(['current_amount' => $current_amount]);
+
+        return response()->json([
+            'success' => true,
+            'current_amount' => $current_amount,
+        ]);
     }
 }
