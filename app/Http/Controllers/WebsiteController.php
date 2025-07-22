@@ -155,7 +155,7 @@ class WebsiteController extends Controller
     public function updateWebsite(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'site_connectivity' => 'required|in:db,api',
+            'site_connectivity' => 'nullable|in:db,api',
             'business_model_id' => 'required|exists:business_models,id',
             'technology' => 'required|in:html,wordpress,corephp,laravel,django,other',
             'site_name' => 'nullable|string|max:255',
@@ -297,7 +297,7 @@ class WebsiteController extends Controller
                     'term_taxonomy_table' => $request->term_taxonomy_table,
                     'consumer_key' => $request->consumer_key,
                     'consumer_secret' => $request->consumer_secret,
-                    'site_link' => $request->site_link,
+                    'site_link' => rtrim($request->site_link, '/') . '/',
                     'company_name' => $request->company_name,
                     'company_email' => $request->company_email,
                     'company_mobile' => $request->company_mobile,
@@ -324,11 +324,11 @@ class WebsiteController extends Controller
         try {
 
             $validator = Validator::make($request->all(), [
+                'site_connectivity' => 'nullable|in:db,api',
                 'business_model_id' => 'required|exists:business_models,id',
                 'technology' => 'required|in:html,wordpress,corephp,laravel,django,other',
                 'site_name' => 'nullable|string|max:255',
                 'site_description' => 'nullable|string|max:500',
-                'site_connectivity' => 'required|in:db,api',
                 'db_host' => 'required|string|max:255',
                 'db_port' => 'required|numeric',
                 'db_name' => 'required|string|max:255',
@@ -384,7 +384,7 @@ class WebsiteController extends Controller
                 'db_name' => $request->db_name,
                 'db_username' => $request->db_username,
                 'db_password' => $request->db_password,
-                'site_link' => $request->site_link,
+                'site_link' => rtrim($request->site_link, '/') . '/',
                 'company_name' => $request->company_name,
                 'consumer_key' => $request->consumer_key,
                 'consumer_secret' => $request->consumer_secret,
