@@ -209,10 +209,14 @@ class WordPressController extends Controller
 
             if ($pages <= 0) continue;
 
+            $basePercentage = 20; #20% ture changes of urjency
+            $multiplier = ceil($invoiceAmount / 100);
+            $chance = min($basePercentage * $multiplier, 100); 
+
             $product->unit_price = floatval($product->price);
             $product->pages = $pages;
             $product->urgent_amount = 99.75;
-            $product->is_urgent = rand(1, 100) <= 10;
+            $product->is_urgent = rand(1, 100) <= $chance;
             $product->line_total = $product->unit_price * $product->pages;
 
             if ($product->is_urgent) {
