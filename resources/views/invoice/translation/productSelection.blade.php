@@ -572,40 +572,7 @@
     <script>
         feather.replace();
     </script>
-    <script>
-        // function calculateTotalPrice() {
-        //     var total = 0;
-        //     $('.product-row').each(function() {
-        //         var unitPrice = parseFloat($(this).find('.product-price').val());
-        //         var pages = parseInt($(this).find('.product-pages').val()) || 1;
-        //         total += unitPrice * pages;
-        //     });
-
-        //     $('#products-total').text('{{ site_currency() }}' + total.toFixed(2));
-        //     $('#current_amount').val(total.toFixed(2));
-
-        //     // Update the invoice amount calculation
-        //     var discountAmount = parseFloat($('#discount_amount').val()) || 0;
-        //     var invoiceAmount = total - discountAmount;
-        //     $('#invoice_amount').val(invoiceAmount.toFixed(2));
-
-        //     // Apply color classes based on comparison with original invoice amount
-        //     var targetAmount = parseFloat($('#original_invoice_amount').val()) || 0;
-        //     var difference = Math.abs(invoiceAmount - targetAmount);
-        //     var percentDiff = (difference / targetAmount) * 100;
-
-        //     if (percentDiff <= 5) {
-        //         $('#invoice_amount').removeClass('text-danger').addClass('text-success');
-        //     } else {
-        //         $('#invoice_amount').removeClass('text-success').addClass('text-danger');
-        //     }
-        // }
-
-        // // Re-run calculations when the document is ready
-        // $(document).ready(function() {
-        //     calculateTotalPrice();
-        // });
-    </script>
+    
     <script>
         $(document).ready(function() {
             $('html, body').animate({
@@ -642,7 +609,6 @@
         }
 
         document.getElementById('noOfProducts').addEventListener('change', triggerRandomizeProducts);
-        //document.getElementById('category_id').addEventListener('change', triggerRandomizeProducts);
     </script>
 
     <script>
@@ -762,7 +728,7 @@
                     noOfProducts: $('#noOfProducts').val()
                 },
                 beforeSend: function() {
-                    $('#randomize-product-table-body').html(getLoaderRowHTML());
+                    $('#randomize-product-table-body').html(getLoaderRowHTML(10));
                     $('#current_amount').val('Calculating...');
                     $('#discount_amount').prop('type', 'text').val('Calculating...').prop('readonly', true);
                     $('#current_amount').removeClass('text-danger text-success');
@@ -774,7 +740,7 @@
                     $('#discount_amount').val(0.00);
                     if (response.total === 0) {
                         $('#randomize-product-table-body').html(getErrorRowHTML(
-                            'No results found. Try randomizing or use a different keyword.'));
+                            'No results found. Try randomizing or use a different keyword.',10));
                         return;
                     } else {
                         const invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
@@ -843,7 +809,7 @@
             if (!priceFrom && !priceTo) {
                 $('#customize-product-table-body').html(
                     getErrorRowHTML(
-                        'No products found for your keyword. Try a different keyword or adjust the range filter.')
+                        'No products found for your keyword. Try a different keyword or adjust the range filter.',10)
                 );
                 $('#error-row').fadeIn(300).delay(3000).fadeOut(500);
                 return;
@@ -871,7 +837,7 @@
                         $('#customize-product-table-body').html(
                             getErrorRowHTML(
                                 'No products found for your keyword. Try a different keyword or adjust the range filter.'
-                            )
+                            ,10)
                         );
                         return;
                     }
@@ -884,7 +850,7 @@
                     if (textStatus !== 'abort') {
                         console.error('AJAX Error:', textStatus);
                         $('#customize-product-table-body').html(getErrorRowHTML(
-                            'Something went wrong while filtering.'));
+                            'Something went wrong while filtering.',10));
                         toastr.error('Something went wrong while filtering.', 'Oops!');
                     }
                 },
@@ -922,7 +888,7 @@
 
                     // Clear table body
                     $('#randomize-product-table-body').html(getErrorRowHTML(
-                        'Randomize filter cleared. You can now randomize products again or add custom products.'
+                        'Randomize filter cleared. You can now randomize products again or add custom products.',10
                     ));
 
                     // Show toast

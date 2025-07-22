@@ -220,9 +220,14 @@ class HomeController extends Controller
 
     public function fetchWooCommerceProducts()
     {
-        $consumerKey = 'ck_cdde416de55f08fd2849000081ea380da09dbe07';
-        $consumerSecret = 'cs_a4d86e30abca2386762d40339a6c112940ef4239';
-        $siteUrl = 'https://gm3boot.jkt-mainos.com';
+        // $consumerKey = 'ck_cdde416de55f08fd2849000081ea380da09dbe07';
+        // $consumerSecret = 'cs_a4d86e30abca2386762d40339a6c112940ef4239';
+        // $siteUrl = 'https://gm3boot.jkt-mainos.com';
+
+        $consumerKey = 'ck_5e0c0836ac39d6042c03a18f349c7f589e707f6e';
+        $consumerSecret = 'cs_feb29980d81bf805b1e7fe0060205303170e2e3b';
+        $siteUrl = 'https://speedytranslators.com';
+
         $auth = base64_encode($consumerKey . ':' . $consumerSecret);
 
         $products = [];
