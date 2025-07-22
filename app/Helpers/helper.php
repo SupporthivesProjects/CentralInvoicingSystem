@@ -2,6 +2,7 @@
 use App\Services\DynamicDatabaseService;
 use App\Models\Website;
 use App\Models\Currency;
+use App\Models\Language;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Log;
@@ -312,18 +313,27 @@ if (!function_exists('site_languages')) {
             $site = \App\Models\Website::findOrFail($site_id);
             \App\Services\DynamicDatabaseService::connect($site);
 
-            $languages = DB::connection('dynamic')
-                ->table('languages')
+            if (Schema::connection('dynamic')->hasTable('languages')) {
+                return DB::connection('dynamic')
+                    ->table('languages')
+                    ->select('id', 'name')
+                    ->orderBy('name')
+                    ->get();
+            }
+
+            return DB::table('languages')
                 ->select('id', 'name')
                 ->orderBy('name')
                 ->get();
-
-            return $languages;
         } catch (\Exception $e) {
-            return collect(); // Return empty collection on failure
+            return DB::table('languages')
+                ->select('id', 'name')
+                ->orderBy('name')
+                ->get();
         }
     }
 }
+
 
 if (!function_exists('compact_number')) {
     function compact_number($num)

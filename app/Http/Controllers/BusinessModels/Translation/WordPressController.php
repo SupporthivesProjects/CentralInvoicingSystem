@@ -212,7 +212,7 @@ class WordPressController extends Controller
             $product->unit_price = floatval($product->price);
             $product->pages = $pages;
             $product->urgent_amount = 99.75;
-            $product->is_urgent = rand(1, 100) <= 30;
+            $product->is_urgent = rand(1, 100) <= 10;
             $product->line_total = $product->unit_price * $product->pages;
 
             if ($product->is_urgent) {
@@ -221,6 +221,13 @@ class WordPressController extends Controller
 
             $product->can_edit_price = 1;
             $product->remaining_days = 0;
+            $productName = strtolower(trim($product->name));
+
+            if ($certifiedProduct && $productName === strtolower(trim($certifiedProduct['name']))) {
+                $product->unit_type = 'pages';
+            } else {
+                $product->unit_type = 'words';
+            }
 
             $selectedProducts[] = $product;
         }
@@ -254,7 +261,7 @@ class WordPressController extends Controller
 
     
 
-    public function updateProductPages(Request $request)
+    public function updateProduct(Request $request)
     {
         $productId = $request->get('product_id');
         $pages = intval($request->get('pages'));
@@ -298,15 +305,15 @@ class WordPressController extends Controller
         $site_id = $request->get('site_id');
         $site = Website::findOrFail($site_id);
         $modelType = $site->businessModel->model_type;
-
+    
         $readyProducts = session('ready_products', []);
-
+    
         $updatedProducts = collect($readyProducts)->filter(function ($product) use ($productId) {
             return $product['id'] != $productId;
         })->values()->toArray();
-
+    
         session()->put('ready_products', $updatedProducts);
-
+    
         if (empty($updatedProducts)) {
             session()->forget('current_amount');
             return response()->json([
@@ -315,140 +322,69 @@ class WordPressController extends Controller
                 'currency' => null
             ]);
         }
-
+    
         $consumerKey = $site->consumer_key;
         $consumerSecret = $site->consumer_secret;
         $siteUrl = $site->site_link;
         $auth = base64_encode($consumerKey . ':' . $consumerSecret);
-
+    
         $productIds = collect($updatedProducts)->pluck('id')->all();
         $selectedProducts = [];
-
+    
+        $certifiedProduct = collect($updatedProducts)->first(function ($product) {
+            return strtolower(trim($product['name'])) === 'certified translation';
+        });
+    
         foreach ($productIds as $id) {
             $response = Http::withHeaders([
                 'Authorization' => 'Basic ' . $auth,
                 'Content-Type' => 'application/json',
                 'User-Agent' => 'LaravelApp/1.0'
             ])->get("{$siteUrl}/wp-json/wc/v3/products/{$id}");
-
+    
             if ($response->failed()) continue;
-
+    
             $apiProduct = (object) $response->json();
             $sessionProduct = collect($updatedProducts)->firstWhere('id', $id);
-
+    
             $apiProduct->unit_price = floatval($sessionProduct['unit_price']);
             $apiProduct->pages = intval($sessionProduct['pages']);
             $apiProduct->urgent_amount = floatval($sessionProduct['urgent_amount'] ?? 99.75);
             $apiProduct->is_urgent = $sessionProduct['is_urgent'] ?? false;
             $apiProduct->line_total = $apiProduct->pages * $apiProduct->unit_price;
-
+    
             if ($apiProduct->is_urgent) {
                 $apiProduct->line_total += $apiProduct->urgent_amount;
             }
-
+    
             $apiProduct->can_edit_price = 1;
             $apiProduct->remaining_days = 0;
-
+    
+            $productName = strtolower(trim($apiProduct->name));
+            if ($certifiedProduct && $productName === strtolower(trim($certifiedProduct['name']))) {
+                $apiProduct->unit_type = 'pages';
+            } else {
+                $apiProduct->unit_type = 'words';
+            }
+    
             $selectedProducts[] = $apiProduct;
         }
-
+    
         $finalTotal = collect($selectedProducts)->sum('line_total');
         session(['current_amount' => $finalTotal]);
-
+    
         $tableRows = view("invoice.{$modelType}.random_product_rows", [
             'products' => $selectedProducts,
             'site' => $site,
             'total' => $finalTotal
         ])->render();
-
+    
         return response()->json([
             'tableRows' => $tableRows,
             'total' => $finalTotal
         ]);
     }
-
-
-
-    public function updateProduct(Request $request)
-    {
-        $productId = $request->get('product_id');
-        $pages = intval($request->get('quantity', 1));
-        $site_id = $request->get('site_id');
-
-        $site = Website::findOrFail($site_id);
-        $modelType = $site->businessModel->model_type;
-
-        $readyProducts = session('ready_products', []);
-
-        foreach ($readyProducts as &$product) {
-            if ($product['id'] == $productId) {
-                $product['pages'] = $pages;
-                break;
-            }
-        }
-
-        session()->put('ready_products', $readyProducts);
-
-        if (empty($readyProducts)) {
-            session()->forget('current_amount');
-            return response()->json([
-                'tableRows' => '',
-                'total' => 0,
-                'currency' => null
-            ]);
-        }
-
-        $consumerKey = $site->consumer_key;
-        $consumerSecret = $site->consumer_secret;
-        $siteUrl = $site->site_link;
-        $auth = base64_encode($consumerKey . ':' . $consumerSecret);
-
-        $productIds = collect($readyProducts)->pluck('id')->all();
-        $selectedProducts = [];
-
-        foreach ($productIds as $id) {
-            $response = Http::withHeaders([
-                'Authorization' => 'Basic ' . $auth,
-                'Content-Type' => 'application/json',
-                'User-Agent' => 'LaravelApp/1.0'
-            ])->get("{$siteUrl}/wp-json/wc/v3/products/{$id}");
-
-            if ($response->failed()) continue;
-
-            $apiProduct = (object) $response->json();
-            $sessionProduct = collect($readyProducts)->firstWhere('id', $id);
-
-            $apiProduct->unit_price = floatval($sessionProduct['unit_price']);
-            $apiProduct->pages = intval($sessionProduct['pages'] ?? 1);
-            $apiProduct->urgent_amount = floatval($sessionProduct['urgent_amount'] ?? 99.75);
-            $apiProduct->is_urgent = $sessionProduct['is_urgent'] ?? false;
-            $apiProduct->line_total = $apiProduct->unit_price * $apiProduct->pages;
-
-            if ($apiProduct->is_urgent) {
-                $apiProduct->line_total += $apiProduct->urgent_amount;
-            }
-
-            $apiProduct->can_edit_price = 1;
-            $apiProduct->remaining_days = 0;
-
-            $selectedProducts[] = $apiProduct;
-        }
-
-        $total = collect($selectedProducts)->sum('line_total');
-        session(['current_amount' => $total]);
-
-        $tableRows = view("invoice.{$modelType}.random_product_rows", [
-            'products' => $selectedProducts,
-            'site' => $site,
-            'total' => $total
-        ])->render();
-
-        return response()->json([
-            'tableRows' => $tableRows,
-            'total' => $total
-        ]);
-    }
-
+    
 
 
     public function clearProducts(Request $request)
@@ -511,37 +447,34 @@ class WordPressController extends Controller
     {
         $site_id = $request->input('site_id');
         $site = Website::findOrFail($site_id);
-
+        DynamicDatabaseService::connect($site);
         $company_detail_type = $request->input('company_detail_type');
-
+    
         if ($company_detail_type === 'remote') {
-
-            $site_name    = $request->input('remote_site_name') ?? '';
+            $site_name       = $request->input('remote_site_name') ?? '';
             $company_name    = $request->input('remote_company_name') ?? '';
             $company_email   = $request->input('remote_company_email') ?? '';
             $company_mobile  = $request->input('remote_company_mobile') ?? '';
             $company_address = $request->input('remote_company_address') ?? '';
             $remote_database = DB::connection($this->connectionType)->table('general_settings')->orderByDesc('updated_at')->first();
-
+    
             if ($remote_database) {
-                DB::connection($this->connectionType)->table('general_settings') ->where('id', $remote_database->id)
+                DB::connection($this->connectionType)->table('general_settings')->where('id', $remote_database->id)
                     ->update([
-                        'site_name'    => $request->input('remote_site_name') ?? '',
-                        //'company_name' => $request->input('remote_company_name') ?? '',
-                        'email'        => $request->input('remote_company_email') ?? '',
-                        'phone'        => $request->input('remote_company_mobile') ?? '',
-                        'address'      => $request->input('remote_company_address') ?? '',
+                        'site_name'    => $site_name,
+                        'email'        => $company_email,
+                        'phone'        => $company_mobile,
+                        'address'      => $company_address,
                         'updated_at'   => now(),
                     ]);
             }
-
-        } else{
-
-            $site_name    = $request->input('local_site_name') ?? '';
+        } else {
+            $site_name       = $request->input('local_site_name') ?? '';
             $company_name    = $request->input('local_company_name') ?? '';
             $company_email   = $request->input('local_company_email') ?? '';
             $company_mobile  = $request->input('local_company_mobile') ?? '';
             $company_address = $request->input('local_company_address') ?? '';
+    
             $site->site_name       = $site_name;
             $site->company_name    = $company_name;
             $site->company_email   = $company_email;
@@ -549,7 +482,7 @@ class WordPressController extends Controller
             $site->company_address = $company_address;
             $site->save();
         }
-
+    
         $invoice_data = [
             'site' => $site,
             'site_name' => $site_name,
@@ -562,10 +495,10 @@ class WordPressController extends Controller
             'invoice_amount' => $request->input('invoice_amount'),
             'current_amount' => $request->input('current_amount'),
             'discount_amount' => $request->input('discount_amount'),
-            'company_name'         => $company_name,
-            'company_email'        => $company_email,
-            'company_mobile'       => $company_mobile,
-            'company_address'      => $company_address,
+            'company_name' => $company_name,
+            'company_email' => $company_email,
+            'company_mobile' => $company_mobile,
+            'company_address' => $company_address,
             'invoice_header_image' => base64EncodeImage($site->invoice_header_image),
             'invoice_footer_image' => base64EncodeImage($site->invoice_footer_image),
             'invoice_signature' => base64EncodeImage($site->invoice_signature),
@@ -573,86 +506,96 @@ class WordPressController extends Controller
             'invoice_image1' => base64EncodeImage($site->invoice_image1),
             'invoice_image2' => base64EncodeImage($site->invoice_image2),
             'invoice_image3' => base64EncodeImage($site->invoice_image3),
-            'invoice_image4'       => base64EncodeImage($site->invoice_image4),
-            'invoice_image5'       => base64EncodeImage($site->invoice_image5),
-            'invoice_image6'       => base64EncodeImage($site->invoice_image6),
-            'invoice_image7'       => base64EncodeImage($site->invoice_image7),
-            'invoice_image8'       => base64EncodeImage($site->invoice_image8),
-            'invoice_image9'       => base64EncodeImage($site->invoice_image9),
+            'invoice_image4' => base64EncodeImage($site->invoice_image4),
+            'invoice_image5' => base64EncodeImage($site->invoice_image5),
+            'invoice_image6' => base64EncodeImage($site->invoice_image6),
+            'invoice_image7' => base64EncodeImage($site->invoice_image7),
+            'invoice_image8' => base64EncodeImage($site->invoice_image8),
+            'invoice_image9' => base64EncodeImage($site->invoice_image9),
             'invoice_template' => $site->invoice_template,
             'model_type' => $site->businessModel->model_type,
             'site_id' => $site->id,
             'currency' => site_currency(),
         ];
-
+    
         $productsInput = $request->input('products', []);
-        DynamicDatabaseService::connect($site);
-
+        dd( $productsInput);
         $productIds = array_keys($productsInput);
-        //dd($productsInput);
-
-        $products = DB::connection($this->connectionType)->table($this->productTable)
-            ->whereIn('id', $productIds)
-            ->select('id', 'category_id', 'name', 'unit_price')
-            ->get()
-            ->sortBy(function ($product) use ($productIds) {
-                return array_search($product->id, $productIds);
-            })
-            ->values()
-            ->map(function ($product) use ($productsInput) {
-                $input = $productsInput[$product->id];
-
-                $product->name = $input['name'] ?? 'Unknown';
-                $product->unit_price = (float) ($input['price'] ?? $product->unit_price);
-                $product->line_total = (float) ($input['line_total'] ?? 0);
-                $product->pages = (int) ($input['pages'] ?? 1);
-                $product->is_urgent = isset($input['is_urgent']) ? 1 : 0;
-                $product->urgent_amount = (float) ($input['urgent_amount'] ?? 0);
-                $product->from_language = $input['from_language'] ?? null;
-                $product->to_language = $input['to_language'] ?? null;
-                $product->selected = isset($input['selected']) ? 1 : 0;
-
-                return $product;
-            });
-
-        // ✅ Replace language IDs with language names using site_languages()
+    
+        $auth = base64_encode($site->consumer_key . ':' . $site->consumer_secret);
+        $siteUrl = rtrim($site->site_link, '/');
+    
+        $apiProducts = collect();
+        foreach ($productIds as $id) {
+            $response = Http::withHeaders([
+                'Authorization' => 'Basic ' . $auth,
+                'Content-Type' => 'application/json',
+                'User-Agent' => 'LaravelApp/1.0'
+            ])->get("{$siteUrl}/wp-json/wc/v3/products/{$id}");
+    
+            if ($response->successful()) {
+                $apiProducts->push((object) $response->json());
+            }
+        }
+    
+        $certifiedProduct = collect($productsInput)->first(function ($product) {
+            return strtolower(trim($product['name'])) === 'certified translation';
+        });
+    
+        $apiProducts = $apiProducts->map(function ($product) use ($productsInput, $certifiedProduct) {
+            if (!isset($productsInput[$product->id])) return $product;
+    
+            $input = $productsInput[$product->id];
+    
+            $product->name = $input['name'] ?? 'Unknown';
+            $product->unit_price = (float) ($input['price'] ?? $product->price ?? 0);
+            $product->line_total = (float) ($input['line_total'] ?? 0);
+            $product->pages = (int) ($input['pages'] ?? 1);
+            $product->is_urgent = isset($input['is_urgent']) ? 1 : 0;
+            $product->urgent_amount = (float) ($input['urgent_amount'] ?? 0);
+            $product->from_language = $input['from_language'] ?? null;
+            $product->to_language = $input['to_language'] ?? null;
+            $product->selected = isset($input['selected']) ? 1 : 0;
+    
+            if ($certifiedProduct && strtolower(trim($product->name)) === strtolower(trim($certifiedProduct['name']))) {
+                $product->unit_type = 'Pages';
+            } else {
+                $product->unit_type = 'Words';
+            }
+    
+            return $product;
+        });
+    
         $languages = site_languages()->pluck('name', 'id');
-
-        $products->transform(function ($product) use ($languages) {
+        $apiProducts = $apiProducts->transform(function ($product) use ($languages) {
             $product->from_language = $languages[$product->from_language] ?? $product->from_language;
             $product->to_language = $languages[$product->to_language] ?? $product->to_language;
             return $product;
         });
-
-        //dd($products);
-
-        $invoice_data['products'] = $products;
+        $invoice_data['products'] = $apiProducts;
         $invoice_data['product_ids'] = $productIds;
-        //dd($productIds);
-
+    
         $modelType = strtolower($site->businessModel->model_type);
         $siteIdInWords = numberToWords($site->id);
         $viewPath = "websites.{$modelType}.{$siteIdInWords}";
-
+    
         if (!empty($productsInput)) {
-                $this->updateProductPrice($productsInput);
+            $this->updateProductPrice($productsInput);
         }
+    
         InvoiceController::createInvoiceHistory($invoice_data);
-
-        if ($request->filled('invoice_file_name')) {
-            $filename = $request->input('invoice_file_name') . '.pdf';
-        } else {
-            $filename = $invoice_data['invoice_number'] . '.pdf';
-        }
-
+    
+        $filename = $request->filled('invoice_file_name')
+            ? $request->input('invoice_file_name') . '.pdf'
+            : $invoice_data['invoice_number'] . '.pdf';
+    
         try {
             return $this->generateWithApi2Pdf($site, $viewPath, $invoice_data, $filename);
-
         } catch (\Exception $e) {
-            // Fallback to Dompdf if API2PDF fails
             return $this->generateWithDompdf($site, $viewPath, $invoice_data, $filename);
         }
     }
+    
 
     protected function generateWithDompdf($site, $viewPath, $invoice_data, $filename)
     {
@@ -704,69 +647,55 @@ class WordPressController extends Controller
     }
 
 
-
-
     protected function updateProductPrice($productDataArray)
     {
         $site_id = session('customer.site_id');
-
+        $site = Website::findOrFail($site_id);
+        $auth = base64_encode($site->consumer_key . ':' . $site->consumer_secret);
+        $siteUrl = rtrim($site->site_link, '/');
+    
         foreach ($productDataArray as $item) {
-            // Check if item is already an array or needs decoding
             $data = is_string($item) ? json_decode($item, true) : $item;
-
+    
             if (!empty($data['id']) && isset($data['price'])) {
                 $product_id = intval($data['id']);
                 $new_price = floatval($data['price']);
-
-                $product = DB::connection($this->connectionType)
-                    ->table($this->productTable)
-                    ->where('id', $product_id)
-                    ->first();
-
-                if (!$product) continue;
-
-                $current_price = floatval($product->unit_price);
-
-                if ($current_price == $new_price) continue;
-
-                $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
-                    ->where('product_id', $product_id)
-                    ->orderByDesc('last_price_changed')
-                    ->first();
-
-                if (!$lastUpdate) {
-                    DB::connection($this->connectionType)
-                        ->table($this->productTable)
-                        ->where('id', $product_id)
-                        ->update(['unit_price' => $new_price]);
-
-                    ProductPriceHistory::create([
-                        'site_id' => $site_id,
-                        'product_id' => $product_id,
-                        'unit_price' => $new_price,
-                        'last_price_changed' => now(),
-                    ]);
+    
+                $response = Http::withHeaders([
+                    'Authorization' => 'Basic ' . $auth,
+                    'Content-Type' => 'application/json',
+                    'User-Agent' => 'LaravelApp/1.0'
+                ])->get("{$siteUrl}/wp-json/wc/v3/products/{$product_id}");
+    
+                if (!$response->successful()) {
+                    Log::error("Failed to fetch product ID {$product_id}: " . $response->body());
                     continue;
                 }
-
-                if (Carbon::parse($lastUpdate->last_price_changed)->diffInMonths(now()) >= 3) {
-                    DB::connection($this->connectionType)
-                        ->table($this->productTable)
-                        ->where('id', $product_id)
-                        ->update(['unit_price' => $new_price]);
-
-                    ProductPriceHistory::create([
-                        'site_id' => $site_id,
-                        'product_id' => $product_id,
-                        'unit_price' => $new_price,
-                        'last_price_changed' => now(),
-                    ]);
+    
+                $product = (object) $response->json();
+                $current_price = floatval($product->price);
+    
+                if ($current_price == $new_price) {
+                    Log::info("No price change for product ID {$product_id}. Current price: {$current_price}");
+                    continue;
+                }
+    
+                $updateResponse = Http::withHeaders([
+                    'Authorization' => 'Basic ' . $auth,
+                    'Content-Type' => 'application/json',
+                    'User-Agent' => 'LaravelApp/1.0'
+                ])->put("{$siteUrl}/wp-json/wc/v3/products/{$product_id}", [
+                    'regular_price' => strval($new_price)
+                ]);
+    
+                if ($updateResponse->successful()) {
+                    Log::info("Updated price for product ID {$product_id} from {$current_price} to {$new_price}");
+                } else {
+                    Log::error("Failed to update price for product ID {$product_id}: " . $updateResponse->body());
                 }
             }
         }
     }
-
-
-
+    
 }
 
