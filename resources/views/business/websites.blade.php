@@ -90,11 +90,6 @@
                                                             @if($site->site_status === 'pdown') disabled @endif>
                                                             <i class="fas fa-file-invoice"></i> Generate Invoice
                                                         </button>
-                                                        @if(auth()->user()->roles->contains('name', 'admin'))
-                                                            <a href="{{ route('website.edit', $site->id) }}" class="btn btn-sm btn-primary">
-                                                                    <i class="fas fa-edit"></i> Edit
-                                                            </a>
-                                                        @endif
                                                         @if(auth()->user()->roles->contains('name', 'developer'))
                                                             <a href="{{ route('website.edit', $site->id) }}" class="btn btn-sm btn-primary">
                                                                     <i class="fas fa-edit"></i> Edit

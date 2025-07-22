@@ -671,21 +671,21 @@ class LaravelController extends Controller
         }
 
         try {
-            return $this->generateWithApi2Pdf($viewPath, $invoice_data, $filename);
+            return $this->generateWithApi2Pdf($site, $viewPath, $invoice_data, $filename);
 
         } catch (\Exception $e) {
             // Fallback to Dompdf if API2PDF fails
-            return $this->generateWithDompdf($viewPath, $invoice_data, $filename);
+            return $this->generateWithDompdf($site, $viewPath, $invoice_data, $filename);
         }
     }
 
-    protected function generateWithDompdf($viewPath, $invoice_data, $filename)
+    protected function generateWithDompdf($site, $viewPath, $invoice_data, $filename)
     {
         $pdf = \PDF::loadView($viewPath, $invoice_data)->setPaper('A4', 'portrait');
         return $pdf->download($filename);
     }
 
-    protected function generateWithApi2Pdf($viewPath, $invoice_data, $filename)
+    protected function generateWithApi2Pdf($site, $viewPath, $invoice_data, $filename)
     {
         $html = View::make($viewPath, $invoice_data)->render();
 
@@ -695,8 +695,14 @@ class LaravelController extends Controller
             'html' => $html,
             'fileName' => $filename,
             'options' => [
-                'format' => 'A4',
-                'landscape' => false
+                'format' => $site->pdf_size ?? 'A4',
+                'landscape' => ($site->pdf_orientation ?? 'portrait') === 'landscape',
+                'marginTop' => '0mm',
+                'marginBottom' => '0mm',
+                'marginLeft' => '0mm',
+                'marginRight' => '0mm',
+                'disableSmartShrinking' => true,
+                'zoom' => 1,
             ]
         ]);
 
