@@ -146,23 +146,30 @@
                         <div class="row g-2">
                         <div class="col-md-1 border-end">
                             <div class="list-group list-group-flush h-100 d-flex flex-column justify-content-center" id="companyTypeTab" role="tablist">
-                            <label class="rounded-end-0 list-group-item list-group-item-action d-flex align-items-center gap-2 py-2 active" data-bs-toggle="list" href="#websiteDetails" role="tab" style="cursor:pointer;">
-                                <input class="form-check-input visually-hidden" form="generate-invoice-form" type="radio" name="company_detail_type" id="radioWebsite" value="remote" checked>
+                            @if(!$isWordPress)
+                            <label class="rounded-end-0 list-group-item list-group-item-action d-flex align-items-center gap-2 py-2 {{ !$isWordPress ? 'active' : '' }}"
+                                data-bs-toggle="list" href="#websiteDetails" role="tab" style="cursor:pointer;">
+                                <input class="form-check-input visually-hidden" form="generate-invoice-form" type="radio" name="company_detail_type"
+                                    id="radioWebsite" value="remote" @checked(!$isWordPress)>
                                 <span class="flex-grow-1 fw-semibold text-center rounded d-flex justify-content-center align-items-center">
-                                Remote <span class="ms-1 d-none active-arrow"><i class="fas fa-check"></i></span>
+                                    Remote <span class="ms-1 d-none active-arrow"><i class="fas fa-check"></i></span>
                                 </span>
                             </label>
-                            <label class="rounded-end-0 list-group-item list-group-item-action d-flex align-items-center gap-2 py-2" data-bs-toggle="list" href="#customDetails" role="tab" style="cursor:pointer;">
-                                <input class="form-check-input visually-hidden" form="generate-invoice-form" type="radio" name="company_detail_type" id="radioCustom" value="local">
+                            @endif
+                            <label class="rounded-end-0 list-group-item list-group-item-action d-flex align-items-center gap-2 py-2 {{ $isWordPress ? 'active' : '' }}"
+                                data-bs-toggle="list" href="#customDetails" role="tab" style="cursor:pointer;">
+                                <input class="form-check-input visually-hidden" form="generate-invoice-form" type="radio" name="company_detail_type"
+                                    id="radioCustom" value="local" @checked($isWordPress)>
                                 <span class="flex-grow-1 fw-semibold text-center rounded d-flex justify-content-center align-items-center">
-                                Local <span class="ms-1 d-none active-arrow"><i class="fas fa-check"></i></span>
+                                    Local <span class="ms-1 d-none active-arrow"><i class="fas fa-check"></i></span>
                                 </span>
                             </label>
+
                             </div>
                         </div>
                         <div class="col-md-11">
                             <div class="tab-content">
-                            <div class="tab-pane p-0 fade show active" id="websiteDetails" role="tabpanel">
+                            <div class="tab-pane p-0 fade {{ !$isWordPress ? 'show active' : '' }}" id="websiteDetails" role="tabpanel">
                                 <div class="p-2 bg-white">
                                 <div class="row g-1 mb-2">
                                     <div class="col-4">
@@ -200,7 +207,7 @@
                                 </div>
                                 </div>
                             </div>
-                            <div class="tab-pane p-0 fade" id="customDetails" role="tabpanel">
+                            <div class="tab-pane p-0 fade {{ $isWordPress ? 'show active' : '' }}" id="customDetails" role="tabpanel">
                                 <div class="p-2 bg-white">
                                 <div class="row g-1 mb-2">
                                     <div class="col-4">
@@ -245,6 +252,7 @@
                     </div>
                 </div>
             </div>
+
                 <div class="card custom-card mt-4">
                     <div class="card-body shadow-lg rounded">
                         <div class="row">
@@ -375,21 +383,15 @@
                             <table class="table table-bordered table-hover align-middle mb-0">
                                 <thead class="table-dark">
                                     <tr>
-                                        <th class="text-center" style="width: 8%;">PID</th>
-                                        {{-- <th class="text-center" style="width: 10%;">Category</th> --}}
-                                        <th class="text-center" style="width: 15%;">Translation Type</th>
-                                        <th class="text-center" style="width: 15%;">From Language</th>
-                                        <th class="text-center" style="width: 15%;">To Language</th>
-                                        <th class="text-center unit-price-header" data-column="3" data-order="desc">
-                                            <span class="d-inline-flex align-items-center justify-content-center gap-1">
-                                                Unit Price <i class="bi bi-caret-down-fill"></i>
-                                            </span>
-                                        </th>
-                                        <th class="text-center" style="width: 20%;">Edit Price</th>
-                                        <th class="text-center" style="width: 12%;">Pages</th>
-                                        <th class="text-center" style="width: 8%;">Hurry</th>
+                                        <th class="text-center" style="width: 6%;">PID</th>
+                                        <th class="text-center" style="width: 12%;">Translation</th>
+                                        <th class="text-center" style="width: 16%;">From Language</th>
+                                        <th class="text-center" style="width: 16%;">To Language</th>
+                                        <th class="text-center" style="width: 22%;">Editable Price</th>
+                                        <th class="text-center" style="width: 17%;">Pages/Words</th>
+                                        <th class="text-center" style="width: 6%;">Hurry</th>
                                         <th class="text-center" style="width: 12%;">Total</th>
-                                        <th class="text-center" style="width: 8%;">Remove</th>
+                                        <th class="text-center" style="width: 6%;">Remove</th>
                                     </tr>
                                 </thead>
                                 <tbody id="randomize-product-table-body">

@@ -88,8 +88,6 @@ Route::middleware(['auth', 'role:admin,staff,developer'])->group(function () {
     Route::get('/generate-new-invoice-number', [InvoiceController::class, 'generateInvoiceNumber'])->name('generate.invoice.number');
     Route::get('/invoice/chart', [HomeController::class, 'showInvoiceChart'])->name('invoice.chart');
     Route::get('/report/invoices', [ReportController::class, 'invoiceReport'])->name('invoice.report');
-
-    Route::post('update/product/pages', [LaravelController::class, 'updateProductPages'])->name('update.product.pages');
 });
 
 

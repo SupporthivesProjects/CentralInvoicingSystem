@@ -41,7 +41,7 @@ class LaravelController extends Controller
     {
         $site_id = $request->get('site_id');
         $invoiceAmount = floatval($request->get('invoice_amount'));
-        $filterType = $request->get('filter_type'); // 'certified', 'standard', or null/empty for both
+        $filterType = $request->get('filter_type');
 
         if (!$invoiceAmount || $invoiceAmount <= 0) {
             return response()->json([
@@ -54,59 +54,44 @@ class LaravelController extends Controller
         $site = Website::findOrFail($site_id);
         DynamicDatabaseService::connect($site);
 
-        // Get the two translation products from database
         $translationProducts = DB::connection($this->connectionType)
-        ->table($this->productTable)
-        ->select('id', 'category_id', 'name', 'unit_price', 'slug')
-        ->where('published', 1)
-        ->where(function ($query) {
-            $query->where('name', 'like', '%Standard%')
-                ->orWhere('name', 'like', '%Certified%');
-        })
-        ->get();
+            ->table($this->productTable)
+            ->select('id', 'category_id', 'name', 'unit_price', 'slug')
+            ->where('published', 1)
+            ->where(function ($query) {
+                $query->where('name', 'like', '%Standard%')
+                    ->orWhere('name', 'like', '%Certified%');
+            })
+            ->get();
 
-    if ($translationProducts->isEmpty()) {
-        return response()->json([
-            'tableRows' => '',
-            'total' => 0,
-            'message' => 'Translation products not found in the database'
-        ]);
-    }
+        if ($translationProducts->isEmpty()) {
+            return response()->json([
+                'tableRows' => '',
+                'total' => 0,
+                'message' => 'Translation products not found in the database'
+            ]);
+        }
 
-    // Trim and find "Certified Translation"
-    $certifiedTranslation = $translationProducts->first(function ($item) {
-        return Str::contains(Str::lower(trim($item->name)), 'certified translation');
-    });
+        $certifiedTranslation = $translationProducts->first(function ($item) {
+            return Str::contains(Str::lower(trim($item->name)), 'certified translation');
+        });
 
-    // Try to find "Standard Professional Translation" or fallback to "Standard Translation"
-    $standardTranslation = $translationProducts->first(function ($item) {
-        return Str::contains(Str::lower(trim($item->name)), 'standard professional translation');
-    }) ?? $translationProducts->first(function ($item) {
-        return Str::contains(Str::lower(trim($item->name)), 'standard translation');
-    });
+        $standardTranslation = $translationProducts->first(function ($item) {
+            return Str::contains(Str::lower(trim($item->name)), 'standard professional translation');
+        }) ?? $translationProducts->first(function ($item) {
+            return Str::contains(Str::lower(trim($item->name)), 'standard translation');
+        });
 
-        //dd($certifiedTranslation, $standardTranslation);
-
-
-
-        // Get prices from database (no static fallback values)
         $certifiedPrice = $certifiedTranslation ? floatval($certifiedTranslation->unit_price) : null;
         $standardPrice = $standardTranslation ? floatval($standardTranslation->unit_price) : null;
-
-        //dd($certifiedPrice, $certifiedPrice);
 
         $bestMatch = null;
         $bestTotal = PHP_FLOAT_MAX;
         $bestDistance = PHP_FLOAT_MAX;
 
-        //dd($filterType, $certifiedTranslation, $certifiedPrice);
-        // Handle filter-specific logic
         if ($filterType === 'certified' && $certifiedTranslation && $certifiedPrice) {
-            //dd("I am in certified filter");
-            // Only Certified Translation
             $certPages = ceil($invoiceAmount / $certifiedPrice);
             $total = $certPages * $certifiedPrice;
-
             $bestTotal = $total;
             $bestMatch = [
                 [
@@ -115,12 +100,9 @@ class LaravelController extends Controller
                     'total' => $total
                 ]
             ];
-        }
-        elseif ($filterType === 'standard' && $standardTranslation && $standardPrice) {
-            // Only Standard Translation
+        } elseif ($filterType === 'standard' && $standardTranslation && $standardPrice) {
             $stdPages = ceil($invoiceAmount / $standardPrice);
             $total = $stdPages * $standardPrice;
-
             $bestTotal = $total;
             $bestMatch = [
                 [
@@ -129,12 +111,8 @@ class LaravelController extends Controller
                     'total' => $total
                 ]
             ];
-        }
-        else {
-            // Both translations with balanced approach
+        } else {
             if ($certifiedTranslation && $standardTranslation && $certifiedPrice && $standardPrice) {
-
-                // Start with ratio-based approach for better balance
                 $ratios = [
                     ['cert_ratio' => 0.3, 'std_ratio' => 0.7],
                     ['cert_ratio' => 0.5, 'std_ratio' => 0.5],
@@ -148,19 +126,15 @@ class LaravelController extends Controller
                 foreach ($ratios as $ratio) {
                     $certAmount = $invoiceAmount * $ratio['cert_ratio'];
                     $stdAmount = $invoiceAmount * $ratio['std_ratio'];
-
                     $certPages = max(1, ceil($certAmount / $certifiedPrice));
                     $stdPages = max(1, ceil($stdAmount / $standardPrice));
-
                     $total = ($certPages * $certifiedPrice) + ($stdPages * $standardPrice);
 
                     if ($total >= $invoiceAmount) {
                         $distance = $total - $invoiceAmount;
-
-                        // Prefer combinations with better balance (closer to 50/50 value ratio)
                         $certValue = $certPages * $certifiedPrice;
                         $stdValue = $stdPages * $standardPrice;
-                        $balanceScore = abs(($certValue / $total) - 0.5); // Lower is more balanced
+                        $balanceScore = abs(($certValue / $total) - 0.5);
 
                         if ($distance < $bestDistance || ($distance == $bestDistance && $balanceScore < 0.3)) {
                             $bestDistance = $distance;
@@ -181,18 +155,15 @@ class LaravelController extends Controller
                     }
                 }
 
-                // Only try sequential approach if ratio approach didn't find good combinations
                 if (!$bestMatch) {
-                    $maxCertPages = min(20, ceil($invoiceAmount / ($certifiedPrice * 2))); // More conservative limit
+                    $maxCertPages = min(20, ceil($invoiceAmount / ($certifiedPrice * 2)));
 
-                    for ($certPages = 2; $certPages <= $maxCertPages; $certPages++) { // Start from 2, not 1
+                    for ($certPages = 2; $certPages <= $maxCertPages; $certPages++) {
                         $certTotal = $certPages * $certifiedPrice;
 
                         if ($certTotal < $invoiceAmount) {
-                            // Calculate needed standard pages to reach or exceed invoice amount
                             $remainingAmount = $invoiceAmount - $certTotal;
                             $stdPages = ceil($remainingAmount / $standardPrice);
-
                             $total = $certTotal + ($stdPages * $standardPrice);
 
                             if ($total >= $invoiceAmount) {
@@ -220,7 +191,6 @@ class LaravelController extends Controller
                 }
             }
 
-            // Fallback: try only certified if no combination worked
             if (!$bestMatch && $certifiedTranslation && $certifiedPrice) {
                 $certPages = ceil($invoiceAmount / $certifiedPrice);
                 $total = $certPages * $certifiedPrice;
@@ -237,11 +207,9 @@ class LaravelController extends Controller
                 }
             }
 
-            // Final fallback: try only standard
             if (!$bestMatch && $standardTranslation && $standardPrice) {
                 $stdPages = ceil($invoiceAmount / $standardPrice);
                 $total = $stdPages * $standardPrice;
-
                 $bestTotal = $total;
                 $bestMatch = [
                     [
@@ -261,18 +229,15 @@ class LaravelController extends Controller
             ]);
         }
 
-        // Prepare product data
         $selectedProducts = [];
         foreach ($bestMatch as $item) {
             $product = $item['product'];
             $pages = $item['pages'];
 
-            // Skip products with 0 pages
             if ($pages <= 0) {
                 continue;
             }
 
-            // Check price editing permissions
             $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
                 ->where('product_id', $product->id)
                 ->orderByDesc('last_price_changed')
@@ -289,23 +254,20 @@ class LaravelController extends Controller
                 $product->remaining_days = 0;
             }
 
-            // Add pages information
             $product->pages = $pages;
             $product->line_total = $pages * floatval($product->unit_price);
             $product->urgent_amount = 24.24;
+            $product->is_urgent = rand(1, 100) <= 30;
 
-            // Randomly decide if this product should have urgent amount (30% chance)
-            $product->is_urgent = rand(1, 100) <= 30; // 30% chance of being urgent
-
-            // If urgent, add urgent amount to line total
             if ($product->is_urgent) {
                 $product->line_total += $product->urgent_amount;
             }
 
+            $product->unit_type = (Str::contains(Str::lower($product->name), 'certified translation')) ? 'pages' : 'words';
+
             $selectedProducts[] = $product;
         }
 
-        // Store in session
         $productList = collect($selectedProducts)->map(function ($product) {
             return [
                 'id' => $product->id,
@@ -313,17 +275,16 @@ class LaravelController extends Controller
                 'pages' => $product->pages,
                 'is_urgent' => $product->is_urgent,
                 'urgent_amount' => $product->urgent_amount,
+                'unit_type' => $product->unit_type,
             ];
         })->toArray();
 
-        // Calculate total including urgent amounts
         $finalTotal = collect($selectedProducts)->sum('line_total');
 
         session()->forget('ready_products');
         session()->put('ready_products', $productList);
         session(['current_amount' => $finalTotal]);
 
-        // Generate view
         $modelType = $site->businessModel->model_type;
         $tableRows = view("invoice.{$modelType}.random_product_rows", [
             'products' => $selectedProducts,
@@ -337,48 +298,44 @@ class LaravelController extends Controller
         ]);
     }
 
-public function updateProductPages(Request $request)
-{
-    $productId = $request->get('product_id');
-    $pages = intval($request->get('pages'));
-    $siteId = $request->get('site_id');
 
-    if ($pages <= 0) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Pages must be greater than zero'
-        ], 400);
-    }
+    public function updateProduct(Request $request)
+    {
+        $productId = $request->get('product_id');
+        $pages = intval($request->get('pages'));
+        $siteId = $request->get('site_id');
 
-    // Update the product pages in session
-    $readyProducts = session('ready_products', []);
-    foreach ($readyProducts as &$product) {
-        if ($product['id'] == $productId) {
-            $product['pages'] = $pages;
-            break;
+        if ($pages <= 0) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Pages must be greater than zero'
+            ], 400);
         }
+
+        // Update the product pages in session
+        $readyProducts = session('ready_products', []);
+        foreach ($readyProducts as &$product) {
+            if ($product['id'] == $productId) {
+                $product['pages'] = $pages;
+                break;
+            }
+        }
+
+        session()->put('ready_products', $readyProducts);
+
+        // Recalculate the current amount
+        $totalAmount = 0;
+        foreach ($readyProducts as $product) {
+            $totalAmount += $product['unit_price'] * ($product['pages'] ?? 1);
+        }
+
+        session(['current_amount' => $totalAmount]);
+
+        return response()->json([
+            'success' => true,
+            'total' => $totalAmount
+        ]);
     }
-
-    session()->put('ready_products', $readyProducts);
-
-    // Recalculate the current amount
-    $totalAmount = 0;
-    foreach ($readyProducts as $product) {
-        $totalAmount += $product['unit_price'] * ($product['pages'] ?? 1);
-    }
-
-    session(['current_amount' => $totalAmount]);
-
-    return response()->json([
-        'success' => true,
-        'total' => $totalAmount
-    ]);
-}
-
-
-
-
-
 
 
     public function addProducts(Request $request)
@@ -474,14 +431,12 @@ public function updateProductPages(Request $request)
 
         $readyProducts = session('ready_products', []);
 
-        // Remove the selected product
         $updatedProducts = collect($readyProducts)->filter(function ($product) use ($productId) {
             return $product['id'] != $productId;
         })->values()->toArray();
 
         session()->put('ready_products', $updatedProducts);
 
-        // If no products left, return early
         if (empty($updatedProducts)) {
             session(['current_amount' => 0]);
             return response()->json([
@@ -495,7 +450,6 @@ public function updateProductPages(Request $request)
 
         $productIds = array_column($updatedProducts, 'id');
 
-        // Get product details from DB
         $products = DB::connection($this->connectionType)->table($this->productTable)
             ->select('id', 'category_id', 'name', 'unit_price', 'slug')
             ->whereIn('id', $productIds)
@@ -532,10 +486,11 @@ public function updateProductPages(Request $request)
                 $product->remaining_days = 0;
             }
 
+            $product->unit_type = (Str::contains(Str::lower($product->name), 'certified translation')) ? 'pages' : 'words';
+
             return $product;
         });
 
-        // Total recalculation from all products (unit_price × pages)
         $currentAmount = $products->sum(function ($product) {
             return floatval($product->unit_price) * intval($product->pages ?? 1);
         });
@@ -557,76 +512,6 @@ public function updateProductPages(Request $request)
     }
 
 
-    public function updateProduct(Request $request)
-    {
-        $productId = $request->get('product_id');
-        $quantity = $request->get('quantity');
-        $site_id = $request->get('site_id');
-
-        $site = Website::findOrFail($site_id);
-        DynamicDatabaseService::connect($site);
-
-        $readyProducts = session()->get('ready_products', []);
-
-        foreach ($readyProducts as &$product) {
-            if ($product['id'] == $productId) {
-                $product['quantity'] = $quantity;
-                break;
-            }
-        }
-        session()->put('ready_products', $readyProducts);
-
-        $productIds = collect($readyProducts)->pluck('id')->toArray();
-
-        $products = DB::connection($this->connectionType)->table($this->productTable)
-            ->select('id', 'category_id', 'name', 'unit_price', 'slug')
-            ->whereIn('id', $productIds)
-            ->get();
-
-        $products = $products->map(function ($product) use ($readyProducts, $site_id) {
-            $sessionProduct = collect($readyProducts)->firstWhere('id', $product->id);
-            $product->unit_price = $sessionProduct['unit_price'] ?? $product->unit_price;
-            $product->quantity = $sessionProduct['quantity'] ?? 1;
-            $product->category_name = DB::connection($this->connectionType)->table('categories')->where('id', $product->category_id)->value('name') ?? 'unknown';
-
-            $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
-                ->where('product_id', $product->id)
-                ->orderByDesc('last_price_changed')
-                ->first();
-
-            if ($lastUpdate) {
-                $lastPriceChanged = Carbon::parse($lastUpdate->last_price_changed);
-                $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
-                $remainingDays = now()->diffInDays($nextPriceChangeDate, false);
-                $product->remaining_days = round(max($remainingDays, 0));
-                $product->can_edit_price = now()->greaterThanOrEqualTo($nextPriceChangeDate) ? 1 : 0;
-            } else {
-                $product->can_edit_price = 1;
-                $product->remaining_days = 0;
-            }
-
-            return $product;
-        });
-
-        $modelType = $site->businessModel->model_type;
-
-        $total = $products->sum(function ($product) {
-            return $product->unit_price * ($product->quantity ?? 1);
-        });
-
-        session(['current_amount' => $total]);
-
-        $tableRows = view("invoice.{$modelType}.random_product_rows", [
-            'products' => $products,
-            'site' => $site,
-            'total' => $total
-        ])->render();
-
-        return response()->json([
-            'tableRows' => $tableRows,
-            'total' => $total
-        ]);
-    }
 
 
     public function clearProducts(Request $request)
@@ -875,6 +760,7 @@ public function updateProductPages(Request $request)
                 $product->from_language = $input['from_language'] ?? null;
                 $product->to_language = $input['to_language'] ?? null;
                 $product->selected = isset($input['selected']) ? 1 : 0;
+                $product->unit_type = (Str::contains(Str::lower($product->name), 'certified translation')) ? 'pages' : 'words';
 
                 return $product;
             });

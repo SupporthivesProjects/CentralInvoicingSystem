@@ -5,7 +5,6 @@
     @endphp
     <tr class="product-row">
         <td class="text-center">{{ $product->id }}</td>
-        {{-- <td>{{ $product->category_name }}</td> --}}
         <td>
             {{ $product->name }}
             @if ($site->site_link && $product->slug)
@@ -19,7 +18,7 @@
         <td>
             <select form="generate-invoice-form" class="form-select from-language-dropdown"
                 name="products[{{ $product->id }}][from_language]">
-                <option value="">Select From Language</option>
+                <option value="">From Language</option>
                 @foreach ($languages as $lang)
                     <option value="{{ $lang->id }}">{{ $lang->name }}</option>
                 @endforeach
@@ -28,18 +27,15 @@
         <td>
             <select form="generate-invoice-form" class="form-select to-language-dropdown"
                 name="products[{{ $product->id }}][to_language]">
-                <option value="">Select To Language</option>
+                <option value="">To Language</option>
                 @foreach ($languages as $lang)
                     <option value="{{ $lang->id }}">{{ $lang->name }}</option>
                 @endforeach
             </select>
         </td>
-        <td class="text-center">
-            {{ site_currency() }}{{ number_format($product->unit_price, 2) }}
-            <input form="generate-invoice-form" type="hidden" name="products[{{ $product->id }}][display_unit_price]"
-                value="{{ number_format($product->unit_price, 2) }}">
-        </td>
         <td>
+        <input form="generate-invoice-form" type="hidden" name="products[{{ $product->id }}][display_unit_price]"
+        value="{{ number_format($product->unit_price, 2) }}">
             <div class="input-group d-flex">
                 <span class="input-group-text">{{ site_currency() }}</span>
                 <input form="generate-invoice-form" style="display: none;"
@@ -63,17 +59,30 @@
                 value="{{ $product->can_edit_price }}">
         </td>
         <td class="text-center">
-            <input form="generate-invoice-form" type="number" class="form-control product-pages text-center"
-                name="products[{{ $product->id }}][pages]" value="{{ $product->pages }}" min="1"
-                data-product-id="{{ $product->id }}" aria-label="Number of pages" />
+            <div class="input-group">
+                <input 
+                    form="generate-invoice-form" 
+                    type="number" 
+                    class="form-control product-pages text-center"
+                    name="products[{{ $product->id }}][pages]" 
+                    value="{{ $product->pages }}" 
+                    min="1"
+                    data-product-id="{{ $product->id }}" 
+                    aria-label="Number of pages or words" 
+                />
+                <span class="input-group-text">
+                    {{ $product->unit_type ?? 'pages' }}
+                </span>
+            </div>
         </td>
+       
         <td class="text-center">
             <input form="generate-invoice-form" class="form-check-input urgency-checkbox border-primary" type="checkbox"
                 name="products[{{ $product->id }}][is_urgent]" value="1" data-product-id="{{ $product->id }}"
-                data-urgent_amount="{{ number_format($product->urgent_amount ?? 99.75 , 2, '.', '') }}"
+                data-urgent_amount="{{ number_format($product->urgent_amount ?? 99.75, 2, '.', '') }}"
                 {{ isset($product->is_urgent) && $product->is_urgent ? 'checked' : '' }} />
             <input form="generate-invoice-form" type="hidden" name="products[{{ $product->id }}][urgent_amount]"
-                value="{{ number_format($product->urgent_amount ?? 99.75 , 2, '.', '') }}">
+                value="{{ number_format($product->urgent_amount ?? 99.75, 2, '.', '') }}">
         </td>
         <td class="text-center line-total" data-product-id="{{ $product->id }}">
             {{ site_currency() }}{{ number_format($product->line_total, 2) }}
@@ -196,10 +205,10 @@
             }
 
             updateLineTotal(productId);
-
+            toastr.info('Updating Pages or Words.....');
             // ✅ AJAX update
             $.ajax({
-                url: "{{ route('update.product.pages') }}",
+                url: "{{ route('update.product') }}",
                 method: 'POST',
                 data: {
                     product_id: productId,
