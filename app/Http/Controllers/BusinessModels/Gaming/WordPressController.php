@@ -77,6 +77,7 @@ class WordPressController extends Controller
         }
 
         $allProducts = collect();
+        $targetUnitPrice = $productCount > 0 ? ($invoiceAmount / $productCount) : $invoiceAmount;
 
         foreach ($response->json() as $product) {
             // Fetch variations manually
@@ -85,6 +86,8 @@ class WordPressController extends Controller
 
             if ($variationRes->failed()) continue;
 
+            $variations = [];
+
             foreach ($variationRes->json() as $var) {
                 $attrs = collect($var['attributes'])->pluck('option', 'name')->toArray();
                 $bundleAmount = preg_replace('/\D/', '', $attrs['Amount'] ?? '0');
@@ -92,7 +95,7 @@ class WordPressController extends Controller
 
                 if ($priceFrom && $priceTo && ($unitPrice < $priceFrom || $unitPrice > $priceTo)) continue;
 
-                $allProducts->push((object)[
+                $variations[] = (object)[
                     'id' => $product['id'],
                     'bundle_id' => $var['id'],
                     'name' => $product['name'],
@@ -106,7 +109,16 @@ class WordPressController extends Controller
                     'game_platform' => $attrs['Platform'] ?? '',
                     'game_region' => null,
                     'game_need_to_capture' => null,
-                ]);
+                ];
+            }
+
+            if (!empty($variations)) {
+                // Pick variation closest to target price
+                $selectedVariation = collect($variations)->sortBy(function ($v) use ($targetUnitPrice) {
+                    return abs($v->unit_price - $targetUnitPrice);
+                })->first();
+
+                $allProducts->push($selectedVariation);
             }
         }
 
@@ -128,8 +140,6 @@ class WordPressController extends Controller
             ]);
         }
 
-        //dd($allProducts);
-        //$allProducts = $allProducts->shuffle()->take(60);
         $bestMatch = null;
         $bestTotal = 0;
 
@@ -183,7 +193,6 @@ class WordPressController extends Controller
 
         session(['selected_games' => $selected_games, 'current_amount' => $bestTotal]);
 
-
         $modelType = $site->businessModel->model_type;
 
         $tableRows = view("invoice.{$modelType}.random_product_rows", [
@@ -199,6 +208,7 @@ class WordPressController extends Controller
             'is_random' => true
         ]);
     }
+
 
     public function removeProduct(Request $request)
     {
