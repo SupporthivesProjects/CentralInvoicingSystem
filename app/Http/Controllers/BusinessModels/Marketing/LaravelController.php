@@ -570,7 +570,7 @@ class LaravelController extends Controller
         $invoice_data['site_id'] = $site->id;
 
         $company_detail_type = $request->input('company_detail_type');
-    
+
         if ($company_detail_type === 'remote') {
 
             $invoice_data['site_name']    = $request->input('remote_site_name') ?? '';
@@ -620,7 +620,7 @@ class LaravelController extends Controller
         $invoice_data['invoice_image7'] = base64EncodeImage($site->invoice_image7);
         $invoice_data['invoice_image8'] = base64EncodeImage($site->invoice_image8);
         $invoice_data['invoice_image9'] = base64EncodeImage($site->invoice_image9);
-    
+
         $productDataArray = $request->input('product_data', []);
         $productIds = [];
         $customPrices = [];
@@ -667,9 +667,9 @@ class LaravelController extends Controller
             $filename = $request->input('invoice_file_name') . '.pdf';
         } else {
             $filename = $invoice_data['invoice_number'] . '.pdf';
-        }  
-    
-      
+        }
+
+
         $filename = $request->filled('invoice_file_name')
         ? $request->input('invoice_file_name') . '.pdf'
         : $invoice_data['invoice_number'] . '.pdf';
@@ -677,6 +677,7 @@ class LaravelController extends Controller
                 return $this->generateWithApi2Pdf($site, $viewPath, $invoice_data, $filename);
 
             } catch (\Exception $e) {
+                \Log::error('API2PDF failed: ' . $e->getMessage());
                 // Fallback to Dompdf if API2PDF fails
                 return $this->generateWithDompdf($site, $viewPath, $invoice_data, $filename);
             }
