@@ -213,24 +213,26 @@ class WordPressController extends Controller
     public function removeProduct(Request $request)
     {
         $id = $request->get('product_id');
-        $unitPrice = $request->get('unit_price');
+        $bundle = $request->get('bundle_id'); // Make sure to send this from frontend
+        $unitPrice = floatval($request->get('unit_price'));
         $site_id = $request->get('site_id');
 
         $selectedGames = session('selected_games', []);
-        //dd($selectedGames);
 
-        // Remove matching bundle (id + unit_price)
-        $updatedGames = array_filter($selectedGames, function ($game) use ($id, $unitPrice) {
-            return !($game['id'] == $id && floatval($game['unit_price']) == floatval($unitPrice));
+        // Remove only the matching product
+        $updatedGames = array_filter($selectedGames, function ($game) use ($id, $bundle, $unitPrice) {
+            return !(
+                $game['id'] == $id &&
+                $game['bundle'] == $bundle &&
+                floatval($game['unit_price']) == $unitPrice
+            );
         });
 
         $updatedGames = array_values($updatedGames);
-
-        // Update session
         session(['selected_games' => $updatedGames]);
-        //dd($updatedGames);
 
         if (empty($updatedGames)) {
+            session()->forget('current_amount');
             return response()->json([
                 'tableRows' => '',
                 'total'     => 0,
@@ -239,73 +241,68 @@ class WordPressController extends Controller
             ]);
         }
 
+        // Re-fetch products from WooCommerce
         $site = Website::findOrFail($site_id);
-        DynamicDatabaseService::connect($site);
-
-        $currency = DB::connection($this->connectionType)
-            ->table('currencies')->where('status', 1)->first();
+        $consumerKey = $site->consumer_key;
+        $consumerSecret = $site->consumer_secret;
+        $base = rtrim($site->site_link, '/') . '/wp-json/wc/v3/products';
 
         $modelType = $site->businessModel->model_type;
-
-        $productIds = array_column($updatedGames, 'id');
 
         $finalProducts = collect();
 
         foreach ($updatedGames as $sessionGame) {
-            $product = DB::connection($this->connectionType)
-                ->table('products as p')
-                ->join('game_sever_based_cost as c', 'p.id', '=', 'c.game_id')
-                ->where('p.id', $sessionGame['id'])
-                ->select(
-                    'p.id',
-                    'p.name',
-                    'p.slug',
-                    'p.game_currency',
-                    'p.game_platform',
-                    'p.game_server_region',
-                    'p.game_need_to_capture',
-                    'c.costs',
-                    'c.id as bundle_id',
-                )
-                ->first();
+            $productRes = Http::withBasicAuth($consumerKey, $consumerSecret)
+                ->get($base . '/' . $sessionGame['id']);
 
-            //dd($product);
-            if ($product) {
-                $finalProducts->push((object)[
-                    'id'             => $product->id,
-                    'name'           => $product->name,
-                    'bundle_id'      => $product->bundle_id,
-                    'unit_price'     => floatval($sessionGame['unit_price']),
-                    'slug'           => Str::slug($product->name . '-' . ($sessionGame['game_currency_amount'] ?? '')),
-                    'source'         => 'Random',
-                    'can_edit_price' => 0,
-                    'remaining_days' => 0,
-                    'game_currency'  => $product->game_currency,
-                    'game_currency_amount' => $sessionGame['game_currency_amount'] ?? '',
-                    'game_platform'  => $product->game_platform,
-                    'game_region'    => $product->game_server_region,
-                    'game_need_to_capture' => $product->game_need_to_capture
-                ]);
-            }
+            if ($productRes->failed()) continue;
+
+            $product = $productRes->json();
+
+            $variationRes = Http::withBasicAuth($consumerKey, $consumerSecret)
+                ->get($base . '/' . $sessionGame['id'] . '/variations/' . $sessionGame['bundle']);
+
+            if ($variationRes->failed()) continue;
+
+            $variation = $variationRes->json();
+
+            $attrs = collect($variation['attributes'])->pluck('option', 'name')->toArray();
+            $bundleAmount = preg_replace('/\D/', '', $attrs['Amount'] ?? '');
+
+            $finalProducts->push((object)[
+                'id' => $product['id'],
+                'name' => $product['name'],
+                'bundle_id' => $variation['id'],
+                'unit_price' => floatval($sessionGame['unit_price']),
+                'slug' => Str::slug($product['name'] . '-' . $bundleAmount),
+                'source' => 'Random',
+                'can_edit_price' => 0,
+                'remaining_days' => 0,
+                'game_currency' => $product['sku'] ?? '',
+                'game_currency_amount' => $bundleAmount,
+                'game_platform' => $attrs['Platform'] ?? '',
+                'game_region' => null,
+                'game_need_to_capture' => null,
+            ]);
         }
-        $bestTotal = $finalProducts->sum('unit_price');
-        session(['current_amount' => $bestTotal]);
-        //dd($finalProducts);
+
+        $total = $finalProducts->sum('unit_price');
+        session(['current_amount' => $total]);
 
         $tableRows = view("invoice.{$modelType}.random_product_rows", [
             'products' => $finalProducts,
-            'currency' => $currency,
-            'site'     => $site
+            'currency' => site_currency(),
+            'site' => $site
         ])->render();
-
-        $total = $finalProducts->sum('unit_price');
 
         return response()->json([
             'tableRows' => $tableRows,
             'total'     => $total,
-            'currency'  => $currency
+            'currency'  => site_currency()
         ]);
     }
+
+
 
 
 
