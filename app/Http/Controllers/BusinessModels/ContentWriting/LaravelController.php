@@ -1443,6 +1443,7 @@ class LaravelController extends Controller
 
         } catch (\Exception $e) {
             // Fallback to Dompdf if API2PDF fails
+            \Log::error('API2PDF Narayan failed: ' . $e->getMessage());
             return $this->generateWithDompdf($site, $viewPath, $invoice_data, $filename);
         }
        
