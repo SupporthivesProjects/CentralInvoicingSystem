@@ -108,7 +108,7 @@
                     <button class="accordion-button fw-semibold text-dark bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#companyDetailsCollapse" aria-expanded="false" aria-controls="companyDetailsCollapse">
                         <i class="fas fa-city text-primary me-2"></i>
                         <span class="fw-semibold">Select Company Details Source :</span>
-                        <span id="companySourceBadge" class="badge bg-success ms-2">Remote</span>
+                        <span id="companySourceBadge" class="badge bg-success ms-2">Local</span>
                     </button>
                     </h2>
                     <div id="companyDetailsCollapse" class="accordion-collapse collapse" aria-labelledby="companyDetailsHeading" data-bs-parent="#companyDetailsAccordion">
@@ -117,7 +117,7 @@
                         <div class="col-md-1 border-end">
                             <div class="list-group list-group-flush h-100 d-flex flex-column justify-content-center" id="companyTypeTab" role="tablist">
                             @if(!$isWordPress)
-                            <label class="rounded-end-0 list-group-item list-group-item-action d-flex align-items-center gap-2 py-2 {{ !$isWordPress ? 'active' : '' }}"
+                            <label class="rounded-end-0 list-group-item list-group-item-action d-flex align-items-center gap-2 py-2"
                                 data-bs-toggle="list" href="#websiteDetails" role="tab" style="cursor:pointer;">
                                 <input class="form-check-input visually-hidden" form="generate-invoice-form" type="radio" name="company_detail_type"
                                     id="radioWebsite" value="remote" @checked(!$isWordPress)>
@@ -126,7 +126,7 @@
                                 </span>
                             </label>
                             @endif
-                            <label class="rounded-end-0 list-group-item list-group-item-action d-flex align-items-center gap-2 py-2 {{ $isWordPress ? 'active' : '' }}"
+                            <label class="rounded-end-0 list-group-item list-group-item-action d-flex align-items-center gap-2 py-2 active"
                                 data-bs-toggle="list" href="#customDetails" role="tab" style="cursor:pointer;">
                                 <input class="form-check-input visually-hidden" form="generate-invoice-form" type="radio" name="company_detail_type"
                                     id="radioCustom" value="local" @checked($isWordPress)>
@@ -139,7 +139,7 @@
                         </div>
                         <div class="col-md-11">
                             <div class="tab-content">
-                            <div class="tab-pane p-0 fade {{ !$isWordPress ? 'show active' : '' }}" id="websiteDetails" role="tabpanel">
+                            <div class="tab-pane p-0 fade " id="websiteDetails" role="tabpanel">
                                 <div class="p-2 bg-white">
                                 <div class="row g-1 mb-2">
                                     <div class="col-4">
@@ -177,7 +177,7 @@
                                 </div>
                                 </div>
                             </div>
-                            <div class="tab-pane p-0 fade {{ $isWordPress ? 'show active' : '' }}" id="customDetails" role="tabpanel">
+                            <div class="tab-pane p-0 fade show active" id="customDetails" role="tabpanel">
                                 <div class="p-2 bg-white">
                                 <div class="row g-1 mb-2">
                                     <div class="col-4">
@@ -215,15 +215,13 @@
                                 </div>
                                 </div>
                             </div>
-                            </div> <!-- tab-content -->
-                        </div> <!-- col-md-11 -->
-                        </div> <!-- row -->
-                    </div> <!-- accordion-body -->
+                            </div> 
+                        </div> 
+                        </div>
+                    </div> 
                     </div>
                 </div>
             </div>
-
-
             <div class="card custom-card mt-4">
                 <div class="card-body shadow-lg rounded">
                 <div class="row">

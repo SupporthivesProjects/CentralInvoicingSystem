@@ -36,6 +36,31 @@ class LaravelController extends Controller
         $this->connectionType = 'dynamic';
     }
 
+    protected function generateSlug($categoryId)
+    {
+        $categorySlugs = [
+            'SEO Packages' => 'seo',
+            'PPC Packages' => 'ppc',
+            'ORM Packages' => 'orm',
+            'Social Media Packages' => 'social',
+            'Web Design And Development Packages' => 'wwd',
+            'Email Marketing Packages' => 'em',
+        ];
+
+        $name = DB::connection($this->connectionType)
+            ->table('categories')
+            ->where('id', $categoryId)
+            ->value('name') ?? 'unknown';
+
+        $normalized = preg_replace('/\s+/', ' ', trim($name));
+
+        return [
+            'category_name' => $normalized,
+            'slug' => $categorySlugs[$normalized] ?? \Str::slug($normalized),
+        ];
+    }
+
+
 
     public function randomProducts(Request $request)
     {
@@ -113,18 +138,20 @@ class LaravelController extends Controller
         }
 
         $bestMatch = collect($bestMatch);
-        $bestMatch->each(function ($product) {
-            $product->category_name = DB::connection($this->connectionType)->table('categories')->where('id', $product->category_id)->value('name') ?? 'unknown';
-        });
 
         $bestMatch->each(function ($product) use ($site_id) {
-            $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
-                                            ->where('product_id', $product->id)
-                                            ->orderByDesc('last_price_changed')
-                                            ->first();
 
+            $data = $this->generateSlug($product->category_id);
+            $product->category_name = $data['category_name'];
+            $product->slug = $data['slug'];
+        
+            $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
+                ->where('product_id', $product->id)
+                ->orderByDesc('last_price_changed')
+                ->first();
+        
             if ($lastUpdate) {
-                $lastPriceChanged = Carbon::parse($lastUpdate->last_price_changed);
+                $lastPriceChanged = \Carbon\Carbon::parse($lastUpdate->last_price_changed);
                 $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
                 $remainingDays = now()->diffInDays($nextPriceChangeDate, false);
                 $product->remaining_days = round(max($remainingDays, 0));
@@ -134,7 +161,7 @@ class LaravelController extends Controller
                 $product->remaining_days = 0;
             }
         });
-
+        
         $productList = $bestMatch->map(function ($product) {
             return [
                 'id' => $product->id,
@@ -208,15 +235,18 @@ class LaravelController extends Controller
         $products = $products->map(function ($product) use ($readyProducts, $site_id) {
             $sessionProduct = collect($readyProducts)->firstWhere('id', $product->id);
             $product->unit_price = $sessionProduct['unit_price'] ?? $product->unit_price;
-            $product->category_name = DB::connection($this->connectionType)->table('categories')->where('id', $product->category_id)->value('name') ?? 'unknown';
-
+        
+            $data = $this->generateSlug($product->category_id);
+            $product->category_name = $data['category_name'];
+            $product->slug = $data['slug'];
+        
             $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
                 ->where('product_id', $product->id)
                 ->orderByDesc('last_price_changed')
                 ->first();
-
+        
             if ($lastUpdate) {
-                $lastPriceChanged = Carbon::parse($lastUpdate->last_price_changed);
+                $lastPriceChanged = \Carbon\Carbon::parse($lastUpdate->last_price_changed);
                 $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
                 $remainingDays = now()->diffInDays($nextPriceChangeDate, false);
                 $product->remaining_days = round(max($remainingDays, 0));
@@ -225,9 +255,10 @@ class LaravelController extends Controller
                 $product->can_edit_price = 1;
                 $product->remaining_days = 0;
             }
-
+        
             return $product;
         });
+        
 
         $modelType = $site->businessModel->model_type;
         session(['current_amount' => collect($products)->sum('unit_price')]);
@@ -274,29 +305,34 @@ class LaravelController extends Controller
             ->whereIn('id', $productIds)
             ->get();
 
-        $products = $products->map(function ($product) use ($updatedProducts, $site_id) {
-            $sessionProduct = collect($updatedProducts)->firstWhere('id', $product->id);
-            $product->unit_price = $sessionProduct['unit_price'] ?? $product->unit_price;
-            $product->category_name = DB::connection($this->connectionType)->table('categories')->where('id', $product->category_id)->value('name') ?? 'unknown';
+            $products = $products->map(function ($product) use ($updatedProducts, $site_id) {
 
-            $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
-                ->where('product_id', $product->id)
-                ->orderByDesc('last_price_changed')
-                ->first();
-
-            if ($lastUpdate) {
-                $lastPriceChanged = Carbon::parse($lastUpdate->last_price_changed);
-                $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
-                $remainingDays = now()->diffInDays($nextPriceChangeDate, false);
-                $product->remaining_days = round(max($remainingDays, 0));
-                $product->can_edit_price = now()->greaterThanOrEqualTo($nextPriceChangeDate) ? 1 : 0;
-            } else {
-                $product->can_edit_price = 1;
-                $product->remaining_days = 0;
-            }
-
-            return $product;
-        });
+                $sessionProduct = collect($updatedProducts)->firstWhere('id', $product->id);
+                $product->unit_price = $sessionProduct['unit_price'] ?? $product->unit_price;
+            
+                $data = $this->generateSlug($product->category_id);
+                $product->category_name = $data['category_name'];
+                $product->slug = $data['slug'];
+            
+                $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
+                    ->where('product_id', $product->id)
+                    ->orderByDesc('last_price_changed')
+                    ->first();
+            
+                if ($lastUpdate) {
+                    $lastPriceChanged = \Carbon\Carbon::parse($lastUpdate->last_price_changed);
+                    $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
+                    $remainingDays = now()->diffInDays($nextPriceChangeDate, false);
+                    $product->remaining_days = round(max($remainingDays, 0));
+                    $product->can_edit_price = now()->greaterThanOrEqualTo($nextPriceChangeDate) ? 1 : 0;
+                } else {
+                    $product->can_edit_price = 1;
+                    $product->remaining_days = 0;
+                }
+            
+                return $product;
+            });
+            
 
         $modelType = $site->businessModel->model_type;
         session(['current_amount' => collect($products)->sum('unit_price')]);
@@ -363,15 +399,16 @@ class LaravelController extends Controller
         $products = $products->map(function ($product) use ($readyProducts, $site_id) {
             $sessionProduct = collect($readyProducts)->firstWhere('id', $product->id);
             $product->subscription = $sessionProduct['subscription'] ?? $product->subscription;
-
-            $categoryName = DB::connection($this->connectionType)->table('categories')->where('id', $product->category_id)->value('name');
-            $product->category_name = $categoryName ?: 'unknown';
-
+        
+            $data = $this->generateSlug($product->category_id);
+            $product->category_name = $data['category_name'];
+            $product->slug = $data['slug'];
+        
             $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
                 ->where('product_id', $product->id)
                 ->orderByDesc('last_price_changed')
                 ->first();
-
+        
             if ($lastUpdate) {
                 $lastPriceChanged = Carbon::parse($lastUpdate->last_price_changed);
                 $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
@@ -382,9 +419,10 @@ class LaravelController extends Controller
                 $product->can_edit_price = 1;
                 $product->remaining_days = 0;
             }
-
+        
             return $product;
         });
+        
 
         $totalAmount = collect($readyProducts)->sum('unit_price');
         session(['current_amount' => $totalAmount]);
@@ -497,8 +535,10 @@ class LaravelController extends Controller
             ->groupBy('product_id');
 
         $products->each(function ($product) use ($categories, $priceHistories) {
-            $product->category_name = $categories[$product->category_id] ?? 'unknown';
-
+            $data = $this->generateSlug($product->category_id);
+            $product->category_name = $data['category_name'];
+            $product->slug = $data['slug'];
+        
             $lastUpdate = $priceHistories[$product->id][0] ?? null;
             if ($lastUpdate) {
                 $lastPriceChanged = Carbon::parse($lastUpdate->last_price_changed);
@@ -511,6 +551,7 @@ class LaravelController extends Controller
                 $product->remaining_days = 0;
             }
         });
+            
 
         $modelType = $site->businessModel->model_type;
         $random_amount = session('current_amount', 0);
@@ -636,22 +677,23 @@ class LaravelController extends Controller
 
         $products = DB::connection($this->connectionType)->table($this->productTable)
             ->whereIn('id', $productIds)
-            ->select('id','subscription', 'category_id', 'name', 'unit_price')
+            ->select('id', 'subscription', 'category_id', 'name', 'unit_price')
             ->get()
             ->sortBy(function ($product) use ($productIds) {
                 return array_search($product->id, $productIds);
             })
             ->values()
-            ->map(function ($product) use ($customPrices) {
+            ->map(function ($product) use ($customPrices, $categorySlugs) {
                 $product->unit_price = $customPrices[$product->id] ?? $product->unit_price;
+
+                $data = $this->generateSlug($product->category_id);
+                $product->category_name = $data['category_name'];
+                $product->slug = $data['slug'];
+
                 return $product;
             });
 
-        $products->each(function ($product) {
-            $product->category_name = DB::connection($this->connectionType)->table('categories')->where('id', $product->category_id)->value('name') ?? 'unknown';
-        });
-
-
+            
         $invoice_data['currency'] = site_currency();
 
         $invoice_data['products'] = $products;

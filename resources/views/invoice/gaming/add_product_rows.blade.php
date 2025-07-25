@@ -12,7 +12,7 @@
         <td>
             {{ $product->name }}
             @if($site->site_link && $product->slug)
-                <a href="{{ $site->site_link }}product/{{ $product->slug }}" target="_blank" title="View Product">🔗</a>
+                <a href="{{ $site->site_link }}games" target="_blank" title="View Product">🔗</a>
             @endif
         </td>
 

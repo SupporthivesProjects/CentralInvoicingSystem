@@ -346,19 +346,22 @@
                                                             <td class="text-center">{{ $invoice->id }}</td>
                                                             <td class="text-left">{{ $invoice->invoice_number }}</td>
                                                             <td class="text-left">
-                                                            @if ($invoice->website && $invoice->website->site_link)
-                                                                <a href="{{ $invoice->website->site_link }}" target="_blank" data-bs-toggle="tooltip" title="Model: {{ $invoice->model_type }}">
-                                                                    {{ $invoice->website->site_name ?? $invoice->website->site_link }}
-                                                                </a>
-                                                            @elseif ($invoice->website && $invoice->website->site_name)
-                                                                <a href="https://www.google.com/search?q={{ urlencode($invoice->website->site_name) }}" target="_blank" data-bs-toggle="tooltip"  title="Model: {{ $invoice->model_type }}">
+                                                                @if ($invoice->website && $invoice->website->site_link)
                                                                     {{ $invoice->website->site_name }}
-                                                                </a>
-                                                            @else
-                                                                <span class="text-muted">Site not found or deleted</span>
-                                                            @endif
-
+                                                                    <a href="{{ $invoice->website->site_link }}" target="_blank">
+                                                                        <i class="bi bi-box-arrow-up-right ms-1"></i>
+                                                                    </a>
+                                                                @elseif ($invoice->website && $invoice->website->site_name)
+                                                                    {{ $invoice->website->site_name }}
+                                                                    <a href="https://www.google.com/search?q={{ urlencode($invoice->website->site_name) }}" target="_blank"
+                                                                    data-bs-toggle="tooltip" title="Model: {{ $invoice->model_type }}">
+                                                                        <i class="bi bi-box-arrow-up-right ms-1"></i>
+                                                                    </a>
+                                                                @else
+                                                                    <span class="text-muted">Site not found or deleted</span>
+                                                                @endif
                                                             </td>
+
                                                             <td class="text-center">{{ $invoice->currency }}{{ number_format($invoice->discount_amount, 2) }} </td>
                                                             <td class="text-center">{{ $invoice->currency }}{{ number_format($invoice->invoice_amount, 2) }}</td>
                                                            

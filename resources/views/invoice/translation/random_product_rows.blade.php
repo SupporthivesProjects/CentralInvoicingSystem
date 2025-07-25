@@ -8,7 +8,7 @@
         <td>
             {{ $product->name }}
             @if ($site->site_link && $product->slug)
-                <a href="{{ $site->site_link }}product/{{ $product->slug }}" target="_blank">🔗</a>
+                <a href="{{ $site->site_link }}" target="_blank">🔗</a>
             @endif
             <input form="generate-invoice-form" type="hidden" name="products[{{ $product->id }}][id]"
                 value="{{ $product->id }}">
@@ -67,7 +67,7 @@
                     name="products[{{ $product->id }}][pages]" 
                     value="{{ $product->pages }}" 
                     min="1"
-                    data-product-id="{{ $product->id }}" 
+                    data-product-id="{{ $product->id }}" data-unit-type="{{ $product->unit_type ?? 'pages' }}"
                     aria-label="Number of pages or words" 
                 />
                 <span class="input-group-text">
@@ -197,6 +197,7 @@
         $(document).off('change', '.product-pages').on('change', '.product-pages', function() {
             var $input = $(this);
             var productId = $input.data('product-id');
+            var unitType = $input.data('unit-type'); 
             var pages = parseInt($input.val()) || 1;
 
             if (pages < 1) {
@@ -205,7 +206,7 @@
             }
 
             updateLineTotal(productId);
-            toastr.info('Updating Pages or Words.....');
+            toastr.info(`Updating ${unitType}...`);
             // ✅ AJAX update
             $.ajax({
                 url: "{{ route('update.product') }}",
@@ -217,7 +218,7 @@
                     _token: '{{ csrf_token() }}'
                 },
                 success: function(response) {
-                    toastr.success('Pages updated successfully');
+                    toastr.success(`${unitType} updated successfully`);
                     $('#randomize-product-table-body').html(response.tableRows);
 
                     // After updating the DOM, ensure all hidden inputs are present
