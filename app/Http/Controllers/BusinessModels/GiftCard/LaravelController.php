@@ -45,8 +45,7 @@ class LaravelController extends Controller
         $priceFrom = $request->get('price_from');
         $priceTo = $request->get('price_to');
         $categoryName = $request->get('category_name');
-        // Ensure noOfProducts is treated as null if not provided or zero
-        $noOfProducts = $request->get('noOfProducts') ? intval($request->get('noOfProducts')) : null;
+        $noOfProducts = intval($request->get('noOfProducts'));
 
         $site = Website::findOrFail($site_id);
         DynamicDatabaseService::connect($site);
@@ -69,36 +68,116 @@ class LaravelController extends Controller
             });
         }
 
+        $products = $query->orderByDesc('unit_price')->get();
+
+        if ($products->isEmpty()) {
+            return response()->json([
+                'tableRows' => '',
+                'total' => 0,
+                'message' => 'No products found in this range or category.'
+            ]);
+        }
+
         $bestMatch = null;
         $bestTotal = 0;
+        $bestDistance = PHP_INT_MAX;
 
+        // Step 1: First try to find EXACT match combinations (sum = invoiceAmount)
+        for ($attempt = 0; $attempt < 50; $attempt++) {
+            $shuffled = $products->shuffle();
+            $selected = [];
+            $currentTotal = 0;
 
-        if (!$noOfProducts || $noOfProducts == 1) {
-            $perfectMatch = $query->clone()->where('unit_price', $invoiceAmount)->first();
+            foreach ($shuffled as $product) {
+                $price = floatval($product->unit_price);
 
-            if ($perfectMatch) {
-                // If a perfect match is found, we use it and skip the combination logic.
-                $bestMatch = collect([$perfectMatch]);
-                $bestTotal = $invoiceAmount;
+                // If specific number of products required, stop when reached
+                if ($noOfProducts && count($selected) >= $noOfProducts) break;
+
+                // If adding this product would exceed invoice amount, skip it
+                if ($currentTotal + $price > $invoiceAmount) continue;
+
+                $selected[] = $product;
+                $currentTotal += $price;
+
+                // Check if we hit exact match
+                if ($currentTotal == $invoiceAmount) {
+                    // If no specific count required, or if we have exact count
+                    if (!$noOfProducts || count($selected) == $noOfProducts) {
+                        $bestMatch = $selected;
+                        $bestTotal = $currentTotal;
+                        break 2; // Break both loops - found perfect match
+                    }
+                }
+
+                // If we have required number of products, stop adding more
+                if ($noOfProducts && count($selected) == $noOfProducts) break;
+            }
+
+            // If we found exact match with any number of products (when no specific count)
+            if (!$noOfProducts && $currentTotal == $invoiceAmount && count($selected) > 0) {
+                $bestMatch = $selected;
+                $bestTotal = $currentTotal;
+                break;
             }
         }
+
+        // Step 2: If no exact match found, find closest higher amount
         if (!$bestMatch) {
-            $bestDistance = PHP_INT_MAX;
-            $minTotal = ($categoryName || $noOfProducts) ? $invoiceAmount * 0.6 : $invoiceAmount;
-            $maxTotal = $invoiceAmount * 1.10;
-            $fetchLimit = $noOfProducts ? ($noOfProducts * 10) : 200;
+            $maxTotal = $invoiceAmount * 1.15; // Allow up to 15% higher
 
-            $products = $query->orderByDesc('unit_price')->limit($fetchLimit)->get();
+            for ($attempt = 0; $attempt < 50; $attempt++) {
+                $shuffled = $products->shuffle();
+                $selected = [];
+                $currentTotal = 0;
 
-            if ($products->isEmpty()) {
-                return response()->json([
-                    'tableRows' => '',
-                    'total' => 0,
-                    'message' => 'No products found in this range or category.'
-                ]);
+                foreach ($shuffled as $product) {
+                    $price = floatval($product->unit_price);
+
+                    // If specific number of products required, stop when reached
+                    if ($noOfProducts && count($selected) >= $noOfProducts) break;
+
+                    // If adding this product would exceed max allowed, skip it
+                    if ($currentTotal + $price > $maxTotal) continue;
+
+                    $selected[] = $product;
+                    $currentTotal += $price;
+
+                    // If we have required number of products, stop adding more
+                    if ($noOfProducts && count($selected) == $noOfProducts) break;
+                }
+
+                // Evaluate this combination
+                if ($noOfProducts) {
+                    // Must have exact number of products and total >= invoice amount
+                    if (count($selected) == $noOfProducts && $currentTotal >= $invoiceAmount) {
+                        $distance = $currentTotal - $invoiceAmount;
+                        if ($distance < $bestDistance) {
+                            $bestMatch = $selected;
+                            $bestTotal = $currentTotal;
+                            $bestDistance = $distance;
+                        }
+                    }
+                } else {
+                    // Any number of products, but total must be >= invoice amount
+                    if ($currentTotal >= $invoiceAmount && $currentTotal <= $maxTotal) {
+                        $distance = $currentTotal - $invoiceAmount;
+                        if ($distance < $bestDistance) {
+                            $bestMatch = $selected;
+                            $bestTotal = $currentTotal;
+                            $bestDistance = $distance;
+                        }
+                    }
+                }
             }
+        }
 
-            for ($i = 0; $i < 30; $i++) {
+        // Step 3: Final fallback - if still no match, try original logic with more flexibility
+        if (!$bestMatch) {
+            $minTotal = $invoiceAmount * 0.8; // Allow 20% lower as last resort
+            $maxTotal = $invoiceAmount * 1.20; // Allow 20% higher
+
+            for ($attempt = 0; $attempt < 30; $attempt++) {
                 $shuffled = $products->shuffle();
                 $selected = [];
                 $currentTotal = 0;
@@ -116,24 +195,22 @@ class LaravelController extends Controller
                 }
 
                 if ($noOfProducts && count($selected) == $noOfProducts) {
-                    $distance = abs($invoiceAmount - $currentTotal);
-                    if ($distance < $bestDistance) {
-                        $bestMatch = $selected; // This is an array
-                        $bestTotal = $currentTotal;
-                        $bestDistance = $distance;
+                    if ($currentTotal >= $minTotal) {
+                        $distance = abs($invoiceAmount - $currentTotal);
+                        if ($distance < $bestDistance) {
+                            $bestMatch = $selected;
+                            $bestTotal = $currentTotal;
+                            $bestDistance = $distance;
+                        }
                     }
-                    if ($distance <= $invoiceAmount * 0.05) break;
-                } elseif (!$noOfProducts && $currentTotal >= $minTotal && $currentTotal <= $maxTotal && $currentTotal > $bestTotal) {
-                    $bestMatch = $selected; // This is an array
-                    $bestTotal = $currentTotal;
+                } elseif (!$noOfProducts && $currentTotal >= $minTotal && $currentTotal <= $maxTotal) {
+                    if ($currentTotal > $bestTotal) {
+                        $bestMatch = $selected;
+                        $bestTotal = $currentTotal;
+                    }
                 }
             }
-            // Convert array to collection if a match was found in the loop
-            if ($bestMatch) {
-                $bestMatch = collect($bestMatch);
-            }
         }
-
 
         if (!$bestMatch) {
             return response()->json([
@@ -143,9 +220,9 @@ class LaravelController extends Controller
             ]);
         }
 
-        // The rest of your function remains the same...
-        // ... ($bestMatch is now guaranteed to be a collection if it exists)
+        $bestMatch = collect($bestMatch);
 
+        // Get category information
         $categoryIds = $bestMatch->pluck('category_id')->unique();
         $categories = DB::connection($this->connectionType)
             ->table('categories')
@@ -156,6 +233,7 @@ class LaravelController extends Controller
             $product->category_name = $categories[$product->category_id] ?? 'unknown';
         });
 
+        // Get price history information
         $productIds = $bestMatch->pluck('id')->unique();
         $priceHistories = ProductPriceHistory::where('site_id', $site_id)
             ->whereIn('product_id', $productIds)
@@ -164,7 +242,7 @@ class LaravelController extends Controller
             ->groupBy('product_id');
 
         $bestMatch->each(function ($product) use ($priceHistories) {
-            $history = $priceHistories->get($product->id, collect())->first();
+            $history = $priceHistories[$product->id][0] ?? null;
             if ($history) {
                 $lastChanged = Carbon::parse($history->last_price_changed);
                 $nextChange = $lastChanged->copy()->addMonths(3);
@@ -177,11 +255,13 @@ class LaravelController extends Controller
             }
         });
 
+        // Store in session
         $productList = $bestMatch->map(fn($p) => ['id' => $p->id, 'unit_price' => $p->unit_price])->toArray();
         session()->forget('ready_products');
         session()->put('ready_products', $productList);
         session(['current_amount' => $bestTotal]);
 
+        // Render view
         $modelType = $site->businessModel->model_type;
         $tableRows = view("invoice.{$modelType}.random_product_rows", [
             'products' => $bestMatch,
