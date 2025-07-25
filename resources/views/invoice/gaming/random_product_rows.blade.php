@@ -25,7 +25,7 @@
         <td>
             {{ $product->name }}
             @if ($site->site_link && $product->slug)
-                <a href="{{ $site->site_link }}/product/{{ $product->slug }}" target="_blank">🔗</a>
+                <a href="{{ $site->site_link }}games" target="_blank">🔗</a>
             @endif
             <input form="generate-invoice-form" type="hidden" name="products[{{ $product->id }}][name]"
                 value="{{ $product->name }}">

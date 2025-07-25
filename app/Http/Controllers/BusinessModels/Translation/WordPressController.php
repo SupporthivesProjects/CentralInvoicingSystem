@@ -44,7 +44,7 @@ class WordPressController extends Controller
         $site_id = $request->get('site_id');
         $invoiceAmount = floatval($request->get('invoice_amount'));
         $filterType = $request->get('filter_type');
-
+    
         if (!$invoiceAmount || $invoiceAmount <= 0) {
             return response()->json([
                 'tableRows' => '',
@@ -52,16 +52,16 @@ class WordPressController extends Controller
                 'message' => 'Please provide a valid invoice amount'
             ]);
         }
-
+    
         $site = Website::findOrFail($site_id);
         $modelType = $site->businessModel->model_type;
-
+    
         $auth = base64_encode($site->consumer_key . ':' . $site->consumer_secret);
         $siteUrl = rtrim($site->site_link, '/');
-
+    
         $products = [];
         $page = 1;
-
+    
         do {
             $response = Http::withHeaders([
                 'Authorization' => 'Basic ' . $auth,
@@ -72,14 +72,14 @@ class WordPressController extends Controller
                 'page' => $page,
                 'status' => 'publish'
             ]);
-
+    
             if ($response->failed()) break;
-
+    
             $data = $response->json();
             $products = array_merge($products, $data);
             $page++;
         } while (!empty($data));
-
+    
         if (empty($products)) {
             return response()->json([
                 'tableRows' => '',
@@ -87,28 +87,28 @@ class WordPressController extends Controller
                 'message' => 'No products found from API.'
             ]);
         }
-
+    
         $certifiedProduct = collect($products)->first(function ($product) {
             return strtolower(trim($product['name'])) === 'certified translation';
         });
-
+    
         $standardProduct = collect($products)->first(function ($product) {
             $name = strtolower(trim($product['name']));
             return str_contains($name, 'standard professional translation') ||
                 str_contains($name, 'standard translation') ||
                 str_contains($name, 'business translation');
         });
-
+    
         $certifiedPrice = $certifiedProduct['price'] ?? null;
         $standardPrice = $standardProduct['price'] ?? null;
-
+    
         $certifiedPrice = $certifiedPrice !== null ? floatval($certifiedPrice) : null;
         $standardPrice = $standardPrice !== null ? floatval($standardPrice) : null;
-
+    
         $bestMatch = null;
         $bestTotal = PHP_FLOAT_MAX;
         $bestDistance = PHP_FLOAT_MAX;
-
+    
         if ($filterType === 'certified' && $certifiedProduct && $certifiedPrice) {
             $pages = ceil($invoiceAmount / $certifiedPrice);
             $total = $pages * $certifiedPrice;
@@ -126,32 +126,31 @@ class WordPressController extends Controller
                 'total' => $total
             ]];
         } elseif ($certifiedProduct && $standardProduct && $certifiedPrice && $standardPrice) {
-
             $ratios = [
-                    ['cert_ratio' => 0.3, 'std_ratio' => 0.7],
-                    ['cert_ratio' => 0.5, 'std_ratio' => 0.5],
-                    ['cert_ratio' => 0.7, 'std_ratio' => 0.3],
-                    ['cert_ratio' => 0.2, 'std_ratio' => 0.8],
-                    ['cert_ratio' => 0.8, 'std_ratio' => 0.2],
-                    ['cert_ratio' => 0.4, 'std_ratio' => 0.6],
-                    ['cert_ratio' => 0.6, 'std_ratio' => 0.4],
+                ['cert_ratio' => 0.3, 'std_ratio' => 0.7],
+                ['cert_ratio' => 0.5, 'std_ratio' => 0.5],
+                ['cert_ratio' => 0.7, 'std_ratio' => 0.3],
+                ['cert_ratio' => 0.2, 'std_ratio' => 0.8],
+                ['cert_ratio' => 0.8, 'std_ratio' => 0.2],
+                ['cert_ratio' => 0.4, 'std_ratio' => 0.6],
+                ['cert_ratio' => 0.6, 'std_ratio' => 0.4],
             ];
-
+    
             foreach ($ratios as $ratio) {
                 $certAmount = $invoiceAmount * $ratio['cert_ratio'];
                 $stdAmount = $invoiceAmount * $ratio['std_ratio'];
-
+    
                 $certPages = max(1, ceil($certAmount / $certifiedPrice));
                 $stdPages = max(1, ceil($stdAmount / $standardPrice));
-
+    
                 $certTotal = $certPages * $certifiedPrice;
                 $stdTotal = $stdPages * $standardPrice;
                 $total = $certTotal + $stdTotal;
-
+    
                 if ($total >= $invoiceAmount) {
                     $distance = $total - $invoiceAmount;
                     $balanceScore = abs(($certTotal / $total) - 0.5);
-
+    
                     if ($distance < $bestDistance || ($distance === $bestDistance && $balanceScore < 0.3)) {
                         $bestMatch = [
                             [
@@ -171,29 +170,29 @@ class WordPressController extends Controller
                 }
             }
         }
-
+    
         if (!$bestMatch && $certifiedProduct && $certifiedPrice) {
             $pages = ceil($invoiceAmount / $certifiedPrice);
             $total = $pages * $certifiedPrice;
-
+    
             $bestMatch = [[
                 'product' => $certifiedProduct,
                 'pages' => $pages,
                 'total' => $total
             ]];
         }
-
+    
         if (!$bestMatch && $standardProduct && $standardPrice) {
             $pages = ceil($invoiceAmount / $standardPrice);
             $total = $pages * $standardPrice;
-
+    
             $bestMatch = [[
                 'product' => $standardProduct,
                 'pages' => $pages,
                 'total' => $total
             ]];
         }
-
+    
         if (!$bestMatch) {
             return response()->json([
                 'tableRows' => '',
@@ -201,41 +200,43 @@ class WordPressController extends Controller
                 'message' => 'No matching combination found, try again please'
             ]);
         }
-
+    
         $selectedProducts = [];
         foreach ($bestMatch as $item) {
             $product = (object) $item['product'];
-            $pages = $item['pages'];
-
-            if ($pages <= 0) continue;
-
-            $basePercentage = 20; #20% ture changes of urjency
-            $multiplier = ceil($invoiceAmount / 100);
-            $chance = min($basePercentage * $multiplier, 100); 
-
+    
+            $basePercentage = 15;
+            $chance = min(log($invoiceAmount + 1, 10) * $basePercentage, 100);
+    
             $product->unit_price = floatval($product->price);
-            $product->pages = $pages;
             $product->urgent_amount = 99.75;
             $product->is_urgent = rand(1, 100) <= $chance;
-            $product->line_total = $product->unit_price * $product->pages;
-
+    
+            $unitTotal = $product->unit_price;
             if ($product->is_urgent) {
-                $product->line_total += $product->urgent_amount;
+                $unitTotal += $product->urgent_amount;
             }
-
+    
+            $product->pages = ceil($invoiceAmount / $unitTotal);
+            $product->line_total = $product->unit_price * $product->pages;
+    
+            if ($product->is_urgent) {
+                $product->line_total += $product->urgent_amount * $product->pages;
+            }
+    
             $product->can_edit_price = 1;
             $product->remaining_days = 0;
+    
             $productName = strtolower(trim($product->name));
-
             if ($certifiedProduct && $productName === strtolower(trim($certifiedProduct['name']))) {
                 $product->unit_type = 'pages';
             } else {
                 $product->unit_type = 'words';
             }
-
+    
             $selectedProducts[] = $product;
         }
-
+    
         session()->forget('ready_products');
         session()->put('ready_products', collect($selectedProducts)->map(function ($product) {
             return [
@@ -246,22 +247,23 @@ class WordPressController extends Controller
                 'urgent_amount' => $product->urgent_amount,
             ];
         })->toArray());
-
+    
         $finalTotal = collect($selectedProducts)->sum('line_total');
-
+    
         session(['current_amount' => $finalTotal]);
-
+    
         $tableRows = view("invoice.{$modelType}.random_product_rows", [
             'products' => $selectedProducts,
             'site' => $site,
             'total' => $finalTotal
         ])->render();
-
+    
         return response()->json([
             'tableRows' => $tableRows,
             'total' => $finalTotal
         ]);
     }
+    
 
     
 
