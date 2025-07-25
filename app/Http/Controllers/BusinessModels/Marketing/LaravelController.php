@@ -675,25 +675,25 @@ class LaravelController extends Controller
         }
 
 
-        $products = DB::connection($this->connectionType)->table($this->productTable)
-            ->whereIn('id', $productIds)
-            ->select('id', 'subscription', 'category_id', 'name', 'unit_price')
-            ->get()
-            ->sortBy(function ($product) use ($productIds) {
-                return array_search($product->id, $productIds);
-            })
-            ->values()
-            ->map(function ($product) use ($customPrices, $categorySlugs) {
-                $product->unit_price = $customPrices[$product->id] ?? $product->unit_price;
-
-                $data = $this->generateSlug($product->category_id);
-                $product->category_name = $data['category_name'];
-                $product->slug = $data['slug'];
-
-                return $product;
-            });
-
+        $products = DB::connection($this->connectionType)
+        ->table($this->productTable)
+        ->whereIn('id', $productIds)
+        ->select('id', 'subscription', 'category_id', 'name', 'unit_price')
+        ->get()
+        ->sortBy(function ($product) use ($productIds) {
+            return array_search($product->id, $productIds);
+        })
+        ->values()
+        ->map(function ($product) use ($customPrices) {
+            $product->unit_price = $customPrices[$product->id] ?? $product->unit_price;
             
+            $data = $this->generateSlug($product->category_id);
+            $product->category_name = $data['category_name'];
+            $product->slug = $data['slug'];
+            return $product;
+        });
+    
+    
         $invoice_data['currency'] = site_currency();
 
         $invoice_data['products'] = $products;

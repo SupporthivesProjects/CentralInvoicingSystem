@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Your Email Title</title>
+    <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
 </head>
 
 <body style="margin: 0 !important; padding: 0 !important;">
