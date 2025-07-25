@@ -33,6 +33,31 @@ class WordPressController extends Controller
         $this->connectionType = 'dynamic';
     }
 
+    protected function generateSlug($categoryId)
+    {
+        $categorySlugs = [
+            'SEO Packages' => 'seo',
+            'PPC Packages' => 'ppc',
+            'ORM Packages' => 'orm',
+            'Social Media Packages' => 'social',
+            'Web Design And Development Packages' => 'wwd',
+            'Email Marketing Packages' => 'em',
+        ];
+
+        $name = DB::connection($this->connectionType)
+            ->table('categories')
+            ->where('id', $categoryId)
+            ->value('name') ?? 'unknown';
+
+        $normalized = preg_replace('/\s+/', ' ', trim($name));
+
+        return [
+            'category_name' => $normalized,
+            'slug' => $categorySlugs[$normalized] ?? \Str::slug($normalized),
+        ];
+    }
+
+
  
     public function randomProducts(Request $request)
     {
