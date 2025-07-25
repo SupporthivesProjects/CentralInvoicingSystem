@@ -23,8 +23,12 @@ $(document).ready(function () {
 
 
 $(document).ready(function () {
-    
-    $('#internalSearchInput').on('input', performInternalSearch);
+    let searchTimeout;
+
+    $('#internalSearchInput').on('input', function () {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(performInternalSearch, 2000);
+    });
 
     $('#internalSearchType').on('change', function () {
         if ($('#internalSearchInput').val().trim().length > 1) {
@@ -48,21 +52,21 @@ $(document).ready(function () {
         const url = $('#internalSearchInput').data('url');
         const selectedText = $('#internalSearchType option:selected').text();
         const heading = `Search Results for ${selectedText}`;
-    
+
         if (keyword.length > 1 && type !== '') {
             $('#searchResults').empty().removeClass('active-search');
             $('#searchspinner').html(`<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div>`).show();
-    
+
             $.ajax({
                 url: url,
                 method: 'GET',
                 data: { keyword, type },
                 success: function (response) {
                     let html = '';
-    
+
                     if (response.length > 0) {
                         html += `<div class="mt-3"><p class="fw-semibold text-muted mb-2 fs-13">${heading}</p><ul class="ps-2 list-unstyled">`;
-                    
+
                         response.forEach(item => {
                             html += `
                                 <li class="p-1 d-flex align-items-center text-muted mb-2 search-app">
@@ -71,24 +75,24 @@ $(document).ready(function () {
                                    </a>
                                 </li>`;
                         });
-                    
+
                         html += `</ul>`;
-                    
+
                         if (type !== 'business_models') {
                             const encodedKeyword = encodeURIComponent(keyword);
                             const encodedType = encodeURIComponent(type);
-                    
+
                             html += `
                                 <div class="text-end mt-2">
                                     <a href="/websites/search/result?keyword=${encodedKeyword}&type=${encodedType}" class="btn btn-sm btn-outline-primary" target="_blank">View All</a>
                                 </div>`;
                         }
-                    
+
                         html += `</div>`;
                     } else {
                         html = '<p class="text-muted">No results found.</p>';
                     }
-    
+
                     $('#searchResults').html(html).addClass('active-search');
                 },
                 error: function () {
@@ -98,16 +102,13 @@ $(document).ready(function () {
                     $('#searchspinner').hide().empty();
                 }
             });
-
         } else {
             $('#searchResults').empty().removeClass('active-search');
             $('#searchspinner').hide().empty();
         }
     }
-    
-
-
 });
+
 
  $('#copyInvoicenumber').on('click', function () {
         const invoiceInput = document.getElementById('invoice_number');
