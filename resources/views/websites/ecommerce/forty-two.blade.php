@@ -81,7 +81,7 @@
                                 <img src="{{ $invoice_header_image }}" class="img-fluid">
                             </td>
                         </tr>
-                        <tr>
+                        <tr style="">
                             <td style="background: url('{{ $invoice_image1 }}') no-repeat; background-size: contain; background-position: 15px 42px">
                                 <table width="100%" cellspacing="0" cellpadding="0" border="0" class="main-td">
                                     <tbody>
