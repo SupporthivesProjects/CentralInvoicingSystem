@@ -54,18 +54,18 @@
                             <table style="border-collapse:collapse;width:100%;margin-top:20px;">
                                 <td style="vertical-align: top;">
                                     <h2
-                                        style="color:#000000;font-size: 12px;font-weight:500;font-family: Poppins;margin: 0px;line-height:18px;text-transform:capitalize;">
+                                        style="color:#000000;font-size: 12px;font-weight:600;font-family: Poppins;margin: 0px;line-height:18px;text-transform:capitalize;">
                                         Invoice to
                                     </h2>
                                     <p
-                                        style="color:#000000;font-size:9px;font-weight:500;font-family: Poppins;margin: 0px;line-height:16px;text-transform:capitalize;">
+                                        style="color:#000000;font-size:9px;font-weight:600;font-family: Poppins;margin: 0px;line-height:16px;text-transform:capitalize;">
                                         {{ $customer_name }}
                                     </p>
                                 </td>
                                 <td
                                     style="display: flex;flex-direction: column;align-items:flex-end;justify-content: right;gap: 10px;padding-top: 10px;vertical-align: top;">
                                     <img src="{{ $company_logo }}" alt=""
-                                        style="height:30px;width:70px;margin-right: 30px;">
+                                        style="height:30px;width:70px;margin-right: 90px;">
                                     <div>
                                         <h2
                                             style="color:#000000;font-size: 12px;font-weight:500;font-family: Poppins;margin: 0px;line-height:18px;text-transform:capitalize;">
@@ -115,25 +115,25 @@
                                         <tr style="height:40px;">
                                             <td>
                                                 <p
-                                                    style="color:black;font-size: 11px;font-weight: 500;font-family:Poppins;margin: 0px;line-height: 28px;text-align: left;padding-left:10px;">
+                                                    style="color:black;font-size: 9px;font-weight: 500;font-family:Poppins;margin: 0px;line-height: 28px;text-align: left;padding-left:10px;">
                                                     {{ $product->name }}
                                                 </p>
                                             </td>
                                             <td>
                                                 <p
-                                                    style="color:black;font-size: 11px;font-weight: 500;font-family:Poppins;margin: 0px;line-height:16px;text-align:right;padding-right:10px;">
+                                                    style="color:black;font-size: 9px;font-weight: 500;font-family:Poppins;margin: 0px;line-height:16px;text-align:right;padding-right:10px;">
                                                     {{ $product->quantity ?? 1 }}
                                                 </p>
                                             </td>
                                             <td>
                                                 <p
-                                                    style="color:black;font-size: 11px;font-weight: 500;font-family:Poppins;margin: 0px;line-height: 28px;text-align:right;padding-right:10px;">
+                                                    style="color:black;font-size: 9px;font-weight: 500;font-family:Poppins;margin: 0px;line-height: 28px;text-align:right;padding-right:10px;">
                                                     {{ site_currency() }} {{ number_format($product->unit_price, 2) }}
                                                 </p>
                                             </td>
                                             <td>
                                                 <p
-                                                    style="color:black;font-size: 11px;font-weight: 500;font-family: Poppins;margin: 0px;line-height: 28px;text-align:right;padding-right:10px;">
+                                                    style="color:black;font-size: 9px;font-weight: 500;font-family: Poppins;margin: 0px;line-height: 28px;text-align:right;padding-right:10px;">
                                                     {{ site_currency() }}{{ number_format(($product->quantity ?? 1) * $product->unit_price, 2) }}
                                                 </p>
                                             </td>

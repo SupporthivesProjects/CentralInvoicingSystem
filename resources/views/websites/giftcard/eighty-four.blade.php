@@ -71,7 +71,7 @@
                                 @endforeach
                             </table>
 
-                            <table style="width: 300px;font-size: 10px; border-collapse: collapse;">
+                            <table style="width: 300px;font-size: 10px; border-collapse: collapse; margin-left: auto">
                               <tr style="border-bottom: 1px solid #ccc;">
                                 <td style="padding: 8px; font-weight: bold; color: #666; font-variant: small-caps;">Subtotal</td>
                                 <td style="padding: 8px; text-align: right; color: #666;">

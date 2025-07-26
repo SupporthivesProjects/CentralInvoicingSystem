@@ -29,12 +29,13 @@
                             <table>
                                 <tr>
                                     <td style="padding-top: 30px;">
-                                        <p style="font-family: arial;font-size:10px;margin: 0px;font-weight: 400;padding-bottom: 5px;">
-                                            <b>Invoice Number:</b> #{{ $invoice_number}}
-                                        </p>
                                         <p style="font-family: arial;font-size:10px;margin: 0px;font-weight: 400;">
                                             <b>Date</b> {{ $invoice_date }}
                                         </p>
+                                        <p style="font-family: arial;font-size:10px;margin: 0px;font-weight: 400;padding-bottom: 5px;">
+                                            <b>Invoice Number:</b> #{{ $invoice_number}}
+                                        </p>
+                                        
                                         <br>
                                     </td>
                                     <td style="text-align: right;">
