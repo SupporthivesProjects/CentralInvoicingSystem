@@ -137,7 +137,7 @@
                                     <td style="width: 80%; vertical-align: top;">
                                         <div style="min-height: 651px !important;">
                                         <table cellspacing="0" cellpadding="0" border="0" width="100%" style="border-collapse: collapse; width: 100%;">
-                                            <tr style="border-top: 1px solid black; border-bottom: 3px solid black; height: 30px;">
+                                            <tr style="border-top: 1px solid black; border-bottom: 2px solid black; height: 30px;">
                                                 <td>
                                                     <h1 style="margin: 0px; font-family: Calibri; font-size: 11px; color: #041021;">
                                                         Product Name / Service Details
