@@ -124,7 +124,7 @@
                             <label class="rounded-end-0 list-group-item list-group-item-action d-flex align-items-center gap-2 py-2"
                                 data-bs-toggle="list" href="#websiteDetails" role="tab" style="cursor:pointer;">
                                 <input class="form-check-input visually-hidden" form="generate-invoice-form" type="radio" name="company_detail_type"
-                                    id="radioWebsite" value="remote" @checked(!$isWordPress)>
+                                    id="radioWebsite" value="remote" >
                                 <span class="flex-grow-1 fw-semibold text-center rounded d-flex justify-content-center align-items-center">
                                     Remote <span class="ms-1 d-none active-arrow"><i class="fas fa-check"></i></span>
                                 </span>
@@ -133,7 +133,7 @@
                             <label class="rounded-end-0 list-group-item list-group-item-action d-flex align-items-center gap-2 py-2 active"
                                 data-bs-toggle="list" href="#customDetails" role="tab" style="cursor:pointer;">
                                 <input class="form-check-input visually-hidden" form="generate-invoice-form" type="radio" name="company_detail_type"
-                                    id="radioCustom" value="local" @checked($isWordPress)>
+                                    id="radioCustom" value="local" checked>
                                 <span class="flex-grow-1 fw-semibold text-center rounded d-flex justify-content-center align-items-center">
                                     Local <span class="ms-1 d-none active-arrow"><i class="fas fa-check"></i></span>
                                 </span>

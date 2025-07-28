@@ -148,6 +148,7 @@
                         <li class="slide side-menu__label1"><a href="javascript:void(0)">Settings</a></li>
                         <li class="slide"><a href="{{ route('myprofile') }}" class="side-menu__item">Profile</a></li>
                         <li class="slide"><a href="{{ route('currency.index') }}" class="side-menu__item">Currency</a></li>
+                        <li class="slide"><a href="{{ route('currency.manage.rates') }}" class="side-menu__item">Coversion Rate</a></li>
                     </ul>
                 </li>
                 @endif

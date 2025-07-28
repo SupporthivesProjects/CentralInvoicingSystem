@@ -90,7 +90,8 @@
             <!-- End::header-element -->
             
             <!-- Start::header-element -->
-            <div class="header-element country-selector">
+            {{--
+                <div class="header-element country-selector">
                 <!-- Start::header-link|dropdown-toggle -->
                 <a href="javascript:void(0);" class="header-link dropdown-toggle country-Flag" data-bs-auto-close="outside" data-bs-toggle="dropdown">
                     <span>
@@ -111,7 +112,7 @@
                 </a>
 
               
-                <!-- End::header-link|dropdown-toggle -->
+               <!-- End::header-link|dropdown-toggle -->
                 <ul class="main-header-dropdown dropdown-menu dropdown-menu-end" data-popper-placement="none">
                     @foreach(currencies() as $currency)
                     <li>
@@ -123,9 +124,10 @@
                     
                 </ul> 
                
+               
             </div>
             <!-- End::header-element -->
-
+            --}}
            {{--
             <div class="header-element notifications-dropdown">
                 <!-- Start::header-link|dropdown-toggle -->

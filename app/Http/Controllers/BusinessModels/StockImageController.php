@@ -53,6 +53,11 @@ class StockImageController extends Controller
         return $this->resolveByTechnology($request, 'filterProducts');
     }
 
+    public function getProduct(Request $request)
+    {
+        return $this->resolveByTechnology($request, 'getProduct');
+    }
+    
     public function generateInvoice(Request $request)
     {
         return $this->resolveByTechnology($request, 'generateInvoice');

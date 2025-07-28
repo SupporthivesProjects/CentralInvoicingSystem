@@ -57,6 +57,11 @@ class GamingSiteController extends Controller
         return $this->resolveByTechnology($request, 'generateInvoice');
     }
 
+    public function getProduct(Request $request)
+    {
+        return $this->resolveByTechnology($request, 'getProduct');
+    }
+
     protected function resolveByTechnology(Request $request, $method)
     {
    

@@ -6,7 +6,7 @@
 
         @if($site->site_link && $product->slug)
             <a 
-                href="{{ $site->site_link }}/product/{{ $product->slug }}" 
+                href="{{ $site->site_link }}{{ $product->slug }}" 
                 target="_blank" 
                 class="input-group-text"
                 data-bs-toggle="tooltip"
@@ -54,7 +54,8 @@
             <input type="text" 
                    class="form-control text-center product-rrp" 
                    value="{{ number_format($product->rrp, 2, '.', '') }}" 
-                   data-product-id="{{ $product->id }}" 
+                   data-reverse-rate="{{ $product->reverse_rate ?? 1 }}"
+                   data-product-id="{{ $product->id }}"
                    aria-label="RRP"
                    {{ $product->can_edit_price == 0 ? 'readonly' : '' }}>
             <span class="input-group-text d-flex align-items-center"
@@ -72,18 +73,18 @@
 
     <td class="text-center">
         <div class="input-group d-flex justify-content-center">
-        <span class="input-group-text"><i class="fas fa-percent"></i></span>
+        <span class="input-group-text"><i class="fas fa-percent text-success"></i></span>
             <input type="text" 
-                   class="form-control text-center product-discount" 
+                   class="form-control text-center text-success fw-bold product-discount" 
                    value="{{ $product->discount }}" 
                    data-product-id="{{ $product->id }}" 
                    aria-label="Discount" 
                    {{ $product->can_edit_price == 0 ? 'readonly' : '' }}>
             <span class="input-group-text d-flex align-items-center" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $product->can_edit_price == 0 ? 'Discount update allowed after ' . $product->remaining_days . ' days.' : 'Editable' }}">
                   @if($product->can_edit_price == 0)
-                        <i class="fas fa-lock text-muted"></i>
+                        <i class="fas fa-lock text-success text-muted"></i>
                     @else
-                      <i class="fas fa-edit"></i>
+                      <i class="fas fa-edit text-success"></i>
                     @endif
                  
             </span>

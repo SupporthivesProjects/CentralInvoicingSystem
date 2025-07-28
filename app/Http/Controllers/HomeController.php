@@ -13,14 +13,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
-
-
-
+use App\Services\CurrencyConversionService;
 
 
 class HomeController extends Controller
 {
 
+  
     public function index(Request $request)
     {
 

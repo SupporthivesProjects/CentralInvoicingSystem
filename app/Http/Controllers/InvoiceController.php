@@ -13,6 +13,9 @@ use App\Services\DynamicDatabaseService;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+
 
 use App\Http\Controllers\BusinessModels\EcommerceController;
 use App\Http\Controllers\BusinessModels\ContentWritingController;
@@ -181,7 +184,7 @@ class InvoiceController extends Controller
         }
     
         try {
-            $site = Website::findOrFail($site_id);
+            $site = Website::with('businessModel')->findOrFail($site_id);
 
             if ($site->site_status === 'pdown') {
                 return redirect()->back()->with('error', 'Site is permanently down. Invoice cannot be generated.');
@@ -203,9 +206,17 @@ class InvoiceController extends Controller
             } catch (\Exception $e) {
                 $remote_database = null;
             }
-            
-    
+
             $modelType = $site->businessModel->model_type;
+
+            if ($site->businessModel && strtolower(trim($site->businessModel->model_type)) === 'giftcard' && strtolower(trim($site->technology)) === 'laravel') {
+                try {
+                    $this->ensureConversionRatesTable($this->connectionType, $site);
+                } catch (\Throwable $e) {
+                    \Log::error("🔥 Error ensuring conversion_rates table: " . $e->getMessage());
+                }
+            } 
+                    
             $sites = Website::orderBy('id', 'DESC')->get();
     
             return view("invoice.{$modelType}.productSelection", [
@@ -224,9 +235,59 @@ class InvoiceController extends Controller
                 ->with('error', 'Database connection failed: ' . $e->getMessage());
         }
     }
+
     
-
-
+    public function ensureConversionRatesTable(string $connection, $site)
+    {
+        DynamicDatabaseService::connect($site);
+    
+        if (!Schema::connection($connection)->hasTable('conversion_rates')) {
+            Schema::connection($connection)->create('conversion_rates', function (Blueprint $table) {
+                $table->id();
+                $table->string('from_currency', 10);
+                $table->string('to_currency', 10);
+                $table->decimal('rate', 10, 4);
+                $table->timestamps();
+            });
+    
+            DB::connection($connection)->table('conversion_rates')->insert([
+                ['from_currency' => 'AUD', 'to_currency' => 'EUR', 'rate' => 0.6100, 'created_at' => now(), 'updated_at' => now()],
+                ['from_currency' => 'AUD', 'to_currency' => 'AUD', 'rate' => 1.0000, 'created_at' => now(), 'updated_at' => now()],
+                ['from_currency' => 'AUD', 'to_currency' => 'CAD', 'rate' => 0.8600, 'created_at' => now(), 'updated_at' => now()],
+                ['from_currency' => 'AUD', 'to_currency' => 'USD', 'rate' => 0.6500, 'created_at' => now(), 'updated_at' => now()],
+                ['from_currency' => 'AUD', 'to_currency' => 'AED', 'rate' => 2.3800, 'created_at' => now(), 'updated_at' => now()],
+                ['from_currency' => 'CAD', 'to_currency' => 'EUR', 'rate' => 0.6800, 'created_at' => now(), 'updated_at' => now()],
+                ['from_currency' => 'CAD', 'to_currency' => 'AUD', 'rate' => 1.1200, 'created_at' => now(), 'updated_at' => now()],
+                ['from_currency' => 'CAD', 'to_currency' => 'CAD', 'rate' => 1.0000, 'created_at' => now(), 'updated_at' => now()],
+                ['from_currency' => 'CAD', 'to_currency' => 'USD', 'rate' => 0.7300, 'created_at' => now(), 'updated_at' => now()],
+                ['from_currency' => 'CAD', 'to_currency' => 'AED', 'rate' => 2.6700, 'created_at' => now(), 'updated_at' => now()],
+                ['from_currency' => 'USD', 'to_currency' => 'EUR', 'rate' => 0.9400, 'created_at' => now(), 'updated_at' => now()],
+                ['from_currency' => 'USD', 'to_currency' => 'AUD', 'rate' => 1.5400, 'created_at' => now(), 'updated_at' => now()],
+                ['from_currency' => 'USD', 'to_currency' => 'CAD', 'rate' => 1.3600, 'created_at' => now(), 'updated_at' => now()],
+                ['from_currency' => 'USD', 'to_currency' => 'USD', 'rate' => 1.0000, 'created_at' => now(), 'updated_at' => now()],
+                ['from_currency' => 'USD', 'to_currency' => 'AED', 'rate' => 3.6700, 'created_at' => now(), 'updated_at' => now()],
+                ['from_currency' => 'GBP', 'to_currency' => 'EUR', 'rate' => 1.1700, 'created_at' => now(), 'updated_at' => now()],
+                ['from_currency' => 'GBP', 'to_currency' => 'AUD', 'rate' => 1.8800, 'created_at' => now(), 'updated_at' => now()],
+                ['from_currency' => 'GBP', 'to_currency' => 'CAD', 'rate' => 1.6700, 'created_at' => now(), 'updated_at' => now()],
+                ['from_currency' => 'GBP', 'to_currency' => 'USD', 'rate' => 1.2500, 'created_at' => now(), 'updated_at' => now()],
+                ['from_currency' => 'GBP', 'to_currency' => 'AED', 'rate' => 4.5900, 'created_at' => now(), 'updated_at' => now()],
+                ['from_currency' => 'JPY', 'to_currency' => 'EUR', 'rate' => 0.0067, 'created_at' => now(), 'updated_at' => now()],
+                ['from_currency' => 'JPY', 'to_currency' => 'AUD', 'rate' => 0.0110, 'created_at' => now(), 'updated_at' => now()],
+                ['from_currency' => 'JPY', 'to_currency' => 'CAD', 'rate' => 0.0096, 'created_at' => now(), 'updated_at' => now()],
+                ['from_currency' => 'JPY', 'to_currency' => 'JPY', 'rate' => 1.0000, 'created_at' => now(), 'updated_at' => now()],
+                ['from_currency' => 'JPY', 'to_currency' => 'AED', 'rate' => 0.0230, 'created_at' => now(), 'updated_at' => now()],
+                ['from_currency' => 'EUR', 'to_currency' => 'EUR', 'rate' => 1.0000, 'created_at' => now(), 'updated_at' => now()],
+                ['from_currency' => 'EUR', 'to_currency' => 'AUD', 'rate' => 1.7100, 'created_at' => now(), 'updated_at' => now()],
+                ['from_currency' => 'EUR', 'to_currency' => 'CAD', 'rate' => 1.4700, 'created_at' => now(), 'updated_at' => now()],
+                ['from_currency' => 'EUR', 'to_currency' => 'USD', 'rate' => 1.0700, 'created_at' => now(), 'updated_at' => now()],
+                ['from_currency' => 'EUR', 'to_currency' => 'AED', 'rate' => 3.9200, 'created_at' => now(), 'updated_at' => now()],
+            ]);
+    
+           
+            \Log::info("conversion_rates table created for site ID: {$site->id}, Name: {$site->site_name}");
+        }
+    }
+    
 
     public function updateInvoiceAmount(Request $request)
     {
