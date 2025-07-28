@@ -14,7 +14,7 @@
                     <!-- Header -->
                     <tr>
                         <td style="padding: 0px;max-height: 130px;">
-                            <table>
+                            <table style="width: 100%;">
                                 <tr>
                                     <td
                                         style="height: 180px; background: url({{ $invoice_header_image }}) no-repeat;background-position: 100% 100%;background-size:cover;width: 600px;">
