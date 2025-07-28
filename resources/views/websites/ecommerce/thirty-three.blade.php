@@ -122,7 +122,7 @@
                                             <tr>
                                                 <td>
                                                     <div
-                                                        style="background: url('{{ $invoice_image1 }}') no-repeat; background-position: center center; background-size: cover;width: 250px; height: 150px; max-width: 100%; display: flex;flex-direction: column;justify-content: end;padding-bottom: 24px; margin: auto;padding-left: 17px;">
+                                                        style="background: url('{{ $invoice_image1 }}') no-repeat; background-position: center center; background-size: cover;width: 250px; height: 120px; max-width: 100%; display: flex;flex-direction: column;justify-content: end;padding-bottom: 24px; margin: auto;padding-left: 17px;">
                                                         <p
                                                             style="font-family: arial;font-size: 10px;margin: 10px;font-weight: 400;color: #F4C542;">
                                                             Phone </p>
@@ -134,7 +134,7 @@
                                                 </td>
                                                 <td>
                                                     <div
-                                                        style="background: url('{{ $invoice_image2 }}') no-repeat; background-position: center center; background-size: cover;width: 250px; height: 150px; max-width: 100%; display: flex;flex-direction: column;justify-content: end;padding-bottom: 24px;  margin: auto;padding-left: 17px;">
+                                                        style="background: url('{{ $invoice_image2 }}') no-repeat; background-position: center center; background-size: cover;width: 250px; height: 120px; max-width: 100%; display: flex;flex-direction: column;justify-content: end;padding-bottom: 24px;  margin: auto;padding-left: 17px;">
                                                         <p
                                                             style="font-family: arial;font-size: 10px;margin: 3px;font-weight: 400;color: #F4C542;">
                                                             Address</p>
@@ -146,7 +146,7 @@
                                                 </td>
                                                 <td>
                                                     <div
-                                                        style="background: url('{{ $invoice_image3 }}') no-repeat; background-position: center center; background-size: cover;width: 250px; height: 150px; max-width: 100%; display: flex;flex-direction: column;justify-content: end;padding-bottom: 24px;  margin: auto;padding-left: 17px;">
+                                                        style="background: url('{{ $invoice_image3 }}') no-repeat; background-position: center center; background-size: cover;width: 250px; height: 120px; max-width: 100%; display: flex;flex-direction: column;justify-content: end;padding-bottom: 24px;  margin: auto;padding-left: 17px;">
                                                         <p
                                                             style="font-family: arial;font-size: 10px;margin: 10px;font-weight: 400;color: #F4C542;">
                                                             Email</p>
