@@ -205,7 +205,7 @@
                                         <p style="color: red;">{{ site_currency() . number_format($discount_amount, 2) }}</p>
                                     </td>
                                 </tr>
-                                <tr style="border-collapse: collapse;height: 24px;">
+                                <tr style="border-collapse: collapse;height: 24px; padding-bottom: 200px;">
                                     <td
                                         style="width: 250px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
 
@@ -238,16 +238,16 @@
                                 <tr style="border-collapse: collapse;">
                                     <td
                                         style=" width: 200px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;color: #5E5E5E;padding-left: 40px;padding-top: 10px;">
-                                        <img src="{{ $invoice_image3 }}" alt="" style="height: 10px;">+1 132 456 9873
+                                        <img src="{{ $invoice_image3 }}" alt="" style="height: 10px; padding-right: 10px;">+1 132 456 9873
                                     </td>
                                     <td
                                         style="width: 200px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;color: #5E5E5E;padding-top: 10px;padding-left: 5px;">
                                         <img src="{{ $invoice_image4 }}" alt=""
-                                            style="height: 10px;">{{ $company_email }}
+                                            style="height: 10px; padding-right: 10px;">{{ $company_email }}
                                     </td>
                                     <td
                                         style="width: 200px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;color: #5E5E5E;padding-top: 10px;padding-left: 5px;">
-                                        <img src="{{ $invoice_image2 }}" alt="" style="height: 10px;">{{ $site->site_link }}
+                                        <img src="{{ $invoice_image2 }}" alt="" style="height: 10px; padding-right: 10px;">{{ $site->site_link }}
                                     </td>
                                 </tr>
                             </table>
