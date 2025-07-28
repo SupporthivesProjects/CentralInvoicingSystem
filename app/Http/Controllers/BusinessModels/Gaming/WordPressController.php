@@ -184,6 +184,7 @@ class WordPressController extends Controller
         $selected_games = array_map(function ($g) {
             return [
                 'id' => $g->id,
+                'name' => $g->name,
                 'unit_price' => $g->unit_price,
                 'game_currency_amount' => $g->game_currency_amount,
                 'game_currency' => $g->game_currency,
@@ -213,26 +214,23 @@ class WordPressController extends Controller
     public function removeProduct(Request $request)
     {
         $id = $request->get('product_id');
-        $bundle = $request->get('bundle_id'); // Make sure to send this from frontend
-        $unitPrice = floatval($request->get('unit_price'));
+        $unitPrice = $request->get('unit_price');
         $site_id = $request->get('site_id');
 
         $selectedGames = session('selected_games', []);
-
-        // Remove only the matching product
-        $updatedGames = array_filter($selectedGames, function ($game) use ($id, $bundle, $unitPrice) {
-            return !(
-                $game['id'] == $id &&
-                $game['bundle'] == $bundle &&
-                floatval($game['unit_price']) == $unitPrice
-            );
+        //dd($selectedGames);
+        // Remove matching product (id + unit_price)
+        $updatedGames = array_filter($selectedGames, function ($game) use ($id, $unitPrice) {
+            return !($game['id'] == $id && floatval($game['unit_price']) == floatval($unitPrice));
         });
 
         $updatedGames = array_values($updatedGames);
+
+        // Update session
         session(['selected_games' => $updatedGames]);
 
+        // If no products remaining
         if (empty($updatedGames)) {
-            session()->forget('current_amount');
             return response()->json([
                 'tableRows' => '',
                 'total'     => 0,
@@ -241,64 +239,49 @@ class WordPressController extends Controller
             ]);
         }
 
-        // Re-fetch products from WooCommerce
         $site = Website::findOrFail($site_id);
-        $consumerKey = $site->consumer_key;
-        $consumerSecret = $site->consumer_secret;
-        $base = rtrim($site->site_link, '/') . '/wp-json/wc/v3/products';
 
+        // Get currency - this might be different for WP vs Laravel sites
+        //$currency = $this->getCurrencyForSite($site);
+
+        // Get business model type for view template
         $modelType = $site->businessModel->model_type;
 
+        // Build products collection from session data for table display (as objects for Blade compatibility)
         $finalProducts = collect();
-
+        //dd($updatedGames);
         foreach ($updatedGames as $sessionGame) {
-            $productRes = Http::withBasicAuth($consumerKey, $consumerSecret)
-                ->get($base . '/' . $sessionGame['id']);
-
-            if ($productRes->failed()) continue;
-
-            $product = $productRes->json();
-
-            $variationRes = Http::withBasicAuth($consumerKey, $consumerSecret)
-                ->get($base . '/' . $sessionGame['id'] . '/variations/' . $sessionGame['bundle']);
-
-            if ($variationRes->failed()) continue;
-
-            $variation = $variationRes->json();
-
-            $attrs = collect($variation['attributes'])->pluck('option', 'name')->toArray();
-            $bundleAmount = preg_replace('/\D/', '', $attrs['Amount'] ?? '');
-
             $finalProducts->push((object)[
-                'id' => $product['id'],
-                'name' => $product['name'],
-                'bundle_id' => $variation['id'],
-                'unit_price' => floatval($sessionGame['unit_price']),
-                'slug' => Str::slug($product['name'] . '-' . $bundleAmount),
-                'source' => 'Random',
-                'can_edit_price' => 0,
-                'remaining_days' => 0,
-                'game_currency' => $product['sku'] ?? '',
-                'game_currency_amount' => $bundleAmount,
-                'game_platform' => $attrs['Platform'] ?? '',
-                'game_region' => null,
-                'game_need_to_capture' => null,
+                'id'                   => $sessionGame['id'],
+                'name'                 => $sessionGame['name'] ?? 'Product',
+                'bundle_id'            => $sessionGame['bundle_id'] ?? null,
+                'unit_price'           => floatval($sessionGame['unit_price']),
+                'slug'                 => $sessionGame['slug'] ?? Str::slug(($sessionGame['name'] ?? 'product') . '-' . ($sessionGame['game_currency_amount'] ?? '')),
+                'source'               => $sessionGame['source'] ?? 'Random',
+                'can_edit_price'       => $sessionGame['can_edit_price'] ?? 0,
+                'remaining_days'       => $sessionGame['remaining_days'] ?? 0,
+                'game_currency'        => $sessionGame['game_currency'] ?? '',
+                'game_currency_amount' => $sessionGame['game_currency_amount'] ?? '',
+                'game_platform'        => $sessionGame['game_platform'] ?? '',
+                'game_region'          => $sessionGame['game_region'] ?? '',
+                'game_need_to_capture' => $sessionGame['game_need_to_capture'] ?? '{}' // Ensure it's a JSON string for the template
             ]);
         }
 
         $total = $finalProducts->sum('unit_price');
         session(['current_amount' => $total]);
 
+        // Render table rows using the same view template
         $tableRows = view("invoice.{$modelType}.random_product_rows", [
             'products' => $finalProducts,
             'currency' => site_currency(),
-            'site' => $site
+            'site'     => $site
         ])->render();
 
         return response()->json([
             'tableRows' => $tableRows,
             'total'     => $total,
-            'currency'  => site_currency()
+            'currency'  => site_currency(),
         ]);
     }
 
@@ -394,69 +377,97 @@ class WordPressController extends Controller
         $existingAssoc = [];
         $seenKeys = [];
 
+        // Keep existing products in session (normalize all data structures)
         foreach ($existing as $item) {
             $game_id = $item['id'];
-            $bundle_amount = (float) $item['game_currency_amount'];
-            $key = "{$game_id}-{$bundle_amount}-custom";
+            $bundle_amount = (float) ($item['game_currency_amount'] ?? 0);
+
+            // Normalize source to lowercase to avoid key mismatch
+            $source = strtolower($item['source'] ?? ($item['bundle'] ?? 'random'));
+            $key = "{$game_id}-{$bundle_amount}-{$source}";
 
             if (!in_array($key, $seenKeys)) {
-                $existingAssoc[] = [
-                    'id' => (int) $game_id,
-                    'unit_price' => (float) $item['unit_price'],
-                    'game_currency_amount' => (string) $bundle_amount,
-                    'bundle' => 'custom',
-                ];
+                // Normalize the data structure for both Random and Custom products
+                if ($source === 'random') {
+                    $existingAssoc[] = [
+                        'id' => (int) $game_id,
+                        'name' => $item['name'] ?? 'Product',
+                        'unit_price' => (float) $item['unit_price'],
+                        'game_currency_amount' => (string) $bundle_amount,
+                        'game_currency' => $item['game_currency'] ?? '',
+                        'bundle_id' => $item['bundle_id'] ?? null,
+                        'source' => 'Random',
+                        'can_edit_price' => 0,
+                        'remaining_days' => 0,
+                        'slug' => $item['slug'] ?? '',
+                        'game_platform' => $item['game_platform'] ?? '',
+                        'game_region' => $item['game_region'] ?? '',
+                        'game_need_to_capture' => $item['game_need_to_capture'] ?? '{}',
+                    ];
+                } else {
+                    $existingAssoc[] = [
+                        'id' => (int) $game_id,
+                        'unit_price' => (float) $item['unit_price'],
+                        'game_currency_amount' => (string) $bundle_amount,
+                        'bundle_id' => $item['bundle_id'] ?? null,
+                        'source' => 'Custom',
+                        'can_edit_price' => $item['can_edit_price'] ?? 1,
+                        'remaining_days' => $item['remaining_days'] ?? 1,
+                        'name' => $item['name'] ?? 'Unknown',
+                        'slug' => $item['slug'] ?? '',
+                        'game_currency' => $item['game_currency'] ?? '',
+                        'game_platform' => $item['game_platform'] ?? '',
+                        'game_region' => $item['game_region'] ?? '',
+                        'game_need_to_capture' => $item['game_need_to_capture'] ?? '{}',
+                    ];
+                }
                 $seenKeys[] = $key;
             }
         }
 
+        // Fetch and add new products with complete data
         foreach ($selected as $gameData) {
             $game_id = $gameData['product_id'] ?? $gameData['id'];
             $bundle_amount = (float) $gameData['game_currency_amount'];
             $key = "{$game_id}-{$bundle_amount}-custom";
 
             if (!in_array($key, $seenKeys)) {
-                $existingAssoc[] = [
-                    'id' => (int) $game_id,
-                    'unit_price' => (float) $gameData['unit_price'],
-                    'game_currency_amount' => (string) $bundle_amount,
-                    'bundle' => 'custom',
-                ];
-                $seenKeys[] = $key;
+                // Fetch product details from WooCommerce
+                $productResponse = Http::withBasicAuth($consumerKey, $consumerSecret)
+                    ->get($woocommerceBaseUrl . $game_id);
+
+                if ($productResponse->successful()) {
+                    $product = $productResponse->json();
+                    $meta = collect($product['meta_data'] ?? []);
+                    $getMeta = fn($key) => $meta->firstWhere('key', $key)['value'] ?? null;
+
+                    $existingAssoc[] = [
+                        'id' => (int) $game_id,
+                        'unit_price' => (float) $gameData['unit_price'],
+                        'game_currency_amount' => (string) $bundle_amount,
+                        'bundle_id' => $getMeta('bundle_id'),
+                        'source' => 'Custom',
+                        'can_edit_price' => 1,
+                        'remaining_days' => 1,
+                        'name' => $product['name'] ?? 'Unknown',
+                        'slug' => $product['slug'] ?? '',
+                        'game_currency' => $product['sku'] ?? '',
+                        'game_platform' => $product['categories'][0]['name'] ?? '',
+                        'game_region' => $getMeta('game_region') ?? '',
+                        'game_need_to_capture' => $getMeta('game_need_to_capture') ?? '{}',
+                    ];
+                    $seenKeys[] = $key;
+                }
             }
         }
 
+        // Update session with complete product data
         session(['selected_games' => $existingAssoc]);
 
-        // ✅ Fetch product details one by one
-        $finalProducts = collect($existingAssoc)->map(function ($item) use ($woocommerceBaseUrl, $consumerKey, $consumerSecret) {
-            $productResponse = Http::withBasicAuth($consumerKey, $consumerSecret)
-                ->get($woocommerceBaseUrl . $item['id']);
-
-            if ($productResponse->failed()) {
-                return null;
-            }
-
-            $product = $productResponse->json();
-            $meta = collect($product['meta_data'] ?? []);
-            $getMeta = fn($key) => $meta->firstWhere('key', $key)['value'] ?? null;
-
-            return (object) [
-                'id' => $item['id'],
-                'unit_price' => $item['unit_price'],
-                'game_currency_amount' => $item['game_currency_amount'],
-                'bundle_id' => $getMeta('bundle_id'),
-                'source' => 'Custom',
-                'can_edit_price' => 1,
-                'remaining_days' => 1,
-                'name' => $product['name'] ?? 'Unknown',
-                'slug' => $product['slug'] ?? '',
-                'game_currency' => $product['sku'] ?? '',
-                'game_platform' => $product['categories'][0]['name'] ?? '',
-                'game_region' => $getMeta('game_region'),
-                'game_need_to_capture' => $getMeta('game_need_to_capture') ?? '{}',
-            ];
-        })->filter(); // remove nulls if any request failed
+        // Build display products (same as session data now)
+        $finalProducts = collect($existingAssoc)->map(function ($item) {
+            return (object) $item;
+        });
 
         $bestTotal = $finalProducts->sum('unit_price');
         session(['current_amount' => $bestTotal]);
@@ -476,6 +487,7 @@ class WordPressController extends Controller
             'products' => $finalProducts,
         ]);
     }
+
 
 
 
