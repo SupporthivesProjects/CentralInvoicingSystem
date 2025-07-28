@@ -51,11 +51,11 @@
                                         Billed From</th>
                                 </tr>
                                 <tr style="background-color: #f7f4ef;">
-                                    <td style="padding: 15px; display: flex;">
+                                    <td style="padding: 15px; display: flex; ">
                                         <strong style="display: inline-block; width: 60px; font-family: 'BASKERVILLE SEMIBOLD'; font-size: 10px;">Name</strong>
                                         <span style="color: #2f4f4f; font-family: 'BASKERVILLE SEMIBOLD'; font-size: 10px; ">{{ $customer_name  }}</span>
                                     </td>
-                                    <td style="padding: 15px;">
+                                    <td style="padding: 15px;border: 1px solid pink">
                                         <strong style="display: inline-block; width: 60px; font-family: 'BASKERVILLE SEMIBOLD'; font-size: 10px;">Name</strong>
                                         <span style="color: #2f4f4f; font-family: 'BASKERVILLE SEMIBOLD'; font-size: 10px;">{{ $company_name  }}<br>{{ $site_name }}</span>
                                     </td>
@@ -76,21 +76,21 @@
                                 <tbody style="background-color: #f7f4ef;">
                                 @foreach ($products as $product)
                                     <tr>
-                                        <td style="padding: 10px;">{{ $product->quantity ?? 1 }}</td>
-                                        <td style="padding: 10px;">{{ $product->name }}</td>
-                                        <td style="padding: 10px; text-align: right;">{{ site_currency() . number_format($product->unit_price, 2) }}</td>
-                                        <td style="padding: 10px; text-align: right;">{{ site_currency() . number_format(($product->quantity ?? 1) * $product->unit_price, 2) }}</td>
+                                        <td style="padding: 10px;border: 1px solid pink">{{ $product->quantity ?? 1 }}</td>
+                                        <td style="padding: 10px;border: 1px solid pink">{{ $product->name }}</td>
+                                        <td style="padding: 10px;border: 1px solid pink; text-align: right;">{{ site_currency() . number_format($product->unit_price, 2) }}</td>
+                                        <td style="padding: 10px; text-align: right;border: 1px solid pink">{{ site_currency() . number_format(($product->quantity ?? 1) * $product->unit_price, 2) }}</td>
                                     </tr>
                                 @endforeach
 
                                     <!-- Subtotal and Discount -->
                                     <tr>
                                         <td colspan="3" style="text-align: right; padding: 10px;">Subtotal</td>
-                                        <td style="text-align: right; padding: 10px;">{{ site_currency() . number_format($invoice_amount + $discount_amount, 2) }}</td>
+                                        <td style="text-align: right; padding: 10px;border: 1px solid pink">{{ site_currency() . number_format($invoice_amount + $discount_amount, 2) }}</td>
                                     </tr>
                                     <tr>
-                                        <td colspan="3" style="text-align: right; padding: 10px;">Discount Total</td>
-                                        <td style="text-align: right; padding: 10px;">{{ site_currency() . number_format($discount_amount, 2) }}</td>
+                                        <td colspan="3" style="text-align: right;border: 1px solid pink; padding: 10px;">Discount Total</td>
+                                        <td style="text-align: right; padding: 10px;border: 1px solid pink">{{ site_currency() . number_format($discount_amount, 2) }}</td>
                                     </tr>
                                 </tbody>
                                 <tfoot>

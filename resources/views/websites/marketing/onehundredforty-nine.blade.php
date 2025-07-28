@@ -20,7 +20,7 @@
                     </tr>
                     <tr>
                         <td style="padding-left:40px;vertical-align:bottom;overflow:hidden;" align="left">
-                            <h1 style="font-family: Calibri;font-size: 36px;color: #414042;margin: 0px;">INVOICE</h1>
+                            <h1 style="font-family: arial;font-size: 36px;color: #414042;margin: 0px;">INVOICE</h1>
                         </td>
                         <td style="padding:0px;vertical-align:top;overflow:hidden;" align="right">
                             <img src="{{ $invoice_image1 }}" alt="" style="width:120px;margin-right: -20px;">
@@ -34,28 +34,28 @@
                         <td style="padding-left:40px;vertical-align:bottom;overflow:hidden;display: flex;gap:80px;"
                             align="left">
                             <div>
-                                <p style="font-family: Calibri;font-size:9px;color: #414042;margin: 0px;">
+                                <p style="font-family: arial;font-size:9px;color: #414042;margin: 0px;">
                                     Invoice No : #{{ $invoice_number }}
                                 </p>
-                                <p style="font-family: Calibri;font-size:9px;color: #414042;margin: 0px;">
+                                <p style="font-family: arial;font-size:9px;color: #414042;margin: 0px;">
                                     Due Date : {{ $invoice_date }}
                                 </p>
                                 <p style="border-bottom: 1px solid black;width: 150px;margin: 5px 0px;"></p>
-                                <p style="font-family: Calibri;font-size:10px;color: #414042;">
+                                <p style="font-family: arial;font-size:10px;color: #414042;">
                                     Total Amount Due
                                 </p>
                                 <p
-                                    style="font-family: Calibri;font-size:22px;color: #414042;margin: 0px;font-weight: 700;">
+                                    style="font-family: arial;font-size:22px;color: #414042;margin: 0px;font-weight: 700;">
                                     {{ $invoice_amount }}
                                 </p>
                             </div>
                             <div>
                                 <p
-                                    style="font-family: Calibri;font-size:10px;color: #414042;margin: 0px;font-weight: 700;">
+                                    style="font-family: arial;font-size:10px;color: #414042;margin: 0px;font-weight: 700;">
                                     Invoice To
                                 </p>
                                 <p
-                                    style="font-family: Calibri;font-size:12px;color: #414042;margin: 0px;font-weight: 700;">
+                                    style="font-family: arial;font-size:12px;color: #414042;margin: 0px;font-weight: 700;">
                                     {{ $customer_name }}
                                 </p>
                             </div>
@@ -63,18 +63,18 @@
                         <td style="padding-right:40px;vertical-align:top;overflow:hidden;" align="right">
                             <div style="text-align: left;">
                                 <p
-                                    style="font-family: Calibri;font-size:10px;color: #414042;margin: 0px;font-weight: 700;">
+                                    style="font-family: arial;font-size:10px;color: #414042;margin: 0px;font-weight: 700;">
                                     Invoice From
                                 </p>
                                 <p
-                                    style="font-family: Calibri;font-size:12px;color: #414042;margin: 0px;font-weight: 700;">
+                                    style="font-family: arial;font-size:12px;color: #414042;margin: 0px;font-weight: 700;">
                                     {{ $site_name }}
                                 </p>
                                 <a
-                                    style="font-family: Calibri;font-size:9px;color: #0563C1;margin: 0px;text-decoration: underline;">
+                                    style="font-family: arial;font-size:9px;color: #0563C1;margin: 0px;text-decoration: underline;">
                                     {{ $company_email }}
                                 </a>
-                                <p style="font-family: Calibri;font-size:9px;color: #414042;margin: 0px;">
+                                <p style="font-family: arial;font-size:9px;color: #414042;margin: 0px;">
                                     {{ $company_mobile }} <br>
                                     {{ $company_address }}
                                 </p>
@@ -112,7 +112,7 @@
                                         </td>
                                         <td style="width: 120px;">
                                             <p
-                                                style="color:#ffffff;font-size:16px;font-weight: 700;font-family: Calibri;margin: 0px;line-height: 28px;text-align: center;text-transform: uppercase;">
+                                                style="color:#ffffff;font-size:16px;font-weight: 700;font-family: arial;margin: 0px;line-height: 28px;text-align: center;text-transform: uppercase;">
                                                 billing cycle
                                             </p>
                                         </td>
@@ -145,7 +145,7 @@
                                             </td>
                                             <td style="width: 120px;">
                                                 <p
-                                                    style="color:#000000;font-size:9px;font-weight: 400;font-family: Calibri;margin: 0px;line-height: 28px;text-align: center;text-transform: uppercase;">
+                                                    style="color:#000000;font-size:9px;font-weight: 400;font-family: arial;margin: 0px;line-height: 28px;text-align: center;text-transform: uppercase;">
                                                     One Time
                                                 </p>
                                             </td>
@@ -167,7 +167,7 @@
                                         </td>
                                         <td>
                                             <p
-                                                style="color:#58595B;font-size:12px;font-weight:400;font-family: Arial;margin: 0px;line-height: 28px;text-align:right;padding-right:10px;text-transform: uppercase;">
+                                                style="color:#58595B;font-size:12px;font-weight:400;font-family: arialmargin: 0px;line-height: 28px;text-align:right;padding-right:10px;text-transform: uppercase;">
                                                 {{ site_currency() . number_format($invoice_amount + $discount_amount ?? 0, 2) }}
                                             </p>
                                         </td>
