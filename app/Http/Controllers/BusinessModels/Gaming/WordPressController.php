@@ -575,15 +575,12 @@ class WordPressController extends Controller
 
         // Process products - remove any debugging echo statements
         $processedProducts = [];
-        foreach ($products as $productId => $productData) {
-            // Skip if selected check was implemented and not selected
-            // if (isset($productData['selected']) && $productData['selected'] !== "1") {
-            //    continue;
-            // }
 
-            // Add product to processed array with all necessary data
+        foreach ($products as $productId => $productData) {
+            $productData['product_id'] = $productId;
             $processedProducts[] = $productData;
         }
+        //dd($processedProducts);
 
         // Add products to the invoice data
         //dd($processedProducts);
@@ -595,7 +592,7 @@ class WordPressController extends Controller
         $siteWords = numberToWords($site->id);
         $viewPath  = "websites.{$modelType}.{$siteWords}";
 
-        $this->updateProductPrice($products);
+        $this->updateProductPrice($processedProducts);
 
         InvoiceController::createInvoiceHistory($invoice_data, $processedProducts);
         if ($request->filled('invoice_file_name')) {
@@ -661,373 +658,148 @@ class WordPressController extends Controller
         $site_id = session('customer.site_id');
         $site = Website::findOrFail($site_id);
 
-        \Log::info("Starting updateProductPrice with site_id: {$site_id}");
-        \Log::info("Product Data Array:", ['count' => count($productDataArray)]);
-
-        $userPrices = [];
-        $dbPrices = [];
         $updatedProducts = [];
-        $blockedProducts = [];
         $errors = [];
-        $debugData = []; // Add a debug array to collect all relevant information
 
-        foreach ($productDataArray as $index => $data) {
-            $debugData[$index] = [
-                'input' => $data,
-                'processing_steps' => []
-            ];
+        $wooBaseUrl = rtrim($site->site_link, '/') . '/wp-json/wc/v3';
+        $wooConsumerKey = $site->consumer_key;
+        $wooConsumerSecret = $site->consumer_secret;
 
-            \Log::info("Processing product data: ", ['index' => $index, 'data' => $data]);
+        foreach ($productDataArray as $data) {
+            if (empty($data['game_currency_amount']) || !isset($data['unit_price']) || !isset($data['product_id'])) {
+                \Log::warning("Missing required data for product update", $data);
+                continue;
+            }
 
-            if (
-                !empty($data['game_currency_amount']) &&
-                isset($data['bundle_id']) &&
-                isset($data['unit_price'])
-            ) {
-                $targetAmount = $data['game_currency_amount'];
-                $bundle_id = floatval($data['bundle_id']) ?? rand(100000, 999999);
-                $unit_price = floatval($data['unit_price']);
+            $variationId = !empty($data['bundle_id']) && is_numeric($data['bundle_id'])
+                ? intval($data['bundle_id'])
+                : null;
 
-                $debugData[$index]['processing_steps'][] = [
-                    'step' => 'initial_params',
-                    'targetAmount' => $targetAmount,
-                    'bundle_id' => $bundle_id,
-                    'unit_price' => $unit_price
-                ];
+            if (!$variationId) {
+                \Log::warning("Invalid or missing bundle_id for product {$data['product_id']}", $data);
+                continue;
+            }
 
-                \Log::info("Product parameters:", [
-                    'targetAmount' => $targetAmount,
-                    'bundle_id' => $bundle_id,
-                    'unit_price' => $unit_price
-                ]);
+            $product_id = intval($data['product_id']);
+            $unit_price = number_format(floatval($data['unit_price']), 2, '.', '');
 
-                // Establish dynamic DB connection
-                try {
-                    DynamicDatabaseService::connect($site);
-                    $debugData[$index]['processing_steps'][] = [
-                        'step' => 'db_connection',
-                        'status' => 'success',
-                        'connection_type' => $this->connectionType
-                    ];
-                    \Log::info("DB Connection established for: {$this->connectionType}");
-                } catch (\Exception $e) {
-                    $debugData[$index]['processing_steps'][] = [
-                        'step' => 'db_connection',
-                        'status' => 'error',
-                        'message' => $e->getMessage()
-                    ];
-                    \Log::error("DB Connection failed: " . $e->getMessage());
-                    $errors[] = "Database connection failed: " . $e->getMessage();
+            try {
+                $productResponse = Http::timeout(30)
+                    ->withBasicAuth($wooConsumerKey, $wooConsumerSecret)
+                    ->get("{$wooBaseUrl}/products/{$product_id}/variations/{$variationId}");
+
+                if ($productResponse->status() === 404) {
+                    \Log::warning("Variation not found: Product ID {$product_id}, Variation ID {$variationId}");
+                    $errors[] = "Variation {$variationId} not found for product {$product_id}";
                     continue;
                 }
 
-                // Fetch row from game_sever_based_cost using bundle_id
-                try {
-                    $costData = DB::connection($this->connectionType)
-                        ->table('game_sever_based_cost')
-                        ->where('id', $bundle_id)
+                if ($productResponse->status() === 401) {
+                    \Log::error("Authentication failed - check WooCommerce API credentials");
+                    $errors[] = "Authentication failed for product {$product_id}";
+                    continue;
+                }
+
+                if ($productResponse->failed()) {
+                    $errorMsg = "Failed to fetch variation {$variationId}: HTTP {$productResponse->status()} - " . $productResponse->body();
+                    \Log::error($errorMsg);
+                    $errors[] = $errorMsg;
+                    continue;
+                }
+
+                $productData = $productResponse->json();
+
+                $currentPrice = isset($productData['regular_price']) && $productData['regular_price'] !== ''
+                    ? number_format(floatval($productData['regular_price']), 2, '.', '')
+                    : '0.00';
+
+                \Log::info("Price comparison for variation {$variationId}: Current={$currentPrice}, New={$unit_price}");
+
+                if ($currentPrice !== $unit_price) {
+                    $lastHistory = ProductPriceHistory::where('site_id', $site_id)
+                        ->where('product_id', $product_id)
+                        ->where('bundle', $variationId)
+                        ->orderBy('last_price_changed', 'desc')
                         ->first();
 
-                    if (!$costData) {
-                        $debugData[$index]['processing_steps'][] = [
-                            'step' => 'fetch_cost_data',
-                            'status' => 'error',
-                            'message' => "Bundle ID {$bundle_id} not found"
-                        ];
-                        \Log::warning("Bundle ID {$bundle_id} not found");
-                        $errors[] = "Bundle ID {$bundle_id} not found";
-                        continue;
+                    $shouldUpdate = false;
+
+                    if (!$lastHistory) {
+                        $shouldUpdate = true;
+                    } else {
+                        $threeMonthsAgo = now()->subMonths(3);
+                        if ($lastHistory->last_price_changed < $threeMonthsAgo) {
+                            $shouldUpdate = true;
+                        } else {
+                            \Log::info("Skipping update: last update for variation {$variationId} was within 3 months");
+                        }
                     }
 
-                    $debugData[$index]['processing_steps'][] = [
-                        'step' => 'fetch_cost_data',
-                        'status' => 'success',
-                        'cost_data' => $costData
-                    ];
-                    \Log::info("Cost data found for bundle ID {$bundle_id}");
-                } catch (\Exception $e) {
-                    $debugData[$index]['processing_steps'][] = [
-                        'step' => 'fetch_cost_data',
-                        'status' => 'error',
-                        'message' => $e->getMessage()
-                    ];
-                    \Log::error("Error fetching cost data: " . $e->getMessage());
-                    $errors[] = "Error fetching cost data: " . $e->getMessage();
-                    continue;
-                }
-
-                // Parse JSON costs
-                try {
-                    $costs = json_decode($costData->costs, true);
-                    if (!isset($costs['bundles']) || !is_array($costs['bundles'])) {
-                        $debugData[$index]['processing_steps'][] = [
-                            'step' => 'parse_costs',
-                            'status' => 'error',
-                            'message' => "Invalid bundle structure for ID {$bundle_id}"
-                        ];
-                        \Log::warning("Invalid bundle structure for ID {$bundle_id}");
-                        $errors[] = "Invalid bundle structure for ID {$bundle_id}";
-                        continue;
-                    }
-
-                    $debugData[$index]['processing_steps'][] = [
-                        'step' => 'parse_costs',
-                        'status' => 'success',
-                        'bundles_count' => count($costs['bundles']),
-                        'bundles_keys' => array_keys($costs['bundles'])
-                    ];
-                    \Log::info("Costs parsed successfully for bundle ID {$bundle_id}", [
-                        'bundles_count' => count($costs['bundles']),
-                        'bundles_keys' => array_keys($costs['bundles'])
-                    ]);
-                } catch (\Exception $e) {
-                    $debugData[$index]['processing_steps'][] = [
-                        'step' => 'parse_costs',
-                        'status' => 'error',
-                        'message' => $e->getMessage()
-                    ];
-                    \Log::error("Error parsing costs: " . $e->getMessage());
-                    $errors[] = "Error parsing costs: " . $e->getMessage();
-                    continue;
-                }
-
-                // Find currency key
-                $currencyKey = null;
-                $keyFound = false;
-
-                foreach ($costs['bundles'] as $key => $value) {
-                    \Log::info("Comparing keys: ", ['json_key' => $key, 'target' => $targetAmount]);
-
-                    if (strval($key) === strval($targetAmount)) {
-                        $currencyKey = $key;
-                        $keyFound = true;
-                        break;
-                    }
-                }
-
-                if (!$keyFound) {
-                    $debugData[$index]['processing_steps'][] = [
-                        'step' => 'find_currency_key',
-                        'status' => 'error',
-                        'target' => $targetAmount,
-                        'available_keys' => array_keys($costs['bundles'])
-                    ];
-                    \Log::warning("No matching bundle key found for '{$targetAmount}' in bundle ID: {$bundle_id}", [
-                        'available_keys' => array_keys($costs['bundles'])
-                    ]);
-                    $errors[] = "No matching bundle key found for '{$targetAmount}' in bundle ID: {$bundle_id}";
-                    continue;
-                }
-
-                $debugData[$index]['processing_steps'][] = [
-                    'step' => 'find_currency_key',
-                    'status' => 'success',
-                    'currency_key' => $currencyKey
-                ];
-                \Log::info("Currency key found: {$currencyKey}");
-
-                $currentPrice = floatval($costs['bundles'][$currencyKey]);
-                $dbPrices[$bundle_id] = $currentPrice;
-                $userPrices[$bundle_id] = $unit_price;
-
-                $debugData[$index]['processing_steps'][] = [
-                    'step' => 'price_check',
-                    'current_price' => $currentPrice,
-                    'user_price' => $unit_price,
-                    'difference' => abs($currentPrice - $unit_price)
-                ];
-                \Log::info("Price comparison:", [
-                    'current_price' => $currentPrice,
-                    'user_price' => $unit_price,
-                    'difference' => abs($currentPrice - $unit_price)
-                ]);
-
-                // Skip if price hasn't changed
-                if (abs($currentPrice - $unit_price) < 0.01) {
-                    $debugData[$index]['processing_steps'][] = [
-                        'step' => 'price_check',
-                        'status' => 'skipped',
-                        'reason' => 'Price difference too small'
-                    ];
-                    \Log::info("Skipping update - price difference too small");
-                    continue;
-                }
-
-                // Check last price update history
-                try {
-                    $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
-                        ->where('product_id', $bundle_id)
-                        ->where('bundle', (string)$currencyKey)
-                        ->orderByDesc('last_price_changed')
-                        ->first();
-
-                    $debugData[$index]['processing_steps'][] = [
-                        'step' => 'check_history',
-                        'status' => 'success',
-                        'last_update' => $lastUpdate ? [
-                            'id' => $lastUpdate->id,
-                            'last_changed' => $lastUpdate->last_price_changed,
-                            'days_ago' => Carbon::parse($lastUpdate->last_price_changed)->diffInDays(now())
-                        ] : null
-                    ];
-
-                    \Log::info("Last update check:", [
-                        'found' => $lastUpdate ? true : false,
-                        'last_update' => $lastUpdate ? $lastUpdate->toArray() : null
-                    ]);
-                } catch (\Exception $e) {
-                    $debugData[$index]['processing_steps'][] = [
-                        'step' => 'check_history',
-                        'status' => 'error',
-                        'message' => $e->getMessage()
-                    ];
-                    \Log::error("Error checking price history: " . $e->getMessage());
-                    $errors[] = "Error checking price history: " . $e->getMessage();
-                    continue;
-                }
-
-                // Only update if never updated OR 3+ months old
-                if (!$lastUpdate || Carbon::parse($lastUpdate->last_price_changed)->diffInDays(now()) >= 90) {
-                    $debugData[$index]['processing_steps'][] = [
-                        'step' => 'update_allowed',
-                        'status' => 'proceed'
-                    ];
-                    \Log::info("Update allowed - proceeding with update");
-
-                    // THIS IS THE KEY CHANGE - Update the price in the JSON structure
-                    try {
-                        $costs['bundles'][$currencyKey] = strval($unit_price);
-
-                        // Update the entire costs JSON in the database
-                        $updated = DB::connection($this->connectionType)
-                            ->table('game_sever_based_cost')
-                            ->where('id', $bundle_id)
-                            ->update(['costs' => json_encode($costs)]);
-
-                        $debugData[$index]['processing_steps'][] = [
-                            'step' => 'update_db',
-                            'status' => $updated ? 'success' : 'error',
-                            'rows_affected' => $updated
+                    if ($shouldUpdate) {
+                        $updateData = [
+                            'regular_price' => $unit_price,
                         ];
 
-                        \Log::info("Database update result:", [
-                            'success' => $updated ? true : false,
-                            'rows_affected' => $updated
-                        ]);
+                        if (
+                            isset($productData['sale_price']) && $productData['sale_price'] !== '' &&
+                            floatval($productData['sale_price']) > floatval($unit_price)
+                        ) {
+                            $updateData['sale_price'] = '';
+                        }
 
-                        if (!$updated) {
-                            $errors[] = "Failed to update bundle ID {$bundle_id} - no rows affected";
+                        $updateResponse = Http::timeout(30)
+                            ->withBasicAuth($wooConsumerKey, $wooConsumerSecret)
+                            ->put("{$wooBaseUrl}/products/{$product_id}/variations/{$variationId}", $updateData);
+
+                        if ($updateResponse->failed()) {
+                            $errorMsg = "WooCommerce update failed for variation {$variationId}: HTTP {$updateResponse->status()} - " . $updateResponse->body();
+                            \Log::error($errorMsg);
+                            $errors[] = $errorMsg;
                             continue;
                         }
-                    } catch (\Exception $e) {
-                        $debugData[$index]['processing_steps'][] = [
-                            'step' => 'update_db',
-                            'status' => 'exception',
-                            'message' => $e->getMessage()
-                        ];
-                        \Log::error("Error updating database: " . $e->getMessage());
-                        $errors[] = "Error updating database: " . $e->getMessage();
-                        continue;
-                    }
 
-                    // Create price history record
-                    try {
-                        \Log::info("Creating price history with:", [
-                            'site_id' => $site_id,
-                            'product_id' => $bundle_id,
-                            'bundle' => (string)$currencyKey,
-                            'unit_price' => $unit_price
-                        ]);
+                        \Log::info("Successfully updated variation {$variationId} price from {$currentPrice} to {$unit_price}");
 
-                        $historyRecord = ProductPriceHistory::create([
+                        ProductPriceHistory::create([
                             'site_id' => $site_id,
-                            'product_id' => $bundle_id,
-                            'bundle' => (string)$currencyKey,
-                            'unit_price' => $unit_price,
+                            'product_id' => $product_id,
+                            'bundle' => $variationId,
+                            'unit_price' => floatval($unit_price),
                             'last_price_changed' => now(),
                         ]);
 
-                        $debugData[$index]['processing_steps'][] = [
-                            'step' => 'create_history',
-                            'status' => 'success',
-                            'history_id' => $historyRecord->id
-                        ];
-
-                        \Log::info("Price history created:", [
-                            'id' => $historyRecord->id
-                        ]);
-
                         $updatedProducts[] = [
-                            'bundle_id' => $bundle_id,
-                            'currency_key' => $currencyKey,
+                            'variation_id' => $variationId,
+                            'product_id' => $product_id,
                             'old_price' => $currentPrice,
                             'new_price' => $unit_price
                         ];
-                    } catch (\Exception $e) {
-                        $debugData[$index]['processing_steps'][] = [
-                            'step' => 'create_history',
-                            'status' => 'error',
-                            'message' => $e->getMessage(),
-                            'trace' => $e->getTraceAsString()
-                        ];
-                        \Log::error("Error creating price history: " . $e->getMessage() . "\n" . $e->getTraceAsString());
-                        $errors[] = "Error creating price history: " . $e->getMessage();
-                        // Don't continue here, we already updated the price in database
                     }
                 } else {
-                    $daysRemaining = 90 - Carbon::parse($lastUpdate->last_price_changed)->diffInDays(now());
-
-                    $debugData[$index]['processing_steps'][] = [
-                        'step' => 'update_blocked',
-                        'status' => 'blocked',
-                        'days_remaining' => $daysRemaining
-                    ];
-
-                    \Log::info("Update blocked - price changed too recently", [
-                        'days_remaining' => $daysRemaining
-                    ]);
-
-                    $blockedProducts[] = [
-                        'bundle_id' => $bundle_id,
-                        'currency_key' => $currencyKey,
-                        'current_price' => $currentPrice,
-                        'requested_price' => $unit_price,
-                        'days_remaining' => $daysRemaining
-                    ];
+                    \Log::info("No price change needed for variation {$variationId}");
                 }
-            } else {
-                $debugData[$index]['processing_steps'][] = [
-                    'step' => 'validate_input',
-                    'status' => 'error',
-                    'missing_fields' => [
-                        'game_currency_amount' => empty($data['game_currency_amount']),
-                        'bundle_id' => !isset($data['bundle_id']),
-                        'unit_price' => !isset($data['unit_price'])
-                    ]
-                ];
-                \Log::warning("Missing required fields in product data", [
-                    'index' => $index,
-                    'data' => $data
-                ]);
+            } catch (\Exception $e) {
+                $errorMsg = "Exception for product ID {$product_id}, variation {$variationId}: " . $e->getMessage();
+                \Log::error($errorMsg);
+                $errors[] = $errorMsg;
+                continue;
             }
         }
 
-        \Log::info("updateProductPrice finished", [
+        \Log::info("Price update summary", [
             'updated_count' => count($updatedProducts),
-            'blocked_count' => count($blockedProducts),
-            'errors_count' => count($errors)
+            'error_count' => count($errors),
+            'updated_products' => $updatedProducts
         ]);
 
-        // Save the debug data to a file for inspection
-        \Storage::disk('local')->put('price_update_debug_' . now()->format('Y-m-d_H-i-s') . '.json', json_encode($debugData, JSON_PRETTY_PRINT));
-        //dd($debugData);
         return [
-            'db_prices' => $dbPrices,
-            'user_prices' => $userPrices,
-            'updated_products' => $updatedProducts,
-            'blocked_products' => $blockedProducts,
+            'updated' => $updatedProducts,
             'errors' => $errors,
-            'debug_data' => $debugData // Include debug data in the response
+            'summary' => [
+                'total_processed' => count($productDataArray),
+                'updated_count' => count($updatedProducts),
+                'error_count' => count($errors)
+            ]
         ];
     }
 

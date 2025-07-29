@@ -58,26 +58,23 @@
         </td> --}}
         <td>
             @php
-                // Check if price was updated in the last 90 days
                 $lastUpdate = \App\Models\ProductPriceHistory::where('site_id', session('customer.site_id'))
-                    ->where('product_id', $product->bundle_id)
-                    ->where('bundle', (string) $product->game_currency_amount)
-                    ->orderByDesc('last_price_changed')
+                    ->where('product_id', $product->id)
+                    ->where('bundle', $product->bundle_id)
+                    ->latest('last_price_changed')
                     ->first();
 
-                $isLocked =
-                    $lastUpdate && \Carbon\Carbon::parse($lastUpdate->last_price_changed)->diffInDays(now()) < 90;
+                $isLocked = $lastUpdate && Carbon\Carbon::parse($lastUpdate->last_price_changed)->gt(now()->subMonths(3));
                 $daysRemaining = $isLocked
-                    ? 90 - \Carbon\Carbon::parse($lastUpdate->last_price_changed)->diffInDays(now())
+                    ? now()->diffInDays(Carbon\Carbon::parse($lastUpdate->last_price_changed)->addMonths(3))
                     : 0;
 
-                // Get lock/unlock status for display
                 $lockStatus = $isLocked ? 'locked' : 'unlocked';
                 $iconClass = $isLocked ? 'fa-lock bg-warning' : 'fa-pencil bg-success';
                 $tooltip = $isLocked ? "Price locked for {$daysRemaining} more days" : 'Price can be edited';
                 $inputTooltip = $isLocked
                     ? 'This price was updated on ' .
-                        \Carbon\Carbon::parse($lastUpdate->last_price_changed)->format('M d, Y') .
+                        Carbon\Carbon::parse($lastUpdate->last_price_changed)->format('M d, Y') .
                         " and cannot be modified for {$daysRemaining} more days"
                     : 'You can update this price';
             @endphp
@@ -193,7 +190,7 @@
                     $('#table-blocker').show();
                     $button.prop('disabled', true).html(
                         '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>'
-                        );
+                    );
 
                     $.ajax({
                         url: "{{ route('remove.product') }}",
@@ -262,14 +259,14 @@
                 currentAmount += editPrice;
             });
             const invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
-                let discountAmount = 0;
+            let discountAmount = 0;
 
-                if (currentAmount > invoiceAmount) {
-                    discountAmount = currentAmount - invoiceAmount;
-                }
+            if (currentAmount > invoiceAmount) {
+                discountAmount = currentAmount - invoiceAmount;
+            }
 
-                $('#current_amount').val(currentAmount.toFixed(2));
-                $('#discount_amount').val(discountAmount.toFixed(2));
+            $('#current_amount').val(currentAmount.toFixed(2));
+            $('#discount_amount').val(discountAmount.toFixed(2));
 
 
 
