@@ -1028,15 +1028,6 @@ class LaravelController extends Controller
                     $updateData['discount'] = $new_discount;
                 }
 
-                Log::info('Prepared update data', [
-                    'product_id' => $product_id,
-                    'update_data' => $updateData
-                ]);
-
-                if (empty($updateData)) {
-                    Log::info('No changes detected', ['product_id' => $product_id]);
-                    continue;
-                }
 
                 $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
                     ->where('product_id', $product_id)
@@ -1049,41 +1040,24 @@ class LaravelController extends Controller
                     $shouldUpdate = true;
                 } else {
                     $monthsSinceLast = Carbon::parse($lastUpdate->last_price_changed)->diffInMonths(now());
+
                     if ($monthsSinceLast >= 3) {
                         $shouldUpdate = true;
                     }
                 }
 
-                Log::info('Update decision', [
-                    'product_id' => $product_id,
-                    'should_update' => $shouldUpdate
-                ]);
-
                 if ($shouldUpdate) {
-                    DB::connection($this->connectionType)->enableQueryLog();
-
+                   
                     $affected = DB::connection($this->connectionType)
                         ->table($this->productTable)
                         ->where('id', $product_id)
                         ->update($updateData);
-
-                    $queryLog = DB::connection($this->connectionType)->getQueryLog();
-
-                    Log::info('Update executed', [
-                        'product_id' => $product_id,
-                        'affected_rows' => $affected,
-                        'query_log' => $queryLog
-                    ]);
 
                     ProductPriceHistory::create([
                         'site_id'            => $site_id,
                         'product_id'         => $product_id,
                         'unit_price'         => $new_price,
                         'last_price_changed' => now(),
-                    ]);
-
-                    Log::info('Price history inserted', [
-                        'product_id' => $product_id
                     ]);
                 }
             } else {

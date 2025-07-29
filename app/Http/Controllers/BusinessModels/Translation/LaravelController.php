@@ -857,64 +857,64 @@ class LaravelController extends Controller
 
 
     protected function updateProductPrice($productDataArray)
-{
-    $site_id = session('customer.site_id');
+    {
+        $site_id = session('customer.site_id');
 
-    foreach ($productDataArray as $item) {
-        // Check if item is already an array or needs decoding
-        $data = is_string($item) ? json_decode($item, true) : $item;
+        foreach ($productDataArray as $item) {
+            // Check if item is already an array or needs decoding
+            $data = is_string($item) ? json_decode($item, true) : $item;
 
-        if (!empty($data['id']) && isset($data['price'])) {
-            $product_id = intval($data['id']);
-            $new_price = floatval($data['price']);
+            if (!empty($data['id']) && isset($data['price'])) {
+                $product_id = intval($data['id']);
+                $new_price = floatval($data['price']);
 
-            $product = DB::connection($this->connectionType)
-                ->table($this->productTable)
-                ->where('id', $product_id)
-                ->first();
-
-            if (!$product) continue;
-
-            $current_price = floatval($product->unit_price);
-
-            if ($current_price == $new_price) continue;
-
-            $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
-                ->where('product_id', $product_id)
-                ->orderByDesc('last_price_changed')
-                ->first();
-
-            if (!$lastUpdate) {
-                DB::connection($this->connectionType)
+                $product = DB::connection($this->connectionType)
                     ->table($this->productTable)
                     ->where('id', $product_id)
-                    ->update(['unit_price' => $new_price]);
+                    ->first();
 
-                ProductPriceHistory::create([
-                    'site_id' => $site_id,
-                    'product_id' => $product_id,
-                    'unit_price' => $new_price,
-                    'last_price_changed' => now(),
-                ]);
-                continue;
-            }
+                if (!$product) continue;
 
-            if (Carbon::parse($lastUpdate->last_price_changed)->diffInMonths(now()) >= 3) {
-                DB::connection($this->connectionType)
-                    ->table($this->productTable)
-                    ->where('id', $product_id)
-                    ->update(['unit_price' => $new_price]);
+                $current_price = floatval($product->unit_price);
 
-                ProductPriceHistory::create([
-                    'site_id' => $site_id,
-                    'product_id' => $product_id,
-                    'unit_price' => $new_price,
-                    'last_price_changed' => now(),
-                ]);
+                if ($current_price == $new_price) continue;
+
+                $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
+                    ->where('product_id', $product_id)
+                    ->orderByDesc('last_price_changed')
+                    ->first();
+
+                if (!$lastUpdate) {
+                    DB::connection($this->connectionType)
+                        ->table($this->productTable)
+                        ->where('id', $product_id)
+                        ->update(['unit_price' => $new_price]);
+
+                    ProductPriceHistory::create([
+                        'site_id' => $site_id,
+                        'product_id' => $product_id,
+                        'unit_price' => $new_price,
+                        'last_price_changed' => now(),
+                    ]);
+                    continue;
+                }
+
+                if (Carbon::parse($lastUpdate->last_price_changed)->diffInMonths(now()) >= 3) {
+                    DB::connection($this->connectionType)
+                        ->table($this->productTable)
+                        ->where('id', $product_id)
+                        ->update(['unit_price' => $new_price]);
+
+                    ProductPriceHistory::create([
+                        'site_id' => $site_id,
+                        'product_id' => $product_id,
+                        'unit_price' => $new_price,
+                        'last_price_changed' => now(),
+                    ]);
+                }
             }
         }
     }
-}
 
 
 

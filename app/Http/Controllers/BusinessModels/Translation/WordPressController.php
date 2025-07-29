@@ -38,7 +38,6 @@ class WordPressController extends Controller
         $this->connectionType = 'dynamic';
     }
 
-
     public function randomProducts(Request $request)
     {
         $site_id = $request->get('site_id');
@@ -105,27 +104,116 @@ class WordPressController extends Controller
         $certifiedPrice = $certifiedPrice !== null ? floatval($certifiedPrice) : null;
         $standardPrice = $standardPrice !== null ? floatval($standardPrice) : null;
     
+        // Calculate urgency parameters
+        $basePercentage = 15;
+        $urgencyChance = min(log($invoiceAmount + 1, 10) * $basePercentage, 100);
+        $urgentAmount = 99.75;
+    
         $bestMatch = null;
         $bestTotal = PHP_FLOAT_MAX;
         $bestDistance = PHP_FLOAT_MAX;
     
         if ($filterType === 'certified' && $certifiedProduct && $certifiedPrice) {
-            $pages = ceil($invoiceAmount / $certifiedPrice);
-            $total = $pages * $certifiedPrice;
-            $bestMatch = [[
-                'product' => $certifiedProduct,
-                'pages' => $pages,
-                'total' => $total
-            ]];
+            // Try different page quantities and urgency combinations
+            $bestScenario = null;
+            $bestDistance = PHP_FLOAT_MAX;
+            
+            // Try various page quantities around the calculated amount
+            $basePages = ceil($invoiceAmount / $certifiedPrice);
+            $pagesToTry = range(max(1, $basePages - 2), $basePages + 5);
+            
+            foreach ($pagesToTry as $pages) {
+                // Try without urgency
+                $totalWithoutUrgency = $pages * $certifiedPrice;
+                $distanceWithoutUrgency = abs($totalWithoutUrgency - $invoiceAmount);
+                
+                if ($distanceWithoutUrgency < $bestDistance) {
+                    $bestDistance = $distanceWithoutUrgency;
+                    $bestScenario = [
+                        'pages' => $pages,
+                        'total' => $totalWithoutUrgency,
+                        'is_urgent' => false
+                    ];
+                }
+                
+                // Try with urgency
+                $totalWithUrgency = $pages * ($certifiedPrice + $urgentAmount);
+                $distanceWithUrgency = abs($totalWithUrgency - $invoiceAmount);
+                
+                if ($distanceWithUrgency < $bestDistance) {
+                    $bestDistance = $distanceWithUrgency;
+                    $bestScenario = [
+                        'pages' => $pages,
+                        'total' => $totalWithUrgency,
+                        'is_urgent' => true
+                    ];
+                }
+            }
+            
+            if ($bestScenario) {
+                $bestMatch = [[
+                    'product' => $certifiedProduct,
+                    'pages' => $bestScenario['pages'],
+                    'total' => $bestScenario['total'],
+                    'is_urgent' => $bestScenario['is_urgent'] && (rand(1, 100) <= $urgencyChance),
+                    'base_price' => $certifiedPrice
+                ]];
+            }
         } elseif ($filterType === 'standard' && $standardProduct && $standardPrice) {
-            $pages = ceil($invoiceAmount / $standardPrice);
-            $total = $pages * $standardPrice;
-            $bestMatch = [[
-                'product' => $standardProduct,
-                'pages' => $pages,
-                'total' => $total
-            ]];
+            // Try different page quantities and urgency combinations
+            $bestScenario = null;
+            $bestDistance = PHP_FLOAT_MAX;
+            
+            // Try various page quantities around the calculated amount
+            $basePages = ceil($invoiceAmount / $standardPrice);
+            $pagesToTry = range(max(1, $basePages - 2), $basePages + 5);
+            
+            foreach ($pagesToTry as $pages) {
+                // Try without urgency
+                $totalWithoutUrgency = $pages * $standardPrice;
+                $distanceWithoutUrgency = abs($totalWithoutUrgency - $invoiceAmount);
+                
+                if ($distanceWithoutUrgency < $bestDistance) {
+                    $bestDistance = $distanceWithoutUrgency;
+                    $bestScenario = [
+                        'pages' => $pages,
+                        'total' => $totalWithoutUrgency,
+                        'is_urgent' => false
+                    ];
+                }
+                
+                // Try with urgency
+                $totalWithUrgency = $pages * ($standardPrice + $urgentAmount);
+                $distanceWithUrgency = abs($totalWithUrgency - $invoiceAmount);
+                
+                if ($distanceWithUrgency < $bestDistance) {
+                    $bestDistance = $distanceWithUrgency;
+                    $bestScenario = [
+                        'pages' => $pages,
+                        'total' => $totalWithUrgency,
+                        'is_urgent' => true
+                    ];
+                }
+            }
+            
+            if ($bestScenario) {
+                $bestMatch = [[
+                    'product' => $standardProduct,
+                    'pages' => $bestScenario['pages'],
+                    'total' => $bestScenario['total'],
+                    'is_urgent' => $bestScenario['is_urgent'] && (rand(1, 100) <= $urgencyChance),
+                    'base_price' => $standardPrice
+                ]];
+            }
         } elseif ($certifiedProduct && $standardProduct && $certifiedPrice && $standardPrice) {
+            // For mixed products, be more systematic about finding the best match
+            $urgencyScenarios = [
+                ['cert_urgent' => false, 'std_urgent' => false],
+                ['cert_urgent' => true, 'std_urgent' => false],
+                ['cert_urgent' => false, 'std_urgent' => true],
+                ['cert_urgent' => true, 'std_urgent' => true],
+            ];
+            
             $ratios = [
                 ['cert_ratio' => 0.3, 'std_ratio' => 0.7],
                 ['cert_ratio' => 0.5, 'std_ratio' => 0.5],
@@ -136,61 +224,147 @@ class WordPressController extends Controller
                 ['cert_ratio' => 0.6, 'std_ratio' => 0.4],
             ];
     
-            foreach ($ratios as $ratio) {
-                $certAmount = $invoiceAmount * $ratio['cert_ratio'];
-                $stdAmount = $invoiceAmount * $ratio['std_ratio'];
+            foreach ($urgencyScenarios as $urgencyScenario) {
+                $certEffectivePrice = $certifiedPrice + ($urgencyScenario['cert_urgent'] ? $urgentAmount : 0);
+                $stdEffectivePrice = $standardPrice + ($urgencyScenario['std_urgent'] ? $urgentAmount : 0);
+                
+                foreach ($ratios as $ratio) {
+                    $certAmount = $invoiceAmount * $ratio['cert_ratio'];
+                    $stdAmount = $invoiceAmount * $ratio['std_ratio'];
     
-                $certPages = max(1, ceil($certAmount / $certifiedPrice));
-                $stdPages = max(1, ceil($stdAmount / $standardPrice));
+                    // Try different page combinations around the calculated amounts
+                    $baseCertPages = ceil($certAmount / $certEffectivePrice);
+                    $baseStdPages = ceil($stdAmount / $stdEffectivePrice);
+                    
+                    $certPagesToTry = range(max(1, $baseCertPages - 1), $baseCertPages + 2);
+                    $stdPagesToTry = range(max(1, $baseStdPages - 1), $baseStdPages + 2);
+                    
+                    foreach ($certPagesToTry as $certPages) {
+                        foreach ($stdPagesToTry as $stdPages) {
+                            $certTotal = $certPages * $certEffectivePrice;
+                            $stdTotal = $stdPages * $stdEffectivePrice;
+                            $total = $certTotal + $stdTotal;
     
-                $certTotal = $certPages * $certifiedPrice;
-                $stdTotal = $stdPages * $standardPrice;
-                $total = $certTotal + $stdTotal;
+                            if ($total >= $invoiceAmount * 0.95) { // Allow some flexibility
+                                $distance = abs($total - $invoiceAmount);
+                                $balanceScore = abs(($certTotal / $total) - 0.5);
     
-                if ($total >= $invoiceAmount) {
-                    $distance = $total - $invoiceAmount;
-                    $balanceScore = abs(($certTotal / $total) - 0.5);
-    
-                    if ($distance < $bestDistance || ($distance === $bestDistance && $balanceScore < 0.3)) {
-                        $bestMatch = [
-                            [
-                                'product' => $certifiedProduct,
-                                'pages' => $certPages,
-                                'total' => $certTotal
-                            ],
-                            [
-                                'product' => $standardProduct,
-                                'pages' => $stdPages,
-                                'total' => $stdTotal
-                            ]
-                        ];
-                        $bestDistance = $distance;
-                        $bestTotal = $total;
+                                if ($distance < $bestDistance || ($distance === $bestDistance && $balanceScore < 0.3)) {
+                                    $bestMatch = [
+                                        [
+                                            'product' => $certifiedProduct,
+                                            'pages' => $certPages,
+                                            'total' => $certTotal,
+                                            'is_urgent' => $urgencyScenario['cert_urgent'] && (rand(1, 100) <= $urgencyChance),
+                                            'base_price' => $certifiedPrice
+                                        ],
+                                        [
+                                            'product' => $standardProduct,
+                                            'pages' => $stdPages,
+                                            'total' => $stdTotal,
+                                            'is_urgent' => $urgencyScenario['std_urgent'] && (rand(1, 100) <= $urgencyChance),
+                                            'base_price' => $standardPrice
+                                        ]
+                                    ];
+                                    $bestDistance = $distance;
+                                    $bestTotal = $total;
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
     
-        if (!$bestMatch && $certifiedProduct && $certifiedPrice) {
-            $pages = ceil($invoiceAmount / $certifiedPrice);
-            $total = $pages * $certifiedPrice;
+        // Fallback: try single products with better page quantity optimization
+        if (!$bestMatch) {
+            if ($certifiedProduct && $certifiedPrice) {
+                $bestScenario = null;
+                $bestDistance = PHP_FLOAT_MAX;
+                
+                $basePages = ceil($invoiceAmount / $certifiedPrice);
+                $pagesToTry = range(max(1, $basePages - 3), $basePages + 8);
+                
+                foreach ($pagesToTry as $pages) {
+                    // Try without urgency
+                    $totalWithoutUrgency = $pages * $certifiedPrice;
+                    $distanceWithoutUrgency = abs($totalWithoutUrgency - $invoiceAmount);
+                    
+                    if ($distanceWithoutUrgency < $bestDistance) {
+                        $bestDistance = $distanceWithoutUrgency;
+                        $bestScenario = [
+                            'product' => $certifiedProduct,
+                            'pages' => $pages,
+                            'total' => $totalWithoutUrgency,
+                            'is_urgent' => false,
+                            'base_price' => $certifiedPrice
+                        ];
+                    }
+                    
+                    // Try with urgency
+                    $totalWithUrgency = $pages * ($certifiedPrice + $urgentAmount);
+                    $distanceWithUrgency = abs($totalWithUrgency - $invoiceAmount);
+                    
+                    if ($distanceWithUrgency < $bestDistance) {
+                        $bestDistance = $distanceWithUrgency;
+                        $bestScenario = [
+                            'product' => $certifiedProduct,
+                            'pages' => $pages,
+                            'total' => $totalWithUrgency,
+                            'is_urgent' => true,
+                            'base_price' => $certifiedPrice
+                        ];
+                    }
+                }
+                
+                if ($bestScenario) {
+                    $bestMatch = [[$bestScenario]];
+                }
+            }
     
-            $bestMatch = [[
-                'product' => $certifiedProduct,
-                'pages' => $pages,
-                'total' => $total
-            ]];
-        }
-    
-        if (!$bestMatch && $standardProduct && $standardPrice) {
-            $pages = ceil($invoiceAmount / $standardPrice);
-            $total = $pages * $standardPrice;
-    
-            $bestMatch = [[
-                'product' => $standardProduct,
-                'pages' => $pages,
-                'total' => $total
-            ]];
+            if ($standardProduct && $standardPrice && (!$bestMatch || $bestDistance > 50)) {
+                $bestScenario = null;
+                $currentBestDistance = $bestMatch ? $bestDistance : PHP_FLOAT_MAX;
+                
+                $basePages = ceil($invoiceAmount / $standardPrice);
+                $pagesToTry = range(max(1, $basePages - 3), $basePages + 8);
+                
+                foreach ($pagesToTry as $pages) {
+                    // Try without urgency
+                    $totalWithoutUrgency = $pages * $standardPrice;
+                    $distanceWithoutUrgency = abs($totalWithoutUrgency - $invoiceAmount);
+                    
+                    if ($distanceWithoutUrgency < $currentBestDistance) {
+                        $currentBestDistance = $distanceWithoutUrgency;
+                        $bestScenario = [
+                            'product' => $standardProduct,
+                            'pages' => $pages,
+                            'total' => $totalWithoutUrgency,
+                            'is_urgent' => false,
+                            'base_price' => $standardPrice
+                        ];
+                    }
+                    
+                    // Try with urgency
+                    $totalWithUrgency = $pages * ($standardPrice + $urgentAmount);
+                    $distanceWithUrgency = abs($totalWithUrgency - $invoiceAmount);
+                    
+                    if ($distanceWithUrgency < $currentBestDistance) {
+                        $currentBestDistance = $distanceWithUrgency;
+                        $bestScenario = [
+                            'product' => $standardProduct,
+                            'pages' => $pages,
+                            'total' => $totalWithUrgency,
+                            'is_urgent' => true,
+                            'base_price' => $standardPrice
+                        ];
+                    }
+                }
+                
+                if ($bestScenario && $currentBestDistance < $bestDistance) {
+                    $bestMatch = [[$bestScenario]];
+                }
+            }
         }
     
         if (!$bestMatch) {
@@ -205,27 +379,34 @@ class WordPressController extends Controller
         foreach ($bestMatch as $item) {
             $product = (object) $item['product'];
     
-            $basePercentage = 15;
-            $chance = min(log($invoiceAmount + 1, 10) * $basePercentage, 100);
-    
-            $product->unit_price = floatval($product->price);
-            $product->urgent_amount = 99.75;
-            $product->is_urgent = rand(1, 100) <= $chance;
-    
-            $unitTotal = $product->unit_price;
-            if ($product->is_urgent) {
-                $unitTotal += $product->urgent_amount;
+            $product->unit_price = floatval($item['base_price']);
+            $product->urgent_amount = $urgentAmount;
+            $product->is_urgent = $item['is_urgent']; // Use the optimized urgency
+            $product->pages = $item['pages'];
+
+            $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
+                ->where('product_id', $product->id)
+                ->orderByDesc('last_price_changed')
+                ->first();
+
+            if ($lastUpdate) {
+                $lastPriceChanged = Carbon::parse($lastUpdate->last_price_changed);
+                $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
+                $remainingDays = now()->diffInDays($nextPriceChangeDate, false);
+                $product->remaining_days = round(max($remainingDays, 0));
+                $product->can_edit_price = now()->greaterThanOrEqualTo($nextPriceChangeDate) ? 1 : 0;
+            } else {
+                $product->can_edit_price = 1;
+                $product->remaining_days = 0;
             }
+
     
-            $product->pages = ceil($invoiceAmount / $unitTotal);
+            // Calculate line total accurately
             $product->line_total = $product->unit_price * $product->pages;
-    
             if ($product->is_urgent) {
                 $product->line_total += $product->urgent_amount * $product->pages;
             }
-    
-            $product->can_edit_price = 1;
-            $product->remaining_days = 0;
+
     
             $productName = strtolower(trim($product->name));
             if ($certifiedProduct && $productName === strtolower(trim($certifiedProduct['name']))) {
@@ -263,9 +444,7 @@ class WordPressController extends Controller
             'total' => $finalTotal
         ]);
     }
-    
 
-    
 
     public function updateProduct(Request $request)
     {
@@ -525,7 +704,6 @@ class WordPressController extends Controller
         ];
     
         $productsInput = $request->input('products', []);
-        dd( $productsInput);
         $productIds = array_keys($productsInput);
     
         $auth = base64_encode($site->consumer_key . ':' . $site->consumer_secret);
@@ -659,33 +837,48 @@ class WordPressController extends Controller
         $site = Website::findOrFail($site_id);
         $auth = base64_encode($site->consumer_key . ':' . $site->consumer_secret);
         $siteUrl = rtrim($site->site_link, '/');
-    
+
         foreach ($productDataArray as $item) {
             $data = is_string($item) ? json_decode($item, true) : $item;
-    
+
             if (!empty($data['id']) && isset($data['price'])) {
                 $product_id = intval($data['id']);
                 $new_price = floatval($data['price']);
-    
+
                 $response = Http::withHeaders([
                     'Authorization' => 'Basic ' . $auth,
                     'Content-Type' => 'application/json',
                     'User-Agent' => 'LaravelApp/1.0'
                 ])->get("{$siteUrl}/wp-json/wc/v3/products/{$product_id}");
-    
+
                 if (!$response->successful()) {
                     Log::error("Failed to fetch product ID {$product_id}: " . $response->body());
                     continue;
                 }
-    
+
                 $product = (object) $response->json();
                 $current_price = floatval($product->price);
-    
+
                 if ($current_price == $new_price) {
                     Log::info("No price change for product ID {$product_id}. Current price: {$current_price}");
                     continue;
                 }
-    
+
+                // Check price history
+                $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
+                    ->where('product_id', $product_id)
+                    ->orderByDesc('last_price_changed')
+                    ->first();
+
+                $shouldUpdateHistory = false;
+
+                if (!$lastUpdate) {
+                    $shouldUpdateHistory = true;
+                } elseif (Carbon::parse($lastUpdate->last_price_changed)->diffInMonths(now()) >= 3) {
+                    $shouldUpdateHistory = true;
+                }
+
+                // Update price on WooCommerce
                 $updateResponse = Http::withHeaders([
                     'Authorization' => 'Basic ' . $auth,
                     'Content-Type' => 'application/json',
@@ -693,15 +886,27 @@ class WordPressController extends Controller
                 ])->put("{$siteUrl}/wp-json/wc/v3/products/{$product_id}", [
                     'regular_price' => strval($new_price)
                 ]);
-    
+
                 if ($updateResponse->successful()) {
                     Log::info("Updated price for product ID {$product_id} from {$current_price} to {$new_price}");
+
+                    // Save price history if needed
+                    if ($shouldUpdateHistory) {
+                        ProductPriceHistory::create([
+                            'site_id' => $site_id,
+                            'product_id' => $product_id,
+                            'unit_price' => $new_price,
+                            'last_price_changed' => now(),
+                        ]);
+                    }
                 } else {
                     Log::error("Failed to update price for product ID {$product_id}: " . $updateResponse->body());
                 }
             }
         }
     }
-    
+
+
+   
 }
 
