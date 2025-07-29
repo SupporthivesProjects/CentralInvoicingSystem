@@ -15,6 +15,36 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Artisan;
 use App\Models\InvoiceGenerationHistory;
+use App\Models\CurrencyRate;
+
+
+if (!function_exists('convertCurrency')) {
+    function convertCurrency2(string $fromCurrency, string $toCurrency, float $amount): ?float
+    {
+        if ($fromCurrency === $toCurrency) {
+            return $amount;
+        }
+
+        $fromCurrencyModel = Currency::where('code', strtoupper($fromCurrency))->first();
+        $toCurrencyModel = Currency::where('code', strtoupper($toCurrency))->first();
+
+        if (!$fromCurrencyModel || !$toCurrencyModel) {
+            return $amount;
+        }
+
+        $rate = CurrencyRate::where('from_currency_id', $fromCurrencyModel->id)
+            ->where('to_currency_id', $toCurrencyModel->id)
+            ->value('rate');
+
+        if (!$rate) {
+            return $amount;
+        }
+
+        $convertedAmount = $amount * $rate;
+
+        return round($convertedAmount, 2);
+    }
+}
 
 
 if (!function_exists('myinvoices')) {
@@ -171,21 +201,41 @@ if (!function_exists('site_currency_code')) {
         if (!$site_id) {
             return 'USD';
         }
+
         try {
             $site = \App\Models\Website::findOrFail($site_id);
             \App\Services\DynamicDatabaseService::connect($site);
-            $site_currency = DB::connection('dynamic')->table('business_settings')->where('type', 'system_default_currency')->first()
-                ?? DB::connection('dynamic')->table('business_settings')->where('type', 'home_default_currency')->first();
-            $currency = DB::connection('dynamic')->table('currencies')->where('id', $site_currency->value)->first();
+
+            if ($site->technology === 'wordpress') {
+                $currencyTable = $site->currency_table ?? 'wp_options';
+                $currencyRow = DB::connection('dynamic')
+                    ->table($currencyTable)
+                    ->where('option_name', 'woocommerce_currency')
+                    ->first();
+
+                return $currencyRow?->option_value ?? 'USD';
+            }
+
+            $site_currency = DB::connection('dynamic')->table('business_settings')
+                ->where('type', 'system_default_currency')
+                ->first()
+                ?? DB::connection('dynamic')->table('business_settings')
+                    ->where('type', 'home_default_currency')
+                    ->first();
+
+            $currency = DB::connection('dynamic')
+                ->table('currencies')
+                ->where('id', $site_currency->value ?? null)
+                ->first();
+
             return $currency->code ?? 'USD';
+
         } catch (\Exception $e) {
-            
-            Log::error('Exception caught: '.$e->getMessage(), [
+            Log::error('Exception caught: ' . $e->getMessage(), [
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),
                 'trace' => $e->getTraceAsString(),
             ]);
-
             return 'USD';
         }
     }

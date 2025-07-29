@@ -121,7 +121,7 @@
                             <label class="rounded-end-0 list-group-item list-group-item-action d-flex align-items-center gap-2 py-2"
                                 data-bs-toggle="list" href="#websiteDetails" role="tab" style="cursor:pointer;">
                                 <input class="form-check-input visually-hidden" form="generate-invoice-form" type="radio" name="company_detail_type"
-                                    id="radioWebsite" value="remote" @checked(!$isWordPress)>
+                                    id="radioWebsite" value="remote">
                                 <span class="flex-grow-1 fw-semibold text-center rounded d-flex justify-content-center align-items-center">
                                     Remote <span class="ms-1 d-none active-arrow"><i class="fas fa-check"></i></span>
                                 </span>
@@ -130,7 +130,7 @@
                             <label class="rounded-end-0 list-group-item list-group-item-action d-flex align-items-center gap-2 py-2 active"
                                 data-bs-toggle="list" href="#customDetails" role="tab" style="cursor:pointer;">
                                 <input class="form-check-input visually-hidden" form="generate-invoice-form" type="radio" name="company_detail_type"
-                                    id="radioCustom" value="local" @checked($isWordPress)>
+                                    id="radioCustom" value="local" checked>
                                 <span class="flex-grow-1 fw-semibold text-center rounded d-flex justify-content-center align-items-center">
                                     Local <span class="ms-1 d-none active-arrow"><i class="fas fa-check"></i></span>
                                 </span>
@@ -362,16 +362,16 @@
                         <table class="table table-bordered table-hover align-middle mb-0">
                             <thead class="">
                             <tr>
-                                <th class="text-center" style="width: 8%">PID</th>
-                                <th class="text-center" style="width: 30%;">Product Name</th>
+                                <th class="text-center" style="width: 6%">PID</th>
+                                <th class="text-center" style="width: 35%;">Product Name</th>
                                 <th class="text-center" style="width: 20%;"> RRP Price </th>
                                 <th class="text-center" style="width: 15%;">Discount</th>
-                                <th class="text-center  unit-price-header" style="width: 12%;cursor: pointer;" data-column="3" data-order="desc">
+                                <th class="text-center  unit-price-header" style="width: 18%;cursor: pointer;" data-column="3" data-order="desc">
                                     <span class="d-inline-flex align-items-center justify-content-center gap-1">
                                         Our Price <i class="bi bi-caret-down-fill"></i>
                                     </span>
                                 </th>
-                                <th class="text-center" style="width: 10%;">Remove</th>
+                                <th class="text-center" style="width: 6%;">Remove</th>
                             </tr>
 
                             </thead>
@@ -464,16 +464,16 @@
                         <table id="customize-products-table" class="table table-bordered table-hover align-middle mb-0 table-responsive" style="width:100% !important;">
                             <thead class="text-center">
                             <tr>
-                                    <th class="text-center" style="width: 8%;">PID</th>
-                                    <th class="text-center" style="width: 30%;">Product Name</th>
+                                    <th class="text-center" style="width: 6%;">PID</th>
+                                    <th class="text-center" style="width: 35%;">Product Name</th>
                                     <th class="text-center" style="width: 20%;"> RRP Price  </th>
                                     <th class="text-center" style="width: 15%;">Discount</th>
-                                    <th class="text-center  unit-price-header" style="width: 12%;cursor: pointer;" data-column="3" data-order="desc">
+                                    <th class="text-center  unit-price-header" style="width: 18%;cursor: pointer;" data-column="3" data-order="desc">
                                        <span class="d-inline-flex align-items-center justify-content-center gap-1">
                                             Our Price <i class="bi bi-caret-down-fill"></i>
                                         </span>
                                     </th>
-                                    <th style="width: 10%;">Select</th>
+                                    <th style="width: 6%;">Select</th>
                             </tr>
                             </thead>
                             <tbody id="customize-product-table-body">
@@ -966,19 +966,26 @@ function clearRandomizedFilter(button) {
 
         selectedProducts.each(function () {
             const productId = $(this).val();
+
             const productNameInput = $(`input.product-name[data-product-id="${productId}"]`);
             const productName = productNameInput.val() || '';
+
             const unitPrice = $(`input.product-price[data-product-id="${productId}"]`).val() || 0;
-            const productRRP = parseFloat($(`input.product-rrp[data-product-id="${productId}"]`).val()) || 0;
+
+            const $rrpInput = $(`input.product-rrp[data-product-id="${productId}"]`);
+            const productRRP = parseFloat($rrpInput.val()) || 0;
+            const reverseRate = parseFloat($rrpInput.data('reverse-rate')) || 1;
+            const originalRRP = productRRP * reverseRate;
             const productDiscount = $(`input.product-discount[data-product-id="${productId}"]`).val() || 0;
 
             const match = productName.match(/([A-Z]{3})\s*(\d+(\.\d+)?)/i);
+            const displayRRP = Math.round(parseFloat(originalRRP));
 
             if (match) {
                 const nameRRP = parseFloat(match[2]);
 
-                if (Math.abs(nameRRP - productRRP) > 0.01) {
-                    toastr.warning(`Name and RRP mismatch for Product ID (PID) "${productId}". Update pending.`);
+                if (Math.abs(nameRRP - originalRRP) > 0.01) {
+                    toastr.warning(`PID ${productId}: Name should end with "${displayRRP}"`);
                     productNameInput.css('border', '1px solid red');
                     setTimeout(() => {
                         productNameInput.css('border', '');
@@ -1005,8 +1012,6 @@ function clearRandomizedFilter(button) {
         if (hasMismatch) {
             return false;
         }
-
-       
         let blinkCount = 0;
         const maxBlinkCount = 30;
         const blinkInterval = 500;

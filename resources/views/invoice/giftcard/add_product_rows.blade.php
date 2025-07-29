@@ -4,11 +4,11 @@
     <td>
         {{ $product->name }} 
         @if($site->site_link && $product->slug)
-            <a href="{{ $site->site_link }}product/{{ $product->slug }}" target="_blank">🔗</a>
+            <a href="{{ $site->site_link }}{{ $product->slug }}" target="_blank">🔗</a>
         @endif
     </td>
     <td  class="text-center">{{ site_currency() }}{{ number_format($product->rrp, 2) }}</td>
-    <td  class="text-center">{{  $product->discount }}%</td>
+    <td  class="text-center text-success fw-bold">{{  $product->discount }}%</td>
     <td class="text-center">
         {{ site_currency() }} 
         <span id="temp_unit_price_text" class="unit-price-text" >{{ number_format($product->unit_price, 2, '.', '') }}</span>

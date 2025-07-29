@@ -38,6 +38,7 @@ class LaravelController extends Controller
         $this->productTable = getProductTable($site->technology);
         $this->connectionType = 'dynamic';
     }
+    
     public function randomProducts(Request $request)
     {
         $site_id = $request->get('site_id');
@@ -45,139 +46,77 @@ class LaravelController extends Controller
         $priceFrom = $request->get('price_from');
         $priceTo = $request->get('price_to');
         $categoryName = $request->get('category_name');
-        $noOfProducts = intval($request->get('noOfProducts'));
+        $noOfProducts = $request->get('noOfProducts') ? intval($request->get('noOfProducts')) : null;
 
         $site = Website::findOrFail($site_id);
         DynamicDatabaseService::connect($site);
 
+        $siteCurrency = site_currency_code();
+
         $query = DB::connection($this->connectionType)
-            ->table($this->productTable)
-            ->select('id', 'name', 'slug', 'category_id', 'card_currency', 'rrp', 'discount', 'unit_price', 'current_stock')
-            ->where('published', 1);
+            ->table($this->productTable . ' as p')
+            ->leftJoin('conversion_rates as cr', function ($join) use ($siteCurrency) {
+                $join->on('p.card_currency', '=', 'cr.from_currency')
+                    ->where('cr.to_currency', '=', $siteCurrency);
+            })
+            ->select(
+                'p.id',
+                'p.name',
+                'p.slug',
+                'p.category_id',
+                'p.card_currency',
+                DB::raw('ROUND(p.rrp * IFNULL(cr.rate, 1), 2) as rrp'),
+                'p.discount',
+                DB::raw('ROUND(p.unit_price * IFNULL(cr.rate, 1), 2) as unit_price'),
+                'p.current_stock',
+                DB::raw('ROUND(1 / IFNULL(cr.rate, 1), 5) as reverse_rate')
+            )
+            ->where('p.published', 1);
 
+        $subQuery = DB::connection($this->connectionType)->table(DB::raw("({$query->toSql()}) as derived"))->mergeBindings($query);
+        
         if ($priceFrom && $priceTo) {
-            $query->whereBetween('unit_price', [$priceFrom, $priceTo]);
+            $subQuery->whereBetween('unit_price', [$priceFrom, $priceTo]);
         }
-
+            
         if (!empty($categoryName)) {
             $normalized = strtolower(str_replace(['-', '_', ' ', ','], '', $categoryName));
-            $query->whereIn('category_id', function ($sub) use ($normalized) {
+            $subQuery->whereIn('category_id', function ($sub) use ($normalized) {
                 $sub->select('id')
                     ->from('categories')
                     ->whereRaw("LOWER(REPLACE(REPLACE(REPLACE(REPLACE(tags, '-', ''), '_', ''), ' ', ''), ',', '')) LIKE ?", ["%{$normalized}%"]);
             });
         }
 
-        $products = $query->orderByDesc('unit_price')->get();
-
-        if ($products->isEmpty()) {
-            return response()->json([
-                'tableRows' => '',
-                'total' => 0,
-                'message' => 'No products found in this range or category.'
-            ]);
-        }
-
         $bestMatch = null;
         $bestTotal = 0;
-        $bestDistance = PHP_INT_MAX;
+        
+        $checkSingleProductQuery = clone $subQuery;
+        $perfectMatch = $checkSingleProductQuery->where('unit_price', $invoiceAmount)->inRandomOrder() ->first();
 
-        // Step 1: First try to find EXACT match combinations (sum = invoiceAmount)
-        for ($attempt = 0; $attempt < 50; $attempt++) {
-            $shuffled = $products->shuffle();
-            $selected = [];
-            $currentTotal = 0;
-
-            foreach ($shuffled as $product) {
-                $price = floatval($product->unit_price);
-
-                // If specific number of products required, stop when reached
-                if ($noOfProducts && count($selected) >= $noOfProducts) break;
-
-                // If adding this product would exceed invoice amount, skip it
-                if ($currentTotal + $price > $invoiceAmount) continue;
-
-                $selected[] = $product;
-                $currentTotal += $price;
-
-                // Check if we hit exact match
-                if ($currentTotal == $invoiceAmount) {
-                    // If no specific count required, or if we have exact count
-                    if (!$noOfProducts || count($selected) == $noOfProducts) {
-                        $bestMatch = $selected;
-                        $bestTotal = $currentTotal;
-                        break 2; // Break both loops - found perfect match
-                    }
-                }
-
-                // If we have required number of products, stop adding more
-                if ($noOfProducts && count($selected) == $noOfProducts) break;
-            }
-
-            // If we found exact match with any number of products (when no specific count)
-            if (!$noOfProducts && $currentTotal == $invoiceAmount && count($selected) > 0) {
-                $bestMatch = $selected;
-                $bestTotal = $currentTotal;
-                break;
-            }
+        if ($perfectMatch) {
+            $bestMatch = collect([$perfectMatch]);
+            $bestTotal = $invoiceAmount;
         }
 
-        // Step 2: If no exact match found, find closest higher amount
+        
         if (!$bestMatch) {
-            $maxTotal = $invoiceAmount * 1.15; // Allow up to 15% higher
+            $bestDistance = PHP_INT_MAX;
+            $minTotal = ($categoryName || $noOfProducts) ? $invoiceAmount * 0.6 : $invoiceAmount;
+            $maxTotal = $invoiceAmount * 1.10;
+            $fetchLimit = $noOfProducts ? ($noOfProducts * 10) : 200;
 
-            for ($attempt = 0; $attempt < 50; $attempt++) {
-                $shuffled = $products->shuffle();
-                $selected = [];
-                $currentTotal = 0;
+            $products = $subQuery->orderByDesc('unit_price')->limit($fetchLimit)->get();
 
-                foreach ($shuffled as $product) {
-                    $price = floatval($product->unit_price);
-
-                    // If specific number of products required, stop when reached
-                    if ($noOfProducts && count($selected) >= $noOfProducts) break;
-
-                    // If adding this product would exceed max allowed, skip it
-                    if ($currentTotal + $price > $maxTotal) continue;
-
-                    $selected[] = $product;
-                    $currentTotal += $price;
-
-                    // If we have required number of products, stop adding more
-                    if ($noOfProducts && count($selected) == $noOfProducts) break;
-                }
-
-                // Evaluate this combination
-                if ($noOfProducts) {
-                    // Must have exact number of products and total >= invoice amount
-                    if (count($selected) == $noOfProducts && $currentTotal >= $invoiceAmount) {
-                        $distance = $currentTotal - $invoiceAmount;
-                        if ($distance < $bestDistance) {
-                            $bestMatch = $selected;
-                            $bestTotal = $currentTotal;
-                            $bestDistance = $distance;
-                        }
-                    }
-                } else {
-                    // Any number of products, but total must be >= invoice amount
-                    if ($currentTotal >= $invoiceAmount && $currentTotal <= $maxTotal) {
-                        $distance = $currentTotal - $invoiceAmount;
-                        if ($distance < $bestDistance) {
-                            $bestMatch = $selected;
-                            $bestTotal = $currentTotal;
-                            $bestDistance = $distance;
-                        }
-                    }
-                }
+            if ($products->isEmpty()) {
+                return response()->json([
+                    'tableRows' => '',
+                    'total' => 0,
+                    'message' => 'No products found in this range or category.'
+                ]);
             }
-        }
 
-        // Step 3: Final fallback - if still no match, try original logic with more flexibility
-        if (!$bestMatch) {
-            $minTotal = $invoiceAmount * 0.8; // Allow 20% lower as last resort
-            $maxTotal = $invoiceAmount * 1.20; // Allow 20% higher
-
-            for ($attempt = 0; $attempt < 30; $attempt++) {
+            for ($i = 0; $i < 30; $i++) {
                 $shuffled = $products->shuffle();
                 $selected = [];
                 $currentTotal = 0;
@@ -195,22 +134,24 @@ class LaravelController extends Controller
                 }
 
                 if ($noOfProducts && count($selected) == $noOfProducts) {
-                    if ($currentTotal >= $minTotal) {
-                        $distance = abs($invoiceAmount - $currentTotal);
-                        if ($distance < $bestDistance) {
-                            $bestMatch = $selected;
-                            $bestTotal = $currentTotal;
-                            $bestDistance = $distance;
-                        }
-                    }
-                } elseif (!$noOfProducts && $currentTotal >= $minTotal && $currentTotal <= $maxTotal) {
-                    if ($currentTotal > $bestTotal) {
-                        $bestMatch = $selected;
+                    $distance = abs($invoiceAmount - $currentTotal);
+                    if ($distance < $bestDistance) {
+                        $bestMatch = $selected; // This is an array
                         $bestTotal = $currentTotal;
+                        $bestDistance = $distance;
                     }
+                    if ($distance <= $invoiceAmount * 0.05) break;
+                } elseif (!$noOfProducts && $currentTotal >= $minTotal && $currentTotal <= $maxTotal && $currentTotal > $bestTotal) {
+                    $bestMatch = $selected; // This is an array
+                    $bestTotal = $currentTotal;
                 }
             }
+            // Convert array to collection if a match was found in the loop
+            if ($bestMatch) {
+                $bestMatch = collect($bestMatch);
+            }
         }
+
 
         if (!$bestMatch) {
             return response()->json([
@@ -220,20 +161,26 @@ class LaravelController extends Controller
             ]);
         }
 
-        $bestMatch = collect($bestMatch);
-
-        // Get category information
         $categoryIds = $bestMatch->pluck('category_id')->unique();
+
+        
         $categories = DB::connection($this->connectionType)
             ->table('categories')
             ->whereIn('id', $categoryIds)
-            ->pluck('name', 'id');
+            ->select('id', 'name', 'slug')  
+            ->get()
+            ->keyBy('id');  
 
-        $bestMatch->each(function ($product) use ($categories) {
-            $product->category_name = $categories[$product->category_id] ?? 'unknown';
+
+        $siteLink = $site->site_link;
+
+        $bestMatch->each(function ($product) use ($categories, $siteLink) {
+            $category = $categories[$product->category_id] ?? null;
+        
+            $product->category_name = $category->name ?? 'unknown';
+            $product->slug = $category ? 'search?category=' . $category->slug : $siteLink;
         });
-
-        // Get price history information
+        
         $productIds = $bestMatch->pluck('id')->unique();
         $priceHistories = ProductPriceHistory::where('site_id', $site_id)
             ->whereIn('product_id', $productIds)
@@ -242,12 +189,12 @@ class LaravelController extends Controller
             ->groupBy('product_id');
 
         $bestMatch->each(function ($product) use ($priceHistories) {
-            $history = $priceHistories[$product->id][0] ?? null;
+            $history = $priceHistories->get($product->id, collect())->first();
             if ($history) {
                 $lastChanged = Carbon::parse($history->last_price_changed);
                 $nextChange = $lastChanged->copy()->addMonths(3);
                 $daysLeft = now()->diffInDays($nextChange, false);
-                $product->remaining_days = max($daysLeft, 0);
+                $product->remaining_days = max(round($daysLeft), 0);
                 $product->can_edit_price = now()->greaterThanOrEqualTo($nextChange) ? 1 : 0;
             } else {
                 $product->remaining_days = 0;
@@ -255,13 +202,11 @@ class LaravelController extends Controller
             }
         });
 
-        // Store in session
         $productList = $bestMatch->map(fn($p) => ['id' => $p->id, 'unit_price' => $p->unit_price])->toArray();
         session()->forget('ready_products');
         session()->put('ready_products', $productList);
         session(['current_amount' => $bestTotal]);
 
-        // Render view
         $modelType = $site->businessModel->model_type;
         $tableRows = view("invoice.{$modelType}.random_product_rows", [
             'products' => $bestMatch,
@@ -274,6 +219,7 @@ class LaravelController extends Controller
             'total' => $bestTotal
         ]);
     }
+
 
 
     public function addProducts(Request $request)
@@ -312,11 +258,30 @@ class LaravelController extends Controller
 
         $productIds = collect($readyProducts)->pluck('id')->reverse()->values()->toArray();
 
-        $products = DB::connection($this->connectionType)->table($this->productTable)
-            ->select('id', 'name', 'slug', 'category_id', 'card_currency', 'rrp', 'discount', 'unit_price', 'current_stock')
-            ->whereIn('id', $productIds)
+        $siteCurrency = site_currency_code();
+        $products = DB::connection($this->connectionType)
+            ->table($this->productTable . ' as p')
+            ->leftJoin('conversion_rates as cr', function ($join) use ($siteCurrency) {
+                $join->on('p.card_currency', '=', 'cr.from_currency')
+                    ->where('cr.to_currency', '=', $siteCurrency);
+            })
+            ->select(
+                'p.id',
+                'p.name',
+                'p.slug',
+                'p.category_id',
+                'p.card_currency',
+                DB::raw('ROUND(p.rrp * IFNULL(cr.rate, 1), 2) as rrp'),
+                'p.discount',
+                DB::raw('ROUND(p.unit_price * IFNULL(cr.rate, 1), 2) as unit_price'),
+                'p.current_stock',
+                DB::raw('ROUND(1 / IFNULL(cr.rate, 1), 5) as reverse_rate')
+            )
+            ->whereIn('p.id', $productIds)
             ->get()
             ->keyBy('id');
+
+
 
         $products = collect($productIds)->map(function ($id) use ($products) {
             return $products[$id];
@@ -325,8 +290,6 @@ class LaravelController extends Controller
         $products = $products->map(function ($product) use ($readyProducts, $site_id) {
             $sessionProduct = collect($readyProducts)->firstWhere('id', $product->id);
             $product->unit_price = $sessionProduct['unit_price'] ?? $product->unit_price;
-            $product->category_name = DB::connection($this->connectionType)->table('categories')->where('id', $product->category_id)->value('name') ?? 'unknown';
-
             $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
                 ->where('product_id', $product->id)
                 ->orderByDesc('last_price_changed')
@@ -336,7 +299,7 @@ class LaravelController extends Controller
                 $lastPriceChanged = Carbon::parse($lastUpdate->last_price_changed);
                 $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
                 $remainingDays = now()->diffInDays($nextPriceChangeDate, false);
-                $product->remaining_days = round(max($remainingDays, 0));
+                $product->remaining_days = max(round($daysLeft), 0);
                 $product->can_edit_price = now()->greaterThanOrEqualTo($nextPriceChangeDate) ? 1 : 0;
             } else {
                 $product->can_edit_price = 1;
@@ -385,35 +348,66 @@ class LaravelController extends Controller
 
         $productIds = array_column($updatedProducts, 'id');
 
-        $products = DB::connection($this->connectionType)->table($this->productTable)
-            ->select('id', 'name', 'slug', 'category_id', 'card_currency', 'rrp', 'discount', 'unit_price', 'current_stock')
-            ->whereIn('id', $productIds)
+        $siteCurrency = site_currency_code();
+        $products = DB::connection($this->connectionType)
+            ->table($this->productTable . ' as p')
+            ->leftJoin('conversion_rates as cr', function ($join) use ($siteCurrency) {
+                $join->on('p.card_currency', '=', 'cr.from_currency')
+                    ->where('cr.to_currency', '=', $siteCurrency);
+            })
+            ->select(
+                'p.id',
+                'p.name',
+                'p.slug',
+                'p.category_id',
+                'p.card_currency',
+                DB::raw('ROUND(p.rrp * IFNULL(cr.rate, 1), 2) as rrp'),
+                'p.discount',
+                DB::raw('ROUND(p.unit_price * IFNULL(cr.rate, 1), 2) as unit_price'),
+                'p.current_stock',
+                DB::raw('ROUND(1 / IFNULL(cr.rate, 1), 5) as reverse_rate')
+            )
+            ->whereIn('p.id', $productIds)
             ->get();
 
-        $products = $products->map(function ($product) use ($updatedProducts, $site_id) {
-            $sessionProduct = collect($updatedProducts)->firstWhere('id', $product->id);
-            $product->unit_price = $sessionProduct['unit_price'] ?? $product->unit_price;
-            $product->category_name = DB::connection($this->connectionType)->table('categories')->where('id', $product->category_id)->value('name') ?? 'unknown';
+            $categoryIds = $products->pluck('category_id')->unique();
 
-            $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
-                ->where('product_id', $product->id)
-                ->orderByDesc('last_price_changed')
-                ->first();
+            $categories = DB::connection($this->connectionType)
+                ->table('categories')
+                ->whereIn('id', $categoryIds)
+                ->select('id', 'name', 'slug')
+                ->get()
+                ->keyBy('id');
 
-            if ($lastUpdate) {
-                $lastPriceChanged = Carbon::parse($lastUpdate->last_price_changed);
-                $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
-                $remainingDays = now()->diffInDays($nextPriceChangeDate, false);
-                $product->remaining_days = round(max($remainingDays, 0));
-                $product->can_edit_price = now()->greaterThanOrEqualTo($nextPriceChangeDate) ? 1 : 0;
-            } else {
-                $product->can_edit_price = 1;
-                $product->remaining_days = 0;
-            }
-
-            return $product;
-        });
-
+            $siteLink = $site->site_link;
+            $products = $products->map(function ($product) use ($updatedProducts, $site_id, $categories, $siteLink) {
+                $sessionProduct = collect($updatedProducts)->firstWhere('id', $product->id);
+            
+                $product->unit_price = $sessionProduct['unit_price'] ?? $product->unit_price;
+            
+                $category = $categories[$product->category_id] ?? null;
+                $product->category_name = $category->name ?? 'unknown';
+                $product->slug = $category ? 'search?category=' . $category->slug : $siteLink;
+            
+                $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
+                    ->where('product_id', $product->id)
+                    ->orderByDesc('last_price_changed')
+                    ->first();
+            
+                if ($lastUpdate) {
+                    $lastPriceChanged = Carbon::parse($lastUpdate->last_price_changed);
+                    $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
+                    $remainingDays = now()->diffInDays($nextPriceChangeDate, false);
+                    $product->remaining_days = max(round($daysLeft), 0);
+                    $product->can_edit_price = now()->greaterThanOrEqualTo($nextPriceChangeDate) ? 1 : 0;
+                } else {
+                    $product->can_edit_price = 1;
+                    $product->remaining_days = 0;
+                }
+            
+                return $product;
+            });
+            
         $modelType = $site->businessModel->model_type;
         session(['current_amount' => collect($products)->sum('unit_price')]);
         $tableRows = view("invoice.{$modelType}.random_product_rows", [
@@ -449,35 +443,66 @@ class LaravelController extends Controller
 
         $productIds = collect($readyProducts)->pluck('id')->toArray();
 
-        $products = DB::connection($this->connectionType)->table($this->productTable)
-            ->select('id', 'name', 'slug', 'category_id', 'card_currency', 'rrp', 'discount', 'unit_price', 'current_stock')
-            ->whereIn('id', $productIds)
+        $siteCurrency = site_currency_code();
+        $products = DB::connection($this->connectionType)
+            ->table($this->productTable . ' as p')
+            ->leftJoin('conversion_rates as cr', function ($join) use ($siteCurrency) {
+                $join->on('p.card_currency', '=', 'cr.from_currency')
+                    ->where('cr.to_currency', '=', $siteCurrency);
+            })
+            ->select(
+                'p.id',
+                'p.name',
+                'p.slug',
+                'p.category_id',
+                'p.card_currency',
+                DB::raw('ROUND(p.rrp * IFNULL(cr.rate, 1), 2) as rrp'),
+                'p.discount',
+                DB::raw('ROUND(p.unit_price * IFNULL(cr.rate, 1), 2) as unit_price'),
+                'p.current_stock',
+                DB::raw('ROUND(1 / IFNULL(cr.rate, 1), 5) as reverse_rate')
+            )
+            ->whereIn('p.id', $productIds)
             ->get();
+    
 
-        $products = $products->map(function ($product) use ($readyProducts, $site_id) {
-            $sessionProduct = collect($readyProducts)->firstWhere('id', $product->id);
-            $product->unit_price = $sessionProduct['unit_price'] ?? $product->unit_price;
-            $product->quantity = $sessionProduct['quantity'] ?? 1;
-            $product->category_name = DB::connection($this->connectionType)->table('categories')->where('id', $product->category_id)->value('name') ?? 'unknown';
+            $categoryIds = $products->pluck('category_id')->unique();
 
-            $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
-                ->where('product_id', $product->id)
-                ->orderByDesc('last_price_changed')
-                ->first();
+            $categories = DB::connection($this->connectionType)
+                ->table('categories')
+                ->whereIn('id', $categoryIds)
+                ->select('id', 'name', 'slug')
+                ->get()
+                ->keyBy('id');
 
-            if ($lastUpdate) {
-                $lastPriceChanged = Carbon::parse($lastUpdate->last_price_changed);
-                $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
-                $remainingDays = now()->diffInDays($nextPriceChangeDate, false);
-                $product->remaining_days = round(max($remainingDays, 0));
-                $product->can_edit_price = now()->greaterThanOrEqualTo($nextPriceChangeDate) ? 1 : 0;
-            } else {
-                $product->can_edit_price = 1;
-                $product->remaining_days = 0;
-            }
-
-            return $product;
-        });
+            $siteLink = $site->site_link;
+            $products = $products->map(function ($product) use ($updatedProducts, $site_id, $categories, $siteLink) {
+                $sessionProduct = collect($updatedProducts)->firstWhere('id', $product->id);
+            
+                $product->unit_price = $sessionProduct['unit_price'] ?? $product->unit_price;
+            
+                $category = $categories[$product->category_id] ?? null;
+                $product->category_name = $category->name ?? 'unknown';
+                $product->slug = $category ? 'search?category=' . $category->slug : $siteLink;
+            
+                $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
+                    ->where('product_id', $product->id)
+                    ->orderByDesc('last_price_changed')
+                    ->first();
+            
+                if ($lastUpdate) {
+                    $lastPriceChanged = Carbon::parse($lastUpdate->last_price_changed);
+                    $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
+                    $remainingDays = now()->diffInDays($nextPriceChangeDate, false);
+                    $product->remaining_days = max(round($daysLeft), 0);
+                    $product->can_edit_price = now()->greaterThanOrEqualTo($nextPriceChangeDate) ? 1 : 0;
+                } else {
+                    $product->can_edit_price = 1;
+                    $product->remaining_days = 0;
+                }
+            
+                return $product;
+            });
 
         $modelType = $site->businessModel->model_type;
 
@@ -527,41 +552,52 @@ class LaravelController extends Controller
             ]);
         }
 
+        $siteCurrency = site_currency_code();
+
         $query = DB::connection($this->connectionType)
-            ->table($this->productTable)
-            ->leftJoin('categories', 'products.category_id', '=', 'categories.id')
+            ->table($this->productTable . ' as p')
+            ->leftJoin('categories as c', 'p.category_id', '=', 'c.id')
+            ->leftJoin('conversion_rates as cr', function ($join) use ($siteCurrency) {
+                $join->on('p.card_currency', '=', 'cr.from_currency')
+                    ->where('cr.to_currency', '=', $siteCurrency);
+            })
             ->select(
-                'products.id',
-                'products.name',
-                'products.slug',
-                'products.category_id',
-                'products.card_currency',
-                'products.rrp',
-                'products.discount',
-                'products.unit_price',
-                'products.current_stock',
-                'categories.name as category_name'
+                'p.id',
+                'p.name',
+                'p.slug',
+                'p.category_id',
+                'p.card_currency',
+                DB::raw('ROUND(p.rrp * IFNULL(cr.rate, 1), 2) as rrp'),
+                'p.discount',
+                DB::raw('ROUND(p.unit_price * IFNULL(cr.rate, 1), 2) as unit_price'),
+                'p.current_stock',
+                DB::raw('ROUND(1 / IFNULL(cr.rate, 1), 5) as reverse_rate'),
+                'c.name as category_name'
             )
-            ->where('products.published', 1);
+            ->where('p.published', 1);
+
+        $subQuery = DB::connection($this->connectionType)
+            ->table(DB::raw("({$query->toSql()}) as derived"))
+            ->mergeBindings($query);
 
         if ($hasPriceRange) {
-            $query->whereBetween('unit_price', [
+            $subQuery->whereBetween('unit_price', [
                 (float) $request->price_from,
                 (float) $request->price_to
             ]);
         }
 
         if (in_array($sortUnitPrice, ['asc', 'desc'])) {
-            $query->orderBy('unit_price', $sortUnitPrice);
+            $subQuery->orderBy('unit_price', $sortUnitPrice);
         }
 
         if (!empty($keyword)) {
             $normalizedSearch = strtolower(str_replace(['-', '_', ' ', ','], '', $keyword));
 
-            $query->where(function ($q) use ($normalizedSearch) {
-                $q->whereRaw("LOWER(REPLACE(REPLACE(REPLACE(REPLACE(products.name, '-', ''), '_', ''), ' ', ''), ',', '')) LIKE ?", ["%{$normalizedSearch}%"])
-                    ->orWhereRaw("LOWER(REPLACE(REPLACE(REPLACE(REPLACE(products.slug, '-', ''), '_', ''), ' ', ''), ',', '')) LIKE ?", ["%{$normalizedSearch}%"])
-                    ->orWhereIn('products.category_id', function ($sub) use ($normalizedSearch) {
+            $subQuery->where(function ($q) use ($normalizedSearch) {
+                $q->whereRaw("LOWER(REPLACE(REPLACE(REPLACE(REPLACE(name, '-', ''), '_', ''), ' ', ''), ',', '')) LIKE ?", ["%{$normalizedSearch}%"])
+                    ->orWhereRaw("LOWER(REPLACE(REPLACE(REPLACE(REPLACE(slug, '-', ''), '_', ''), ' ', ''), ',', '')) LIKE ?", ["%{$normalizedSearch}%"])
+                    ->orWhereIn('category_id', function ($sub) use ($normalizedSearch) {
                         $sub->select('id')
                             ->from('categories')
                             ->whereRaw("LOWER(REPLACE(REPLACE(REPLACE(REPLACE(tags, '-', ''), '_', ''), ' ', ''), ',', '')) LIKE ?", ["%{$normalizedSearch}%"]);
@@ -569,19 +605,18 @@ class LaravelController extends Controller
             });
         }
 
-
         $readyProducts = session('ready_products', []);
         $readyProductIds = collect($readyProducts)->pluck('id')->toArray();
 
         if (count($readyProductIds) > 0) {
-            $query->whereNotIn('products.id', $readyProductIds);
+            $subQuery->whereNotIn('id', $readyProductIds);
         }
 
-        $totalCount = $query->count();
+        $totalCount = $subQuery->count();
         $page = $request->input('page', 1);
         $perPage = 10;
         $offset = ($page - 1) * $perPage;
-        $products = $query->skip($offset)->take($perPage)->get();
+        $products = $subQuery->skip($offset)->take($perPage)->get();
         $totalPages = ceil($totalCount / $perPage);
         $paginationPages = $this->smartPagination($page, $totalPages);
 
@@ -592,25 +627,39 @@ class LaravelController extends Controller
         }
 
         $productIds = $products->pluck('id')->toArray();
+        $categoryIds = $products->pluck('category_id')->unique()->toArray();
+        
         $priceHistories = ProductPriceHistory::where('site_id', $site_id)
             ->whereIn('product_id', $productIds)
             ->orderByDesc('last_price_changed')
             ->get()
             ->keyBy('product_id');
-
+        
+        $categories = DB::connection($this->connectionType)
+            ->table('categories')
+            ->whereIn('id', $categoryIds)
+            ->select('id', 'name', 'slug')
+            ->get()
+            ->keyBy('id');
+        
         foreach ($products as $product) {
+            $category = $categories->get($product->category_id);
+            $product->category_name = $category->name ?? 'unknown';
+            $product->slug = $category ? 'search?category=' . $category->slug : $site->site_link;
+        
             $history = $priceHistories->get($product->id);
             if ($history) {
                 $lastPriceChanged = Carbon::parse($history->last_price_changed);
                 $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
                 $remainingDays = now()->diffInDays($nextPriceChangeDate, false);
-                $product->remaining_days = round(max($remainingDays, 0));
+                $product->remaining_days = max(round($daysLeft), 0);
                 $product->can_edit_price = now()->greaterThanOrEqualTo($nextPriceChangeDate) ? 1 : 0;
             } else {
                 $product->can_edit_price = 1;
                 $product->remaining_days = 0;
             }
         }
+        
 
         $modelType = $site->businessModel->model_type;
         $random_amount = session('current_amount', 0);
@@ -663,8 +712,59 @@ class LaravelController extends Controller
         return array_values(array_unique($pages));
     }
 
+    public function getProduct(Request $request)
+    {
+        $productId = $request->input('product_id');
+        $rrp = $request->input('rrp');
+        $site_id = session('customer.site_id');
+        $site = Website::findOrFail($site_id);
+        DynamicDatabaseService::connect($site);
 
+        if ($site->businessModel && strtolower(trim($site->businessModel->model_type)) !== 'giftcard' && strtolower(trim($site->technology)) !== 'laravel') {
+            return response()->json(['success' => true]);
+        }
 
+    
+        if (!$productId || !$rrp) {
+            return response()->json(['success' => false], 400);
+        }
+    
+        $product = DB::connection($this->connectionType)
+            ->table($this->productTable)
+            ->where('id', $productId)
+            ->first();
+    
+        if (!$product) {
+            return response()->json(['success' => false], 404);
+        }
+    
+        $siteCurrency = site_currency_code();
+    
+        $rate = ($product->card_currency === $siteCurrency)
+            ? 1
+            : DB::connection($this->connectionType)
+                ->table('conversion_rates')
+                ->where('from_currency', $siteCurrency)
+                ->where('to_currency', $product->card_currency)
+                ->value('rate') ?? 1;
+    
+        $convertedAmount = round($rrp * $rate, 2);
+    
+        $match = [];
+        $nameRRP = null;
+        if (preg_match('/([A-Z]{3})\s*(\d+(\.\d+)?)/i', $product->name, $match)) {
+            $nameRRP = (float)$match[2];
+        }
+    
+        $hasMismatch = is_null($nameRRP) || abs($nameRRP - $convertedAmount) > 0.01;
+    
+        return response()->json([
+            'convertedAmount' => $convertedAmount,
+            'success' => !$hasMismatch
+        ]);
+    }
+    
+   
     public function generateInvoice(Request $request)
     {
         $site_id = $request->input('site_id');
@@ -756,19 +856,40 @@ class LaravelController extends Controller
             }
         }
 
-        $products = DB::connection($this->connectionType)->table($this->productTable)
-            ->whereIn('id', $productIds)
-            ->select('id', 'name', 'slug', 'category_id', 'card_currency', 'rrp', 'discount', 'unit_price', 'current_stock')
+        $siteCurrency = site_currency_code();
+
+        $products = DB::connection($this->connectionType)
+            ->table($this->productTable . ' as p')
+            ->leftJoin('conversion_rates as cr', function ($join) use ($siteCurrency) {
+                $join->on('p.card_currency', '=', 'cr.from_currency')
+                     ->where('cr.to_currency', '=', $siteCurrency);
+            })
+            ->whereIn('p.id', $productIds)
+            ->select(
+                'p.id',
+                'p.name',
+                'p.slug',
+                'p.category_id',
+                'p.card_currency',
+                DB::raw('ROUND(p.rrp * IFNULL(cr.rate, 1), 2) as rrp'),
+                'p.discount',
+                DB::raw('ROUND(p.unit_price * IFNULL(cr.rate, 1), 2) as unit_price'),
+                'p.current_stock',
+                DB::raw('ROUND(1 / IFNULL(cr.rate, 1), 5) as reverse_rate')
+            )
             ->get()
             ->sortBy(fn($product) => array_search($product->id, $productIds))
             ->values()
             ->map(function ($product) use ($customPrices) {
-                $product->name = $customPrices[$product->id]['product_name'];
-                $product->rrp = $customPrices[$product->id]['unit_rrp'];
-                $product->discount = $customPrices[$product->id]['unit_discount'];
-                $product->unit_price = $customPrices[$product->id]['unit_price'];
+                if (isset($customPrices[$product->id])) {
+                    $product->name = $customPrices[$product->id]['product_name'];
+                    $product->rrp = $customPrices[$product->id]['unit_rrp'];
+                    $product->discount = $customPrices[$product->id]['unit_discount'];
+                    $product->unit_price = $customPrices[$product->id]['unit_price'];
+                }
                 return $product;
             });
+        
 
         $products->each(function ($product) {
             $product->category_name = DB::connection($this->connectionType)
@@ -855,19 +976,28 @@ class LaravelController extends Controller
         foreach ($productDataArray as $item) {
             $data = json_decode($item, true);
 
-            Log::info('Processing item', ['raw_data' => $data]);
-
             if (!empty($data['product_id']) && isset($data['unit_price'])) {
-                $product_id   = $data['product_id'];
-                $new_name     = $data['product_name'];
-                $new_price    = floatval($data['unit_price']);
-                $new_rrp      = isset($data['unit_rrp']) ? floatval($data['unit_rrp']) : null;
-                $new_discount = isset($data['unit_discount']) ? floatval($data['unit_discount']) : null;
 
+                $product_id   = $data['product_id'];
+                
                 $product = DB::connection($this->connectionType)
                     ->table($this->productTable)
                     ->where('id', $product_id)
                     ->first();
+
+                $siteCurrency = site_currency_code();
+
+                $rate = DB::connection($this->connectionType)
+                    ->table('conversion_rates')
+                    ->where('from_currency', $siteCurrency)
+                    ->where('to_currency', $product->card_currency)
+                    ->value('rate');
+
+                $rate = $rate ?: 1;
+                $new_name     = $data['product_name'];
+                $new_price = round($data['unit_price'] * $rate, 2);
+                $new_rrp   = round($data['unit_rrp'] * $rate, 2);
+                $new_discount = isset($data['unit_discount']) ? floatval($data['unit_discount']) : null;
 
                 if (! $product) {
                     Log::info('Product not found', ['product_id' => $product_id]);
