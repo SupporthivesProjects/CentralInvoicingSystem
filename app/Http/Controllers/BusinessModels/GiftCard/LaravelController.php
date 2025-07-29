@@ -92,14 +92,15 @@ class LaravelController extends Controller
         $bestTotal = 0;
         
         $checkSingleProductQuery = clone $subQuery;
-        $perfectMatch = $checkSingleProductQuery->where('unit_price', $invoiceAmount)->inRandomOrder() ->first();
 
-        if ($perfectMatch) {
-            $bestMatch = collect([$perfectMatch]);
+        $matchingProducts = $checkSingleProductQuery->where('unit_price', $invoiceAmount)->get();
+    
+        if ($matchingProducts->isNotEmpty()) {
+            $randomProduct = $matchingProducts->shuffle()->first();
+            $bestMatch = collect([$randomProduct]);
             $bestTotal = $invoiceAmount;
         }
-
-        
+    
         if (!$bestMatch) {
             $bestDistance = PHP_INT_MAX;
             $minTotal = ($categoryName || $noOfProducts) ? $invoiceAmount * 0.6 : $invoiceAmount;
