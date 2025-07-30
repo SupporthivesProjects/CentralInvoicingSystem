@@ -4,6 +4,10 @@
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
     <link href="https://fonts.cdnfonts.com/css/calibri-light" rel="stylesheet">
     <style>
+        @page {
+            margin: 0px;
+            padding: 0px;
+        }
         * {
             margin: 0px;
             padding: 0px;
@@ -250,7 +254,7 @@
                             <td style="width: 100%; background: url('{{ $invoice_footer_image }}') no-repeat; background-size:contain;padding: 40px 0px 57px;">
                                 <p style="text-align: center;">
                                     <div style="width: 340px !important; text-align: center; margin: auto;">
-                                        <p style="padding-bottom: 5px;"> <strong>NOTE</strong></p>
+                                        <p style="padding-bottom: 5px;"> <strong></strong></p>
                                         <p>
                                            {!! $site->site_description !!}
                                         </p>
