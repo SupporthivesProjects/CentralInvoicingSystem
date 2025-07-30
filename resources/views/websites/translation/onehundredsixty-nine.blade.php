@@ -3,7 +3,7 @@
 <head>
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
 </head>
-<body>
+<body style="margin: 0 !important;padding: 0 !important;">
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
             <td align="center" bgcolor="#f2f2f2" style="padding:0px 0;">
@@ -55,7 +55,7 @@
                                     </td>
                                 </tr>
                             </table>
-                            <div style="min-height: 450px !important">
+                            <div style="min-height: 470px !important">
                             <table style="width: 100%; margin-top: 20px;" cellspacing="0" cellpadding="10" border="0" style="border-collapse: collapse; font-family: Arial, sans-serif;">
                                 
 
