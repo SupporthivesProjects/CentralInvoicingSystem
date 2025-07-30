@@ -47,7 +47,7 @@ $(function (e) {
 
     // file export datatable
     $('#file-export').DataTable({
-        dom: 'Bfrtip',
+        dom: 'lBfrtip',  // Added 'l' to show page length dropdown
         buttons: [
             'copy', 'csv', 'excel', 'pdf', 'print'
         ],
@@ -55,11 +55,13 @@ $(function (e) {
             searchPlaceholder: 'Search...',
             sSearch: '',
         },
+        pageLength: 10,
     });
+    
     // file export datatable
 
     $('#websites-datatables').DataTable({
-        dom: 'Bfrtip',
+        dom: 'lBfrtip',  // Added 'l' to show page length dropdown
         order: [[0, 'desc']],
         buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
         language: {
@@ -67,22 +69,11 @@ $(function (e) {
             sSearch: '',
         },
         columns: [
-            null,  // # - index column, default
-            null,  // Model column
-            null,  // Site Name
-            null,  // Site Link
-            {      // Bank Name (your input column)
-                render: function(data, type, row, meta) {
-                    if (type === 'filter') {
-                        // Extract the input value from the cell's HTML string
-                        let el = $.parseHTML(data);
-                        let input = $(el).find('input');
-                        return input.length ? input.val() : data;
-                    }
-                    return data;
-                }
-            },
-            {      // Bank Code (your input column)
+            null,
+            null,
+            null,
+            null,
+            {
                 render: function(data, type, row, meta) {
                     if (type === 'filter') {
                         let el = $.parseHTML(data);
@@ -92,9 +83,21 @@ $(function (e) {
                     return data;
                 }
             },
-            null,  // Actions
-        ]
+            {
+                render: function(data, type, row, meta) {
+                    if (type === 'filter') {
+                        let el = $.parseHTML(data);
+                        let input = $(el).find('input');
+                        return input.length ? input.val() : data;
+                    }
+                    return data;
+                }
+            },
+            null,
+        ],
+        pageLength: 10,
     });
+    
 
     // delete row datatable
     var table = $('#delete-datatable').DataTable({

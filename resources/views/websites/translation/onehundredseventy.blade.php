@@ -3,9 +3,6 @@
 <head>
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
 </head>
-@php 
-dd($products);
-@endph
 <body style="margin:0px;padding:0px;">
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
@@ -54,6 +51,14 @@ dd($products);
                                 @endforeach
                             </table>
 
+                            <div style="border-top: 1px solid #333; margin: 40px 0; width: 100%; margin-bottom: 0px;"></div>
+                            <div style="border-top: 1px solid #333; margin: 40px 0; width: 100%; margin-bottom: 0px;"></div>
+                            <div style="border-top: 1px solid #333; margin: 40px 0; width: 100%; margin-bottom: 0px;"></div>
+                            <div style="border-top: 1px solid #333; margin: 40px 0; width: 100%; margin-bottom: 0px;"></div>
+                            <div style="border-top: 1px solid #333; margin: 40px 0; width: 100%; margin-bottom: 0px;"></div>
+                            <div style="border-top: 1px solid #333; margin: 40px 0; width: 100%; margin-bottom: 0px;"></div>
+                            <div style="border-top: 1px solid #333; margin: 40px 0; width: 100%; margin-bottom: 0px;"></div>
+                            <div style="border-top: 1px solid #333; margin: 40px 0; width: 100%; margin-bottom: 0px;"></div>
                             <div style="border-top: 1px solid #333; margin: 40px 0; width: 100%; margin-bottom: 0px;"></div>
 
                             <table style="width: 100%; font-family: Arial, sans-serif; font-size: 10px; border-collapse: collapse;">
