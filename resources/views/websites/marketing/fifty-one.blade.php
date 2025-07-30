@@ -82,7 +82,7 @@
     <!-- Summary -->
     <tr>
       <td style="padding: 20px;">
-        <table width="100%" cellpadding="5" cellspacing="0" style="max-width: 170px; float: right;">
+        <table width="100%" cellpadding="5" cellspacing="0" style="max-width: 250px; float: right;">
           <tr>
             <td style="text-align: right;">SUBTOTAL</td>
             <td style="text-align: right;">{{ site_currency() }} {{ number_format(($invoice_amount + $discount_amount) ?? 0, 2) }}</td>

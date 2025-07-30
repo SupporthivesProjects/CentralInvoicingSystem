@@ -19,7 +19,7 @@
                     style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
                     <!-- Header -->
                     <tr>
-                        <td style="padding: 0px;max-height: 160px;">
+                        <td style="padding: 0px;max-height: 250px;">
                             <table>
                                 <tr>
                                     <td
@@ -49,7 +49,7 @@
                                     </td>
                                     <td style="text-align: right;">
                                         <p style="font-family: arial;font-size:26px;margin: 0px;font-weight: 400;">
-                                            <b>INVOICE</b>
+                                            <b style="color: #00B5D9;">INVOICE</b>
                                         </p>
                                     </td>
                                 </tr>
