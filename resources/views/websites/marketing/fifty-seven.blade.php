@@ -111,7 +111,7 @@
        
     </style>
 </head>
-<body>
+<body style="padding: 0px; margin: 0px;">
     <table width="100%" cellspacing="0" cellpadding="0" border="0" style="margin: auto;">
         <tr>
             <td style="background: url(./img/Picture3.png) no-repeat; background-size: cover; height: 100%;">
@@ -191,7 +191,7 @@
                                                             <td style="padding-left: 20px; border: 0px;"></td>
                                                             <td style="padding-left: 20px; border: 0px;"></td>
                                                             <td style="padding-left: 20px; border: 0px;">
-                                                                <h6 style="font-family: 'Roboto';font-size: 9px;line-height: normal;color: #ff0000b8;">GRAND</h6>
+                                                                <h6 style="font-family: 'Roboto';font-size: 9px;line-height: normal;color: #ff0000b8;">GRAND TOTAL</h6>
                                                             </td>
                                                             <td style="border: 0px;" >
                                                                 <h6 style="font-family: 'Roboto';font-size: 16px;line-height: normal;color: #ff0000b8;">{{ site_currency() }} {{ number_format($invoice_amount ?? 0, 2) }}</h6>

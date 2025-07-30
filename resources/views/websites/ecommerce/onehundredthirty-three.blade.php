@@ -64,12 +64,6 @@
                                 {{ $company_email }}
                             </p>
                             <br>
-                            <p style="margin: 0px;font-size: 9px;font-weight: 700;font-family:Arial;line-height: 12px;">
-                                Phone
-                            </p>
-                            <p style="margin: 0px;font-size: 9px;font-family:Arial;line-height: 12px;">
-                                {{ $company_mobile }}
-                            </p>
                             <br>
                             <p style="margin: 0px;font-size: 9px;font-weight: 700;font-family:Arial;line-height: 12px;">
                                 Address
