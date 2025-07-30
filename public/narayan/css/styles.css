@@ -941,13 +941,6 @@ background: linear-gradient(135deg, #4e73df, #1cc88a);
   }
 }
 
-body {
-  margin: 0;
-  background: #ffffff;
-  overflow: hidden;
-  height: 100vh;
-  cursor: pointer;
-}
 
 .flash {
   position: absolute;
