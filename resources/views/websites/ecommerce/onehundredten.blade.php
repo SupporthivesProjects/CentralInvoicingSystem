@@ -197,7 +197,7 @@
 
                     <!-- Original Footer Row (Hidden for PDF rendering) -->
                     <tr>
-                        <td style="height:100px; visibility: hidden;"></td>
+                        <td style="display:none;"></td>
                     </tr>
                     <!-- Footer End -->    
                 </table>
