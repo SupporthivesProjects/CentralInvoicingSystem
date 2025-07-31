@@ -3,24 +3,43 @@
 <head>
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        .footer-fixed {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 100px;
+            background: url('{{ $invoice_footer_image }}') center center no-repeat;
+            background-size: cover;
+        }
+    </style>
 </head>
 <body>
+
+    <!-- Main Invoice Table -->
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
             <td align="center" bgcolor="#f2f2f2" style="padding:0px 0;">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
-                     <!---header--->
+                    
+                    <!---header--->
                     <tr>
                         <td align="center" style="height:100px;background:url('{{ $invoice_header_image }}');background-size: cover;background-repeat: no-repeat;background-position: center;"></td>
                     </tr> 
                     <!---header End--->
 
                     <!-- Content -->
-                    <tr style="background:#ffff ;">
+                    <tr style="background:#ffff;">
                         <td style="padding: 40px;">
-                            <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse;">
+                        <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse;">
                              <tr>
                                 <td>
                                  <h1 style="margin: 0px;font-family: Arial;font-size:28px;line-height:32px;text-transform: uppercase;">
@@ -73,7 +92,7 @@
                                 </td>
                              </tr>
                             </table>
-                            <div style="min-height: 500px !important;">
+                            <div style="min-height: 650px !important;">
                               <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse;margin-top: 40px;">
                                  <tr style="background:#021228">
                                  <td>
@@ -176,17 +195,18 @@
                     </tr>
                     <!-- Content End-->
 
-
-                    <!-----------Footer----------->
+                    <!-- Original Footer Row (Hidden for PDF rendering) -->
                     <tr>
-                        <td style="height:100px;background:url('{{ $invoice_footer_image }}');background-size: cover;background-repeat: no-repeat;background-position: center;">
-                           
-                        </td>
-                    </tr> 
-                    <!-----------Footer End----------->    
+                        <td style="display:none;"></td>
+                    </tr>
+                    <!-- Footer End -->    
                 </table>
             </td>
         </tr>
     </table>
+
+    <!-- Footer absolutely fixed for PDF -->
+    <div class="footer-fixed"></div>
+
 </body>
 </html>

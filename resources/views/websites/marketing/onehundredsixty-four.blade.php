@@ -4,7 +4,22 @@
 <head>
     <meta charset="UTF-8">
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        .footer-fixed {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background:#e5c99e; height:18px; padding-top:40px; border-bottom:60px solid #3c4a4a;
+        }
+    </style>
 </head>
+
+
 
 <body style="font-family:'Segoe UI', Arial, sans-serif; margin:0; background:#f9f9f9;">
     <table cellpadding="0" cellspacing="0" border="0" align="center" style="background:#fff; width:100%; margin:30px auto; border:1px solid #333; box-shadow:0 0 8px #ccc;">
@@ -143,7 +158,7 @@
             <td colspan="2"></td>
         </tr>
         <!-- Footer Bar -->
-        <tr>
+        <!-- <tr>
             <td colspan="2" style="padding:0;">
                 <table width="100%" cellpadding="0" cellspacing="0">
                     <tr>
@@ -153,8 +168,10 @@
                     </tr>
                 </table>
             </td>
-        </tr>
+        </tr> -->
     </table>
+     <!-- Footer absolutely fixed for PDF -->
+     <div class="footer-fixed"></div>
 </body>
 
 </html>

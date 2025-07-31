@@ -3,10 +3,25 @@
 <head>
     <meta charset="UTF-8" />
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        .footer-fixed {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 45px;
+            background: url('{{ $invoice_header_image }}') center center no-repeat;
+            background-size: cover;
+        }
+    </style>
   </head>
 <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #ffffff;">
   <table width="100%" cellpadding="0" cellspacing="0" border="0"
-    style="max-width: 90%; margin: 0 auto; border: 1px solid #ccc;">
+    style="max-width: 100%; margin: 0 auto; border: 1px solid #ccc;">
     <!-- Header with Logo -->
     <tr style=" background: url('{{ $invoice_header_image }}');background-repeat: no-repeat; background-size: cover;background-position: center;height: 134px;">
       <td style="padding: 65px 0px 10px 24px;">
@@ -132,12 +147,20 @@
 
 
 
-    <tr style=" background: url('{{ $invoice_header_image }}');background-repeat: no-repeat;background-size: cover;background-position: center;height: 45px;">
+    <!-- <tr style=" background: url('{{ $invoice_header_image }}');background-repeat: no-repeat;background-size: cover;background-position: center;height: 45px;">
       <td style=" padding: 0px; color: #ffffff; font-size: 12px; text-align: center;">
 
       </td>
+    </tr> -->
+    <!-- Original Footer Row (Hidden for PDF rendering) -->
+    <tr>
+      <td style="display:none;"></td>
     </tr>
+    <!-- Footer End -->   
   </table>
+
+   <!-- Footer absolutely fixed for PDF -->
+   <div class="footer-fixed"></div>
 </body>
 
 </html>
