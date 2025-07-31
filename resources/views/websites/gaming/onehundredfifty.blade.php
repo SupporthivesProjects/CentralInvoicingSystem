@@ -2,6 +2,13 @@
 <html>
 <head>
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
+    <style>
+      body {
+        margin: 0px;
+        padding: 0px;
+
+      }
+    </style>
 </head>
 <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #ffffff;">
   <table width="100%" cellpadding="0" cellspacing="0" border="0"
@@ -28,7 +35,7 @@
     </tr>
     <tr>
       <td colspan="2" style="padding: 20px;">
-        <table width="100%" style="font-size: 14px;">
+        <table width="100%" style="font-size: 14px; ">
           <tr>
             <td style="color: #1a1a1a;">
              {!! $company_address !!}
