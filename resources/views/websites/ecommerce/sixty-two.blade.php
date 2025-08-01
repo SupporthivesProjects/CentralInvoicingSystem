@@ -124,7 +124,7 @@
                                     <td style="color: red; padding-top: 0%;">Thank you for your business!</td>
                                 </tr>
                                 <tr>
-                                    <td style="color: red; font-weight: bold;">{{ $site_name }}  | {!! $company_address ?? 'N/A' !!}</td>
+                                    <td style="color: red; font-weight: bold;">{{ $site_name }}.co  | {!! $company_address ?? 'N/A' !!}</td>
                                 </tr>
                             </table>
                         </td>
