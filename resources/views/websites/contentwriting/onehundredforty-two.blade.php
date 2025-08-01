@@ -4,6 +4,10 @@
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
     <link href="https://fonts.cdnfonts.com/css/calibri-light" rel="stylesheet">
     <style>
+        body {
+            margin: 0px;
+            padding: 0px;
+        }
         @page {
             margin: 0px;
             padding: 0px;
@@ -172,7 +176,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td style="padding:0px 56px 50px">
+                        <td style="padding:0px 56px 50px; min-height: 650px;">
                           <table class="table-list" style="width: 100%;"> 
                             <tbody>
                                 <tr>
