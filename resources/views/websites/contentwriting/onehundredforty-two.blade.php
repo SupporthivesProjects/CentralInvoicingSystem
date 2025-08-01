@@ -225,6 +225,7 @@
                                     <td>{{ site_currency() }} {{ number_format($product->unit_price, 2) }}</td>
                                 </tr>
                                 @endforeach
+                                
                                 <tr>
                                     <td>
                                         <div>
