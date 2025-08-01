@@ -79,7 +79,7 @@
                                     </td>
                                 </tr>
                             </table>
-                            <div style="min-height: 620px !important;">
+                            <div style="min-height: 610px !important;">
                                 <table width="100%" border="1" cellspacing="0" cellpadding="8"
                                     style="border-collapse: collapse; font-family:'Century Gothic (Headings)'; font-size: 9px; width: 800px; margin: auto; margin-top: 20px; text-align: left;">
                                     <tr>
