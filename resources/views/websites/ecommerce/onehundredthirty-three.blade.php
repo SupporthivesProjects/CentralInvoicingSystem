@@ -10,10 +10,10 @@
         rel="stylesheet">
 </head>
 
-<body>
+<body style="margin: 0px; padding: 0px;">
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
-            <td align="center" bgcolor="#f2f2f2" style="padding: 20px 0;">
+            <td align="center">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0"
                     style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);background: #bacbe4;">
                     <!---header--->
