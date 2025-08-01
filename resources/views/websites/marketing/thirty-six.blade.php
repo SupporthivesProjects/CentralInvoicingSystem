@@ -8,8 +8,8 @@
 <body>
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
-            <td align="center" bgcolor="#f2f2f2" style="padding: 20px 0;">
-                <table width="600" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
+            <td align="center" >
+                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
                     style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
                     <tr>
                         <td style="padding: 0px;max-height: 130px;">
@@ -75,7 +75,7 @@
                                 </tr>
 
                             </table>
-                            <div style="min-height: 500px !important;">
+                            <div style="min-height: 650px !important;">
                                 <table style="border-collapse: collapse;border-bottom: 0px;border: 0px;">
                                     <tr
                                         style="border-collapse: collapse;height: 30px;background-color: black; color: white;border-bottom: 0px;border: 0px;">

@@ -5,12 +5,17 @@
     <link href="https://fonts.cdnfonts.com/css/calibri-light" rel="stylesheet">
     <style>
         body {
-            margin: 0px;
-            padding: 0px;
+            margin: 0;
+            padding: 0;
         }
-        @page {
-            margin: 0px;
-            padding: 0px;
+        .footer-fixed {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 100px;
+            background: url('{{ $invoice_footer_image }}') center center no-repeat;
+            background-size: cover;
         }
         * {
             margin: 0px;
@@ -542,8 +547,8 @@
                     
                    </tbody>
                    <tfoot>
-                        <tr>
-                            <td style="width: 100%; background: url('{{ $invoice_footer_image }}') no-repeat; background-size:contain;padding: 40px 0px 57px;">
+                        <!-- <tr>
+                            <td style="width: 100%; background: url('{{ $invoice_footer_image }}') no-repeat; background-size:contain;">
                                 <p style="text-align: center;">
                                     <div style="width: 340px !important; text-align: center; margin: auto;">
                                         <p style="padding-bottom: 5px;"> <strong></strong></p>
@@ -553,11 +558,19 @@
                                     </div>
                                 </p>
                             </td>
-                        </tr>
+                        </tr> -->
+
+                         <!-- Original Footer Row (Hidden for PDF rendering) -->
+                    <tr>
+                        <td style="display:none;"></td>
+                    </tr>
+                    <!-- Footer End -->   
                    </tfoot>
                 </table>
             </td>
         </tr>
     </table>
+    <!-- Footer absolutely fixed for PDF -->
+    <div class="footer-fixed"></div>
 </body>
 </html>

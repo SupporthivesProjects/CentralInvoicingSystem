@@ -3,6 +3,19 @@
 <head>
     <title>art2cartdevs</title>
     <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        .footer-fixed {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 100px;
+            background: url('{{ $invoice_footer_image }}') center center no-repeat;
+            background-size: cover;
+        }
         * {
             margin: 0px;
             padding: 0px;
@@ -123,7 +136,7 @@
                                         </tr>
                                         <tr>
                                             <td class="datalist">
-                                                <div style="min-height: 500px !important;">
+                                                <div style="min-height: 650px !important;">
                                                 <table width="100%" cellspacing="0" cellpadding="0" border="0" class="datalist">
                                                     <thead>
                                                         <tr>
@@ -191,16 +204,23 @@
                                 </table>
                             </td>
                         </tr>
-                        <tr>
+                        <!-- <tr>
                             <td>
                                 <img src="{{ $invoice_footer_image }}" class="img-fluid">
                             </td>
-                        </tr>
+                        </tr> -->
+                         <!-- Original Footer Row (Hidden for PDF rendering) -->
+                    <tr>
+                        <td style="display:none;"></td>
+                    </tr>
+                    <!-- Footer End --> 
                    </tbody>
                 </table>
 
             </td>
         </tr>
     </table>
+    <!-- Footer absolutely fixed for PDF -->
+    <div class="footer-fixed"></div>
 </body>
 </html>
