@@ -28,11 +28,11 @@
                     style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
                     <!-- Header -->
                     <tr>
-                        <td style="padding: 0px;height: 250px;">
+                        <td style="padding: 0px;max-height: 250px;">
                             <table>
                                 <tr>
                                     <td
-                                        style="height: 250px; background: url({{ $invoice_header_image }}) no-repeat;background-position:center;background-size:cover;width: 100%;">
+                                        style="height: 100px; background: url({{ $invoice_header_image }}) no-repeat;background-position:center;background-size:cover;width: 1000px;">
 
                                     </td>
 
