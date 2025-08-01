@@ -1048,11 +1048,13 @@ class LaravelController extends Controller
 
                 if ($shouldUpdate) {
                    
+                    if (!empty($updateData)) {
                     $affected = DB::connection($this->connectionType)
-                        ->table($this->productTable)
-                        ->where('id', $product_id)
-                        ->update($updateData);
-
+                                    ->table($this->productTable)
+                                    ->where('id', $product_id)
+                                    ->update($updateData);
+                    }
+                    
                     ProductPriceHistory::create([
                         'site_id'            => $site_id,
                         'product_id'         => $product_id,
