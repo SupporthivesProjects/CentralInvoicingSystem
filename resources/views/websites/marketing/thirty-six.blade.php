@@ -13,10 +13,10 @@
                     style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
                     <tr>
                         <td style="padding: 0px;max-height: 130px;">
-                            <table>
+                            <table width="100%">
                                 <tr>
                                     <td
-                                        style="height: 60px; background: url('{{ $invoice_header_image }}') no-repeat;background-position: 100% 100%;background-size:cover;width: 600px;">
+                                        style="height: 60px; background: url('{{ $invoice_header_image }}') no-repeat;background-position: 100% 100%;background-size:cover;width: 100%;">
                                     </td>
                                 </tr>
                             </table>
@@ -24,7 +24,7 @@
                     </tr>
                     <tr>
                         <td style="padding:40px;padding-top:0px;">
-                            <table>
+                            <table width="100%">
                                 <tr>
                                     <td>
                                         <p style="font-family: arial;font-size:48px;margin: 0px;font-weight: 400;">
