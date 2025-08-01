@@ -45,7 +45,7 @@
                                     <td colspan="2"
                                         style="vertical-align: top; font-size: 9px; width: 70%;  padding-top: 0px;">
 
-                                        <div style="min-height: 200px !important;">
+                                        <div style="min-height: 100px !important;">
                                             <table>
                                                 <tr style=" padding-top: 0px;">
                                                     <td style="color: #E62E2D; font-weight: bold;  padding-top: 0px; ">DATE:
@@ -79,7 +79,7 @@
                                     </td>
                                 </tr>
                             </table>
-                            <div style="min-height: 900px !important;">
+                            <div style="min-height: 800px !important;">
                                 <table width="100%" border="1" cellspacing="0" cellpadding="8"
                                     style="border-collapse: collapse; font-family:'Century Gothic (Headings)'; font-size: 9px; width: 800px; margin: auto; margin-top: 20px; text-align: left;">
                                     <tr>

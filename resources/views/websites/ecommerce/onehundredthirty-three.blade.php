@@ -73,7 +73,7 @@
                             </p>
                         </td>
                         <td style="padding: 20px;vertical-align: top;">
-                            <div style="min-height: 800px !important;">
+                            <div style="min-height: 820px !important;">
                             <table cellspacing="0" cellpadding="0" border="0"
                                 style="border-collapse: collapse;margin-bottom: 150px;" width="100%">
                                 <tr style="border-top: 1px solid black;border-bottom: 2px solid black;">
