@@ -44,27 +44,30 @@
                                     <!-- Date and Invoice Number -->
                                     <td colspan="2"
                                         style="vertical-align: top; font-size: 9px; width: 70%;  padding-top: 0px;">
-                                        <table>
-                                            <tr style=" padding-top: 0px;">
-                                                <td style="color: #E62E2D; font-weight: bold;  padding-top: 0px; ">DATE:
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td style="color: #000;">{{ $invoice_date }}</td>
-                                            </tr>
-                                            <tr>
-                                                <td style="height: 2px;"></td>
-                                            </tr>
-                                            <tr>
-                                                <td style="color: #E62E2D; font-weight: bold;">INVOICE #</td>
-                                            </tr>
-                                            <tr>
-                                                <td style="color: #000;">{{ $invoice_number }}</td>
-                                            </tr>
-                                            <tr>
-                                                <td style="height: 20px;"></td>
-                                            </tr>
-                                        </table>
+
+                                        <div style="min-height: 900px !important;">
+                                            <table>
+                                                <tr style=" padding-top: 0px;">
+                                                    <td style="color: #E62E2D; font-weight: bold;  padding-top: 0px; ">DATE:
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="color: #000;">{{ $invoice_date }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="height: 2px;"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="color: #E62E2D; font-weight: bold;">INVOICE #</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="color: #000;">{{ $invoice_number }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="height: 20px;"></td>
+                                                </tr>
+                                            </table>
+                                        </div>
                                     </td>
 
                                     <!-- To Section -->
