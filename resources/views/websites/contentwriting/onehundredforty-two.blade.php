@@ -253,7 +253,7 @@
                     </tr>
                     
                    </tbody>
-                   <tfoot>
+                   <tfoot style="position: absolute; bottom: 0px; width: 100%; height: 100px;">
                         <tr>
                             <td style="width: 100%; background: url('{{ $invoice_footer_image }}') no-repeat; background-size:contain;padding: 40px 0px 57px;">
                                 <p style="text-align: center;">
