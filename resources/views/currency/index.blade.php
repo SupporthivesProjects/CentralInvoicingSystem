@@ -237,7 +237,23 @@ $(document).ready(function () {
                     success: function (res) {
                         if (res.success) {
                             toastr.success('All currency rates updated successfully.');
+                         
+                            const table = $('#file-export').DataTable();
+                            table.clear().destroy();
+
                             $('#currencyTableBody').html(res.html);
+
+                            $('#file-export').DataTable({
+                                dom: 'lBfrtip', 
+                                buttons: [
+                                    'copy', 'csv', 'excel', 'pdf', 'print'
+                                ],
+                                language: {
+                                    searchPlaceholder: 'Search...',
+                                    sSearch: '',
+                                },
+                                pageLength: 10,
+                            });
                         } else {
                             toastr.error('Failed to update currency rates.');
                         }

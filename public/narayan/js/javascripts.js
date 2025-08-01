@@ -5,6 +5,15 @@ script.onload = function() {
     feather.replace();
 };
 
+document.addEventListener("click", (e) => {
+    const flash = document.createElement("div");
+    flash.className = "flash";
+    flash.style.left = `${e.pageX}px`;
+    flash.style.top = `${e.pageY}px`;
+    document.body.appendChild(flash);
+    setTimeout(() => flash.remove(), 600); 
+  });
+
 $(document).ready(function () {
     $('#companyTypeTab .list-group-item.active .active-arrow').removeClass('d-none');
     let activeText = $('#companyTypeTab .list-group-item.active span:first').text().trim();

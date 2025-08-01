@@ -4,9 +4,18 @@
 <head>
     <title>Your Email Title</title>
     <style>
-        body{
-            padding: 0px;
-            margin: 0px;
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        .footer-fixed {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            background: url('{{ $invoice_footer_image }}') center center no-repeat;
+            background-size: cover;
         }
     </style>
 </head>
@@ -19,7 +28,7 @@
                     style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
                     <!-- Header -->
                     <tr>
-                        <td style="padding: 0px;max-height: 160px;">
+                        <td style="padding: 0px;max-height: 300px;">
                             <table>
                                 <tr>
                                     <td
@@ -49,7 +58,7 @@
                                     </td>
                                     <td style="text-align: right;">
                                         <p style="font-family: arial;font-size:26px;margin: 0px;font-weight: 400;">
-                                            <b>INVOICE</b>
+                                            <b style="color: #00B5D9;">INVOICE</b>
                                         </p>
                                     </td>
                                 </tr>
@@ -101,7 +110,7 @@
 
                             </table>
 
-                            <div style="min-height: 500px !important;">
+                            <div style="min-height: 650px !important;">
                             <table style="border-collapse: collapse;border-bottom: 0px;border: 0px;">
 
 
@@ -205,7 +214,7 @@
         <!-- Content End-->
 
         <!-----------Footer----------->
-        <tr>
+        <!-- <tr>
             <td style="height: 75px;">
                 <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;">
                     <tr
@@ -216,13 +225,19 @@
 
                 </table>
             </td>
-        </tr>
+        </tr> -->
+        <!-- Original Footer Row (Hidden for PDF rendering) -->
+        <tr>
+                        <td style="display:none;"></td>
+                    </tr>
         <!-----------Footer End----------->
 
     </table>
     </td>
     </tr>
     </table>
+    <!-- Footer absolutely fixed for PDF -->
+    <div class="footer-fixed"></div>
 </body>
 
 </html>
