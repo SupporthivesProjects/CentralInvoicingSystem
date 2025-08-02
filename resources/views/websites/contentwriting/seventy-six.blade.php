@@ -5,7 +5,7 @@
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
 </head>
 
-<body>
+<body style="margin:0px !important;padding:0px !important;">
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
             <td align="center" bgcolor="#f2f2f2" style="padding: 0px 0;">
@@ -53,9 +53,8 @@
                                         <p style="margin: 0;"><a href="#"
                                                 style="color: #0000EE; text-decoration: underline; font-size: 12px;">{{ $site_name }}</a>
                                         </p>
-                                        <p style="margin: 0; font-size: 10px;"><strong>Email:</strong>
-                                            {{ $company_email }}</p>
-                                        <p style="margin: 0; font-size: 10px;"><strong>Website:</strong> {{ $site->site_link }}
+                                        <p style="margin: 0; font-size: 10px;"><strong>Email:</strong> {{ $company_email }}</p>
+                                        <p style="margin: 0; font-size: 10px;"><strong>Website:</strong> {{ $site_name }}
                                         </p>
                                         <p style="margin: 0; font-size: 10px;"><strong>Phone:</strong> {{ $company_mobile }}</p>
                                         <p style="margin: 0; font-size: 10px;"><strong>Address:</strong>{!! $company_address !!}</p>
@@ -85,7 +84,7 @@
                             <br>
             
                             <!-- PRODUCT TABLE -->
-                            <div style="min-height:450px !important;">
+                            <div style="min-height:530px !important;">
                             <table width="100%" cellpadding="10" cellspacing="0"
                                 style="font-family: Arial; border-collapse: collapse;">
                                 <tr style="background-color: #F3EFE9; font-size: 12px; border-bottom: 1px solid #D0CECE;">

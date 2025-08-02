@@ -4,7 +4,7 @@
 </head>
 <html>
   <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #ffffff;">
-    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width: 600px; margin: 0 auto; border: 1px solid #ccc;">
+    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width: 100%; margin: 0 auto; border: 1px solid #ccc;">
        <tr style=" background: url('{{ $invoice_header_image }}');background-repeat: no-repeat;background-size: cover;background-position: center;height: 124px;">
           <td style="padding: 0px;">
           </td>
@@ -42,7 +42,7 @@
     <!-- Items Table -->
     <tr>
       <td colspan="2" style="padding: 0 20px 20px;">
-      <div style="min-height: 460px !important">
+      <div style="min-height: 680px !important">
         <table width="100%" cellpadding="8" cellspacing="0" style="border-collapse: collapse; font-size: 14px;">
           <tr style="background-color: #0D6966; color: #ffffff;">
             <th align="left">QUANTITY</th>
@@ -54,8 +54,14 @@
           <tr style="border-bottom: 1px solid #ddd;">
             <td>1</td>
             <td>{{ $product->name }} <br>{{ $product->from_language }} to  {{ $product->to_language }}</td>
-            <td align="right"> {{ $product->pages }}| {{ round($product->pages * 250) }}</td>
-            <td align="right">{{ site_currency() . number_format($product->line_total) }}</td>
+            <td align="right">
+              @if ($product->unit_type === 'words')
+                  {{ ceil($product->pages / 250) }} | {{ $product->pages }} 
+              @else
+                  {{ $product->pages }} | {{ $product->pages * 250 }} 
+              @endif
+          </td>
+            <td align="right">{{ site_currency() . number_format($product->line_total, 2) }}</td>
           </tr>
           @endforeach
           <tr>
