@@ -50,7 +50,7 @@
     </td>
     <td class="text-center">
         <div class="input-group d-flex justify-content-center">
-            <span class="input-group-text">{{ site_currency() }}</span>
+            <span class="input-group-text"  data-bs-toggle="tooltip" title="{{ site_currency_code() }}">{{ site_currency() }}</span>
             <input type="text" 
                    class="form-control text-center product-rrp" 
                    value="{{ number_format($product->rrp, 2, '.', '') }}" 

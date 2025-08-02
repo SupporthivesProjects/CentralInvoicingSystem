@@ -37,7 +37,7 @@
         <input form="generate-invoice-form" type="hidden" name="products[{{ $product->id }}][display_unit_price]"
         value="{{ number_format($product->unit_price, 2) }}">
             <div class="input-group d-flex">
-                <span class="input-group-text">{{ site_currency() }}</span>
+                <span class="input-group-text"  data-bs-toggle="tooltip" title="{{ site_currency_code() }}">{{ site_currency() }}</span>
                 <input form="generate-invoice-form" style="display: none;"
                     class="form-check-input border narayan-checkbox border-1 border-primary" type="checkbox"
                     name="products[{{ $product->id }}][selected]"

@@ -32,7 +32,7 @@
     <td  class="text-center">{{ site_currency() }}{{ number_format($product->unit_price, 2) }}</td>
     <td>
         <div class="input-group d-flex">
-            <span class="input-group-text">{{ site_currency() }}</span>
+            <span class="input-group-text"  data-bs-toggle="tooltip" title="{{ site_currency_code() }}">{{ site_currency() }}</span>
             <input  style="display: none;"
                 class="form-check-input border narayan-checkbox border-1 border-primary" 
                 type="checkbox" 

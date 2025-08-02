@@ -15,7 +15,7 @@
             <span class="badge bg-secondary">No Credits</span>
         @endif
     </td>
-    <td class="text-center">
+    <td class="text-center" >
         {{ site_currency() }}
         <input type="hidden"
                class="add-product-price form-control d-inline-block"
