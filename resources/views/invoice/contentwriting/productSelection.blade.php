@@ -464,7 +464,7 @@
                                     Total Price <i class="bi bi-caret-down-fill"></i>
                                 </span>
                             </th>
-                            <th class="text-center" style="width: 15%;">Action</th>
+                            <th class="text-center" style="width: 15%;">Select</th>
                         </tr>
                     </thead>
                     <tbody id="customize-product-table-body">

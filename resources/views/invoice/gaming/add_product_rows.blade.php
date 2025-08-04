@@ -31,7 +31,7 @@
         <!-- 5️⃣ UNIT PRICE -->
         <td>
             <div class="input-group">
-                <span class="input-group-text">{{ site_currency() }}</span>
+                <span class="input-group-text"  data-bs-toggle="tooltip" title="{{ site_currency_code() }}">{{ site_currency() }}</span>
                 <input type="text" class="form-control add-product-price text-center dynamic-input" value="0.00" data-product-id="{{ $product->id }}">
             </div>
         </td>

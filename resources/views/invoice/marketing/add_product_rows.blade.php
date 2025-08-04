@@ -15,7 +15,7 @@
     <td  class="text-center">{{ site_currency() }}{{ number_format($product->unit_price, 2) }}</td>
     <td>
         <div class="input-group">
-            <span class="input-group-text">{{ site_currency() }}</span>
+            <span class="input-group-text"  data-bs-toggle="tooltip" title="{{ site_currency_code() }}">{{ site_currency() }}</span>
             <input 
                 type="text" 
                 class="form-control add-product-price text-center" 
