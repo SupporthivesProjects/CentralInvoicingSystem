@@ -88,7 +88,7 @@
 
                             <br>
                             <br>
-                            <div style="min-height: 500px !important;">
+                            <div style="min-height: 800px !important;">
                                 <table style="border-collapse: collapse;">
                                     <tr
                                         style="border-collapse: collapse;height: 24px;border-top: 1px solid black;border-bottom: 1px solid black;">
