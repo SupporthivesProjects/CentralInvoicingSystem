@@ -14,9 +14,9 @@
                     </tr>
                     
                     <tr style="background: url('{{ $invoice_image1 }}') no-repeat;background-position: center;background-size: cover; display: flex;flex-direction: column;">
-                        <td style="padding: 0px;">
-                            <table>
-                                <tr>
+                        <td style="padding: 0px; width: 100%;">
+                            <table style="width: 100%;">
+                                <tr style="width: 100%;">
                                     <td style="padding-left: 40px; width: 100%;">
                                         <img src="{{ $company_logo }}" alt="" style="display: block; padding: 48px 0px 0px 0px;height:80px;">
                                     </td>
@@ -31,11 +31,11 @@
                                 </tr>
                             </table>
                         </td>
-                        <td style="padding:0px 60px 200px 60px;">
+                        <td style="padding:0px 60px 200px 60px; width: 100%;">
                             <br>
                             <br>
                             <table style="width: 100%;">
-                                <tr>
+                                <tr style="width: 100%;">
                                     <td style="display: flex; justify-content: space-between;">
                                         <p style="font-family:  Arial;font-size: 11px;margin: 0px; font-weight: 400;">
                                             <b>BILLED FROM:</b>
