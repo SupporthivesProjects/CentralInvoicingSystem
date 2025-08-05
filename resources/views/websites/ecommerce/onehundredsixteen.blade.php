@@ -17,7 +17,7 @@
                         <td style="padding: 0px;">
                             <table>
                                 <tr>
-                                    <td style="padding-left: 40px; width: 300px;">
+                                    <td style="padding-left: 40px; width: 100%;">
                                         <img src="{{ $company_logo }}" alt="" style="display: block; padding: 48px 0px 0px 0px;height:80px;">
                                     </td>
                                     <td style="width:300px; text-align: -webkit-right; padding-top: 40px; padding-right: 48px;">

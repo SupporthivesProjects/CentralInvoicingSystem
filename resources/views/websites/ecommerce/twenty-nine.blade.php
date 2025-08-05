@@ -22,7 +22,7 @@
                         <td style="padding: 0px;max-height: 130px;">
                             <table>
                                 <tr>
-                                    <td style="height: 64px; background: url('{{ $invoice_header_image }}') no-repeat;background-position:center;background-size:cover;width: 600px;">
+                                    <td style="height: 64px; background: url('{{ $invoice_header_image }}') no-repeat;background-position:center;background-size:cover;width: 100%;">
                                          <img src="{{ $company_logo }}" alt="" style="margin: auto; height: 50px; display: block;">
                                     </td>
                                     
@@ -34,10 +34,10 @@
 
                      <!-- Content -->
                     <tr >
-                        <td style="padding:40px;padding-top:0px;">
+                        <td style="padding:60px;padding-top:0px;">
                             <table>
                                 <tr>
-                                    <td style="padding-top: 30px;">
+                                    <td style="padding-top: 30px; width: 100%;">
                                         <p style="font-family: arial;font-size:10px;margin: 0px;font-weight: 400;">
                                             <b>Date</b> {{ $invoice_date }}
                                         </p>
@@ -54,7 +54,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td style="padding-top: 10px;width: 300px;">
+                                    <td style="padding-top: 10px;width: 100%;">
                                         <p style="font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;">
                                             <b>BILLED FROM:</b>
                                         </p>
