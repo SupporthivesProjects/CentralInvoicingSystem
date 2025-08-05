@@ -14,7 +14,7 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background:#e5c99e; height:18px; border-bottom:60px solid #3c4a4a;
+            background:#e5c99e; height:40px; border-bottom:60px solid #3c4a4a;
         }
     </style>
 </head>
@@ -42,14 +42,14 @@
         </tr>
         <!-- Contact Info -->
         <tr>
-            <td colspan="2" style="padding:0 0px 0 300px;">
+            <td colspan="2" style="padding:0 0px 0 250px;">
                 <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:20px;">
                     <tr>
-                        <td style="font-size:0.98em; padding-right:40px;width:20%;">
+                        <td style="font-size:0.98em; padding-right:40px;width:25%;">
                             <b>📞&nbsp;Phone:</b><br>
                             {{ $company_mobile }}
                         </td>
-                        <td style="font-size:0.98em; padding-right:40px;width:20%;">
+                        <td style="font-size:0.98em; padding-right:40px;width:25%;">
                             <b>✉️&nbsp;Email:</b><br>
                             {{ $company_email }}
                         </td>
