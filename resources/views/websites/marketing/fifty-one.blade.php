@@ -19,7 +19,7 @@
         }
         .footer-fixed-2 {
             position: fixed;
-            bottom: 100px;
+            bottom: 60px;
             left: 0;
             right: 0;
         }
@@ -134,10 +134,16 @@
               <strong>Address</strong><br />
               {!! $company_address !!}
             </td>
+            <td style="width: 20%;">
+              
+            </td>
             <td>
               <img src="{{ $invoice_image2 }}" width="20" style="vertical-align:middle; margin-bottom: 8px;" /> <br />
               <strong>Email</strong><br />
               {{ $company_email }}
+            </td>
+            <td style="width: 20%;">
+              
             </td>
             <td>
               <img src="{{ $invoice_image3 }}" width="20" style="vertical-align:middle; margin-bottom: 8px;" /> <br />
