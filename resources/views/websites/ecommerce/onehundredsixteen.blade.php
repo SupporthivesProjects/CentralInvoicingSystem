@@ -56,13 +56,13 @@
                                 </tr>
                             </table>
                             <br>
-                            <div style="min-height: 560px !important;">
+                            <div style="min-height: 540px !important;">
                                 <table style="border-collapse: collapse;">
                                     <tr style="border-collapse: collapse;height: 24px;">
                                         <td style="width: 100px; color: #000000; text-align: center; padding: 0px;font-family:  Arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse; border: 1px solid #000000;">
                                         <b>QUANTITY</b> 
                                         </td>
-                                        <td style="width: 250px; color: #000000; text-align: center; padding: 0px;font-family:  Arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse; border: 1px solid #000000;">
+                                        <td style="width: 350px; color: #000000; text-align: center; padding: 0px;font-family:  Arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse; border: 1px solid #000000;">
                                             <b>DESCRIPTION</b>
                                         </td>
                                         <td style="width: 150px; color: #000000; text-align: center; padding: 0px; font-family:  Arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse; border: 1px solid #000000;">
@@ -77,7 +77,7 @@
                                         <td style="width: 100px; color:#000000; text-align: center; padding: 0px 10px;font-family:  Arial;font-size: 10px;margin: 0px;font-weight: 400;border: 1px solid #000000;border-collapse: collapse;">
                                         1
                                         </td>
-                                        <td style="width: 250px; color:#000000; text-align:start; padding: 0px 10px;font-family:  Arial;font-size:10px;margin: 0px;font-weight: 400;border: 1px solid #000000;border-collapse: collapse;">
+                                        <td style="width: 350px; color:#000000; text-align:start; padding: 0px 10px;font-family:  Arial;font-size:10px;margin: 0px;font-weight: 400;border: 1px solid #000000;border-collapse: collapse;">
                                             {{ $product->name }}
                                         </td>
                                         <td style="width:100px; color:#000000; text-align:center;font-family:  Arial;font-size: 10px;margin: 0px;font-weight: 400;border: 1px solid #000000;border-collapse: collapse;">
