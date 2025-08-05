@@ -14,7 +14,7 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background:#e5c99e; height:18px; padding-top:40px; border-bottom:60px solid #3c4a4a;
+            background:#e5c99e; height:18px; border-bottom:60px solid #3c4a4a;
         }
     </style>
 </head>
@@ -152,9 +152,7 @@
                 </table>
             </td>
         </tr>
-        <tr class="section-space" style="height: 50px;">
-            <td colspan="2"></td>
-        </tr>
+        
         <div class="footer-fixed"></div>
         <!-- Footer Bar -->
         <!-- <tr>
