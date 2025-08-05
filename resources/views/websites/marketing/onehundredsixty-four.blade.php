@@ -66,17 +66,20 @@
             <td colspan="2" style="padding:0 30px;">
                 <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:20px;">
                     <tr>
-                        <td style="width:32%; font-size:0.98em; line-height:1.5; vertical-align:top; border-left: 1px solid #282828">
+                        <td style="width:32%; font-size:0.98em; line-height:1.5; vertical-align:top; border-left: 1px solid #282828; padding:10px 15px;">
                             <b style="font-size:1.05em;">To:  {{ $customer_name }}</b><br>
                             {{ $customer_email }}
                         </td>
                         
                         <td
-                            style="width:36%; font-size:0.97em; background:#f3f3f3; padding:10px 15px; border-radius:6px; vertical-align:top; border-left: 1px solid #282828">
+                            style="width:36%; font-size:0.97em; padding:10px 15px; vertical-align:top; border-left: 1px solid #282828">
                             <b>Invoice Details</b><br>
                             Invoice Date: {{ $invoice_date }}<br>
                             Issue Date: {{ $invoice_date }}<br>
                             Total Due: {{ site_currency() }} {{ number_format(($invoice_amount) ?? 0, 2) }}
+                        </td>
+                        <td
+                            style="width:32%; font-size:0.97em; padding:10px 15px; border-radius:6px; vertical-align:top;">
                         </td>
                     </tr>
                 </table>
@@ -152,6 +155,7 @@
         <tr class="section-space" style="height: 50px;">
             <td colspan="2"></td>
         </tr>
+        <div class="footer-fixed"></div>
         <!-- Footer Bar -->
         <!-- <tr>
             <td colspan="2" style="padding:0;">
@@ -166,7 +170,7 @@
         </tr> -->
     </table>
      <!-- Footer absolutely fixed for PDF -->
-     <div class="footer-fixed"></div>
+     
 </body>
 
 </html>
