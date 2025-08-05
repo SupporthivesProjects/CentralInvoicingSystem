@@ -23,7 +23,7 @@
                             <table style="width: 100%;">
                                 <tr>
                                     <td
-                                        style="height: 180px; background: url({{ $invoice_header_image }}) no-repeat;background-position: 100% 100%;background-size:cover;width: 600px;">
+                                        style="height: 180px; background: url({{ $invoice_header_image }}) no-repeat;background-position: 100% 100%;background-size:cover;width: 100%;">
                                         <img src="{{ $company_logo }}" alt=""
                                             style="height:60px;padding: 40px;padding-top: 80px;">
                                     </td>
