@@ -153,7 +153,9 @@
             </td>
         </tr>
         
-        <div class="footer-fixed"></div>
+        <tr class="footer-fixed">
+            <td style="height: 100px;"></td>
+        </tr>
         <!-- Footer Bar -->
         <!-- <tr>
             <td colspan="2" style="padding:0;">

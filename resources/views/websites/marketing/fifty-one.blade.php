@@ -22,6 +22,7 @@
             bottom: 60px;
             left: 0;
             right: 0;
+            width: 100%;
         }
     </style>
   </head>
@@ -148,7 +149,7 @@
             <td>
               <img src="{{ $invoice_image3 }}" width="20" style="vertical-align:middle; margin-bottom: 8px;" /> <br />
               <strong>Website</strong><br />
-              <a href="{{ $site->site_link }}" style="color: #000000">Brandbeknown.com</a>
+              <a href="{{ $site->site_link }}" style="color: #000000; text-decoration: none;">Brandbeknown.com</a>
             </td>
           </tr>
         </table>
