@@ -61,13 +61,26 @@ class CurrencyController extends Controller
             'message' => 'Rate updated successfully.'
         ]);
     }
+
+    public function deleteRate($id)
+    {
+        $rate = CurrencyRate::find($id);
+
+        if (!$rate) {
+            return response()->json(['message' => 'Currency rate not found.'], 404);
+        }
+
+        $rate->delete();
+        return response()->json(['message' => 'Currency rate deleted successfully.']);
+    }
+
     
 
     public function ajaxAdd(Request $request)
     {
         $data = $request->validate([
             'from_currency_id' => 'required|exists:currencies,id',
-            'to_currency_id' => 'required|exists:currencies,id|different:from_currency_id',
+            'to_currency_id' => 'required|exists:currencies,id',
             'rate' => 'required|numeric|min:0'
         ]);
     

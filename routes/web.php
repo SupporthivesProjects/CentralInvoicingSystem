@@ -82,6 +82,7 @@ Route::middleware(['auth', 'role:admin,staff,developer'])->group(function () {
     Route::get('/manage-currency-rates', [CurrencyController::class, 'manageRates'])->name('currency.manage.rates');
     Route::post('/currency-rate/update', [CurrencyController::class, 'ajaxUpdate'])->name('currencies.updateRate');
     Route::post('/currency-rate/add', [CurrencyController::class, 'ajaxAdd'])->name('currencies.storeRate');
+    Route::post('/currency-rate/delete/{id}', [CurrencyController::class, 'deleteRate'])->name('currencies.deleteRate');
 
     Route::get('/clear-products', [InvoiceController::class, 'clearProducts'])->name('clear.products');
     Route::post('/add-product', [InvoiceController::class, 'addProducts'])->name('add.products');

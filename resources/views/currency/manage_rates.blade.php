@@ -60,6 +60,8 @@
                                             </td>
                                             <td>
                                                 <button class="btn btn-sm btn-success update-rate">Update</button>
+                                                <button class="btn btn-danger btn-sm delete-rate" data-id="{{ $rate->id }}"><i class="bi bi-trash"></i></button>
+
                                             </td>
                                         </tr>
                                     @endforeach
@@ -192,4 +194,53 @@ $(document).ready(function () {
     });
 });
 </script>
+
+<script>
+    $(document).on('click', '.delete-rate', function (e) {
+    e.preventDefault();
+    let $btn = $(this);
+    let rateId = $btn.data('id');
+
+    let deleteUrl = "{{ route('currencies.deleteRate', ':id') }}".replace(':id', rateId);
+
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You are about to delete this currency rate.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const originalHtml = $btn.html();
+            $btn.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>');
+            $btn.prop('disabled', true);
+
+            $.ajax({
+                url: deleteUrl,
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function (response) {
+                    toastr.success(response.message);
+                    $('.delete-rate[data-id="' + rateId + '"]').closest('tr').remove();
+                },
+                error: function (xhr) {
+                    let msg = 'Something went wrong.';
+                    if (xhr.responseJSON?.message) {
+                        msg = xhr.responseJSON.message;
+                    }
+                    toastr.error(msg);
+                    $btn.html(originalHtml);
+                    $btn.prop('disabled', false);
+                }
+            });
+        }
+    });
+});
+
+</script>
+
 @endpush

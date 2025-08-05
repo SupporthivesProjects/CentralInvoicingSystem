@@ -38,25 +38,31 @@ class LaravelController extends Controller
 
     protected function generateSlug($categoryId)
     {
+        static $categoryCache = [];
+        
         $categorySlugs = [
-            'SEO Packages' => 'seo',
-            'PPC Packages' => 'ppc',
-            'ORM Packages' => 'orm',
-            'Social Media Packages' => 'social',
-            'Web Design And Development Packages' => 'wwd',
-            'Email Marketing Packages' => 'em',
+            'seo packages' => 'seo',
+            'ppc packages' => 'ppc',
+            'orm packages' => 'orm',
+            'social media packages' => 'social',
+            'web design and development packages' => 'wdd',
+            'email marketing packages' => 'em',
         ];
 
-        $name = DB::connection($this->connectionType)
-            ->table('categories')
-            ->where('id', $categoryId)
-            ->value('name') ?? 'unknown';
+        if (!isset($categoryCache[$categoryId])) {
+            $categoryCache[$categoryId] = DB::connection($this->connectionType)
+                ->table('categories')
+                ->where('id', $categoryId)
+                ->value('name') ?? 'Unknown';
+        }
 
+        $name = $categoryCache[$categoryId];
         $normalized = preg_replace('/\s+/', ' ', trim($name));
+        $normalizedLower = strtolower($normalized);
 
         return [
             'category_name' => $normalized,
-            'slug' => $categorySlugs[$normalized] ?? \Str::slug($normalized),
+            'slug' => $categorySlugs[$normalizedLower] ?? \Str::slug($normalized),
         ];
     }
 
@@ -83,7 +89,7 @@ class LaravelController extends Controller
             ->when($priceFrom && $priceTo, function ($query) use ($priceFrom, $priceTo) {
                 return $query->whereBetween('unit_price', [$priceFrom, $priceTo]);
             })
-           // ->inRandomOrder()
+            ->inRandomOrder()
             ->get();
 
         if ($categoryId || $noOfProducts) {
