@@ -45,16 +45,16 @@
             <td colspan="2" style="padding:0 0px 0 300px;">
                 <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:20px;">
                     <tr>
-                        <td style="font-size:0.98em; padding-right:40px;">
-                            <b>📞 Phone:</b><br>
+                        <td style="font-size:0.98em; padding-right:40px;width:20%;">
+                            <b>📞&nbsp;Phone:</b><br>
                             {{ $company_mobile }}
                         </td>
-                        <td style="font-size:0.98em; padding-right:40px;">
-                            <b>✉️ Email:</b><br>
+                        <td style="font-size:0.98em; padding-right:40px;width:20%;">
+                            <b>✉️&nbsp;Email:</b><br>
                             {{ $company_email }}
                         </td>
                         <td style="font-size:0.98em;">
-                            <b>🏠 Address:</b><br>
+                            <b>🏠&nbsp;Address:</b><br>
                             {!! $company_address !!}
                         </td>
                     </tr>
@@ -66,18 +66,13 @@
             <td colspan="2" style="padding:0 30px;">
                 <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:20px;">
                     <tr>
-                        <td style="width:32%; font-size:0.98em; line-height:1.5; vertical-align:top;">
+                        <td style="width:32%; font-size:0.98em; line-height:1.5; vertical-align:top; border-left: 1px solid #282828">
                             <b style="font-size:1.05em;">To:  {{ $customer_name }}</b><br>
                             {{ $customer_email }}
                         </td>
-                        <td style="width:32%; font-size:0.98em; line-height:1.5; vertical-align:top;">
-                            <b style="font-size:1.05em;">{{ $site_name }}</b><br>
-                            A: {!! $company_address !!}<br>
-                            E: {{ $company_email }}<br>
-                            P: {{ $company_mobile }}
-                        </td>
+                        
                         <td
-                            style="width:36%; font-size:0.97em; background:#f3f3f3; padding:10px 15px; border-radius:6px; vertical-align:top;">
+                            style="width:36%; font-size:0.97em; background:#f3f3f3; padding:10px 15px; border-radius:6px; vertical-align:top; border-left: 1px solid #282828">
                             <b>Invoice Details</b><br>
                             Invoice Date: {{ $invoice_date }}<br>
                             Issue Date: {{ $invoice_date }}<br>
@@ -94,24 +89,24 @@
                     style="margin-top:30px; border-collapse:collapse; font-size:1em;">
                     <tr>
                         <th
-                            style="background:#f3f3f3; font-weight:bold; letter-spacing:1px; border-bottom:1px solid #ccc; padding:12px 8px; text-align:left;">
+                            style="background: transparent; font-weight:bold; letter-spacing:1px; border-bottom:1px solid #D8A34E; border-top:1px solid #D8A34E; padding:12px 8px; text-align:left;">
                             PRODUCT DESCRIPTIONS</th>
                         <th
-                            style="background:#f3f3f3; font-weight:bold; letter-spacing:1px; border-bottom:1px solid #ccc; padding:12px 8px; text-align:left;">
+                            style="background: transparent; font-weight:bold; letter-spacing:1px; border-bottom:1px solid #D8A34E; border-top:1px solid #D8A34E; padding:12px 8px; text-align:left;">
                             Length</th>
                         <th
-                            style="background:#f3f3f3; font-weight:bold; letter-spacing:1px; border-bottom:1px solid #ccc; padding:12px 8px; text-align:left;">
+                            style="background: transparent; font-weight:bold; letter-spacing:1px; border-bottom:1px solid #D8A34E; border-top:1px solid #D8A34E; padding:12px 8px; text-align:left;">
                             Quantity</th>
                         <th
-                            style="background:#f3f3f3; font-weight:bold; letter-spacing:1px; border-bottom:1px solid #ccc; padding:12px 8px; text-align:right;">
+                            style="background: transparent; font-weight:bold; letter-spacing:1px; border-bottom:1px solid #D8A34E; border-top:1px solid #D8A34E; padding:12px 8px; text-align:right;">
                             AMOUNT</th>
                     </tr>
                     @foreach($products as $product)
                     <tr>
-                        <td style="border-bottom:1px solid #ccc; padding:12px 8px;"><b>{{ $product->name }}</td>
-                        <td style="border-bottom:1px solid #ccc; padding:12px 8px;">{{ $product->subscription ?? '-' }}</td>
-                        <td style="border-bottom:1px solid #ccc; padding:12px 8px;">1</td>
-                        <td style="border-bottom:1px solid #ccc; padding:12px 8px; text-align:right;">{{ site_currency() }} {{ number_format($product->unit_price ?? 0, 2) }}</td>
+                        <td style="background: transparent; border-bottom:1px solid #282828; padding:12px 8px;"><b>{{ $product->name }}</td>
+                        <td style="background: transparent; border-bottom:1px solid #282828; padding:12px 8px;">{{ $product->subscription ?? '-' }}</td>
+                        <td style="background: transparent; border-bottom:1px solid #282828; padding:12px 8px;">1</td>
+                        <td style="background: transparent; border-bottom:1px solid #282828; padding:12px 8px; text-align:right;">{{ site_currency() }} {{ number_format($product->unit_price ?? 0, 2) }}</td>
                     </tr>
                     @endforeach
                     
