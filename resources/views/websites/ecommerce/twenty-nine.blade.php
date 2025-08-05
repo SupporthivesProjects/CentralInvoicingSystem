@@ -18,10 +18,10 @@
             <td align="center">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
                     <!-- Header -->
-                    <tr>
-                        <td style="padding: 0px;max-height: 130px;">
-                            <table>
-                                <tr>
+                    <tr style="width: 100%;">
+                        <td style="padding: 0px;max-height: 130px; width: 100%;">
+                            <table style="width: 100%;">
+                                <tr style="width: 100%;">
                                     <td style="height: 64px; background: url('{{ $invoice_header_image }}') no-repeat;background-position:center;background-size:cover;width: 100%;">
                                          <img src="{{ $company_logo }}" alt="" style="margin: auto; height: 50px; display: block;">
                                     </td>
@@ -34,7 +34,7 @@
 
                      <!-- Content -->
                     <tr >
-                        <td style="padding:60px;padding-top:0px;">
+                        <td style="padding: 48px;padding-top:0px;">
                             <table>
                                 <tr>
                                     <td style="padding-top: 30px; width: 100%;">
@@ -69,7 +69,7 @@
                                  
                             </table>
                             
-                            <div style="min-height: 820px !important;">
+                            <div style="min-height: 800px !important;">
                             <table style="border-collapse: collapse;border-bottom: 0px;border: 0px;">
                                 <tr style="border-collapse: collapse;height: 30px;background-color: #0078D7; color: white;border-bottom: 0px;border: 0px;">
                                     <td style="width: 200px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 600;border-collapse: collapse;padding-left: 5px;">

@@ -31,7 +31,7 @@
                                 </tr>
                             </table>
                         </td>
-                        <td style="padding:0px 48px 200px 48px;">
+                        <td style="padding:0px 60px 200px 60px;">
                             <br>
                             <br>
                             <table style="width: 100%;">
@@ -56,7 +56,7 @@
                                 </tr>
                             </table>
                             <br>
-                            <div style="min-height: 540px !important;">
+                            <div style="min-height: 550px !important;">
                                 <table style="border-collapse: collapse;">
                                     <tr style="border-collapse: collapse;height: 24px;">
                                         <td style="width: 100px; color: #000000; text-align: center; padding: 0px;font-family:  Arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse; border: 1px solid #000000;">
