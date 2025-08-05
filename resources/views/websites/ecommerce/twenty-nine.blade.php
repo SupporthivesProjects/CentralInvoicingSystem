@@ -34,7 +34,7 @@
 
                      <!-- Content -->
                     <tr >
-                        <td style="padding: 70px;padding-top:0px;">
+                        <td style="padding: 90px;padding-top:0px;">
                             <table>
                                 <tr>
                                     <td style="padding-top: 30px; width: 100%;">
