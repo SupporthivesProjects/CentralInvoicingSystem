@@ -15,7 +15,7 @@
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
             <td align="center">
-                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
+                <table width="100%"  cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
                     style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
                     <!-- Header -->
                     <tr>
@@ -88,7 +88,7 @@
 
                             <br>
                             <br>
-                            <div style="min-height: 800px !important;">
+                            <div style="min-height: 500px !important;">
                                 <table style="border-collapse: collapse;">
                                     <tr
                                         style="border-collapse: collapse;height: 24px;border-top: 1px solid black;border-bottom: 1px solid black;">
