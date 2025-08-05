@@ -70,11 +70,13 @@
                                         <p style="font-family: arial;font-size: 11px;margin: 0px;font-weight: 400;">
                                             {{ $company_address }}
                                         </p>
-                                        <p style="font-family: arial;font-size: 11px;margin: 0px;font-weight: 400;">
+                                        <br>
+                                        <br>
+                                        <!-- <p style="font-family: arial;font-size: 11px;margin: 0px;font-weight: 400;">
                                             Phone {{ $company_mobile }}
-                                        </p>
+                                        </p> -->
                                         <p style="font-family: arial;font-size: 11px;margin: 0px;font-weight: 400;">
-                                            {{ $company_email }} | {{ $site->site_link }}
+                                            {{ $company_email }} 
                                         </p>
                                     <td style="padding-top: 10px;width: 300px;text-align: right;">
                                         <p style="font-family: arial;font-size: 11px;margin: 0px;font-weight: 400;">
@@ -95,7 +97,7 @@
                                             {{ $customer_name }}
                                         </p>
                                         <p style="font-family: arial;font-size: 11px;margin: 0px;font-weight: 400;">
-                                            Phone {{ $customer_mobile }} | {{ $customer_email }}
+                                            {{ $customer_mobile }} | {{ $customer_email }}
                                         </p>
                                     <td style="padding-top: 10px;width: 300px;text-align: right;">
                                         <p style="font-family: arial;font-size: 11px;margin: 0px;font-weight: 400;">
