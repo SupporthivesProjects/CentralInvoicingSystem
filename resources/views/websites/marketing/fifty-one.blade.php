@@ -22,6 +22,7 @@
             bottom: 60px;
             left: 0;
             right: 0;
+            width: 100%;
         }
     </style>
   </head>
@@ -125,7 +126,7 @@
     </tr>
 
 
-    <tr class="footer-fixed-2">
+    <!-- <tr class="footer-fixed-2">
       <td style="padding: 30px 20px;">
         <table width="100%" style="text-align: center; font-size: 13px; color: #444;">
           <tr>
@@ -148,12 +149,40 @@
             <td>
               <img src="{{ $invoice_image3 }}" width="20" style="vertical-align:middle; margin-bottom: 8px;" /> <br />
               <strong>Website</strong><br />
-              <a href="{{ $site->site_link }}" style="color: #000000">Brandbeknown.com</a>
+              <a href="{{ $site->site_link }}" style="color: #000000; text-decoration: none;">Brandbeknown.com</a>
             </td>
           </tr>
         </table>
       </td>
-    </tr>
+    </tr> -->
+
+    <div class="footer-fixed-2" style="padding: 30px 20px;">
+      <div style="display: flex; justify-content: space-between; text-align: center; font-size: 13px; color: #444; flex-wrap: wrap;">
+        
+        <div style="flex: 1; min-width: 150px; margin: 10px;">
+          <img src="{{ $invoice_image1 }}" width="20" style="vertical-align: middle; margin-bottom: 8px;" /><br />
+          <strong>Address</strong><br />
+          {!! $company_address !!}
+        </div>
+
+        
+
+        <div style="flex: 1; min-width: 150px; margin: 10px;">
+          <img src="{{ $invoice_image2 }}" width="20" style="vertical-align: middle; margin-bottom: 8px;" /><br />
+          <strong>Email</strong><br />
+          {{ $company_email }}
+        </div>
+
+
+        <div style="flex: 1; min-width: 150px; margin: 10px;">
+          <img src="{{ $invoice_image3 }}" width="20" style="vertical-align: middle; margin-bottom: 8px;" /><br />
+          <strong>Website</strong><br />
+          <a href="{{ $site->site_link }}" style="color: #000000; text-decoration: none;">Brandbeknown.com</a>
+        </div>
+
+      </div>
+    </div>
+
     <div class="footer-fixed"></div>
 
     <!-- Footer -->
