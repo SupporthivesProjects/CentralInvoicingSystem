@@ -17,6 +17,12 @@
             background: url('{{ $invoice_header_image }}') center center no-repeat;
             background-size: cover;
         }
+        .footer-fixed-2 {
+            position: fixed;
+            bottom: 100px;
+            left: 0;
+            right: 0;
+        }
     </style>
   </head>
 <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #ffffff;">
@@ -119,7 +125,7 @@
     </tr>
 
 
-    <tr>
+    <tr class="footer-fixed-2">
       <td style="padding: 30px 20px;">
         <table width="100%" style="text-align: center; font-size: 13px; color: #444;">
           <tr>
@@ -142,6 +148,7 @@
         </table>
       </td>
     </tr>
+    <div class="footer-fixed"></div>
 
     <!-- Footer -->
 
@@ -160,7 +167,7 @@
   </table>
 
    <!-- Footer absolutely fixed for PDF -->
-   <div class="footer-fixed"></div>
+   
 </body>
 
 </html>
