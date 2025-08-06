@@ -228,41 +228,59 @@
                         </td>
                     </tr>
                    </tbody>
-                   <tfoot class="footer-fixed">
-                        <tr>
-                            <td style="background:url('{{ $invoice_footer_image }}') no-repeat; background-size: cover; height: 220px; padding: 33px 45px;">
-                                <table>
-                                    <tbody>
-                                        <tr>
-                                            <td>
-                                                <img src="{{ $company_logo }}" alt="" class="img-fluid" style="width: 206px;height: 150px;">
-                                            </td>
-                                            <td style="text-align: right; width: 100%;">
-                                                <p style="font-family: 'Roboto'; font-size: 9px; font-weight: 400; color: #fff;">
-                                                {{ $company_name }}<br>
-                                                {!! $company_address !!}<br>
-                                                </p>
-                                                <p style="font-family: 'Roboto'; font-size: 9px; font-weight: 400; color: #fff; padding: 5px 0px;">
-                                                
-                                                {{ $site->company_mobile }}
-                                                </p>
-                                                <p style="font-family: 'Roboto'; font-size: 9px; font-weight: 400; color: pink;">
-                                                {{ $company_email }}
-                                                </p>
-                                            </td>
-                                            <td style="padding-left: 12px;">
-                                                <div style="background: #d75151;display: flex; flex-direction: column; gap: 21px;padding: 37px 7px; transform: translate(10px, 37px);">
-                                                    <img src="{{ $invoice_image1 }}" class="img-fluid" style="width: 10px;height: 10px; object-fit:contain">
-                                                    <img src="{{ $invoice_image2 }}" class="img-fluid" style="width: 10px;height: 10px; object-fit:contain">
-                                                    <img src="{{ $invoice_image3 }}" class="img-fluid" style="width: 10px;height: 10px; object-fit:contain">
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </td>
-                        </tr>
-                   </tfoot>
+                   <div class="invoice-footer" style="
+                        background: url('{{ $invoice_footer_image }}') no-repeat center;
+                        background-size: cover;
+                        height: 220px;
+                        padding: 33px 45px;
+                        display: flex;
+                        align-items: flex-start;
+                        justify-content: space-between;
+                        gap: 20px;
+                        flex-wrap: wrap;
+                    ">
+
+                    <!-- Company Logo -->
+                    <div style="flex-shrink: 0;">
+                        <img src="{{ $company_logo }}" alt="Company Logo" style="width: 206px; height: 150px;">
+                    </div>
+
+                    <!-- Company Info -->
+                    <div style="flex: 1; text-align: right;">
+                        <p style="font-family: 'Roboto'; font-size: 9px; font-weight: 400; color: #fff;">
+                        {{ $company_name }}<br>
+                        {!! $company_address !!}<br>
+                        </p>
+                        <p style="font-family: 'Roboto'; font-size: 9px; font-weight: 400; color: #fff; padding: 5px 0;">
+                        {{ $site->company_mobile }}
+                        </p>
+                        <p style="font-family: 'Roboto'; font-size: 9px; font-weight: 400; color: pink;">
+                        {{ $company_email }}
+                        </p>
+                    </div>
+
+                    <!-- Vertical Icons -->
+                    <div style="
+                        padding-left: 12px;
+                        display: flex;
+                        align-items: flex-start;
+                    ">
+                        <div style="
+                        background: #d75151;
+                        display: flex;
+                        flex-direction: column;
+                        gap: 21px;
+                        padding: 37px 7px;
+                        transform: translate(10px, 37px);
+                        ">
+                        <img src="{{ $invoice_image1 }}" style="width: 10px; height: 10px; object-fit: contain;">
+                        <img src="{{ $invoice_image2 }}" style="width: 10px; height: 10px; object-fit: contain;">
+                        <img src="{{ $invoice_image3 }}" style="width: 10px; height: 10px; object-fit: contain;">
+                        </div>
+                    </div>
+
+                    </div>
+
                 </table>
             </td>
         </tr>
