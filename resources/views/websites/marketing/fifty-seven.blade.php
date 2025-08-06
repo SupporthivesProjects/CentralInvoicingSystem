@@ -112,6 +112,15 @@
            font-weight: 300;
            color: grey;
         }
+        .footer-fixed {
+            position: fixed;
+            bottom: 0px;
+            left: 0;
+            right: 0;
+            height: 100px;
+            background: url('{{ $invoice_footer_image }}') center center no-repeat;
+            background-size: cover;
+        }
        
     </style>
 </head>
@@ -219,7 +228,7 @@
                         </td>
                     </tr>
                    </tbody>
-                   <tfoot>
+                   <tfoot class="footer-fixed">
                         <tr>
                             <td style="background:url('{{ $invoice_footer_image }}') no-repeat; background-size: cover; height: 220px; padding: 33px 45px;">
                                 <table>
