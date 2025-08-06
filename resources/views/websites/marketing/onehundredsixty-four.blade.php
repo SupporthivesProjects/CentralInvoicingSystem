@@ -22,7 +22,7 @@
 
 
 <body style="font-family:'Segoe UI', Arial, sans-serif; margin:0; ">
-    <table cellpadding="0" cellspacing="0" border="0" align="center" style="background:#fff; width:100%;height: 100%; margin:30px auto; box-shadow:0 0 8px #ccc;">
+    <table cellpadding="0" cellspacing="0" border="0" align="center" style="background:#fff; width:100%;height: 100%; margin:30px auto;">
         <tr>
             <td colspan="2" style="padding:0;">
                 <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
@@ -42,14 +42,14 @@
         </tr>
         <!-- Contact Info -->
         <tr>
-            <td colspan="2" style="padding:0 0px 0 250px;">
+            <td colspan="2" style="padding:0 0px 0 100px;">
                 <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:20px;">
                     <tr>
-                        <td style="font-size:0.98em; padding-right:40px;width:25%;">
+                        <td style="font-size:0.98em; padding-right:40px;width:30%;">
                             <b>📞&nbsp;Phone:</b><br>
                             {{ $company_mobile }}
                         </td>
-                        <td style="font-size:0.98em; padding-right:40px;width:25%;">
+                        <td style="font-size:0.98em; padding-right:40px;width:30%;">
                             <b>✉️&nbsp;Email:</b><br>
                             {{ $company_email }}
                         </td>
