@@ -37,7 +37,7 @@
                     <!-- Content -->
                     <tr>
                         <td
-                            style="padding:40px;padding-top:0px;background: url({{ $invoice_image1 }}) no-repeat;background-position: center;background-size: cover;height:444px;">
+                            style="padding:40px;padding-top:0px;padding-bottom:10px;background: url({{ $invoice_image1 }}) no-repeat;background-position:top center;background-size: cover;height:444px;">
                             <table style="border-collapse: collapse;;">
                                 <tr style="border-collapse: collapse;height: 35px;">
                                     <td
