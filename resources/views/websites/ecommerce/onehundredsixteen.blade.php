@@ -31,7 +31,7 @@
                                 </tr>
                             </table>
                         </td>
-                        <td style="padding:0px 60px 200px 60px; width: 100%;">
+                        <td style="padding:0px 60px 200px 60px;">
                             <br>
                             <br>
                             <table style="width: 100%;">
