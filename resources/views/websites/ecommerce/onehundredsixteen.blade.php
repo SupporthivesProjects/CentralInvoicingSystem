@@ -56,9 +56,9 @@
                                 </tr>
                             </table>
                             <br>
-                            <div style="min-height: 850px !important;">
-                                <table style="border-collapse: collapse;">
-                                    <tr style="border-collapse: collapse;height: 24px;">
+                            <div style="min-height: 850px !important; width: 100%">
+                                <table style="border-collapse: collapse; width: 100%;">
+                                    <tr style="border-collapse: collapse;height: 24px; width: 100%">
                                         <td style="width: 20%; color: #000000; text-align: center; padding: 0px;font-family:  Arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse; border: 1px solid #000000;">
                                         <b>QUANTITY</b> 
                                         </td>
@@ -68,7 +68,7 @@
                                         <td style="width: 20%; color: #000000; text-align: center; padding: 0px; font-family:  Arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse; border: 1px solid #000000;">
                                             <b>UNIT PRICE</b>
                                         </td>
-                                        <td style="width: 40%; color: #000000; text-align: center; padding: 0px;font-family:  Arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse; border: 1px solid #000000;">
+                                        <td style="width: 20%; color: #000000; text-align: center; padding: 0px;font-family:  Arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse; border: 1px solid #000000;">
                                             <b>TOTAL</b>
                                         </td>
                                     </tr>
