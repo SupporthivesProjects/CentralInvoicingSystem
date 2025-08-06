@@ -37,7 +37,7 @@
                     <!-- Content -->
                     <tr>
                         <td
-                            style="padding:40px;padding-top:0px;background: url({{ $invoice_image1 }}) no-repeat;background-position: center;background-size: cover;height:444px;">
+                            style="padding:40px;padding-top:0px;padding-bottom:10px;background: url({{ $invoice_image1 }}) no-repeat;background-position:top center;background-size: cover;height:444px;">
                             <table style="border-collapse: collapse;;">
                                 <tr style="border-collapse: collapse;height: 35px;">
                                     <td
@@ -88,6 +88,7 @@
 
                             <br>
                             <br>
+<<<<<<< HEAD
                             <div style="min-height: 500px !important;">
                             <table style="border-collapse: collapse;">
                                 <tr
@@ -113,6 +114,33 @@
                                     style="border-collapse: collapse;height: 10px;border-top: 1px solid black;border-bottom: 1px solid black;">
                                     <td
                                         style="width: 250px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;border-right: 1px solid black;">
+=======
+                            <div style="min-height: 800px !important;">
+                                <table style="border-collapse: collapse;">
+                                    <tr
+                                        style="border-collapse: collapse;height: 24px;border-top: 1px solid black;border-bottom: 1px solid black;">
+                                        <td
+                                            style="width: 250px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;border-right: 1px solid black;">
+                                            <b>Item Descriptions</b>
+                                        </td>
+                                        <td
+                                            style="width: 150px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;border-right: 1px solid black;">
+                                            <b>Unit Price</b>
+                                        </td>
+                                        <td
+                                            style="width: 150px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;border-right: 1px solid black;">
+                                            <b>Quantity</b>
+                                        </td>
+                                        <td
+                                            style="width: 150px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
+                                            <b>AMOUNT</b>
+                                        </td>
+                                    </tr>
+                                    <tr
+                                        style="border-collapse: collapse;height: 10px;border-top: 1px solid black;border-bottom: 1px solid black;">
+                                        <td
+                                            style="width: 250px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;border-right: 1px solid black;">
+>>>>>>> pr-160
 
                                     </td>
                                     <td
