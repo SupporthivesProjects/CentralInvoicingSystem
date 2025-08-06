@@ -6,6 +6,7 @@
         body {
             margin: 0;
             padding: 0;
+            margin-bottom: -2px;
         }
         .footer-fixed {
             position: fixed;

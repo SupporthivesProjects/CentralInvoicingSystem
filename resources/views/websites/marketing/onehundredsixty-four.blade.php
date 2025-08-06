@@ -21,7 +21,7 @@
 
 
 
-<body style="font-family:'Segoe UI', Arial, sans-serif; margin:0; background:#f9f9f9;">
+<body style="font-family:'Segoe UI', Arial, sans-serif; margin:0; ">
     <table cellpadding="0" cellspacing="0" border="0" align="center" style="background:#fff; width:100%;height: 100%; margin:30px auto; box-shadow:0 0 8px #ccc;">
         <tr>
             <td colspan="2" style="padding:0;">
