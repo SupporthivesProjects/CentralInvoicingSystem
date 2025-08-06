@@ -117,6 +117,7 @@
             bottom: 0px;
             left: 0;
             right: 0;
+            width: 100%;
             /* background: url('{{ $invoice_footer_image }}') center center no-repeat; */
             /* background-size: cover; */
         }
