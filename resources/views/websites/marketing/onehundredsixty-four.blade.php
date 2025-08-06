@@ -43,7 +43,7 @@
         <!-- Contact Info -->
         <tr>
             <td colspan="2" style="padding:0 0px 0 100px;">
-                <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:20px;">
+                <table align="top" width="100%" cellpadding="0" cellspacing="0" style="margin-top:100px;">
                     <tr>
                         <td style="font-size:0.98em; padding-right:40px;width:30%;">
                             <b>📞&nbsp;Phone:</b><br>
