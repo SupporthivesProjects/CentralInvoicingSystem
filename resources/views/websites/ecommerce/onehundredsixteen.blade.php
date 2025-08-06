@@ -20,7 +20,7 @@
                                     <td style="padding-left: 60px; width: 100%;">
                                         <img src="{{ $company_logo }}" alt="" style="display: block; padding: 48px 0px 0px 0px;height:80px;">
                                     </td>
-                                    <td style="width:300px; text-align: -webkit-right; padding-top: 40px; padding-right: 48px;">
+                                    <td style="width:300px; text-align: -webkit-right; padding-top: 40px; padding-right: 60px;">
                                         <h2 style="font-family: Arial; font-size: 24px; margin: 0px;">INVOICE</h2>
                                         <br>
                                         <p style="font-family: Arial;font-size: 12px;margin: 0px;font-weight: 400;">
@@ -56,7 +56,7 @@
                                 </tr>
                             </table>
                             <br>
-                            <div style="min-height: 650px !important;">
+                            <div style="min-height: 850px !important;">
                                 <table style="border-collapse: collapse;">
                                     <tr style="border-collapse: collapse;height: 24px;">
                                         <td style="width: 100px; color: #000000; text-align: center; padding: 0px;font-family:  Arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse; border: 1px solid #000000;">
