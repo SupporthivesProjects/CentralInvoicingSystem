@@ -153,7 +153,7 @@
                     </tr>
                     <tr>
                         <td style="padding: 0px 50px 24px;">
-                            <div style="min-height: 650px !important;">
+                            <div style="min-height: 450px !important;">
                                 <table class="table-main-list" style="width: 100%;">
                                     <tbody>
                                         <tr>
