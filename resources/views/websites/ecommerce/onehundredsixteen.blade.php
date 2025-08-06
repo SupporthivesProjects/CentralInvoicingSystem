@@ -59,31 +59,31 @@
                             <div style="min-height: 850px !important; width: 100%">
                                 <table style="border-collapse: collapse; width: 100%;">
                                     <tr style="border-collapse: collapse;height: 24px; width: 100%">
-                                        <td style="width: 20%; color: #000000; text-align: center; padding: 0px;font-family:  Arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse; border: 1px solid #000000;">
+                                        <td style="width: 100px; color: #000000; text-align: center; padding: 0px;font-family:  Arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse; border: 1px solid #000000;">
                                         <b>QUANTITY</b> 
                                         </td>
-                                        <td style="width: 40%; color: #000000; text-align: center; padding: 0px;font-family:  Arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse; border: 1px solid #000000;">
+                                        <td style="width: 400px; color: #000000; text-align: center; padding: 0px;font-family:  Arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse; border: 1px solid #000000;">
                                             <b>DESCRIPTION</b>
                                         </td>
-                                        <td style="width: 20%; color: #000000; text-align: center; padding: 0px; font-family:  Arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse; border: 1px solid #000000;">
+                                        <td style="width: 100px; color: #000000; text-align: center; padding: 0px; font-family:  Arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse; border: 1px solid #000000;">
                                             <b>UNIT PRICE</b>
                                         </td>
-                                        <td style="width: 20%; color: #000000; text-align: center; padding: 0px;font-family:  Arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse; border: 1px solid #000000;">
+                                        <td style="width: 100px; color: #000000; text-align: center; padding: 0px;font-family:  Arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse; border: 1px solid #000000;">
                                             <b>TOTAL</b>
                                         </td>
                                     </tr>
                                     @foreach($products as $product)
                                     <tr style="border-collapse: collapse;height: 24px;">
-                                        <td style="width: 20%; color:#000000; text-align: center; padding: 0px 10px;font-family:  Arial;font-size: 10px;margin: 0px;font-weight: 400;border: 1px solid #000000;border-collapse: collapse;">
+                                        <td style="width: 100px; color:#000000; text-align: center; padding: 0px 10px;font-family:  Arial;font-size: 10px;margin: 0px;font-weight: 400;border: 1px solid #000000;border-collapse: collapse;">
                                         1
                                         </td>
-                                        <td style="width: 40%; color:#000000; text-align:start; padding: 0px 10px;font-family:  Arial;font-size:10px;margin: 0px;font-weight: 400;border: 1px solid #000000;border-collapse: collapse;">
+                                        <td style="width: 400px; color:#000000; text-align:start; padding: 0px 10px;font-family:  Arial;font-size:10px;margin: 0px;font-weight: 400;border: 1px solid #000000;border-collapse: collapse;">
                                             {{ $product->name }}
                                         </td>
-                                        <td style="width: 20%; color:#000000; text-align:center;font-family:  Arial;font-size: 10px;margin: 0px;font-weight: 400;border: 1px solid #000000;border-collapse: collapse;">
+                                        <td style="width: 100px; color:#000000; text-align:center;font-family:  Arial;font-size: 10px;margin: 0px;font-weight: 400;border: 1px solid #000000;border-collapse: collapse;">
                                         {{ site_currency() }} {{  number_format($product->unit_price, 2) }}
                                         </td>
-                                        <td style="width: 20%; color:#000000; text-align:center;font-family:  Arial;font-size: 10px;margin: 0px;font-weight: 400;border: 1px solid #000000;border-collapse: collapse;">
+                                        <td style="width: 100px; color:#000000; text-align:center;font-family:  Arial;font-size: 10px;margin: 0px;font-weight: 400;border: 1px solid #000000;border-collapse: collapse;">
                                         {{ site_currency() }} {{  number_format($product->unit_price, 2) }}
                                         </td>
                                     </tr>
