@@ -19,7 +19,7 @@
                     style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
                     <!-- Header -->
                     <tr>
-                        <td style="padding: 0px;max-height: 130px;">
+                        <td style="padding: 0px;max-height: 130px; height:20%">
                             <table style="width: 100%;">
                                 <tr>
                                     <td
@@ -37,7 +37,7 @@
                     <!-- Content -->
                     <tr>
                         <td
-                            style="padding:40px;padding-top:0px;background: url({{ $invoice_image1 }}) no-repeat;background-position:center;background-size: cover;height:444px;">
+                            style="padding:40px;padding-top:0px;background: url({{ $invoice_image1 }}) no-repeat;background-position:center;background-size: cover;height:444px; height:60%;">
                             <table style="border-collapse: collapse;;">
                                 <tr style="border-collapse: collapse;height: 35px;">
                                     <td
@@ -259,7 +259,7 @@
 
                     <!-----------Footer----------->
                     <tr>
-                        <td>
+                        <td style="height:20%">
                             <table width="100%" cellspacing="0" cellpadding="" border="0px"
                                 style="border-collapse: collapse;">
                                 <tr
