@@ -8,6 +8,15 @@
             padding: 0px;
             margin: 0px;
         }
+
+        .footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+
     </style>
 </head>
 
@@ -257,30 +266,24 @@
                     </tr>
                     <!-- Content End-->
 
-                    <!-----------Footer----------->
-                    <tr>
-                        <td style="height:20%">
-                            <table width="100%" cellspacing="0" cellpadding="" border="0px"
-                                style="border-collapse: collapse;">
-                                <tr
-                                    style="background: url({{ $invoice_footer_image }}) no-repeat;background-position: center;background-size: cover;height: 45px;padding:50px;background-size:cover;width: 100%;">
-                                    <td style="text-align:center;">
-                                        <p
-                                            style="text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight:700;color:whitesmoke;">
-
-                                        </p>
-                                    </td>
-                                </tr>
-                                <tr>
-                            </table>
-                        </td>
-                    </tr>
-                    <!-----------Footer End----------->
+                   
 
                 </table>
             </td>
         </tr>
     </table>
+    <!-- Fixed Footer outside the table -->
+    <div class="footer">
+        <table width="100%" cellspacing="0" cellpadding="0" border="0">
+            <tr style="background: url('{{ $invoice_footer_image }}') no-repeat center; background-size: cover;">
+                <td style="text-align:center; height: 45px;">
+                    <p style="font-family: arial; font-size: 10px; font-weight: 700; color: whitesmoke;">
+                        {{ $site_name }} | {{ $company_email }} | {{ $site->site_link }}
+                    </p>
+                </td>
+            </tr>
+        </table>
+    </div>
 </body>
 
 </html>
