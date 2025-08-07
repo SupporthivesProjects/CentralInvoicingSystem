@@ -153,7 +153,7 @@
                     </tr>
                     <tr>
                         <td style="padding: 0px 50px 24px;">
-                            <div style="min-height: 650px !important;">
+                            <div style="min-height: 450px !important;">
                                 <table class="table-main-list" style="width: 100%;">
                                     <tbody>
                                         <tr>
@@ -228,6 +228,7 @@
                         </td>
                     </tr>
                    </tbody>
+                   <div class="footer-fixed">
                    <div class="invoice-footer" style="
                         background: url('{{ $invoice_footer_image }}') no-repeat center;
                         background-size: cover;
@@ -240,45 +241,46 @@
                         flex-wrap: wrap;
                     ">
 
-                    <!-- Company Logo -->
-                    <div style="flex-shrink: 0;">
-                        <img src="{{ $company_logo }}" alt="Company Logo" style="width: 206px; height: 150px;">
-                    </div>
-
-                    <!-- Company Info -->
-                    <div style="flex: 1; text-align: right;">
-                        <p style="font-family: 'Roboto'; font-size: 9px; font-weight: 400; color: #fff;">
-                        {{ $company_name }}<br>
-                        {!! $company_address !!}<br>
-                        </p>
-                        <p style="font-family: 'Roboto'; font-size: 9px; font-weight: 400; color: #fff; padding: 5px 0;">
-                        {{ $site->company_mobile }}
-                        </p>
-                        <p style="font-family: 'Roboto'; font-size: 9px; font-weight: 400; color: pink;">
-                        {{ $company_email }}
-                        </p>
-                    </div>
-
-                    <!-- Vertical Icons -->
-                    <div style="
-                        padding-left: 12px;
-                        display: flex;
-                        align-items: flex-start;
-                    ">
-                        <div style="
-                        background: #d75151;
-                        display: flex;
-                        flex-direction: column;
-                        gap: 21px;
-                        padding: 37px 7px;
-                        transform: translate(10px, 37px);
-                        ">
-                        <img src="{{ $invoice_image1 }}" style="width: 10px; height: 10px; object-fit: contain;">
-                        <img src="{{ $invoice_image2 }}" style="width: 10px; height: 10px; object-fit: contain;">
-                        <img src="{{ $invoice_image3 }}" style="width: 10px; height: 10px; object-fit: contain;">
+                        <!-- Company Logo -->
+                        <div style="flex-shrink: 0;">
+                            <img src="{{ $company_logo }}" alt="Company Logo" style="width: 206px; height: 150px;">
                         </div>
-                    </div>
 
+                        <!-- Company Info -->
+                        <div style="flex: 1; text-align: right;">
+                            <p style="font-family: 'Roboto'; font-size: 9px; font-weight: 400; color: #fff;">
+                            {{ $company_name }}<br>
+                            {!! $company_address !!}<br>
+                            </p>
+                            <p style="font-family: 'Roboto'; font-size: 9px; font-weight: 400; color: #fff; padding: 5px 0;">
+                            {{ $site->company_mobile }}
+                            </p>
+                            <p style="font-family: 'Roboto'; font-size: 9px; font-weight: 400; color: pink;">
+                            {{ $company_email }}
+                            </p>
+                        </div>
+
+                        <!-- Vertical Icons -->
+                        <div style="
+                            padding-left: 12px;
+                            display: flex;
+                            align-items: flex-start;
+                        ">
+                            <div style="
+                            background: #d75151;
+                            display: flex;
+                            flex-direction: column;
+                            gap: 21px;
+                            padding: 37px 7px;
+                            transform: translate(10px, 37px);
+                            ">
+                            <img src="{{ $invoice_image1 }}" style="width: 10px; height: 10px; object-fit: contain;">
+                            <img src="{{ $invoice_image2 }}" style="width: 10px; height: 10px; object-fit: contain;">
+                            <img src="{{ $invoice_image3 }}" style="width: 10px; height: 10px; object-fit: contain;">
+                            </div>
+                        </div>
+
+                    </div>
                     </div>
 
                 </table>
