@@ -5,11 +5,10 @@
     <title>{{ $site_name . $invoice_number }}</title>
 </head>
 
-<body style="margin: 0; padding: 40px 0;  font-family: Arial, sans-serif;">
+<body style="margin: 0; padding:0px 0;  font-family: Arial, sans-serif;">
 
     <!-- Main White Invoice Table -->
-    <table align="center" width="600" cellpadding="0" cellspacing="0"EK Sung.
-        style="background-color: #ffffff; color: #000; box-shadow: 0 0 10px rgba(0,0,0,0.15); border-radius: 10px; overflow: hidden; background: url('{{ $invoice_image1 }}') no-repeat center top; background-size: 100% 100%;">
+    <table align="center" width="100%" cellpadding="0" cellspacing="0" style="background-color: #ffffff; color: #000; box-shadow: 0 0 10px rgba(0,0,0,0.15); border-radius: 10px; overflow: hidden; background: url('{{ $invoice_image1 }}') no-repeat center top; background-size: 100% 100%;max-width:100%;">
 
         <!-- Header -->
         <tr>
@@ -61,83 +60,82 @@
             </td>
         </tr>
 
-        <!-- Invoice To -->
+   
         <tr style="position: relative;">
             <td style="padding: 20px; padding-bottom: 10px; position: absolute; width: 300px; left: 25px; top: 25px;">
                 <div style="background-color: #f79d7c; padding: 15px 20px; border-radius: 25px;">
                     <p style="margin: 0; font-size: 14px; color: white;">Invoice To</p>
-                    <h2 style="margin: 5px 0 0 0; color: #333;">{{ $customer_name }}Background image. Kannada URL. </h2>
+                    <h2 style="margin: 5px 0 0 0; color: #333;">{{ $customer_name }} </h2>
                 </div>
             </td>
         </tr>
 
-        <!-- Invoice Items -->
-        <tr>
-            <td style="padding: 190px 20px 0px;">
-                <table width="100%" cellpadding="10" cellspacing="0" style="border-collapse: collapse;">
-                    <thead>
-                        <tr style="background-color: #7ebbf3; color: #000; font-size: 13px; font-weight: bold;">
-                            <th align="left"
-                                style="padding: 12px; border-top-left-radius: 12px; border-bottom-left-radius: 12px;">
-                                ITEM DESCRIPTION</th>
-                            <th align="center" style="padding: 12px;">UNIT PRICE</th>
-                            <th align="center" style="padding: 12px;">QTY</th>
-                            <th align="right"
-                                style="padding: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px;">
-                                TOTAL</th>
+       
+            <tr>
+                <td style="padding: 190px 20px 0px;">
+                <div style="min-height: 738px !important;">
+                    <table width="100%" cellpadding="10" cellspacing="0" style="border-collapse: collapse;">
+                        <thead>
+                            <tr style="background-color: #7ebbf3; color: #000; font-size: 13px; font-weight: bold;">
+                                <th align="left"
+                                    style="padding: 12px; border-top-left-radius: 12px; border-bottom-left-radius: 12px;">
+                                    ITEM DESCRIPTION</th>
+                                <th align="center" style="padding: 12px;">UNIT PRICE</th>
+                                <th align="center" style="padding: 12px;">QTY</th>
+                                <th align="right"
+                                    style="padding: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px;">
+                                    TOTAL</th>
+                            </tr>
+                        </thead>
+                        <!-- Repeating Item Rows -->
+                        @foreach($products as $product)
+                        <tr style="background-color: #fde7c8; font-size: 12px;">
+                            <td>{{ $product->name }}</td>
+                            <td align="center">{{ site_currency() . number_format($product->unit_price, 2) }}</td>
+                            <td align="center">1</td>
+                            <td align="right">{{ site_currency() . number_format($product->unit_price, 2) }}</td>
                         </tr>
-                    </thead>
-                    <!-- Repeating Item Rows -->
-                    @foreach($products as $product)
-                    <tr style="background-color: #fde7c8; font-size: 12px;">
-                        <td>{{ $product->name }}</td>
-                        <td align="center">{{ site_currency() . number_format($product->unit_price, 2) }}</td>
-                        <td align="center">1</td>
-                        <td align="right">{{ site_currency() . number_format($product->unit_price, 2) }}</td>
-                    </tr>
-                    @endforeach
-                </table>
-            </td>
-        </tr>
+                        @endforeach
 
-        <!-- Totals Section -->
-        <tr>
-            <td style="padding: 20px 20px 130px;">
-                <table align="right" style="width: 200px; font-family: Arial, sans-serif; font-size: 13px;">
-                    <tr>
-                        <td colspan="2"
-                            style="background-color: #7ebbf3;border-radius: 30px;padding: 10px 16px;color: #000;font-weight: 600;display: flex;justify-content: space-between;">
-                            <span>Sub Total</span>
-                            <span>{{ site_currency() . number_format($invoice_amount + $discount_amount, 2) }}</span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="height: 10px;"></td>
-                    </tr> <!-- spacing -->
+                        <tr>
+                            <td colspan="3"></td>
+                            <td 
+                                style="background-color: #7ebbf3;border-radius: 30px;padding: 10px 16px;color: #000;font-weight: 600;display: flex;justify-content: space-between;">
+                                <span>Sub Total</span>
+                                <span>{{ site_currency() . number_format($invoice_amount + $discount_amount, 2) }}</span>
+                            </td>
+                        </tr>
+                        <tr> <td colspan="3"></td>
+                        <td  style="height: 10px;"></td>
+                        </tr> <!-- spacing -->
 
-                    <tr>
-                        <td colspan="2"
-                            style="background-color: #f79d7c;border-radius: 30px;padding: 10px 16px;color: #000;font-weight: 600;display: flex;justify-content: space-between;">
-                            <span>Discount</span>
-                            <span>{{ site_currency() . number_format($discount_amount, 2) }}</span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="height: 10px;"></td>
-                    </tr> <!-- spacing -->
+                        <tr>
+                        <td colspan="3"></td>
+                        <td 
+                                style="background-color: #f79d7c;border-radius: 30px;padding: 10px 16px;color: #000;font-weight: 600;display: flex;justify-content: space-between;">
+                                <span>Discount</span>
+                                <span>{{ site_currency() . number_format($discount_amount, 2) }}</span>
+                            </td>
+                        </tr>
+                        <tr>
+                        <td colspan="3"></td>
+                        <td  style="height: 10px;"></td>
+                        </tr> <!-- spacing -->
 
-                    <tr>
-                        <td colspan="2"
-                            style="background-color: #ffffff;border-radius: 30px;padding: 10px 16px;color: #000;font-weight: 700;display: flex;justify-content: space-between;">
-                            <span>TOTAL</span>
-                            <span>{{ site_currency() . number_format($invoice_amount, 2) }}</span>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
+                        <tr>
+                        <td colspan="3"></td>
+                        <td 
+                                style="background-color: #ffffff;border-radius: 30px;padding: 10px 16px;color: #000;font-weight: 700;display: flex;justify-content: space-between;">
+                                <span>TOTAL</span>
+                                <span>{{ site_currency() . number_format($invoice_amount, 2) }}</span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                </td>
+            </tr>
 
-
+          
     </table>
 
 </body>
