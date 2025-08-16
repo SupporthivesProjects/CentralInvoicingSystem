@@ -2,6 +2,17 @@
 <html>
 <head>
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
+    <style>
+        .footer-fixed {
+        position: fixed;
+        bottom: 0px;
+        left: 0;
+        right: 0;
+        width: 100%;
+        /* background: url('{{ $invoice_footer_image }}') center center no-repeat; */
+        /* background-size: cover; */
+        }
+    </style>
 </head>
 <body>
     <table width="100%" cellspacing="0" height="100%" cellpadding="0" border="0">
@@ -45,7 +56,6 @@
                                         </p>
                                     </td>
                                     <td style="width:300px;
-                                    padding: 40px;
                                     text-align: right;">
                                         <h1 style="font-family: arial;font-size: 20px;margin: 0px;font-weight: 700;">INVOICE</h1><br><br>
                                         <p style="font-family: arial;font-size:10px;margin: 0px;font-weight: 400;">
@@ -140,7 +150,7 @@
                     <tr>
                         <td>
                             <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;"> 
-                                <tr style="background: url('{{ $invoice_footer_image }}') no-repeat;background-position: center;background-size: cover;height:141px;padding:50px;background-size:cover;width: 100%;">
+                                <tr class="footer-fixed" style="background: url('{{ $invoice_footer_image }}') no-repeat;background-position: center;background-size: cover;height:141px;padding:50px;background-size:cover;width: 100%;">
                                     <td style="text-align:center;">
                                         <p style="text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight:700;color:whitesmoke;">
                                             THANK YOU FOR YOUR BUSINESS
