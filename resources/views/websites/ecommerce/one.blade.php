@@ -29,6 +29,10 @@
             background-position: center;
             background-size: cover;
         }
+        body{
+            margin: 0px;
+            padding: 0px;
+        }
 
     </style>
 </head>

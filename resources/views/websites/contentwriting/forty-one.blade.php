@@ -2,6 +2,12 @@
 <html>
 <head>
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
+    <style>
+        body{
+            margin: 0px;
+            padding: 0px;
+        }
+    </style>
 </head>
 <body>
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
