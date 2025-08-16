@@ -6,10 +6,12 @@
     <style>
         body, table, td {
             background-color: transparent !important;
+            margin: 0;
+            padding: 0;
         }
         table td {
-            padding-top: 10px !important;
-            padding-bottom: 10px !important;
+            /* padding-top: 10px !important;
+            padding-bottom: 10px !important; */
         }
         .invoice_header_image {
             background-image: url('{{ $invoice_header_image }}');
