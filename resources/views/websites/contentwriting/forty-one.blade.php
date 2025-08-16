@@ -6,8 +6,8 @@
 <body>
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
-            <td align="center" style="padding: 0px 0;">
-                <table   width="100%" cellspacing="0" cellpadding="0" bgcolor="#ffffff" style=" width: 100px;border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
+            <td align="center" style="padding: 0px;">
+                <table   width="100%" cellspacing="0" cellpadding="0" bgcolor="#ffffff" style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
                     <tr>
                         <td style="padding: 0px;max-height: 130px;">
                             <table  width="100%" cellspacing="0" cellpadding="0">
