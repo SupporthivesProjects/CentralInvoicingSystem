@@ -793,36 +793,48 @@ class LaravelController extends Controller
 
         if ($company_detail_type === 'remote') {
 
-            $invoice_data['site_name']    = $request->input('remote_site_name') ?? '';
-            $invoice_data['company_name']    = $request->input('remote_company_name') ?? '';
-            $invoice_data['company_email']   = $request->input('remote_company_email') ?? '';
-            $invoice_data['company_mobile']  = $request->input('remote_company_mobile') ?? '';
-            $invoice_data['company_address'] = $request->input('remote_company_address') ?? '';
+            $invoice_data['site_name']          = $request->input('remote_site_name') ?? '';
+            $invoice_data['company_name']       = $request->input('remote_company_name') ?? '';
+            $invoice_data['company_email']      = $request->input('remote_company_email') ?? '';
+            $invoice_data['company_mobile']     = $request->input('remote_company_mobile') ?? '';
+            $invoice_data['company_address']    = $request->input('remote_company_address') ?? '';
+            $invoice_data['registration_number'] = $request->input('remote_registration_number') ?? '';
+            $invoice_data['license_number']      = $request->input('remote_license_number') ?? '';
+        
             $remote_database = DB::connection($this->connectionType)->table('general_settings')->orderByDesc('updated_at')->first();
-
+        
             if ($remote_database) {
                 DB::connection($this->connectionType)->table('general_settings')->where('id', $remote_database->id)
                     ->update([
-                        'site_name'    => $request->input('remote_site_name') ?? '',
-                        //'company_name' => $request->input('remote_company_name') ?? '',
-                        'email'        => $request->input('remote_company_email') ?? '',
-                        'phone'        => $request->input('remote_company_mobile') ?? '',
-                        'address'      => $request->input('remote_company_address') ?? '',
-                        'updated_at'   => now(),
+                        'site_name'            => $request->input('remote_site_name') ?? '',
+                        //'company_name'        => $request->input('remote_company_name') ?? '',
+                        'email'                => $request->input('remote_company_email') ?? '',
+                        'phone'                => $request->input('remote_company_mobile') ?? '',
+                        'address'              => $request->input('remote_company_address') ?? '',
+                       // 'registration_number'  => $request->input('remote_registration_number') ?? '',
+                       // 'license_number'       => $request->input('remote_license_number') ?? '',
+                        'updated_at'           => now(),
                     ]);
             }
+        
         } else {
-
-            $invoice_data['site_name']    = $request->input('local_site_name') ?? '';
-            $invoice_data['company_name']    = $request->input('local_company_name') ?? '';
-            $invoice_data['company_email']   = $request->input('local_company_email') ?? '';
-            $invoice_data['company_mobile']  = $request->input('local_company_mobile') ?? '';
-            $invoice_data['company_address'] = $request->input('local_company_address') ?? '';
-            $site->site_name       = $invoice_data['site_name'];
-            $site->company_name    = $invoice_data['company_name'];
-            $site->company_email   = $invoice_data['company_email'];
-            $site->company_mobile  = $invoice_data['company_mobile'];
-            $site->company_address = $invoice_data['company_address'];
+        
+            $invoice_data['site_name']          = $request->input('local_site_name') ?? '';
+            $invoice_data['company_name']       = $request->input('local_company_name') ?? '';
+            $invoice_data['company_email']      = $request->input('local_company_email') ?? '';
+            $invoice_data['company_mobile']     = $request->input('local_company_mobile') ?? '';
+            $invoice_data['company_address']    = $request->input('local_company_address') ?? '';
+            $invoice_data['registration_number'] = $request->input('registration_number') ?? '';
+            $invoice_data['license_number']      = $request->input('license_number') ?? '';
+        
+            $site->site_name          = $invoice_data['site_name'];
+            $site->company_name       = $invoice_data['company_name'];
+            $site->company_email      = $invoice_data['company_email'];
+            $site->company_mobile     = $invoice_data['company_mobile'];
+            $site->company_address    = $invoice_data['company_address'];
+            $site->registration_number = $invoice_data['registration_number'];
+            $site->license_number      = $invoice_data['license_number'];
+        
             $site->save();
         }
 
