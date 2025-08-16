@@ -81,7 +81,7 @@
                                     </td>
                                 </tr>
                             </table>
-                            <div style="min-height: 500px !important;">
+                            <div style="min-height: 100% !important;">
                                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
                                     style="border-collapse: collapse;margin-top: 40px;">
                                     <tr style="background: #D3E5F9;">
