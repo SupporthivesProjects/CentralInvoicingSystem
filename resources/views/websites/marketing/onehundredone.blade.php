@@ -90,35 +90,47 @@
     </tr>
 
    <div class="footer-fixed">
-    <tr>
-      <td style="padding: 30px 20px;">
-        <table width="100%" style="text-align: center; font-size: 13px; color: #444;">
-          <tr>
-            <td>
-              <img src="{{ $invoice_image1 }}" width="20" style="vertical-align:middle; margin-bottom: 8px;" /> <br />
-              <strong>Address</strong><br />
-              {!! $company_address !!}
-            </td>
-            <td>
-              <img src="{{ $invoice_image2 }}" width="20" style="vertical-align:middle; margin-bottom: 8px;" /> <br />
-              <strong>Email</strong><br />
-              {{ $company_email }}
-            </td>
-            <!-- <td>
-              <img src="{{ $invoice_image3 }}" width="20" style="vertical-align:middle; margin-bottom: 8px;" /> <br />
-              <strong>Phone</strong><br />
-              {{ $company_mobile }}
-            </td> -->
-          </tr>
-        </table>
-      </td>
-    </tr>
+    <!-- Contact Info -->
+<div style="padding: 30px 20px;">
+  <div style="display: flex; justify-content: center; gap: 40px; text-align: center; font-size: 13px; color: #444; flex-wrap: wrap;">
 
-    <!-- Footer -->
-    <tr style=" background: url('{{ $invoice_footer_image }}');background-repeat: no-repeat;background-size: cover;background-position: center; height: 45px;">
-      <td style=" padding: 0px; color: #ffffff; font-size: 12px; text-align: center;">
-      </td>
-    </tr>
+    <!-- Address -->
+    <div style="width: 50%;">
+      <img src="{{ $invoice_image1 }}" width="20" style="vertical-align: middle; margin-bottom: 8px;" /><br />
+      <strong>Address</strong><br />
+      {!! $company_address !!}
+    </div>
+
+    <!-- Email -->
+    <div style="width: 50%;">
+      <img src="{{ $invoice_image2 }}" width="20" style="vertical-align: middle; margin-bottom: 8px;" /><br />
+      <strong>Email</strong><br />
+      {{ $company_email }}
+    </div>
+
+    <!-- Phone (optional: uncomment if needed) -->
+    <!--
+    <div>
+      <img src="{{ $invoice_image3 }}" width="20" style="vertical-align: middle; margin-bottom: 8px;" /><br />
+      <strong>Phone</strong><br />
+      {{ $company_mobile }}
+    </div>
+    -->
+  </div>
+</div>
+
+<!-- Footer Background -->
+<div style="
+  background: url('{{ $invoice_footer_image }}') no-repeat center;
+  background-size: cover;
+  height: 45px;
+  color: #ffffff;
+  font-size: 12px;
+  text-align: center;
+  padding: 0;
+">
+</div>
+
     </div>
   </table>
 </body>
