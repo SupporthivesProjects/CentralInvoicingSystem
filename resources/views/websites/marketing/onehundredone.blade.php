@@ -92,17 +92,17 @@
    <div class="footer-fixed">
     <!-- Contact Info -->
 <div style="padding: 30px 20px;">
-  <div style="display: flex; justify-content: center; gap: 40px; text-align: center; font-size: 13px; color: #444; flex-wrap: wrap;">
+  <div style="display: flex; justify-content: center; gap: 0px; text-align: center; font-size: 13px; color: #444; flex-wrap: wrap;">
 
     <!-- Address -->
-    <div style="width: 50%;">
+    <div style="width: 48%;">
       <img src="{{ $invoice_image1 }}" width="20" style="vertical-align: middle; margin-bottom: 8px;" /><br />
       <strong>Address</strong><br />
       {!! $company_address !!}
     </div>
 
     <!-- Email -->
-    <div style="width: 50%;">
+    <div style="width: 48%;">
       <img src="{{ $invoice_image2 }}" width="20" style="vertical-align: middle; margin-bottom: 8px;" /><br />
       <strong>Email</strong><br />
       {{ $company_email }}
