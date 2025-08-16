@@ -84,19 +84,19 @@
                             </table>
                             <br>
                             <br>
-                            <table style="border: 1px solid black;border-collapse: collapse;">
+                            <table width="100%" style="border: 1px solid black;border-collapse: collapse;">
                                 <tr style="border: 1px solid black;border-collapse: collapse;height: 24px;">
-                                    <td style="width: 100px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border: 1px solid black;border-collapse: collapse;">
+                                    <td style="text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border: 1px solid black;border-collapse: collapse;">
                                        <b>QUANTITY</b> 
                                     </td>
-                                    <td style="width: 250px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border: 1px solid black;border-collapse: collapse;">
+                                    <td style="min-width: 250px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border: 1px solid black;border-collapse: collapse;">
                                         <b>DESCRIPTION</b>
                                     </td>
                                     
-                                    <td style="width: 150px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border: 1px solid black;border-collapse: collapse;">
+                                    <td style="min-width: 150px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border: 1px solid black;border-collapse: collapse;">
                                         <b>UNIT PRICE</b>
                                     </td>
-                                    <td style="width:100px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border: 1px solid black;border-collapse: collapse;">
+                                    <td style="min-width:100px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border: 1px solid black;border-collapse: collapse;">
                                         <b>TOTAL</b>
                                     </td>
                                 </tr>
@@ -155,7 +155,7 @@
                                 <div style="
                                     background: url('{{ $invoice_footer_image }}') no-repeat center;
                                     background-size: cover;
-                                    height: 141px;
+                                    height: 80px;
                                     width: 100%;
                                     display: flex;
                                     align-items: center;
