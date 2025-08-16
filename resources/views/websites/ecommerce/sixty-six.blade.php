@@ -32,7 +32,7 @@
                         <td style="padding:40px;padding-top:0px;">
                             <table>
                                 <tr>
-                                    <td style="width:900px;text-align: center;">
+                                    <td style="text-align: center; align-items: center;">
                                        <h1 style="color:#474748;text-align: center;margin: 0px;font-size: 36;font-family: Arial;">
                                         INVOICE
                                        </h1>
