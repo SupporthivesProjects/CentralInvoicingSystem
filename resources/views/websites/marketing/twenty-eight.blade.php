@@ -37,7 +37,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td style="text-align: right;padding-right: 40px;">
+                        <td style="text-align: right;padding-right: 40px;height: fit-content;">
                             <h1 style="font-family: arial; font-size: 20px; margin: 0; font-weight: 700;">
                             INVOICE
                             </h1>
@@ -52,7 +52,7 @@
                     </tr>
 
                     <tr>
-                        <td style="padding:40px;background: url('') no-repeat;background-position: center;background-size: cover;height:444px;">
+                        <td style="padding:40px;background: url('') no-repeat;background-position: center;background-size: cover;height: fit-content;">
                             <table width="100%" cellspacing="0" height="100%" cellpadding="0" border="0">
                                 <tr>
                                     <td>
