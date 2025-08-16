@@ -25,7 +25,7 @@
                 <table width="100%" height="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse;">
                     <!-- Header -->
                     <tr>
-                        <td style="padding: 0px;max-height: 130px;">
+                        <td style="padding: 40px;max-height: 130px;">
                             <table>
                                 <tr>
                                     <td style="height: 40px;">
@@ -37,7 +37,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td style="text-align: right;">
+                        <td style="text-align: right;padding-right: 40px;">
                             <h1 style="font-family: arial; font-size: 20px; margin: 0; font-weight: 700;">
                             INVOICE
                             </h1>
@@ -53,7 +53,7 @@
 
                     <tr>
                         <td style="padding:40px;background: url('') no-repeat;background-position: center;background-size: cover;height:444px;">
-                            <table>
+                            <table width="100%" cellspacing="0" height="100%" cellpadding="0" border="0">
                                 <tr>
                                     <td>
                                         <p style="font-family: arial;font-size: 10px;margin: 0px;font-weight: 700;">
@@ -84,7 +84,6 @@
                             </table>
                             <br>
                             <br>
-                            <div style="min-height: 500px !important;">
                             <table style="border: 1px solid black;border-collapse: collapse;">
                                 <tr style="border: 1px solid black;border-collapse: collapse;height: 24px;">
                                     <td style="width: 100px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border: 1px solid black;border-collapse: collapse;">
@@ -148,7 +147,6 @@
                                     </td>
                                 </tr>
                             </table>
-                        </div>
                         </td>
                     </tr>
                     <tr>
