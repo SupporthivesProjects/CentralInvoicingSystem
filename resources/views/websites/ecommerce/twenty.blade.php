@@ -125,7 +125,7 @@
 
                                     </td>
                                     <td style="display: flex;">
-                                    <table border="1" style="border-collapse: collapse; margin-bottom: 20px; width: 100%;min-height: 500px !important;border: 1px solid #ccc !important;">
+                                    <table border="1" style="border-collapse: collapse; margin-bottom: 20px; width: 100%;min-height: 650px !important;border: 1px solid #ccc !important;">
                                         <tr style="height: 50px;">
                                             <td style="width: 200px; padding-left: 10px;border-bottom: 1px solid #ccc !important;">
                                                 <p style="color: rgb(128, 128, 128); font-size: 11px; font-weight: 600; font-family: Calibri; margin: 0px;">
