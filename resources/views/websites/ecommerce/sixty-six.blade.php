@@ -30,7 +30,7 @@
                     <!-- Content -->
                     <tr>
                         <td style="padding:40px;padding-top:0px;">
-                            <table>
+                            <table style="width:100%;">
                                 <tr>
                                     <td style="text-align: center; align-items: center;">
                                        <h1 style="color:#474748;text-align: center;margin: 0px;font-size: 36;font-family: Arial;">
@@ -61,7 +61,7 @@
                                 </tr>
                             </table>
                            <br>
-                           <div style="min-height: 700px !important;">
+                           <div style="min-height: 650px !important;">
                             <table style="border-collapse: collapse;">
                                 <tr style="height:40px;border-top: 1px solid #474748;border-bottom: 1px solid #474748;">
                                     <td style="width: 250px;padding: 10px;">
