@@ -2,9 +2,20 @@
 <html>
 <head>
   <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
+  <style>
+    .footer-fixed {
+      position: fixed;
+      bottom: 0px;
+      left: 0;
+      right: 0;
+      width: 100%;
+      /* background: url('{{ $invoice_footer_image }}') center center no-repeat; */
+      /* background-size: cover; */
+    }
+  </style>
 </head>
 <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #ffffff;">
-  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width: 90%; margin: 0 auto; border: 1px solid #ccc;">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin: 0 auto; border: 0px solid #ccc;">
     <tr style=" background: url('{{ $invoice_header_image }}');background-repeat: no-repeat; background-size: cover; background-position: center;height: 134px;">
       <td style="padding: 65px 0px 10px 24px;">
         <!-- <img src="./img/image1.png" alt="" width="166px"> -->
@@ -23,7 +34,7 @@
             </td>
             <td valign="top" width="33%">
               <strong>Invoice From</strong><br/>
-              <span style="color: #e64a4a;">{{ $site_name }}</span><br/>
+              <span>{{ $site_name }}</span><br/>
               {{ $company_email }}<br/>
               {{ $company_mobile }}<br/>
               {!! $company_address !!}
@@ -78,7 +89,7 @@
       </td>
     </tr>
 
-   
+   <div class="footer-fixed">
     <tr>
       <td style="padding: 30px 20px;">
         <table width="100%" style="text-align: center; font-size: 13px; color: #444;">
@@ -93,11 +104,11 @@
               <strong>Email</strong><br />
               {{ $company_email }}
             </td>
-            <td>
+            <!-- <td>
               <img src="{{ $invoice_image3 }}" width="20" style="vertical-align:middle; margin-bottom: 8px;" /> <br />
               <strong>Phone</strong><br />
               {{ $company_mobile }}
-            </td>
+            </td> -->
           </tr>
         </table>
       </td>
@@ -108,6 +119,7 @@
       <td style=" padding: 0px; color: #ffffff; font-size: 12px; text-align: center;">
       </td>
     </tr>
+    </div>
   </table>
 </body>
 
