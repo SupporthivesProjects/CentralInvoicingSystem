@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>{{ $site_name . $invoice_number }}</title>
+    <title>{{ $site_name . $invoice_number }} </title>
 </head>
 <body style="padding: 0px; margin: 0px;">
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
