@@ -8,8 +8,8 @@
             background-color: transparent !important;
         }
         table td {
-            padding-top: 10px !important;
-            padding-bottom: 10px !important;
+            /* padding-top: 10px !important;
+            padding-bottom: 10px !important; */
         }
         .invoice_header_image {
             background-image: url('{{ $invoice_header_image }}');
