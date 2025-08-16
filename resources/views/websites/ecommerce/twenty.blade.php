@@ -6,6 +6,8 @@
     <style>
         body, table, td {
             background-color: transparent !important;
+            margin: 0;
+            padding: 0;
         }
         table td {
             /* padding-top: 10px !important;
