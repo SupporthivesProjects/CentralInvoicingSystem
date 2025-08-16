@@ -68,7 +68,7 @@
                                          <p style="font-size: 10px;">BILL FROM</p>
                                           <p style="font-size: 10px;">
                                             <b>
-                                             {{ $site->site_link }}<br>{!! $company_address !!}
+                                                contentcriteria.com<br>{!! $company_address !!}
                                             </b>
                                         </p>
                                     </td>
