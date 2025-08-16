@@ -3,6 +3,13 @@
 
 <head>
     <title>Your Email Title</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -44,10 +51,10 @@
                                             style="margin: 0px;font-family:Roboto;font-size:9px;color:#6f6f71;line-height: 12px;">
                                             <b>Email :</b> {{ $customer_email }}
                                         </p>
-                                        <p
+                                        <!-- <p
                                             style="margin: 0px;font-family:Roboto;font-size:9px;color:#6f6f71;line-height: 12px;">
                                             <b>Phone :</b> {{ $customer_mobile }}
-                                        </p>
+                                        </p> -->
                                     </td>
                                     <td style="padding-right:50px;" align="right">
                                         <p
