@@ -3,6 +3,10 @@
 <head>
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
     <style>
+        body, * {
+            margin: 0px;
+            padding: 0px;
+        }
         .footer-fixed {
         position: fixed;
         bottom: 0px;
@@ -17,14 +21,14 @@
 <body>
     <table width="100%" cellspacing="0" height="100%" cellpadding="0" border="0">
         <tr>
-            <td align="center" bgcolor="#f2f2f2" style="padding: 0px 0;">
-                <table width="100%" height="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
+            <td align="center" bgcolor="#FFFFFF" style="padding: 0px 0;">
+                <table width="100%" height="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse;">
                     <!-- Header -->
                     <tr>
                         <td style="padding: 0px;max-height: 130px;">
                             <table>
                                 <tr>
-                                    <td style="height: 40px; width: 600px;">
+                                    <td style="height: 40px;">
                                        
                                     </td>
                                     
@@ -55,8 +59,7 @@
                                         Email: {{ $company_email }} 
                                         </p>
                                     </td>
-                                    <td style="width:300px;
-                                    text-align: right;">
+                                    <td style="text-align: right;">
                                         <h1 style="font-family: arial;font-size: 20px;margin: 0px;font-weight: 700;">INVOICE</h1><br><br>
                                         <p style="font-family: arial;font-size:10px;margin: 0px;font-weight: 400;">
                                            DATE: {{ $invoice_date }}
@@ -150,7 +153,7 @@
                     <tr>
                         <td>
                             <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;"> 
-                                <tr class="footer-fixed" style="background: url('{{ $invoice_footer_image }}') no-repeat;background-position: center;background-size: cover;height:141px;padding:50px;background-size:cover;width: 100%;">
+                                <tr style="background: url('{{ $invoice_footer_image }}') no-repeat;background-position: center;background-size: cover;height:141px;padding:50px;background-size:cover;width: 100%;">
                                     <td style="text-align:center;">
                                         <p style="text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight:700;color:whitesmoke;">
                                             THANK YOU FOR YOUR BUSINESS
