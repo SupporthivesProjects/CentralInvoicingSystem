@@ -29,7 +29,7 @@
                             <table>
                                 <tr>
                                     <td style="height: 40px;">
-                                       
+                                       <img src="{{ $invoice_header_image }}" alt="" style="margin: auto; display: block;height: 40px;">
                                     </td>
                                     
                                 </tr>
@@ -37,38 +37,39 @@
                         </td>
                     </tr>
                     <tr>
-                        <td style="padding:40px;padding-top:0px;background: url('') no-repeat;background-position: center;background-size: cover;height:444px;">
+                        <td style="text-align: right;">
+                            <h1 style="font-family: arial; font-size: 20px; margin: 0; font-weight: 700;">
+                            INVOICE
+                            </h1>
+                            <p style="font-family: arial; font-size: 10px; margin: 0; font-weight: 400;">
+                            DATE: {{ $invoice_date }}
+                            </p>
+                            <p style="font-family: arial; font-size: 10px; margin: 0; font-weight: 400;">
+                            INVOICE #{{ $invoice_number }}
+                            </p>
+                            <br>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding:40px;background: url('') no-repeat;background-position: center;background-size: cover;height:444px;">
                             <table>
                                 <tr>
-                                    <td ><img src="{{ $invoice_header_image }}" alt="" style="margin: auto; display: block;height: 40px;">
-                                         <br>
-                                        <br><br><br><br>
+                                    <td>
                                         <p style="font-family: arial;font-size: 10px;margin: 0px;font-weight: 700;">
-                                            
-                                             <strong>   BILLED FROM:</strong>
-                                            
+                                            <strong>BILLED FROM:</strong>
                                         </p>
                                         <p style="font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;">
-                                         {{ $site_name }} 
-                                        </p>
-                                        
-                                        <p style="font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;">
-                                            Website:{{ $site->site_link }} 
+                                            {{ $site_name }} 
                                         </p>
                                         <p style="font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;">
-                                        Email: {{ $company_email }} 
+                                            Website: {{ $site->site_link }} 
+                                        </p>
+                                        <p style="font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;">
+                                            Email: {{ $company_email }} 
                                         </p>
                                     </td>
                                     <td style="text-align: right;">
-                                        <h1 style="font-family: arial;font-size: 20px;margin: 0px;font-weight: 700;">INVOICE</h1><br><br>
-                                        <p style="font-family: arial;font-size:10px;margin: 0px;font-weight: 400;">
-                                           DATE: {{ $invoice_date }}
-                                        </p>
-
-                                        <p style="font-family: arial;font-size:10px;margin: 0px;font-weight: 400;">
-                                           INVOICE #{{ $invoice_number}}
-                                        </p><br>
-                                        
                                         <p style="font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;">
                                             <b>
                                                 BILLED TO:
@@ -152,16 +153,29 @@
                     </tr>
                     <tr>
                         <td>
-                            <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;"> 
-                                <tr style="background: url('{{ $invoice_footer_image }}') no-repeat;background-position: center;background-size: cover;height:141px;padding:50px;background-size:cover;width: 100%;">
-                                    <td style="text-align:center;">
-                                        <p style="text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight:700;color:whitesmoke;">
-                                            THANK YOU FOR YOUR BUSINESS
-                                        </p>
-                                    </td>          
-                                </tr>
-                                <tr>              
-                            </table>
+                            <div class="footer-fixed">
+                                <div style="
+                                    background: url('{{ $invoice_footer_image }}') no-repeat center;
+                                    background-size: cover;
+                                    height: 141px;
+                                    width: 100%;
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    padding: 50px;
+                                    ">
+                                    <p style="
+                                        text-align: center;
+                                        font-family: arial;
+                                        font-size: 10px;
+                                        margin: 0;
+                                        font-weight: 700;
+                                        color: whitesmoke;
+                                    ">
+                                        THANK YOU FOR YOUR BUSINESS
+                                    </p>
+                                </div>
+                            </div>
                         </td>
                     </tr> 
                 </table>
