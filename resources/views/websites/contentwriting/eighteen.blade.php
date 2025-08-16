@@ -78,123 +78,126 @@
                                 </td>
                             </tr>
                         </table>
-                        <table width="100%"  style="border-collapse: collapse;margin-top:30px;min-height: 450px !important;">
-                         <tr style="background-color: #FF444E !important; height: 30px;">
-                            <td>
-                                <p style="margin: 0px;color:#FFFFFF;font-family: Poppins;font-size: 10px;font-weight: 500;text-align: center;text-transform: uppercase;">
-                                    QTY.
-                                </p>
-                            </td>
-                            <td>
-                                <p style="margin: 0px;color:#FFFFFF;font-family: Poppins;font-size: 10px;font-weight: 500;text-align: center;text-transform: uppercase;">
-                                    DESCRIPTION
-                                </p>
-                            </td>
-                            <td>
-                                <p style="margin: 0px;color:#FFFFFF;font-family: Poppins;font-size: 10px;font-weight: 500;text-align: center;text-transform: uppercase;">
-                                    QUALITY
-                                </p>
-                            </td>
-                            <td>
-                                <p style="margin: 0px;color:#FFFFFF;font-family: Poppins;font-size: 10px;font-weight: 500;text-align: center;text-transform: uppercase;">
-                                    TURNAROUND
-                                </p>
-                            </td>
-                            <td>
-                                <p style="margin: 0px;color:#FFFFFF;font-family: Poppins;font-size: 10px;font-weight: 500;text-align: center;text-transform: uppercase;">
-                                    IMAGERY
-                                </p>
-                            </td>
-                            <td>
-                                <p style="margin: 0px;color:#FFFFFF;font-family: Poppins;font-size: 10px;font-weight: 500;text-align: center;text-transform: uppercase;">
-                                    BILLING TYPE
-                                </p>
-                            </td>
-                            <td>
-                                <p style="margin: 0px;color:#FFFFFF;font-family: Poppins;font-size: 10px;font-weight: 500;text-align: center;text-transform: uppercase;">
-                                    Total
-                                </p>
-                            </td>
-                            </tr>
-                            @foreach($products as $product)
-                            <tr style="height:30px;border-bottom: 1px solid #7F7F7F;">
-                            <td>
-                                <p style="margin: 0px;color:#7F7F7F;font-family: Poppins;font-size: 10px;font-weight: 500;text-align: center;text-transform:capitalize;">
-                                {{ $loop->iteration }}
-                                </p>
-                            </td>
-                            <td>
-                                <p style="margin: 0px;color:#7F7F7F;font-family: Poppins;font-size: 10px;font-weight: 500;text-align: center;text-transform:capitalize;">
-                                 {{ $product->name }}
-                                </p>
-                            </td>
-                            <td>
-                                <p style="margin: 0px;color:#7F7F7F;font-family: Poppins;font-size: 10px;font-weight: 500;text-align: center;text-transform:capitalize;">
-                                {{ $product->quality }}
-                                </p>
-                            </td>
-                            <td>
-                                <p style="margin: 0px;color:#7F7F7F;font-family: Poppins;font-size: 10px;font-weight: 500;text-align: center;text-transform:capitalize;">
-                                {{ $product->delivery }}
-                                </p>
-                            </td>
-                            <td>
-                                <p style="margin: 0px;color:#7F7F7F;font-family: Poppins;font-size: 10px;font-weight: 500;text-align: center;text-transform:capitalize;">
-                                {{ $product->imagecount }}
-                                </p>
-                            </td>
-                            <td>
-                                <p style="margin: 0px;color:#7F7F7F;font-family: Poppins;font-size: 10px;font-weight: 500;text-align: center;text-transform:capitalize;">
-                                    one time
-                                </p>
-                            </td>
-                            <td>
-                                <p style="margin: 0px;color:#7F7F7F;font-family: Poppins;font-size: 10px;font-weight: 500;text-align: center;text-transform:capitalize;">
-                                {{  site_currency() }} {{ number_format($product->unit_price, 2) }}
-                                </p>
-                            </td>
-                            </tr>
-                            @endforeach
-                            <tr style="height:30px;border-bottom: 1px solid #7F7F7F;">
-                            <td colspan="5"></td>
-                            <td>
-                                <p style="margin: 0px;color:#7F7F7F;font-family: Poppins;font-size: 10px;font-weight: 500;text-align: center;text-transform:capitalize;">
-                                    Subtotal
-                                </p>
-                            </td>
-                            <td>
-                                <p style="margin: 0px;color:#7F7F7F;font-family: Poppins;font-size: 10px;font-weight: 500;text-align: center;text-transform:capitalize;">
-                                {{ site_currency() }} {{ number_format(($invoice_amount + $discount_amount), 2) }}
-                                </p>
-                            </td>
-                            </tr>
-                            <tr style="height:30px;border-bottom: 1px solid #7F7F7F;">
-                            <td colspan="5"></td>
-                            <td>
-                                <p style="margin: 0px;color:#7F7F7F;font-family: Poppins;font-size: 10px;font-weight: 500;text-align: center;text-transform:capitalize;">
-                                    Discount
-                                </p>
-                            </td>
-                            <td>
-                                <p style="margin: 0px;color:#7F7F7F;font-family: Poppins;font-size: 10px;font-weight: 500;text-align: center;text-transform:capitalize;">
-                                {{ site_currency() }} {{ number_format($discount_amount, 2) }}
-                                </p>
-                            </td>
-                            </tr>
-                            <tr style="height:30px;border-bottom: 1px solid #7F7F7F;">
-                            <td colspan="5"></td>
-                            <td>
-                                <p style="margin: 0px;color:#4C483D;font-family: Poppins;font-size: 10px;font-weight: 500;text-align: center;text-transform:capitalize;">
-                                    TOTAL
-                                </p>
-                            </td>
-                            <td>
-                                <p style="margin: 0px;color:#4C483D;font-family: Poppins;font-size: 10px;font-weight: 500;text-align: center;text-transform:capitalize;">
-                                {{  site_currency() }} {{ number_format($invoice_amount, 2) }}
-                                </p>
-                            </td>
-                            </tr>
-                        </table>
+
+                        <div style="min-height: 700px;">
+                            <table width="100%"  style="border-collapse: collapse;margin-top:30px;min-height: 450px !important;">
+                            <tr style="background-color: #FF444E !important; height: 30px;">
+                                <td>
+                                    <p style="margin: 0px;color:#FFFFFF;font-family: Poppins;font-size: 10px;font-weight: 500;text-align: center;text-transform: uppercase;">
+                                        QTY.
+                                    </p>
+                                </td>
+                                <td>
+                                    <p style="margin: 0px;color:#FFFFFF;font-family: Poppins;font-size: 10px;font-weight: 500;text-align: center;text-transform: uppercase;">
+                                        DESCRIPTION
+                                    </p>
+                                </td>
+                                <td>
+                                    <p style="margin: 0px;color:#FFFFFF;font-family: Poppins;font-size: 10px;font-weight: 500;text-align: center;text-transform: uppercase;">
+                                        QUALITY
+                                    </p>
+                                </td>
+                                <td>
+                                    <p style="margin: 0px;color:#FFFFFF;font-family: Poppins;font-size: 10px;font-weight: 500;text-align: center;text-transform: uppercase;">
+                                        TURNAROUND
+                                    </p>
+                                </td>
+                                <td>
+                                    <p style="margin: 0px;color:#FFFFFF;font-family: Poppins;font-size: 10px;font-weight: 500;text-align: center;text-transform: uppercase;">
+                                        IMAGERY
+                                    </p>
+                                </td>
+                                <td>
+                                    <p style="margin: 0px;color:#FFFFFF;font-family: Poppins;font-size: 10px;font-weight: 500;text-align: center;text-transform: uppercase;">
+                                        BILLING TYPE
+                                    </p>
+                                </td>
+                                <td>
+                                    <p style="margin: 0px;color:#FFFFFF;font-family: Poppins;font-size: 10px;font-weight: 500;text-align: center;text-transform: uppercase;">
+                                        Total
+                                    </p>
+                                </td>
+                                </tr>
+                                @foreach($products as $product)
+                                <tr style="height:30px;border-bottom: 1px solid #7F7F7F;">
+                                <td>
+                                    <p style="margin: 0px;color:#7F7F7F;font-family: Poppins;font-size: 10px;font-weight: 500;text-align: center;text-transform:capitalize;">
+                                    {{ $loop->iteration }}
+                                    </p>
+                                </td>
+                                <td>
+                                    <p style="margin: 0px;color:#7F7F7F;font-family: Poppins;font-size: 10px;font-weight: 500;text-align: center;text-transform:capitalize;">
+                                    {{ $product->name }}
+                                    </p>
+                                </td>
+                                <td>
+                                    <p style="margin: 0px;color:#7F7F7F;font-family: Poppins;font-size: 10px;font-weight: 500;text-align: center;text-transform:capitalize;">
+                                    {{ $product->quality }}
+                                    </p>
+                                </td>
+                                <td>
+                                    <p style="margin: 0px;color:#7F7F7F;font-family: Poppins;font-size: 10px;font-weight: 500;text-align: center;text-transform:capitalize;">
+                                    {{ $product->delivery }}
+                                    </p>
+                                </td>
+                                <td>
+                                    <p style="margin: 0px;color:#7F7F7F;font-family: Poppins;font-size: 10px;font-weight: 500;text-align: center;text-transform:capitalize;">
+                                    {{ $product->imagecount }}
+                                    </p>
+                                </td>
+                                <td>
+                                    <p style="margin: 0px;color:#7F7F7F;font-family: Poppins;font-size: 10px;font-weight: 500;text-align: center;text-transform:capitalize;">
+                                        one time
+                                    </p>
+                                </td>
+                                <td>
+                                    <p style="margin: 0px;color:#7F7F7F;font-family: Poppins;font-size: 10px;font-weight: 500;text-align: center;text-transform:capitalize;">
+                                    {{  site_currency() }} {{ number_format($product->unit_price, 2) }}
+                                    </p>
+                                </td>
+                                </tr>
+                                @endforeach
+                                <tr style="height:30px;border-bottom: 1px solid #7F7F7F;">
+                                <td colspan="5"></td>
+                                <td>
+                                    <p style="margin: 0px;color:#7F7F7F;font-family: Poppins;font-size: 10px;font-weight: 500;text-align: center;text-transform:capitalize;">
+                                        Subtotal
+                                    </p>
+                                </td>
+                                <td>
+                                    <p style="margin: 0px;color:#7F7F7F;font-family: Poppins;font-size: 10px;font-weight: 500;text-align: center;text-transform:capitalize;">
+                                    {{ site_currency() }} {{ number_format(($invoice_amount + $discount_amount), 2) }}
+                                    </p>
+                                </td>
+                                </tr>
+                                <tr style="height:30px;border-bottom: 1px solid #7F7F7F;">
+                                <td colspan="5"></td>
+                                <td>
+                                    <p style="margin: 0px;color:#7F7F7F;font-family: Poppins;font-size: 10px;font-weight: 500;text-align: center;text-transform:capitalize;">
+                                        Discount
+                                    </p>
+                                </td>
+                                <td>
+                                    <p style="margin: 0px;color:#7F7F7F;font-family: Poppins;font-size: 10px;font-weight: 500;text-align: center;text-transform:capitalize;">
+                                    {{ site_currency() }} {{ number_format($discount_amount, 2) }}
+                                    </p>
+                                </td>
+                                </tr>
+                                <tr style="height:30px;border-bottom: 1px solid #7F7F7F;">
+                                <td colspan="5"></td>
+                                <td>
+                                    <p style="margin: 0px;color:#4C483D;font-family: Poppins;font-size: 10px;font-weight: 500;text-align: center;text-transform:capitalize;">
+                                        TOTAL
+                                    </p>
+                                </td>
+                                <td>
+                                    <p style="margin: 0px;color:#4C483D;font-family: Poppins;font-size: 10px;font-weight: 500;text-align: center;text-transform:capitalize;">
+                                    {{  site_currency() }} {{ number_format($invoice_amount, 2) }}
+                                    </p>
+                                </td>
+                                </tr>
+                            </table>
+                        </div>
                         <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse; margin-top: 10px;">
                             <tr>
                                 <td>

@@ -47,7 +47,7 @@
                                         <b>To:</b> {{ $customer_name }}
                                        </p>
                                        <p style="color:#474748;font-family: arial;font-size: 10px;">
-                                        <b>From:</b> www.onlinedesignstudy.com
+                                        <b>From:</b> {{ $Website_Link }}
                                        </p>
                                     </td>
                                     <td style="text-align: end;">

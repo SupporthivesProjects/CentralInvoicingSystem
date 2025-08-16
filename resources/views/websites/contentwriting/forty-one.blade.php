@@ -163,7 +163,7 @@
                                
                                 <tr style="border-bottom: 1px solid black;border-top: 1px solid black;height: 20px;">
                                     <td style="width: 250px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
-                                       <b>TotalDue</b>
+                                       <b>Total Due</b>
                                     </td>
                                     <td style="width: 100px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
                                         <b></b>
