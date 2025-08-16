@@ -70,7 +70,7 @@
                                 <td style="width: 50%; text-align: right; vertical-align: middle;">
                                     <div style="display: inline-block; text-align: right;">
                                         <h1 style="color: #2e74b1; font-size: 14px; font-family: Calibri; font-weight: 400; margin: 0px; text-transform: uppercase;">
-                                            INVOICENO: {{ $invoice_number }}
+                                            INVOICE NO: {{ $invoice_number }}
                                         </h1>
                                         <p style="color: black; font-size: 12px; font-family: Roboto, sans-serif; font-weight: 400; margin: 4px 0 0; text-transform: capitalize;">
                                             DATE: {{ $invoice_date }}
@@ -100,7 +100,11 @@
                                                 {{ $customer_name }}
                                              </p>
                                              <span style="color: grey;font-size:10px;font-weight:400;font-family: Calibri;">
-                                                <b style="color: black;">E:</b>  {{ $customer_email }}
+                                                <!-- <b style="color: black;">E:</b>  {{ $customer_email }} -->
+                                                @if(!empty($customer_email))
+                                                    <b style="color: black;">E:</b> {{ $customer_email }}
+                                                @endif
+
                                              </span>
                                           </div>
                                           <div style="display: flex;flex-direction: column;margin-top: 40px;">
@@ -145,9 +149,9 @@
                                                 <p style="color: black; font-size: 10px; font-weight: 600; font-family: Calibri; margin: 0px;">
                                                     {{ $product->name }}
                                                 </p>
-                                                <span style="color: grey; font-size: 8px; font-weight: 600; font-family: Calibri; margin: 0px;">
+                                                <!-- <span style="color: grey; font-size: 8px; font-weight: 600; font-family: Calibri; margin: 0px;">
                                                 {{ $product->name }}...
-                                                </span>
+                                                </span> -->
                                                 <p style="color: black; font-size: 10px; font-weight: 400; font-family: Calibri; margin: 0px;">
                                                 {{ $product->category_name }}
                                                 </p>
