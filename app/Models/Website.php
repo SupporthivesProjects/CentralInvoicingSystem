@@ -36,6 +36,8 @@ class Website extends Model
         'company_email',
         'company_mobile',
         'company_address',
+        'registration_number',
+        'license_number',
         'bank_name',
         'bank_code',
         'pdf_size',

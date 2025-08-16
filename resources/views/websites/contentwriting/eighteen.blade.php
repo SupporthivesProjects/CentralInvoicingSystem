@@ -3,8 +3,11 @@
 <head>
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
     <style>
-        body, table, td {
+        body{
             /* background-color: transparent !important; */
+            margin:0px !important;
+            padding:0px !important;
+
 
         }
         table td {
@@ -214,13 +217,15 @@
                                     </p>
                                 </td>
                             </tr>
+                            @if(!empty($site->license_number))
                             <tr>
                                 <td>
                                     <p style="margin: 0px; color:#FF444E; font-family: Poppins; font-size: 11px; font-weight: 500; text-align:right; text-transform:capitalize;">
-                                        License No: <span style="color: #4C483D;">{{ $site->site_description ?? '' }}</span>
+                                        License No: <span style="color: #4C483D;">{{ $site->license_number }}</span>
                                     </p>
                                 </td>
                             </tr>
+                            @endif
                             <tr>
                                 <td>
                                     <p style="margin: 0px; color:#FF444E; font-family: Poppins; font-size: 11px; font-weight: 500; text-align:right; text-transform:capitalize;">
