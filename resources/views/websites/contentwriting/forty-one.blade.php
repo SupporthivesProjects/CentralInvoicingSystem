@@ -186,7 +186,7 @@
                     </tr>
                    
                     <tr>
-                        <td style="padding: 0px 32px">
+                        <td style="padding: 0px 32px;background: url('{{ $invoice_footer_image }}') no-repeat;background-position: center;background-size: cover;">
                             <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;"> 
                                 <tr style="background: url('{{ $invoice_footer_image }}') no-repeat;background-position: center;background-size: cover;height:105px;padding:50px;background-size:cover;width: 100%;">
                                     <td >
