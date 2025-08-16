@@ -87,7 +87,7 @@
                                 </tr>
                             </table>
                             <br>
-                            <div style="min-height: 620px !important;">
+                            <div style="min-height: 600px !important;">
                                 <table style="border: 1px solid #2f5496; border-collapse: collapse;">
                                     <tr style="height: 20px;">
                                         <td style="width: 100px; text-align: left; padding-left: 10px; font-family: Calibri; font-size: 10px; font-weight: 400; border: 1px solid #2f5496;">
@@ -149,7 +149,7 @@
 
                     <!-- Footer -->
                     <tr>
-                        <td>
+                        <td style="padding: 0px;">
 
                         <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse;padding-top:50px !important;">
                                 <tr class="invoice_footer_image">
