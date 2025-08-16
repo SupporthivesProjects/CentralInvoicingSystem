@@ -28,7 +28,7 @@
                         <td style="padding: 0px;max-height: 130px;">
                             <table>
                                 <tr>
-                                    <td style="height: 40px; width: 600px;">
+                                    <td style="height: 40px;">
                                        
                                     </td>
                                     
@@ -59,8 +59,7 @@
                                         Email: {{ $company_email }} 
                                         </p>
                                     </td>
-                                    <td style="width:300px;
-                                    text-align: right;">
+                                    <td style="text-align: right;">
                                         <h1 style="font-family: arial;font-size: 20px;margin: 0px;font-weight: 700;">INVOICE</h1><br><br>
                                         <p style="font-family: arial;font-size:10px;margin: 0px;font-weight: 400;">
                                            DATE: {{ $invoice_date }}
