@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\Website;
 use App\Models\User;
 use App\Models\BusinessModel;
@@ -19,7 +20,7 @@ use App\Services\CurrencyConversionService;
 class HomeController extends Controller
 {
 
-  
+
     public function index(Request $request)
     {
 
@@ -40,52 +41,52 @@ class HomeController extends Controller
                 return InvoiceGenerationHistory::orderBy('id', 'desc')->get();
             });
         }
-        
-        return view('pages.dashboard', compact('invoices', 'dates', 'invoiceCounts','businessmodels','sites', 'priceChanges', 'invoicedates','userInvoices'));
+
+        return view('pages.dashboard', compact('invoices', 'dates', 'invoiceCounts', 'businessmodels', 'sites', 'priceChanges', 'invoicedates', 'userInvoices'));
     }
 
-    
+
     public function getUserInvoiceChartData()
     {
-        $startDate = now()->subDays(7)->startOfDay(); 
+        $startDate = now()->subDays(7)->startOfDay();
         $endDate = now()->endOfDay();
-    
-       
+
+
         $rawData = InvoiceGenerationHistory::selectRaw('DATE(created_at) as date, created_by, COUNT(*) as count')
             ->whereBetween('created_at', [$startDate, $endDate])
             ->groupBy('date', 'created_by')
             ->orderBy('date')
             ->get();
-    
-       
+
+
         $invoicedates = collect();
         for ($i = 0; $i < 8; $i++) {
             $invoicedates->push(now()->subDays(7 - $i)->format('d-m-Y'));
         }
-    
+
         $users = $rawData->pluck('created_by')->unique();
-    
+
         $series = [];
-    
+
         foreach ($users as $userId) {
             $user = User::find($userId);
             $userData = [];
-    
+
             foreach ($invoicedates as $formattedDate) {
                 $matching = $rawData->first(function ($item) use ($formattedDate, $userId) {
                     return $item->created_by == $userId &&
                         Carbon::parse($item->date)->format('d-m-Y') === $formattedDate;
                 });
-    
+
                 $userData[] = $matching ? (int) $matching->count : 0;
             }
-    
+
             $series[] = [
                 'name' => $user?->name ?? "User $userId",
                 'data' => $userData
             ];
         }
-    
+
         return [$invoicedates, $series];
     }
 
@@ -102,10 +103,10 @@ class HomeController extends Controller
                 DB::raw('DATE(last_price_changed) as date'),
                 DB::raw('COUNT(*) as price_changes')
             )
-            ->whereBetween('last_price_changed', [$sevenDaysAgo, $today])
-            ->groupBy('date')
-            ->orderBy('date', 'asc')
-            ->get();
+                ->whereBetween('last_price_changed', [$sevenDaysAgo, $today])
+                ->groupBy('date')
+                ->orderBy('date', 'asc')
+                ->get();
         });
 
         $invoiceStats = Cache::remember($cacheKeyInvoiceStats, 300, function () use ($sevenDaysAgo, $today) {
@@ -115,10 +116,10 @@ class HomeController extends Controller
                 DB::raw('SUM(invoice_amount) as total_sales'),
                 DB::raw('SUM(discount_amount) as discount_amount')
             )
-            ->whereBetween('created_at', [$sevenDaysAgo, $today])
-            ->groupBy('date')
-            ->orderBy('date', 'asc')
-            ->get();
+                ->whereBetween('created_at', [$sevenDaysAgo, $today])
+                ->groupBy('date')
+                ->orderBy('date', 'asc')
+                ->get();
         });
 
         $dates = [];
@@ -149,7 +150,7 @@ class HomeController extends Controller
     }
 
 
-    
+
     public function internalSearch(Request $request)
     {
         $keyword = $request->get('keyword', '');
@@ -163,11 +164,11 @@ class HomeController extends Controller
 
         switch ($type) {
             case 'websites':
-                $normalizedKeyword = preg_replace('/[^a-zA-Z0-9]/', '', strtolower($keyword));
+                $keyword = strtolower(trim($keyword));
 
-                $results = Website::whereRaw("REPLACE(LOWER(site_name), '-', '') LIKE ?", ['%' . $normalizedKeyword . '%'])
-                    ->orWhereRaw("REPLACE(LOWER(bank_name), '-', '') LIKE ?", ['%' . $normalizedKeyword . '%'])
-                    ->orWhereRaw("REPLACE(LOWER(bank_code), '-', '') LIKE ?", ['%' . $normalizedKeyword . '%'])
+                $results = Website::where('site_name', 'like', '%' . $keyword . '%')
+                    ->orWhere('bank_name', 'like', '%' . $keyword . '%')
+                    ->orWhere('bank_code', 'like', '%' . $keyword . '%')
                     ->limit(10)
                     ->get();
                 foreach ($results as $row) {
@@ -201,21 +202,21 @@ class HomeController extends Controller
     {
         $keyword = $request->input('keyword', '');
         $type = $request->input('type', '');
-    
+
         if (empty($keyword) || $type !== 'websites') {
             return response()->json([]);
         }
-    
+
         $normalizedKeyword = preg_replace('/[^a-zA-Z0-9]/', '', strtolower($keyword));
-    
+
         $websites = Website::whereRaw("REPLACE(LOWER(site_name), '-', '') LIKE ?", ['%' . $normalizedKeyword . '%'])
             ->orWhereRaw("REPLACE(LOWER(bank_name), '-', '') LIKE ?", ['%' . $normalizedKeyword . '%'])
             ->orWhereRaw("REPLACE(LOWER(bank_code), '-', '') LIKE ?", ['%' . $normalizedKeyword . '%'])
             ->get();
-    
+
         return view('business.searchresult', compact('websites'));
     }
-    
+
 
     public function fetchWooCommerceProducts()
     {
@@ -289,7 +290,4 @@ class HomeController extends Controller
 
         return response()->json($products);
     }
-
-    
-    
 }
