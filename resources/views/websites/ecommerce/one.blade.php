@@ -149,7 +149,7 @@
 
                     <!-- Footer -->
                     <tr>
-                        <td>
+                        <td style="padding: 0px;">
 
                         <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse;padding-top:50px !important;">
                                 <tr class="invoice_footer_image">
