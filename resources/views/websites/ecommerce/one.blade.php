@@ -88,7 +88,7 @@
                             </table>
                             <br>
                             <div style="min-height: 600px !important;">
-                                <table style="border: 1px solid #2f5496; border-collapse: collapse;">
+                                <table style="border: 1px solid #2f5496; border-collapse: collapse; width: 100%">
                                     <tr style="height: 20px;">
                                         <td style="width: 100px; text-align: left; padding-left: 10px; font-family: Calibri; font-size: 10px; font-weight: 400; border: 1px solid #2f5496;">
                                             <b style="color:#2f5496;">QTY</b>
