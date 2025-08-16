@@ -20,6 +20,10 @@
             width: 100% !important;
             height: 942px !important;
         }
+        body{
+            margin: 0px;
+            padding: 0px;
+        }
 
 
  </style>
@@ -27,7 +31,7 @@
 <body>
 <table width="100%" cellspacing="0" cellpadding="0" border="0" style="margin: 0 auto; text-align: center;">
         <tr>
-            <td align="center" bgcolor="#f2f2f2" style="padding: 40px 0;">
+            <td align="center" style="0px;">
             <table class="invoice_header_image" width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
 
                 <tr >
