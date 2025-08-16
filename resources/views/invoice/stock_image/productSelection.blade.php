@@ -149,28 +149,49 @@
                                             <div class="p-2 bg-white">
                                                 <div class="row g-1 mb-2">
                                                     <div class="col-3">
-                                                        <input type="text" form="generate-invoice-form" class="form-control form-control-sm" name="remote_site_name" placeholder="Website Name" value="{{ $remote_database->site_name ?? '' }}">
+                                                        <div class="input-group input-group-sm">
+                                                            <span class="input-group-text"><i class="fas fa-globe"></i></span>
+                                                            <input type="text" form="generate-invoice-form" class="form-control form-control-sm" name="remote_site_name" placeholder="Website Name" value="{{ $remote_database->site_name ?? '' }}">
+                                                        </div>
                                                     </div>
                                                     <div class="col-3">
-                                                        <input type="text" form="generate-invoice-form" class="form-control form-control-sm" name="remote_company_mobile" placeholder="Company Mobile" value="{{ $remote_database->phone ?? '' }}">
+                                                        <div class="input-group input-group-sm">
+                                                            <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                                                            <input type="text" form="generate-invoice-form" class="form-control form-control-sm" name="remote_company_mobile" placeholder="Company Mobile" value="{{ $remote_database->phone ?? '' }}">
+                                                        </div>
                                                     </div>
                                                     <div class="col-3">
-                                                         <input type="email" form="generate-invoice-form" class="form-control form-control-sm" name="remote_company_email" placeholder="Company Email" value="{{ $remote_database->email ?? '' }}">
+                                                        <div class="input-group input-group-sm">
+                                                            <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                                            <input type="email" form="generate-invoice-form" class="form-control form-control-sm" name="remote_company_email" placeholder="Company Email" value="{{ $remote_database->email ?? '' }}">
+                                                        </div>
                                                     </div>
                                                     <div class="col-3">
-                                                        <input type="text" form="generate-invoice-form" class="form-control form-control-sm" name="remote_registration_number" placeholder="Registration Number" value="{{ $remote_database->registration_number ?? '' }}">
+                                                        <div class="input-group input-group-sm">
+                                                            <span class="input-group-text"><i class="fas fa-id-card"></i></span>
+                                                            <input type="text" form="generate-invoice-form" class="form-control form-control-sm" name="remote_registration_number" placeholder="Registration Number" value="{{ $remote_database->registration_number ?? '' }}">
+                                                        </div>
                                                     </div>
                                                 </div>
 
                                                 <div class="row g-1 mb-2">
                                                     <div class="col-3">
-                                                        <input type="text" form="generate-invoice-form" class="form-control form-control-sm" name="remote_company_name" placeholder="Company Name" value="{{ $remote_database->company_name ?? '' }}">
+                                                        <div class="input-group input-group-sm">
+                                                            <span class="input-group-text"><i class="fas fa-building"></i></span>
+                                                            <input type="text" form="generate-invoice-form" class="form-control form-control-sm" name="remote_company_name" placeholder="Company Name" value="{{ $remote_database->company_name ?? '' }}">
+                                                        </div>
                                                     </div>
                                                     <div class="col-6">
-                                                        <input type="text" form="generate-invoice-form" class="form-control form-control-sm" name="remote_company_address" placeholder="Company Address" value="{{ $remote_database->address ?? '' }}">
+                                                        <div class="input-group input-group-sm">
+                                                            <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+                                                            <input type="text" form="generate-invoice-form" class="form-control form-control-sm" name="remote_company_address" placeholder="Company Address" value="{{ $remote_database->address ?? '' }}">
+                                                        </div>
                                                     </div>
                                                     <div class="col-3">
-                                                        <input type="text" form="generate-invoice-form" class="form-control form-control-sm" name="remote_license_number" placeholder="License Number" value="{{ $remote_database->license_number ?? '' }}">
+                                                        <div class="input-group input-group-sm">
+                                                            <span class="input-group-text"><i class="fas fa-file-alt"></i></span>
+                                                            <input type="text" form="generate-invoice-form" class="form-control form-control-sm" name="remote_license_number" placeholder="License Number" value="{{ $remote_database->license_number ?? '' }}">
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -181,28 +202,49 @@
                                             <div class="p-2 bg-white">
                                                 <div class="row g-1 mb-2">
                                                     <div class="col-3">
-                                                        <input type="text" form="generate-invoice-form" class="form-control form-control-sm" name="local_site_name" placeholder="Website Name" value="{{ $site->site_name ?? '' }}">
+                                                        <div class="input-group input-group-sm">
+                                                            <span class="input-group-text"><i class="fas fa-globe"></i></span>
+                                                            <input type="text" form="generate-invoice-form" class="form-control form-control-sm" name="local_site_name" placeholder="Website Name" value="{{ $site->site_name ?? '' }}">
+                                                        </div>
                                                     </div>
                                                     <div class="col-3">
-                                                        <input type="text" form="generate-invoice-form" class="form-control form-control-sm" name="local_company_mobile" placeholder="Company Mobile" value="{{ $site->company_mobile ?? '' }}">
+                                                        <div class="input-group input-group-sm">
+                                                            <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                                                            <input type="text" form="generate-invoice-form" class="form-control form-control-sm" name="local_company_mobile" placeholder="Company Mobile" value="{{ $site->company_mobile ?? '' }}">
+                                                        </div>
                                                     </div>
                                                     <div class="col-3">
-                                                        <input type="email" form="generate-invoice-form" class="form-control form-control-sm" name="local_company_email" placeholder="Company Email" value="{{ $site->company_email ?? '' }}">
+                                                        <div class="input-group input-group-sm">
+                                                            <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                                            <input type="email" form="generate-invoice-form" class="form-control form-control-sm" name="local_company_email" placeholder="Company Email" value="{{ $site->company_email ?? '' }}">
+                                                        </div>
                                                     </div>
                                                     <div class="col-3">
-                                                        <input type="text" form="generate-invoice-form" class="form-control form-control-sm" name="registration_number" placeholder="Registration Number" value="{{ $site->registration_number ?? '' }}">
+                                                        <div class="input-group input-group-sm">
+                                                            <span class="input-group-text"><i class="fas fa-id-card"></i></span>
+                                                            <input type="text" form="generate-invoice-form" class="form-control form-control-sm" name="registration_number" placeholder="Registration Number" value="{{ $site->registration_number ?? '' }}">
+                                                        </div>
                                                     </div>
                                                 </div>
 
                                                 <div class="row g-1 mb-2">
                                                     <div class="col-3">
-                                                        <input type="text" form="generate-invoice-form" class="form-control form-control-sm" name="local_company_name" placeholder="Company Name" value="{{ $site->company_name ?? '' }}">
+                                                        <div class="input-group input-group-sm">
+                                                            <span class="input-group-text"><i class="fas fa-building"></i></span>
+                                                            <input type="text" form="generate-invoice-form" class="form-control form-control-sm" name="local_company_name" placeholder="Company Name" value="{{ $site->company_name ?? '' }}">
+                                                        </div>
                                                     </div>
                                                     <div class="col-6">
-                                                        <input type="text" form="generate-invoice-form" class="form-control form-control-sm" name="local_company_address" placeholder="Company Address" value="{{ $site->company_address ?? '' }}">
+                                                        <div class="input-group input-group-sm">
+                                                            <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+                                                            <input type="text" form="generate-invoice-form" class="form-control form-control-sm" name="local_company_address" placeholder="Company Address" value="{{ $site->company_address ?? '' }}">
+                                                        </div>
                                                     </div>
                                                     <div class="col-3">
-                                                        <input type="text" form="generate-invoice-form" class="form-control form-control-sm" name="license_number" placeholder="License Number" value="{{ $site->license_number ?? '' }}">
+                                                        <div class="input-group input-group-sm">
+                                                            <span class="input-group-text"><i class="fas fa-file-alt"></i></span>
+                                                            <input type="text" form="generate-invoice-form" class="form-control form-control-sm" name="license_number" placeholder="License Number" value="{{ $site->license_number ?? '' }}">
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -215,6 +257,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="card custom-card mt-4">
                 <div class="card-body shadow-lg rounded">
                 <div class="row">
