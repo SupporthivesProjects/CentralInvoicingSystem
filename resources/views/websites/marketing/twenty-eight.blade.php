@@ -47,7 +47,6 @@
                             <p style="font-family: arial; font-size: 10px; margin: 0; font-weight: 400;">
                             INVOICE #{{ $invoice_number }}
                             </p>
-                            <br>
                         </td>
                     </tr>
 
@@ -69,7 +68,7 @@
                                             Email: {{ $company_email }} 
                                         </p>
                                     </td>
-                                    <td style="text-align: right;">
+                                    <td style="text-align: right;" align="top">
                                         <p style="font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;">
                                             <b>
                                                 BILLED TO:
