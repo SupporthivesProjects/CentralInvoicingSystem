@@ -87,7 +87,7 @@
                                 </tr>
                             </table>
                             <br>
-                            <div style="min-height: 580px !important;">
+                            <div style="min-height: 620px !important;">
                                 <table style="border: 1px solid #2f5496; border-collapse: collapse;">
                                     <tr style="height: 20px;">
                                         <td style="width: 100px; text-align: left; padding-left: 10px; font-family: Calibri; font-size: 10px; font-weight: 400; border: 1px solid #2f5496;">
