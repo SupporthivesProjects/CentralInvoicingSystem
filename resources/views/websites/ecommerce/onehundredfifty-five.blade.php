@@ -79,7 +79,7 @@
                     <!-- Content -->
                     <tr style="background:#ffff ;">
                         <td>
-                            <div style="min-height: 600px !important;">
+                            <div style="min-height: 580px !important;">
                             <table width="100%" cellspacing="0" cellpadding="" border="0px"
                                 style="border-collapse: collapse;margin-top: 40px;">
                                 <tr style="background:#3D9D97;">
