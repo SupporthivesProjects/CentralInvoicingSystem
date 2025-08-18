@@ -870,7 +870,7 @@ class WordPressController extends Controller
                 $prefix = explode('_', $this->productPriceTable)[0] ?? 'wp';
                 $postMetaTable = $prefix . '_postmeta';
 
-                DB::connection($connection)
+                DB::connection($this->connectionType)
                 ->table($postMetaTable)
                 ->where('post_id', $product_id)
                 ->where('meta_key', '_price')
