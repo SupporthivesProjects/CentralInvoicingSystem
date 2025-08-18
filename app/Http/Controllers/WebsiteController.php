@@ -380,6 +380,14 @@ class WebsiteController extends Controller
                     ->with('error', $firstError);
             }
 
+            $exists = Website::where('db_host', $request->db_host) ->where('db_password', $request->db_password)->exists();
+
+            if ($exists) {
+                return redirect()->back()
+                    ->withInput()
+                    ->with('error', 'A website with the same host and password already exists.');
+            }
+
             $website = Website::create([
                 'business_model_id' => $request->business_model_id,
                 'technology' => $request->technology,
