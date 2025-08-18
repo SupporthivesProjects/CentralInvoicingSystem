@@ -861,13 +861,13 @@ class WordPressController extends Controller
             if ($canUpdate) {
 
                 DB::connection($this->connectionType)
-                ->table($this->priceTable)
+                ->table($this->productPriceTable)
                 ->where('product_id', $product_id)
                 ->update([
                     'min_price' => $new_price,
                 ]);
 
-                $prefix = explode('_', $this->priceTable)[0] ?? 'wp';
+                $prefix = explode('_', $this->productPriceTable)[0] ?? 'wp';
                 $postMetaTable = $prefix . '_postmeta';
 
                 DB::connection($connection)
