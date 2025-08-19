@@ -50,7 +50,7 @@
                                 </tr>
                             </table>
                             
-                            <div style="min-height: 790px;">
+                            <div style="min-height: 800px;">
                                 <table
                                     style="margin-top: 70px; width: 100%; padding: 40px; border-collapse: collapse; color: white; font-size: 11px;">
                                     <thead>
