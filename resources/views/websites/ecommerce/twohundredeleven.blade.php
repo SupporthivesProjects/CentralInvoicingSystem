@@ -3,13 +3,30 @@
 <head>
     <title>{{ $site_name . $invoice_number }}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0px;
+            padding: 0px;
+        }
+        .footer-fixed {
+            position: fixed;
+            bottom: 0px;
+            left: 0;
+            right: 0;
+            width: 100%;
+            /* background: url('{{ $invoice_footer_image }}') center center no-repeat; */
+            /* background-size: cover; */
+        }
+    </style>
+
 </head>
 <body>
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
-            <td align="center" bgcolor="#f2f2f2" style="padding: 20px 0;">
+            <td align="center" bgcolor="#f2f2f2" style="padding: 0px 0;">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse;">
                      <!---header--->
                     <tr>
@@ -197,44 +214,42 @@
                     <!-- Content End-->  
 
                     <!---footer--->
-                    <tr>
-                        <td style="background:#8cc4de;height: 100px;padding:20px;">
-                            <table width="100%">
-                                <tr>
-                                    <td>
-                                       <table>
-                                        <tr>
-                                            <td style="display: flex;justify-content:left;align-items: center;gap:10px">
-                                                <img src="{{ $invoice_image1 }}" alt="" style="height:20px;">
-                                                <p style="color: #ffffff;margin: 0px;font-size:9px;font-family: Roboto;">
-                                             {{ $site_name }}
-                                            </p>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td style="display: flex;justify-content:left;align-items: center;gap:10px">
-                                                <img src="{{ $invoice_image2 }}" alt="" style="height:20px;">
-                                                <p style="color: #ffffff;margin: 0px;font-size:9px;font-family: Roboto;line-height:24px;">
-                                             {{ $company_email }}
-                                            </p>
-                                            </td>
-                                           
-                                        </tr>
-                                       </table>
-                                    </td>
-                                    <td align="right">
-                                      <p style="color: #ffffff;margin: 0px;font-size:9px;font-family: Roboto;line-height:12px;">
-                                       {{ $company_name }}
-                                      </p>
-                                      <p style="color: #ffffff;margin: 0px;font-size:9px;font-family: Roboto;line-height:12px;">
-                                       {!! $company_address !!}<br>
-                                       {{ $company_mobile }}
-                                      </p>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr> 
+                    <div class="footer-fixed" style="background:#8cc4de; height:100px; padding:20px; display:flex; justify-content:space-between; align-items:flex-start; width:100%; box-sizing:border-box;">
+                            
+                        <!-- Left Section -->
+                        <div style="display:flex; flex-direction:column; gap:6px;">
+                            
+                            <!-- Site Name -->
+                            <div style="display:flex; align-items:center; gap:10px;">
+                            <img src="{{ $invoice_image1 }}" alt="" style="height:20px;">
+                            <p style="color:#ffffff; margin:0; font-size:9px; font-family:Roboto;">
+                                {{ $site_name }}
+                            </p>
+                            </div>
+                            
+                            <!-- Company Email -->
+                            <div style="display:flex; align-items:center; gap:10px;">
+                            <img src="{{ $invoice_image2 }}" alt="" style="height:20px;">
+                            <p style="color:#ffffff; margin:0; font-size:9px; font-family:Roboto; line-height:24px;">
+                                {{ $company_email }}
+                            </p>
+                            </div>
+                            
+                        </div>
+
+                        <!-- Right Section -->
+                        <div style="text-align:right;">
+                            <p style="color:#ffffff; margin:0; font-size:9px; font-family:Roboto; line-height:12px;">
+                            {{ $company_name }}
+                            </p>
+                            <p style="color:#ffffff; margin:0; font-size:9px; font-family:Roboto; line-height:12px;">
+                            {!! $company_address !!}<br>
+                            {{ $company_mobile }}
+                            </p>
+                        </div>
+
+                        </div>
+
                     <!---footer End--->
                 </table>
             </td>
