@@ -81,7 +81,8 @@
                             <br>
                             <div style="min-height: 657px;">
                                 <table style="border-collapse: collapse;" class="striped-table">
-                                    <tr style="border-collapse: collapse;height: 24px; border-bottom: 12px solid #161a1c;">
+                                    <!-- <tr style="border-collapse: collapse;height: 24px; border-bottom: 12px solid #161a1c;"> -->
+                                    <tr style="border-collapse: collapse;height: 24px; ">
                                         <td style="width: 80px; color: #FFFFFF; text-align: center; padding: 16px 10px;font-family:  kanit;font-size: 14px;margin: 0px;font-weight: 700;border-collapse: collapse;">
                                         <b>NO</b> 
                                         </td>
@@ -118,7 +119,9 @@
                                         </td>
                                     </tr>
                                     @endforeach
-                                    <tr style="border-top: 24px solid #161a1c;">
+                                    <!-- <tr style="border-top: 24px solid #161a1c;"> -->
+                                    <tr>
+
                                         <td style="width: 100px;text-align: right;font-family: Helvetica;font-size: 9px;margin: 0px;font-weight: 400;padding-right: 10px; background-color: #161a1c;" colspan="3">
                                         </td>
                                         <td style="width: 100px;color: #FFFFFF;text-align: start;font-family: Helvetica;font-size: 9px;margin: 0px;font-weight: 400;padding: 0px 12px; background-color: #24292e;" colspan="1">
