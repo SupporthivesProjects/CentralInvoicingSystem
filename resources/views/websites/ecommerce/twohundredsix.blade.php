@@ -8,7 +8,7 @@
 <body style="margin: 0px; padding: 0px;">
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
-            <td align="center">
+            <td align="top">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
                     style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
                     <!-- Header -->
@@ -46,11 +46,10 @@
 
 
                     <!-- Content -->
-                     <div style="min-height: 700px;">
+                     <div style="min-height: 500px;">
                         <tr>
                             
-                            <td
-                                style="padding:40px;padding-top:0px;background: url(img/body_bg.png) no-repeat;background-position: center;background-size: cover;height:444px; font-family: 'arial'; font-size: 9px; vertical-align: top;">
+                            <td style="padding:40px;padding-top:0px;background: url(img/body_bg.png) no-repeat;background-position: center;background-size: cover;height:444px; font-family: 'arial'; font-size: 9px; vertical-align: top;">
                                 <br>
                                 <table width="100%" border="1" cellspacing="0" cellpadding="8"
                                     style="border-collapse: collapse; text-align: center;">

@@ -12,7 +12,7 @@
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
                     style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1); background-image: url('{{ $invoice_header_image }}'); background-position: center; background-repeat: no-repeat; background-size: cover; height: 870px;">
                     <!-- Header -->
-                    <tr>
+                    <tr style="padding: 200px 50px 0px 50px;">
                         <td style="height: 130px;">
                             <table style="font-family: 'Poppins'; padding: 39px; width: 100%; font-size: 9px;">
                                 <tr style="position: relative;">
@@ -49,7 +49,7 @@
                                         style="font-size: 16px; vertical-align: middle; font-weight: bold;">{{ $customer_name ? $customer_name : '' }}</td>
                                 </tr>
                             </table>
-
+                            
                             <div style="min-height: 640px;">
                                 <table
                                     style="margin-top: 70px; width: 100%; padding: 40px; border-collapse: collapse; color: white; font-size: 11px;">
@@ -112,29 +112,29 @@
                                         </tr> --}}
                                     </tbody>
                                 </table>
-                            </div>
 
-                            <table style="width: 100%; border-collapse: collapse; margin-top: 85px;">
-                                <tr>
-                                    <td style="text-align: left; font-size: 12px; font-weight: 500; color: #1b1f23;">
-                                        THANK YOU
-                                    </td>
-                                    <td style="text-align: right;">
-                                        <table style="float: right; font-size: 12px;">
-                                            <tr>
-                                                <td
-                                                    style="font-weight: bold; padding-right: 20px; padding-bottom: 20px;">
-                                                    SUBTOTAL</td>
-                                                <td style="font-size: 11px; padding-bottom: 20px;">{{ site_currency() . number_format($invoice_amount ?? 0, 2) }}<</td>
-                                            </tr>
-                                            <tr>
-                                                <td style="font-weight: bold; padding-right: 20px;">DISCOUNT</td>
-                                                <td style="font-size: 11px;">{{ site_currency() . number_format($discount_amount ?? 0, 2) }}</td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                </tr>
-                            </table>
+                                <table style="width: 100%; border-collapse: collapse; margin-top: 85px;">
+                                    <tr>
+                                        <td style="text-align: left; font-size: 12px; font-weight: 500; color: #1b1f23;">
+                                            THANK YOU
+                                        </td>
+                                        <td style="text-align: right;">
+                                            <table style="float: right; font-size: 12px;">
+                                                <tr>
+                                                    <td
+                                                        style="font-weight: bold; padding-right: 20px; padding-bottom: 20px;">
+                                                        SUBTOTAL</td>
+                                                    <td style="font-size: 11px; padding-bottom: 20px;">{{ site_currency() . number_format($invoice_amount ?? 0, 2) }}<</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-weight: bold; padding-right: 20px;">DISCOUNT</td>
+                                                    <td style="font-size: 11px;">{{ site_currency() . number_format($discount_amount ?? 0, 2) }}</td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
 
                         </td>
                     </tr>

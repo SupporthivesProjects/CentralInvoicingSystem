@@ -17,7 +17,7 @@
   ">
         <!-- Header -->
         <tr>
-            <td colspan="4" style="padding: 110px 30px 20px;">
+            <td colspan="4" style="padding: 180px 50px 40px;">
                 <table width="100%" cellspacing="0" cellpadding="0">
                     <tr>
                         <!-- Left section -->
@@ -55,10 +55,10 @@
 
         <!-- Content Box -->
         <tr>
-            <td colspan="4" style="padding: 0px 150px 0px 0px;">
-                <div style="min-height: 700px">
+            <td colspan="4" style="padding: 0px 160px 0px 0px;">
+                <div style="min-height: 740px">
                     <table width="100%" cellspacing="0" cellpadding="10"
-                    style="border-collapse: collapse; font-size: 10px; margin-top: 75px;">
+                    style="border-collapse: collapse; font-size: 10px; margin-top: 90px;">
                     <!-- Header Row -->
                     <tr style="text-transform: uppercase; border-bottom: 1px solid #293f8c;">
                         <th align="left" style="font-weight: 600;width:50%">Item Description</th>
