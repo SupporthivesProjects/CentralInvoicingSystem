@@ -32,7 +32,7 @@
                     <tr>
 
                         <td
-                            style="font-family: 'Poppins'; font-size: 9px; vertical-align: top; padding: 60px 40px 0px 40px; width: 100%;">
+                            style="font-family: 'Poppins'; font-size: 9px; vertical-align: top; padding: 40px 40px 0px 40px; width: 100%;">
                             <table style="font-size: 12px; width: 100%;">
                                 <td>Total Due</td>
                                 <td>
@@ -50,7 +50,7 @@
                                 </tr>
                             </table>
                             
-                            <div style="min-height: 350px;">
+                            <div style="min-height: 270px;">
                                 <table
                                     style="margin-top: 70px; width: 100%; padding: 40px; border-collapse: collapse; color: white; font-size: 11px;">
                                     <thead>
