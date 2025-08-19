@@ -50,7 +50,7 @@
                                 </tr>
                             </table>
                             
-                            <div style="min-height: 805px;">
+                            <div style="min-height: 400px;">
                                 <table
                                     style="margin-top: 70px; width: 100%; padding: 40px; border-collapse: collapse; color: white; font-size: 11px;">
                                     <thead>
@@ -112,8 +112,8 @@
                                         </tr> --}}
                                     </tbody>
                                 </table>
-
-                                <table style="width: 100%; border-collapse: collapse; margin-top: 85px;">
+                            </div>
+                            <table style="width: 100%; border-collapse: collapse; margin-top: 85px;">
                                     <tr>
                                         <td style="text-align: left; font-size: 12px; font-weight: 500; color: #1b1f23;">
                                             THANK YOU
@@ -133,9 +133,7 @@
                                             </table>
                                         </td>
                                     </tr>
-                                </table>
-                            </div>
-
+                            </table>
                         </td>
                     </tr>
                     <!-- Content End-->
