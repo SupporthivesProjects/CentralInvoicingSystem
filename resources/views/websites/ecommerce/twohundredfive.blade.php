@@ -18,7 +18,7 @@
                                 <tr style="position: relative;">
                                     <td style="position: absolute; left: 20px; font-weight: bold; top: 48px;">
                                         #{{ $invoice_number }}</td>
-                                    <td style="position: absolute; right: 410px; font-weight: bold; top: 48px;">
+                                    <td style="position: absolute; right: 420px; font-weight: bold; top: 48px;">
                                         {{ $invoice_date }}</td>
                                 </tr>
                             </table>
@@ -36,7 +36,7 @@
                             <table style="font-size: 12px; width: 100%;">
                                 <td>Total Due</td>
                                 <td>
-                                    <div style="height: 1px; width: 550px; background-color: #E48920;"></div>
+                                    <div style="height: 1px; width: 575px; background-color: #E48920;"></div>
                                 </td>
                                 <td>Invoice To :</td>
                             </table>
@@ -46,11 +46,11 @@
                                         style="font-size: 32px; font-weight: bold; padding-left: 60px; padding-top: 13px;">
                                         {{ site_currency() . number_format($invoice_amount ?? 0, 2) }}</td>
                                     <td align="right"
-                                        style="font-size: 16px; vertical-align: middle; font-weight: bold;">{{ $customer_name ? $customer_name : '' }}</td>
+                                        style="font-size: 16px; padding-right: 10px; vertical-align: middle; font-weight: bold;">{{ $customer_name ? $customer_name : '' }}</td>
                                 </tr>
                             </table>
                             
-                            <div style="min-height: 400px;">
+                            <div style="min-height: 350px;">
                                 <table
                                     style="margin-top: 70px; width: 100%; padding: 40px; border-collapse: collapse; color: white; font-size: 11px;">
                                     <thead>
