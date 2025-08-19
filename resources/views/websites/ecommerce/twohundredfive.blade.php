@@ -49,8 +49,8 @@
                                         style="font-size: 16px; vertical-align: middle; font-weight: bold;">{{ $customer_name ? $customer_name : '' }}</td>
                                 </tr>
                             </table>
-                            
-                            <div style="min-height: 700px;">
+
+                            <div style="min-height: 640px;">
                                 <table
                                     style="margin-top: 70px; width: 100%; padding: 40px; border-collapse: collapse; color: white; font-size: 11px;">
                                     <thead>
