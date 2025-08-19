@@ -2,12 +2,23 @@
 <html>
 <head>
     <title>{{ $site_name . $invoice_number }}</title>
+    <style>
+        .footer-fixed {
+            position: fixed;
+            bottom: 0px;
+            left: 0;
+            right: 0;
+            width: 100%;
+            /* background: url('{{ $invoice_footer_image }}') center center no-repeat; */
+            /* background-size: cover; */
+        }
+    </style>
 </head>
 <body style="padding: 0px; margin: 0px;">
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
             <td align="center">
-                <table width="700" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
+                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse;">
                     <!-- Header -->
                     <tr>
                         <td style="padding: 0px;">
@@ -133,44 +144,50 @@
                         </td>
                     </tr>
                     <!-- Content End-->
+                    <div class="footer-fixed" style="padding: 40px 0px 0px 0px;">
+                        <div style="display: flex; gap: 24px; align-items: flex-start;padding-bottom: 20px;">
 
-                    <tr>
-                        <td style="padding: 40px 60px 20px 60px;">
-                            <div style="display: flex; gap: 24px; align-items: flex-end;">
-                                <div style="padding: 0px; display: flex; flex-direction: column; gap: 12px;width: 100%;">
-                                    <p style="font-family:  Arial;font-size: 13px;margin: 0px; font-weight: 400; text-align: center;">
-                                        <b>Address</b>
-                                    </p>
-                                    <p style="font-family:  Arial;font-size: 9px;margin: 0px; font-weight: 400; text-align: center;">
-                                        {!! $company_address !!}
-                                    </p>
-                                </div>
-                                <div style="height: 20px; width: 1px; background-color: #000000;"></div>
-                                <div style="padding: 0px; display: flex; flex-direction: column; gap: 12px; width: 100%;">
-                                    <p style="font-family:  Arial;font-size: 13px;margin: 0px; font-weight: 400; text-align: center;">
-                                        <b>Phone</b>
-                                    </p>
-                                    <p style="font-family:  Arial;font-size: 9px;margin: 0px; font-weight: 400; text-align: center;">
-                                        {{ $company_mobile }}
-                                    </p>
-                                </div>
-                                <div style="height: 20px; width: 1px; background-color: #000000;"></div>
-                                <div style="padding: 0px; display: flex; flex-direction: column; gap: 12px; width: 100%;">
-                                    <p style="font-family:  Arial;font-size: 13px;margin: 0px; font-weight: 400; text-align: center;">
-                                        <b>Email</b>
-                                    </p>
-                                    <p style="font-family:  Arial;font-size: 9px;margin: 0px; font-weight: 400; text-align: center;">
-                                        {{ $company_email }}
-                                    </p>
-                                </div>
+                            <!-- Address -->
+                            <div style="padding: 0px; display: flex; flex-direction: column; gap: 12px; width: 100%;">
+                                <p style="font-family: Arial; font-size: 13px; margin: 0px; font-weight: 400; text-align: center;">
+                                    <b>Address</b>
+                                </p>
+                                <p style="font-family: Arial; font-size: 9px; margin: 0px; font-weight: 400; text-align: center;">
+                                    {!! $company_address !!}
+                                </p>
                             </div>
-                        </td>
-                    </tr>
-                     <!-- Footer -->
-                     <tr>
-                        <td style="background-color: #213442; padding: 16px;">
-                        </td>
-                     </tr>
+
+                            <!-- Divider -->
+                            <div style="height: 20px; width: 1px; background-color: #000000;"></div>
+
+                            <!-- Phone -->
+                            <div style="padding: 0px; display: flex; flex-direction: column; gap: 12px; width: 100%;">
+                                <p style="font-family: Arial; font-size: 13px; margin: 0px; font-weight: 400; text-align: center;">
+                                    <b>Phone</b>
+                                </p>
+                                <p style="font-family: Arial; font-size: 9px; margin: 0px; font-weight: 400; text-align: center;">
+                                    {{ $company_mobile }}
+                                </p>
+                            </div>
+
+                            <!-- Divider -->
+                            <div style="height: 20px; width: 1px; background-color: #000000;"></div>
+
+                            <!-- Email -->
+                            <div style="padding: 0px; display: flex; flex-direction: column; gap: 12px; width: 100%;">
+                                <p style="font-family: Arial; font-size: 13px; margin: 0px; font-weight: 400; text-align: center;">
+                                    <b>Email</b>
+                                </p>
+                                <p style="font-family: Arial; font-size: 9px; margin: 0px; font-weight: 400; text-align: center;">
+                                    {{ $company_email }}
+                                </p>
+                            </div>
+
+                        </div>
+                        <!-- Footer -->
+                        <div style="background-color: #213442; padding: 16px;">
+                        </div>
+                    </div>
                 </table>
             </td>
         </tr>
