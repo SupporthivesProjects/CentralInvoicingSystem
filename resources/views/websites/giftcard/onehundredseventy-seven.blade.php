@@ -56,7 +56,8 @@
         <!-- Content Box -->
         <tr>
             <td colspan="4" style="padding: 0px;">
-                <table width="100%" cellspacing="0" cellpadding="10"
+                <div style="min-height: 900px">
+                    <table width="100%" cellspacing="0" cellpadding="10"
                     style="border-collapse: collapse; font-size: 10px; margin-top: 75px;">
                     <!-- Header Row -->
                     <tr style="text-transform: uppercase; border-bottom: 1px solid #293f8c;">
@@ -150,7 +151,8 @@
                             <strong style="font-size: 16px;">{{ site_currency() . number_format($invoice_amount ?? 0, 2) }}</strong>
                         </td>
                     </tr>
-                </table>
+                    </table>
+                </div>
             </td>
         </tr>
 
