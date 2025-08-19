@@ -75,7 +75,7 @@
                             </table>
                         </td>
                     </tr> 
-                    <tr style="border-bottom: 2px solid #428bc2;;">
+                    <tr>
                         <td align="center">
                             <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;"> 
                                 <tr>
@@ -214,7 +214,7 @@
                     <!-- Content End-->  
 
                     <!---footer--->
-                    <div class="footer-fixed" style="background:#8cc4de; height:100px; padding:20px; display:flex; justify-content:space-between; align-items:flex-start; width:100%; box-sizing:border-box;">
+                    <div class="footer-fixed" style="background:#8cc4de; height:100px; padding:20px; display:flex; justify-content:space-between; align-items:flex-start; width:100%; box-sizing:border-box;border-top: 2px solid #428bc2;">
                             
                         <!-- Left Section -->
                         <div style="display:flex; flex-direction:column; gap:6px;">
