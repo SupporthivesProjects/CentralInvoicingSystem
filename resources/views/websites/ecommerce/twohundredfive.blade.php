@@ -16,9 +16,9 @@
                         <td style="height: 130px;">
                             <table style="font-family: 'Poppins'; padding: 39px; width: 100%; font-size: 9px;">
                                 <tr style="position: relative;">
-                                    <td style="position: absolute; left: -5px; font-weight: bold; top: 16px;">
+                                    <td style="position: absolute; left: -12px; font-weight: bold; top: 40px;">
                                         #{{ $invoice_number }}</td>
-                                    <td style="position: absolute; right: 333px; font-weight: bold; top: 16px;">
+                                    <td style="position: absolute; right: 450px; font-weight: bold; top: 40px;">
                                         {{ $invoice_date }}</td>
                                 </tr>
                             </table>
@@ -32,8 +32,8 @@
                     <tr>
 
                         <td
-                            style="font-family: 'Poppins'; font-size: 9px; vertical-align: top; padding: 0px 40px 0px 40px;">
-                            <table style="font-size: 12px; ">
+                            style="font-family: 'Poppins'; font-size: 9px; vertical-align: top; padding: 0px 40px 0px 40px; width: 100%;">
+                            <table style="font-size: 12px; width: 100%;">
                                 <td>Total Due</td>
                                 <td>
                                     <div style="height: 1px; width: 450px; background-color: #E48920;"></div>
@@ -50,7 +50,7 @@
                                 </tr>
                             </table>
                             
-                            <div style="min-height: 800px;">
+                            <div style="min-height: 805px;">
                                 <table
                                     style="margin-top: 70px; width: 100%; padding: 40px; border-collapse: collapse; color: white; font-size: 11px;">
                                     <thead>
