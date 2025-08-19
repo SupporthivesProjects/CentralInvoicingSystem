@@ -281,7 +281,7 @@
 
                   <!--footer-->
                   <tr> 
-                        <td style="padding:20px 20px;background: url('{{ $invoice_footer_image }}');background-repeat: no-repeat;background-position: center;background-size: cover;height:160px;vertical-align: top;padding-left: 40px;">
+                        <td style="padding:20px 20px;background: url('{{ $invoice_footer_image }}');background-repeat: no-repeat;background-position: center;background-size: cover;height:240px;vertical-align: top;padding-left: 40px;">
                           <table style="border-collapse: collapse;width:40%;">
                               <tr>
                                  <td colspan="2">
