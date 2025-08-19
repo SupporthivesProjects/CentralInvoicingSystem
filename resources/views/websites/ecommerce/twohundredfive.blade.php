@@ -10,7 +10,7 @@
         <tr>
             <td align="center">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
-                    style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1); background-image: url('{{ $invoice_header_image }}'); background-position: center; background-repeat: no-repeat; background-size: cover; height: 870px;">
+                    style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1); background-image: url('{{ $invoice_header_image }}'); background-position: center; background-repeat: no-repeat; background-size: cover; height: 100vh;">
                     <!-- Header -->
                     <tr style="padding: 200px 50px 0px 50px;">
                         <td style="height: 130px;">
