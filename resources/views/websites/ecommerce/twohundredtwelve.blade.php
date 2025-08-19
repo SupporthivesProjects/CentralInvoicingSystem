@@ -216,6 +216,24 @@
                                        </p>
                                     </td>
                                  </tr> --}}
+                                 <tr style="background:#ffffff;height: 24px;">
+                                    <td style="padding: 5px 10px;">
+                                       <p style="margin: 0px;font-size:9px;font-weight:400;font-family:poppins;line-height:14px;color:#6e7160;">
+                                       </p>
+                                    </td>
+                                    <td style="padding: 5px 10px;">
+                                       <p style="margin: 0px;font-size:9px;font-weight:400;font-family:poppins;line-height:14px;color:#6e7160;">
+                                       </p>
+                                    </td>
+                                    <td style="padding: 5px 10px;" align="right">
+                                       <p style="margin: 0px;font-size:9px;font-weight:400;font-family:poppins;line-height:14px;color:#6e7160;">
+                                       </p>
+                                    </td>
+                                    <td style="padding: 5px 10px;" align="right">
+                                       <p style="margin: 0px;font-size:9px;font-weight:400;font-family:poppins;line-height:14px;color:#6e7160;">
+                                       </p>
+                                    </td>
+                                 </tr>
                                  <tr style="height: 24px;">
                                     <td style="padding: 5px 10px;" colspan="2"></td>
                                     <td style="padding: 5px 10px;background:#f1f1f1;" align="left">
