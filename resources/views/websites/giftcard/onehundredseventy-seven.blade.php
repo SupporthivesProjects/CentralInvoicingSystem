@@ -55,8 +55,8 @@
 
         <!-- Content Box -->
         <tr>
-            <td colspan="4" style="padding: 0px;">
-                <div style="min-height: 900px">
+            <td colspan="4" style="padding: 0px 150px 0px 0px;">
+                <div style="min-height: 700px">
                     <table width="100%" cellspacing="0" cellpadding="10"
                     style="border-collapse: collapse; font-size: 10px; margin-top: 75px;">
                     <!-- Header Row -->

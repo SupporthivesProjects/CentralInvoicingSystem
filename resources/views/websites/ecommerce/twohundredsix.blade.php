@@ -46,7 +46,7 @@
 
 
                     <!-- Content -->
-                     <div style="min-height: 1000px;">
+                     <div style="min-height: 700px;">
                         <tr>
                             
                             <td
