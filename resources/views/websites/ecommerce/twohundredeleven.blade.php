@@ -23,7 +23,7 @@
     </style>
 
 </head>
-<body style="background: linear-gradient(to bottom, #ffffff 30%, #8cc4de 70%);">
+<body style="background: linear-gradient(to bottom, #ffffff 30%, #8cc4de 30%);">
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
             <td align="center" style="padding: 0px 0;">
