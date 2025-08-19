@@ -24,7 +24,7 @@
                     <tr>
                         <td style="padding: 0px 0px 0px 40px;">
                             <div style="display: flex; align-items: flex-start;">
-                                <div style="position: relative; top: -34px; min-height: 220px !important; ">
+                                <div style="position: relative; top: -34px; min-height: 250px !important; ">
                                     <table style="border-collapse: collapse; background-color: #F2F2F2; border-radius: 10px 10px 0px 0px;">
                                         <tr style="border-collapse: collapse;height: 34px;background-color: #e03b42;">
                                             <td style="width: 200px; color: #FFFFFF; text-align: start; padding: 0px 16px;font-family:  Arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse; border-radius: 10px 0px 0px 0px;">
