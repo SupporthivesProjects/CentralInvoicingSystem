@@ -6,11 +6,11 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 </head>
-<body>
+<body style="margin: 0px; padding: 0px;">
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
-            <td align="center" bgcolor="#ffffff" style="padding: 20px 0;">
-                <table width="600" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
+            <td align="center">
+                <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
                      <!---header--->
                     <tr> 
                         <td align="center" style="padding: 20px 20px;background: url('{{ $invoice_header_image }}');background-repeat: no-repeat;background-position: center;background-size: cover;height:80px;">
@@ -58,203 +58,205 @@
                                  </td>
                               </tr>
                            </table>
-                           <table style="width: 100%;border-collapse: collapse;margin-top: 40px;">
-                              <tr style="background: #6e7160;">
-                                 <td style="padding: 5px 10px;">
-                                    <p style="margin: 0px;font-size:11px;font-weight:700;font-family:poppins;line-height:24px;text-transform:uppercase;color:#ffffff;">
-                                      Qty   
-                                    </p>
-                                 </td>
-                                 <td style="padding: 5px 10px;">
-                                    <p style="margin: 0px;font-size:11px;font-weight:700;font-family:poppins;line-height:24px;text-transform:uppercase;color:#ffffff;">
-                                      Item Description  
-                                    </p>
-                                 </td>
-                                 <td style="padding: 5px 10px;" align="right">
-                                    <p style="margin: 0px;font-size:11px;font-weight:700;font-family:poppins;line-height:24px;text-transform:uppercase;color:#ffffff;">
-                                      Delivery  
-                                    </p>
-                                 </td>
-                                 <td style="padding: 5px 10px;" align="right">
-                                    <p style="margin: 0px;font-size:11px;font-weight:700;font-family:poppins;line-height:24px;text-transform:uppercase;color:#ffffff;">
-                                      Total   
-                                    </p>
-                                 </td>
-                              </tr>
-                              @foreach ($products as $product)
-                              <tr style="background:#f1f1f1;height: 24px;">
-                                 <td style="padding: 5px 10px;">
-                                    <p style="margin: 0px;font-size:9px;font-weight:400;font-family:poppins;line-height:14px;color:#6e7160;">
-                                      1  
-                                    </p>
-                                 </td>
-                                 <td style="padding: 5px 10px;">
-                                    <p style="margin: 0px;font-size:9px;font-weight:400;font-family:poppins;line-height:14px;color:#6e7160;">
-                                      Wedding Thank You Note Design  
-                                    </p>
-                                 </td>
-                                 <td style="padding: 5px 10px;" align="right">
-                                    <p style="margin: 0px;font-size:9px;font-weight:400;font-family:poppins;line-height:14px;color:#6e7160;">
-                                      Urgent (+$35)  
-                                    </p>
-                                 </td>
-                                 <td style="padding: 5px 10px;" align="right">
-                                    <p style="margin: 0px;font-size:9px;font-weight:400;font-family:poppins;line-height:14px;color:#6e7160;">
-                                      {{ site_currency() . number_format($invoice_amount ?? 0, 2) }}   
-                                    </p>
-                                 </td>
-                              </tr>
-                              @endforeach
-                              {{-- <tr style="height: 24px;">
-                                 <td style="padding: 5px 10px;">
-                                    <p style="margin: 0px;font-size:9px;font-weight:400;font-family:poppins;line-height:14px;color:#6e7160;">
-                                      1  
-                                    </p>
-                                 </td>
-                                 <td style="padding: 5px 10px;">
-                                    <p style="margin: 0px;font-size:9px;font-weight:400;font-family:poppins;line-height:14px;color:#6e7160;">
-                                      Wedding Thank You Note Design  
-                                    </p>
-                                 </td>
-                                 <td style="padding: 5px 10px;" align="right">
-                                    <p style="margin: 0px;font-size:9px;font-weight:400;font-family:poppins;line-height:14px;color:#6e7160;">
-                                      Urgent (+$35)  
-                                    </p>
-                                 </td>
-                                 <td style="padding: 5px 10px;" align="right">
-                                    <p style="margin: 0px;font-size:9px;font-weight:400;font-family:poppins;line-height:14px;color:#6e7160;">
-                                     {{ site_currency() . number_format($invoice_amount ?? 0, 2) }}  
-                                    </p>
-                                 </td>
-                              </tr> --}}
-                              {{-- <tr style="background:#f1f1f1;height: 24px;">
-                                 <td style="padding: 5px 10px;">
-                                    <p style="margin: 0px;font-size:9px;font-weight:400;font-family:poppins;line-height:14px;color:#6e7160;">
-                                      
-                                    </p>
-                                 </td>
-                                 <td style="padding: 5px 10px;">
-                                    <p style="margin: 0px;font-size:9px;font-weight:400;font-family:poppins;line-height:14px;color:#6e7160;">
+                           <div style="min-height: 550px;">
+                              <table style="width: 100%;border-collapse: collapse;margin-top: 40px;">
+                                 <tr style="background: #6e7160;">
+                                    <td style="padding: 5px 10px;">
+                                       <p style="margin: 0px;font-size:11px;font-weight:700;font-family:poppins;line-height:24px;text-transform:uppercase;color:#ffffff;">
+                                       Qty   
+                                       </p>
+                                    </td>
+                                    <td style="padding: 5px 10px;">
+                                       <p style="margin: 0px;font-size:11px;font-weight:700;font-family:poppins;line-height:24px;text-transform:uppercase;color:#ffffff;">
+                                       Item Description  
+                                       </p>
+                                    </td>
+                                    <td style="padding: 5px 10px;" align="right">
+                                       <p style="margin: 0px;font-size:11px;font-weight:700;font-family:poppins;line-height:24px;text-transform:uppercase;color:#ffffff;">
+                                       Delivery  
+                                       </p>
+                                    </td>
+                                    <td style="padding: 5px 10px;" align="right">
+                                       <p style="margin: 0px;font-size:11px;font-weight:700;font-family:poppins;line-height:24px;text-transform:uppercase;color:#ffffff;">
+                                       Total   
+                                       </p>
+                                    </td>
+                                 </tr>
+                                 @foreach ($products as $product)
+                                 <tr style="background:#f1f1f1;height: 24px;">
+                                    <td style="padding: 5px 10px;">
+                                       <p style="margin: 0px;font-size:9px;font-weight:400;font-family:poppins;line-height:14px;color:#6e7160;">
+                                       1  
+                                       </p>
+                                    </td>
+                                    <td style="padding: 5px 10px;">
+                                       <p style="margin: 0px;font-size:9px;font-weight:400;font-family:poppins;line-height:14px;color:#6e7160;">
+                                       Wedding Thank You Note Design  
+                                       </p>
+                                    </td>
+                                    <td style="padding: 5px 10px;" align="right">
+                                       <p style="margin: 0px;font-size:9px;font-weight:400;font-family:poppins;line-height:14px;color:#6e7160;">
+                                       Urgent (+$35)  
+                                       </p>
+                                    </td>
+                                    <td style="padding: 5px 10px;" align="right">
+                                       <p style="margin: 0px;font-size:9px;font-weight:400;font-family:poppins;line-height:14px;color:#6e7160;">
+                                       {{ site_currency() . number_format($invoice_amount ?? 0, 2) }}   
+                                       </p>
+                                    </td>
+                                 </tr>
+                                 @endforeach
+                                 {{-- <tr style="height: 24px;">
+                                    <td style="padding: 5px 10px;">
+                                       <p style="margin: 0px;font-size:9px;font-weight:400;font-family:poppins;line-height:14px;color:#6e7160;">
+                                       1  
+                                       </p>
+                                    </td>
+                                    <td style="padding: 5px 10px;">
+                                       <p style="margin: 0px;font-size:9px;font-weight:400;font-family:poppins;line-height:14px;color:#6e7160;">
+                                       Wedding Thank You Note Design  
+                                       </p>
+                                    </td>
+                                    <td style="padding: 5px 10px;" align="right">
+                                       <p style="margin: 0px;font-size:9px;font-weight:400;font-family:poppins;line-height:14px;color:#6e7160;">
+                                       Urgent (+$35)  
+                                       </p>
+                                    </td>
+                                    <td style="padding: 5px 10px;" align="right">
+                                       <p style="margin: 0px;font-size:9px;font-weight:400;font-family:poppins;line-height:14px;color:#6e7160;">
+                                       {{ site_currency() . number_format($invoice_amount ?? 0, 2) }}  
+                                       </p>
+                                    </td>
+                                 </tr> --}}
+                                 {{-- <tr style="background:#f1f1f1;height: 24px;">
+                                    <td style="padding: 5px 10px;">
+                                       <p style="margin: 0px;font-size:9px;font-weight:400;font-family:poppins;line-height:14px;color:#6e7160;">
                                        
-                                    </p>
-                                 </td>
-                                 <td style="padding: 5px 10px;" align="right">
-                                    <p style="margin: 0px;font-size:9px;font-weight:400;font-family:poppins;line-height:14px;color:#6e7160;">
-                                      
-                                    </p>
-                                 </td>
-                                 <td style="padding: 5px 10px;" align="right">
-                                    <p style="margin: 0px;font-size:9px;font-weight:400;font-family:poppins;line-height:14px;color:#6e7160;">
-                                        
-                                    </p>
-                                 </td>
-                              </tr>
-                              <tr style="height: 24px;">
-                                 <td style="padding: 5px 10px;">
-                                    <p style="margin: 0px;font-size:9px;font-weight:400;font-family:poppins;line-height:14px;color:#6e7160;">
-                                      
-                                    </p>
-                                 </td>
-                                 <td style="padding: 5px 10px;">
-                                    <p style="margin: 0px;font-size:9px;font-weight:400;font-family:poppins;line-height:14px;color:#6e7160;">
+                                       </p>
+                                    </td>
+                                    <td style="padding: 5px 10px;">
+                                       <p style="margin: 0px;font-size:9px;font-weight:400;font-family:poppins;line-height:14px;color:#6e7160;">
+                                          
+                                       </p>
+                                    </td>
+                                    <td style="padding: 5px 10px;" align="right">
+                                       <p style="margin: 0px;font-size:9px;font-weight:400;font-family:poppins;line-height:14px;color:#6e7160;">
                                        
-                                    </p>
-                                 </td>
-                                 <td style="padding: 5px 10px;" align="right">
-                                    <p style="margin: 0px;font-size:9px;font-weight:400;font-family:poppins;line-height:14px;color:#6e7160;">
-                                        
-                                    </p>
-                                 </td>
-                                 <td style="padding: 5px 10px;" align="right">
-                                    <p style="margin: 0px;font-size:9px;font-weight:400;font-family:poppins;line-height:14px;color:#6e7160;">
+                                       </p>
+                                    </td>
+                                    <td style="padding: 5px 10px;" align="right">
+                                       <p style="margin: 0px;font-size:9px;font-weight:400;font-family:poppins;line-height:14px;color:#6e7160;">
+                                          
+                                       </p>
+                                    </td>
+                                 </tr>
+                                 <tr style="height: 24px;">
+                                    <td style="padding: 5px 10px;">
+                                       <p style="margin: 0px;font-size:9px;font-weight:400;font-family:poppins;line-height:14px;color:#6e7160;">
                                        
-                                    </p>
-                                 </td>
-                              </tr>
-                              <tr style="background:#f1f1f1;height: 24px;">
-                                 <td style="padding: 5px 10px;">
-                                    <p style="margin: 0px;font-size:9px;font-weight:400;font-family:poppins;line-height:14px;color:#6e7160;">
-                                      
-                                    </p>
-                                 </td>
-                                 <td style="padding: 5px 10px;">
-                                    <p style="margin: 0px;font-size:9px;font-weight:400;font-family:poppins;line-height:14px;color:#6e7160;">
+                                       </p>
+                                    </td>
+                                    <td style="padding: 5px 10px;">
+                                       <p style="margin: 0px;font-size:9px;font-weight:400;font-family:poppins;line-height:14px;color:#6e7160;">
+                                          
+                                       </p>
+                                    </td>
+                                    <td style="padding: 5px 10px;" align="right">
+                                       <p style="margin: 0px;font-size:9px;font-weight:400;font-family:poppins;line-height:14px;color:#6e7160;">
+                                          
+                                       </p>
+                                    </td>
+                                    <td style="padding: 5px 10px;" align="right">
+                                       <p style="margin: 0px;font-size:9px;font-weight:400;font-family:poppins;line-height:14px;color:#6e7160;">
+                                          
+                                       </p>
+                                    </td>
+                                 </tr>
+                                 <tr style="background:#f1f1f1;height: 24px;">
+                                    <td style="padding: 5px 10px;">
+                                       <p style="margin: 0px;font-size:9px;font-weight:400;font-family:poppins;line-height:14px;color:#6e7160;">
                                        
-                                    </p>
-                                 </td>
-                                 <td style="padding: 5px 10px;" align="right">
-                                    <p style="margin: 0px;font-size:9px;font-weight:400;font-family:poppins;line-height:14px;color:#6e7160;">
-                                      
-                                    </p>
-                                 </td>
-                                 <td style="padding: 5px 10px;" align="right">
-                                    <p style="margin: 0px;font-size:9px;font-weight:400;font-family:poppins;line-height:14px;color:#6e7160;">
-                                        
-                                    </p>
-                                 </td>
-                              </tr>
-                              <tr style="height: 24px;">
-                                 <td style="padding: 5px 10px;">
-                                    <p style="margin: 0px;font-size:9px;font-weight:400;font-family:poppins;line-height:14px;color:#6e7160;">
-                                      
-                                    </p>
-                                 </td>
-                                 <td style="padding: 5px 10px;">
-                                    <p style="margin: 0px;font-size:9px;font-weight:400;font-family:poppins;line-height:14px;color:#6e7160;">
+                                       </p>
+                                    </td>
+                                    <td style="padding: 5px 10px;">
+                                       <p style="margin: 0px;font-size:9px;font-weight:400;font-family:poppins;line-height:14px;color:#6e7160;">
+                                          
+                                       </p>
+                                    </td>
+                                    <td style="padding: 5px 10px;" align="right">
+                                       <p style="margin: 0px;font-size:9px;font-weight:400;font-family:poppins;line-height:14px;color:#6e7160;">
                                        
-                                    </p>
-                                 </td>
-                                 <td style="padding: 5px 10px;" align="right">
-                                    <p style="margin: 0px;font-size:9px;font-weight:400;font-family:poppins;line-height:14px;color:#6e7160;">
-                                        
-                                    </p>
-                                 </td>
-                                 <td style="padding: 5px 10px;" align="right">
-                                    <p style="margin: 0px;font-size:9px;font-weight:400;font-family:poppins;line-height:14px;color:#6e7160;">
+                                       </p>
+                                    </td>
+                                    <td style="padding: 5px 10px;" align="right">
+                                       <p style="margin: 0px;font-size:9px;font-weight:400;font-family:poppins;line-height:14px;color:#6e7160;">
+                                          
+                                       </p>
+                                    </td>
+                                 </tr>
+                                 <tr style="height: 24px;">
+                                    <td style="padding: 5px 10px;">
+                                       <p style="margin: 0px;font-size:9px;font-weight:400;font-family:poppins;line-height:14px;color:#6e7160;">
                                        
-                                    </p>
-                                 </td>
-                              </tr> --}}
-                              <tr style="height: 24px;">
-                                 <td style="padding: 5px 10px;" colspan="2"></td>
-                                 <td style="padding: 5px 10px;background:#f1f1f1;" align="left">
-                                     <p style="margin: 0px;font-size:11px;font-weight:700;font-family:poppins;line-height:14px;text-transform: uppercase;">
-                                      Subtotal
-                                    </p>
-                                 </td>
-                                 <td style="padding: 5px 10px;background:#f1f1f1;" align="right">
-                                    <p style="margin: 0px;font-size:9px;font-weight:400;font-family:poppins;line-height:14px;color:#6e7160;">
-                                       {{ site_currency() . number_format($invoice_amount + $discount_amount ?? 0, 2) }}
-                                    </p>
-                                 </td>
-                              </tr>
-                              <tr style="height: 24px;">
-                                 <td style="padding: 5px 10px;" colspan="2"></td>
-                                 <td style="padding: 5px 10px;" align="left">
-                                     <p style="margin: 0px;font-size:11px;font-weight:700;font-family:poppins;line-height:14px;text-transform: uppercase;">
-                                      Discount
-                                    </p>
-                                 </td>
-                                 <td style="padding: 5px 10px;" align="right">
-                                    <p style="margin: 0px;font-size:9px;font-weight:400;font-family:poppins;line-height:14px;color:#6e7160;">
-                                       {{ site_currency() . number_format($discount_amount ?? 0, 2) }}
-                                    </p>
-                                 </td>
-                              </tr>
-                              <tr style="height: 24px;">
-                                 <td style="padding: 5px 10px;" colspan="2"></td>
-                                 <td style="padding: 5px 10px;background:#f1f1f1;" align="left">
-                                     <p style="margin: 0px;font-size:11px;font-weight:700;font-family:poppins;line-height:14px;text-transform: uppercase;">
-                                      Total Paid 
-                                    </p>
-                                 </td>
-                                 <td style="padding: 5px 10px;background:#f1f1f1;" align="right">
-                                    <p style="margin: 0px;font-size:9px;font-weight:400;font-family:poppins;line-height:14px;color:#6e7160;">
-                                       {{ site_currency() . number_format($invoice_amount ?? 0, 2) }}
-                                    </p>
-                                 </td>
-                              </tr>
-                           </table>
+                                       </p>
+                                    </td>
+                                    <td style="padding: 5px 10px;">
+                                       <p style="margin: 0px;font-size:9px;font-weight:400;font-family:poppins;line-height:14px;color:#6e7160;">
+                                          
+                                       </p>
+                                    </td>
+                                    <td style="padding: 5px 10px;" align="right">
+                                       <p style="margin: 0px;font-size:9px;font-weight:400;font-family:poppins;line-height:14px;color:#6e7160;">
+                                          
+                                       </p>
+                                    </td>
+                                    <td style="padding: 5px 10px;" align="right">
+                                       <p style="margin: 0px;font-size:9px;font-weight:400;font-family:poppins;line-height:14px;color:#6e7160;">
+                                          
+                                       </p>
+                                    </td>
+                                 </tr> --}}
+                                 <tr style="height: 24px;">
+                                    <td style="padding: 5px 10px;" colspan="2"></td>
+                                    <td style="padding: 5px 10px;background:#f1f1f1;" align="left">
+                                       <p style="margin: 0px;font-size:11px;font-weight:700;font-family:poppins;line-height:14px;text-transform: uppercase;">
+                                       Subtotal
+                                       </p>
+                                    </td>
+                                    <td style="padding: 5px 10px;background:#f1f1f1;" align="right">
+                                       <p style="margin: 0px;font-size:9px;font-weight:400;font-family:poppins;line-height:14px;color:#6e7160;">
+                                          {{ site_currency() . number_format($invoice_amount + $discount_amount ?? 0, 2) }}
+                                       </p>
+                                    </td>
+                                 </tr>
+                                 <tr style="height: 24px;">
+                                    <td style="padding: 5px 10px;" colspan="2"></td>
+                                    <td style="padding: 5px 10px;" align="left">
+                                       <p style="margin: 0px;font-size:11px;font-weight:700;font-family:poppins;line-height:14px;text-transform: uppercase;">
+                                       Discount
+                                       </p>
+                                    </td>
+                                    <td style="padding: 5px 10px;" align="right">
+                                       <p style="margin: 0px;font-size:9px;font-weight:400;font-family:poppins;line-height:14px;color:#6e7160;">
+                                          {{ site_currency() . number_format($discount_amount ?? 0, 2) }}
+                                       </p>
+                                    </td>
+                                 </tr>
+                                 <tr style="height: 24px;">
+                                    <td style="padding: 5px 10px;" colspan="2"></td>
+                                    <td style="padding: 5px 10px;background:#f1f1f1;" align="left">
+                                       <p style="margin: 0px;font-size:11px;font-weight:700;font-family:poppins;line-height:14px;text-transform: uppercase;">
+                                       Total Paid 
+                                       </p>
+                                    </td>
+                                    <td style="padding: 5px 10px;background:#f1f1f1;" align="right">
+                                       <p style="margin: 0px;font-size:9px;font-weight:400;font-family:poppins;line-height:14px;color:#6e7160;">
+                                          {{ site_currency() . number_format($invoice_amount ?? 0, 2) }}
+                                       </p>
+                                    </td>
+                                 </tr>
+                              </table>
+                           </div>
                         </td>   
                     </tr>
                     <!-- Content End-->
