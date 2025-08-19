@@ -23,11 +23,11 @@
     </style>
 
 </head>
-<body>
+<body style="background: linear-gradient(to bottom, #ffffff 30%, #8cc4de 70%);">
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
-            <td align="center" bgcolor="#f2f2f2" style="padding: 0px 0;">
-                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse;">
+            <td align="center" style="padding: 0px 0;">
+                <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse;">
                      <!---header--->
                     <tr>
                         <td align="center">
