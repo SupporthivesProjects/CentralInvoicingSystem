@@ -61,7 +61,7 @@
 
 
                     <!-- Content -->
-                    <tr>
+                    <!-- <tr>
                         <td align="center">
                             <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;"> 
                                 <tr>
@@ -74,15 +74,15 @@
                                 </tr>
                             </table>
                         </td>
-                    </tr> 
+                    </tr>  -->
                     <tr>
                         <td align="center">
-                            <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;"> 
+                            <table width="100%" height="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;"> 
                                 <tr>
                                 <td align="left" style="width:30%;vertical-align:top;">
                                     <img src="{{ $invoice_image3 }}" alt="" style="height:250px;">
                                 </td>
-                                <td align="center" style="width:70%;background:#8cc4de;vertical-align:top;padding: 0px 30px;">
+                                <td align="center" style="width:70%;background:#8cc4de;vertical-align:top;padding: 0px 30px;height: 100%;">
                                    <table style="width:100%;border-collapse: collapse;">
                                     <tr>
                                         <td align="left">
