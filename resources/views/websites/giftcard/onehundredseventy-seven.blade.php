@@ -5,7 +5,7 @@
     <title>Invoice</title>
 </head>
 
-<body style="margin: 0; padding: 0;">
+<body style="margin: 0px; padding: 0px;">
     <table width="100%" cellspacing="0" cellpadding="0" style="
     background-image: url('{{ $invoice_image1 }}');
     background-size: 100% 100%;

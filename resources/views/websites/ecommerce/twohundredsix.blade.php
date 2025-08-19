@@ -5,7 +5,7 @@
     <title>getdevving</title>
 </head>
 
-<body>
+<body style="margin: 0px; padding: 0px;">
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
             <td align="center">
