@@ -5,11 +5,11 @@
     <title>getdevving</title>
 </head>
 
-<body>
+<body style="margin: 0px; padding: 0px;">
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
-            <td align="center" bgcolor="#f2f2f2" style="padding: 20px 0;">
-                <table width="600" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
+            <td align="center">
+                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
                     style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
                     <!-- Header -->
                     <tr>
@@ -46,78 +46,80 @@
 
 
                     <!-- Content -->
-                    <tr>
-                        
-                        <td
-                            style="padding:40px;padding-top:0px;background: url(img/body_bg.png) no-repeat;background-position: center;background-size: cover;height:444px; font-family: 'arial'; font-size: 9px; vertical-align: top;">
-                            <br>
-                            <table width="300px" border="1" cellspacing="0" cellpadding="8"
-                                style="border-collapse: collapse; text-align: center;">
-                                <tr>
-                                    <th style="width: 15%; font-weight: bold;">QUANTITY</th>
-                                    <th style="width: 55%; font-weight: bold;">DESCRIPTION</th>
-                                    <th style="width: 15%; font-weight: bold;">UNIT PRICE</th>
-                                    <th style="width: 15%; font-weight: bold;">TOTAL</th>
-                                </tr>
-                                @foreach($products as $product)
-                                <tr>
-                                    <td>1</td>
-                                    <td align="left">Master HTML 5 Video</td>
-                                    <td align="right">{{ site_currency() }}{{ number_format($product->unit_price, 2) }}</td>
-                                    <td align="right">{{ number_format($invoice_amount, 2) }}</td>
-                                </tr>
-                                @endforeach
-                                <!-- Empty rows for spacing -->
-                                {{-- <tr>
-                                    <td>&nbsp;</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>&nbsp;</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>&nbsp;</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>&nbsp;</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>&nbsp;</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr> --}}
-                            </table>
+                     <div style="min-height: 1000px;">
+                        <tr>
+                            
+                            <td
+                                style="padding:40px;padding-top:0px;background: url(img/body_bg.png) no-repeat;background-position: center;background-size: cover;height:444px; font-family: 'arial'; font-size: 9px; vertical-align: top;">
+                                <br>
+                                <table width="100%" border="1" cellspacing="0" cellpadding="8"
+                                    style="border-collapse: collapse; text-align: center;">
+                                    <tr>
+                                        <th style="width: 15%; font-weight: bold;">QUANTITY</th>
+                                        <th style="width: 55%; font-weight: bold;">DESCRIPTION</th>
+                                        <th style="width: 15%; font-weight: bold;">UNIT PRICE</th>
+                                        <th style="width: 15%; font-weight: bold;">TOTAL</th>
+                                    </tr>
+                                    @foreach($products as $product)
+                                    <tr>
+                                        <td>1</td>
+                                        <td align="left">Master HTML 5 Video</td>
+                                        <td align="right">{{ site_currency() }}{{ number_format($product->unit_price, 2) }}</td>
+                                        <td align="right">{{ number_format($invoice_amount, 2) }}</td>
+                                    </tr>
+                                    @endforeach
+                                    <!-- Empty rows for spacing -->
+                                    {{-- <tr>
+                                        <td>&nbsp;</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>&nbsp;</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>&nbsp;</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>&nbsp;</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>&nbsp;</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr> --}}
+                                </table>
 
-                            <!-- Totals Section -->
-                            <table align="right"  cellspacing="0" cellpadding="8"
-                                style=" border-collapse: collapse; width: 23%;">
-                                <tr>
-                                    <td style="font-weight: bold; text-align: right;">SUBTOTAL</td>
-                                    <td style="text-align: right; border: 1px solid gray">{{ site_currency() }}{{ number_format(($invoice_amount + $discount_amount), 2) }}</td>
-                                </tr>
-                                <tr>
-                                    <td style="font-weight: bold; text-align: right;">DISCOUNT</td>
-                                    <td style="text-align: right; border: 1px solid gray">{{ site_currency() }}{{ number_format($discount_amount, 2) }}</td>
-                                </tr>
-                                <tr>
-                                    <td style="font-weight: bold; text-align: right;">TOTAL DUE</td>
-                                    <td style="text-align: right; border: 1px solid gray">{{ number_format($invoice_amount, 2) }}</td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
+                                <!-- Totals Section -->
+                                <table align="right"  cellspacing="0" cellpadding="8"
+                                    style=" border-collapse: collapse; width: 23%;">
+                                    <tr>
+                                        <td style="font-weight: bold; text-align: right;">SUBTOTAL</td>
+                                        <td style="text-align: right; border: 1px solid gray">{{ site_currency() }}{{ number_format(($invoice_amount + $discount_amount), 2) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-weight: bold; text-align: right;">DISCOUNT</td>
+                                        <td style="text-align: right; border: 1px solid gray">{{ site_currency() }}{{ number_format($discount_amount, 2) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-weight: bold; text-align: right;">TOTAL DUE</td>
+                                        <td style="text-align: right; border: 1px solid gray">{{ number_format($invoice_amount, 2) }}</td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </div>
                     <!-- Content End-->
 
 

@@ -5,11 +5,11 @@
     <title>knowhowtodesign</title>
 </head>
 
-<body>
+<body style="margin: 0px; padding: 0px;">
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
-            <td align="center" bgcolor="#f2f2f2" style="padding: 20px 0;">
-                <table width="460" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
+            <td align="center">
+                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
                     style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1); background-image: url('{{ $invoice_header_image }}'); background-position: center; background-repeat: no-repeat; background-size: cover; height: 870px;">
                     <!-- Header -->
                     <tr>
@@ -49,67 +49,70 @@
                                         style="font-size: 16px; vertical-align: middle; font-weight: bold;">{{ $customer_name ? $customer_name : '' }}</td>
                                 </tr>
                             </table>
-                            <table
-                                style="margin-top: 70px; width: 100%; padding: 40px; border-collapse: collapse; color: white; font-size: 11px;">
-                                <thead>
-                                    <tr style="font-size: 12px;">
-                                        <th style="text-align: left; padding: 12px; border-bottom: 1px solid white;">
-                                            DESCRIPTION</th>
-                                        <th style="text-align: right; padding: 12px; border-bottom: 1px solid white;">
-                                            UNIT PRICE</th>
-                                        <th style="text-align: center; padding: 12px; border-bottom: 1px solid white; width: 100px;">
-                                            QTY</th>
-                                        <th style="text-align: right; padding: 12px; border-bottom: 1px solid white; width: 40px;">
-                                            TOTAL</th>
-                                    </tr>
-                                </thead>
-                                <tbody style="color: white;">
-                                    @foreach ($products as $product)
-                                    <tr>
-                                        <td style="padding: 12px; border-bottom: 1px solid #ccc;">{{ $product->name }}</td>
-                                        <td style="padding: 12px; text-align: right; border-bottom: 1px solid #ccc;">
-                                            {{ site_currency() . number_format($product->unit_price ?? 0, 2) }}</td>
-                                        <td style="padding: 12px; text-align: center; border-bottom: 1px solid #ccc;">1
-                                        </td>
-                                        <td style="padding: 12px; text-align: right; border-bottom: 1px solid #ccc;">
-                                            {{ site_currency() . number_format($invoice_amount ?? 0, 2) }}<</td>
-                                    </tr>
-                                    @endforeach
-                                    {{-- <tr>
-                                        <td style="padding: 12px; border-bottom: 1px solid #ccc;">Item Name</td>
-                                        <td style="padding: 12px; text-align: right; border-bottom: 1px solid #ccc;">
-                                            $100.00</td>
-                                        <td style="padding: 12px; text-align: center; border-bottom: 1px solid #ccc;">3
-                                        </td>
-                                        <td style="padding: 12px; text-align: right; border-bottom: 1px solid #ccc;">
-                                            $300.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td style="padding: 12px; border-bottom: 1px solid #ccc;">Item Name</td>
-                                        <td style="padding: 12px; text-align: right; border-bottom: 1px solid #ccc;">
-                                            $50.00</td>
-                                        <td style="padding: 12px; text-align: center; border-bottom: 1px solid #ccc;">2
-                                        </td>
-                                        <td style="padding: 12px; text-align: right; border-bottom: 1px solid #ccc;">
-                                            $100.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td style="padding: 12px; border-bottom: 1px solid #ccc;">Item Name</td>
-                                        <td style="padding: 12px; text-align: right; border-bottom: 1px solid #ccc;">
-                                            $50.00</td>
-                                        <td style="padding: 12px; text-align: center; border-bottom: 1px solid #ccc;">2
-                                        </td>
-                                        <td style="padding: 12px; text-align: right; border-bottom: 1px solid #ccc;">
-                                            $100.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td style="padding: 12px;">Item Name</td>
-                                        <td style="padding: 12px; text-align: right;">$10.00</td>
-                                        <td style="padding: 12px; text-align: center;">2</td>
-                                        <td style="padding: 12px; text-align: right;">$20.00</td>
-                                    </tr> --}}
-                                </tbody>
-                            </table>
+                            
+                            <div style="min-height: 700px;">
+                                <table
+                                    style="margin-top: 70px; width: 100%; padding: 40px; border-collapse: collapse; color: white; font-size: 11px;">
+                                    <thead>
+                                        <tr style="font-size: 12px;">
+                                            <th style="text-align: left; padding: 12px; border-bottom: 1px solid white;">
+                                                DESCRIPTION</th>
+                                            <th style="text-align: right; padding: 12px; border-bottom: 1px solid white;">
+                                                UNIT PRICE</th>
+                                            <th style="text-align: center; padding: 12px; border-bottom: 1px solid white; width: 100px;">
+                                                QTY</th>
+                                            <th style="text-align: right; padding: 12px; border-bottom: 1px solid white; width: 40px;">
+                                                TOTAL</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody style="color: white;">
+                                        @foreach ($products as $product)
+                                        <tr>
+                                            <td style="padding: 12px; border-bottom: 1px solid #ccc;">{{ $product->name }}</td>
+                                            <td style="padding: 12px; text-align: right; border-bottom: 1px solid #ccc;">
+                                                {{ site_currency() . number_format($product->unit_price ?? 0, 2) }}</td>
+                                            <td style="padding: 12px; text-align: center; border-bottom: 1px solid #ccc;">1
+                                            </td>
+                                            <td style="padding: 12px; text-align: right; border-bottom: 1px solid #ccc;">
+                                                {{ site_currency() . number_format($invoice_amount ?? 0, 2) }}<</td>
+                                        </tr>
+                                        @endforeach
+                                        {{-- <tr>
+                                            <td style="padding: 12px; border-bottom: 1px solid #ccc;">Item Name</td>
+                                            <td style="padding: 12px; text-align: right; border-bottom: 1px solid #ccc;">
+                                                $100.00</td>
+                                            <td style="padding: 12px; text-align: center; border-bottom: 1px solid #ccc;">3
+                                            </td>
+                                            <td style="padding: 12px; text-align: right; border-bottom: 1px solid #ccc;">
+                                                $300.00</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 12px; border-bottom: 1px solid #ccc;">Item Name</td>
+                                            <td style="padding: 12px; text-align: right; border-bottom: 1px solid #ccc;">
+                                                $50.00</td>
+                                            <td style="padding: 12px; text-align: center; border-bottom: 1px solid #ccc;">2
+                                            </td>
+                                            <td style="padding: 12px; text-align: right; border-bottom: 1px solid #ccc;">
+                                                $100.00</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 12px; border-bottom: 1px solid #ccc;">Item Name</td>
+                                            <td style="padding: 12px; text-align: right; border-bottom: 1px solid #ccc;">
+                                                $50.00</td>
+                                            <td style="padding: 12px; text-align: center; border-bottom: 1px solid #ccc;">2
+                                            </td>
+                                            <td style="padding: 12px; text-align: right; border-bottom: 1px solid #ccc;">
+                                                $100.00</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 12px;">Item Name</td>
+                                            <td style="padding: 12px; text-align: right;">$10.00</td>
+                                            <td style="padding: 12px; text-align: center;">2</td>
+                                            <td style="padding: 12px; text-align: right;">$20.00</td>
+                                        </tr> --}}
+                                    </tbody>
+                                </table>
+                            </div>
 
                             <table style="width: 100%; border-collapse: collapse; margin-top: 85px;">
                                 <tr>
