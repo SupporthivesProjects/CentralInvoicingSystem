@@ -7,15 +7,15 @@
 
 <body style="margin: 0px; padding: 0px;">
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
-        <tr>
-            <td align="top">
+        <tr style="width: 100%;">
+            <td align="top" style="width: 100%;">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
                     style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
                     <!-- Header -->
-                    <tr>
-                        <td style="padding: 0px;max-height: 130px;">
-                            <table>
-                                <tr>
+                    <tr style="width: 100%;">
+                        <td style="padding: 0px;max-height: 130px; width: 100%;">
+                            <table style="width: 100%;">
+                                <tr style="width: 100%;">
                                     <td style="width: 50%; vertical-align: top; padding-left: 40px; padding-top: 40px;">
                                         <img src="{{ $company_logo }}" alt="Get Devwing Logo"
                                             style="height: 40px;"><br><br>
@@ -47,7 +47,7 @@
 
                     <!-- Content -->
                         <tr> 
-                            <td style="padding:40px;padding-top:0px;background: url(img/body_bg.png) no-repeat;background-position: center;background-size: cover;height:700px; font-family: 'arial'; font-size: 9px; vertical-align: top;">
+                            <td style="padding:40px;padding-top:0px;background: url(img/body_bg.png) no-repeat;background-position: center;background-size: cover;height:770px; font-family: 'arial'; font-size: 9px; vertical-align: top;">
                                 <br>
                                 <table width="100%" border="1" cellspacing="0" cellpadding="8"
                                     style="border-collapse: collapse; text-align: center;">

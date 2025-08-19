@@ -56,9 +56,9 @@
         <!-- Content Box -->
         <tr>
             <td colspan="4" style="padding: 0px 160px 0px 0px;">
-                <div style="min-height: 650px">
+                <div style="min-height: 520px">
                     <table width="100%" cellspacing="0" cellpadding="10"
-                    style="border-collapse: collapse; font-size: 10px; margin-top: 90px;">
+                    style="border-collapse: collapse; font-size: 10px; margin-top: 70px;">
                     <!-- Header Row -->
                     <tr style="text-transform: uppercase; border-bottom: 1px solid #293f8c;">
                         <th align="left" style="font-weight: 600;width:50%">Item Description</th>
