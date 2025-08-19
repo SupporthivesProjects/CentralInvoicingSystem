@@ -58,7 +58,7 @@
                                  </td>
                               </tr>
                            </table>
-                           <div style="min-height: 520px;">
+                           <div style="min-height: 500px;">
                               <table style="width: 100%;border-collapse: collapse;margin-top: 40px;">
                                  <tr style="background: #6e7160;">
                                     <td style="padding: 5px 10px;">
