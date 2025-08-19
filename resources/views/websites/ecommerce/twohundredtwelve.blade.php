@@ -58,7 +58,7 @@
                                  </td>
                               </tr>
                            </table>
-                           <div style="min-height: 550px;">
+                           <div style="min-height: 520px;">
                               <table style="width: 100%;border-collapse: collapse;margin-top: 40px;">
                                  <tr style="background: #6e7160;">
                                     <td style="padding: 5px 10px;">
@@ -281,7 +281,7 @@
 
                   <!--footer-->
                   <tr> 
-                        <td style="padding:20px 20px;background: url('{{ $invoice_footer_image }}');background-repeat: no-repeat;background-position: center;background-size: cover;height:280px;vertical-align: top;padding-left: 40px;">
+                        <td style="padding:20px 20px;background: url('{{ $invoice_footer_image }}');background-repeat: no-repeat;background-position: center;background-size: cover;height:260px;vertical-align: top;padding-left: 40px;">
                           <table style="border-collapse: collapse;width:40%;">
                               <tr>
                                  <td colspan="2">
