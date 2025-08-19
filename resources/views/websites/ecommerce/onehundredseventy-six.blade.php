@@ -2,6 +2,17 @@
 <html>
 <head>
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }} </title>
+    <style>
+        .footer-fixed {
+            position: fixed;
+            bottom: 0px;
+            left: 0;
+            right: 0;
+            width: 100%;
+            /* background: url('{{ $invoice_footer_image }}') center center no-repeat; */
+            /* background-size: cover; */
+        }
+    </style>
 </head>
 <body style="padding: 0px; margin: 0px;">
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
@@ -125,18 +136,20 @@
                     <!-- from to -->
 
                      <!-- Footer -->
-                     <tr>
-                        <td style="background: linear-gradient(to right, #e03b42 35%, #202020 35%); padding: 60px 40px 60px 40px; display: flex; justify-content: space-between;">
-                            <p style="font-family: Arial;font-size: 22px;margin: 0px;font-weight: 400; color: #FFFFFF;">Thank You for<br>Purchasing!</p>
-                            <p style="font-family: Arial;font-size: 9px;margin: 0px;font-weight: 400; color: #FFFFFF; text-align: end; line-height: 15px;"><span style="color: #e03b42; font-size: 14px;">Contact</span><br>
-                                {{ $company_name }}<br>
-                                {{ $company_email }}<br>
-                                {!! $company_address !!}<br>
-                                {{ $company_mobile }}<br>
-                                www.bizzspace.co                                
-                            </p>
-                        </td>
-                     </tr>
+                     <div style="background: linear-gradient(to right, #e03b42 35%, #202020 35%); padding: 60px 40px; display: flex; justify-content: space-between;" class="footer-fixed">
+                        <p style="font-family: Arial; font-size: 22px; margin: 0; font-weight: 400; color: #FFFFFF;">
+                            Thank You for<br>Purchasing!
+                        </p>
+                        <p style="font-family: Arial; font-size: 9px; margin: 0; font-weight: 400; color: #FFFFFF; text-align: end; line-height: 15px;">
+                            <span style="color: #e03b42; font-size: 14px;">Contact</span><br>
+                            {{ $company_name }}<br>
+                            {{ $company_email }}<br>
+                            {!! $company_address !!}<br>
+                            {{ $company_mobile }}<br>
+                            www.bizzspace.co
+                        </p>
+                    </div>
+
                 </table>
             </td>
         </tr>
