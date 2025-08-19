@@ -6,7 +6,7 @@
 </head>
 
 <body style="margin: 0; padding: 0;">
-    <table width="600" cellspacing="0" cellpadding="0" style="
+    <table width="100%" cellspacing="0" cellpadding="0" style="
     background-image: url('{{ $invoice_image1 }}');
     background-size: 100% 100%;
     background-repeat: no-repeat;
@@ -56,7 +56,7 @@
         <!-- Content Box -->
         <tr>
             <td colspan="4" style="padding: 0px;">
-                <table width="480px" cellspacing="0" cellpadding="10"
+                <table width="100%" cellspacing="0" cellpadding="10"
                     style="border-collapse: collapse; font-size: 10px; margin-top: 75px;">
                     <!-- Header Row -->
                     <tr style="text-transform: uppercase; border-bottom: 1px solid #293f8c;">
