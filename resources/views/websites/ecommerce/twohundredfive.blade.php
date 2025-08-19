@@ -18,7 +18,7 @@
                                 <tr style="position: relative;">
                                     <td style="position: absolute; left: 20px; font-weight: bold; top: 48px;">
                                         #{{ $invoice_number }}</td>
-                                    <td style="position: absolute; right: 410px; font-weight: bold; top: 48px;">
+                                    <td style="position: absolute; right: 420px; font-weight: bold; top: 48px;">
                                         {{ $invoice_date }}</td>
                                 </tr>
                             </table>
