@@ -6,7 +6,7 @@
 
 
 </head>
-<body>
+<body style="margin: 0px; padding: 0px;">
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
             <td align="center">
@@ -30,13 +30,13 @@
                             
                             <table style="border-collapse: collapse;border-bottom: 0px;border: 0px;background: linear-gradient(to right, #3e1d1b, #0a0a12);">
                                 <tr style="border-collapse: collapse;">
-                                    <td style="padding-top: 10px;width: 300px;padding: 30px;">
+                                    <td style="padding-top: 10px;width: 100%;padding: 30px;">
                                         
                                             <p style="font-size: 15px;font-family: 'Bebas Neue', sans-serif;color: #f24c1e;margin: 0px; text-align: left;padding-bottom: 5px;padding-left: 5px;">Invoice to</p>
                                             <p style="font-family: 'Montserrat', sans-serif;font-size: 16px;margin: 0px; text-align: left;padding-bottom: 5px;padding-left: 5px;color: white;">{{ $customer_name ? $customer_name : '' }}</p>
                                        
                                     </td>
-                                    <td style="padding-top: 10px;width: 300px;padding: 30px;">
+                                    <td style="padding-top: 10px;width: 100%;padding: 30px;">
                                        <p style="font-family: arial;font-size: 60px;margin: 0px;font-weight: 400; text-align: right;padding-bottom: 5px;padding-right: 5px;color: white;">
                                             <b>INVOICE</b>
                                         </p>
@@ -62,147 +62,147 @@
                     <tr >
                             <td style="padding: 50px;padding-top: 0px;background-color: white;">
                                 <div style="min-height: 650px;">
-                            <table style="border-collapse: collapse;">
-                                <tr style="border-collapse: collapse;height: 40px;border-bottom: 1px solid #f24c1e;font-family: 'Bebas Neue', sans-serif;">
-                                    <td style="width: 300px;text-align: left; font-size: 17px;margin: 0px;border-collapse: collapse;">
-                                        <p>ITEM DESCRIPTION</p>
-                                    </td>
-                                    <td style="width: 150px;text-align: center; font-size: 17px;margin: 0px; border-collapse: collapse;padding-left: 5px;">
-                                        <p>UNIT PRICE</p>
-                                    </td>
-                                    <td style="width: 200px;text-align:center; font-size: 17px;margin: 0px;border-collapse: collapse;">
-                                        <p>QTY</p>
-                                    </td>
-                                    <td style="width:100px;text-align: center; font-size: 17px;margin: 0px;border-collapse: collapse;padding-right: 2px;">
-                                        <p>Total</p>
-                                    </td>
-                                </tr>
-                                @foreach ($products as $product)
-                                <tr style="border-collapse: collapse;height: 50px;">
-                                    <td style="width: 350px;text-align:left;font-family: 'Montserrat', sans-serif;font-size:8px;margin: 0px;font-weight: 400; border-collapse: collapse;">
-                                     <b> {{ $product->name }}<br></b>
-                                   
-                                    </td>
-                                    <td style="width:150px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;">
-                                       {{ site_currency() . number_format($product->unit_price ?? 0, 2) }}
-                                    </td>
-                                    <td style="width:100px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;">
-                                     1
-                                    </td>
-                                    <td style="width:100px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-right: 2px;">
-                                      {{ site_currency() . number_format($invoice_amount ?? 0, 2) }}
-                                    </td>
-                                </tr>
-                                @endforeach
-                                {{-- <tr style="border-collapse: collapse;height: 50px;">
-                                    <td style="width: 350px;text-align:left;font-family: 'Montserrat', sans-serif;font-size:8px;margin: 0px;font-weight: 400; border-collapse: collapse;">
-                                      <b> Item Name<br></b>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
- 
-                                    </td>
-                                    <td style="width:150px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;">
-                                       $100.00
-                                    </td>
-                                    <td style="width:100px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;">
-                                     5
-                                    </td>
-                                    <td style="width:100px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-right: 2px;">
-                                      $500.00
-                                    </td>
-                                </tr>
-                                  <tr style="border-collapse: collapse;height: 50px;">
-                                    <td style="width: 350px;text-align:left;font-family: 'Montserrat', sans-serif;font-size:8px;margin: 0px;font-weight: 400; border-collapse: collapse;">
-                                      <b> Item Name<br></b>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
- 
-                                    </td>
-                                    <td style="width:150px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;">
-                                      $50.00
-                                    </td>
-                                    <td style="width:100px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;">
-                                     5
-                                    </td>
-                                    <td style="width:100px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-right: 2px;">
-                                      $500.00
-                                    </td>
-                                </tr>
-                               <tr style="border-collapse: collapse;height: 50px;">
-                                    <td style="width: 350px;text-align:left;font-family: 'Montserrat', sans-serif;font-size:8px;margin: 0px;font-weight: 400; border-collapse: collapse;">
-                                      <b> Item Name<br></b>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
- 
-                                    </td>
-                                    <td style="width:150px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;">
-                                      $50.00
-                                    </td>
-                                    <td style="width:100px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;">
-                                     5
-                                    </td>
-                                    <td style="width:100px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-right: 2px;">
-                                      $500.00
-                                    </td>
-                                </tr>
-                                <tr style="border-collapse: collapse;height: 50px;border-bottom: 1px solid #f24c1e;">
-                                    <td style="width: 350px;text-align:left;font-family: 'Montserrat', sans-serif;font-size:8px;margin: 0px;font-weight: 400; border-collapse: collapse;">
-                                      <b> Item Name<br></b>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
- 
-                                    </td>
-                                    <td style="width:150px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;">
-                                      $50.00
-                                    </td>
-                                    <td style="width:100px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;">
-                                     5
-                                    </td>
-                                    <td style="width:100px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-right: 2px;">
-                                      $500.00
-                                    </td>
-                                </tr> --}}
-                                <tr style="border-collapse: collapse;height: 15px;">
-                                    <td style="width: 350px;text-align:left;font-family: 'Montserrat', sans-serif;font-size:8px;margin: 0px;font-weight: 400; border-collapse: collapse;">
-                                     
-                                    </td>
-                                    <td style="width:150px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;">
-                                      
-                                    </td>
-                                    <td style="width:100px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;">
-                                     
-                                    </td>
-                                    <td style="width:100px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-right: 2px;">
-                                     
-                                    </td>
-                                </tr>
-                                <tr style="border-collapse: collapse;height: 25px;">
-                                    <td style="width: 350px;text-align:center;font-family: 'Montserrat', sans-serif;font-size:9px;margin: 0px;font-weight: 400; border-collapse: collapse;background-color: #f24c1e;border-top-left-radius: 30px;border-top-right-radius: 30px;color: white;">
-                                        <b>Grand Total:</b>
-                                    </td>
-                                    <td style="width:150px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;">
-                                      
-                                    </td>
-                                    <td style="width:100px;text-align:center;font-family: 'Bebas Neue', sans-serif;font-size: 13px;margin: 0px;font-weight: 400; border-collapse: collapse;">
-                                     <p style="margin-bottom: 0px;margin-top: 0px;">SUBTOTAL</p>
-                                    </td>
-                                    <td style="width:100px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-right: 2px;">
-                                      {{ site_currency() . number_format($invoice_amount ?? 0, 2) }}
-                                    </td>
-                                </tr>
-                                 <tr style="border-collapse: collapse;height: 25px;">
-                                    <td style="width: 350px;text-align:center;font-family: 'Montserrat', sans-serif;font-size:24px;margin: 0px;font-weight: 400; border-collapse: collapse;background-color: #f24c1e;color: white;">
-                                       <b>{{ site_currency() . number_format($invoice_amount + $discount_amount ?? 0, 2) }}</b>
-                                    </td>
-                                    <td style="width:150px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;">
-                                      
-                                    </td>
-                                    <td style="width:100px;text-align:center;font-family: 'Bebas Neue', sans-serif;font-size: 13px;margin: 0px;font-weight: 400; border-collapse: collapse;">
-                                     <p>DISCOUNT</p>
-                                    </td>
-                                    <td style="width:100px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-right: 2px;">
-                                      {{ site_currency() . number_format($discount_amount ?? 0, 2) }}
-                                    </td>
-                                </tr>
-                                
-                            </table>
-                            </div>
+                                    <table style="border-collapse: collapse;">
+                                        <tr style="border-collapse: collapse;height: 40px;border-bottom: 1px solid #f24c1e;font-family: 'Bebas Neue', sans-serif;">
+                                            <td style="width: 300px;text-align: left; font-size: 17px;margin: 0px;border-collapse: collapse;">
+                                                <p>ITEM DESCRIPTION</p>
+                                            </td>
+                                            <td style="width: 150px;text-align: center; font-size: 17px;margin: 0px; border-collapse: collapse;padding-left: 5px;">
+                                                <p>UNIT PRICE</p>
+                                            </td>
+                                            <td style="width: 200px;text-align:center; font-size: 17px;margin: 0px;border-collapse: collapse;">
+                                                <p>QTY</p>
+                                            </td>
+                                            <td style="width:100px;text-align: center; font-size: 17px;margin: 0px;border-collapse: collapse;padding-right: 2px;">
+                                                <p>Total</p>
+                                            </td>
+                                        </tr>
+                                        @foreach ($products as $product)
+                                        <tr style="border-collapse: collapse;height: 50px;">
+                                            <td style="width: 350px;text-align:left;font-family: 'Montserrat', sans-serif;font-size:8px;margin: 0px;font-weight: 400; border-collapse: collapse;">
+                                            <b> {{ $product->name }}<br></b>
+                                        
+                                            </td>
+                                            <td style="width:150px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;">
+                                            {{ site_currency() . number_format($product->unit_price ?? 0, 2) }}
+                                            </td>
+                                            <td style="width:100px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;">
+                                            1
+                                            </td>
+                                            <td style="width:100px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-right: 2px;">
+                                            {{ site_currency() . number_format($invoice_amount ?? 0, 2) }}
+                                            </td>
+                                        </tr>
+                                        @endforeach
+                                        {{-- <tr style="border-collapse: collapse;height: 50px;">
+                                            <td style="width: 350px;text-align:left;font-family: 'Montserrat', sans-serif;font-size:8px;margin: 0px;font-weight: 400; border-collapse: collapse;">
+                                            <b> Item Name<br></b>
+                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
+        
+                                            </td>
+                                            <td style="width:150px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;">
+                                            $100.00
+                                            </td>
+                                            <td style="width:100px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;">
+                                            5
+                                            </td>
+                                            <td style="width:100px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-right: 2px;">
+                                            $500.00
+                                            </td>
+                                        </tr>
+                                        <tr style="border-collapse: collapse;height: 50px;">
+                                            <td style="width: 350px;text-align:left;font-family: 'Montserrat', sans-serif;font-size:8px;margin: 0px;font-weight: 400; border-collapse: collapse;">
+                                            <b> Item Name<br></b>
+                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
+        
+                                            </td>
+                                            <td style="width:150px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;">
+                                            $50.00
+                                            </td>
+                                            <td style="width:100px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;">
+                                            5
+                                            </td>
+                                            <td style="width:100px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-right: 2px;">
+                                            $500.00
+                                            </td>
+                                        </tr>
+                                    <tr style="border-collapse: collapse;height: 50px;">
+                                            <td style="width: 350px;text-align:left;font-family: 'Montserrat', sans-serif;font-size:8px;margin: 0px;font-weight: 400; border-collapse: collapse;">
+                                            <b> Item Name<br></b>
+                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
+        
+                                            </td>
+                                            <td style="width:150px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;">
+                                            $50.00
+                                            </td>
+                                            <td style="width:100px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;">
+                                            5
+                                            </td>
+                                            <td style="width:100px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-right: 2px;">
+                                            $500.00
+                                            </td>
+                                        </tr>
+                                        <tr style="border-collapse: collapse;height: 50px;border-bottom: 1px solid #f24c1e;">
+                                            <td style="width: 350px;text-align:left;font-family: 'Montserrat', sans-serif;font-size:8px;margin: 0px;font-weight: 400; border-collapse: collapse;">
+                                            <b> Item Name<br></b>
+                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
+        
+                                            </td>
+                                            <td style="width:150px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;">
+                                            $50.00
+                                            </td>
+                                            <td style="width:100px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;">
+                                            5
+                                            </td>
+                                            <td style="width:100px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-right: 2px;">
+                                            $500.00
+                                            </td>
+                                        </tr> --}}
+                                        <tr style="border-collapse: collapse;height: 15px;">
+                                            <td style="width: 350px;text-align:left;font-family: 'Montserrat', sans-serif;font-size:8px;margin: 0px;font-weight: 400; border-collapse: collapse;">
+                                            
+                                            </td>
+                                            <td style="width:150px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;">
+                                            
+                                            </td>
+                                            <td style="width:100px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;">
+                                            
+                                            </td>
+                                            <td style="width:100px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-right: 2px;">
+                                            
+                                            </td>
+                                        </tr>
+                                        <tr style="border-collapse: collapse;height: 25px;">
+                                            <td style="width: 350px;text-align:center;font-family: 'Montserrat', sans-serif;font-size:9px;margin: 0px;font-weight: 400; border-collapse: collapse;background-color: #f24c1e;border-top-left-radius: 30px;border-top-right-radius: 30px;color: white;">
+                                                <b>Grand Total:</b>
+                                            </td>
+                                            <td style="width:150px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;">
+                                            
+                                            </td>
+                                            <td style="width:100px;text-align:center;font-family: 'Bebas Neue', sans-serif;font-size: 13px;margin: 0px;font-weight: 400; border-collapse: collapse;">
+                                            <p style="margin-bottom: 0px;margin-top: 0px;">SUBTOTAL</p>
+                                            </td>
+                                            <td style="width:100px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-right: 2px;">
+                                            {{ site_currency() . number_format($invoice_amount ?? 0, 2) }}
+                                            </td>
+                                        </tr>
+                                        <tr style="border-collapse: collapse;height: 25px;">
+                                            <td style="width: 350px;text-align:center;font-family: 'Montserrat', sans-serif;font-size:24px;margin: 0px;font-weight: 400; border-collapse: collapse;background-color: #f24c1e;color: white;">
+                                            <b>{{ site_currency() . number_format($invoice_amount + $discount_amount ?? 0, 2) }}</b>
+                                            </td>
+                                            <td style="width:150px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;">
+                                            
+                                            </td>
+                                            <td style="width:100px;text-align:center;font-family: 'Bebas Neue', sans-serif;font-size: 13px;margin: 0px;font-weight: 400; border-collapse: collapse;">
+                                            <p>DISCOUNT</p>
+                                            </td>
+                                            <td style="width:100px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-right: 2px;">
+                                            {{ site_currency() . number_format($discount_amount ?? 0, 2) }}
+                                            </td>
+                                        </tr>
+                                        
+                                    </table>
+                                </div>
                             <br><br>
                         </td>
                     </tr>
