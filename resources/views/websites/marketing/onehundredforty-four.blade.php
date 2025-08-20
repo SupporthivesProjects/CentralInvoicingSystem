@@ -3,10 +3,10 @@
 <head>
     <title>Your Email Title</title>
 </head>
-<body>
+<body style="margin: 0px; padding: 0px;">
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
-            <td align="center" bgcolor="#f2f2f2" style="padding: 20px 0;">
+            <td align="center">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
                     <!-- Header -->
                    <tr>
@@ -39,11 +39,12 @@
                     <!-- Header End -->
 
                      <!-- Content -->
-                    <tr >
-                        <td style="padding:40px;padding-top:0px;">
-                            <table>
-                                <tr>
-                                    <td style="padding-top: 30px;width: 300px;">
+                    <tr style="width: 100%;">
+                        <td style="padding:40px;padding-top:0px; width: 100%;">
+                            <table style="width: 100%;">
+                                <tr style="width: 100%;">
+                                    <div style="display: flex; flex-direction: row; justify-content: space-between;">
+                                    <td style="padding-top: 30px;min-width: 200px;">
                                         <p style="font-family: arial;font-size:10px;margin: 0px;font-weight: 400;padding-bottom: 5px;">
                                             <b>BILLED TO</b>
                                         </p>
@@ -58,9 +59,9 @@
                                         </p>
                                         <br>
                                     </td>
-                                    <td style="padding-top: 10px;width: 300px;text-align: right;">
+                                    <td style="padding-top: 10px;min-width: 200px;text-align: right;">
                                        <p style="font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;padding-bottom: 5px;">
-                                            <b>BILLED FORM</b>
+                                            <b>BILLED FROM</b>
                                         </p>
                                         <p style="font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;padding-bottom: 5px;">
                                             <b>{{ $site_name }}</b>
@@ -69,9 +70,10 @@
                                           <p style="font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;padding-bottom: 5px;color: #8C8C8C;">{{ $company_mobile }}</p>
                                            <p style="font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;padding-bottom: 5px;color: #8C8C8C;">{{ $company_email }}</p>
                                      </td>
+                                     </div>
                                 </tr>
                             </table>
-                            <div style="min-height: 650px !important;">
+                            <div style="min-height: 770px !important;">
                             <table style="border-collapse: collapse;border-bottom: 0px;border: 0px;">
                                 <tr style="border-collapse: collapse;height: 50px; color: white;border-bottom: 1px solid black;border: 0px;">
                                     <td style="padding-left: 2px; width: 500px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 600;border-collapse: collapse;padding-left: 5px;border-right: 1px solid black;background-color: #3C7F79;">
@@ -108,7 +110,7 @@
                                 @endforeach
                                 <tr style="border-collapse: collapse;height: 30px;border-bottom: 0px;border: 0px;">
                                     <td style="width: 100px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;">
-                                     <img src="{{ $invoice_image2 }}" alt="" style="height: 20px;"> {{ $company_address }},
+                                     
                                     </td>
                                     <td style="width: 300px;text-align:left;font-family: arial;font-size:10px;margin: 0px;font-weight: 400; border-collapse: collapse;">
 
@@ -138,7 +140,7 @@
                                 </tr>
                                  <tr style="border-collapse: collapse;height: 30px;border-bottom: 0px;border: 0px;">
                                     <td style="width: 100px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;">
-                                     <img src="{{ $invoice_image1 }}" alt="" style="height: 20px;"> {{ $company_mobile }}
+                                     
                                     </td>
                                     <td style="width: 300px;text-align:left;font-family: arial;font-size:10px;margin: 0px;font-weight: 400; border-collapse: collapse;">
 
@@ -148,7 +150,7 @@
                                 </tr>
                                  <tr style="border-collapse: collapse;height: 30px;border-bottom: 0px;border: 0px;">
                                     <td style="width: 100px;padding-left: 20px; text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;color: blue;">
-                                     {{ $company_email }}
+                                     
                                     </td>
                                     <td style="width: 300px;text-align:left;font-family: arial;font-size:10px;margin: 0px;font-weight: 400; border-collapse: collapse;">
 
