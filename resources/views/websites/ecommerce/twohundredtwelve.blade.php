@@ -297,7 +297,7 @@
                                       {!! $company_address !!}
                                     </p>
                                  </td>
-                                 <td style="padding-left: 30px;">
+                                 <td style="padding-left: 0px;">
                                      <p style="margin: 0px;font-size:7.5px;font-weight:400;font-family:Baskerville;line-height:14px;">
                                       {{ $company_email }}
                                     </p>
