@@ -28,7 +28,7 @@
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
             <td align="center">
-                <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);background: url('{{ $invoice_image1 }}');background-repeat: no-repeat;background-position: center;background-size: cover;height:900px;">
+                <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse; background: url('{{ $invoice_image1 }}');background-repeat: no-repeat;background-position: top center;background-size: cover;">
                     <!---header--->
                     <tr style="height:90px;">
                         <td style="padding:40px;vertical-align: top;padding-right: 30px;" align="right">
@@ -38,7 +38,7 @@
                                 padding: 2px 16px;
                                 border-radius: 8px;
                                 box-shadow: 4px 4px 0px 0px #BA12F7;">
-                             <p style="font-family:Futura Cyrillic;font-size: 14px;font-weight: 400;line-height:24px;margin:25px;">
+                             <p style="font-family:Futura Cyrillic;font-size: 14px;font-weight: 400;line-height:24px;">
                             {{ $invoice_date }}
                            </p>
                            </div>
