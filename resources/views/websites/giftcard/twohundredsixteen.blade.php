@@ -17,7 +17,7 @@
     </style>
 </head>
 
-<body style="margin:0; padding:0; font-family:Arial, sans-serif; background:#f4f4f4;">
+<body style="margin:0; padding:0; font-family:Arial, sans-serif; background:#FFFFFF;">
     <!-- Header -->
     <table cellpadding="0" cellspacing="0" style="width:100%; border-collapse:collapse; margin:0 auto;">
         <tr>
