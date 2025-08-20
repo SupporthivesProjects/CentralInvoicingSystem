@@ -53,6 +53,7 @@
                                     </p>
                                     </td>
                                 </tr>
+                                @foreach($products as $product)
                                 <tr>
                                   <td style="padding: 10px;width: 40%;">
                                     <p style="font-family:Avenir;font-size:8px;font-weight:400;line-height:14px;margin: 0px;color: #ffffff;">
@@ -75,6 +76,7 @@
                                     </p>
                                   </td>
                                 </tr>
+                                @endforeach
                                 {{-- <tr>
                                   <td style="padding: 10px;width: 40%;">
                                     <p style="font-family:Avenir;font-size:8px;font-weight:400;line-height:14px;margin: 0px;color: #ffffff;">
