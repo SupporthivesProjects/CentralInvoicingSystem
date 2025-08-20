@@ -4,11 +4,22 @@
 <head>
     <meta charset="UTF-8">
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
+    <style>
+        .footer-fixed {
+            position: fixed;
+            bottom: 0px;
+            left: 0;
+            right: 0;
+            width: 100%;
+            /* background: url('{{ $invoice_footer_image }}') center center no-repeat; */
+            /* background-size: cover; */
+        }
+    </style>
 </head>
 
 <body style="margin:0; padding:0; font-family:Arial, sans-serif; background:#f4f4f4;">
     <!-- Header -->
-    <table cellpadding="0" cellspacing="0" style="width:600px; border-collapse:collapse; margin:0 auto;">
+    <table cellpadding="0" cellspacing="0" style="width:100%; border-collapse:collapse; margin:0 auto;">
         <tr>
             <td colspan="4"
                 style="background-image: url('{{ $invoice_image3 }}'); background-size: 100% 100%; padding:65px 0;text-align:center;">
@@ -115,23 +126,30 @@
         </tr>
 
         <!-- Footer -->
-        <tr style=" background-color: #fff;">
-            <td colspan="4" style="background-image: url('{{ $invoice_image4 }}'); background-size: 100% 100%; padding:30px;">
-                <table style="width:100%;">
-                    <tr>
-                        <td style="font-size:9px; color: #fff;">
-                            Email: <a href="mailto:info@finndealz.com"
-                                style=" text-decoration:none;">{{ $company_email }}</a><br>
-                            Tel: {{ $company_mobile }}<br>
-                            Address: {!! $company_address !!}
-                        </td>
-                        <td style="text-align:right;">
-                            <img src="{{ $invoice_image6 }}" alt="FINNDEALZ" style="height:40px;">
+         <tr>
+            <td>
+                <table class="footer-fixed" width="100%" cellpadding="0" cellspacing="0">
+                    <tr style=" background-color: #fff;">
+                        <td colspan="4" style="background-image: url('{{ $invoice_image4 }}'); background-size: 100% 100%; padding:30px;">
+                            <table style="width:100%;">
+                                <tr>
+                                    <td style="font-size:9px; color: #fff;">
+                                        Email: <a href="mailto:info@finndealz.com"
+                                            style=" text-decoration:none;">{{ $company_email }}</a><br>
+                                        Tel: {{ $company_mobile }}<br>
+                                        Address: {!! $company_address !!}
+                                    </td>
+                                    <td style="text-align:right;">
+                                        <img src="{{ $invoice_image6 }}" alt="FINNDEALZ" style="height:40px;">
+                                    </td>
+                                </tr>
+                            </table>
                         </td>
                     </tr>
                 </table>
             </td>
-        </tr>
+         </tr>
+        
     </table>
 </body>
 
