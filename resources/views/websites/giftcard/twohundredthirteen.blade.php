@@ -49,7 +49,7 @@
                               </tr> 
                               <tr>
                                  <td colspan="2">
-                                  <div style="min-height: 550px;">
+                                  <div style="min-height: 555px;">
                                     <table style="border-collapse: collapse;margin:20px 0px;" width="100%">
                                        <tr style="background: #fd8488;">
                                           <td style="padding: 10px;width: 50%;">
