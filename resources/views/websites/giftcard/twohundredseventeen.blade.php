@@ -61,7 +61,7 @@
                     </tr>
                     <tr >
                             <td style="padding: 50px;padding-top: 0px;background-color: white;">
-                                <div style="min-height: 658px;">
+                                <div style="min-height: 600px;">
                                     <table style="border-collapse: collapse;">
                                         <tr style="border-collapse: collapse;height: 40px;border-bottom: 1px solid #f24c1e;font-family: 'Bebas Neue', sans-serif;">
                                             <td style="width: 300px;text-align: left; font-size: 17px;margin: 0px;border-collapse: collapse;">
