@@ -6,11 +6,11 @@
 
 
 </head>
-<body>
+<body style="margin: 0px; padding: 0px;">
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
-            <td align="center" bgcolor="#f2f2f2" style="padding: 20px 0;">
-                <table width="600" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);border-left: 20px solid  #f24c1e;border-right: 20px solid  #f24c1e;">
+            <td align="center">
+                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);border-left: 20px solid  #f24c1e;border-right: 20px solid  #f24c1e;">
                     <!-- Header -->
                      <tr>
                         <td style="height: 75px;background-color: white;">
@@ -61,6 +61,7 @@
                     </tr>
                     <tr >
                             <td style="padding: 50px;padding-top: 0px;background-color: white;">
+                                <div style="min-height: 800px;">
                             <table style="border-collapse: collapse;">
                                 <tr style="border-collapse: collapse;height: 40px;border-bottom: 1px solid #f24c1e;font-family: 'Bebas Neue', sans-serif;">
                                     <td style="width: 300px;text-align: left; font-size: 17px;margin: 0px;border-collapse: collapse;">
@@ -201,6 +202,7 @@
                                 </tr>
                                 
                             </table>
+                            </div>
                             <br><br>
                         </td>
                     </tr>

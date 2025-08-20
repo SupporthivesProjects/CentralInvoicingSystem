@@ -146,7 +146,7 @@
                     <!-- Content End-->
                     <!-----------Footer----------->
                     <tr>
-                        <td align="center" style="background:url('{{ $invoice_image2 }}');background-size: cover;background-repeat: repeat;">
+                        <td align="bottom" style="background:url('{{ $invoice_image2 }}');background-size: cover;background-repeat: repeat;">
                             <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;"> 
                                 <tr>
                                     <td style="padding:40px 40px 100px 40px;">
