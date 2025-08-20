@@ -11,12 +11,12 @@
     </style>
 </head>
 
-<body>
+<body style="background: #0E162D">
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
-            <td align="center" bgcolor="#f2f2f2" style="padding: 0px 0;">
-                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
-                    style="border-collapse: collapse;background-image: url('{{ $invoice_image1 }}'); background-position: top left; background-repeat: no-repeat; background-size: cover;">
+            <td align="center" bgcolor="#0E162D" style="padding: 0px 0;">
+                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#0E162D"
+                    style="border-collapse: collapse;background-image: url('{{ $invoice_image1 }}'); background-position: top left; background-repeat: no-repeat; background-size: 100% auto;">
                     <!-- Header -->
                     <tr>
 
