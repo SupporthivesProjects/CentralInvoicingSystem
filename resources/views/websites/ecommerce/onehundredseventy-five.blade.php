@@ -122,7 +122,7 @@
                                     <!-- <tr style="border-top: 24px solid #161a1c;"> -->
                                     <tr>
 
-                                        <td style="width: 100px;text-align: right;font-family: Helvetica;font-size: 9px;margin: 0px;font-weight: 400;padding-right: 10px; border: 0" colspan="3">
+                                        <td style="width: 100px;text-align: right;font-family: Helvetica;font-size: 9px;margin: 0px;font-weight: 400;padding-right: 10px; border: 0px;background-color: #161A1C;" colspan="3">
                                         </td>
                                         <td style="width: 100px;color: #FFFFFF;text-align: start;font-family: Helvetica;font-size: 9px;margin: 0px;font-weight: 400;padding: 0px 12px; background-color: #24292e;" colspan="1">
                                         <p>Sub Total</p>
@@ -132,7 +132,7 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td style="width: 100px;text-align: right;font-family: Helvetica;font-size: 9px;margin: 0px;font-weight: 400;padding-right: 10px; background-color: #161a1c;border: 0" colspan="3">
+                                        <td style="width: 100px;text-align: right;font-family: Helvetica;font-size: 9px;margin: 0px;font-weight: 400;padding-right: 10px; background-color: #161a1c;border: 0px;background-color: #161A1C;" colspan="3">
                                         </td>
                                         <td style="width: 100px;color: #FFFFFF;text-align: start;font-family: Helvetica;font-size: 9px;margin: 0px;font-weight: 400;padding: 0px 12px; background-color: #24292e;"  colspan="1">
                                         <p>
@@ -144,7 +144,7 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td style="width: 100px;text-align: right;font-family: Helvetica;font-size: 10px;margin: 0px;font-weight: 400;padding-right: 10px; background-color: #161a1c;border: 0" colspan="3">
+                                        <td style="width: 100px;text-align: right;font-family: Helvetica;font-size: 10px;margin: 0px;font-weight: 400;padding-right: 10px; background-color: #161a1c;border: 0px;background-color: #161A1C;" colspan="3">
                                         </td>
                                         <td style="width: 100px;color: #FFFFFF;text-align: start;font-family: Kanit;font-size: 14px;margin: 0px;font-weight: 700; padding: 0px 12px 14px 12px; background-color: #24292e;" colspan="1">
                                         <p>
