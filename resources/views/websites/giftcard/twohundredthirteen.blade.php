@@ -243,7 +243,7 @@
 
                   <!--footer-->
                   <tr> 
-                        <td style="padding:0px 30px;background: url('{{ $invoice_footer_image }}');background-repeat: no-repeat;background-position: center;background-size: cover;height:170px;" align="right">
+                        <td style="padding:0px 30px;background: url('{{ $invoice_footer_image }}');background-repeat: no-repeat;background-position: center;background-size: cover;height:300px;" align="right">
                          <p style="margin: 0px;font-size: 10px;font-family: DM Sans;font-weight: 700;color: #ff8a8e;line-height: 16px;">
                            {{ $company_name }}
                          </p>
