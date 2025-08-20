@@ -166,7 +166,7 @@
                                 <tr>
                                     <td
                                         style="width: 120px; padding-top: 16px; color:#000000; text-align:center;padding-left:10px;font-family:  Arial;font-size:9px;margin: 0px;font-weight: 400;border-collapse: collapse;">
-                                        PLACEHOLDER COMPANY NAME LLC OFFICE NO. XX, PLACEHOLDER STREET – PLACEHOLDER
+                                        PLACEHOLDER COMPANY NAME LLCOFFICE NO. XX, PLACEHOLDER STREET – PLACEHOLDER
                                         CITY
                                     </td>
                                 </tr>
