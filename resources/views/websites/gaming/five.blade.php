@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Your Email Title</title>
+    <title>Your Email   Title</title>
 </head>
 <body>
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
