@@ -73,7 +73,7 @@
                                      </div>
                                 </tr>
                             </table>
-                            <div style="min-height: 780px !important;">
+                            <div style="min-height: 788px !important;">
                             <table style="border-collapse: collapse;border-bottom: 0px;border: 0px;">
                                 <tr style="border-collapse: collapse;height: 50px; color: white;border-bottom: 1px solid black;border: 0px;">
                                     <td style="padding-left: 2px; width: 500px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 600;border-collapse: collapse;padding-left: 5px;border-right: 1px solid black;background-color: #3C7F79;">
