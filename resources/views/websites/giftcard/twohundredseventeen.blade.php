@@ -9,8 +9,8 @@
 <body>
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
-            <td align="center" bgcolor="#f2f2f2" style="padding: 20px 0;">
-                <table width="600" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);border-left: 20px solid  #f24c1e;border-right: 20px solid  #f24c1e;">
+            <td align="center">
+                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);border-left: 20px solid  #f24c1e;border-right: 20px solid  #f24c1e;">
                     <!-- Header -->
                      <tr>
                         <td style="height: 75px;background-color: white;">
@@ -30,13 +30,13 @@
                             
                             <table style="border-collapse: collapse;border-bottom: 0px;border: 0px;background: linear-gradient(to right, #3e1d1b, #0a0a12);">
                                 <tr style="border-collapse: collapse;">
-                                    <td style="padding-top: 10px;width: 300px;padding: 30px;">
+                                    <td style="padding-top: 10px;width: 100%;padding: 30px;">
                                         
                                             <p style="font-size: 15px;font-family: 'Bebas Neue', sans-serif;color: #f24c1e;margin: 0px; text-align: left;padding-bottom: 5px;padding-left: 5px;">Invoice to</p>
                                             <p style="font-family: 'Montserrat', sans-serif;font-size: 16px;margin: 0px; text-align: left;padding-bottom: 5px;padding-left: 5px;color: white;">{{ $customer_name ? $customer_name : '' }}</p>
                                        
                                     </td>
-                                    <td style="padding-top: 10px;width: 300px;padding: 30px;">
+                                    <td style="padding-top: 10px;width: 100%;padding: 30px;">
                                        <p style="font-family: arial;font-size: 60px;margin: 0px;font-weight: 400; text-align: right;padding-bottom: 5px;padding-right: 5px;color: white;">
                                             <b>INVOICE</b>
                                         </p>
@@ -61,6 +61,7 @@
                     </tr>
                     <tr >
                             <td style="padding: 50px;padding-top: 0px;background-color: white;">
+                                <div style="min-height: 650px;">
                             <table style="border-collapse: collapse;">
                                 <tr style="border-collapse: collapse;height: 40px;border-bottom: 1px solid #f24c1e;font-family: 'Bebas Neue', sans-serif;">
                                     <td style="width: 300px;text-align: left; font-size: 17px;margin: 0px;border-collapse: collapse;">
@@ -201,6 +202,7 @@
                                 </tr>
                                 
                             </table>
+                            </div>
                             <br><br>
                         </td>
                     </tr>
