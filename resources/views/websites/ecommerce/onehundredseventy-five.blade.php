@@ -16,7 +16,7 @@
         }
     </style>
 </head>
-<body style="padding: 0px; margin: 0px;">
+<body style="padding: 0px; margin: 0px; background-color: #161A1C;">
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
             <td align="center">
