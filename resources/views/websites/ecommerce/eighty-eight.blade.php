@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Your Email Title</title>
+    <title>Your Email title</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
