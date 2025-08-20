@@ -38,7 +38,7 @@
                                     Invoice No : #{{ $invoice_number }}
                                 </p>
                                 <p style="font-family: arial;font-size:9px;color: #414042;margin: 0px;">
-                                    Due Date : {{ $invoice_date }}
+                                    Date : {{ $invoice_date }}
                                 </p>
                                 <p style="border-bottom: 1px solid black;width: 150px;margin: 5px 0px;"></p>
                                 <p style="font-family: arial;font-size:10px;color: #414042;">
@@ -46,7 +46,7 @@
                                 </p>
                                 <p
                                     style="font-family: arial;font-size:22px;color: #414042;margin: 0px;font-weight: 700;">
-                                    {{ $invoice_amount }}
+                                    {{ site_currency() . $invoice_amount }}
                                 </p>
                             </div>
                             <div>
@@ -74,7 +74,7 @@
                                     style="font-family: arial;font-size:9px;color: #0563C1;margin: 0px;text-decoration: underline;">
                                     {{ $company_email }}
                                 </a>
-                                <p style="font-family: arial;font-size:9px;color: #414042;margin: 0px;">
+                                <p style="font-family: arial;font-size:9px;color: #414042;margin: 0px; max-width: 100px">
                                     {{ $company_mobile }} <br>
                                     {{ $company_address }}
                                 </p>
@@ -94,19 +94,19 @@
                                     <tr style="width:520px;height:40px;background: #000000;">
                                         <td style="width: 150px;">
                                             <p
-                                                style="color:#ffffff;font-size:16px;font-weight: 700;font-family:Calibri;margin: 0px;line-height: 28px;text-align: center;text-transform: uppercase;">
+                                                style="color:#ffffff;font-size:16px;font-weight: 700;font-family:arial;margin: 0px;line-height: 28px;text-align: center;text-transform: uppercase;">
                                                 product & service
                                             </p>
                                         </td>
                                         <td style="width:50px;">
                                             <p
-                                                style="color:#ffffff;font-size:16px;font-weight: 700;font-family:Calibri;margin: 0px;line-height: 28px;text-align: center;text-transform: uppercase;">
+                                                style="color:#ffffff;font-size:16px;font-weight: 700;font-family:arial;margin: 0px;line-height: 28px;text-align: center;text-transform: uppercase;">
                                                 QTY
                                             </p>
                                         </td>
                                         <td style="width: 100px;">
                                             <p
-                                                style="color:#ffffff;font-size:16px;font-weight: 700;font-family:Calibri;margin: 0px;line-height: 28px;text-align: center;text-transform: uppercase;">
+                                                style="color:#ffffff;font-size:16px;font-weight: 700;font-family:arial;margin: 0px;line-height: 28px;text-align: center;text-transform: uppercase;">
                                                 length
                                             </p>
                                         </td>
@@ -118,7 +118,7 @@
                                         </td>
                                         <td style="width: 100px;">
                                             <p
-                                                style="color:#ffffff;font-size:16px;font-weight: 700;font-family:Calibri;margin: 0px;line-height: 28px;text-align: center;text-transform: uppercase;">
+                                                style="color:#ffffff;font-size:16px;font-weight: 700;font-family:arial;margin: 0px;line-height: 28px;text-align: center;text-transform: uppercase;">
                                                 Total
                                             </p>
                                         </td>
@@ -127,19 +127,19 @@
                                         <tr style="width:520px;height:60px;">
                                             <td style="width: 150px;padding: 10px;" align="left">
                                                 <p
-                                                    style="color:#000000;font-size:12px;font-weight:400;font-family:Calibri;margin: 0px;line-height:16px;">
+                                                    style="color:#000000;font-size:12px;font-weight:400;font-family:arial;margin: 0px;line-height:16px;">
                                                     {{ $product->name }}
                                                 </p>
                                             </td>
                                             <td style="width:50px;">
                                                 <p
-                                                    style="color:#000000;font-size:9px;font-weight:400;font-family:Calibri;margin: 0px;line-height:16px;text-align: center;">
+                                                    style="color:#000000;font-size:9px;font-weight:400;font-family:arial;margin: 0px;line-height:16px;text-align: center;">
                                                     1
                                                 </p>
                                             </td>
                                             <td style="width: 100px;">
                                                 <p
-                                                    style="color:#000000;font-size:9px;font-weight:400;font-family:Calibri;margin: 0px;line-height: 28px;text-align: center;text-transform: uppercase;">
+                                                    style="color:#000000;font-size:9px;font-weight:400;font-family:arial;margin: 0px;line-height: 28px;text-align: center;text-transform: uppercase;">
                                                     {{ $product->subscription }}
                                                 </p>
                                             </td>
@@ -151,7 +151,7 @@
                                             </td>
                                             <td style="width: 100px;">
                                                 <p
-                                                    style="color:#000000;font-size:9px;font-weight: 400;font-family:Calibri;margin: 0px;line-height: 28px;text-align: center;text-transform: uppercase;">
+                                                    style="color:#000000;font-size:9px;font-weight: 400;font-family:arial;margin: 0px;line-height: 28px;text-align: center;text-transform: uppercase;">
                                                     {{ site_currency() . number_format($product->unit_price ?? 0, 2) }}
                                                 </p>
                                             </td>
@@ -161,7 +161,7 @@
                                         <td colspan="3"></td>
                                         <td>
                                             <p
-                                                style="color:#58595B;font-size:12px;font-weight:400;font-family:Calibri;margin: 0px;line-height: 28px;text-align:right;padding-right:10px;text-transform: uppercase;">
+                                                style="color:#58595B;font-size:12px;font-weight:400;font-family:arial;margin: 0px;line-height: 28px;text-align:right;padding-right:10px;text-transform: uppercase;">
                                                 Subtotal
                                             </p>
                                         </td>
@@ -176,13 +176,13 @@
                                         <td colspan="3"></td>
                                         <td style="border-bottom: 1px solid #58595B;">
                                             <p
-                                                style="color:#58595B;font-size:12px;font-weight:400;font-family:Calibri;margin: 0px;line-height: 28px;text-align:right;padding-right:10px;text-transform: uppercase;">
+                                                style="color:#58595B;font-size:12px;font-weight:400;font-family:arial;margin: 0px;line-height: 28px;text-align:right;padding-right:10px;text-transform: uppercase;">
                                                 Discount
                                             </p>
                                         </td>
                                         <td style="border-bottom: 1px solid #58595B;">
                                             <p
-                                                style="color:#58595B;font-size:12px;font-weight:400;font-family:Calibri;margin: 0px;line-height: 28px;text-align:right;padding-right:10px;text-transform: uppercase;">
+                                                style="color:#58595B;font-size:12px;font-weight:400;font-family:arial;margin: 0px;line-height: 28px;text-align:right;padding-right:10px;text-transform: uppercase;">
                                                 {{ site_currency() . number_format($discount_amount ?? 0, 2) }}
                                             </p>
                                         </td>
@@ -190,13 +190,13 @@
                                     <tr style="height: 28px;">
                                         <td colspan="4">
                                             <p
-                                                style="color:#58595B;font-size:16px;font-weight:700;font-family:Calibri;margin: 0px;line-height: 28px;text-align:right;padding-right:10px;text-transform: uppercase;">
+                                                style="color:#58595B;font-size:16px;font-weight:700;font-family:arial;margin: 0px;line-height: 28px;text-align:right;padding-right:10px;text-transform: uppercase;">
                                                 GRAND TOTAL
                                             </p>
                                         </td>
                                         <td>
                                             <p
-                                                style="color:#58595B;font-size:16px;font-weight:700;font-family:Calibri;margin: 0px;line-height: 28px;text-align:right;padding-right:10px;text-transform: uppercase;">
+                                                style="color:#58595B;font-size:16px;font-weight:700;font-family:arial;margin: 0px;line-height: 28px;text-align:right;padding-right:10px;text-transform: uppercase;">
                                                 {{ site_currency() . number_format($invoice_amount ?? 0, 2) }}
                                             </p>
                                         </td>
