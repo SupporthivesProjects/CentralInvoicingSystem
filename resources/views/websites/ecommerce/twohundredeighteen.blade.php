@@ -112,7 +112,7 @@
                                 @endforeach
                                 <tr>
                                     <td style="width: 100px;text-align: right;font-family: Arial;font-size: 10px;margin: 0px;font-weight: 400;padding-right: 10px;"
-                                        colspan="3">
+                                        colspan="2">
                                     </td>
                                     <td style="width: 100px;color: #000000;text-align: start;font-family: Arial;font-size: 10px;margin: 0px;font-weight: 400;padding-right: 10px; padding-left: 10px; background-color: #FFFFFF;"
                                         colspan="1">
@@ -126,7 +126,7 @@
                                 </tr>
                                 <tr>
                                     <td style="width: 100px;text-align: right;font-family: Arial;font-size: 10px;margin: 0px;font-weight: 400;padding-right: 10px; "
-                                        colspan="3">
+                                        colspan="2">
                                     </td>
                                     <td style="width: 100px;color: #000000;text-align: start;font-family: Arial;font-size: 10px;margin: 0px;font-weight: 400;padding-right: 10px; padding-left: 10px; background-color: #F4F4F4;"
                                         colspan="1">
@@ -142,7 +142,7 @@
                                 </tr>
                                 <tr>
                                     <td style="width: 100px;text-align: right;font-family: Arial;font-size: 10px;margin: 0px;font-weight: 400;padding-right: 10px;"
-                                        colspan="3">
+                                        colspan="2">
                                     </td>
                                     <td style="width: 100px;color: #000000;text-align: start;font-family: Arial;font-size: 10px;margin: 0px;font-weight: 400; padding-right: 10px; padding-left: 10px; background-color: #FFFFFF;"
                                         colspan="1">
