@@ -70,7 +70,7 @@
                                 <tr>
                                     <td>
                                         <p style="font-size: 12px; margin: 0;"><b>Email: </b>{{ $company_email }}</p>
-                                        <p style="font-size: 12px; margin: 0;"><b>Website: </b>{{ $site->site_link }}</p>
+                                        <p style="font-size: 12px; margin: 0;"><b>Website: </b> <a href="{{ $site->site_link }}" style="color: #000000;">eazymarketer.com</a> </p>
                                         <p style="font-size: 12px; margin: 0;"><b>Phone: </b>{{ $company_mobile }}</p>
                                         <p style="font-size: 12px; margin: 0;"><b>Address: </b>{!! $company_address !!}</p>
                                     </td>
