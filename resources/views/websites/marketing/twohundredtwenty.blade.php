@@ -10,7 +10,7 @@
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
             <td align="center">
-                <table width="100%" cellspacing="0" cellpadding="0" border="0" style=" height: 60vh; border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);background: url('{{ $invoice_image1 }}');background-repeat: no-repeat;background-position: center;background-size:100% 100%;">
+                <table width="600px" cellspacing="0" cellpadding="0" border="0" style=" border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);background: url('{{ $invoice_image1 }}');background-repeat: no-repeat;background-position: center;background-size:100% 100%;">
                     <!-- Content -->
                     <tr>
                         <td align="center" style="padding:40px;">
