@@ -20,7 +20,7 @@
                     <!-- Header -->
                     <tr>
 
-                        <td style="height: 144px;">
+                        <td style="height: 250px;">
 
                             <table style="font-family: 'Lato';">
                                 <tr>
