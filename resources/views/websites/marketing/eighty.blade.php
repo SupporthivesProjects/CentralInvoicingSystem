@@ -3,6 +3,10 @@
 <head>
   <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
     <style>
+      body {
+            margin: 0px;
+            padding: 0px;
+        }
         .footer-fixed {
             position: fixed;
             bottom: 0px;
@@ -65,10 +69,10 @@
                             <table style="width: 100%;font-family: Arial, Helvetica, sans-serif; margin-top: 20px;">
                                 <tr>
                                     <td>
-                                        <p style="font-size: 10px; margin: 0;"><b>Email: </b>{{ $company_email }}</p>
-                                        <p style="font-size: 10px; margin: 0;"><b>Website: </b>{{ $site->site_link }}</p>
-                                        <p style="font-size: 10px; margin: 0;"><b>Phone: </b>{{ $company_mobile }}</p>
-                                        <p style="font-size: 10px; margin: 0;"><b>Address: </b>{!! $company_address !!}</p>
+                                        <p style="font-size: 12px; margin: 0;"><b>Email: </b>{{ $company_email }}</p>
+                                        <p style="font-size: 12px; margin: 0;"><b>Website: </b>{{ $site->site_link }}</p>
+                                        <p style="font-size: 12px; margin: 0;"><b>Phone: </b>{{ $company_mobile }}</p>
+                                        <p style="font-size: 12px; margin: 0;"><b>Address: </b>{!! $company_address !!}</p>
                                     </td>
                                     
 
@@ -87,7 +91,7 @@
                                 </thead>
                                 <tbody>
                                 @foreach($products as $product)
-                                  <tr style="border-bottom: 1px solid #ccc; font-size: 8px;">
+                                  <tr style="border-bottom: 1px solid #ccc; font-size: 14px;">
                                     <td style="padding: 10px;"> {{ $product->name }}</td>
                                     <td style="padding: 10px;">{{ $product->subscription ?? '-' }}</td>
                                     <td style="padding: 10px;">1</td>
@@ -102,15 +106,15 @@
                               <table style="width: 250px; margin-left: auto;border-collapse: collapse; font-family: Arial, sans-serif; margin-top: 20px;">
                                 <thead>
                                   <tr>
-                                    <th colspan="2" style="text-align: left; padding: 10px 12px; font-weight: bold;font-size:10px;">INVOICE TOTAL</th>
+                                    <th colspan="2" style="text-align: left; padding: 10px 12px; font-weight: bold;font-size:14px;">INVOICE TOTAL</th>
                                   </tr>
                                 </thead>
                                 <tbody>
-                                  <tr style="border-bottom: 1px solid #ccc; font-size: 8px;">
+                                  <tr style="border-bottom: 1px solid #ccc; font-size: 12px;">
                                     <td style="padding: 10px 12px;">SUBTOTAL</td>
                                     <td style="padding: 10px 12px; text-align: right;">{{ site_currency() }} {{ number_format(($invoice_amount + $discount_amount) ?? 0, 2) }}</td>
                                   </tr>
-                                  <tr style="border-bottom: 1px solid #ccc; font-size: 8px;">
+                                  <tr style="border-bottom: 1px solid #ccc; font-size: 12px;">
                                     <td style="padding: 10px 12px;">DISCOUNT</td>
                                     <td style="padding: 10px 12px; text-align: right;">{{ site_currency() }} {{ number_format($discount_amount ?? 0, 2) }}</td>
                                   </tr>
