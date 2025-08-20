@@ -12,7 +12,7 @@
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
                     style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
                     <!-- Header -->
-                    <tr style="height:15%">
+                    <tr style="height:15vh">
                         <td style="padding: 0px;">
                             <img src="{{ $invoice_header_image }}" alt=""
                                 style="display: block;max-width: 100%;">
@@ -22,7 +22,7 @@
 
 
                     <!-- Content -->
-                    <tr style="height:70%">
+                    <tr style="height:70vh">
                         <td
                             style="padding:0px 60px 60px 60px;background: url('{{ $invoice_image1 }}') no-repeat;background-position: center;background-size: 101%;height:444px;">
                             <table style="width:100%;">
@@ -112,7 +112,7 @@
                                 @endforeach
                                 <tr>
                                     <td style="width: 100px;text-align: right;font-family: Arial;font-size: 10px;margin: 0px;font-weight: 400;padding-right: 10px;"
-                                        colspan="3">
+                                        colspan="2">
                                     </td>
                                     <td style="width: 100px;color: #000000;text-align: start;font-family: Arial;font-size: 10px;margin: 0px;font-weight: 400;padding-right: 10px; padding-left: 10px; background-color: #FFFFFF;"
                                         colspan="1">
@@ -126,7 +126,7 @@
                                 </tr>
                                 <tr>
                                     <td style="width: 100px;text-align: right;font-family: Arial;font-size: 10px;margin: 0px;font-weight: 400;padding-right: 10px; "
-                                        colspan="3">
+                                        colspan="2">
                                     </td>
                                     <td style="width: 100px;color: #000000;text-align: start;font-family: Arial;font-size: 10px;margin: 0px;font-weight: 400;padding-right: 10px; padding-left: 10px; background-color: #F4F4F4;"
                                         colspan="1">
@@ -142,7 +142,7 @@
                                 </tr>
                                 <tr>
                                     <td style="width: 100px;text-align: right;font-family: Arial;font-size: 10px;margin: 0px;font-weight: 400;padding-right: 10px;"
-                                        colspan="3">
+                                        colspan="2">
                                     </td>
                                     <td style="width: 100px;color: #000000;text-align: start;font-family: Arial;font-size: 10px;margin: 0px;font-weight: 400; padding-right: 10px; padding-left: 10px; background-color: #FFFFFF;"
                                         colspan="1">
@@ -176,7 +176,7 @@
                     <!-- Content End-->
 
                     <!-- Footer -->
-                    <tr style="height:15%">
+                    <tr style="height:15vh">
                         <td
                             style="background-image: url({{ $invoice_footer_image }}); padding: 48px; background-size: 100% 100%; background-position: center; background-repeat: no-repeat;">
                         </td>
