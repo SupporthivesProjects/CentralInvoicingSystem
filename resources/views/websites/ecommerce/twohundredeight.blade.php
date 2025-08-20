@@ -6,6 +6,7 @@
         body {
             margin: 0;
             padding: 0;
+            background-color : #1E2E22;
         }
     </style>
     <link rel="preconnect" href="https://fonts.googleapis.com">
