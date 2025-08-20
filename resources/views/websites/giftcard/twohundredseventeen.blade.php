@@ -47,11 +47,11 @@
                              <table style="padding-left: 30px;padding-right: 30px; background: linear-gradient(to right, #3e1d1b, #0a0a12);border-bottom-left-radius: 30px;border-bottom-right-radius: 30px;justify-content: center;">
                                 
                                 <tr >
-                                    <td style="width: 300px;color: white;border-top: 1px solid #f24c1e;border-collapse: collapse;">
+                                    <td style="width: 100%;color: white;border-top: 1px solid #f24c1e;border-collapse: collapse;">
                                         <p style="color: #f24c1e;font-family: 'Bebas Neue', sans-serif;margin-bottom: 0px;">Invoice Number</p>
                                         <p style="margin-top: 2px;">{{ $invoice_number }}</p>
                                     </td>
-                                    <td style="width: 300px;text-align: right;color: white;border-top: 1px solid #f24c1e;border-collapse: collapse;">
+                                    <td style="width: 1005;text-align: right;color: white;border-top: 1px solid #f24c1e;border-collapse: collapse;">
                                         <p style="color: #f24c1e;font-family: 'Bebas Neue', sans-serif;margin-bottom: 0px;">Invoice Date</p>
                                         <p style="margin-top: 2px;">{{ $invoice_date }}</p>
                                     </td>
@@ -61,7 +61,7 @@
                     </tr>
                     <tr >
                             <td style="padding: 50px;padding-top: 0px;background-color: white;">
-                                <div style="min-height: 650px;">
+                                <div style="min-height: 658px;">
                                     <table style="border-collapse: collapse;">
                                         <tr style="border-collapse: collapse;height: 40px;border-bottom: 1px solid #f24c1e;font-family: 'Bebas Neue', sans-serif;">
                                             <td style="width: 300px;text-align: left; font-size: 17px;margin: 0px;border-collapse: collapse;">
