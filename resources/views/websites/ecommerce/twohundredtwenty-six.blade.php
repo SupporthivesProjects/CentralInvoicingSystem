@@ -14,9 +14,9 @@
 <body>
     <table width="100%" cellspacing="0" cellpadding="0" border="0" style="height:100vh;">
         <tr>
-            <td align="center" style="padding:0px;">
+            <td align="center" style="padding:0px;vertical-align:top;">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
-                    style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
+                    style="border-collapse: collapse;">
                     <!-- Header -->
                     <tr>
                         <td style="padding: 0;">
