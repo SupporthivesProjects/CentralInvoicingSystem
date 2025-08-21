@@ -14,7 +14,7 @@
 <table width="100%" cellspacing="0" cellpadding="0" border="0">
   <tr>
     <td align="center" style="padding: 0px;">
-     <table width="600" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
+     <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
         <tr>
             <td>
                <table width="100%" cellpadding="0" cellspacing="0"
