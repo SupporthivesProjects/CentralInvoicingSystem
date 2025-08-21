@@ -22,7 +22,7 @@
         }
     </style>
 </head>
-<body style="background: url('{{ $invoice_image1 }}');background-position: center;background-size: cover;background-repeat: repeat;">
+<body style="background: linear-gradient(to right, #F4F4F4 38%, #FFFFFF 38%);">
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
             <td align="center" bgcolor="#FFFFFF" style="padding: 0px 0;">
