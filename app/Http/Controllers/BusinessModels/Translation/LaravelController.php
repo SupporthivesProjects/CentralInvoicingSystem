@@ -712,7 +712,7 @@ class LaravelController extends Controller
 
         $invoice_data = [
             'site' => $site,
-            'site_name' => $site_name,
+            'site_name' => $site->site_name,
             'invoice_number' => $request->input('invoice_number'),
             'invoice_date' => $request->input('invoice_date'),
             'customer_name' => $request->input('customer_name'),
@@ -722,10 +722,10 @@ class LaravelController extends Controller
             'invoice_amount' => $request->input('invoice_amount'),
             'current_amount' => $request->input('current_amount'),
             'discount_amount' => $request->input('discount_amount'),
-            'company_name'         => $company_name,
-            'company_email'        => $company_email,
-            'company_mobile'       => $company_mobile,
-            'company_address'      => $company_address,
+            'company_name'         => $site->company_name,
+            'company_email'        => $site->company_email,
+            'company_mobile'       => $site->company_mobile,
+            'company_address'      => $site->company_address,
             'invoice_header_image' => base64EncodeImage($site->invoice_header_image),
             'invoice_footer_image' => base64EncodeImage($site->invoice_footer_image),
             'invoice_signature' => base64EncodeImage($site->invoice_signature),
@@ -817,7 +817,7 @@ class LaravelController extends Controller
 
     protected function generateWithDompdf($site, $viewPath, $invoice_data, $filename)
     {
-        $pdf = \PDF::loadView($viewPath, $invoice_data)->setPaper('A4', 'portrait');
+        $pdf = PDF::loadView($viewPath, $invoice_data)->setPaper('A4', 'portrait');
         return $pdf->download($filename);
     }
 
