@@ -3,10 +3,16 @@
 
 <head>
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
+    <style>
+        *{
+            margin:0px;
+            padding:0px;
+        }
+    </style>
 </head>
 
 <body>
-    <table width="100%" cellspacing="0" cellpadding="0" border="0">
+    <table width="100%" cellspacing="0" cellpadding="0" border="0" style="height:100vh;">
         <tr>
             <td align="center" style="padding:0px;">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
