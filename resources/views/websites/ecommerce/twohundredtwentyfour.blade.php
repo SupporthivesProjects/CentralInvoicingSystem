@@ -5,11 +5,10 @@
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
 </head>
 
-<body style="margin: 0; padding:0px;  font-family: Arial, sans-serif;">
+<body style="margin: 0;padding:0px;font-family: Arial,sans-serif;">
 
     <!-- Main White Invoice Table -->
-    <table align="center" width="100%" cellpadding="0" cellspacing="0"
-        style="background-color: #ffffff; color: #000; box-shadow: 0 0 10px rgba(0,0,0,0.15); border-radius: 10px; overflow: hidden; background: url('{{ $invoice_image1 }}') no-repeat center top; background-size: 100% 100%;">
+    <table align="center" width="100%" cellpadding="0" cellspacing="0" style="background-color: #ffffff; color: #000; box-shadow: 0 0 10px rgba(0,0,0,0.15); border-radius: 10px; overflow: hidden; background: url('{{ $invoice_image1 }}') no-repeat center top; background-size: 100% 100%;">
 
         <!-- Header -->
         <tr>
