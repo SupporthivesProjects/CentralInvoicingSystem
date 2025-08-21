@@ -13,7 +13,7 @@
 <table width="100%" cellspacing="0" cellpadding="0" border="0">
   <tr>
     <td align="center" style="padding: 0px;">
-     <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
+     <table width="100vw" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
         <tr style="height:15vh;">
             <td>
                <table width="100%" cellpadding="0" cellspacing="0"
@@ -29,8 +29,8 @@
                 </table>
             </td>
         </tr>
-
-        <tr style="height:70vh;">
+        <tr style="height:30px"></tr>
+        <tr style="height:100%;">
          <td>
             <table width="100%" cellpadding="0" cellspacing="0">
                     <tr valign="top">
@@ -80,7 +80,7 @@
                     <!-- TOTAL SECTION (Centered Box) -->
                     <tr>
                         <td colspan="2" align="center" style="padding-top: 40px;">
-                            <table width="180" cellpadding="0" cellspacing="0"
+                            <table width="180px" cellpadding="0" cellspacing="0"
                                 style="font-size: 8px; border-collapse: collapse;">
                                 <tr>
                                     <td
