@@ -22,7 +22,7 @@
         }
     </style>
 </head>
-<body>
+<body style="background: url('{{ $invoice_image1 }}');background-position: center;background-size: cover;background-repeat: repeat;">
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
             <td align="center" bgcolor="#FFFFFF" style="padding: 0px 0;">
@@ -32,7 +32,7 @@
                         <td>
                             <table border="0" style="border-collapse: collapse;width: 100%;">
                                   <tr align="right">
-                                    <td style="background: url('{{ $invoice_image1 }}');background-position: center;background-size: cover;background-repeat: repeat;padding:40px;width: 40%;vertical-align: top;">
+                                    <td style="padding:40px;width: 40%;vertical-align: top;">
                                        <h1 style="margin: 0px;font-family: Calibri;font-size: 40px;color:#414042;">INVOICE</h1>
                                        <table style="height:90px;"></table>
                                        <table border="0" style="border-collapse: collapse;width: 100%;">
