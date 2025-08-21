@@ -51,7 +51,7 @@
                                             <tr>
                                                 <td>
                                                      <h2 style="margin: 0px;font-family: Calibri;font-size:12px;color:#414042;">{{ $site_name }}</h2><br>
-                                                     <p style="margin: 0px;font-family: Calibri;font-size:12px;color: #808080; max-width: 100px">
+                                                     <p style="margin: 0px;font-family: Calibri;font-size:12px;color: #808080; max-width: 200px">
                                                         {{ $company_address }}<br>
                                                         {{ $company_mobile }}
                                                      </p>
