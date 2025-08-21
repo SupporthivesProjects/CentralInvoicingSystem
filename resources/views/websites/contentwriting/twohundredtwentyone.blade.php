@@ -9,12 +9,7 @@
         }
     </style>
 </head>
-
-<<<<<<< HEAD
 <body>
-=======
-<body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #ffffff; color: #000;">
->>>>>>> Saakshi
 <table width="100%" cellspacing="0" cellpadding="0" border="0">
   <tr>
     <td align="center" style="padding: 0px;">
@@ -116,17 +111,17 @@
         </tr>
         <tr>
         <td colspan="2" align="center" style="padding-top: 50px;">
-                            <table width="100%" cellpadding="0" cellspacing="0"
-                                style="border-radius: 30px; background-color: #fff;height:15vh">
-                                <tr
-                                    style="background-image: url({{ $invoice_footer_image }}); background-position: center; background-repeat: no-repeat; background-size: cover;">
-                                    <td align="center" style="padding: 30px;">
-                                        <h2 style="color: #ffd75f; margin: 0; font-size: 20px;">THANK YOU!</h2>
-                                        <p style="color: white; font-size: 12px; margin: 5px 0 0 0; font-size: 5px;">
-                                            Contact Us: {{ $company_email }}</p>
-                                    </td>
-                                </tr>
-                            </table>
+            <table width="100%" cellpadding="0" cellspacing="0"
+                 style="border-radius: 30px; background-color: #fff;height:15vh">
+                <tr
+                       style="background-image: url({{ $invoice_footer_image }}); background-position: center; background-repeat: no-repeat; background-size: cover;">
+                      <td align="center" style="padding: 30px;">
+                         <h2 style="color: #ffd75f; margin: 0; font-size: 20px;">THANK YOU!</h2>
+                         <p style="color: white; font-size: 12px; margin: 5px 0 0 0; font-size: 5px;">
+                               Contact Us: {{ $company_email }}</p>
+                     </td>
+                 </tr>
+            </table>
         </td>
         </tr>
 
