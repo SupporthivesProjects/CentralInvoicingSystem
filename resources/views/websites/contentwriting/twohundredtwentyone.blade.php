@@ -15,7 +15,7 @@
   <tr>
     <td align="center" style="padding: 0px;">
      <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
-        <tr>
+        <tr style="height:15vh;">
             <td>
                <table width="100%" cellpadding="0" cellspacing="0"
                     style="border-radius: 30px; background-color: #0a0033;">
@@ -31,9 +31,9 @@
             </td>
         </tr>
 
-        <tr>
+        <tr style="height:70vh;">
          <td>
-            <table width="100%" cellpadding="0" cellspacing="0" style="height:85vh;">
+            <table width="100%" cellpadding="0" cellspacing="0">
                     <tr valign="top">
                         <!-- LEFT: Item Table -->
                         <td width="65%" style="padding-right: 20px;">
@@ -110,10 +110,10 @@
                 </table>
          </td>
         </tr>
-        <tr>
+        <tr style="height:15vh;">
         <td colspan="2" align="center" style="padding-top: 50px;">
                             <table width="100%" cellpadding="0" cellspacing="0"
-                                style="border-radius: 30px; background-color: #fff;height:15vh">
+                                style="border-radius: 30px; background-color: #fff;">
                                 <tr
                                     style="background-image: url({{ $invoice_footer_image }}); background-position: center; background-repeat: no-repeat; background-size: cover;">
                                     <td align="center" style="padding: 30px;">
