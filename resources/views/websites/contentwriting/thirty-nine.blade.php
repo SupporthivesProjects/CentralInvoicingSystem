@@ -28,7 +28,7 @@
             <td align="center" style="padding: 0px 0;">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse;">
                     <!-- Content -->
-                    <tr style="background:#ffff ;">
+                    <tr>
                         <td>
                             <table border="0" style="border-collapse: collapse;width: 100%;">
                                   <tr align="right">
