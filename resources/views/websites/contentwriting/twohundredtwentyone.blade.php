@@ -13,10 +13,10 @@
 <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #ffffff; color: #000;">
 
     <!-- HEADER -->
-    <table width="100%" cellpadding="0" cellspacing="0">
+    <table width="100%" cellpadding="0" cellspacing="0" style="height:15vh;">
         <tr>
             <td align="center">
-                <table width="600" cellpadding="0" cellspacing="0"
+                <table width="100%" cellpadding="0" cellspacing="0"
                     style="border-radius: 30px; background-color: #0a0033;">
                     <tr>
                         <td width="60%" style="padding: 30px;">
@@ -38,7 +38,7 @@
     <table width="100%" cellpadding="0" cellspacing="0">
         <tr>
             <td align="center">
-                <table width="600" cellpadding="0" cellspacing="0">
+                <table width="100%" cellpadding="0" cellspacing="0" style="height:85vh;">
                     <tr valign="top">
                         <!-- LEFT: Item Table -->
                         <td width="65%" style="padding-right: 20px;">
@@ -115,8 +115,8 @@
                     <!-- THANK YOU FOOTER -->
                     <tr>
                         <td colspan="2" align="center" style="padding-top: 50px;">
-                            <table width="600" cellpadding="0" cellspacing="0"
-                                style="border-radius: 30px; background-color: #fff;">
+                            <table width="100%" cellpadding="0" cellspacing="0"
+                                style="border-radius: 30px; background-color: #fff;height:15vh">
                                 <tr
                                     style="background-image: url({{ $invoice_footer_image }}); background-position: center; background-repeat: no-repeat; background-size: cover;">
                                     <td align="center" style="padding: 30px;">
