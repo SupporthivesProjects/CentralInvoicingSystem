@@ -25,8 +25,8 @@
 <body style="background: linear-gradient(to right, #F4F4F4 38%, #FFFFFF 38%);">
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
-            <td align="center" bgcolor="#FFFFFF" style="padding: 0px 0;">
-                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse;">
+            <td align="center" style="padding: 0px 0;">
+                <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse;">
                     <!-- Content -->
                     <tr style="background:#ffff ;">
                         <td>
