@@ -20,7 +20,7 @@
         .footer-fixed2 {
             position: fixed;
             bottom: 40px;
-            left: 0;
+            left: 20px;
             right: 0;
             width: 100%;
         }
@@ -193,7 +193,7 @@
                                 </p>
                                  </td>
                                  <td align="right">
-                                 <p style="margin: 0px;margin-left: 20px;font-size:8px;font-weight:400;font-family:Lato;line-height:14px;">
+                                 <p style="margin: 0px;font-size:8px;font-weight:400;font-family:Lato;line-height:14px;">
                                     {{ $company_email }}
                                 </p>
                                  </td>
