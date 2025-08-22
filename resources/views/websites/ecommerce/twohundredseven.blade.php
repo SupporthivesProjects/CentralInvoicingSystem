@@ -5,6 +5,19 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+<style>
+        body{
+            margin:0px;
+            padding:0px;
+        }
+        .footer-fixed {
+            position: fixed;
+            bottom: 0px;
+            left: 0;
+            right: 0;
+            width: 100%;
+        }
+    </style>
 </head>
 <body>
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
@@ -177,11 +190,18 @@
                     <!-- Content End-->
 
                   <!--footer-->
+                  <tr>
+                        <td>
+                            <table width="100%" cellspacing="0" cellpadding="0" border="0" class="footer-fixed">
                   <tr> 
                         <td style="background: url('{{ $invoice_footer_image }}');background-repeat: no-repeat;background-position: center;background-size: cover;height:40px;">
                           
                         </td>
                   </tr> 
+                  </table>
+                        </td>
+                       
+                     </tr>
                   <!--footer end-->
                 </table>
             </td>
