@@ -45,7 +45,7 @@
                             </table>
                         </td>
                     </tr>
-                    <tr style="display: flex;">
+                    <tr style="display: flex; height: 80vh;">
                         <td style="padding:0px 40px 60px 24px;height:650px;">
                             <br>
                             <br>
