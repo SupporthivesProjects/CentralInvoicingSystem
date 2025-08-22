@@ -12,7 +12,14 @@
         }
         .footer-fixed {
             position: fixed;
-            bottom: 0px;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            width: 100%;
+        }
+        .footer-fixed2 {
+            position: fixed;
+            bottom: 40px;
             left: 0;
             right: 0;
             width: 100%;
@@ -23,7 +30,7 @@
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
             <td align="center">
-                <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
+                <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse; ">
                      <!---header--->
                     <tr> 
                         <td style="padding: 20px 20px;background: url('{{ $invoice_header_image }}');background-repeat: no-repeat;background-position: center;background-size: cover;height:80px;padding-left:30px;padding-top: 30px;">
@@ -171,7 +178,14 @@
                                  </td>
                               </tr>
                            </table>
-                           <table style="border-collapse:collapse;width:95%;margin-top: 40px;margin-bottom: 40px;">
+                           
+                        </td>   
+                    </tr>
+                    <!-- Content End-->
+
+                    <tr>
+                        <td>
+                        <table style="border-collapse:collapse;width:95%;margin-top: 40px;margin-bottom: 40px;" class="footer-fixed2">
                                <tr>
                                  <td align="left">
                                  <p style="margin: 0px;font-size:26px;font-weight:700;font-family:Lato;line-height:30px;color: #d81d3f;">
@@ -185,9 +199,8 @@
                                  </td>
                                </tr>
                            </table>
-                        </td>   
-                    </tr>
-                    <!-- Content End-->
+            </td>
+        </tr>
 
                   <!--footer-->
                   <tr>
