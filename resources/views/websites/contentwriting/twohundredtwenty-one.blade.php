@@ -31,7 +31,7 @@
         </tr>
     </table>
     <!-- MAIN CONTENT -->
-    <table width="100%" cellpadding="0" cellspacing="0" style="height:70vh;padding:30px">
+    <table width="100%" cellpadding="0" cellspacing="0" style="height:60vh;padding:30px">
         <tr>
             <td align="center" style="vertical-align:top;">
                 <table width="100%" cellpadding="0" cellspacing="0">
