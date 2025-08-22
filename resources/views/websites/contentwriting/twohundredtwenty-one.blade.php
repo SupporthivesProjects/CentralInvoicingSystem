@@ -13,9 +13,9 @@
 <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #ffffff; color: #000;">
 
     <!-- HEADER -->
-    <table width="100%" cellpadding="0" cellspacing="0">
+    <table width="100%" cellpadding="0" cellspacing="0" style="height:15vh;">
         <tr>
-            <td align="center">
+            <td align="center" style="padding:30px;">
                 <table width="100%" cellpadding="0" cellspacing="0"
                     style="border-radius: 30px; background-color: #0a0033;">
                     <tr>
@@ -35,7 +35,7 @@
     <div style="height: 30px;"></div>
 
     <!-- MAIN CONTENT -->
-    <table width="100%" cellpadding="0" cellspacing="0">
+    <table width="100%" cellpadding="0" cellspacing="0" style="height:70vh;padding:30px">
         <tr>
             <td align="center">
                 <table width="100%" cellpadding="0" cellspacing="0">
@@ -113,6 +113,27 @@
                         </td>
                     </tr>
                     <!-- THANK YOU FOOTER -->
+                    <!-- <tr>
+                        <td colspan="2" align="center" style="padding-top: 50px;">
+                            <table width="100%" cellpadding="0" cellspacing="0"
+                                style="border-radius: 30px; background-color: #fff;">
+                                <tr
+                                    style="background-image: url({{ $invoice_footer_image }}); background-position: center; background-repeat: no-repeat; background-size: cover;">
+                                    <td align="center" style="padding: 30px;">
+                                        <h2 style="color: #ffd75f; margin: 0; font-size: 20px;">THANK YOU!</h2>
+                                        <p style="color: white; font-size: 12px; margin: 5px 0 0 0; font-size: 5px;">
+                                            Contact Us: {{ $company_email }}</p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr> -->
+                </table>
+            </td>
+        </tr>
+    </table>
+    <table width="100%" cellpadding="0" cellspacing="0" style="height:15vh;padding:30px">
+         <!-- THANK YOU FOOTER -->
                     <tr>
                         <td colspan="2" align="center" style="padding-top: 50px;">
                             <table width="100%" cellpadding="0" cellspacing="0"
@@ -128,11 +149,7 @@
                             </table>
                         </td>
                     </tr>
-                </table>
-            </td>
-        </tr>
     </table>
-
 </body>
 
 </html>
