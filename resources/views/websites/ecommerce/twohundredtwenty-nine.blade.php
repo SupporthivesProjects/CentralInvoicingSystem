@@ -11,8 +11,8 @@
 <body>
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
-            <td align="center" bgcolor="#f2f2f2" style="padding: 20px 0;">
-                <table width="600" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
+            <td align="center" bgcolor="#f2f2f2" style="padding:0px;">
+                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
                     style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1); background: url({{ $invoice_image1 }}) no-repeat;background-position:center;background-size:100% 100%;">
                     <!-- Header -->
                     <tr>
@@ -211,9 +211,6 @@
                         </td>
                     </tr>
                     <!-- Content End-->
-
-
-
                 </table>
             </td>
         </tr>
