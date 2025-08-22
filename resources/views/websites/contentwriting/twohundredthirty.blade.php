@@ -19,7 +19,7 @@
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
                     style="border-collapse: collapse;background-image: url({{ $invoice_image1 }});background-repeat: no-repeat;background-size:100% 100%;">
                     <!-- Content -->
-                    <tr style="min-height: 600px;">
+                    <tr style="min-height:90vh;">
                         <td style="margin-top:250px;">
                             <table style="padding-left:40px;padding-right: 50px;padding-top: 20px;">
                                 <tr style="border-collapse: collapse;">
