@@ -14,7 +14,7 @@
 <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #ffffff;">
 
     <!-- Outer Table with Background -->
-    <table width="100%" cellpadding="0" cellspacing="0">
+    <table width="100vw" cellpadding="0" cellspacing="0">
         <tr>
             <td align="center" style="background: url('{{ $invoice_image1 }}') no-repeat; background-size:100% 100%;background-position:center;padding: 30px 0px 125px 0px;">
                 <!-- White Box Container -->
