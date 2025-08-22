@@ -14,8 +14,7 @@
 <body style="margin: 0; padding: 40px 0;  font-family: Arial, sans-serif;">
 
     <!-- Main White Invoice Table -->
-    <table align="center" width="100%" cellpadding="0" cellspacing="0"
-        style="background-color: #ffffff; color: #000;border-radius: 10px; overflow: hidden; background: url('{{ $invoice_image1 }}') no-repeat center top; background-size: 100% 100%;">
+    <table align="center" width="100%" cellpadding="0" cellspacing="0" style="background-color: #ffffff; color: #000;border-radius: 10px; overflow: hidden; background: url('{{ $invoice_image1 }}') no-repeat center top; background-size:cover;">
 
         <!-- Header -->
         <tr>
