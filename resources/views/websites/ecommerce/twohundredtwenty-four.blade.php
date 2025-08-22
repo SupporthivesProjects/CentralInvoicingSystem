@@ -14,8 +14,10 @@
 <body style="margin: 0; padding: 40px 0;  font-family: Arial, sans-serif;">
 
     <!-- Main White Invoice Table -->
-    <table align="center" width="100%" cellpadding="0" cellspacing="0" style="background-color: #ffffff; color: #000;border-radius: 10px; overflow: hidden; background: url('{{ $invoice_image1 }}') no-repeat center top; background-size:cover;">
-
+    <table align="center" width="100%" cellpadding="0" cellspacing="0">
+       <tr>
+        <td style="background-color: #ffffff; color: #000;border-radius: 10px; overflow: hidden; background: url('{{ $invoice_image1 }}') no-repeat center top; background-size:cover;">
+        <table>
         <!-- Header -->
         <tr>
             <td style="padding: 20px;">
@@ -37,8 +39,7 @@
                 </table>
             </td>
         </tr>
-
-        <!-- Invoice Date & Number -->
+         <!-- Invoice Date & Number -->
         <tr style="position: relative;">
             <td style="padding: 0 20px 10px 20px; position: absolute; right: 10px; top: -55px;">
                 <table width="100%">
@@ -139,8 +140,9 @@
                 </table>
             </td>
         </tr>
-
-
+        </table>
+        </td>
+       </tr>
     </table>
 
 </body>
