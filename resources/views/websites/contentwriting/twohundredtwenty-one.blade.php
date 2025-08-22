@@ -30,10 +30,6 @@
             </td>
         </tr>
     </table>
-
-    <!-- GAP -->
-    <div style="height: 30px;"></div>
-
     <!-- MAIN CONTENT -->
     <table width="100%" cellpadding="0" cellspacing="0" style="height:70vh;padding:30px">
         <tr>
