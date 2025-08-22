@@ -48,10 +48,7 @@
                                 </tr>
                             </table>
 
-                          
-
-                            <table
-                                style="border-collapse: collapse;border-bottom: 0px;border: 0px;border-radius: 15px; background-color: white;padding: 10px;">
+                            <table style="border-collapse: collapse;border-bottom: 0px;border: 0px;border-radius: 15px; background-color: white;padding: 10px;">
 
                                 <tr
                                     style="border-collapse: collapse;height: 40px;border-bottom: 0px;border: 0px;border-bottom: 2px solid black;padding: 20px;">
