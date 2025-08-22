@@ -33,7 +33,9 @@
                     </tr>
 
                     <!-- Header End -->
+                     <tr style="height:30px">
 
+                     </tr>
 
                     <!-- Content -->
                     <tr>
@@ -135,16 +137,12 @@
     left: -259px;
     width: 120px;">
                                         <img src="{{ $invoice_image2 }}" alt=""
-                                            style="position: absolute; bottom: -9px;
+                                            style="position: absolute; bottom: 20px;
     left: -193px;
     width: 80px;">
                                     </td>
                                 </tr>
                             </table>
-
-
-
-
                         </td>
                     </tr>
                     <!-- Content End-->
