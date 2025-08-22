@@ -52,7 +52,7 @@
                                 </tr>
                             </table>
 
-                            <table style="border-collapse: collapse;border-bottom: 0px;border: 0px;border-radius: 15px; background-color: white;padding: 10px;margin-top:50px;margin-bottom:50px;height:56.8vh;">
+                            <table style="border-collapse: collapse;border-bottom: 0px;border: 0px;border-radius: 15px; background-color: white;padding: 10px;margin-top:50px;margin-bottom:50px;height:56.9vh;">
                                 <tr style="border-collapse: collapse;height: 40px;border-bottom: 0px;border: 0px;border-bottom: 2px solid black;padding: 20px;">
                                     <td
                                         style="width: 300px;text-align: left;font-family: 'Cambay', sans-serif;font-size: 13px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-left: 20px;">
