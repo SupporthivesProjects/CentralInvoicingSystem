@@ -48,7 +48,7 @@
                                 </tr>
                             </table>
 
-                            <br>
+                          
 
                             <table
                                 style="border-collapse: collapse;border-bottom: 0px;border: 0px;border-radius: 15px; background-color: white;padding: 10px;">
