@@ -4,7 +4,12 @@
 <head>
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
     <link href="https://fonts.googleapis.com/css2?family=Cambay&display=swap" rel="stylesheet">
-
+<style>
+    *{
+        margin:0px;
+        padding:0px;
+    }
+</style>
 </head>
 
 <body>
