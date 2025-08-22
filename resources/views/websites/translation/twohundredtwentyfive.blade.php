@@ -3,6 +3,12 @@
 
 <head>
     <title>{{ $site->site_name }} - Invoice #{{ $invoice_number }}</title>
+    <style>
+        *{
+            margin:0px;
+            padding:0px;
+        }
+    </style>
 </head>
 
 <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #ffffff;">
@@ -13,7 +19,7 @@
         <tr>
             <td align="center">
                 <!-- White Box Container -->
-                <table width="520" cellpadding="0" cellspacing="0" style="padding: 30px 25px;margin-top: 50px;">
+                <table width="100%" cellpadding="0" cellspacing="0" style="padding: 30px 25px;margin-top: 50px;">
 
                     <!-- Invoice Header -->
                     <tr>
