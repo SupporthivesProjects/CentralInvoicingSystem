@@ -25,7 +25,7 @@
                                     <td style="
                                         background: url('{{ $invoice_header_image }}') no-repeat center;
                                         background-size: cover;
-                                        height: 102px;">
+                                        height:150px;">
                                     </td>
                                 </tr>
                             </table>
@@ -51,8 +51,9 @@
                                         <img src="{{ $invoice_image1 }}" alt="Top Box"
                                             style=" position: absolute; top: 27px; right: 89px; z-index: 1;" />
                                         <img src="{{ $invoice_image2 }}" alt="Bottom Box"
-                                            style="position: absolute; top: 206px; right: 89px; z-index: 1; width: 65px;" />
-                                        <p
+                                            style="position: absolute; top: 206px; right: 89px; z-index: 1; width: 65px;"/>
+                                       <br><br><br>
+                                            <p
                                             style="font-size: 28px; font-weight: bold; position: relative; z-index: 2; top: 69px;">
                                             INVOICE</p>
                                     </td>
@@ -127,7 +128,7 @@
                                     <td style="text-align: right; padding: 6px; font-size: 8px;">{{ site_currency() }} {{ number_format(($invoice_amount ), 2) }}</td>
                                 </tr>
                                 <tr >
-                                    <td style="position: relative;">
+                                    <td style="position:absolute;bottom:30px">
                                         <img src="{{ $invoice_image1 }}" alt=""
                                             style="position: absolute; bottom: -125px;
     left: -307px;
