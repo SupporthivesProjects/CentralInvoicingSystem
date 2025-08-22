@@ -177,7 +177,7 @@
                             </table><br>
 
                             <table style="background-color: white;border-radius: 10px;">
-                                <tr style="width: 600px;">
+                                <tr style="width:100%;">
                                     <td
                                         style="width: 300px;font-size: 12px;font-family: 'Cambay', sans-serif;padding: 20px;padding-bottom: 20px;">
                                         <b>{{$company_name}}</b><br>
