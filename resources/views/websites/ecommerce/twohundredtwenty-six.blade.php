@@ -52,7 +52,7 @@
                                             style=" position: absolute; top: 27px; right: 89px; z-index: 1;" />
                                         <img src="{{ $invoice_image2 }}" alt="Bottom Box"
                                             style="position: absolute; top: 206px; right: 89px; z-index: 1; width: 65px;"/>
-                                       <br><br><br>
+                                       <br><br>
                                             <p
                                             style="font-size: 28px; font-weight: bold; position: relative; z-index: 2; top: 69px;">
                                             INVOICE</p>
@@ -80,15 +80,15 @@
 
                                     <!-- Billed To -->
                                     <td style="width: 16%; vertical-align: top;">
-                                        <p style="margin: 0; font-weight: bold; font-size:12px ;">Billed To:</p>
-                                        <p style="margin: 0; font-size:12px ;">
+                                        <p style="margin: 0; font-weight: bold; font-size:12px ;z-index: 2">Billed To:</p>
+                                        <p style="margin: 0; font-size:12px ;z-index: 2">
                                             {{ $customer_name }}
                                         </p>
                                     </td>
                                 </tr>
                             </table>
                             <br>
-                            <table width="100%" style="border-collapse: collapse;margin-top: 11px;">
+                            <table width="100%" style="border-collapse: collapse;margin-top:40px;">
                                 <tr style="background-color: #D4E1EF; border-bottom: 1px solid gray; font-size: 11px;">
                                     <th style="text-align: left; padding: 5px;">Item</th>
                                     <th style="text-align: left; padding: 5px;">Product Description</th>
@@ -128,7 +128,7 @@
                                     <td style="text-align: right; padding: 6px; font-size: 8px;">{{ site_currency() }} {{ number_format(($invoice_amount ), 2) }}</td>
                                 </tr>
                                 <tr >
-                                    <td style="position:absolute;bottom:30px">
+                                    <td style="position:absolute;bottom:-30px">
                                         <img src="{{ $invoice_image1 }}" alt=""
                                             style="position: absolute; bottom: -125px;
     left: -307px;
