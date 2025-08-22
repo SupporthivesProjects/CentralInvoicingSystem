@@ -33,7 +33,7 @@
     <!-- MAIN CONTENT -->
     <table width="100%" cellpadding="0" cellspacing="0" style="height:70vh;padding:30px">
         <tr>
-            <td align="center">
+            <td align="center" style="vertical-align:top;">
                 <table width="100%" cellpadding="0" cellspacing="0">
                     <tr valign="top">
                         <!-- LEFT: Item Table -->
@@ -128,7 +128,7 @@
             </td>
         </tr>
     </table>
-    <table width="100%" cellpadding="0" cellspacing="0" style="height:15vh;padding:30px">
+    <table width="100%" cellpadding="0" cellspacing="0" style="padding:30px">
          <!-- THANK YOU FOOTER -->
                     <tr>
                         <td colspan="2" align="center" style="padding-top: 50px;">
