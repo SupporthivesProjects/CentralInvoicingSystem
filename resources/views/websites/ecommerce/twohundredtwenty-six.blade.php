@@ -54,7 +54,7 @@
                                             style="position: absolute; top: 206px; right: 89px; z-index: 1; width: 65px;"/>
                                        <br><br>
                                             <p
-                                            style="font-size: 28px; font-weight: bold; position: relative; z-index: 2; top: 69px;">
+                                            style="font-size: 28px; font-weight: bold; position: relative; z-index: 2; top:69px;">
                                             INVOICE</p>
                                     </td>
                                 </tr>
@@ -80,8 +80,8 @@
 
                                     <!-- Billed To -->
                                     <td style="width: 16%; vertical-align: top;">
-                                        <p style="margin: 0; font-weight: bold; font-size:12px ;z-index:10000;">Billed To:</p>
-                                        <p style="margin: 0; font-size:12px ;z-index: 200000;">
+                                        <p style="margin: 0; font-weight: bold; font-size:12px ;z-index:10000;position:relative;">Billed To:</p>
+                                        <p style="margin: 0; font-size:12px ;z-index: 200000;position:relative;">
                                             {{ $customer_name }}
                                         </p>
                                     </td>
@@ -128,7 +128,7 @@
                                     <td style="text-align: right; padding: 6px; font-size: 8px;">{{ site_currency() }} {{ number_format(($invoice_amount ), 2) }}</td>
                                 </tr>
                                 <tr >
-                                    <td style="position:absolute;bottom:100px">
+                                    <td style="position:absolute;bottom:200px">
                                         <img src="{{ $invoice_image1 }}" alt=""
                                             style="position: absolute; bottom: -125px;
     left: -307px;
