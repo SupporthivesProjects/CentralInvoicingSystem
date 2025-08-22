@@ -5,7 +5,7 @@
     <title>Your Email Title</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<<style>
+<style>
 *{
     margin:0px;
     padding:0px;
@@ -18,7 +18,7 @@
         <tr>
             <td align="center" bgcolor="#f2f2f2" style="padding:0px;">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
-                    style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1); background: url({{ $invoice_image1 }}) no-repeat;background-position:center;background-size:100% 100%;background-size:cover;">
+                    style="border-collapse: collapse; background: url({{ $invoice_image1 }}) no-repeat;background-position:center;background-size:cover;">
                     <!-- Header -->
                     <tr>
                         <td style="height: 20px;"></td>
@@ -89,9 +89,6 @@
                                     </td>
                                 </tr>
                             </table>
-
-
-
                             <table
                                 style="border-collapse: collapse;border-bottom: 0px;border: 0px; border-radius: 10px;">
                                 <tr
