@@ -15,7 +15,7 @@
                     <!-- Content -->
                     <tr>
                         <td style="padding: 20px;padding-top: 0px;background: url({{ $invoice_image1 }}) no-repeat;background-position:center;background-size:100% 100%;" align="center">
-                            <table style="border-collapse: collapse;border-bottom: 0px;border: 0px;">
+                            <table style="border-collapse: collapse;border-bottom: 0px;border: 0px;width:100%;">
                                 <tr style="border-collapse: collapse; height: 100px;">
                                     <td style="width: 200px;padding-left: 10px;padding-top: 20px;padding-bottom: 30px;">
 
