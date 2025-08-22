@@ -10,13 +10,11 @@
 <body>
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
-            <td align="center" bgcolor="#f2f2f2" style="padding:0px;">
-                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
+            <td align="center" style="padding:0px;">
+                <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse;">
                     <!-- Content -->
-                    <tr
-                        style=" background: url({{ $invoice_image1 }}) no-repeat;background-position:center;background-size:100% 100%;">
-                        <td style="padding: 20px;padding-top: 0px;">
-
+                    <tr>
+                        <td style="padding: 20px;padding-top: 0px;background: url({{ $invoice_image1 }}) no-repeat;background-position:center;background-size:cover;">
                             <table style="border-collapse: collapse;border-bottom: 0px;border: 0px;">
 
                                 <tr style="border-collapse: collapse; height: 100px;">
