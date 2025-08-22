@@ -15,7 +15,7 @@
 <body>
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
-            <td align="center" bgcolor="#f2f2f2" style="padding:0px;height:100%;background-image: url({{ $invoice_image1 }});background-repeat: no-repeat;background-size:100% 100%;">
+            <td align="center" bgcolor="#f2f2f2" style="padding:0px;height:100vh;background-image: url({{ $invoice_image1 }});background-repeat: no-repeat;background-size:100% 100%;">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse;">
                     <!-- Content -->
                     <tr style="min-height:90vh;">
