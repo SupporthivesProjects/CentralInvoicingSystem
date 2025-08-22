@@ -17,12 +17,11 @@
         <tr>
             <td align="center" bgcolor="#f2f2f2" style="padding:0px;">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
-                    style="border-collapse: collapse;background-image: url({{ $invoice_image1 }}); background-repeat: no-repeat;background-size:cover;">
+                    style="border-collapse: collapse;background-image: url({{ $invoice_image1 }});background-repeat: no-repeat;background-size:100% 100%;">
                     <!-- Content -->
                     <tr style="min-height: 600px;">
-                        <td style="padding-top:200px;">
-
-                            <table style="padding-left: 40px;padding-right: 50px;padding-top: 20px; ">
+                        <td style="margin-top:250px;">
+                            <table style="padding-left:40px;padding-right: 50px;padding-top: 20px;">
                                 <tr style="border-collapse: collapse;">
                                     <td style="width: 300px;font-family: 'Montserrat', sans-serif;">
                                         <p style="color: #f24c1e;font-size: 14px;margin: 0px;">Invoice To :</p>
