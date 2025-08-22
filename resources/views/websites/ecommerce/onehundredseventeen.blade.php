@@ -3,10 +3,10 @@
 <head>
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
 </head>
-<body>
+<body style="margin: 0px; padding: 0px;">
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
-            <td align="center" bgcolor="#f2f2f2" style="padding: 0px 0;">
+            <td align="center">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1); background: url('{{ $invoice_image2 }}') no-repeat;background-position: left bottom;background-size: 45%; background-color: #FFFFFF;">
                     <!-- Content -->
                     <tr style="display: flex; flex-direction: column;">
