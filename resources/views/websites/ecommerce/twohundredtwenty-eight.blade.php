@@ -47,7 +47,7 @@
                                 </tr>
                             </table>
 
-                            <table style="border-collapse: collapse;border-bottom: 0px;border: 0px;border-radius: 15px; background-color: white;padding: 10px;">
+                            <table style="border-collapse: collapse;border-bottom: 0px;border: 0px;border-radius: 15px; background-color: white;padding: 10px;margin-top:50px;margin-bottom:50px;">
                                 <tr style="border-collapse: collapse;height: 40px;border-bottom: 0px;border: 0px;border-bottom: 2px solid black;padding: 20px;">
                                     <td
                                         style="width: 300px;text-align: left;font-family: 'Cambay', sans-serif;font-size: 13px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-left: 20px;">
@@ -170,8 +170,7 @@
 
                             <table style="background-color: white;border-radius: 10px;width:100%;">
                                 <tr style="width:100%;">
-                                    <td>
-                                        style="width: 300px;font-size: 12px;font-family: 'Cambay', sans-serif;padding: 20px;padding-bottom: 20px;">
+                                    <td style="width: 300px;font-size: 12px;font-family: 'Cambay', sans-serif;padding: 20px;padding-bottom: 20px;">
                                         <b>{{$company_name}}</b><br>
                                         <b>{{$company_email}}</b>
                                     </td>
