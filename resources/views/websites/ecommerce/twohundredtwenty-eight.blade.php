@@ -48,8 +48,7 @@
                             </table>
 
                             <table style="border-collapse: collapse;border-bottom: 0px;border: 0px;border-radius: 15px; background-color: white;padding: 10px;">
-                                <tr
-                                    style="border-collapse: collapse;height: 40px;border-bottom: 0px;border: 0px;border-bottom: 2px solid black;padding: 20px;">
+                                <tr style="border-collapse: collapse;height: 40px;border-bottom: 0px;border: 0px;border-bottom: 2px solid black;padding: 20px;">
                                     <td
                                         style="width: 300px;text-align: left;font-family: 'Cambay', sans-serif;font-size: 13px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-left: 20px;">
                                         <b>Description</b>
@@ -68,10 +67,8 @@
                                     </td>
                                 </tr>
                                 
-                                <tr
-                                    @foreach($products as $product)
-
-                                    style="border-collapse: collapse;height: 40px;border-bottom: 0px;border: 0px;padding: 20px;">
+                                <tr  style="border-collapse: collapse;height: 40px;border-bottom: 0px;border: 0px;padding: 20px;">
+                                    @foreach($products as $product)            
                                     <td
                                         style="width: 300px;text-align: left;font-family: 'Cambay', sans-serif;font-size: 12px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-left: 20px;">
                                         <b>{{ $product->name }}</b>
