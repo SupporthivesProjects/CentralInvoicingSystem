@@ -80,8 +80,8 @@
 
                                     <!-- Billed To -->
                                     <td style="width: 16%; vertical-align: top;">
-                                        <p style="margin: 0; font-weight: bold; font-size:12px ;z-index: 2">Billed To:</p>
-                                        <p style="margin: 0; font-size:12px ;z-index: 2">
+                                        <p style="margin: 0; font-weight: bold; font-size:12px ;z-index:10000;">Billed To:</p>
+                                        <p style="margin: 0; font-size:12px ;z-index: 200000;">
                                             {{ $customer_name }}
                                         </p>
                                     </td>
@@ -128,7 +128,7 @@
                                     <td style="text-align: right; padding: 6px; font-size: 8px;">{{ site_currency() }} {{ number_format(($invoice_amount ), 2) }}</td>
                                 </tr>
                                 <tr >
-                                    <td style="position:absolute;bottom:-30px">
+                                    <td style="position:absolute;bottom:100px">
                                         <img src="{{ $invoice_image1 }}" alt=""
                                             style="position: absolute; bottom: -125px;
     left: -307px;
