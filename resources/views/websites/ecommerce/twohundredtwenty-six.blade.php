@@ -25,7 +25,7 @@
                                     <td style="
                                         background: url('{{ $invoice_header_image }}') no-repeat center;
                                         background-size: cover;
-                                        height:150px;">
+                                        height:105px;">
                                     </td>
                                 </tr>
                             </table>
