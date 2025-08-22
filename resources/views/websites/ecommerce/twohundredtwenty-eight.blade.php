@@ -10,11 +10,11 @@
 <body>
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
-            <td align="center" style="padding:0px;">
+            <td align="center" style="padding:0px;background: url({{ $invoice_image1 }}) no-repeat;background-position:center;background-size:cover;">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse;">
                     <!-- Content -->
                     <tr>
-                        <td style="padding: 20px;padding-top: 0px;background: url({{ $invoice_image1 }}) no-repeat;background-position:center;background-size:100% 100%;" align="center">
+                        <td style="padding: 20px;padding-top: 0px;" align="center">
                             <table style="border-collapse: collapse;border-bottom: 0px;border: 0px;width:100%;">
                                 <tr style="border-collapse: collapse; height: 100px;">
                                     <td style="width: 200px;padding-left: 10px;padding-top: 20px;padding-bottom: 30px;">
@@ -32,7 +32,7 @@
                                     </td>
                                 </tr>
                             </table>
-                            <table style="background-color: white;border-radius: 10px;">
+                            <table style="background-color: white;border-radius: 10px;width:100%;">
                                 <tr style="width:100%;">
                                     <td
                                         style="width: 550px;font-size: 14px;font-family: 'Cambay', sans-serif;font-weight: 300;padding: 20px;padding-bottom: 0px;">
