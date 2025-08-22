@@ -14,7 +14,7 @@
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse;">
                     <!-- Content -->
                     <tr>
-                        <td style="padding: 20px;padding-top: 0px;background: url({{ $invoice_image1 }}) no-repeat;background-position:center;background-size:cover;" align="center">
+                        <td style="padding: 20px;padding-top: 0px;background: url({{ $invoice_image1 }}) no-repeat;background-position:center;background-size:100% 100%;" align="center">
                             <table style="border-collapse: collapse;border-bottom: 0px;border: 0px;">
                                 <tr style="border-collapse: collapse; height: 100px;">
                                     <td style="width: 200px;padding-left: 10px;padding-top: 20px;padding-bottom: 30px;">
@@ -33,7 +33,7 @@
                                 </tr>
                             </table>
                             <table style="background-color: white;border-radius: 10px;">
-                                <tr style="width:80%;">
+                                <tr style="width:100%;">
                                     <td
                                         style="width: 550px;font-size: 14px;font-family: 'Cambay', sans-serif;font-weight: 300;padding: 20px;padding-bottom: 0px;">
                                         <b>Invoice To : </b>
@@ -168,9 +168,9 @@
 
                             </table>
 
-                            <table style="background-color: white;border-radius: 10px;">
+                            <table style="background-color: white;border-radius: 10px;width:100%;">
                                 <tr style="width:100%;">
-                                    <td
+                                    <td>
                                         style="width: 300px;font-size: 12px;font-family: 'Cambay', sans-serif;padding: 20px;padding-bottom: 20px;">
                                         <b>{{$company_name}}</b><br>
                                         <b>{{$company_email}}</b>
