@@ -16,7 +16,7 @@
     <!-- Outer Table with Background -->
     <table width="100%" cellpadding="0" cellspacing="0">
         <tr>
-            <td align="center" style="background: url('{{ $invoice_image1 }}') no-repeat center top; background-size: cover; padding: 30px 0px 125px 0px; width:100%; margin: auto;">
+            <td align="center" style="background: url('{{ $invoice_image1 }}') no-repeat; background-size:100% 100%;background-position:center;padding: 30px 0px 125px 0px;">
                 <!-- White Box Container -->
                 <table width="100%" cellpadding="0" cellspacing="0" style="padding: 30px 25px;margin-top: 50px;">
 
@@ -160,7 +160,7 @@
                     <!-- Footer -->
                     <tr>
                         <td style="text-align: center; font-size: 10px; color: #555; padding-top: 10px;">
-                            {{ $company_email }} <span style="color: red; padding: 0 10px;">|</span>
+                            {{ $company_email }} <span style="color: red; padding: 0px 10px;">|</span>
                             {{ $site->site_name }}
                         </td>
                     </tr>
