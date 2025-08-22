@@ -16,7 +16,7 @@
     <!-- Main White Invoice Table -->
     <table align="center" width="100%" cellpadding="0" cellspacing="0">
        <tr>
-        <td style="color: #000;border-radius: 10px; overflow: hidden; background: url('{{ $invoice_image1 }}') no-repeat center; background-size:cover;">
+        <td style="color: #000;border-radius: 10px; overflow: hidden; background: url('{{ $invoice_image1 }}') no-repeat; background-size:100% 100%;background-position:center">
         <table align="center" width="100%" cellpadding="0" cellspacing="0" width="100%"> 
         <!-- Header -->
         <tr>
