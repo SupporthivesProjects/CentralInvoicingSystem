@@ -3,17 +3,21 @@
 
 <head>
     <title>{{ $site->site_name }} - Invoice #{{ $invoice_number }}</title>
+    <style>
+        *{
+            
+        }
+    </style>
 </head>
 
 <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #ffffff;">
 
     <!-- Outer Table with Background -->
-    <table width="100%" cellpadding="0" cellspacing="0"
-        style="background: url('{{ $invoice_image1 }}') no-repeat center top; background-size: cover; padding: 30px 0px 125px 0px; width: 600px; margin: auto;">
+    <table width="100%" cellpadding="0" cellspacing="0">
         <tr>
-            <td align="center">
+            <td align="center" style="background: url('{{ $invoice_image1 }}') no-repeat center top; background-size: cover; padding: 30px 0px 125px 0px; width: 600px; margin: auto;">
                 <!-- White Box Container -->
-                <table width="520" cellpadding="0" cellspacing="0" style="padding: 30px 25px;margin-top: 50px;">
+                <table width="100%" cellpadding="0" cellspacing="0" style="padding: 30px 25px;margin-top: 50px;">
 
                     <!-- Invoice Header -->
                     <tr>
