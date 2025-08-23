@@ -2,12 +2,23 @@
 <html>
 <head>
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }} </title>
+    <style>
+        .footer-fixed {
+            position: fixed;
+            bottom: 0px;
+            left: 0;
+            right: 0;
+            width: 100%;
+            /* background: url('{{ $invoice_footer_image }}') center center no-repeat; */
+            /* background-size: cover; */
+        }
+    </style>
 </head>
 <body style="padding: 0px; margin: 0px;">
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
             <td align="center">
-                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
+                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse;">
                     <!-- Header -->
                     <tr>
                         <td style="padding: 0px; position: relative;">
@@ -24,7 +35,7 @@
                     <tr>
                         <td style="padding: 0px 0px 0px 40px;">
                             <div style="display: flex; align-items: flex-start;">
-                                <div style="position: relative; top: -34px; min-height: 250px !important; ">
+                                <div style="position: relative; top: -34px; min-height: 280px !important; ">
                                     <table style="border-collapse: collapse; background-color: #F2F2F2; border-radius: 10px 10px 0px 0px;">
                                         <tr style="border-collapse: collapse;height: 34px;background-color: #e03b42;">
                                             <td style="width: 200px; color: #FFFFFF; text-align: start; padding: 0px 16px;font-family:  Arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse; border-radius: 10px 0px 0px 0px;">
@@ -126,7 +137,10 @@
 
                      <!-- Footer -->
                      <tr>
-                        <td style="background: linear-gradient(to right, #e03b42 35%, #202020 35%); padding: 60px 40px 60px 40px; display: flex; justify-content: space-between;">
+                        <td>
+                            <table width="100%" cellspacing="0" cellpadding="0" border="0" class="footer-fixed">
+                                <tr>
+                                <td style="background: linear-gradient(to right, #e03b42 35%, #202020 35%); padding: 60px 40px 60px 40px; display: flex; justify-content: space-between;">
                             <p style="font-family: Arial;font-size: 22px;margin: 0px;font-weight: 400; color: #FFFFFF;">Thank You for<br>Purchasing!</p>
                             <p style="font-family: Arial;font-size: 9px;margin: 0px;font-weight: 400; color: #FFFFFF; text-align: end; line-height: 15px;"><span style="color: #e03b42; font-size: 14px;">Contact</span><br>
                                 {{ $company_name }}<br>
@@ -136,7 +150,13 @@
                                 www.bizzspace.co                                
                             </p>
                         </td>
+    </tr>
+
+                            </table>
+                        </td>
+                       
                      </tr>
+
                 </table>
             </td>
         </tr>

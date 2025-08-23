@@ -10,15 +10,15 @@
         <tr>
             <td align="center">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
-                    style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1); background-image: url('{{ $invoice_header_image }}'); background-position: center; background-repeat: no-repeat; background-size: cover; height: 870px;">
+                    style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1); background-image: url('{{ $invoice_header_image }}'); background-position: center; background-repeat: no-repeat; background-size: cover; height: 100vh;">
                     <!-- Header -->
                     <tr style="padding: 200px 50px 0px 50px;">
                         <td style="height: 130px;">
                             <table style="font-family: 'Poppins'; padding: 39px; width: 100%; font-size: 9px;">
                                 <tr style="position: relative;">
-                                    <td style="position: absolute; left: -12px; font-weight: bold; top: 40px;">
+                                    <td style="position: absolute; left: 20px; font-weight: bold; top: 48px;">
                                         #{{ $invoice_number }}</td>
-                                    <td style="position: absolute; right: 450px; font-weight: bold; top: 40px;">
+                                    <td style="position: absolute; right: 420px; font-weight: bold; top: 48px;">
                                         {{ $invoice_date }}</td>
                                 </tr>
                             </table>
@@ -32,25 +32,25 @@
                     <tr>
 
                         <td
-                            style="font-family: 'Poppins'; font-size: 9px; vertical-align: top; padding: 0px 40px 0px 40px; width: 100%;">
+                            style="font-family: 'Poppins'; font-size: 9px; vertical-align: top; padding: 55px 40px 0px 40px; width: 100%;">
                             <table style="font-size: 12px; width: 100%;">
                                 <td>Total Due</td>
                                 <td>
-                                    <div style="height: 1px; width: 450px; background-color: #E48920;"></div>
+                                    <div style="height: 1px; width: 575px; background-color: #E48920;"></div>
                                 </td>
                                 <td>Invoice To :</td>
                             </table>
                             <table width="100%">
                                 <tr>
                                     <td width="50%"
-                                        style="font-size: 32px; font-weight: bold; padding-left: 40px; padding-top: 13px;">
+                                        style="font-size: 32px; font-weight: bold; padding-left: 60px; padding-top: 13px;">
                                         {{ site_currency() . number_format($invoice_amount ?? 0, 2) }}</td>
                                     <td align="right"
-                                        style="font-size: 16px; vertical-align: middle; font-weight: bold;">{{ $customer_name ? $customer_name : '' }}</td>
+                                        style="font-size: 16px; padding-right: 10px; vertical-align: middle; font-weight: bold;">{{ $customer_name ? $customer_name : '' }}</td>
                                 </tr>
                             </table>
                             
-                            <div style="min-height: 805px;">
+                            <div style="min-height: 350px;">
                                 <table
                                     style="margin-top: 70px; width: 100%; padding: 40px; border-collapse: collapse; color: white; font-size: 11px;">
                                     <thead>
@@ -112,8 +112,8 @@
                                         </tr> --}}
                                     </tbody>
                                 </table>
-
-                                <table style="width: 100%; border-collapse: collapse; margin-top: 85px;">
+                            </div>
+                            <table style="width: 100%; border-collapse: collapse; margin-top: 85px;">
                                     <tr>
                                         <td style="text-align: left; font-size: 12px; font-weight: 500; color: #1b1f23;">
                                             THANK YOU
@@ -133,9 +133,7 @@
                                             </table>
                                         </td>
                                     </tr>
-                                </table>
-                            </div>
-
+                            </table>
                         </td>
                     </tr>
                     <!-- Content End-->

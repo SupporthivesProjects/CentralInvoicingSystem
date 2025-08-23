@@ -2,12 +2,27 @@
 <html>
 <head>
   <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
+    <style>
+      body {
+            margin: 0px;
+            padding: 0px;
+        }
+        .footer-fixed {
+            position: fixed;
+            bottom: 0px;
+            left: 0;
+            right: 0;
+            width: 100%;
+            /* background: url('{{ $invoice_footer_image }}') center center no-repeat; */
+            /* background-size: cover; */
+        }
+    </style>
 </head>
 <body>
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
-            <td align="center" bgcolor="#f2f2f2" style="padding: 0px 0;">
-                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
+            <td align="center" bgcolor="#FFFFFF" style="padding: 0px 0;">
+                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse;">
                       <!-- Header -->
 
                       <tr style=" background: url('{{ $invoice_header_image }}'); background-repeat: no-repeat;background-size: cover;background-position: center;height: 130px;">
@@ -54,10 +69,10 @@
                             <table style="width: 100%;font-family: Arial, Helvetica, sans-serif; margin-top: 20px;">
                                 <tr>
                                     <td>
-                                        <p style="font-size: 10px; margin: 0;"><b>Email: </b>{{ $company_email }}</p>
-                                        <p style="font-size: 10px; margin: 0;"><b>Website: </b>{{ $site->site_link }}</p>
-                                        <p style="font-size: 10px; margin: 0;"><b>Phone: </b>{{ $company_mobile }}</p>
-                                        <p style="font-size: 10px; margin: 0;"><b>Address: </b>{!! $company_address !!}</p>
+                                        <p style="font-size: 12px; margin: 0;"><b>Email: </b>{{ $company_email }}</p>
+                                        <p style="font-size: 12px; margin: 0;"><b>Website: </b> <a href="{{ $site->site_link }}" style="color: #000000;text-decoration:none;">eazymarketer.com</a> </p>
+                                        <p style="font-size: 12px; margin: 0;"><b>Phone: </b>{{ $company_mobile }}</p>
+                                        <p style="font-size: 12px; margin: 0;"><b>Address: </b>{!! $company_address !!}</p>
                                     </td>
                                     
 
@@ -76,7 +91,7 @@
                                 </thead>
                                 <tbody>
                                 @foreach($products as $product)
-                                  <tr style="border-bottom: 1px solid #ccc; font-size: 8px;">
+                                  <tr style="border-bottom: 1px solid #ccc; font-size: 14px;">
                                     <td style="padding: 10px;"> {{ $product->name }}</td>
                                     <td style="padding: 10px;">{{ $product->subscription ?? '-' }}</td>
                                     <td style="padding: 10px;">1</td>
@@ -91,15 +106,15 @@
                               <table style="width: 250px; margin-left: auto;border-collapse: collapse; font-family: Arial, sans-serif; margin-top: 20px;">
                                 <thead>
                                   <tr>
-                                    <th colspan="2" style="text-align: left; padding: 10px 12px; font-weight: bold;font-size:10px;">INVOICE TOTAL</th>
+                                    <th colspan="2" style="text-align: left; padding: 10px 12px; font-weight: bold;font-size:14px;">INVOICE TOTAL</th>
                                   </tr>
                                 </thead>
                                 <tbody>
-                                  <tr style="border-bottom: 1px solid #ccc; font-size: 8px;">
+                                  <tr style="border-bottom: 1px solid #ccc; font-size: 12px;">
                                     <td style="padding: 10px 12px;">SUBTOTAL</td>
                                     <td style="padding: 10px 12px; text-align: right;">{{ site_currency() }} {{ number_format(($invoice_amount + $discount_amount) ?? 0, 2) }}</td>
                                   </tr>
-                                  <tr style="border-bottom: 1px solid #ccc; font-size: 8px;">
+                                  <tr style="border-bottom: 1px solid #ccc; font-size: 12px;">
                                     <td style="padding: 10px 12px;">DISCOUNT</td>
                                     <td style="padding: 10px 12px; text-align: right;">{{ site_currency() }} {{ number_format($discount_amount ?? 0, 2) }}</td>
                                   </tr>
@@ -117,7 +132,7 @@
 
 
                     <!-----------Footer----------->
-                    <tr style=" background: url('{{ $invoice_footer_image}}');
+                    <tr class="footer-fixed" style=" background: url('{{ $invoice_footer_image}}');
                     background-repeat: no-repeat;
                     background-size: cover;
                     background-position: center;
