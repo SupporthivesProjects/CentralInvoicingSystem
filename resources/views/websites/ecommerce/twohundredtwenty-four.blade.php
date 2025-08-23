@@ -29,15 +29,13 @@
                                         <p style="font-size: 8px; line-height: 1.4; margin-top: 15px;">
                                             {{ $company_address }}<br>
                                             {{ $company_email }}<br>
-
-
-                                            {{ $company_logo }}
                                         </p>
                                     </td>
                                     <td style="text-align: right; vertical-align: top;">
                                         <div
                                             style="background-color: #ffc680; padding: 10px 20px; font-weight: bold; font-size: 40px; border-radius: 50px;">
                                             INVOICE</div>
+                                             {{ $company_logo }}
                                     </td>
                                 </tr>
                             </table>
