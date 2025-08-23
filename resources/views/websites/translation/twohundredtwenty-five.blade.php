@@ -15,7 +15,7 @@
 
     <!-- Outer Table with Background -->
     <table width="100%" cellpadding="0" cellspacing="0"
-        style="background: url('{{ $invoice_image1 }}') no-repeat center top; background-size: cover;">
+        style="background: url('{{ $invoice_image1 }}') no-repeat center top; background-size:100% 100%;">
         <tr>
             <td align="center" style="vertical-align:">
                 <!-- White Box Container -->
