@@ -1,321 +1,143 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-    <meta charset="UTF-8" />
-    <title>Erose Enterprises Invoice</title>
+    <title>Invoice</title>
+    <style>
+        .custom-line {
+            background: url('./img/image.png') no-repeat left bottom;
+            /* Path to your border image */
+            background-size: 100% 6px;
+            /* Stretch full width, keep height */
+            padding-bottom: 8px;
+            /* Space for the line */
+        }
+    </style>
 </head>
 
-<body style="margin:0; padding:0; background:#fff; font-family:Arial,sans-serif;">
-    <table cellpadding="0" cellspacing="0" border="0"
-        style="width:100%; margin:30px auto; background:#fff; border-radius:8px; box-shadow:0 2px 12px rgba(0,0,0,0.07); border-collapse:separate;">
+<body style="margin: 0; padding: 0; background-color: #ffffff; font-family: Arial, sans-serif;">
+    <table style="width:700px; margin: 0 auto; border-collapse: collapse; background-color: #ffffff;">
         <tr>
-            <!-- Left Sidebar -->
+            <!-- Left Side -->
             <td
-                style="width:260px; background:#f8f8f8; vertical-align:top; border-top-left-radius:8px; border-bottom-left-radius:8px; border-right:1px solid #eee; padding:0;">
-                <table cellpadding="0" cellspacing="0" border="0" style="width:100%;">
-                    <tr>
-                        <td
-                            style="padding:32px 0 0 32px; font-size:26px; color:#222; font-weight:bold; letter-spacing:1px;">
-                            INVOICE
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="padding:8px 0 0 32px; font-size:12px; color:#888;">
-                            Invoice No : <span style="color:#222;">{{ $invoice_number }}</span>
-                        </td>
-                    </tr>
-                    <!-- Spacer -->
-                    <tr>
-                        <td style="height:32px;"></td>
-                    </tr>
-                    <!-- Invoice To -->
-                    <tr>
-                        <td
-                            style="padding:0 0 0 32px; font-size:14px; color:#222; font-weight:bold; border-left:3px solid #e05e6b;">
-                            Invoice To
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="padding:8px 0 0 32px;">
-                            <table cellpadding="0" cellspacing="0" border="0" style="font-size:13px; color:#222;">
-                                <tr>
-                                    <td style="font-weight:bold;">{{ $customer_name }}</td>
-                                </tr>
-                                <tr>
-                                    <td style="color:#888; padding-top:2px;">{{ $customer_mobile }}</td>
-                                </tr>
-                                <tr>
-                                    <td style="color:#888; padding-top:2px;">{{ $customer_email }}</td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                    <!-- Spacer -->
-                    <tr>
-                        <td style="height:24px;"></td>
-                    </tr>
-                    <!-- Invoice From -->
-                    <tr>
-                        <td
-                            style="padding:0 0 0 32px; font-size:14px; color:#222; font-weight:bold; border-left:3px solid #e05e6b;">
-                            Invoice From
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="padding:8px 0 0 32px;">
-                            <table cellpadding="0" cellspacing="0" border="0" style="font-size:13px; color:#222;">
-                                <tr>
-                                    <td style="font-weight:bold;">{{ $site_name }}</td>
-                                </tr>
-                                <tr>
-                                    <td style="color:#888; padding-top:2px;">{{ $company_mobile }}</td>
-                                </tr>
-                                <tr>
-                                    <td style="color:#888; padding-top:2px;">{{ $company_email }}</td>
-                                </tr>
-                                <tr>
-                                    <td style="color:#e05e6b; padding-top:2px; text-decoration:underline;">{{ $company_address }}</td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                    <!-- Spacer -->
-                    <tr>
-                        <td style="height:24px;"></td>
-                    </tr>
-                    <!-- Notes -->
-                    <tr>
-                        <td
-                            style="padding:0 0 0 32px; font-size:14px; color:#222; font-weight:bold; border-left:3px solid #e05e6b;">
-                            Notes:
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="padding:8px 32px 0 32px; font-size:12px; color:#888;">
-                            {{ $invoice_notes ?? 'Thank you for your business!' }}
-                        </td>
-                    </tr>
-                    <!-- Decorative leaves (optional) -->
-                    <tr>
-                        <td style="padding:32px 0 0 0;">
-                            <img src="./img/leaf.png" alt="" style="height:40px; margin-left:32px; opacity:0.7;">
-                        </td>
-                    </tr>
-                </table>
+                style="width: 200px; vertical-align: top; background-color: #ffffff; background-image: url('{{ $invoice_image5 }}') ;background-repeat: no-repeat; background-size: cover; padding: 20px;">
+                <h2 style="margin-bottom: 0; font-size: 24px; color: #333;">INVOICE</h2>
+                <p style="font-style: italic; font-size: 14px; color: #666; margin-top: 5px;">Invoice No : <span
+                        style="color: #a94442;">{{ $invoice_number }}</span></p>
+
+                <h4
+                    style="margin-top: 30px; font-size: 16px; color: #333; border-bottom: 1px solid #d9b3b3; padding-bottom: 5px;">
+                    Invoice To</h4>
+                <p style="font-weight: bold; color: #333; margin-top: -10px;">{{ $customer_name }}</p>
+
+                <h4
+                    style="margin-top: 200px; font-size: 16px; color: #333; border-bottom: 1px solid #d9b3b3; padding-bottom: 5px;">
+                    Invoice To</h4>
+                <p style="font-weight: bold; color: #333; margin-top: -10px;">{{ $site_name }}</p>
+                <p style="font-size: 14px; color: #333;">{!! $company_address !!}<br> <br> {{ $company_email }}<br> <br> {{ $company_mobile }}</p>
             </td>
-            <!-- Main Content -->
-            <td
-                style="width:540px; background:#fff; vertical-align:top; border-top-right-radius:8px; border-bottom-right-radius:8px; padding:0;">
-                <table cellpadding="0" cellspacing="0" border="0" style="width:100%;">
-                    <!-- Logo and Amount -->
-                    <tr>
-                        <td style="padding:32px 0 0 32px;">
-                            <img src="./img/erose_logo.png" alt="erose enterprises" style="height:48px;">
-                        </td>
-                        <td
-                            style="padding:32px 32px 0 0; text-align:right; font-size:24px; color:#e05e6b; font-weight:bold;">
-                            £1000.00
-                        </td>
+
+            <!-- Right Side -->
+            <td style="width: 400px; vertical-align: top; padding: 30px; background-color: #ffffff;">
+                <div style="text-align: right;">
+                    <img src="{{ $invoice_image7 }}" alt="Company Logo" style="height: 50px; margin-bottom: 10px;">
+                </div>
+
+                <table style="width: 100%; margin-top: 30px;">
+                    <tr style="text-align: center; font-size: 10px; color: #999;">
+                        <td style=" border-right: 1px solid grey; text-align: left;">Issue Date<br> <br><span
+                                style="color: #e87c7c; ">{{ $invoice_date }}</span></td>
+                        <td style=" border-right: 1px solid grey; text-align: center;">Invoice Date<br> <br><span
+                                style="color: #e87c7c; ">{{ $invoice_date }}</span></td>
+                        <td style="text-align: right;">Total Due<br> <br><span
+                                style="color: #e87c7c; font-weight: bold; font-size: 12px;">{{ site_currency() . number_format($invoice_amount, 2) }}</span></td>
                     </tr>
-                    <!-- Issue Date, Invoice Date, Total Due -->
+                </table>
+
+                <table style="width: 100%; margin-top: 20px; border-collapse: collapse;">
+                    <thead
+                        style="font-size: 12px; color: #e87c7c; text-align: left; border-bottom: 1px solid grey;border-top: 1px solid grey;">
+                        <tr>
+                            <th style="padding: 8px;">ITEM DESCRIPTION</th>
+                            <th style="padding: 8px;">UNIT PRICE</th>
+                            <th style="padding: 8px;">QTY</th>
+                            <th style="padding: 8px;">AMOUNT</th>
+                        </tr>
+                    </thead>
+                    <tbody style="font-size: 13px; color: #333;">
+                        @foreach($products as $product)
+                        <tr style="">
+                            <td style="padding: 8px 8px 20px; "><strong>{{ $product->name }}</strong><br><span
+                                    style="color: #666; font-size: 12px;">{{ Str::limit(strip_tags($product->description), 100) }}</span></td>
+                            <td style="padding: 8px 8px 20px; ">{{ site_currency() . number_format($product->unit_price, 2) }}</td>
+                            <td style="padding: 8px 8px 20px; ">1</td>
+                            <td style="padding: 8px 8px 20px; ">{{ site_currency() . number_format($product->unit_price, 2) }}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+
+                <table style="width: 100%; margin-top: 20px; font-size: 13px; border-collapse: collapse;">
                     <tr>
-                        <td colspan="2" style="padding:24px 32px 0 32px;">
-                            <table cellpadding="0" cellspacing="0" border="0" style="width:100%;">
-                                <tr>
-                                    <td style="font-size:13px; color:#888; text-align:left; width:33%;">Issue
-                                        Date<br><span style="color:#e05e6b; font-weight:bold;">01/01/2023</span></td>
-                                    <td style="font-size:13px; color:#888; text-align:center; width:33%;">Invoice
-                                        Date<br><span style="color:#e05e6b; font-weight:bold;">01/01/2023</span></td>
-                                    <td style="font-size:13px; color:#888; text-align:right; width:34%;">Total
-                                        Due<br><span style="color:#e05e6b; font-weight:bold;">£1000.00</span></td>
-                                </tr>
-                            </table>
+                        <td colspan="4" style="text-align: right; padding: 12px;"></td>
+                        <td style="padding: 12px; width: 195px;"></td>
+                        <td colspan="2" style="text-align: right; padding: 0px;">Sub Total</td>
+                        <td style="padding: 12px; width: 60px;">{{ site_currency() . number_format($invoice_amount + $discount_amount, 2) }}</td>
+
+                    </tr>
+                    <tr>
+                        <td colspan="4">
                         </td>
+                        <td> &nbsp  &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp</td>
+                        <td colspan="2" style="text-align: right; padding: 12px; border-bottom: 1px solid #444;">
+                            Discount</td>
+                        <td style="padding: 12px; width: 60px; border-bottom: 1px solid #444;">{{ site_currency() . number_format($discount_amount, 2) }}</td>
                     </tr>
-                    <!-- Spacer -->
                     <tr>
-                        <td colspan="2" style="height:24px;"></td>
+                        <td colspan="4"></td>
+                        <td> &nbsp  &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp</td>
+                        <td colspan="2" style="text-align: right; font-weight: bold; color: #e87c7c; padding: 0px;">
+                            Grand Total</td>
+                        <td style="font-weight: bold; color: #e87c7c; padding: 12px; width: 60px;">{{ site_currency() . number_format($invoice_amount, 2) }}</td>
                     </tr>
-                    <!-- Table Headings -->
+
+
+                </table>
+
+
+                <!-- Contact Section -->
+                <h4 style="margin-top: 30px; font-size: 14px; color: #e87c7c; text-align: right;">CONTACT</h4>
+
+
+                <table
+                    style="width: 43%; font-size: 12px; display: flex; margin-left: auto; border-collapse: collapse;">
                     <tr>
-                        <td colspan="2" style="padding:0 32px;">
-                            <table cellpadding="0" cellspacing="0" border="0"
-                                style="width:100%; border-bottom:2px solid #e05e6b;">
-                                <tr>
-                                    <td style="font-size:13px; color:#e05e6b; font-weight:bold; padding-bottom:8px;">
-                                        ITEM DESCRIPTION</td>
-                                    <td
-                                        style="font-size:13px; color:#e05e6b; font-weight:bold; padding-bottom:8px; text-align:center;">
-                                        UNIT PRICE</td>
-                                    <td
-                                        style="font-size:13px; color:#e05e6b; font-weight:bold; padding-bottom:8px; text-align:center;">
-                                        QTY</td>
-                                    <td
-                                        style="font-size:13px; color:#e05e6b; font-weight:bold; padding-bottom:8px; text-align:right;">
-                                        AMOUNT</td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                    <!-- Invoice Items -->
-                    <tr>
-                        <td colspan="2" style="padding:0 32px;">
-                            <table cellpadding="0" cellspacing="0" border="0" style="width:100%;">
-                                <!-- Item Row 1 -->
-                                <tr>
-                                    <td
-                                        style="font-size:13px; color:#222; padding:12px 0 8px 0; border-bottom:1px solid #eee;">
-                                        <span style="font-weight:bold;">Item name 1</span><br>
-                                        <span style="font-size:12px; color:#888;">Lorem ipsum dolor sit amet,</span>
-                                    </td>
-                                    <td
-                                        style="font-size:13px; color:#222; text-align:center; border-bottom:1px solid #eee;">
-                                        £100.00</td>
-                                    <td
-                                        style="font-size:13px; color:#222; text-align:center; border-bottom:1px solid #eee;">
-                                        3</td>
-                                    <td
-                                        style="font-size:13px; color:#222; text-align:right; border-bottom:1px solid #eee;">
-                                        £100.00</td>
-                                </tr>
-                                <!-- Item Row 2 -->
-                                <tr>
-                                    <td
-                                        style="font-size:13px; color:#222; padding:12px 0 8px 0; border-bottom:1px solid #eee;">
-                                        <span style="font-weight:bold;">Item name 1</span><br>
-                                        <span style="font-size:12px; color:#888;">Lorem ipsum dolor sit amet,</span>
-                                    </td>
-                                    <td
-                                        style="font-size:13px; color:#222; text-align:center; border-bottom:1px solid #eee;">
-                                        £100.00</td>
-                                    <td
-                                        style="font-size:13px; color:#222; text-align:center; border-bottom:1px solid #eee;">
-                                        2</td>
-                                    <td
-                                        style="font-size:13px; color:#222; text-align:right; border-bottom:1px solid #eee;">
-                                        £100.00</td>
-                                </tr>
-                                <!-- Item Row 3 -->
-                                <tr>
-                                    <td
-                                        style="font-size:13px; color:#222; padding:12px 0 8px 0; border-bottom:1px solid #eee;">
-                                        <span style="font-weight:bold;">Item name 1</span><br>
-                                        <span style="font-size:12px; color:#888;">Lorem ipsum dolor sit amet,</span>
-                                    </td>
-                                    <td
-                                        style="font-size:13px; color:#222; text-align:center; border-bottom:1px solid #eee;">
-                                        £100.00</td>
-                                    <td
-                                        style="font-size:13px; color:#222; text-align:center; border-bottom:1px solid #eee;">
-                                        1</td>
-                                    <td
-                                        style="font-size:13px; color:#222; text-align:right; border-bottom:1px solid #eee;">
-                                        £100.00</td>
-                                </tr>
-                                <!-- Item Row 4 -->
-                                <tr>
-                                    <td
-                                        style="font-size:13px; color:#222; padding:12px 0 8px 0; border-bottom:1px solid #eee;">
-                                        <span style="font-weight:bold;">Item name 1</span><br>
-                                        <span style="font-size:12px; color:#888;">Lorem ipsum dolor sit amet,</span>
-                                    </td>
-                                    <td
-                                        style="font-size:13px; color:#222; text-align:center; border-bottom:1px solid #eee;">
-                                        £100.00</td>
-                                    <td
-                                        style="font-size:13px; color:#222; text-align:center; border-bottom:1px solid #eee;">
-                                        1</td>
-                                    <td
-                                        style="font-size:13px; color:#222; text-align:right; border-bottom:1px solid #eee;">
-                                        £100.00</td>
-                                </tr>
-                                <!-- Item Row 5 -->
-                                <tr>
-                                    <td
-                                        style="font-size:13px; color:#222; padding:12px 0 8px 0; border-bottom:1px solid #eee;">
-                                        <span style="font-weight:bold;">Item name 1</span><br>
-                                        <span style="font-size:12px; color:#888;">Lorem ipsum dolor sit amet,</span>
-                                    </td>
-                                    <td
-                                        style="font-size:13px; color:#222; text-align:center; border-bottom:1px solid #eee;">
-                                        £100.00</td>
-                                    <td
-                                        style="font-size:13px; color:#222; text-align:center; border-bottom:1px solid #eee;">
-                                        1</td>
-                                    <td
-                                        style="font-size:13px; color:#222; text-align:right; border-bottom:1px solid #eee;">
-                                        £100.00</td>
-                                </tr>
-                            </table>
+                        <td class="custom-line" style="padding-bottom: 10px; color: #333;">
+                            {{ $company_mobile }}
+                            <span style="float:right;">
+                                <img style="width: 18px;" src="{{ $invoice_image6 }}" alt="">
+                            </span>
                         </td>
                     </tr>
-                    <!-- Totals -->
                     <tr>
-                        <td colspan="2" style="padding:24px 32px 0 32px;">
-                            <table cellpadding="0" cellspacing="0" border="0" style="width:100%;">
-                                <tr>
-                                    <td style="width:60%;"></td>
-                                    <td style="font-size:13px; color:#888; text-align:right; padding:2px 0;">Sub Total
-                                    </td>
-                                    <td style="font-size:13px; color:#888; text-align:right; padding:2px 0;">£100.00
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td style="font-size:13px; color:#888; text-align:right; padding:2px 0;">Discount
-                                    </td>
-                                    <td style="font-size:13px; color:#888; text-align:right; padding:2px 0;">£100.00
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td style="font-size:13px; color:#888; text-align:right; padding:2px 0;">Discount
-                                    </td>
-                                    <td style="font-size:13px; color:#888; text-align:right; padding:2px 0;">£100.00
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td colspan="2" style="border-top:2px solid #e05e6b; height:1px;"></td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td
-                                        style="font-size:15px; color:#e05e6b; font-weight:bold; text-align:right; padding:8px 0 0 0;">
-                                        Grand Total</td>
-                                    <td
-                                        style="font-size:15px; color:#e05e6b; font-weight:bold; text-align:right; padding:8px 0 0 0;">
-                                        £100.00</td>
-                                </tr>
-                            </table>
+                        <td class="custom-line" style="padding: 10px 0; color: #333;">
+                            {{ $company_email }}
+                            <span style="float:right; margin-left:6px;">
+                                <img style="width: 18px;" src="{{ $invoice_image3 }}" alt="">
+                            </span>
                         </td>
                     </tr>
-                    <!-- Spacer -->
                     <tr>
-                        <td colspan="2" style="height:32px;"></td>
-                    </tr>
-                    <!-- Contact Footer -->
-                    <tr>
-                        <td colspan="2" style="padding:0 32px 32px 32px;">
-                            <table cellpadding="0" cellspacing="0" border="0" style="width:100%;">
-                                <tr>
-                                    <td style="font-size:14px; color:#e05e6b; font-weight:bold; padding-right:24px;">
-                                        CONTACT</td>
-                                    <td style="font-size:13px; color:#222; padding-right:24px;">
-                                        +44 123 456 789
-                                    </td>
-                                    <td style="font-size:13px; color:#222; padding-right:24px;">
-                                        info@eroseenterprises.com
-                                    </td>
-                                    <td style="font-size:13px; color:#e05e6b; text-decoration:underline;">
-                                        123 London road, kent, abc-123
-                                    </td>
-                                </tr>
-                            </table>
+                        <td class="custom-line" style="padding-top: 10px; color: #333;">
+                            {!! $company_address !!}
+                            <span style="float:right;">
+                                <img style="width: 18px;" src="{{ $invoice_image4 }}" alt="">
+                            </span>
                         </td>
                     </tr>
                 </table>
+
+
             </td>
         </tr>
     </table>
