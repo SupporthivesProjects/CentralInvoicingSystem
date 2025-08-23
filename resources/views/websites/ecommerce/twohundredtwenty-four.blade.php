@@ -98,11 +98,11 @@
                                 <!-- Repeating Item Rows -->
                                 @foreach ($products as $product)
                                     <tr style="background-color: #fde7c8; font-size: 9px;height:40px;">
-                                        <td style="0px 10px">{{ $product->name }}</td>
+                                        <td style="padding:0px 10px;">{{ $product->name }}</td>
                                         <td align="center">{{ site_currency() }}
                                             {{ number_format($product->unit_price, 2) }}</td>
                                         <td align="center">1</td>
-                                        <td align="right" style="0px 10px">{{ site_currency() }}
+                                        <td align="right" style="padding:0px 10px;">{{ site_currency() }}
                                             {{ number_format($product->unit_price, 2) }}</td>
                                     </tr>
                                 @endforeach
