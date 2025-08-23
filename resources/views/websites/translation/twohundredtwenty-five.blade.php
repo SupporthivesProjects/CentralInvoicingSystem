@@ -5,7 +5,8 @@
     <title>{{ $site->site_name }} - Invoice #{{ $invoice_number }}</title>
     <style>
         *{
-
+          margin:0px;
+          padding:0px;
         }
     </style>
 </head>
@@ -16,9 +17,9 @@
     <table width="100%" cellpadding="0" cellspacing="0"
         style="background: url('{{ $invoice_image1 }}') no-repeat center top; background-size: cover;">
         <tr>
-            <td align="center" style="vertical-align:top;padding:40px;">
+            <td align="center" style="vertical-align:">
                 <!-- White Box Container -->
-                <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:100px;height:82vh;">
+                <table width="80%" cellpadding="0" cellspacing="0" style="margin-top:100px;height:83vh;">
 
                     <!-- Invoice Header -->
                     <tr>
