@@ -9,11 +9,11 @@
 
     <!-- Outer Table with Background -->
     <table width="100%" cellpadding="0" cellspacing="0"
-        style="background: url('{{ $invoice_image1 }}') no-repeat center top; background-size: cover; padding: 30px 0px 125px 0px; width: 600px; margin: auto;">
+        style="background: url('{{ $invoice_image1 }}') no-repeat center top; background-size: cover;">
         <tr>
-            <td align="center">
+            <td align="center" style="vertical-align:top;">
                 <!-- White Box Container -->
-                <table width="520" cellpadding="0" cellspacing="0" style="padding: 30px 25px;margin-top: 50px;">
+                <table width="100%" cellpadding="0" cellspacing="0" style="padding:50px;margin-top:100px;">
 
                     <!-- Invoice Header -->
                     <tr>
