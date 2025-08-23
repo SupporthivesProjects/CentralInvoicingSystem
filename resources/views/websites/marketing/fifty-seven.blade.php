@@ -128,7 +128,7 @@
     <table width="100%" cellspacing="0" cellpadding="0" border="0" style="margin: auto;">
         <tr>
             <td style="background: url(./img/Picture3.png) no-repeat; background-size: cover; height: 100%;">
-                <table width="100%" cellspacing="0" cellpadding="0" border="0"  style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
+                <table width="100%" cellspacing="0" cellpadding="0" border="0"  style="border-collapse: collapse;">
                    <tbody>
                     <tr>
                         <td style="background: url('{{ $invoice_header_image }}') no-repeat; background-size: cover; text-align: center; text-align: center; display: flex; justify-content: center;align-items: center;height: 100px;">
