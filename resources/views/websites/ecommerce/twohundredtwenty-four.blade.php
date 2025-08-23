@@ -35,7 +35,7 @@
                                         <div
                                             style="background-color: #ffc680; padding: 10px 20px; font-weight: bold; font-size: 40px; border-radius: 50px;">
                                             INVOICE</div>
-                                             {{ $company_logo }}
+                                           
                                     </td>
                                 </tr>
                             </table>
