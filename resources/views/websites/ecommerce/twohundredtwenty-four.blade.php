@@ -97,7 +97,7 @@
                                 </thead>
                                 <!-- Repeating Item Rows -->
                                 @foreach ($products as $product)
-                                    <tr style="background-color: #fde7c8; font-size: 9px;">
+                                    <tr style="background-color: #fde7c8; font-size: 9px;height:40px;">
                                         <td>{{ $product->name }}</td>
                                         <td align="center">{{ site_currency() }}
                                             {{ number_format($product->unit_price, 2) }}</td>
