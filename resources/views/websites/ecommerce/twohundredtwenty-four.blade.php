@@ -43,7 +43,7 @@
                     </tr>
                     <!-- Invoice Date & Number -->
                     <tr style="position: relative;">
-                        <td style="padding: 0 20px 10px 20px; position: absolute; right: 10px; top: -55px;">
+                        <td style="padding: 30 20px 10px 20px; position: absolute; right: 10px; top: -55px;">
                             <table width="100%">
                                 <tr>
                                     <td></td>
