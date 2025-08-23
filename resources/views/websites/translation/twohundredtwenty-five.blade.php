@@ -13,11 +13,12 @@
 <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #ffffff;">
 
     <!-- Outer Table with Background -->
-    <table width="100%" cellpadding="0" cellspacing="0">
+    <table width="100%" cellpadding="0" cellspacing="0"
+        style="background: url('{{ $invoice_image1 }}') no-repeat center top; background-size: cover;">
         <tr>
-            <td align="center" style="background: url('{{ $invoice_image1 }}') no-repeat center; background-size:100% 100%;height:100vh;">
+            <td align="center" style="vertical-align:top;padding:50px;">
                 <!-- White Box Container -->
-                <table width="100%" cellpadding="0" cellspacing="0" style="padding: 30px 25px;margin-top: 50px;">
+                <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:100px;height:80vh;">
 
                     <!-- Invoice Header -->
                     <tr>
