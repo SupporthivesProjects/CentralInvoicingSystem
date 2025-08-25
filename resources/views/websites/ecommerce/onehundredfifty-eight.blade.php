@@ -11,10 +11,10 @@
             font-family: Arial, sans-serif;
 
             /* bottom border image */
-            background: url('{{ $invoice_image5 }}') no-repeat left top / 200px 100%, #ffffff;
+            background: url('{{ $invoice_image5 }}') repeat-y left top / 200px 100%, #ffffff;
 
             background-size: 100% 6px;
-             min-height: 1500px;
+             min-height: 1200px;
              height: 100%;
         }
 
