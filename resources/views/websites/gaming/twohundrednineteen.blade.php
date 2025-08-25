@@ -7,6 +7,13 @@
             margin:0px;
             padding:0px;
         }
+        .footer-fixed {
+            position: fixed;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            
+        }
     </style>
 </head>
 <body>
@@ -16,10 +23,10 @@
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
                     <!-- Header -->
                     <tr>
-                        <td style="padding: 0px;max-height: 130px;width: 100%; ">
+                        <td style="padding: 0px;max-height: 130px; ">
                             <table>
-                                <tr style="height: 122px; background: url('{{ $invoice_header_image }}') no-repeat;background-position:center;background-size:cover;width: 100%;">
-                                    <td >
+                                <tr>
+                                    <td style="height: 122px; background: url('{{ $invoice_header_image }}') no-repeat;background-position:center;background-size:cover;width: 800px;">
                                          
                                     </td>
                                     
@@ -157,7 +164,7 @@
                     <!-- Content End-->
 
                     <!-----------Footer----------->
-                    <tr>
+                    <!-- <tr>
                         <td style="height: 100px;">
                             <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;"> 
                                 <tr style="background: url('{{ $invoice_footer_image }}') no-repeat;background-position: center;background-size: cover;height:113px;padding:50px;background-size:cover;width: 100%;">
@@ -170,7 +177,33 @@
                                 <tr>              
                             </table>
                         </td>
-                    </tr> 
+                    </tr>  -->
+
+                    <div style="height: 100px;" class="footer-fixed">
+                        <div style="width: 100%; border-collapse: collapse;">
+                            
+                            <div style="
+                            background: url('{{ $invoice_footer_image }}') no-repeat center;
+                            background-size: cover;
+                            height: 113px;
+                            padding: 50px;
+                            width: 100%;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            text-align: center;
+                            ">
+                            <div style="width: 150px; color: white; font-family: Arial, Helvetica, sans-serif; font-size: 10px;">
+                                <b style="color: #0077C8;">{{ $company_email }}</b> | mmomerchandise.com
+                                <br><br>
+                                {{ $company_name }}<br>
+                                {!! $company_address !!}
+                            </div>
+                            </div>
+
+                        </div>
+                        </div>
+
                     <!-----------Footer End----------->
 
                 </table>
