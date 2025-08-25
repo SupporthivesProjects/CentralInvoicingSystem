@@ -2,18 +2,34 @@
 <html>
 <head>
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
+    <style>
+        body{
+            margin: 0px;
+            padding: 0px;
+        }
+        
+        .footer-fixed {
+            position: fixed;
+            bottom: 0px;
+            left: 0;
+            right: 0;
+            width: 100%;
+            /* background: url('{{ $invoice_footer_image }}') center center no-repeat; */
+            /* background-size: cover; */
+        }
+    </style>
 </head>
 <body>
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
-            <td align="center" bgcolor="#f2f2f2" style="padding: 20px 0;">
-                <table width="600" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
+            <td align="center" bgcolor="#FFFFFF" style="padding: 20px 0;">
+                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse;">
                     <!-- Header -->
                     <tr>
                         <td style="padding: 0px;max-height: 130px;">
                             <table>
                                 <tr>
-                                    <td style="height: 100px; background: url('{{ $invoice_header_image }}') no-repeat;background-position:center;background-size:cover;width: 600px;text-align: center;">
+                                    <td style="height: 100px; background: url('{{ $invoice_header_image }}') no-repeat;background-position:center;background-size:cover;width: 100%;text-align: center;">
                                          <img src="{{ $invoice_image2 }}" alt="" >
                                     </td>
                                     
@@ -198,18 +214,9 @@
                     <!-- Content End-->
 
                     <!-----------Footer----------->
-                    <tr>
-                        <td>
-                            <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;"> 
-                                <tr style="height: 120px; background: url('{{ $invoice_footer_image }}') no-repeat;background-position:center;background-size:cover;width: 600px;">
-                                    <td > 
-                                        
-                                    </td>          
-                                </tr>
-                                <tr>              
-                            </table>
-                        </td>
-                    </tr> 
+                    <div class="footer-fixed" style="height: 120px; background: url('{{ $invoice_footer_image }}'); background-repeat: no-repeat;background-position:center;background-size:cover;">
+                        
+                    </div> 
                     <!-----------Footer End----------->
 
                 </table>
