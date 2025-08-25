@@ -658,99 +658,86 @@ class LaravelController extends Controller
     {
         $site_id = $request->input('site_id');
         $site = Website::findOrFail($site_id);
-
+    
         DynamicDatabaseService::connect($site);
-
+    
         $company_detail_type = $request->input('company_detail_type');
-
+    
         if ($company_detail_type === 'remote') {
-
-            $invoice_data['site_name']          = $request->input('remote_site_name') ?? '';
-            $invoice_data['company_name']       = $request->input('remote_company_name') ?? '';
-            $invoice_data['company_email']      = $request->input('remote_company_email') ?? '';
-            $invoice_data['company_mobile']     = $request->input('remote_company_mobile') ?? '';
-            $invoice_data['company_address']    = $request->input('remote_company_address') ?? '';
-            $invoice_data['registration_number'] = $request->input('remote_registration_number') ?? '';
-            $invoice_data['license_number']      = $request->input('remote_license_number') ?? '';
+            $invoice_data['site_name']            = $request->input('remote_site_name') ?? '';
+            $invoice_data['company_name']         = $request->input('remote_company_name') ?? '';
+            $invoice_data['company_email']        = $request->input('remote_company_email') ?? '';
+            $invoice_data['company_mobile']       = $request->input('remote_company_mobile') ?? '';
+            $invoice_data['company_address']      = $request->input('remote_company_address') ?? '';
+            $invoice_data['registration_number']  = $request->input('remote_registration_number') ?? '';
+            $invoice_data['license_number']       = $request->input('remote_license_number') ?? '';
         
             $remote_database = DB::connection($this->connectionType)->table('general_settings')->orderByDesc('updated_at')->first();
         
             if ($remote_database) {
                 DB::connection($this->connectionType)->table('general_settings')->where('id', $remote_database->id)
                     ->update([
-                        'site_name'            => $request->input('remote_site_name') ?? '',
-                        //'company_name'        => $request->input('remote_company_name') ?? '',
-                        'email'                => $request->input('remote_company_email') ?? '',
-                        'phone'                => $request->input('remote_company_mobile') ?? '',
-                        'address'              => $request->input('remote_company_address') ?? '',
-                       // 'registration_number'  => $request->input('remote_registration_number') ?? '',
-                       // 'license_number'       => $request->input('remote_license_number') ?? '',
-                        'updated_at'           => now(),
+                        'site_name'   => $request->input('remote_site_name') ?? '',
+                        'email'       => $request->input('remote_company_email') ?? '',
+                        'phone'       => $request->input('remote_company_mobile') ?? '',
+                        'address'     => $request->input('remote_company_address') ?? '',
+                        'updated_at'  => now(),
                     ]);
             }
-        
         } else {
+            $invoice_data['site_name']            = $request->input('local_site_name') ?? '';
+            $invoice_data['company_name']         = $request->input('local_company_name') ?? '';
+            $invoice_data['company_email']        = $request->input('local_company_email') ?? '';
+            $invoice_data['company_mobile']       = $request->input('local_company_mobile') ?? '';
+            $invoice_data['company_address']      = $request->input('local_company_address') ?? '';
+            $invoice_data['registration_number']  = $request->input('registration_number') ?? '';
+            $invoice_data['license_number']       = $request->input('license_number') ?? '';
         
-            $invoice_data['site_name']          = $request->input('local_site_name') ?? '';
-            $invoice_data['company_name']       = $request->input('local_company_name') ?? '';
-            $invoice_data['company_email']      = $request->input('local_company_email') ?? '';
-            $invoice_data['company_mobile']     = $request->input('local_company_mobile') ?? '';
-            $invoice_data['company_address']    = $request->input('local_company_address') ?? '';
-            $invoice_data['registration_number'] = $request->input('registration_number') ?? '';
-            $invoice_data['license_number']      = $request->input('license_number') ?? '';
-        
-            $site->site_name          = $invoice_data['site_name'];
-            $site->company_name       = $invoice_data['company_name'];
-            $site->company_email      = $invoice_data['company_email'];
-            $site->company_mobile     = $invoice_data['company_mobile'];
-            $site->company_address    = $invoice_data['company_address'];
+            $site->site_name           = $invoice_data['site_name'];
+            $site->company_name        = $invoice_data['company_name'];
+            $site->company_email       = $invoice_data['company_email'];
+            $site->company_mobile      = $invoice_data['company_mobile'];
+            $site->company_address     = $invoice_data['company_address'];
             $site->registration_number = $invoice_data['registration_number'];
             $site->license_number      = $invoice_data['license_number'];
         
             $site->save();
         }
-
-        $invoice_data = [
-            'site' => $site,
-            'site_name' => $site->site_name,
-            'invoice_number' => $request->input('invoice_number'),
-            'invoice_date' => $request->input('invoice_date'),
-            'customer_name' => $request->input('customer_name'),
-            'customer_mobile' => $request->input('customer_mobile'),
-            'customer_email' => $request->input('customer_email'),
-            'company_email' => $request->input('company_email'),
-            'invoice_amount' => $request->input('invoice_amount'),
-            'current_amount' => $request->input('current_amount'),
-            'discount_amount' => $request->input('discount_amount'),
-            'company_name'         => $site->company_name,
-            'company_email'        => $site->company_email,
-            'company_mobile'       => $site->company_mobile,
-            'company_address'      => $site->company_address,
-            'invoice_header_image' => base64EncodeImage($site->invoice_header_image),
-            'invoice_footer_image' => base64EncodeImage($site->invoice_footer_image),
-            'invoice_signature' => base64EncodeImage($site->invoice_signature),
-            'company_logo' => base64EncodeImage($site->company_logo),
-            'invoice_image1' => base64EncodeImage($site->invoice_image1),
-            'invoice_image2' => base64EncodeImage($site->invoice_image2),
-            'invoice_image3' => base64EncodeImage($site->invoice_image3),
-            'invoice_image4'       => base64EncodeImage($site->invoice_image4),
-            'invoice_image5'       => base64EncodeImage($site->invoice_image5),
-            'invoice_image6'       => base64EncodeImage($site->invoice_image6),
-            'invoice_image7'       => base64EncodeImage($site->invoice_image7),
-            'invoice_image8'       => base64EncodeImage($site->invoice_image8),
-            'invoice_image9'       => base64EncodeImage($site->invoice_image9),
-            'invoice_template' => $site->invoice_template,
-            'model_type' => $site->businessModel->model_type,
-            'site_id' => $site->id,
-            'currency' => site_currency(),
-        ];
-
+        
+        $invoice_data['site']            = $site;
+        $invoice_data['invoice_number']  = $request->input('invoice_number');
+        $invoice_data['invoice_date']    = $request->input('invoice_date');
+        $invoice_data['customer_name']   = $request->input('customer_name');
+        $invoice_data['customer_mobile'] = $request->input('customer_mobile');
+        $invoice_data['customer_email']  = $request->input('customer_email');
+        $invoice_data['invoice_amount']  = $request->input('invoice_amount');
+        $invoice_data['current_amount']  = $request->input('current_amount');
+        $invoice_data['discount_amount'] = $request->input('discount_amount');
+        
+        $invoice_data['invoice_header_image'] = base64EncodeImage($site->invoice_header_image);
+        $invoice_data['invoice_footer_image'] = base64EncodeImage($site->invoice_footer_image);
+        $invoice_data['invoice_signature']    = base64EncodeImage($site->invoice_signature);
+        $invoice_data['company_logo']         = base64EncodeImage($site->company_logo);
+        $invoice_data['invoice_image1']       = base64EncodeImage($site->invoice_image1);
+        $invoice_data['invoice_image2']       = base64EncodeImage($site->invoice_image2);
+        $invoice_data['invoice_image3']       = base64EncodeImage($site->invoice_image3);
+        $invoice_data['invoice_image4']       = base64EncodeImage($site->invoice_image4);
+        $invoice_data['invoice_image5']       = base64EncodeImage($site->invoice_image5);
+        $invoice_data['invoice_image6']       = base64EncodeImage($site->invoice_image6);
+        $invoice_data['invoice_image7']       = base64EncodeImage($site->invoice_image7);
+        $invoice_data['invoice_image8']       = base64EncodeImage($site->invoice_image8);
+        $invoice_data['invoice_image9']       = base64EncodeImage($site->invoice_image9);
+        
+        $invoice_data['invoice_template'] = $site->invoice_template;
+        $invoice_data['model_type']       = $site->businessModel->model_type;
+        $invoice_data['site_id']          = $site->id;
+        $invoice_data['currency']         = site_currency();
+        
         $productsInput = $request->input('products', []);
         DynamicDatabaseService::connect($site);
-
+    
         $productIds = array_keys($productsInput);
-        //dd($productsInput);
-
+    
         $products = DB::connection($this->connectionType)->table($this->productTable)
             ->whereIn('id', $productIds)
             ->select('id', 'category_id', 'name', 'unit_price')
@@ -761,7 +748,7 @@ class LaravelController extends Controller
             ->values()
             ->map(function ($product) use ($productsInput) {
                 $input = $productsInput[$product->id];
-
+    
                 $product->name = $input['name'] ?? 'Unknown';
                 $product->unit_price = (float) ($input['price'] ?? $product->unit_price);
                 $product->line_total = (float) ($input['line_total'] ?? 0);
@@ -772,45 +759,40 @@ class LaravelController extends Controller
                 $product->to_language = $input['to_language'] ?? null;
                 $product->selected = isset($input['selected']) ? 1 : 0;
                 $product->unit_type = (Str::contains(Str::lower($product->name), 'certified translation')) ? 'pages' : 'words';
-
+    
                 return $product;
             });
-
-        // ✅ Replace language IDs with language names using site_languages()
+    
         $languages = site_languages()->pluck('name', 'id');
-
+    
         $products->transform(function ($product) use ($languages) {
             $product->from_language = $languages[$product->from_language] ?? $product->from_language;
             $product->to_language = $languages[$product->to_language] ?? $product->to_language;
             return $product;
         });
-
-        //dd($products);
-
+    
         $invoice_data['products'] = $products;
         $invoice_data['product_ids'] = $productIds;
-        //dd($productIds);
-
+    
         $modelType = strtolower($site->businessModel->model_type);
         $siteIdInWords = numberToWords($site->id);
         $viewPath = "websites.{$modelType}.{$siteIdInWords}";
-
+    
         if (!empty($productsInput)) {
-                $this->updateProductPrice($productsInput);
+            $this->updateProductPrice($productsInput);
         }
+    
         InvoiceController::createInvoiceHistory($invoice_data);
-
+    
         if ($request->filled('invoice_file_name')) {
             $filename = $request->input('invoice_file_name') . '.pdf';
         } else {
             $filename = $invoice_data['invoice_number'] . '.pdf';
         }
-
+    
         try {
             return $this->generateWithApi2Pdf($site, $viewPath, $invoice_data, $filename);
-
         } catch (\Exception $e) {
-            // Fallback to Dompdf if API2PDF fails
             return $this->generateWithDompdf($site, $viewPath, $invoice_data, $filename);
         }
     }
