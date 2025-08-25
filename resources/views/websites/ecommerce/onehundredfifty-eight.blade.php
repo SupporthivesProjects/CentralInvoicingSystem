@@ -16,11 +16,11 @@
 </head>
 
 <body style="margin: 0; padding: 0; background-color: #ffffff; font-family: Arial, sans-serif;">
-    <table style="width:700px; margin: 0 auto; border-collapse: collapse; background-color: #ffffff;">
+    <table style="width:100%; margin: 0 auto; border-collapse: collapse; background-color: #ffffff;height: 100%;">
         <tr>
             <!-- Left Side -->
             <td
-                style="width: 200px; vertical-align: top; background-color: #ffffff; background-image: url('{{ $invoice_image5 }}') ;background-repeat: no-repeat; background-size: cover; padding: 20px;">
+                style="width: 200px; vertical-align: top; background-color: #ffffff; background-image: url('{{ $invoice_image5 }}') ;background-repeat: repeat-y; background-size: cover; padding: 20px;height: 100%;">
                 <h2 style="margin-bottom: 0; font-size: 24px; color: #333;">INVOICE</h2>
                 <p style="font-style: italic; font-size: 14px; color: #666; margin-top: 5px;">Invoice No : <span
                         style="color: #a94442;">{{ $invoice_number }}</span></p>
@@ -38,7 +38,7 @@
             </td>
 
             <!-- Right Side -->
-            <td style="width: 400px; vertical-align: top; padding: 30px; background-color: #ffffff;">
+            <td style="width: 100%; vertical-align: top; padding: 30px; background-color: #ffffff;">
                 <div style="text-align: right;">
                     <img src="{{ $invoice_image7 }}" alt="Company Logo" style="height: 50px; margin-bottom: 10px;">
                 </div>
