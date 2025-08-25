@@ -164,8 +164,8 @@
                     <!-- Content End-->
 
                     <!-----------Footer----------->
-                    <!-- <tr>
-                        <td style="height: 100px;">
+                    <tr>
+                        <td style="height: 100px; " class="footer-fixed">
                             <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;"> 
                                 <tr style="background: url('{{ $invoice_footer_image }}') no-repeat;background-position: center;background-size: cover;height:113px;padding:50px;background-size:cover;width: 100%;">
                                     <td style="width: 150px;text-align: center;color: white;font-family: Arial, Helvetica, sans-serif;font-size: 10px;"> 
@@ -177,32 +177,10 @@
                                 <tr>              
                             </table>
                         </td>
-                    </tr>  -->
+                    </tr> 
 
-                    <div style="height: 100px;" class="footer-fixed">
-                        <div style="width: 100%; border-collapse: collapse;">
-                            
-                            <div style="
-                            background: url('{{ $invoice_footer_image }}') no-repeat center;
-                            background-size: cover;
-                            height: 113px;
-                            padding: 50px;
-                            width: 100%;
-                            display: flex;
-                            align-items: center;
-                            justify-content: center;
-                            text-align: center;
-                            ">
-                            <div style="width: 150px; color: white; font-family: Arial, Helvetica, sans-serif; font-size: 10px;">
-                                <b style="color: #0077C8;">{{ $company_email }}</b> | mmomerchandise.com
-                                <br><br>
-                                {{ $company_name }}<br>
-                                {!! $company_address !!}
-                            </div>
-                            </div>
-
-                        </div>
-                        </div>
+                   
+                        
 
                     <!-----------Footer End----------->
 
