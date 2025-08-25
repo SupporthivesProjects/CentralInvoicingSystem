@@ -58,7 +58,7 @@
                                 </tr>
                                 <tr>
                                     <td></td>
-                                    <td style="text-align:center ; padding-top: 10px; font-size: 11px;">
+                                    <td style="text-align:right; padding-top: 10px; font-size: 11px;">
                                         <span style="margin-right:45px;">{{ $invoice_date }}</span>
                                         <span>{{ $invoice_number }}</span>
                                     </td>
@@ -69,9 +69,8 @@
 
                     <!-- Invoice To -->
                     <tr style="position: relative;">
-                        <td
-                            style="padding: 20px; padding-bottom: 10px; position: absolute; width: 300px; left: 25px; top: 25px;">
-                            <div style="background-color: #f79d7c; padding: 15px 20px; border-radius: 25px;">
+                        <td style="padding: 20px; padding-bottom: 10px;vertical-align:center;">
+                            <div>
                                 <p style="margin: 0; font-size: 18px; color: black; font-weight: 700;">Invoice To</p>
                                 <h2 style="margin: 5px 0 0 0; color: #333;">{{ $customer_name }}</h2>
                             </div>
