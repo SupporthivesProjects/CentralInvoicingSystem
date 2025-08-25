@@ -11,27 +11,20 @@
             font-family: Arial, sans-serif;
 
             /* bottom border image */
-            background: url('{{ $invoice_image5 }}') repeat-y left top / 200px 100%, #ffffff;
+            /* background: url('{{ $invoice_image5 }}') repeat-y left top / 200px 100%, #ffffff;
 
-            background-size: 100% 6px;
-             min-height: 1200px;
-             height: 100%;
-        }
-
-        .custom-line {
-            background: url('./img/image.png') no-repeat left bottom;
-            background-size: 100% 6px;
-            padding-bottom: 8px;
+            background-size: 100% 6px; */
+            min-height: 1000px;
         }
     </style>
 </head>
 
 <body>
-    <table style="width:100%; margin: 0 auto; border-collapse: collapse; background-color: #000000;">
+    <table style="width:100%; margin: 0 auto; border-collapse: collapse;">
         <tr>
             <!-- Left Side -->
             <td
-                style="width: 200px; vertical-align: top; background-color: #ffffff; background-image: url('{{ $invoice_image5 }}'); background-repeat: repeat-y; background-size: cover; padding: 20px; min-height: 842px;">
+                style="width: 200px; vertical-align: top; background-color: #ffffff; background-image: url('{{ $invoice_image5 }}'); background-repeat: repeat-y; background-size: cover; padding: 20px; min-height: 1000px;">
                 <h2 style="margin-bottom: 0; font-size: 24px; color: #333;">INVOICE</h2>
                 <p style="font-style: italic; font-size: 14px; color: #666; margin-top: 5px;">
                     Invoice No : <span style="color: #a94442;">{{ $invoice_number }}</span>
