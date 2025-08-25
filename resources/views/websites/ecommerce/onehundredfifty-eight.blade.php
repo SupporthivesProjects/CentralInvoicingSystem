@@ -20,11 +20,11 @@
 </head>
 
 <body>
-    <table style="width:100%; margin: 0 auto; border-collapse: collapse;min-height: 1150px;">
+    <table style="width:100%; margin: 0 auto; border-collapse: collapse;min-height: 1100px;">
         <tr>
             <!-- Left Side -->
             <td
-                style="width: 200px; vertical-align: top; background-color: #ffffff; background-image: url('{{ $invoice_image5 }}'); background-repeat: repeat-y; background-size: cover; padding: 20px; min-height: 1150px;">
+                style="width: 200px; vertical-align: top; background-color: #ffffff; background-image: url('{{ $invoice_image5 }}'); background-repeat: repeat-y; background-size: cover; padding: 20px; min-height: 1100px;">
                 <h2 style="margin-bottom: 0; font-size: 24px; color: #333;">INVOICE</h2>
                 <p style="font-style: italic; font-size: 14px; color: #666; margin-top: 5px;">
                     Invoice No : <span style="color: #a94442;">{{ $invoice_number }}</span>
