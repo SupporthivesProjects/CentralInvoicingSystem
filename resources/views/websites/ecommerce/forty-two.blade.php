@@ -116,9 +116,6 @@
                                                                 <h6 style=" font-size: 10px;font-weight: 000;font-family: Arial; color: #000; margin-top: 10px;">Billed From:</h6>
                                                                 <p style=" font-size: 10px;font-weight: 400;font-family: Arial; color: #000; margin-top: 6px;">Art 2 Cart Devs </p>
                                                             </td>
-                                                            <td>
-                                                                <p style=" font-size: 10px;font-weight: 400;font-family: Arial; color: #000; margin-top: 6px;">{!! $company_address !!}</p>
-                                                            </td>
                                                             
                                                             <td>
                                                                 <h6 style=" font-size: 10px;font-weight: 900;font-family: Arial; color: #000; margin-top: 10px;">Billed To:</h6>
@@ -128,6 +125,9 @@
                                                             </td>
                                                         </tr>
                                                         <tr>
+                                                            <td>
+                                                                <p style=" font-size: 10px;font-weight: 400;font-family: Arial; color: #000; margin-top: 6px;">{!! $company_address !!}</p>
+                                                            </td>
                                                             <td>
                                                                 <p style="font-family: Arial; font-size: 10px; font-weight: 400; color: #000; margin-top: 16px;"> <span style="font-weight: 900;">Email:</span> {{ $company_email ?? 'support@art2cartdevs.com' }}</p>
                                                                 <p style="font-family: Arial; font-size: 10px; font-weight: 400; color: #000;"> <span style="font-weight: 900;">Website:</span> www.art2cartdevs.com</p>
