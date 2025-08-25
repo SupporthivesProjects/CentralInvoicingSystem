@@ -62,7 +62,7 @@
                                     </td>
                                      <td style="padding-top: 5px;width: 300px;">
                                        <p style="font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;text-align: center;padding-bottom: 5px;padding-left: 5px;">
-                                        www.mmomerchandise.com<<br><b style="color: #0077C8;">{{ $company_email }}</b>
+                                       {{ $site_name }}<br><b style="color: #0077C8;">{{ $company_email }}</b>
                                         </p>
                                      </td>
                                 </tr>
