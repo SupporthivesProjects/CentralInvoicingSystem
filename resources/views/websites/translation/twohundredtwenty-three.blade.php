@@ -117,7 +117,7 @@
                                 </table>
                             </div>
                              <table width="100%"
-                                style="margin-top: -30px; padding: 40px; color: White; background-image: url('{{ $invoice_image2}}'); height: 212px; width: 100%; background-position: center; background-repeat: no-repeat; background-size: cover;">
+                                style="margin-top: -30px; padding: 40px; color: White; background-image: url('{{ $invoice_image2}}'); height: 212px; width: 100%; background-position: center; background-repeat: no-repeat; background-size: cover; box-shadow: none;">
                                 <tr>
                                     <td width="50%">
                                         <p style=" font-size: 21px; font-weight: bold; margin: 0%;">Payment Information</p>
@@ -138,7 +138,7 @@
                     <!-----------Footer----------->
                     <tr>
                         <td>
-                            <table width="100%" style="padding: 0px 40px 0px 40px; font-family: 'Inter'; margin-top: -112px;">
+                            <table width="100%" style="padding: 0px 40px 0px 40px; font-family: 'Inter'; margin-top: -10px; background-color: #FFFFFF;">
                                 <tr>
                                     <td width="50%" style="vertical-align: bottom;">
                                         <p style="font-size: 10px;">{{ $company_email }}</p>
