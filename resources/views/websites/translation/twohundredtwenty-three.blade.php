@@ -5,11 +5,11 @@
     <title>{{ $site_name }}</title>
 </head>
 
-<body>
+<body style="margin: 0px; padding: 0px;">
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
-            <td align="center" bgcolor="#f2f2f2" style="padding: 20px 0;">
-                <table width="650" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
+            <td align="center">
+                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
                     style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1); background-image: url(./img/bg.png); background-position: center; background-repeat: no-repeat; background-size: cover; height: 860px;">
                     <!-- Header -->
                     <tr>
@@ -51,69 +51,71 @@
                                 </tr>
                             </table>
                             <br>
-                            <table
-                                style="width: 100%; max-width: 1000px; margin: auto; border-collapse: collapse; font-family: 'Inter' ; font-size: 9px;">
-                                <!-- Table Header Row -->
-                                <tr
-                                    style="background-image: url('{{ $invoice_image3 }}'); background-size: cover; background-repeat: no-repeat; color: black; font-size: 11px;">
-                                    <th style=" text-align: left; padding-left: 40px;">NO</th>
-                                    <th style="padding: 12px; text-align: left;">ITEM DESCRIPTION</th>
-                                    <th style="padding: 12px; text-align: center;">UNIT PRICE</th>
-                                    <th style="padding: 12px; text-align: center;">QTY</th>
-                                    <th style="padding: 12px; text-align: center;">TOTAL</th>
-                                </tr>
+                            <div style="min-height: 650px;">
+                                <table
+                                    style="width: 100%; max-width: 1000px; margin: auto; border-collapse: collapse; font-family: 'Inter' ; font-size: 9px;">
+                                    <!-- Table Header Row -->
+                                    <tr
+                                        style="background-image: url('{{ $invoice_image3 }}'); background-size: cover; background-repeat: no-repeat; color: black; font-size: 11px;">
+                                        <th style=" text-align: left; padding-left: 40px;">NO</th>
+                                        <th style="padding: 12px; text-align: left;">ITEM DESCRIPTION</th>
+                                        <th style="padding: 12px; text-align: center;">UNIT PRICE</th>
+                                        <th style="padding: 12px; text-align: center;">QTY</th>
+                                        <th style="padding: 12px; text-align: center;">TOTAL</th>
+                                    </tr>
 
-                                <!-- Item Rows -->
-                                @foreach($products as $product)
-                                <tr style="background-color: #ffffff;">
-                                    <td style="padding: 10px; padding-left: 40px;">1.</td>
-                                    <td style="padding: 10px; font-weight: bold;">{{ $product->name }}</td>
-                                    <td style="padding: 10px; text-align: center;">{{ site_currency() . number_format($product->unit_price ?? 0, 2) }}</td>
-                                    <td style="padding: 10px;text-align: center;">1</td>
-                                    <td style="padding: 10px; text-align: center;">{{ site_currency() . number_format($invoice_amount ?? 0, 2) }}</td>
-                                </tr>
-                                @endforeach
-                                {{-- <tr style="background-color: #e0e0e0;">
-                                    <td style="padding: 10px; padding-left: 40px;">2.</td>
-                                    <td style="padding: 10px; font-weight: bold;">Item Name</td>
-                                    <td style="padding: 10px; text-align: center;">$30.00</td>
-                                    <td style="padding: 10px; text-align: center;">1</td>
-                                    <td style="padding: 10px; text-align: center;">$30.00</td>
-                                </tr>
-                                <tr style="background-color: #ffffff;">
-                                    <td style="padding: 10px; padding-left: 40px;">3.</td>
-                                    <td style="padding: 10px; font-weight: bold;">Item Name</td>
-                                    <td style="padding: 10px; text-align: center;">$20.00</td>
-                                    <td style="padding: 10px; text-align: center;">2</td>
-                                    <td style="padding: 10px; text-align: center;">$40.00</td>
-                                </tr>
-                                <tr style="background-color: #e0e0e0;">
-                                    <td style="padding: 10px; padding-left: 40px;">4.</td>
-                                    <td style="padding: 10px; font-weight: bold;">Item Name</td>
-                                    <td style="padding: 10px; text-align: center;">$30.00</td>
-                                    <td style="padding: 10px; text-align: center;">1</td>
-                                    <td style="padding: 10px; text-align: center;">$30.00</td>
-                                </tr>
-                                <tr style="background-color: #ffffff;">
-                                    <td style="padding: 10px; padding-left: 40px;">5.</td>
-                                    <td style="padding: 10px; font-weight: bold;">Item Name</td>
-                                    <td style="padding: 10px; text-align: center;">$30.00</td>
-                                    <td style="padding: 10px; text-align: center;">1</td>
-                                    <td style="padding: 10px; text-align: center;">$30.00</td>
-                                </tr> --}}
+                                    <!-- Item Rows -->
+                                    @foreach($products as $product)
+                                    <tr style="background-color: #ffffff;">
+                                        <td style="padding: 10px; padding-left: 40px;">1.</td>
+                                        <td style="padding: 10px; font-weight: bold;">{{ $product->name }}</td>
+                                        <td style="padding: 10px; text-align: center;">{{ site_currency() . number_format($product->unit_price ?? 0, 2) }}</td>
+                                        <td style="padding: 10px;text-align: center;">1</td>
+                                        <td style="padding: 10px; text-align: center;">{{ site_currency() . number_format($invoice_amount ?? 0, 2) }}</td>
+                                    </tr>
+                                    @endforeach
+                                    {{-- <tr style="background-color: #e0e0e0;">
+                                        <td style="padding: 10px; padding-left: 40px;">2.</td>
+                                        <td style="padding: 10px; font-weight: bold;">Item Name</td>
+                                        <td style="padding: 10px; text-align: center;">$30.00</td>
+                                        <td style="padding: 10px; text-align: center;">1</td>
+                                        <td style="padding: 10px; text-align: center;">$30.00</td>
+                                    </tr>
+                                    <tr style="background-color: #ffffff;">
+                                        <td style="padding: 10px; padding-left: 40px;">3.</td>
+                                        <td style="padding: 10px; font-weight: bold;">Item Name</td>
+                                        <td style="padding: 10px; text-align: center;">$20.00</td>
+                                        <td style="padding: 10px; text-align: center;">2</td>
+                                        <td style="padding: 10px; text-align: center;">$40.00</td>
+                                    </tr>
+                                    <tr style="background-color: #e0e0e0;">
+                                        <td style="padding: 10px; padding-left: 40px;">4.</td>
+                                        <td style="padding: 10px; font-weight: bold;">Item Name</td>
+                                        <td style="padding: 10px; text-align: center;">$30.00</td>
+                                        <td style="padding: 10px; text-align: center;">1</td>
+                                        <td style="padding: 10px; text-align: center;">$30.00</td>
+                                    </tr>
+                                    <tr style="background-color: #ffffff;">
+                                        <td style="padding: 10px; padding-left: 40px;">5.</td>
+                                        <td style="padding: 10px; font-weight: bold;">Item Name</td>
+                                        <td style="padding: 10px; text-align: center;">$30.00</td>
+                                        <td style="padding: 10px; text-align: center;">1</td>
+                                        <td style="padding: 10px; text-align: center;">$30.00</td>
+                                    </tr> --}}
 
-                                <!-- Totals -->
-                                <tr>
-                                    <td colspan="4" style="text-align: right; font-size: 9px; padding: 10px; font-weight: bold;">SUB
-                                        TOTAL</td>
-                                    <td align="center" style="padding: 10px; font-weight: bold; font-size: 10px;">{{ site_currency() . number_format($invoice_amount + $discount_amount ?? 0, 2) }}</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="4" style="text-align: right; padding: 10px; font-size: 9px; font-weight: bold;">
-                                        DISCOUNT</td>
-                                    <td align="center" style="padding: 10px; font-size: 10px; font-weight: bold;">{{ site_currency() . number_format($discount_amount ?? 0, 2) }}</td>
-                                </tr>
-                            </table>
+                                    <!-- Totals -->
+                                    <tr>
+                                        <td colspan="4" style="text-align: right; font-size: 9px; padding: 10px; font-weight: bold;">SUB
+                                            TOTAL</td>
+                                        <td align="center" style="padding: 10px; font-weight: bold; font-size: 10px;">{{ site_currency() . number_format($invoice_amount + $discount_amount ?? 0, 2) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4" style="text-align: right; padding: 10px; font-size: 9px; font-weight: bold;">
+                                            DISCOUNT</td>
+                                        <td align="center" style="padding: 10px; font-size: 10px; font-weight: bold;">{{ site_currency() . number_format($discount_amount ?? 0, 2) }}</td>
+                                    </tr>
+                                </table>
+                            </div>
                              <table width="100%"
                                 style="margin-top: -30px; padding: 40px; color: White; background-image: url('{{ $invoice_image2}}'); height: 212px; width: 100%; background-position: center; background-repeat: no-repeat; background-size: cover;">
                                 <tr>
