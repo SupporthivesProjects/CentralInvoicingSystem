@@ -69,7 +69,7 @@
 
                     <!-- Invoice To -->
                     <tr style="position: relative;">
-                        <td style="padding: 20px; padding-bottom: 10px;vertical-align:center;height:100px;">
+                        <td style="vertical-align:center;">
                             <div>
                                 <p style="margin: 0; font-size: 18px; color: black; font-weight: 700;">Invoice To</p>
                                 <h2 style="margin: 5px 0 0 0; color: #333;">{{ $customer_name }}</h2>
