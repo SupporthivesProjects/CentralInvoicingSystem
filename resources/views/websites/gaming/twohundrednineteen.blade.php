@@ -2,6 +2,12 @@
 <html>
 <head>
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
+    <style>
+        body{
+            margin:0px;
+            padding:0px;
+        }
+    </style>
 </head>
 <body>
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
@@ -10,10 +16,10 @@
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
                     <!-- Header -->
                     <tr>
-                        <td style="padding: 0px;max-height: 130px;">
+                        <td style="padding: 0px;max-height: 130px; ">
                             <table>
                                 <tr>
-                                    <td style="height: 122px; background: url('{{ $invoice_header_image }}') no-repeat;background-position:center;background-size:cover;width: 600px;">
+                                    <td style="height: 122px; background: url('{{ $invoice_header_image }}') no-repeat;background-position:center;background-size:cover;width: 100%;">
                                          
                                     </td>
                                     
@@ -28,7 +34,7 @@
                         <td style="padding:60px;padding-top:20px;">
                             <table style="border-collapse: collapse;border-bottom: 0px;border: 0px;">
                                 
-                                <tr style="background-color: #2A2C3A;color: white;border-collapse: collapse;">
+                                <tr style="background-color: #2A2C3A;color: white;border-collapse: collapse;width: 100%;">
                                     <td style="padding-top: 10px;width: 200px;">
                                         <p style="font-family: arial;font-size: 14px;margin: 0px;font-weight: 400; text-align: left;padding-bottom: 5px;padding-left: 5px;">
                                             <b>INVOICE NO. {{ $invoice_number }}</b>
