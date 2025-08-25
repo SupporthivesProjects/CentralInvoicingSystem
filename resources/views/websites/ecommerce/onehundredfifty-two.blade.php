@@ -112,7 +112,7 @@
 
                             </table>
 
-                            <div style="min-height: 650px !important;">
+                            <div style="min-height: 600px !important;">
                             <table style="border-collapse: collapse;border-bottom: 0px;border: 0px;">
 
 
