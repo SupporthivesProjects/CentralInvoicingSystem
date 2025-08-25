@@ -117,6 +117,10 @@
                                                                 <p style=" font-size: 10px;font-weight: 400;font-family: Arial; color: #000; margin-top: 6px;">Art 2 Cart Devs </p>
                                                             </td>
                                                             <td>
+                                                                <p style=" font-size: 10px;font-weight: 400;font-family: Arial; color: #000; margin-top: 6px;">{!! $company_address !!}</p>
+                                                            </td>
+                                                            
+                                                            <td>
                                                                 <h6 style=" font-size: 10px;font-weight: 900;font-family: Arial; color: #000; margin-top: 10px;">Billed To:</h6>
                                                                 <p style=" font-size: 10px;font-weight: 400;font-family: Arial; color: #000; margin-top: 6px;">
                                                                     {{ $customer_name }}
