@@ -14,13 +14,13 @@
             /* background: url('{{ $invoice_image5 }}') repeat-y left top / 200px 100%, #ffffff;
 
             background-size: 100% 6px; */
-            min-height: 1000px;
+            /* min-height: 1000px; */
         }
     </style>
 </head>
 
 <body>
-    <table style="width:100%; margin: 0 auto; border-collapse: collapse;">
+    <table style="width:100%; margin: 0 auto; border-collapse: collapse;min-height: 1000px;">
         <tr>
             <!-- Left Side -->
             <td
