@@ -27,7 +27,7 @@
 </head>
 
 <body>
-    <table style="width:100%; margin: 0 auto; border-collapse: collapse; background-color: #ffffff; min-height: 842px;">
+    <table style="width:100%; margin: 0 auto; border-collapse: collapse; background-color: #000000;">
         <tr>
             <!-- Left Side -->
             <td
