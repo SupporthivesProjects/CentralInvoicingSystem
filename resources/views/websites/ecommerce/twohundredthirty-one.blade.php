@@ -22,20 +22,14 @@
 <body>
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
-            <td align="center" bgcolor="#FFFFFF" style="padding: 20px 0;">
+            <td align="center" bgcolor="#FFFFFF" style="padding: 0px;">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse;">
                     <!-- Header -->
                     <tr>
-                        <td style="padding: 0px;max-height: 130px;">
-                            <table>
-                                <tr>
-                                    <td style="height: 100px; background: url('{{ $invoice_header_image }}') no-repeat;background-position:center;background-size:cover;width: 100%;text-align: center;">
-                                         <img src="{{ $invoice_image2 }}" alt="" >
-                                    </td>
-                                    
-                                </tr>
-                            </table>
+                        <td style="height: 100px; background: url('{{ $invoice_header_image }}') no-repeat;background-position:center;background-size:cover;width: 100%;text-align: center;">
+                                <img src="{{ $invoice_image2 }}" alt="" >
                         </td>
+                                    
                     </tr>
                     <!-- Header End -->
 
