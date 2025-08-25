@@ -39,7 +39,7 @@
                      <!-- Content -->
                     <tr >
                         <td style="padding:60px;padding-top:20px;">
-                            <table style="border-collapse: collapse;border-bottom: 0px;border: 0px;">
+                            <table style="border-collapse: collapse;border-bottom: 0px;border: 0px;width: 100%;">
                                 
                                 <tr style="background-color: #2A2C3A;color: white;border-collapse: collapse;width: 100%;">
                                     <td style="padding-top: 10px;width: 200px;">
