@@ -5,7 +5,7 @@
     <title>{{ $site_name }}</title>
 </head>
 
-<body style="margin: 0px; padding: 0px;">
+<body style="margin: 0px; padding: 0px; background-color: #FFFFFF;">
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
             <td align="center">
@@ -51,7 +51,7 @@
                                 </tr>
                             </table>
                             <br>
-                            <div style="min-height: 580px;">
+                            <div style="min-height: 520px;">
                                 <table
                                     style="width: 100%; max-width: 1000px; margin: auto; border-collapse: collapse; font-family: 'Inter' ; font-size: 9px;">
                                     <!-- Table Header Row -->
