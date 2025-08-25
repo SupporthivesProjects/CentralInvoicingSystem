@@ -82,7 +82,7 @@
                             </tr>
                         </table>
 
-                        <div style="min-height: 670px;">
+                        <div style="min-height: 640px;">
                             <table width="100%"  style="border-collapse: collapse;margin-top:30px;min-height: 450px !important;">
                             <tr style="background-color: #FF444E !important; height: 30px;">
                                 <td>
@@ -201,7 +201,7 @@
                                 </tr>
                             </table>
                         </div>
-                        <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse; margin-top: 10px; padding-bottom: 40px;">
+                        <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse; margin-top: 10px; padding-bottom: 40px; margin-bottom: 40px;">
                             <tr>
                                 <td>
                                     <p style="margin: 0px; color:#FF444E; font-family: Poppins; font-size: 11px; font-weight: 500; text-align:right; text-transform:capitalize;">
