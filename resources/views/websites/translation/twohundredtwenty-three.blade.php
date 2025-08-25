@@ -51,7 +51,7 @@
                                 </tr>
                             </table>
                             <br>
-                            <div style="min-height: 600px;">
+                            <div style="min-height: 580px;">
                                 <table
                                     style="width: 100%; max-width: 1000px; margin: auto; border-collapse: collapse; font-family: 'Inter' ; font-size: 9px;">
                                     <!-- Table Header Row -->
