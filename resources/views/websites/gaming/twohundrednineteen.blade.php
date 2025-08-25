@@ -18,8 +18,8 @@
                     <tr>
                         <td style="padding: 0px;max-height: 130px;width: 100%; ">
                             <table>
-                                <tr>
-                                    <td style="height: 122px; background: url('{{ $invoice_header_image }}') no-repeat;background-position:center;background-size:cover;width: 100%;">
+                                <tr style="height: 122px; background: url('{{ $invoice_header_image }}') no-repeat;background-position:center;background-size:cover;width: 100%;">
+                                    <td >
                                          
                                     </td>
                                     
