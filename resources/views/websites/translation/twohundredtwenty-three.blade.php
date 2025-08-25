@@ -138,7 +138,7 @@
                     <!-----------Footer----------->
                     <tr>
                         <td>
-                            <table width="100%" style="padding: 0px 40px 0px 40px; font-family: 'Inter'; margin-top: -10px; background-color: #FFFFFF; box-shadow: none; height: 75px;">
+                            <table width="100%" style="padding: 0px 40px 0px 40px; font-family: 'Inter'; margin-top: -10px; background-color: #FFFFFF; box-shadow: none; height: 85px;">
                                 <tr>
                                     <td width="50%" style="vertical-align: bottom;">
                                         <p style="font-size: 10px;">{{ $company_email }}</p>
