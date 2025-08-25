@@ -79,7 +79,7 @@
 
                     <!-- Invoice Items -->
                     <tr>
-                        <td style="padding: 190px 20px 0px;">
+                        <td style="padding:20px;">
                             <table width="100%" cellpadding="10" cellspacing="0" style="border-collapse: collapse;">
                                 <thead>
                                     <tr
@@ -111,7 +111,7 @@
 
                     <!-- Totals Section -->
                     <tr>
-                        <td style="padding: 20px 20px 130px;">
+                        <td style="padding: 20px;">
                             <table align="right"
                                 style="width: 200px; font-family: Arial, sans-serif; font-size: 10px;">
                                 <tr>
