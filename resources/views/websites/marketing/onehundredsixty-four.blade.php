@@ -43,13 +43,13 @@
         <!-- Contact Info -->
         <tr>
             <td colspan="2" style="padding:0 0px 0 100px;">
-                <table align="top" width="100%" cellpadding="0" cellspacing="0" style="margin-top:100px;">
+                <table align="top" valign="top" width="100%" cellpadding="0" cellspacing="0" style="margin-top:100px;">
                     <tr>
-                        <td style="font-size:0.98em; padding-right:40px;width:25%;vertical-align: top;">
+                        <td style="font-size:0.98em; padding-right:40px;width:30%;vertical-align: top;">
                             <b>📞&nbsp;Phone:</b><br>
                             {{ $company_mobile }}
                         </td>
-                        <td style="font-size:0.98em; padding-right:40px;width:25%;">
+                        <td style="font-size:0.98em; padding-right:40px;width:30%;">
                             <b>✉️&nbsp;Email:</b><br>
                             {{ $company_email }}
                         </td>
