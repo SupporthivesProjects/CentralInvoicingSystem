@@ -45,7 +45,7 @@
             <td colspan="2" style="padding:0 0px 0 100px;">
                 <table align="top" width="100%" cellpadding="0" cellspacing="0" style="margin-top:100px;">
                     <tr>
-                        <td style="font-size:0.98em; padding-right:40px;width:25%; vertivertical-align: top;">
+                        <td style="font-size:0.98em; padding-right:40px;width:25%;vertical-align: top;">
                             <b>📞&nbsp;Phone:</b><br>
                             {{ $company_mobile }}
                         </td>
@@ -53,7 +53,7 @@
                             <b>✉️&nbsp;Email:</b><br>
                             {{ $company_email }}
                         </td>
-                        <td style="font-size:0.98em;">
+                        <td style="font-size:0.98em;width:40%">
                             <b>🏠&nbsp;Address:</b><br>
                             {!! $company_address !!}
                         </td>
