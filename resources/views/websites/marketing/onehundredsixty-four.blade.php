@@ -49,11 +49,11 @@
                             <b>📞&nbsp;Phone:</b><br>
                             {{ $company_mobile }}
                         </td>
-                        <td style="font-size:0.98em; padding-right:40px;width:30%;">
+                        <td style="font-size:0.98em; padding-right:40px;width:30%;vertical-align: top;">
                             <b>✉️&nbsp;Email:</b><br>
                             {{ $company_email }}
                         </td>
-                        <td style="font-size:0.98em;width:40%">
+                        <td style="font-size:0.98em;">
                             <b>🏠&nbsp;Address:</b><br>
                             {!! $company_address !!}
                         </td>
