@@ -6,6 +6,7 @@
         body {
             margin: 0;
             padding: 0;
+            background-color : #1E2E22;
         }
     </style>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -39,7 +40,7 @@
                                     </td> 
                                   </tr>
                                   <tr style="height:40px;"></tr>
-                                  <tr style="height:580px;">
+                                  <tr style="height:585px;">
                                     <td style="width:70%;">
                                       <table style="border-collapse: collapse;width:100%;">
                                         <tr style="border-top: 1px solid #ffffff;border-bottom: 1px solid #ffffff;">
@@ -146,7 +147,7 @@
                     <!-- Content End-->
                     <!-----------Footer----------->
                     <tr>
-                        <td align="center" style="background:url('{{ $invoice_image2 }}');background-size: cover;background-repeat: repeat;">
+                        <td align="bottom" style="background:url('{{ $invoice_image2 }}');background-size: cover;background-repeat: repeat;">
                             <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;"> 
                                 <tr>
                                     <td style="padding:40px 40px 100px 40px;">

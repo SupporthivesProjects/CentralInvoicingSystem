@@ -9,11 +9,11 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet">
 </head>
-<body>
+<body style="margin: 0px; padding: 0px;">
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
-            <td align="center" bgcolor="#ffffff" style="padding: 20px 0;">
-                <table width="600" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
+            <td align="center">
+                <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
                      <!---header--->
                     <tr> 
                         <td align="right" style="background: url('{{ $invoice_header_image }}');background-repeat:no-repeat;background-position:center;background-size:cover;height:180px;vertical-align:center;padding-right:35px;">
@@ -49,6 +49,7 @@
                               </tr> 
                               <tr>
                                  <td colspan="2">
+                                  <div style="min-height: 555px;">
                                     <table style="border-collapse: collapse;margin:20px 0px;" width="100%">
                                        <tr style="background: #fd8488;">
                                           <td style="padding: 10px;width: 50%;">
@@ -232,6 +233,7 @@
                                           </td>
                                        </tr>
                                     </table>
+                                    </div>
                                  </td>
                               </tr>
                            </table>
@@ -241,7 +243,7 @@
 
                   <!--footer-->
                   <tr> 
-                        <td style="padding:0px 30px;background: url('{{ $invoice_footer_image }}');background-repeat: no-repeat;background-position: center;background-size: cover;height:170px;" align="right">
+                        <td style="padding:0px 30px;background: url('{{ $invoice_footer_image }}');background-repeat: no-repeat;background-position: center;background-size: cover;height:280px;" align="right">
                          <p style="margin: 0px;font-size: 10px;font-family: DM Sans;font-weight: 700;color: #ff8a8e;line-height: 16px;">
                            {{ $company_name }}
                          </p>

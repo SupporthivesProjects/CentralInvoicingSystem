@@ -7,7 +7,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 <style>
-        
+        body {
+            margin: 0;
+            padding: 0;
+        }
         .total_box {
             display: flex;
             flex-direction: row;
@@ -28,17 +31,18 @@
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
             <td align="center">
-                <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);background: url('{{ $invoice_image1 }}');background-repeat: no-repeat;background-position: center;background-size: cover;height:900px;">
+                <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse; background: url('{{ $invoice_image1 }}');background-repeat: no-repeat;background-position: top center;background-size: cover;">
                     <!---header--->
                     <tr style="height:90px;">
                         <td style="padding:40px;vertical-align: top;padding-right: 30px;" align="right">
                         <div style="width: 200px;
+                                background-color: #ffffff;
                                 border: 1px solid #198AB1;
                                 margin-top: 20px;
                                 padding: 2px 16px;
                                 border-radius: 8px;
                                 box-shadow: 4px 4px 0px 0px #BA12F7;">
-                             <p style="font-family:Futura Cyrillic;font-size: 14px;font-weight: 400;line-height:24px;margin:25px;">
+                             <p style="font-family:Futura Cyrillic;font-size: 14px;font-weight: 400;line-height:24px;">
                             {{ $invoice_date }}
                            </p>
                            </div>

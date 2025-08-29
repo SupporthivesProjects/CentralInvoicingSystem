@@ -43,13 +43,13 @@
         <!-- Contact Info -->
         <tr>
             <td colspan="2" style="padding:0 0px 0 100px;">
-                <table align="top" width="100%" cellpadding="0" cellspacing="0" style="margin-top:100px;">
+                <table align="top" valign="top" width="100%" cellpadding="0" cellspacing="0" style="margin-top:100px;">
                     <tr>
-                        <td style="font-size:0.98em; padding-right:40px;width:30%;">
+                        <td style="font-size:0.98em; padding-right:20px;width:30%;vertical-align: top;">
                             <b>📞&nbsp;Phone:</b><br>
                             {{ $company_mobile }}
                         </td>
-                        <td style="font-size:0.98em; padding-right:40px;width:30%;">
+                        <td style="font-size:0.98em; padding-right:20px;width:30%;vertical-align: top;">
                             <b>✉️&nbsp;Email:</b><br>
                             {{ $company_email }}
                         </td>
@@ -143,10 +143,10 @@
                    
                     <tr>
                         <td
-                            style="text-align:right; font-weight:bold; font-size:1.15em; border-top:2px solid #222; padding-top:8px;">
+                            style="text-align:right; font-weight:bold; font-size:1.15em; border-top:1px solid #222; padding-top:8px;">
                             Grand Total:</td>
                         <td
-                            style="text-align:right; width:120px; font-size:1.15em; font-weight:bold; border-top:2px solid #222; padding-top:8px;">
+                            style="text-align:right; width:120px; font-size:1.15em; font-weight:bold; border-top:1px solid #222; padding-top:8px;">
                             {{ site_currency() }} {{ number_format($invoice_amount ?? 0, 2) }}</td>
                     </tr>
                 </table>

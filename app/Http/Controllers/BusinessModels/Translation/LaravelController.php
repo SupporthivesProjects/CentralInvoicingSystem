@@ -800,7 +800,7 @@ class LaravelController extends Controller
 
     protected function generateWithDompdf($site, $viewPath, $invoice_data, $filename)
     {
-        $pdf = \PDF::loadView($viewPath, $invoice_data)->setPaper('A4', 'portrait');
+        $pdf = PDF::loadView($viewPath, $invoice_data)->setPaper('A4', 'portrait');
         return $pdf->download($filename);
     }
 

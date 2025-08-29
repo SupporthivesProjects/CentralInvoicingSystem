@@ -491,7 +491,7 @@ class WordPressController extends Controller
 
 
 
-    public function generateInvoice(Request $request)
+   public function generateInvoice(Request $request)
     {
         $site = Website::findOrFail($request->input('site_id'));
         DynamicDatabaseService::connect($site);
