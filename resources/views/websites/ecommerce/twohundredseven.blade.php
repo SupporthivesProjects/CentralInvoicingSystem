@@ -32,11 +32,11 @@
             <td align="center">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse; ">
                      <!---header--->
-                    <tr> 
+                    <tr>
                         <td style="padding: 20px 20px;background: url('{{ $invoice_header_image }}');background-repeat: no-repeat;background-position: center;background-size: cover;height:80px;padding-left:30px;padding-top: 30px;">
                           <img src="{{ $company_logo }}" alt="" style="height:50px;">
                         </td>
-                    </tr> 
+                    </tr>
                     <!---header End--->
 
                     <!-- Content -->
@@ -46,7 +46,7 @@
                             <tr>
                               <td style="width: 70%;vertical-align: top;">
                                 <p style="margin: 0px;font-size:12px;font-weight:600;font-family:Lato;line-height:24px;color: #000000;">
-                                    Invoice To : 
+                                    Invoice To :
                                 </p>
                                 <p style="margin: 0px;font-size:17px;font-weight:600;font-family:Lato;line-height:24px;color: #d81d3f;">
                                  {{ $customer_name ? $customer_name : '' }}
@@ -73,17 +73,17 @@
                               <tr>
                                  <td style="padding: 5px 10px;background:#1d1c20;padding-left: 30px;" align="center">
                                     <p style="margin: 0px;font-size:11px;font-weight:700;font-family:Lato;line-height:24px;text-transform:uppercase;color:#ffffff;">
-                                      NO   
+                                      NO
                                     </p>
                                  </td>
                                  <td style="padding: 5px 10px;background:#1d1c20;">
                                     <p style="margin: 0px;font-size:11px;font-weight:700;font-family:Lato;line-height:24px;text-transform:uppercase;color:#ffffff;">
-                                      Description  
+                                      Description
                                     </p>
                                  </td>
                                  <td style="padding: 5px 10px;background:#d51240;" align="center">
                                     <p style="margin: 0px;font-size:11px;font-weight:700;font-family:Lato;line-height:24px;text-transform:uppercase;color:#ffffff;">
-                                      UNIT PRICE  
+                                      UNIT PRICE
                                     </p>
                                  </td>
                                  <td style="padding: 5px 10px;background:#d51240;" align="center">
@@ -93,7 +93,7 @@
                                  </td>
                                  <td style="padding: 5px 10px;background:#d51240;" align="center">
                                     <p style="margin: 0px;font-size:11px;font-weight:700;font-family:Lato;line-height:24px;text-transform:uppercase;color:#ffffff;">
-                                      Total   
+                                      Total
                                     </p>
                                  </td>
                               </tr>
@@ -109,7 +109,7 @@
                                        {{ $product->name }}
                                     </p>
                                     <p style="margin: 0px;font-size:8px;font-weight:400;font-family:Lato;line-height:14px;">
-                                       {!! \Illuminate\Support\Str::limit(strip_tags($product->description), 100) !!}
+                                       {{-- !! \Illuminate\Support\Str::limit(strip_tags($product->description), 100) !! --}}
                                     </p>
                                  </td>
                                  <td style="padding: 5px 10px;" align="center">
@@ -138,7 +138,7 @@
                                  </td>
                                  <td style="padding: 5px 10px;" align="center">
                                     <p style="margin: 0px;font-size:10px;font-weight:700;font-family:Lato;line-height:14px;">
-                                       {{ site_currency() . number_format($invoice_amount + $discount_amount ?? 0, 2) }}
+                                       {{ site_currency() ." ". number_format($invoice_amount + $discount_amount ?? 0, 2) }}
                                     </p>
                                  </td>
                               </tr>
@@ -151,7 +151,7 @@
                                  </td>
                                  <td style="padding: 5px 10px;" align="center">
                                     <p style="margin: 0px;font-size:10px;font-weight:700;font-family:Lato;line-height:14px;">
-                                       {{ site_currency() . number_format($discount_amount ?? 0, 2) }}
+                                       {{ site_currency() ." ". number_format($discount_amount ?? 0, 2) }}
                                     </p>
                                  </td>
                               </tr>
@@ -163,7 +163,7 @@
                                     {!! $company_address !!}
                                 </p>
                                 <p style="margin: 0px;font-size:7px;font-weight:400;font-family:Lato;line-height:14px;">
-                                 {{ $company_mobile }} 
+                                 {{ $company_mobile }}
                                 </p>
                                  </td>
                                  <td style="padding: 5px 10px;background: #d81d3f;" align="right">
@@ -173,13 +173,13 @@
                                  </td>
                                  <td style="padding: 5px 10px;background: #d81d3f;" align="center">
                                     <p style="margin: 0px;font-size:12px;font-weight:700;font-family:Lato;line-height:14px;color: #ffffff;">
-                                       {{ site_currency() . number_format($invoice_amount ?? 0, 2) }}
+                                       {{ site_currency() ." ". number_format($invoice_amount ?? 0, 2) }}
                                     </p>
                                  </td>
                               </tr>
                            </table>
-                           
-                        </td>   
+
+                        </td>
                     </tr>
                     <!-- Content End-->
 
@@ -206,14 +206,14 @@
                   <tr>
                         <td>
                             <table width="100%" cellspacing="0" cellpadding="0" border="0" class="footer-fixed">
-                  <tr> 
+                  <tr>
                         <td style="background: url('{{ $invoice_footer_image }}');background-repeat: no-repeat;background-position: center;background-size: cover;height:40px;">
-                          
+
                         </td>
-                  </tr> 
+                  </tr>
                   </table>
                         </td>
-                       
+
                      </tr>
                   <!--footer end-->
                 </table>
