@@ -46,7 +46,7 @@ class WordPressController extends Controller
         $this->categoryTable = $site->category_table ?? 'wp_terms';
         $this->connectionType = 'dynamic';
     }
-
+    
     public function randomProducts(Request $request)
     {
         $site_id = $request->get('site_id') ?? session('customer.site_id');
@@ -55,15 +55,15 @@ class WordPressController extends Controller
         $priceTo = $request->get('price_to');
         $noOfProducts = intval($request->get('noOfProducts'));
         $categoryId = $request->get('category_id');
-
+    
         $site = Website::findOrFail($site_id);
         $connection = $this->connectionType;
-
+    
         DynamicDatabaseService::connect($site);
-
+    
         $postsTable = $this->productTable;
         $priceTable = $this->productPriceTable;
-
+    
         $query = DB::connection($connection)
             ->table($postsTable)
             ->join($priceTable, "$postsTable.ID", '=', "$priceTable.product_id")
@@ -77,72 +77,88 @@ class WordPressController extends Controller
             ->where("$postsTable.post_status", 'publish')
             ->where("$postsTable.post_type", 'product')
             ->where("$priceTable.min_price", '>', 0);
-
+    
         if ($priceFrom && $priceTo) {
             $query->whereBetween("$priceTable.min_price", [$priceFrom, $priceTo]);
         }
-
+    
         if (!empty($categoryId)) {
             $query->join($this->tagsTable . ' as tr', "$postsTable.ID", '=', 'tr.object_id')
                 ->join($this->termTaxonomyTable . ' as tt', 'tr.term_taxonomy_id', '=', 'tt.term_taxonomy_id')
                 ->where('tt.taxonomy', 'product_cat') 
                 ->where('tt.term_id', $categoryId); 
         }
-
-
-
-        $fetchLimit = $noOfProducts ? ($noOfProducts * 5) : 200;
-        $minTotal = $invoiceAmount;
-        $maxTotal = $invoiceAmount * 1.05;
-        $iteration = $noOfProducts ? 30 : 20;
-
-        $allProducts = $query->orderByDesc("$priceTable.min_price")->limit($fetchLimit)->get();if ($noOfProducts) {
-            $targetAvg = $invoiceAmount / $noOfProducts;
-            $allProducts = $allProducts->sortBy(function ($product) use ($targetAvg) {
-                return abs($product->unit_price - $targetAvg);
-            });
+    
+        if ($noOfProducts) {
+            $fetchLimit = $noOfProducts * 20;
+            $iterations = 200;
+            $minTotal = $invoiceAmount * 0.95;
+            $maxTotal = $invoiceAmount * 1.05;
+            $targetAvgPrice = $invoiceAmount / $noOfProducts;
+        } else {
+            $fetchLimit = 200;
+            $iterations = 50;
+            $minTotal = $invoiceAmount;
+            $maxTotal = $invoiceAmount * 1.05;
+            $targetAvgPrice = null;
         }
-        
+    
+        $allProducts = $query->orderByDesc("$priceTable.min_price")->limit($fetchLimit)->get();
+    
+        if ($noOfProducts && $targetAvgPrice) {
+            $reasonableProducts = $allProducts->filter(function($product) use ($targetAvgPrice) {
+                $price = floatval($product->unit_price);
+                return $price <= ($targetAvgPrice * 2) && $price >= ($targetAvgPrice * 0.5);
+            });
+    
+            if ($reasonableProducts->count() < $noOfProducts) {
+                $reasonableProducts = $allProducts;
+            }
+    
+            $allProducts = $reasonableProducts;
+        }
+    
         $bestMatch = null;
         $bestTotal = 0;
-        $bestDistance = null;
+        $bestDistance = PHP_INT_MAX;
         
-        for ($i = 0; $i < $iteration; $i++) {
-            $shuffled = $allProducts->shuffle();
-            $selected = [];
-            $currentTotal = 0;
-        
-            foreach ($shuffled as $product) {
-                $price = floatval($product->unit_price);
-        
-                if ($noOfProducts && count($selected) >= $noOfProducts) break;
-        
-                if ($noOfProducts) {
-                    $selected[] = $product;
-                    $currentTotal += $price;
-                } elseif ($currentTotal + $price <= $maxTotal) {
-                    $selected[] = $product;
-                    $currentTotal += $price;
-                }
-            }
-        
-            if ($noOfProducts && count($selected) == $noOfProducts) {
+        for ($i = 0; $i < $iterations; $i++) {
+            if ($noOfProducts) {
+                $sample = $allProducts->shuffle()->take($noOfProducts);
+                if ($sample->count() != $noOfProducts) continue;
+    
+                $currentTotal = $sample->sum('unit_price');
                 $distance = abs($invoiceAmount - $currentTotal);
-                if ($bestMatch === null || $distance < $bestDistance) {
-                    $bestMatch = $selected;
+    
+                if ($distance < $bestDistance) {
+                    $bestMatch = $sample->all();
                     $bestTotal = $currentTotal;
                     $bestDistance = $distance;
-                    if ($distance < 0.01) break;
+    
+                    if ($distance < ($invoiceAmount * 0.05)) break;
                 }
-            } elseif (!$noOfProducts && $currentTotal >= $minTotal && $currentTotal <= $maxTotal) {
-                if ($currentTotal > $bestTotal) {
-                    $bestMatch = $selected;
-                    $bestTotal = $currentTotal;
+            } else {
+                $shuffled = $allProducts->shuffle();
+                $selected = [];
+                $currentTotal = 0;
+    
+                foreach ($shuffled as $product) {
+                    $price = floatval($product->unit_price);
+                    if ($currentTotal + $price <= $maxTotal) {
+                        $selected[] = $product;
+                        $currentTotal += $price;
+                    }
+                }
+    
+                if ($currentTotal >= $minTotal && $currentTotal <= $maxTotal) {
+                    if ($currentTotal > $bestTotal) {
+                        $bestMatch = $selected;
+                        $bestTotal = $currentTotal;
+                    }
                 }
             }
         }
-        
-
+    
         if (!$bestMatch) {
             return response()->json([
                 'tableRows' => '',
@@ -150,7 +166,9 @@ class WordPressController extends Controller
                 'message' => 'No matching combination found, try again please'
             ]);
         }
-
+    
+        $finalTotal = collect($bestMatch)->sum('unit_price');
+    
         collect($bestMatch)->each(function ($product) use ($site_id) {
             $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
                 ->where('product_id', $product->id)
@@ -168,31 +186,31 @@ class WordPressController extends Controller
                 $product->remaining_days = 0;
             }
         });
-        
-
+    
         $productList = collect($bestMatch)->map(function ($product) {
             return [
                 'id' => $product->id,
                 'unit_price' => $product->unit_price,
             ];
         })->toArray();        
-
+    
         session()->forget('ready_products');
         session()->put('ready_products', $productList);
-        session(['current_amount' => $bestTotal]);
-
+        session(['current_amount' => $finalTotal]);
+    
         $modelType = $site->businessModel->model_type;
         $tableRows = view("invoice.{$modelType}.random_product_rows", [
             'products' => $bestMatch,
             'site' => $site,
-            'total' => $bestTotal
+            'total' => $finalTotal
         ])->render();
-
+    
         return response()->json([
             'tableRows' => $tableRows,
-            'total' => $bestTotal
+            'total' => $finalTotal
         ]);
     }
+    
 
 
     public function addProducts(Request $request)
