@@ -4,18 +4,19 @@
 <head>
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
     <link href="https://fonts.googleapis.com/css2?family=Cambay&display=swap" rel="stylesheet">
-<style>
-    *{
-        margin:0px;
-        padding:0px;
-    }
-</style>
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+    </style>
 </head>
 
 <body>
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
-            <td align="center" style="padding:0px;background: url({{ $invoice_image1 }}) no-repeat;background-position:center;background-size:100% 100%;">
+            <td align="center"
+                style="padding:0px;background: url({{ $invoice_image1 }}) no-repeat;background-position:center;background-size:100% 100%;">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse;">
                     <!-- Content -->
                     <tr>
@@ -52,8 +53,10 @@
                                 </tr>
                             </table>
 
-                            <table style="border-collapse: collapse;border-bottom: 0px;border: 0px;border-radius: 15px; background-color: white;padding: 10px;margin-top:50px;margin-bottom:50px;height:56.95vh;">
-                                <tr style="border-collapse: collapse;height: 40px;border-bottom: 0px;border: 0px;border-bottom: 2px solid black;padding: 20px;">
+                            <table
+                                style="border-collapse: collapse;border-bottom: 0px;border: 0px;border-radius: 15px; background-color: white;padding: 10px;margin-top:50px;margin-bottom:50px;height:56.95vh;">
+                                <tr
+                                    style="border-collapse: collapse;height: 40px;border-bottom: 0px;border: 0px;border-bottom: 2px solid black;padding: 20px;">
                                     <td
                                         style="width: 300px;text-align: left;font-family: 'Cambay', sans-serif;font-size: 13px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-left: 20px;">
                                         <b>Description</b>
@@ -71,27 +74,27 @@
                                         <b>Total</b>
                                     </td>
                                 </tr>
-                                @foreach($products as $product)
-                                <tr  style="border-collapse: collapse;height: 40px;border-bottom: 0px;border: 0px;padding: 20px;">
-
-                                    <td
-                                        style="width: 300px;text-align: left;font-family: 'Cambay', sans-serif;font-size: 12px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-left: 20px;">
-                                        <b>{{ $product->name }}</b>
-                                    </td>
-                                    <td
-                                        style="width: 100px;text-align: center;font-family: 'Cambay', sans-serif;font-size: 12px;margin: 0px;font-weight: 400; border-collapse: collapse;">
-                                        <b>1</b>
-                                    </td>
-                                    <td
-                                        style="width: 200px;text-align:center;font-family: 'Cambay', sans-serif;font-size: 12px;margin: 0px;font-weight: 400;border-collapse: collapse;">
-                                        <b>{{ site_currency() }} {{  number_format($product->unit_price, 2) }}</b>
-                                    </td>
-                                    <td
-                                        style="width:100px;text-align: center;font-family: 'Cambay', sans-serif;font-size: 12px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 20px;">
-                                        <b>{{ site_currency() }} {{  number_format($product->unit_price, 2) }}</b>
-                                    </td>
-                                </tr>
-                                    @endforeach
+                                @foreach ($products as $product)
+                                    <tr
+                                        style="border-collapse: collapse;height: 10px;border-bottom: 0px;border: 0px;padding: 5px;">
+                                        <td
+                                            style="width: 300px;text-align: left;font-family: 'Cambay', sans-serif;font-size: 12px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-left: 20px;padding-top: 5px;padding-bottom: 5px;">
+                                            <b>{{ $product->name }}</b>
+                                        </td>
+                                        <td
+                                            style="width: 100px;text-align: center;font-family: 'Cambay', sans-serif;font-size: 12px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-top: 5px;padding-bottom: 5px;">
+                                            <b>1</b>
+                                        </td>
+                                        <td
+                                            style="width: 200px;text-align:center;font-family: 'Cambay', sans-serif;font-size: 12px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-top: 5px;padding-bottom: 5px;">
+                                            <b>{{ site_currency() }} {{ number_format($product->unit_price, 2) }}</b>
+                                        </td>
+                                        <td
+                                            style="width:100px;text-align: center;font-family: 'Cambay', sans-serif;font-size: 12px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 20px;padding-top: 5px;padding-bottom: 5px;">
+                                            <b>{{ site_currency() }} {{ number_format($product->unit_price, 2) }}</b>
+                                        </td>
+                                    </tr>
+                                @endforeach
 
                                 <tr style="border-collapse: collapse;height: 10px;border-bottom: 0px;border: 0px;">
                                     <td
@@ -128,7 +131,8 @@
                                     </td>
                                     <td
                                         style="width:100px;text-align:center;font-family: arial;font-size: 13px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-right: 10px;">
-                                        <b>{{ site_currency() }} {{ number_format(($invoice_amount + $discount_amount), 2) }}</b>
+                                        <b>{{ site_currency() }}
+                                            {{ number_format($invoice_amount + $discount_amount, 2) }}</b>
                                     </td>
                                 </tr>
                                 <tr
@@ -147,7 +151,7 @@
                                     </td>
                                     <td
                                         style="width:100px;text-align:center;font-family: arial;font-size: 13px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-right: 10px;border-bottom: 2px solid black">
-                                        <b>{{ site_currency() }} {{ number_format(( $discount_amount), 2) }}</b>
+                                        <b>{{ site_currency() }} {{ number_format($discount_amount, 2) }}</b>
                                     </td>
                                 </tr>
 
@@ -167,7 +171,7 @@
                                     </td>
                                     <td
                                         style="width:100px;text-align:center;font-family: arial;font-size: 20px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-right: 10px;">
-                                        <b>{{ site_currency() }} {{ number_format(($invoice_amount), 2) }}</b>
+                                        <b>{{ site_currency() }} {{ number_format($invoice_amount, 2) }}</b>
                                     </td>
                                 </tr>
 
@@ -175,9 +179,10 @@
 
                             <table style="background-color: white;border-radius: 10px;width:100%;">
                                 <tr style="width:100%;">
-                                    <td style="width: 300px;font-size: 12px;font-family: 'Cambay', sans-serif;padding: 20px;padding-bottom: 20px;">
-                                        <b>{{$company_name}}</b><br>
-                                        <b>{{$company_email}}</b>
+                                    <td
+                                        style="width: 300px;font-size: 12px;font-family: 'Cambay', sans-serif;padding: 20px;padding-bottom: 20px;">
+                                        <b>{{ $company_name }}</b><br>
+                                        <b>{{ $company_email }}</b>
                                     </td>
 
                                     <td
