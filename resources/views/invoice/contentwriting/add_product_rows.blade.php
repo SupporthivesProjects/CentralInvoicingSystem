@@ -9,11 +9,10 @@
     <td class="text-center align-middle">
         {{ $product->id }}
     </td>
-
     <td class="text-capitalize">
-        {{ $product->name }} 
-        @if($site->site_link && $product->slug)
-            <a href="{{ $site->site_link }}product/{{ $product->slug }}" target="_blank">🔗</a>
+        {{ $product->name }}
+        @if($site->site_link)
+            <a href="{{ rtrim($site->site_link, '/') }}/services" target="_blank">🔗</a>
         @endif
     </td>
     <td class="text-center" style="padding-left: 10px;padding-right: 10px;">
