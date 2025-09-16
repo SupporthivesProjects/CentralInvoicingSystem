@@ -55,7 +55,7 @@
                                        <br><br>
                                             <p
                                             style="font-size: 28px; font-weight: bold; position: relative; z-index: 2; top:69px;">
-                                            INVOICE</p>
+                                            INVOICES</p>
                                     </td>
                                 </tr>
                             </table>
