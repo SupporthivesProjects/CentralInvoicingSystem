@@ -65,6 +65,9 @@ class LaravelController extends Controller
         $products = $query->orderByDesc('unit_price')->get();
     
         if ($products->isEmpty()) {
+            session()->forget('ready_products');
+            session()->forget('current_amount');
+
             return response()->json([
                 'tableRows' => '',
                 'total' => 0,
@@ -198,6 +201,8 @@ class LaravelController extends Controller
         }
     
         if (!$bestMatch) {
+            session()->forget('ready_products');
+            session()->forget('current_amount');
             return response()->json([
                 'tableRows' => '',
                 'total' => 0,
