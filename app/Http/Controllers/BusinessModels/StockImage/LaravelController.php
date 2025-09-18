@@ -62,6 +62,8 @@ class LaravelController extends Controller
             return $product->price >= $minTotal && $product->price <= $maxTotal;
         });
         if ($filteredProducts->isEmpty()) {
+            session()->forget('ready_products');
+            session()->forget('current_amount');
             return response()->json([
             'tableRows' => '<tr><td colspan="6" class="text-center text-muted">No products found matching the invoice amount. <br><button class="btn btn-primary mt-2" onclick="addCustomPacks()">Add Custom Packs</button></td></tr>',
             'success' => false,

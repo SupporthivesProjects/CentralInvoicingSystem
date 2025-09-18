@@ -213,6 +213,9 @@ class LaravelController extends Controller
         //dd($bestMatch);
 
         if (!$bestMatch) {
+            session()->forget('selected_games');
+            session()->forget('current_amount');
+
             return response()->json([
                 'tableRows' => '',
                 'total'     => 0,
