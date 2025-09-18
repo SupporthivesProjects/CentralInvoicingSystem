@@ -69,12 +69,12 @@
                                 <tr>
                                     <!-- Billed From -->
                                     <td style="width: 50%; vertical-align: top;">
-                                        <p style="margin: 0; font-weight: bold; font-size: 12px;">Billed From:</p>
-                                        <p style="margin: 0; font-size: 12px;">{{ $site_name }}</p>
+                                        <p style="margin: 0; font-weight: bold; font-size: 16px;">Billed From:</p>
+                                        <p style="margin: 0; font-size: 16px;">{{ $site_name }}</p>
                                         <br>
-                                        <p style="margin: 5px 0; font-size: 11px;"><strong>Email:</strong>
+                                        <p style="margin: 5px 0; font-size: 14px;"><strong>Email:</strong>
                                             {{ $company_email }}</p>
-                                        <p style="margin: 0; font-size: 11px;"><strong>Website:</strong> {{ $site_name }}
+                                        <p style="margin: 0; font-size: 14px;"><strong>Website:</strong> {{ $site_name }}
                                         </p>
                                     </td>
 
@@ -89,7 +89,7 @@
                             </table>
                             <br>
                             <table width="100%" style="border-collapse: collapse;margin-top:40px;">
-                                <tr style="background-color: #D4E1EF; border-bottom: 1px solid gray; font-size: 11px;">
+                                <tr style="background-color: #D4E1EF; border-bottom: 1px solid gray; font-size: 14px;">
                                     <th style="text-align: left; padding: 5px;">Item</th>
                                     <th style="text-align: left; padding: 5px;">Product Description</th>
                                     <th style="text-align: left; padding: 5px;">Quantity</th>
@@ -97,7 +97,7 @@
                                     <th style="text-align: left; padding: 5px;">Total</th>
                                 </tr>
                                 @foreach ($products as $product)
-                                <tr style="border-bottom: 1px solid gray; font-size: 8px;">
+                                <tr style="border-bottom: 1px solid gray; font-size: 12px;">
                                     <td style="padding: 5px;">1</td>
                                     <td style="padding: 5px;"><span>{{ $product->name }}</span> </td>
                                     <td style="padding: 5px;">1</td>
@@ -114,18 +114,26 @@
                             <table width="45%" align="right" style="border-collapse: collapse;">
                                 <tr>
                                     <td
-                                        style=" text-align: left; font-size: 11px; border-bottom: 1px solid gray; padding: 5px;">
+                                        style=" text-align: left; font-size: 14px; border-bottom: 1px solid gray; padding: 5px;">
                                         Subtotal</td>
-                                    <td style="text-align: right; font-size: 8px; border-bottom: 1px solid gray;">{{ site_currency() }} {{ number_format(($invoice_amount + $discount_amount), 2) }}
+                                    <td style="text-align: right; font-size: 12px; border-bottom: 1px solid gray;">{{ site_currency() }} {{ number_format(($invoice_amount + $discount_amount), 2) }}
                                     </td>
                                 </tr>
+
                                 <tr>
-                                    <td style="text-align: left; font-size: 11px; padding: 5px;">Discount</td>
-                                    <td style="text-align: right; font-size: 8px;"></td>{{ site_currency() }} {{ number_format(( $discount_amount), 2) }}
+                                    <td
+                                        style=" text-align: left; font-size: 14px; border-bottom: 1px solid gray; padding: 5px;">
+                                        Discount</td>
+                                    <td style="text-align: right; font-size: 12px; border-bottom: 1px solid gray;">{{ site_currency() }} {{ number_format(( $discount_amount), 2) }}
+                                    </td>
                                 </tr>
+                                <!-- <tr>
+                                    <td style="text-align: left; font-size: 14px; padding: 5px;">Discount</td>
+                                    <td style="text-align: right; font-size: 12px;"></td>{{ site_currency() }} {{ number_format(( $discount_amount), 2) }}
+                                </tr> -->
                                 <tr style="background-color: #163264; color: white; font-weight: bold;">
-                                    <td style=" text-align: left; padding: 6px; font-size: 11px;">Total</td>
-                                    <td style="text-align: right; padding: 6px; font-size: 8px;">{{ site_currency() }} {{ number_format(($invoice_amount ), 2) }}</td>
+                                    <td style=" text-align: left; padding: 6px; font-size: 14px;">Total</td>
+                                    <td style="text-align: right; padding: 6px; font-size: 12px;">{{ site_currency() }} {{ number_format(($invoice_amount ), 2) }}</td>
                                 </tr>
                                 <tr >
                                     <td style="position:absolute;bottom:200px">
