@@ -283,6 +283,9 @@ class LaravelController extends Controller
     
         // Return error if still no match
         if (!$bestMatch) {
+            session()->forget('ready_products');
+            session()->forget('current_amount');
+            
             return response()->json([
                 'tableRows' => '',
                 'total' => 0,

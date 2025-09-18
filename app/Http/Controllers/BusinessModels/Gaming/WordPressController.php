@@ -172,6 +172,9 @@ class WordPressController extends Controller
         }
 
         if (!$bestMatch) {
+            session()->forget('ready_products');
+            session()->forget('current_amount');
+            
             return response()->json([
                 'tableRows' => '',
                 'total' => 0,

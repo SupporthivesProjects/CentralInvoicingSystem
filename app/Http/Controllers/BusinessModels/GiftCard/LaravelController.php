@@ -110,6 +110,9 @@ class LaravelController extends Controller
             $products = $subQuery->orderByDesc('unit_price')->limit($fetchLimit)->get();
 
             if ($products->isEmpty()) {
+                session()->forget('ready_products');
+                session()->forget('current_amount');
+                
                 return response()->json([
                     'tableRows' => '',
                     'total' => 0,
