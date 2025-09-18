@@ -160,14 +160,13 @@
                                 <tr>
                                     <td
                                         style="width: 120px; color:#000000; text-align:center;padding-left:10px;font-family:  Arial;font-size:9px;margin: 0px;font-weight: 400;border-collapse: collapse;">
-                                        SUPPORT@CALLIGRAPHII.COM | +11 123 4567 890
+                                        {{ $company_email }} | {{ $company_mobile }}
                                     </td>
                                 </tr>
                                 <tr>
                                     <td
                                         style="width: 120px; padding-top: 16px; color:#000000; text-align:center;padding-left:10px;font-family:  Arial;font-size:9px;margin: 0px;font-weight: 400;border-collapse: collapse;">
-                                        PLACEHOLDER COMPANY NAME LLCOFFICE NO. XX, PLACEHOLDER STREET – PLACEHOLDER
-                                        CITY
+                                        {{ $company_name }} {!! $company_address !!}
                                     </td>
                                 </tr>
                             </table>
