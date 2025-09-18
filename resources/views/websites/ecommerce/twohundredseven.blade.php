@@ -46,7 +46,7 @@
                             <tr>
                               <td style="width: 70%;vertical-align: top;">
                                 <p style="margin: 0px;font-size:12px;font-weight:600;font-family:Lato;line-height:24px;color: #000000;">
-                                    Invoice To :
+                                    Invoice To  :
                                 </p>
                                 <p style="margin: 0px;font-size:17px;font-weight:600;font-family:Lato;line-height:24px;color: #d81d3f;">
                                  {{ $customer_name ? $customer_name : '' }}
