@@ -121,7 +121,7 @@
                                         </p>
                                     </td>
                                     <td style="width: 40px;"></td>
-                                    <td style="vertical-align: top; margin-left:40px">
+                                    <td style="vertical-align: top; padding-left:40px">
                                         <h1
                                             style="margin: 0px;font-family: Lato;font-size: 12px;color: #4D4D4D;line-height:18px;">
                                             Bill To
@@ -133,7 +133,7 @@
                                     </td>
                                 </tr>
                             </table>
-                            <div style="min-height: 670px !important;">
+                            <div style="min-height: 660px !important;">
                             <table width="100%" cellspacing="0" cellpadding="" border="0px"
                                 style="border-collapse: collapse;margin-top: 40px;">
                                 <tr style="background:#C1A064;">
