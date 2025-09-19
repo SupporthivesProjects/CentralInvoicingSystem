@@ -270,7 +270,7 @@
                     <td style="padding-top: 50px;">
                         <tfoot>
                             <tr>
-                                <td style="background: url('{{ $invoice_footer_image }}')no-repeat; display: none; height: 252px; width: 100%; background-size: contain;">
+                                <td style="background: url('{{ $invoice_footer_image }}')no-repeat; height: 252px; width: 100%; background-size: contain;">
                                     
                                 </td>
                             </tr>
