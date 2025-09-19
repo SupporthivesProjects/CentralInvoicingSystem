@@ -19,7 +19,7 @@
         <tr>
             <td align="center" style="vertical-align:">
                 <!-- White Box Container -->
-                <table width="80%" cellpadding="0" cellspacing="0" style="margin-top:120px;height:89vh;padding-bottom:140px">
+                <table width="80%" cellpadding="0" cellspacing="0" style="margin-top:130px;height:90vh;padding-bottom:140px">
 
                     <!-- Invoice Header -->
                     <tr>
@@ -34,7 +34,7 @@
                     <tr>
                         <td>
                             <table width="100%" cellpadding="0" cellspacing="0"
-                                style="border-collapse: collapse; font-family: Arial, sans-serif; border: 1px solid #000000; font-size: 9px;height:400px;">
+                                style="border-collapse: collapse; font-family: Arial, sans-serif; border: 1px solid #000000; font-size: 9px;height:250px;">
                                 <tr>
                                     <!-- Bill To Header -->
                                     <td
