@@ -26,16 +26,31 @@
                     <tr>
                         <td align="center"
                             style="height:100px;background:url(img/header-bg.png);background-size: cover;background-repeat: no-repeat;background-position: center;padding: 10px 20px;">
-                            <table width="100%" cellspacing="0" cellpadding="" border="0px"
+                            <!-- <table width="100%" cellspacing="0" cellpadding="" border="0px"
                                 style="border-collapse: collapse;">
                                 <tr>
                                     <img src="{{ $company_logo }}" alt="" style="height: 45px;">
                                 </tr>
                                 <tr style="height: 10px;"></tr>
-                                <!-- <tr>
+                                <tr>
                                     <img src="{{ $invoice_header_image }}" alt="" style="height:20px;">
-                                </tr> -->
-                            </table>
+                                </tr>
+                            </table> -->
+                            <div style="display: flex; flex-direction: column; align-items: flex-start;">
+                                <!-- Company Logo -->
+                                <div>
+                                    <img src="{{ $company_logo }}" alt="" style="height: 45px;">
+                                </div>
+
+                                <!-- Spacing -->
+                                <div style="height: 10px;"></div>
+
+                                <!-- Invoice Header Image -->
+                                <div>
+                                    <img src="{{ $invoice_header_image }}" alt="" style="height: 20px;">
+                                </div>
+                            </div>
+
                         </td>
                     </tr>
                     <!---header End--->
@@ -106,7 +121,7 @@
                                         </p>
                                     </td>
                                     <!-- <td style=""></td> -->
-                                    <td align="center" style="vertical-align: top; margin-right:20px">
+                                    <td align="center" style="vertical-align: top; ">
                                         <h1
                                             style="margin: 0px;font-family: Lato;font-size: 12px;color: #4D4D4D;line-height:18px;">
                                             Bill To
