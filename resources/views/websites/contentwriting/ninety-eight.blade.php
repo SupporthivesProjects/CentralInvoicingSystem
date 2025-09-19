@@ -184,7 +184,7 @@
                 </tr>
                 <tr>
                     <td>
-                    <div style="min-height: 500px !important;">
+                    <div style="min-height: 510px !important;">
                         <table class="table-list" style="width:100%;border-bottom: 0px; border-left: 0px; border-right: 0px;">
                             <tbody>
                                 <tr>
