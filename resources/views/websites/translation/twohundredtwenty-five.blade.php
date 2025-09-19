@@ -31,7 +31,7 @@
                     </tr>
 
                     <!-- Billing Info -->
-                    <tr>
+                    <tr style="height:30%;">
                         <td>
                             <table width="100%" cellpadding="0" cellspacing="0"
                                 style="border-collapse: collapse; font-family: Arial, sans-serif; border: 1px solid #000000; font-size: 9px;">
@@ -86,7 +86,7 @@
                     </tr>
 
                     <!-- Service Table -->
-                    <tr>
+                    <tr style="height:60%;">
                         <td>
                             <table width="100%" cellpadding="0" cellspacing="0" border="1"
                                 style="font-size: 9px; border-collapse: collapse; margin-bottom: 20px; margin-top: 20px;">
@@ -159,7 +159,7 @@
                     </tr>
 
                     <!-- Footer -->
-                    <tr style="padding-bottom:150px;">
+                    <tr>
                         <td style="text-align: center; font-size: 10px; color: #555; padding-top: 10px;">
                             {{ $company_email }} <span style="color: red; padding: 0 10px;">|</span>
                             {{ $site->site_name }}
