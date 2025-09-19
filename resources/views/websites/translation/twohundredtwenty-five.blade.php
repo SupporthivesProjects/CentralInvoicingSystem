@@ -31,10 +31,10 @@
                     </tr>
 
                     <!-- Billing Info -->
-                    <tr style="height:30%;">
+                    <tr>
                         <td>
                             <table width="100%" cellpadding="0" cellspacing="0"
-                                style="border-collapse: collapse; font-family: Arial, sans-serif; border: 1px solid #000000; font-size: 9px;">
+                                style="border-collapse: collapse; font-family: Arial, sans-serif; border: 1px solid #000000; font-size: 9px;height:400px;">
                                 <tr>
                                     <!-- Bill To Header -->
                                     <td
@@ -86,7 +86,7 @@
                     </tr>
 
                     <!-- Service Table -->
-                    <tr style="height:50%;">
+                    <tr>
                         <td>
                             <table width="100%" cellpadding="0" cellspacing="0" border="1"
                                 style="font-size: 9px; border-collapse: collapse; margin-bottom: 20px; margin-top: 20px;">
