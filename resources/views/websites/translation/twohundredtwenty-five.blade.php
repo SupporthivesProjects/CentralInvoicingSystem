@@ -19,7 +19,7 @@
         <tr>
             <td align="center" style="vertical-align:">
                 <!-- White Box Container -->
-                <table width="80%" cellpadding="0" cellspacing="0" style="margin-top:100px;height:91.1vh;">
+                <table width="80%" cellpadding="0" cellspacing="0" style="margin-top:120px;height:91.1vh;">
 
                     <!-- Invoice Header -->
                     <tr>
@@ -159,7 +159,7 @@
                     </tr>
 
                     <!-- Footer -->
-                    <tr>
+                    <tr style="margin-bottom:100px;">
                         <td style="text-align: center; font-size: 10px; color: #555; padding-top: 10px;">
                             {{ $company_email }} <span style="color: red; padding: 0 10px;">|</span>
                             {{ $site->site_name }}
