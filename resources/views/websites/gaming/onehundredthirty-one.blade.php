@@ -105,7 +105,7 @@
                                             {{ $site_name }}
                                         </p>
                                     </td>
-                                    <td style="width: 40px;"></td>
+                                    <td style="width: 10px;"></td>
                                     <td>
                                         <h1
                                             style="margin: 0px;font-family: Lato;font-size: 12px;color: #4D4D4D;line-height:18px;">
@@ -118,7 +118,7 @@
                                     </td>
                                 </tr>
                             </table>
-                            <div style="min-height: 500px !important;">
+                            <div style="min-height: 650px !important;">
                             <table width="100%" cellspacing="0" cellpadding="" border="0px"
                                 style="border-collapse: collapse;margin-top: 40px;">
                                 <tr style="background:#C1A064;">
