@@ -121,7 +121,7 @@
                                         </p>
                                     </td>
                                     <td style="width: 40px;"></td>
-                                    <td style="vertical-align: top; padding-left:40px">
+                                    <td style="vertical-align: top; padding-left:80px">
                                         <h1
                                             style="margin: 0px;font-family: Lato;font-size: 12px;color: #4D4D4D;line-height:18px;">
                                             Bill To
@@ -272,7 +272,7 @@
                                 </tr>
                                 <tr style="height: 10px;"></tr>
                                 <tr>
-                                    <td style="background:#C1A064;height:30px;">
+                                    <td style="background:#C1A064;height:31px;">
 
                                     </td>
                                 </tr>
