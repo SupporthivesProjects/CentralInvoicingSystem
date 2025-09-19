@@ -17,12 +17,12 @@
     <table width="100%" cellpadding="0" cellspacing="0"
         style="background: url('{{ $invoice_image1 }}') no-repeat center top; background-size:100% 100%;height:100vh;">
         <tr>
-            <td align="center" style="vertical-align:">
+            <td align="center" style="vertical-align:top;">
                 <!-- White Box Container -->
                 <table width="80%" cellpadding="0" cellspacing="0" style="margin-top:140px;padding-bottom:140px">
 
                     <!-- Invoice Header -->
-                    <tr>
+                    <tr style="height:70px;">
                         <td style="padding: 10px 0; font-size: 14px;">
                             <strong>INVOICE NO.:</strong> {{ $invoice_number }}
                             <span style="color: red; padding: 0 10px;">|</span>
@@ -87,7 +87,7 @@
 
                     <!-- Service Table -->
                     <tr>
-                        <td style="vertical-align:top;">
+                        <td style="vertical-align:top;height:500px;">
                             <table width="100%" cellpadding="0" cellspacing="0" border="0"
                                 style="font-size: 9px; border-collapse: collapse; margin-bottom: 20px; margin-top: 20px;">
                                 <tr style="background-color: #810000; color: #ffffff; border: 1px solid black;height:40px">
