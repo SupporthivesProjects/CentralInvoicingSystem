@@ -78,7 +78,7 @@
                                             {{ $company_address }}
                                         </p>
                                     </td>
-                                    <td style="width: 40px;"></td>
+                                    <td style="width: 20px;"></td>
                                     <td align="center" style="vertical-align: top;">
                                         <img src="{{ $invoice_image1 }}" alt="" style="height: 50px;">
                                         <table>
