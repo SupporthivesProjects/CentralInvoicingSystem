@@ -79,7 +79,7 @@
                                         </p>
                                     </td>
                                     <td style="width: 40px;"></td>
-                                    <td align="center" style="vertical-align: top;">
+                                    <td  style="vertical-align: top;">
                                         <img src="{{ $invoice_image1 }}" alt="" style="height: 50px;">
                                         <table>
                                             <tr>
