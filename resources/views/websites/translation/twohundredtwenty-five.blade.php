@@ -159,7 +159,7 @@
                     </tr>
 
                     <!-- Footer -->
-                    <tr style="margin-bottom:100px;">
+                    <tr style="padding-bottom:150px;">
                         <td style="text-align: center; font-size: 10px; color: #555; padding-top: 10px;">
                             {{ $company_email }} <span style="color: red; padding: 0 10px;">|</span>
                             {{ $site->site_name }}
