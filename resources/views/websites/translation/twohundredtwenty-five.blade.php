@@ -19,7 +19,7 @@
         <tr>
             <td align="center" style="vertical-align:">
                 <!-- White Box Container -->
-                <table width="80%" cellpadding="0" cellspacing="0" style="margin-top:130px;height:75vh;padding-bottom:150px">
+                <table width="80%" cellpadding="0" cellspacing="0" style="margin-top:130px;height:80vh;padding-bottom:150px">
 
                     <!-- Invoice Header -->
                     <tr>
@@ -31,7 +31,7 @@
                     </tr>
 
                     <!-- Billing Info -->
-                    <tr>
+                    <tr style="height:30%;">
                         <td>
                             <table width="100%" cellpadding="0" cellspacing="0"
                                 style="border-collapse: collapse; font-family: Arial, sans-serif; border: 1px solid #000000; font-size: 9px;">
@@ -86,7 +86,7 @@
                     </tr>
 
                     <!-- Service Table -->
-                    <tr>
+                    <tr style="height:50%;">
                         <td>
                             <table width="100%" cellpadding="0" cellspacing="0" border="1"
                                 style="font-size: 9px; border-collapse: collapse; margin-bottom: 20px; margin-top: 20px;">
