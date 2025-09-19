@@ -87,7 +87,7 @@
 
                     <!-- Service Table -->
                     <tr>
-                        <td>
+                        <td style="vertical-align:top;">
                             <table width="100%" cellpadding="0" cellspacing="0" border="1"
                                 style="font-size: 9px; border-collapse: collapse; margin-bottom: 20px; margin-top: 20px;">
                                 <tr style="background-color: #810000; color: #ffffff; border: 1px solid black; ">
