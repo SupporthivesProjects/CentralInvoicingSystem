@@ -73,7 +73,7 @@
                                             Invoice Date &nbsp;&nbsp;&nbsp;:&nbsp; {{ $invoice_date }}
                                         </p>
                                         <p style="font-family:  Kanit;color: #d3f64a; font-size: 22px;margin: 0px;font-weight: 400; min-width: 160px; text-align: end;">
-                                            <b>{{ site_currency() . number_format($invoice_amount, 2) }}</b>
+                                            <b>{{ site_currency() ." ". number_format($invoice_amount, 2) }}</b>
                                         </p>
                                     </td>
                                 </tr>
@@ -84,7 +84,7 @@
                                     <!-- <tr style="border-collapse: collapse;height: 24px; border-bottom: 12px solid #161a1c;"> -->
                                     <tr style="border-collapse: collapse;height: 24px; ">
                                         <td style="width: 80px; color: #FFFFFF; text-align: center; padding: 16px 10px;font-family:  kanit;font-size: 14px;margin: 0px;font-weight: 700;border-collapse: collapse;">
-                                        <b>NO</b> 
+                                        <b>NO</b>
                                         </td>
                                         <td style="width: 300px; color: #FFFFFF; text-align: start; padding:16px 10px;font-family:  kanit;font-size: 14px;margin: 0px;font-weight: 700;border-collapse: collapse;">
                                             <b>DESCRIPTION</b>
@@ -106,16 +106,16 @@
                                         </td>
                                         <td style="width: 300px; color:#000000; text-align:start;padding: 16px 10px;font-family:  Helvetica;font-size:8px;margin: 0px;font-weight: 400;border-collapse: collapse;">
                                             <b>{{ $product->name }}</b><br><br>
-                                            {!! \Illuminate\Support\Str::limit(strip_tags($product->description), 150) !!}
+                                            {{--!! \Illuminate\Support\Str::limit(strip_tags($product->description), 150) !!--}}
                                         </td>
                                         <td style="width:100px; color:#000000; text-align:center;padding: 16px 10px;font-family:  Helvetica;font-size: 8px;margin: 0px;font-weight: 400;border-collapse: collapse;">
                                             1
                                         </td>
                                         <td style="width:120px; color:#000000; text-align:center;padding: 16px 10px;font-family:  Helvetica;font-size: 8px;margin: 0px;font-weight: 400;border-collapse: collapse;">
-                                            {{ site_currency() . number_format($product->unit_price ?? 0, 2) }}
+                                            {{ site_currency() ." ". number_format($product->unit_price ?? 0, 2) }}
                                         </td>
                                         <td style="width:100px; color:#000000; text-align:center;padding: 16px 10px;font-family:  Helvetica;font-size: 8px;margin: 0px;font-weight: 400;border-collapse: collapse;">
-                                            {{ site_currency() . number_format($product->unit_price ?? 0, 2) }}
+                                            {{ site_currency() ." ". number_format($product->unit_price ?? 0, 2) }}
                                         </td>
                                     </tr>
                                     @endforeach
@@ -128,7 +128,7 @@
                                         <p>Sub Total</p>
                                         </td>
                                         <td style="width:100px;color: #FFFFFF;text-align:end;padding-right:10px;font-family: Helvetica;font-size: 9px;margin: 0px;font-weight: 400;border-collapse: collapse; background-color: #24292e;">
-                                            <p>{{ site_currency() . number_format($invoice_amount + $discount_amount ?? 0, 2) }}</p>
+                                            <p>{{ site_currency() ." ". number_format($invoice_amount + $discount_amount ?? 0, 2) }}</p>
                                         </td>
                                     </tr>
                                     <tr>
@@ -140,7 +140,7 @@
                                         </p>
                                         </td>
                                         <td style="width:100px;color: #FFFFFF;text-align:end;padding:0px 12px; font-family: Helvetica;font-size: 9px;margin: 0px;font-weight: 400;border-collapse: collapse; background-color: #24292e;">
-                                            <p>{{ site_currency() . number_format($discount_amount ?? 0, 2) }}</p>
+                                            <p>{{ site_currency() ." ". number_format($discount_amount ?? 0, 2) }}</p>
                                         </td>
                                     </tr>
                                     <tr>
@@ -152,7 +152,7 @@
                                         </p>
                                         </td>
                                         <td style="width:100px;color: #d3f64a;text-align:end;padding:0px 12px 14px 12px;font-family: Kanit;font-size: 12px;margin: 0px;font-weight: 700; border-collapse: collapse; background-color: #24292e;">
-                                            <p>{{ site_currency() . number_format($invoice_amount ?? 0, 2) }}</p>
+                                            <p>{{ site_currency() ." ". number_format($invoice_amount ?? 0, 2) }}</p>
                                         </td>
                                     </tr>
                                 </table>

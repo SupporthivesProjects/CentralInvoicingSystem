@@ -796,6 +796,7 @@ class LaravelController extends Controller
             return $this->generateWithDompdf($site, $viewPath, $invoice_data, $filename);
         }
     }
+    
 
     protected function generateWithDompdf($site, $viewPath, $invoice_data, $filename)
     {

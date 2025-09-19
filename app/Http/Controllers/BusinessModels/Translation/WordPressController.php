@@ -775,6 +775,7 @@ class WordPressController extends Controller
         }
     }
     
+    
 
     protected function generateWithDompdf($site, $viewPath, $invoice_data, $filename)
     {

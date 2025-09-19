@@ -57,13 +57,13 @@
                                                 <b> {{ $product->name }}</b>
                                             </td>
                                             <td style="width: 100px; color:#000000; text-align:center;padding-left:16px;font-family:  Arial;font-size:10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
-                                                {{ site_currency() . number_format($product->unit_price ?? 0, 2) }}
+                                            {{ site_currency() }} {{ number_format($product->unit_price ?? 0, 2) }}
                                             </td>
                                             <td style="width:100px; color:#000000; text-align:center;padding-right:16px;font-family:  Arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
                                                 1
                                             </td>
                                             <td style="width:100px; color:#000000; text-align:right;padding-right:16px;font-family:  Arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
-                                                {{ site_currency() . number_format($product->unit_price ?? 0, 2) }}
+                                                {{ site_currency() }} {{  number_format($product->unit_price ?? 0, 2) }}
                                             </td>
                                         </tr>
                                         @endforeach
@@ -74,7 +74,7 @@
                                             <td style="width: 100px;text-align: right;font-family: Arial;font-size: 10px;margin: 0px;font-weight: 400;padding-right: 10px;" colspan="2">
                                             </td>
                                             <td style="width:100px;color: #000000;text-align:end;padding: 0px 16px;font-family: Arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
-                                                <p><b>{{ site_currency() . number_format($invoice_amount + $discount_amount ?? 0, 2) }}</b></p>
+                                                <p><b> {{ site_currency() }} {{  number_format($invoice_amount + $discount_amount ?? 0, 2) }}</b></p>
                                             </td>
                                         </tr>
                                         <tr>
@@ -94,7 +94,7 @@
                                             <td style="width: 100px;text-align: right;font-family: Arial;font-size: 10px;margin: 0px;font-weight: 400;padding-right: 10px; " colspan="2">
                                             </td>
                                             <td style="width:100px;color: #000000;text-align:end;padding: 0px 16px;font-family: Arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
-                                                <p><b>{{ site_currency() . number_format($discount_amount ?? 0, 2) }}</b></p>
+                                                <p><b> {{ site_currency() }} {{  number_format($discount_amount ?? 0, 2) }}</b></p>
                                             </td>
                                         </tr>
                                         <tr>
@@ -104,7 +104,7 @@
                                             <td style="width: 100px;text-align: right;font-family: Arial;font-size: 10px;margin: 0px;font-weight: 400;padding-right: 10px;" colspan="2">
                                             </td>
                                             <td style="width:100px;color: #000000;text-align:end;padding: 0px 16px;font-family: Arial;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;">
-                                                <p><b>{{ site_currency() . number_format($invoice_amount ?? 0, 2) }}</b></p>
+                                                <p><b> {{ site_currency() }} {{  number_format($invoice_amount ?? 0, 2) }}</b></p>
                                             </td>
                                         </tr>
                                     </table>
@@ -147,7 +147,7 @@
                                 {{ $company_email }}<br>
                                 {!! $company_address !!}<br>
                                 {{ $company_mobile }}<br>
-                                www.bizzspace.co                                
+                                {{ $site_name }}                                
                             </p>
                         </td>
     </tr>

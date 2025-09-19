@@ -24,12 +24,12 @@
                         <td valign="top" style="color: white; font-size: 8px;">
                             <table>
                                 <tr>
-                                    <td style="padding-right: 10px; font-size: 11px;">Invoice To:</td>
-                                    <td><strong style="font-size: 16px;">{{ $customer_name ? $customer_name : '' }}</strong></td>
+                                    <td style="font-size: 12px;">Invoice To:</td>
+                                    <td><strong style="font-size: 12px;">{{ $customer_name ? $customer_name : '' }}</strong></td>
                                 </tr>
                                 <tr>
-                                    <td>Email:</td>
-                                    <td>{{ $customer_email ? $customer_email : '' }}</td>
+                                    <td style="font-size: 12px;">Email:</td>
+                                    <td style="font-size: 12px;">{{ $customer_email ? $customer_email : '' }}</td>
                                 </tr>
                             </table>
                         </td>
@@ -38,12 +38,12 @@
                         <td valign="top" style="color: white; font-size: 8px; padding-left: 20px;padding-top: 20px;" align="center">
                             <table>
                                 <tr>
-                                    <td style="padding-right: 10px;">Date:</td>
-                                    <td>{{ $invoice_date }}</td>
+                                    <td style="font-size: 12px;">Date:</td>
+                                    <td style="font-size: 12px;">{{ $invoice_date }}</td>
                                 </tr>
                                 <tr>
-                                    <td>Invoice No.:</td>
-                                    <td>{{ $invoice_number }}</td>
+                                    <td style="font-size: 12px;">Invoice No.:</td>
+                                    <td style="font-size: 12px;">{{ $invoice_number }}</td>
                                 </tr>
                             </table>
                         </td>
@@ -56,13 +56,13 @@
         <!-- Content Box -->
         <tr>
             <td colspan="4" style="padding: 0px 160px 0px 0px;">
-                <div style="min-height: 644px">
+                <div style="min-height: 638px">
                     <table width="100%" cellspacing="0" cellpadding="10"
                     style="border-collapse: collapse; font-size: 10px; margin-top: 70px;">
                     <!-- Header Row -->
                     <tr style="text-transform: uppercase; border-bottom: 1px solid #293f8c;">
                         <th align="left" style="font-weight: 600;width:50%">Item Description</th>
-                        <th align="center" style="font-weight: 600;width:20%">Unit Price</th>
+                        <th align="center" style="font-weight: 600;width:20%">RRP</th>
                         <th align="center" style="font-weight: 600;width:10%">Qty</th>
                         <th align="center" style="font-weight: 600;width:20%">Total</th>
                     </tr>
@@ -76,59 +76,12 @@
                                
                             </span>
                         </td>
-                        <td align="center">{{ site_currency() . number_format($product->unit_price ?? 0, 2) }}</td>
+                        <td align="center">{{ site_currency() . number_format($product->rrp ?? 0, 2) }}</td>
                         <td align="center">1</td>
                         <td align="center">{{ site_currency() . number_format($product->unit_price ?? 0, 2) }}</td>
                     </tr>
                     @endforeach
-                    {{-- <tr style="border-bottom: 1px solid #293f8c;">
-                        <td style="font-size: 8px; line-height: 1.4;">
-                            <strong>Item Name</strong><br>
-                            <span style="font-size: 8px; line-height: 1.4;">
-                                Lorem ipsum <span>dolor sit amet, consectetur adipiscing elit,
-                                    sed</span> do eiusmod tempor.
-                            </span>
-                        </td>
-                        <td align="center">$50.00</td>
-                        <td align="center">5</td>
-                        <td align="center">$250.00</td>
-                    </tr>
-                    <tr style="border-bottom: 1px solid #293f8c;">
-                        <td style="font-size: 8px; line-height: 1.4;">
-                            <strong>Item Name</strong><br>
-                            <span style="font-size: 8px; line-height: 1.4;">
-                                Lorem ipsum <span>dolor sit amet, consectetur adipiscing elit,
-                                    sed</span> do eiusmod tempor.
-                            </span>
-                        </td>
-                        <td align="center">$50.00</td>
-                        <td align="center">5</td>
-                        <td align="center">$250.00</td>
-                    </tr>
-                    <tr style="border-bottom: 1px solid #293f8c;">
-                        <td style="font-size: 8px; line-height: 1.4;">
-                            <strong>Item Name</strong><br>
-                            <span style="font-size: 8px; line-height: 1.4;">
-                                Lorem ipsum <span>dolor sit amet, consectetur adipiscing elit,
-                                    sed</span> do eiusmod tempor.
-                            </span>
-                        </td>
-                        <td align="center">$50.00</td>
-                        <td align="center">5</td>
-                        <td align="center">$250.00</td>
-                    </tr>
-                    <tr style="border-bottom: 1px solid #293f8c;">
-                        <td style="font-size: 8px; line-height: 1.4;">
-                            <strong>Item Name</strong><br>
-                            <span style="font-size: 8px; line-height: 1.4;">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                                    sed do eiusmod tempor.
-                            </span>
-                        </td>
-                        <td align="center">$50.00</td>
-                        <td align="center">5</td>
-                        <td align="center">$250.00</td>
-                    </tr> --}}
+                  
 
                     <!-- Summary Rows -->
                     <tr>

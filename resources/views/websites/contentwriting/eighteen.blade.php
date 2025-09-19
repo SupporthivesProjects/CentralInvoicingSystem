@@ -210,29 +210,42 @@
                                 </td>
                             </tr>
                             <tr style="height: 10px;"></tr>
+                            {{-- Company Name --}}
+                            @if(!empty($company_name))
                             <tr>
                                 <td>
                                     <p style="margin: 0px; color:#FF444E; font-family: Poppins; font-size: 11px; font-weight: 500; text-align:right; text-transform:capitalize;">
-                                        Company Name: <span style="color: #4C483D;">{!! $company_name ?? '' !!}</span>
-                                    </p>
-                                </td>
-                            </tr>
-                            @if(!empty($site->license_number))
-                            <tr>
-                                <td>
-                                    <p style="margin: 0px; color:#FF444E; font-family: Poppins; font-size: 11px; font-weight: 500; text-align:right; text-transform:capitalize;">
-                                        License No: <span style="color: #4C483D;">{{ $site->license_number }}</span>
+                                        Company Name: 
+                                        <span style="color: #4C483D;">{{ $company_name }}</span>
                                     </p>
                                 </td>
                             </tr>
                             @endif
+
+                            {{-- License Number --}}
+                            @if(!empty($site->license_number))
                             <tr>
                                 <td>
                                     <p style="margin: 0px; color:#FF444E; font-family: Poppins; font-size: 11px; font-weight: 500; text-align:right; text-transform:capitalize;">
-                                        Address: <span style="color: #4C483D;">{!! $company_address ?? '' !!}</span>
+                                        License No: 
+                                        <span style="color: #4C483D;">{{ $site->license_number }}</span>
                                     </p>
                                 </td>
                             </tr>
+                            @endif
+
+                            {{-- Company Address --}}
+                            @if(!empty($company_address))
+                            <tr>
+                                <td>
+                                    <p style="margin: 0px; color:#FF444E; font-family: Poppins; font-size: 11px; font-weight: 500; text-align:right; text-transform:capitalize;">
+                                        Address: 
+                                        <span style="color: #4C483D;">{{ $company_address }}</span>
+                                    </p>
+                                </td>
+                            </tr>
+                            @endif
+
                         </table>
 
                     </td>
