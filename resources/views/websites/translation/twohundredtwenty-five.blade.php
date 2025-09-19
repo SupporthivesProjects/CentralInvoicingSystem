@@ -19,7 +19,7 @@
         <tr>
             <td align="center" style="vertical-align:">
                 <!-- White Box Container -->
-                <table width="80%" cellpadding="0" cellspacing="0" style="margin-top:130px;height:87vh;padding-bottom:150px">
+                <table width="80%" cellpadding="0" cellspacing="0" style="margin-top:120px;height:89vh;padding-bottom:140px">
 
                     <!-- Invoice Header -->
                     <tr>
