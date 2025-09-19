@@ -29,7 +29,7 @@
                             <table width="100%" cellspacing="0" cellpadding="" border="0px"
                                 style="border-collapse: collapse;">
                                 <tr>
-                                    <img src="{{ $company_logo }}" alt="" style="height: 50px;">
+                                    <img src="{{ $company_logo }}" alt="" style="height: 45px;">
                                 </tr>
                                 <tr style="height: 10px;"></tr>
                                 <tr>
@@ -105,7 +105,7 @@
                                             {{ $site_name }}
                                         </p>
                                     </td>
-                                    <td style=""></td>
+                                    <!-- <td style=""></td> -->
                                     <td align="center" style="vertical-align: top;">
                                         <h1
                                             style="margin: 0px;font-family: Lato;font-size: 12px;color: #4D4D4D;line-height:18px;">
