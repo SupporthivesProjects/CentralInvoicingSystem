@@ -15,11 +15,11 @@
 
     <!-- Outer Table with Background -->
     <table width="100%" cellpadding="0" cellspacing="0"
-        style="background: url('{{ $invoice_image1 }}') no-repeat center top; background-size:100% 100%;">
+        style="background: url('{{ $invoice_image1 }}') no-repeat center top; background-size:100% 100%;height:100vh;">
         <tr>
             <td align="center" style="vertical-align:">
                 <!-- White Box Container -->
-                <table width="80%" cellpadding="0" cellspacing="0" style="margin-top:140px;height:88vh;padding-bottom:140px">
+                <table width="80%" cellpadding="0" cellspacing="0" style="margin-top:140px;padding-bottom:140px">
 
                     <!-- Invoice Header -->
                     <tr>
@@ -34,8 +34,8 @@
                     <tr>
                         <td>
                             <table width="100%" cellpadding="0" cellspacing="0"
-                                style="border-collapse: collapse; font-family: Arial, sans-serif; border: 1px solid #000000; font-size: 9px;height:250px;">
-                                <tr>
+                                style="border-collapse: collapse; font-family: Arial, sans-serif; border: 1px solid #000000; font-size: 9px;height:200px;">
+                                <tr style="height:40px;">
                                     <!-- Bill To Header -->
                                     <td
                                         style="width: 50%; background-color: #810000; color: #ffffff; padding: 8px; border-right: 1px solid #000000; font-weight: bold;">
@@ -90,7 +90,7 @@
                         <td style="vertical-align:top;">
                             <table width="100%" cellpadding="0" cellspacing="0" border="0"
                                 style="font-size: 9px; border-collapse: collapse; margin-bottom: 20px; margin-top: 20px;">
-                                <tr style="background-color: #810000; color: #ffffff; border: 1px solid black; ">
+                                <tr style="background-color: #810000; color: #ffffff; border: 1px solid black;height:40px">
                                     <th style="padding: 8px;     text-align: left;">Qty.</th>
                                     <th style="padding: 8px;     text-align: left;">Service Type</th>
                                     <th style="padding: 8px;     text-align: right;">Pages</th>
@@ -98,7 +98,7 @@
                                     <th style="padding: 8px;     text-align: right;">Total</th>
                                 </tr>
                                 @foreach ($products as $product)
-                                    <tr style="border: 1px solid black;">
+                                    <tr style="border: 1px solid black;height:40px">
                                         <td style="padding: 8px;   text-align: left;">1</td>
                                         <td style="padding: 8px;   text-align: left;">{{ $product->name }}</td>
                                         <td style="padding: 8px;   text-align: right;">{{ $product->pages }} </td>
@@ -107,21 +107,21 @@
                                             {{ site_currency() . number_format($product->line_total, 2) }}</td>
                                     </tr>
                                 @endforeach
-                                <tr style="border: 1px solid black;">
+                                <tr style="border: 1px solid black;height:40px">
                                     <td colspan="1" style="text-align: right; padding: 8px;"></td>
                                     <td colspan="1" style="text-align: right; padding: 8px;"></td>
                                     <td colspan="1" style="text-align: right; padding: 8px;"></td>
                                     <td colspan="1" style="text-align: right; padding: 8px;"></td>
                                     <td style="padding: 8px;   text-align: right;"></td>
                                 </tr>
-                                <tr style="border: 1px solid black;">
+                                <tr style="border: 1px solid black;height:40px">
                                     <td colspan="1" style="text-align: right; padding: 8px;"></td>
                                     <td colspan="1" style="text-align: right; padding: 8px;"></td>
                                     <td colspan="1" style="text-align: right; padding: 8px;"></td>
                                     <td colspan="1" style="text-align: right; padding: 8px;"></td>
                                     <td style="padding: 8px;   text-align: right;"></td>
                                 </tr>
-                                <tr style="border: none;">
+                                <tr style="border: none;height:40px">
                                     <td colspan="1" style="text-align: right; padding: 8px;"></td>
                                     <td colspan="1" style="text-align: right; padding: 8px;"></td>
                                     <td colspan="1" style="text-align: right; padding: 8px;"></td>
@@ -132,7 +132,7 @@
                                         {{ site_currency() . number_format($invoice_amount + $discount_amount, 2) }}
                                     </td>
                                 </tr>
-                                <tr style="border: none;">
+                                <tr style="border: none;height:40px">
                                     <td colspan="1" style="text-align: right; padding: 8px;"></td>
                                     <td colspan="1" style="text-align: right; padding: 8px;"></td>
                                     <td colspan="1" style="text-align: right; padding: 8px;"></td>
@@ -141,7 +141,7 @@
                                         Discount Total</td>
                                     <td style="padding: 8px;   text-align: right; border: 1px solid black;">278.00</td>
                                 </tr>
-                                <tr style="font-size: 11px; border: none;">
+                                <tr style="font-size: 11px; border: none;height:40px">
                                     <td colspan="1" style="text-align: right; padding: 8px;"></td>
                                     <td colspan="1" style="text-align: right; padding: 8px;"></td>
                                     <td colspan="1" style="text-align: right; padding: 8px;"></td>
