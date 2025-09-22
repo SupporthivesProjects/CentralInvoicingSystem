@@ -65,6 +65,8 @@ class LaravelController extends Controller
             ->get();
 
         if ($translationProducts->isEmpty()) {
+            session()->forget('ready_products');
+            session()->forget('current_amount');
             return response()->json([
                 'tableRows' => '',
                 'total' => 0,
@@ -222,6 +224,10 @@ class LaravelController extends Controller
         }
 
         if (!$bestMatch) {
+
+            session()->forget('ready_products');
+            session()->forget('current_amount');
+            
             return response()->json([
                 'tableRows' => '',
                 'total' => 0,
