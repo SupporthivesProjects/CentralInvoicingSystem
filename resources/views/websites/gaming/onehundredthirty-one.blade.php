@@ -3,6 +3,12 @@
 
 <head>
     <title>Your Email Title</title>
+    <style>
+        body{
+            margin:0px;
+            padding:0px;
+        }
+    </style>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -13,23 +19,38 @@
 <body>
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
-            <td align="center" bgcolor="#f2f2f2" style="padding: 20px 0;">
+            <td align="center" bgcolor="#f2f2f2" style="">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
-                    style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
+                    style="border-collapse: collapse; ">
                     <!---header--->
                     <tr>
                         <td align="center"
                             style="height:100px;background:url(img/header-bg.png);background-size: cover;background-repeat: no-repeat;background-position: center;padding: 10px 20px;">
-                            <table width="100%" cellspacing="0" cellpadding="" border="0px"
+                            <!-- <table width="100%" cellspacing="0" cellpadding="" border="0px"
                                 style="border-collapse: collapse;">
                                 <tr>
-                                    <img src="{{ $company_logo }}" alt="" style="height: 50px;">
+                                    <img src="{{ $company_logo }}" alt="" style="height: 45px;">
                                 </tr>
                                 <tr style="height: 10px;"></tr>
                                 <tr>
                                     <img src="{{ $invoice_header_image }}" alt="" style="height:20px;">
                                 </tr>
-                            </table>
+                            </table> -->
+                            <div style="display: flex; flex-direction: column; align-items: center;">
+                                <!-- Company Logo -->
+                                <div>
+                                    <img src="{{ $company_logo }}" alt="" style="height: 45px;">
+                                </div>
+
+                                <!-- Spacing -->
+                                <div style="height: 10px;"></div>
+
+                                <!-- Invoice Header Image -->
+                                <div>
+                                    <img src="{{ $invoice_header_image }}" alt="" style="height: 20px;">
+                                </div>
+                            </div>
+
                         </td>
                     </tr>
                     <!---header End--->
@@ -57,7 +78,7 @@
                                             {{ $company_address }}
                                         </p>
                                     </td>
-                                    <td style="width: 40px;"></td>
+                                    <td style="width: 20px;"></td>
                                     <td align="center" style="vertical-align: top;">
                                         <img src="{{ $invoice_image1 }}" alt="" style="height: 50px;">
                                         <table>
@@ -89,7 +110,7 @@
                                 </tr>
                                 <tr style="height: 20px;"></tr>
                                 <tr>
-                                    <td colspan="2">
+                                    <td align="left" style="vertical-align: top;">
                                         <h1
                                             style="margin: 0px;font-family: Lato;font-size: 12px;color: #4D4D4D;line-height:18px;">
                                             Bill From
@@ -99,7 +120,8 @@
                                             {{ $site_name }}
                                         </p>
                                     </td>
-                                    <td>
+                                    <td style="width: 60px;"></td>
+                                    <td style="vertical-align: top; padding-left:80px">
                                         <h1
                                             style="margin: 0px;font-family: Lato;font-size: 12px;color: #4D4D4D;line-height:18px;">
                                             Bill To
@@ -111,7 +133,7 @@
                                     </td>
                                 </tr>
                             </table>
-                            <div style="min-height: 500px !important;">
+                            <div style="min-height: 660px !important;">
                             <table width="100%" cellspacing="0" cellpadding="" border="0px"
                                 style="border-collapse: collapse;margin-top: 40px;">
                                 <tr style="background:#C1A064;">
@@ -153,31 +175,31 @@
                                 <tr>
                                     <td style="padding:5px 10px;">
                                         <p
-                                            style="margin: 0px;font-family: Helvetica;font-size:8px;color: #000000;line-height: 12px;">
+                                            style="margin: 0px;font-family: Helvetica;font-size:10px;color: #000000;line-height: 12px;">
                                             {{ $product['name'] }}
                                         </p>
                                     </td>
                                     <td style="padding:5px 10px;">
                                         <p
-                                            style="margin: 0px;font-family: Helvetica;font-size:8px;color: #000000;line-height: 12px;">
+                                            style="margin: 0px;font-family: Helvetica;font-size:10px;color: #000000;line-height: 12px;">
                                             {{ $product['game_currency_amount'] }} {{ $product['game_currency'] }}
                                         </p>
                                     </td>
                                     <td style="padding:5px 10px;">
                                         <p
-                                            style="margin: 0px;font-family: Helvetica;font-size:8px;color: #000000;line-height: 12px;">
+                                            style="margin: 0px;font-family: Helvetica;font-size:10px;color: #000000;line-height: 12px;">
                                             1
                                         </p>
                                     </td>
                                     <td style="padding:5px 10px;">
                                         <p
-                                            style="margin: 0px;font-family: Helvetica;font-size:8px;color: #000000;line-height: 12px;">
+                                            style="margin: 0px;font-family: Helvetica;font-size:10px;color: #000000;line-height: 12px;">
                                             {{ site_currency() . number_format($product['unit_price'], 2) }}
                                         </p>
                                     </td>
                                     <td style="padding:5px 10px;" align="right">
                                         <p
-                                            style="margin: 0px;font-family: Helvetica;font-size:8px;color: #000000;line-height: 12px;">
+                                            style="margin: 0px;font-family: Helvetica;font-size:10px;color: #000000;line-height: 12px;">
                                             {{ site_currency() . number_format($product['unit_price'], 2) }}
                                         </p>
                                     </td>
@@ -193,13 +215,13 @@
                                 <tr>
                                     <td colspan="3" style="padding:5px 10px;">
                                         <p
-                                            style="margin: 0px;font-family: Helvetica;font-size:8px;color: #000000;line-height: 12px;">
+                                            style="margin: 0px;font-family: Helvetica;font-size:10px;color: #000000;line-height: 12px;">
                                             SUBTOTAL
                                         </p>
                                     </td>
                                     <td colspan="2" align="right" style="padding:5px 10px;">
                                         <p
-                                            style="margin: 0px;font-family: Helvetica;font-size:8px;color: #000000;line-height: 12px;">
+                                            style="margin: 0px;font-family: Helvetica;font-size:10px;color: #000000;line-height: 12px;">
                                             {{ site_currency() . number_format($invoice_amount + $discount_amount, 2) }}
                                         </p>
                                     </td>
@@ -207,13 +229,13 @@
                                 <tr>
                                     <td colspan="3" style="padding:5px 10px;">
                                         <p
-                                            style="margin: 0px;font-family: Helvetica;font-size:8px;color: #000000;line-height: 12px;">
+                                            style="margin: 0px;font-family: Helvetica;font-size:10px;color: #000000;line-height: 12px;">
                                             DISCOUNT
                                         </p>
                                     </td>
                                     <td colspan="2" align="right" style="padding:5px 10px;">
                                         <p
-                                            style="margin: 0px;font-family: Helvetica;font-size:8px;color: #000000;line-height: 12px;">
+                                            style="margin: 0px;font-family: Helvetica;font-size:10px;color: #000000;line-height: 12px;">
                                             {{ site_currency() . number_format($discount_amount, 2) }}
                                         </p>
                                     </td>
@@ -250,7 +272,7 @@
                                 </tr>
                                 <tr style="height: 10px;"></tr>
                                 <tr>
-                                    <td style="background:#C1A064;height:30px;">
+                                    <td style="background:#C1A064;height:31px;">
 
                                     </td>
                                 </tr>

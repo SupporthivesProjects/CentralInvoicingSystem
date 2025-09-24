@@ -7,7 +7,8 @@
 
 
     {{-- Main Row --}}
-    <tr class="product-row align-middle" id="product-main-row-{{ $index + 1 }}" data-bs-toggle="collapse"
+    <!-- Add data-bs-toggle="collapse" for expand each list -->
+    <tr class="product-row align-middle" id="product-main-row-{{ $index + 1 }}" data-bs-toggle=""
         data-bs-target="#collapse-{{ $index + 1 }}" aria-expanded="false" aria-controls="collapse-{{ $index + 1 }}"
         style="cursor: pointer;">
         <td class="text-center">
@@ -24,8 +25,9 @@
         <td>{{ $index + 1 }}</td>
         <td>
             {{ $product->name }}
-            @if ($site->site_link && $product->slug)
-                <a href="{{ $site->site_link }}games" target="_blank">🔗</a>
+            @if ($product->slug)
+            {{-- M --}}
+                <a href="{{ $site->site_link.'games/'.$product->slug }}" target="_blank"><i class="bi bi-box-arrow-up-right ms-1"></i></a>
             @endif
             <input form="generate-invoice-form" type="hidden" name="products[{{ $product->id }}][name]"
                 value="{{ $product->name }}">

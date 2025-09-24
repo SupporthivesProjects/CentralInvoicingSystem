@@ -25,7 +25,7 @@
         <tr>
             <td align="center">
                 <table width="100%"  cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
-                    style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
+                    style="border-collapse: collapse; box-shadow: none">
                     <!-- Header -->
                     <tr>
                         <td style="padding: 0px;max-height: 130px; height:20%">
@@ -277,7 +277,7 @@
         <table width="100%" cellspacing="0" cellpadding="0" border="0">
             <tr style="background: url('{{ $invoice_footer_image }}') no-repeat center; background-size: cover;">
                 <td style="text-align:center; height: 45px;">
-                    <p style="font-family: arial; font-size: 10px; font-weight: 700; color: whitesmoke;">
+                    <p style="font-family: arial; font-size: 10px; font-weight: 700; color: whitesmoke; color: black; margin-top: -50px;">
                         {{ $site_name }} | {{ $company_email }} | {{ $site->site_link }}
                     </p>
                 </td>

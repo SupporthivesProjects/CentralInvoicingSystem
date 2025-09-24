@@ -14,11 +14,11 @@
 <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #ffffff;">
 
     <!-- Outer Table with Background -->
-    <table width="100vw" cellpadding="0" cellspacing="0">
+    <table width="100%" cellpadding="0" cellspacing="0">
         <tr>
             <td align="center" style="background: url('{{ $invoice_image1 }}') no-repeat; background-size:100% 100%;background-position:center;padding: 30px 0px 125px 0px;">
                 <!-- White Box Container -->
-                <table width="100%" cellpadding="0" cellspacing="0" style="padding: 30px 25px;margin-top: 50px;">
+                <table width="100%" cellpadding="0" cellspacing="0" style="padding: 30px 25px;margin-top:70px;">
 
                     <!-- Invoice Header -->
                     <tr>
@@ -158,7 +158,7 @@
                     </tr>
 
                     <!-- Footer -->
-                    <tr>
+                    <tr style="margin-bottom:100px;">
                         <td style="text-align: center; font-size: 10px; color: #555; padding-top: 10px;">
                             {{ $company_email }} <span style="color: red; padding: 0px 10px;">|</span>
                             {{ $site->site_name }}

@@ -43,6 +43,7 @@
                                 <tr
                                     style="color: #0a0033; font-weight: bold; border-bottom: 2px solid #ffd75f;font-size: 9px;">
                                     {{-- <th align="left">DESCRIPTION</th> --}}
+                                    <th align="center"></th>
                                     <th align="center">UNIT PRICE</th>
                                     <th align="center">QTY</th>
                                     <th align="right">TOTAL</th>
@@ -72,7 +73,7 @@
                                                 2025</strong></div>
                                         {{-- <div style="margin-bottom: 20px;"><strong>Online Payment</strong><br>Visa or
                                             Mastercard</div> --}}
-                                        <div><strong>BILL FROM:</strong><br><strong>{{ $company_name }} <br>
+                                        <div><strong>BILL FROM:</strong><br><strong>Content At A Flash<br>
                                                 </strong></div>
                                     </td>
                                 </tr>
