@@ -48,9 +48,6 @@ $(function (e) {
     // file export datatable
     $('#file-export').DataTable({
         dom: 'lBfrtip',  // Added 'l' to show page length dropdown
-        buttons: [
-            'copy', 'csv', 'excel', 'pdf', 'print'
-        ],
         language: {
             searchPlaceholder: 'Search...',
             sSearch: '',
@@ -63,7 +60,6 @@ $(function (e) {
     $('#websites-datatables').DataTable({
         dom: 'lBfrtip',  // Added 'l' to show page length dropdown
         order: [[0, 'desc']],
-        buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
         language: {
             searchPlaceholder: 'Search...',
             sSearch: '',

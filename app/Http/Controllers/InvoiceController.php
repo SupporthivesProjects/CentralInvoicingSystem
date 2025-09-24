@@ -18,6 +18,7 @@ use Illuminate\Database\Schema\Blueprint;
 
 
 use App\Http\Controllers\BusinessModels\EcommerceController;
+use App\Http\Controllers\BusinessModels\CalligraphyController;
 use App\Http\Controllers\BusinessModels\ContentWritingController;
 use App\Http\Controllers\BusinessModels\MarketingController;
 use App\Http\Controllers\BusinessModels\GamingSiteController;
@@ -390,6 +391,8 @@ class InvoiceController extends Controller
         switch ($modelType) {
             case 'ecommerce':
                 return app(EcommerceController::class)->$method($request);
+            case 'calligraphy':
+                return app(CalligraphyController::class)->$method($request);
             case 'contentwriting':
                 return app(ContentWritingController::class)->$method($request);
             case 'marketing':
