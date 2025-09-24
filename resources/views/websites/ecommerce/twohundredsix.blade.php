@@ -2,7 +2,8 @@
 <html>
 
 <head>
-    <title>getdevving</title>
+    <!-- <title>getdevving</title> -->
+    <title>{{ $site_name }} #{{ $invoice_number }}</title>
 </head>
 
 <body style="margin: 0px; padding: 0px;">
@@ -47,7 +48,7 @@
 
                     <!-- Content -->
                         <tr> 
-                            <td style="padding:40px;padding-top:0px;background: url(img/body_bg.png) no-repeat;background-position: center;background-size: cover;height:773px; font-family: 'arial'; font-size: 9px; vertical-align: top;">
+                            <td style="padding:40px;padding-top:0px;background: url(img/body_bg.png) no-repeat;background-position: center;background-size: cover;height:778px; font-family: 'arial'; font-size: 9px; vertical-align: top;">
                                 <br>
                                 <table width="100%" border="1" cellspacing="0" cellpadding="8"
                                     style="border-collapse: collapse; text-align: center;">
@@ -60,42 +61,11 @@
                                     @foreach($products as $product)
                                     <tr>
                                         <td>1</td>
-                                        <td align="left">Master HTML 5 Video</td>
+                                        <td align="left">{{ $product->name  }}</td>
                                         <td align="right">{{ site_currency() }}{{ number_format($product->unit_price, 2) }}</td>
                                         <td align="right">{{ number_format($invoice_amount, 2) }}</td>
                                     </tr>
                                     @endforeach
-                                    <!-- Empty rows for spacing -->
-                                    {{-- <tr>
-                                        <td>&nbsp;</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>&nbsp;</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>&nbsp;</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>&nbsp;</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>&nbsp;</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr> --}}
                                 </table>
 
                                 <!-- Totals Section -->

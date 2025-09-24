@@ -160,17 +160,18 @@ class HomeController extends Controller
             return response()->json([]);
         }
 
+        $keyword = strtolower(trim($keyword));
+        $keyword = str_replace(' ', '', $keyword); // remove spaces
         $output = [];
 
         switch ($type) {
             case 'websites':
-                $keyword = strtolower(trim($keyword));
-
-                $results = Website::where('site_name', 'like', '%' . $keyword . '%')
-                    ->orWhere('bank_name', 'like', '%' . $keyword . '%')
-                    ->orWhere('bank_code', 'like', '%' . $keyword . '%')
+                $results = Website::whereRaw("REPLACE(LOWER(site_name), ' ', '') LIKE ?", ["%{$keyword}%"])
+                    ->orWhereRaw("REPLACE(LOWER(bank_name), ' ', '') LIKE ?", ["%{$keyword}%"])
+                    ->orWhereRaw("REPLACE(LOWER(bank_code), ' ', '') LIKE ?", ["%{$keyword}%"])
                     ->limit(10)
                     ->get();
+
                 foreach ($results as $row) {
                     $output[] = [
                         'name' => $row->site_name,
@@ -181,7 +182,10 @@ class HomeController extends Controller
                 break;
 
             case 'business_models':
-                $results = BusinessModel::where('name', 'like', '%' . $keyword . '%')->limit(10)->get();
+                $results = BusinessModel::whereRaw("REPLACE(LOWER(name), ' ', '') LIKE ?", ["%{$keyword}%"])
+                    ->limit(10)
+                    ->get();
+
                 foreach ($results as $row) {
                     $output[] = [
                         'name' => $row->name,
@@ -197,6 +201,7 @@ class HomeController extends Controller
 
         return response()->json($output);
     }
+
 
     public function searchResult(Request $request)
     {
