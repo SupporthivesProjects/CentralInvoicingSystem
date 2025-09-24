@@ -1,69 +1,67 @@
 @forelse($products as $index => $product)
-<tr class="product-row">
-    <td class="text-center" >{{ $product->id }}</td>
-    <td>
-        {{ $product->name }} 
-        @if($site->site_link && $product->slug)
-            <a href="{{ $site->site_link }}product/{{ $product->slug }}" target="_blank">🔗</a>
-        @endif
-    </td>
-    <td  class="text-center">{{ site_currency() }}{{ number_format($product->unit_price, 2) }}</td>
-    <td>
-        <div class="input-group d-flex">
-            <span class="input-group-text"  data-bs-toggle="tooltip" title="{{ site_currency_code() }}">{{ site_currency() }}</span>
-            <input  style="display: none;"
-                class="form-check-input border narayan-checkbox border-1 border-primary" 
-                type="checkbox" 
-                name="product_ids[]" 
-                data-unit_price="{{ number_format($product->unit_price, 2, '.', '') }}" 
-                value="{{ $product->id }}" checked>
-            <input 
-                type="text" 
-                class="form-control product-price text-center" 
-                value="{{ number_format($product->unit_price, 2, '.', '') }}" 
-                data-product-id="{{ $product->id }}"
-                {{ $product->can_edit_price == 0 ? 'readonly' : '' }}  
-                aria-label="Amount (to the nearest dollar)"
-            >
-            <span class="input-group-text d-flex align-items-center">
-                <i 
-                    class="{{ $product->can_edit_price == 0 ? 'fas fa-lock text-muted' : 'fas fa-edit' }}" 
-                    style="font-size: 12px;" 
-                    data-bs-toggle="tooltip"  
-                    data-bs-placement="top"
-                    title="{{
-                        $product->can_edit_price == 0 
-                            ? 'Price update allowed after ' . $product->remaining_days . ' days.' 
-                            : 'Editable'
-                    }}"
-                ></i>
-            </span>
-        </div>
-    </td>
-   
-    <td class="text-center">
-        <button class="remove-product btn btn-danger btn-sm" data-product-name="{{ $product->name }}"  data-product-id="{{ $product->id }}" data-bs-toggle="tooltip" title="Remove Product">
-        <i class="fa fa-trash"></i>
-        </button>
-    </td>
+    <tr class="product-row">
+        <td class="text-center">{{ $product->id }}</td>
+        <td>
+            {{ $product->name }}
+            @if ($site->site_link && $product->slug)
+                <a href="{{ $site->site_link }}product/{{ $product->slug }}" target="_blank">🔗</a>
+            @endif
+        </td>
+        <td class="text-center">{{ site_currency() }}{{ number_format($product->unit_price, 2) }}</td>
+        <td>
+            <div class="input-group d-flex">
+                <span class="input-group-text" data-bs-toggle="tooltip"
+                    title="{{ site_currency_code() }}">{{ site_currency() }}</span>
+                <input style="display: none;" class="form-check-input border narayan-checkbox border-1 border-primary"
+                    type="checkbox" name="product_ids[]"
+                    data-unit_price="{{ number_format($product->unit_price, 2, '.', '') }}" value="{{ $product->id }}"
+                    checked>
+                <input type="text" class="form-control product-price text-center"
+                    value="{{ number_format($product->unit_price, 2, '.', '') }}"
+                    data-product-id="{{ $product->id }}" {{ $product->can_edit_price == 0 ? 'readonly' : '' }}
+                    aria-label="Amount (to the nearest dollar)">
+                <span class="input-group-text d-flex align-items-center">
+                    <i class="{{ $product->can_edit_price == 0 ? 'fas fa-lock text-muted' : 'fas fa-edit' }}"
+                        style="font-size: 12px;" data-bs-toggle="tooltip" data-bs-placement="top"
+                        title="{{ $product->can_edit_price == 0
+                            ? 'Price update allowed after ' . $product->remaining_days . ' days.'
+                            : 'Editable' }}"></i>
+                </span>
+            </div>
+        </td>
 
-</tr>
+        <td class="text-center">
+            <!--Add a dropdown with urgency-select class-->
+            <select class="form-select form-select-sm urgency-select" aria-label="Urgency"
+                data-product-id="{{ $product->id }}">
+                <option value="standard">Standard 5-7 days</option>
+                <option value="urgent">Urgent 2-3 days (+35)</option>
+            </select>
+        </td>
+
+        <td class="text-center">
+            <button class="remove-product btn btn-danger btn-sm" data-product-name="{{ $product->name }}"
+                data-product-id="{{ $product->id }}" data-bs-toggle="tooltip" title="Remove Product">
+                <i class="fa fa-trash"></i>
+            </button>
+        </td>
+
+    </tr>
 @empty
-<tr>
-    <td colspan="7" class="text-center text-muted py-3 border-top">
-        No results found. Try randomizing or use a different keyword.
-    </td>
-</tr>
+    <tr>
+        <td colspan="7" class="text-center text-muted py-3 border-top">
+            No results found. Try randomizing or use a different keyword.
+        </td>
+    </tr>
 @endforelse
 
-<script>    
-
+<script>
     $(document).ready(function() {
         $(document).off('click', '.remove-product').on('click', '.remove-product', function() {
             var $button = $(this);
             var productId = $button.data('product-id');
             var productName = $button.data('product-name');
-        
+
             Swal.fire({
                 title: 'Remove Product?',
                 text: `Are you sure you want to remove '${productName}' product?`,
@@ -84,11 +82,12 @@
                     $('.remove-product').prop('disabled', true);
                     $button.html('<i class="fas fa-spinner fa-spin"></i>');
                     $('#current_amount').val('Recalculating...');
-                    $('#discount_amount').prop('type', 'text').val('Recalculating...').prop('readonly', true);
+                    $('#discount_amount').prop('type', 'text').val('Recalculating...').prop(
+                        'readonly', true);
                     $('#current_amount').removeClass('text-danger text-success');
                     $('#discount_amount').removeClass('text-danger text-success');
                     $('#invoice_amount').removeClass('text-danger text-success');
-            
+
                     $.ajax({
                         url: "{{ route('remove.product') }}",
                         method: 'POST',
@@ -99,36 +98,144 @@
                         },
                         success: function(response) {
                             $button.html('<i class="fas fa-check-square"></i>');
-                            $button.removeClass('btn-danger').addClass('btn-success');
-                            $('#randomize-product-table-body').html(response.tableRows);
-                            toastr.success('Product has been removed successfully.','Product Removed');
-                            $('#discount_amount').prop('readonly', false).prop('type', 'number');
+                            $button.removeClass('btn-danger').addClass(
+                                'btn-success');
+                            $('#randomize-product-table-body').html(response
+                                .tableRows);
+                            toastr.success('Product has been removed successfully.',
+                                'Product Removed');
+                            $('#discount_amount').prop('readonly', false).prop(
+                                'type', 'number');
                             calculateTotalPrice();
 
                             setTimeout(() => {
-                                $button.html('<i class="fas fa-trash-alt"></i>');
-                                $button.removeClass('btn-success').addClass('btn-danger');
+                                $button.html(
+                                    '<i class="fas fa-trash-alt"></i>');
+                                $button.removeClass('btn-success').addClass(
+                                    'btn-danger');
                             }, 2000);
                         },
                         error: function() {
                             $('.remove-product').prop('disabled', false);
                             $button.html('<i class="fas fa-trash-alt"></i>');
-                            $button.removeClass('btn-success').addClass('btn-danger');
+                            $button.removeClass('btn-success').addClass(
+                                'btn-danger');
                             calculateTotalPrice();
-                            toastr.error('Error removing product. Please try again.');
+                            toastr.error(
+                                'Error removing product. Please try again.');
                         },
                         complete: function() {
-                       
-                        $('.remove-product').prop('disabled', false);
-                        setTimeout(() => {
-                            $button.html('<i class="fas fa-trash-alt"></i>');
-                            $button.removeClass('btn-success').addClass('btn-danger');
-                        }, 1000);
-                    }
+
+                            $('.remove-product').prop('disabled', false);
+                            setTimeout(() => {
+                                $button.html(
+                                    '<i class="fas fa-trash-alt"></i>');
+                                $button.removeClass('btn-success').addClass(
+                                    'btn-danger');
+                            }, 1000);
+                        }
                     });
                 }
             });
         });
     });
+</script>
+<script>
+    $(document).ready(function() {
+        // Handle urgency dropdown changes
+        $(document).off('change', '.urgency-select').on('change', '.urgency-select', function() {
+            var $select = $(this);
+            var $row = $select.closest('tr.product-row');
+            var urgencyValue = $select.val();
 
+            // Get the original unit price from the checkbox data attribute
+            var $checkbox = $row.find('input[name="product_ids[]"]');
+            var originalUnitPrice = parseFloat($checkbox.data('unit_price'));
+
+            // Get the editable price input
+            var $editableInput = $row.find('.product-price');
+            var currentEditablePrice = parseFloat($editableInput.val()) || 0;
+
+            // Get the unit price display cell
+            var $unitPriceCell = $row.find('td').eq(2); // Third column (index 2)
+
+            // Calculate urgency fee
+            var urgencyFee = (urgencyValue === 'urgent') ? 35 : 0;
+
+            // Calculate new prices
+            var newUnitPrice = originalUnitPrice + urgencyFee;
+            var newEditablePrice = originalUnitPrice + urgencyFee; // Reset to base price + urgency
+
+            // Update unit price display
+            $unitPriceCell.html(site_currency() + number_format(newUnitPrice, 2));
+
+            // Update editable price input (only if the field is not readonly)
+            if (!$editableInput.prop('readonly')) {
+                $editableInput.val(number_format(newEditablePrice, 2, '.', ''));
+            }
+
+            // Store the urgency fee in a data attribute for future calculations
+            $row.data('urgency-fee', urgencyFee);
+
+            // Trigger calculation update if you have a total calculation function
+            if (typeof calculateTotalPrice === 'function') {
+                calculateTotalPrice();
+            }
+
+            // Optional: Show a brief indication of the price change
+            if (urgencyFee > 0) {
+                $unitPriceCell.addClass('text-warning');
+                $editableInput.addClass('border-warning');
+                setTimeout(function() {
+                    $unitPriceCell.removeClass('text-warning');
+                    $editableInput.removeClass('border-warning');
+                }, 2000);
+            }
+        });
+
+        // Handle manual price edits (preserve urgency fee)
+        $(document).off('input', '.product-price').on('input', '.product-price', function() {
+            var $input = $(this);
+            var $row = $input.closest('tr.product-row');
+            var urgencyFee = $row.data('urgency-fee') || 0;
+
+            // You might want to add validation here to ensure the price doesn't go below original + urgency fee
+            // This depends on your business logic requirements
+
+            // Trigger total calculation
+            if (typeof calculateTotalPrice === 'function') {
+                calculateTotalPrice();
+            }
+        });
+    });
+
+    // Helper function to format numbers (if not already available)
+    function number_format(number, decimals = 2, dec_point = '.', thousands_sep = ',') {
+        number = (number + '').replace(/[^0-9+\-Ee.]/g, '');
+        var n = !isFinite(+number) ? 0 : +number,
+            prec = !isFinite(+decimals) ? 0 : Math.abs(decimals),
+            sep = (typeof thousands_sep === 'undefined') ? ',' : thousands_sep,
+            dec = (typeof dec_point === 'undefined') ? '.' : dec_point,
+            s = '',
+            toFixedFix = function(n, prec) {
+                var k = Math.pow(10, prec);
+                return '' + Math.round(n * k) / k;
+            };
+        s = (prec ? toFixedFix(n, prec) : '' + Math.round(n)).split('.');
+        if (s[0].length > 3) {
+            s[0] = s[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, sep);
+        }
+        if ((s[1] || '').length < prec) {
+            s[1] = s[1] || '';
+            s[1] += new Array(prec - s[1].length + 1).join('0');
+        }
+        return s.join(dec);
+    }
+
+    // Helper function to get currency symbol (if not already available globally)
+    function site_currency() {
+        // This should match your Laravel helper function
+        // You might need to pass this from your blade template or make it available globally
+        return '$'; // Replace with your actual currency symbol or make it dynamic
+    }
 </script>
