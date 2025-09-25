@@ -59,8 +59,15 @@
                                             style="font-size: 20px; font-family: 'Lato ExtraBold'; font-weight: bold; margin: 0%;">{{ $customer_name }}</span>
                                     </td>
                                     <td align="right" style="color: white;">
-                                        <div style="font-size: 12px; text-align: center;">Total Due</div>
-                                        <div style="font-size: 30px; color: #FFD700; font-weight: bold; margin-right: 51px;">{{ site_currency() . number_format($invoice_amount, 2) }}</div>
+                                        <!-- <div style="font-size: 12px; text-align: center;">Total Due</div>
+                                        <div style="font-size: 30px; color: #FFD700; font-weight: bold; margin-right: 51px;">{{ site_currency() . number_format($invoice_amount, 2) }}</div> -->
+                                        <div style="text-align: center; font-size: 12px;">
+                                            <span>Total Due </span>
+                                            <span style="font-size: 30px; color: #FFD700; font-weight: bold; margin-left: 10px;">
+                                                {{ site_currency() . number_format($invoice_amount, 2) }}
+                                            </span>
+                                        </div>
+
                                     </td>
                                 </tr>
                             </table>

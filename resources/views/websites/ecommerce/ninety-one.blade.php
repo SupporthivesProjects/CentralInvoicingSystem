@@ -5,12 +5,18 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+<style>
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+    </style>
 </head>
 <body>
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
-            <td align="center" bgcolor="#f2f2f2" style="padding: 20px 0;">
-                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
+            <td align="center" bgcolor="#f2f2f2" >
+                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse; ">
                      <!---header--->
                     <tr>
                         <td align="center" style="height:140px;background:url('{{ $invoice_header_image }}');background-size: cover;background-repeat: no-repeat;background-position: center;">
@@ -32,9 +38,9 @@
                     <!-- Content -->
                     <tr style="background:#ffff ;">
                         <td style="padding:0px;">
-                            <div style="min-height: 540px !important;">
-                            <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;">
-                                <tr>
+                            <div style="min-height: 980px !important;">
+                            <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;min-height: 980px !important;">
+                                <tr style="min-height: 980px !important;">
                                     <td style="width:20px;"></td>
                                     <td align="center" style="vertical-align: top;">
                                        <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;">
@@ -127,7 +133,7 @@
                                        </table>
                                     </td>
                                     <td style="width:20px;"></td>
-                                    <td align="center" style="vertical-align: top;width:200px;height:100%;background:url('{{ $invoice_image2 }}');background-size: cover;background-repeat: no-repeat;background-position: center;border-top: 1px solid black;padding: 20px 0px 0px 20px;">
+                                    <td align="center" style="min-height: 900px;vertical-align: top;width:200px;height:100%;background:url('{{ $invoice_image2 }}');background-size: cover;background-repeat: no-repeat;background-position: center;border-top: 1px solid black;padding: 20px 0px 0px 20px;">
                                         <table width="100%">
                                         <tr>
                                             <td>

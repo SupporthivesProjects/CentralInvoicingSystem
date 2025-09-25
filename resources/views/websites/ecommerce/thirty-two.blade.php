@@ -83,13 +83,13 @@
                                 <tr>
                                     <td style="width: 100%;">
                                         <p
-                                            style="font-family: arial;font-size: 10px;margin: 0px;font-weight: 400; margin-bottom:5px;">
+                                            style="font-family: arial;font-size: 14px;margin: 0px;font-weight: 400; margin-bottom:5px;">
                                             <b
-                                                style="font-family: arial;font-size: 10px;margin: 0px;font-weight: 700;"><b>Date:</b></b>
+                                                style="font-family: arial;font-size: 14px;margin: 0px;font-weight: 700;"><b>Date:</b></b>
                                             {{ $invoice_date }}
                                         </p>
-                                        <p style="font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;">
-                                            <b style="font-family: arial;font-size: 10px;margin: 0px;font-weight: 700;"><b>Invoice
+                                        <p style="font-family: arial;font-size: 14px;margin: 0px;font-weight: 400;">
+                                            <b style="font-family: arial;font-size: 14px;margin: 0px;font-weight: 700;"><b>Invoice
                                                     Number:</b></b> #{{ $invoice_number }}
                                         </p>
                                     </td>
@@ -103,17 +103,17 @@
                                 <tr>
                                     <td style="padding-top: 30px;">
                                         <p
-                                            style="font-family: arial;font-size:15px;margin: 0px;font-weight: 400; margin-bottom: 5px;">
-                                            Billed From:</p>
-                                        <p style="font-family: arial;font-size:10px;margin: 0px;font-weight: 400;">
+                                            style="font-family: arial;font-size:17px;margin: 0px;font-weight: 400; margin-bottom: 5px;">
+                                            <b>Billed From:</b></p>
+                                        <p style="font-family: arial;font-size:14px;margin: 0px;font-weight: 400;">
                                             {{ $site_name }}</p>
                                     </td>
                                     <td style="text-align: end; padding-top: 30px;">
                                         <p
-                                            style="font-family: arial;font-size:15px;margin: 0px;font-weight: 400; margin-bottom: 5px;padding-right: 50px">
+                                            style="font-family: arial;font-size:17px;margin: 0px;font-weight: 400; margin-bottom: 5px;padding-right: 50px">
                                             <b>Billed To:</b></p>
                                         <p
-                                            style="font-family: arial;font-size:10px;margin: 0px;font-weight: 400;padding-right: 50px">
+                                            style="font-family: arial;font-size:14x;margin: 0px;font-weight: 400;padding-right: 50px">
                                             {{ $customer_name }}</p>
                                     </td>
                                 </tr>
@@ -129,7 +129,7 @@
                                                             Phone </p>
                                                         <p
                                                             style="font-family: arial;font-size: 15px; margin: 0px; font-weight: 400; margin-bottom: 0px; margin-top: 5px;">
-                                                            {{ $company_phone ?? '00971-547326801' }}
+                                                            {{ $company_mobile ?? 'TBC' }}
                                                         </p>
                                                     </div>
                                                 </td>
@@ -141,7 +141,7 @@
                                                             Address</p>
                                                         <p
                                                             style="font-family: arial;font-size: 15px; margin: 0px; font-weight: 400; margin-bottom: -3px; margin-top: 5px;">
-                                                            {{ $company_address ?? 'N/A' }}
+                                                            {!! $company_address ?? 'N/A' !!}
                                                         </p>
                                                     </div>
                                                 </td>
@@ -160,7 +160,7 @@
                                             </tr>
                                         </tbody>
                                     </table>
-                                    <div style="min-height: 650px !important;">
+                                    <div style="min-height: 635px !important;">
                                         <table class="table-data">
 
                                             <thead>
@@ -178,9 +178,9 @@
                                                         <td>{{ $loop->iteration }}</td>
                                                         <td>{{ $product->name }}</td>
                                                         <td>{{ $product->quantity ?? 1 }}</td>
-                                                        <td>{{ site_currency_code() . number_format($product->unit_price, 2) }}
+                                                        <td>{{  site_currency() }} {{ number_format($product->unit_price, 2) }}
                                                         </td>
-                                                        <td>{{ site_currency_code() . number_format(($product->quantity ?? 1) * $product->unit_price, 2) }}
+                                                        <td>{{  site_currency() }} {{ number_format(($product->quantity ?? 1) * $product->unit_price, 2) }}
                                                         </td>
                                                     </tr>
                                                 @endforeach
@@ -188,20 +188,20 @@
                                                 <tr>
                                                     <td colspan="2" style="border-bottom: 0px;"></td>
                                                     <td colspan="2">Subtotal</td>
-                                                    <td>{{ site_currency_code() . number_format($invoice_amount + $discount_amount, 2) }}
+                                                    <td>{{  site_currency() }} {{  number_format($invoice_amount + $discount_amount, 2) }}
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td colspan="2" style="border-bottom: 0px;"></td>
                                                     <td colspan="2" style="border-bottom: 0px solid;">Discount</td>
                                                     <td style="border-bottom: 0px solid;">
-                                                        {{ site_currency_code() . number_format($discount_amount, 2) }}
+                                                    {{  site_currency() }} {{ number_format($discount_amount, 2) }}
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td colspan="2" style="border-bottom: 0px;"></td>
                                                     <td colspan="2">Grand Total</td>
-                                                    <td>{{ site_currency_code() . number_format($invoice_amount, 2) }}
+                                                    <td>{{  site_currency() }} {{ number_format($invoice_amount, 2) }}
                                                     </td>
                                                 </tr>
 
@@ -213,12 +213,9 @@
                                 <tr>
                                     <td
                                         style="background: url('{{ $invoice_footer_image }}')no-repeat; background-size:  cover; height: 120px; background-position:  center center;">
-                                        <p
-                                            style="text-align: left;font-family: arial;font-size: 10px;margin-left: 50px;margin-top: 10px; font-weight:700;color:whitesmoke;">
-                                            Sharahla Solutions FZ-LLC<br>FDRK5710 Compass Building,<br>
-                                            Al Shohada Road, AL Hamra Industrial Zone-FZ,<br> Ras Al Khaimah, United
-                                            Arab Emirates.<br>
-                                            Trading No. 45002243
+                                        <p style="text-align: left;font-family: arial;font-size: 10px;margin-left: 50px;margin-top: 10px; font-weight:700;color:whitesmoke;">
+                                            <br>{{ $company_name }}<br> {!! $company_address !!}
+                                            {{ $site->registration_number }}
                                         </p>
                                     </td>
                                 </tr>
