@@ -20,7 +20,7 @@
                     <tr>
                         <td style="padding:0px;">
                             <table
-                                style="background: url({{ $invoice_header_image }});background-repeat: no-repeat;background-size: cover;margin: auto; display: block;height:200px;width: 100%;border-collapse: collapse;">
+                                style="background: url({{ $invoice_header_image }});background-repeat: no-repeat;background-size: cover;margin: auto; display: block;height:200px;width: 100%;border-collapse: collapse;z-index: 9999999;">
                                 <tr style="vertical-align: bottom;">
                                     <td style="padding: 0px;">
                                         <div
