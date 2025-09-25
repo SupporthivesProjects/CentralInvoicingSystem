@@ -195,7 +195,7 @@
                         </tr>
                       
                         <tr>
-                            <td style="width: 100%; padding: 0px 100px 100px;height:400px;">
+                            <td style="width: 100%; padding: 0px 100px 100px;height:400px;vertical-align:top;">
                                 <table class="table-invioce-list">
                                     <thead>
                                         <tr>
