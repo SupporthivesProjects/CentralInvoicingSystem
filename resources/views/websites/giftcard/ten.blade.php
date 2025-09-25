@@ -24,7 +24,7 @@
                                 <tr style="vertical-align: bottom;">
                                     <td style="padding: 0px;">
                                         <div
-                                            style="background:#1F2139;margin-top:107px;height:70px;width: 320px;padding: 10px 0px 10px 40px;display: flex;flex-direction: column;gap: 10px;">
+                                            style="background:#1F2139;margin-top:150px;height:70px;width: 320px;padding: 10px 0px 10px 40px;display: flex;flex-direction: column;gap: 10px;">
                                             <h1
                                                 style="color: #ffff;font-family: Poppins SemiBold;font-size: 36px;font-weight: 600px;margin: 0px;text-transform: uppercase;">
                                                 Invoice
@@ -82,7 +82,7 @@
                                     </div>
                                 </td>
                             </table>
-                            <div style="min-height: 650px !important;">
+                            <div style="min-height: 400px !important;">
                                 <table cellspacing="0" cellpadding="0" border="0" width="100%"
                                     style="border-collapse: collapse;margin-top:40px;">
                                     <tr style="height:40px;background:#1F2139 ;">
