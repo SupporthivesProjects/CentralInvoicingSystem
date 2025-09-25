@@ -39,16 +39,16 @@
 
                             <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 10px; color: #444; margin-top: 30px;">
                                 <tr style="border-bottom: 1px solid #527ba0;">
-                                  <th style="width: 50%; padding-bottom: 5px; font-variant: small-caps; color: #0070C0; text-align: center;font-size: 16px;">Billed To</th>
-                                  <th style="width: 50%; padding-bottom: 5px; font-variant: small-caps; color: #0070C0; text-align: center;font-size: 16px;">Billed From</th>
+                                  <th style="width: 50%; padding-bottom: 5px; font-variant: small-caps; color: #0070C0; text-align: center;font-size: 14px;">Billed To</th>
+                                  <th style="width: 50%; padding-bottom: 5px; font-variant: small-caps; color: #0070C0; text-align: center;font-size: 14px;">Billed From</th>
                                 </tr>
                                 <tr>
-                                  <td style="text-align: center; padding-top: 8px; vertical-align: top;font-size: 16px;">{{ $customer_name }}</td>
-                                  <td style="text-align: center; padding-top: 8px;vertical-align: top;font-size: 16px;">
+                                  <td style="text-align: center; padding-top: 8px; vertical-align: top;font-size: 14px;">{{ $customer_name }}</td>
+                                  <td style="text-align: center; padding-top: 8px;vertical-align: top;font-size: 14px;">
                                     {{ $site_name }}<br>
                                     {!! $company_address !!}<br>
                                     {{ $company_mobile }}<br />
-                                    <a href="mailto:{{ $company_email }}" style="color: #0070C0; text-decoration: underline;font-size: 16px;">{{$company_email}}</a>
+                                    <a href="mailto:{{ $company_email }}" style="color: #0070C0; text-decoration: underline;font-size: 14px;">{{$company_email}}</a>
                                   </td>
                                 </tr>
                               </table>
@@ -63,30 +63,30 @@
                                 </tr>
                                 @foreach($products as $product)
                                 <tr style="border-bottom: 1px solid #ddd;">
-                                    <td style="padding: 10px;font-size: 16px;">1</td>
-                                    <td style="padding: 10px;font-size: 16px;">{{$product->name}}</td>
-                                    <td style="padding: 10px; text-align: right;font-size: 16px;">{{ site_currency() . number_format($product->unit_price, 2) }}</td>
-                                    <td style="padding: 10px; text-align: right;font-size: 16px;">{{ site_currency() . number_format($product->unit_price, 2) }}</td>
+                                    <td style="padding: 10px;font-size: 14px;">1</td>
+                                    <td style="padding: 10px;font-size: 14px;">{{$product->name}}</td>
+                                    <td style="padding: 10px; text-align: right;font-size: 14px;">{{ site_currency() . number_format($product->unit_price, 2) }}</td>
+                                    <td style="padding: 10px; text-align: right;font-size: 14px;">{{ site_currency() . number_format($product->unit_price, 2) }}</td>
                                 </tr>
                                 @endforeach
                             </table>
 
                             <table style="width: 300px;font-size: 10px; border-collapse: collapse; margin-left: auto">
                               <tr style="border-bottom: 1px solid #ccc;">
-                                <td style="padding: 8px; font-weight: bold; color: #666; font-variant: small-caps;font-size: 16px;">Subtotal</td>
-                                <td style="padding: 8px; text-align: right; color: #666;font-size: 16px;">
+                                <td style="padding: 8px; font-weight: bold; color: #666; font-variant: small-caps;font-size: 14px;">Subtotal</td>
+                                <td style="padding: 8px; text-align: right; color: #666;font-size: 14px;">
                                   {{ site_currency() . number_format($invoice_amount + $discount_amount, 2) }}
                                 </td>
                               </tr>
                               <tr style="border-bottom: 1px solid #999;">
-                                <td style="padding: 8px; font-weight: bold; color: #666; font-variant: small-caps;font-size: 16px;">Discount</td>
-                                <td style="padding: 8px; text-align: right; color: #666;font-size: 16px;">
+                                <td style="padding: 8px; font-weight: bold; color: #666; font-variant: small-caps;g">Discount</td>
+                                <td style="padding: 8px; text-align: right; color: #666;font-size: 14px;">
                                   {{ site_currency() . number_format($discount_amount, 2) }}
                                 </td>
                               </tr>
                               <tr style="border-bottom: 1px solid #999;">
-                                <td style="padding: 10px; font-weight: bold; color: #0070C0; font-variant: small-caps; font-size: 16px;">Total</td>
-                                <td style="padding: 10px; text-align: right; color: #0070C0; font-size: 16px; font-weight: bold;">
+                                <td style="padding: 10px; font-weight: bold; color: #0070C0; font-variant: small-caps; font-size: 14px;">Total</td>
+                                <td style="padding: 10px; text-align: right; color: #0070C0; font-size: 14px; font-weight: bold;">
                                   {{ site_currency() . number_format($invoice_amount, 2) }}
                                 </td>
                               </tr>
