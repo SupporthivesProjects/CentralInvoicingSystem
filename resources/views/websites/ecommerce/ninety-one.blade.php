@@ -38,7 +38,7 @@
                     <!-- Content -->
                     <tr style="background:#ffff ;">
                         <td style="padding:0px;">
-                            <div style="min-height: 650px !important;">
+                            <div style="height: 900px !important;">
                             <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;">
                                 <tr>
                                     <td style="width:20px;"></td>
