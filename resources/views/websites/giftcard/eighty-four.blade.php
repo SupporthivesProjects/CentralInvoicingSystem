@@ -52,7 +52,7 @@
                                   </td>
                                 </tr>
                               </table>
-                              <div style="min-height: 610px !important;">
+                              <div style="min-height: 580px !important;">
                             <table
                                 style="width: 100%; border-collapse: collapse; font-size: 10px; margin-top: 30px;">
                                 <tr style="background-color: #0070C0; color: white;">
