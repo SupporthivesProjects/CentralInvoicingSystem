@@ -132,7 +132,7 @@
 <body>
     <table width="100%" class="maintable" cellspacing="0" cellpadding="0" border="0" style="margin: auto;">
         <tr>
-            <td style="height:100vh;">
+            <td style="height:100vh;vertical-align:top;">
                 <table  width="100%" cellspacing="0" cellpadding="0" border="0"  style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
                 
                     <tbody>
@@ -195,7 +195,7 @@
                         </tr>
                       
                         <tr>
-                            <td style="width: 100%; padding: 0px 100px 100px;">
+                            <td style="width: 100%; padding: 0px 100px 100px;height:500px;">
                                 <table class="table-invioce-list">
                                     <thead>
                                         <tr>
