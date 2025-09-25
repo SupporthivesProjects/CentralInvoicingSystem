@@ -158,9 +158,9 @@
                                                                 <div>
                                                                     <h5>BILLED FROM:</h5>
                                                                     <p>
-                                                                     {{ $site_name }} 
+                                                                      Green 3 creations
                                                                     </p>
-                                                                    <p>{{ $site->site_link }} </p>
+                                                                    <p>{{ $site_name }}</p>
                                                                 </div>
                                                             </td>
                                                         </tr>
