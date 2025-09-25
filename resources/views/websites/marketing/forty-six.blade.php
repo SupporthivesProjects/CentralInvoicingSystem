@@ -132,7 +132,7 @@
 <body>
     <table width="100%" class="maintable" cellspacing="0" cellpadding="0" border="0" style="margin: auto;">
         <tr>
-            <td>
+            <td style="height:100vh;">
                 <table  width="100%" cellspacing="0" cellpadding="0" border="0"  style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
                 
                     <tbody>
@@ -173,7 +173,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td style="width: 100%; padding: 24px 120px;">
+                            <td style="width: 100%; padding: 24px 100px;">
                                 <table class="table-invioce">
                                     <tbody>
                                         <tr>
