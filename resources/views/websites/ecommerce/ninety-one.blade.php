@@ -38,16 +38,16 @@
                     <!-- Content -->
                     <tr style="background:#ffff ;">
                         <td style="padding:0px;">
-                            <div style="min-height: 900px !important;">
+                            <div>
                             <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;">
-                                <tr>
+                                <tr style="min-height: 1200px !important;">
                                     <td style="width:20px;"></td>
                                     <td align="center" style="vertical-align: top;">
                                        <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;">
                                         <tr style="border-top: 1px solid black;border-bottom:2px solid black;height:30px;">
                                             <td style="width: 50%;padding-left: 10px;">
                                                  <p style="margin: 0px;font-family:Source Sans Pro;font-size:9px;color: #000000;">
-                                                  Productssss
+                                                  Product
                                                 </p>
                                             </td>
                                             <td style="width:20%;" align="center">
