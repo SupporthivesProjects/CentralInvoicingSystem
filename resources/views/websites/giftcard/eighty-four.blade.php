@@ -46,7 +46,7 @@
                                   <td style="text-align: center; padding-top: 8px; vertical-align: top;font-size: 14px;">{{ $customer_name }}</td>
                                   <td style="text-align: center; padding-top: 8px;vertical-align: top;font-size: 14px;">
                                     {{ $site_name }}<br>
-                                    {!! $company_address !!}<br>
+                                    {!! $company_address !!} &nbsp;&nbsp;
                                     {{ $company_mobile }}<br />
                                     <a href="mailto:{{ $company_email }}" style="color: #0070C0; text-decoration: underline;font-size: 14px;">{{$company_email}}</a>
                                   </td>
