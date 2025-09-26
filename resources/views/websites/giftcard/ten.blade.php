@@ -67,13 +67,13 @@
                                     <div style="display: flex;flex-direction: column;align-items:flex-start;justify-content: flex-start;gap: 10px;">
                                         <img src="{{ $company_logo }}" alt=""
                                             style="height:30px;width:70px;margin-right: 90px;">
-                                        <div>
+                                        <div style="padding-left: 4px;">
                                             <h2
                                                 style="color:#000000;font-size: 12px;font-weight:500;font-family: Poppins;margin: 0px;line-height:18px;text-transform:capitalize;">
                                                 {!! $company_address !!}
                                             </h2>
                                             <p
-                                                style="color:#767171;font-size:9px;font-weight:500;font-family: Poppins;margin: 0px;line-height:16px;text-transform:capitalize;">
+                                                style="color:#767171;font-size:9px;font-weight:500;font-family: Poppins;margin: 0px;line-height:16px;">
                                                 <b style="color:#000000;">E:</b> {{ $company_email }}
                                             </p>
                                             <p
