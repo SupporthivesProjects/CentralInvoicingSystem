@@ -78,7 +78,7 @@
                                             </p>
                                             <p
                                                 style="color:#767171;font-size:9px;font-weight:500;font-family: Poppins;margin: 0px;line-height:16px;">
-                                                <b style="color:#000000;">W:</b> {{ $site->site_link }}
+                                                <b style="color:#000000;">W:</b> <a href="{{ $site->site_link }}" style="text-decoration: none;color: #767171;">www.puregiftcard.com</a>
                                             </p>
                                         </div>
                                     </div>
