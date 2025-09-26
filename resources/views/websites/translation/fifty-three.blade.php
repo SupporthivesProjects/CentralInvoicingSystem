@@ -7,6 +7,9 @@
             margin:0px;
             padding:0px;
         }
+        .header-row th {
+            padding: 10px;
+        }
     </style>
 </head>
 <body>
@@ -79,7 +82,7 @@
                             <div style="min-height: 550px !important">
                             <table cellspacing="0" cellpadding="10" style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; margin-top: 30px;">
                                 <!-- Header Row -->
-                                <tr style="background-color: #F265AD; color: white; font-weight: bold; font-size: 11px; padding: 20px 0px">
+                                <tr style="background-color: #F265AD; color: white; font-weight: bold; font-size: 11px;" class="header-row">
                                     <th style="text-align: left;">Description</th>
                                     <th style="text-align: center;">No. Pages/Words</th>
                                     <th style="text-align: center;">Unit Price</th>
