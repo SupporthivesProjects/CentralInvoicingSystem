@@ -2,11 +2,17 @@
 <html>
 <head>
     <title>{{ $site->site_name }} - Invoice #{{ $invoice_number }}</title>
+    <style>
+        *{
+            margin:0px;
+            padding:0px;
+        }
+    </style>
 </head>
 <body>
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
-            <td align="center" bgcolor="#f2f2f2" style="padding: 20px 0;">
+            <td align="center" bgcolor="#f2f2f2">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
                       <!-- Header -->
                       <tr style=" background: url('{{ $invoice_header_image }}');
@@ -70,12 +76,12 @@
                                 </tr>
                             </table>
 
-                            <div style="min-height: 420px !important">
+                            <div style="min-height: 520px !important">
                             <table cellspacing="0" cellpadding="10" style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; margin-top: 30px;">
                                 <!-- Header Row -->
                                 <tr style="background-color: #F265AD; color: white; font-weight: bold; font-size: 11px;">
                                     <th style="text-align: left;">Description</th>
-                                    <th style="text-align: center;">No. Pages</th>
+                                    <th style="text-align: center;">No. Pages/Words</th>
                                     <th style="text-align: center;">Unit Price</th>
                                     <th style="text-align: center;">Total</th>
                                 </tr>
@@ -85,10 +91,10 @@
                                 <tr style="border-bottom: 1px solid #ccc;">
                                     <td style="padding-bottom: 10px; padding-top: 5px;">
                                         <p style="font-weight: normal; font-size: 8px; margin: 0;">{{$product->name}}</p>
-                                        </p><br>
+                                        </p>
                                         <p style="font-weight: normal;font-size: 8px; margin: 0;"><b>From Language:</b>{{ $product->from_language }}</p>
                                         <p style="font-weight: normal;font-size: 8px; margin: 0;"><b>To Language:</b> {{ $product->to_language }}</p>
-                                        </p><br />
+                                        </p>
                                         <p style="font-weight: normal;font-size: 8px; margin: 0;"><b>Urgency:</b> {{ $product->is_urgent ? 'Yes (+' . site_currency() . number_format($product->urgent_amount, 2) . ')' : 'No' }}</p>
                                     </td>
                                     <td style="text-align: center; vertical-align: middle;font-size: 8px; padding: 0;">{{$product->pages}}</td>
