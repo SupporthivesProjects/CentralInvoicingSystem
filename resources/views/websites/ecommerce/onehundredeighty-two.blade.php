@@ -74,8 +74,7 @@
                                                 <td style="font-size:40px; font-weight:bold;">INVOICE</td>
                                                 <td style="text-align:right;">
                                                     <div style="font-size:24px; font-weight:bold;">{{ site_currency() . number_format($invoice_amount, 2) }}</div>
-                                                    <div style="font-size:8px; text-transform:uppercase;">Total Due
-                                                        Amount</div>
+                                                    <div style="font-size:8px; text-transform:uppercase;">TOTAL AMOUNT DUE</div>
                                                 </td>
                                             </tr>
                                         </table>

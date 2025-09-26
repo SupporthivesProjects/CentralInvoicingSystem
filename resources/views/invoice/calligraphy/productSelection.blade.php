@@ -22,7 +22,7 @@
                 <a href="{{ url()->previous() }}" class="btn btn-outline-secondary btn-sm" >
                     <i class="fas fa-arrow-left"></i> Go Back
                 </a>
-               
+
                 </div>
                 </div>
             </div>
@@ -37,7 +37,7 @@
                             <div class="col-md-4 mb-3">
                                 <label class="form-label">Selected Website ({{ $customer['site_id'] }}) <span class="text-danger">*</span></label>
                                 <div class="input-group">
-                                 <span class="input-group-text"><i class="fas fa-globe"></i></span> 
+                                 <span class="input-group-text"><i class="fas fa-globe"></i></span>
                                     <input type="text" form="generate-invoice-form" class="form-control" name="site_name" id="site_name" value="{{ $customer['site_name'] ?? 'N/A' }}" readonly>
                                     <span class="input-group-text" data-bs-toggle="modal" data-bs-target="#sitechangemodel"><i class="fas fa-sync-alt text-primary" style="cursor: pointer;"></i></span>
                                 </div>
@@ -70,8 +70,8 @@
                                         </div>
                                 </div>
                             </div>
-                            
-                           
+
+
                         </div>
 
                         <div class="row">
@@ -82,7 +82,7 @@
                                     <input type="date" form="generate-invoice-form" name="invoice_date" class="form-control" value="{{ $invoice['invoice_date'] ?? now()->toDateString() }}">
                                 </div>
                             </div>
-                           
+
 
                             <div class="col-md-4 mb-3">
                                 <label class="form-label">Customer Email</label>
@@ -245,10 +245,10 @@
                                             </div>
                                         </div>
 
-                                    </div> 
-                                </div> 
+                                    </div>
+                                </div>
                             </div>
-                        </div> 
+                        </div>
                     </div>
                 </div>
             </div>
@@ -261,7 +261,7 @@
                         <div class="input-group mb-3">
                             <span class="input-group-text">{{ site_currency() }}</span>
                             <input type="text" form="generate-invoice-form" id="current_amount" name="current_amount" class="form-control bg-white" value="{{ $current_total ?? '00.00' }}" readonly>
-                            <span class="input-group-text" style="width: 40px;"><i class="fas fa-money-bill-wave"></i></span> 
+                            <span class="input-group-text" style="width: 40px;"><i class="fas fa-money-bill-wave"></i></span>
                         </div>
                     </div>
 
@@ -270,7 +270,7 @@
                         <div class="input-group mb-3">
                             <span class="input-group-text">{{ site_currency() }}</span>
                             <input type="number" form="generate-invoice-form" name="discount_amount" id="discount_amount" class="form-control bg-white" placeholder="Discount Amount" value="0">
-                            <span class="input-group-text" style="width: 40px;"><i class="fas fa-tags"></i></span> 
+                            <span class="input-group-text" style="width: 40px;"><i class="fas fa-tags"></i></span>
                         </div>
                     </div>
 
@@ -279,12 +279,12 @@
                         <div class="input-group mb-3">
                             <span class="input-group-text">{{ site_currency() }}</span>
                             <input form="generate-invoice-form" name="invoice_amount" id="invoice_amount" class="form-control" value="{{ number_format($invoice['invoice_amount'], 2, '.', '') }}" type="number">
-                            <span class="input-group-text" id="update_invoice_amount" style="cursor:pointer;width: 40px;"><i data-feather="edit" id="icon"></i></span> 
+                            <span class="input-group-text" id="update_invoice_amount" style="cursor:pointer;width: 40px;"><i data-feather="edit" id="icon"></i></span>
                         </div>
                     </div>
                 </div>
 
-                   
+
                 </div>
             </div>
             <div class="card custom-card mt-4 border-1 rounded shadow">
@@ -297,28 +297,28 @@
                     <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
                        <!-- Add Products -->
                         <button type="button" class="btn btn-outline-primary d-flex align-items-center gap-1 me-1"
-                                onclick="customizeProducts('onload')" 
+                                onclick="customizeProducts('onload')"
                                 data-bs-toggle="tooltip" title="Add more products manually">
                             <i class="fas fa-plus-square"></i> Add Products
                         </button>
 
                         <!-- Randomize -->
                         <button type="button" class="btn btn-outline-success d-flex align-items-center gap-1 me-1"
-                                onclick="randomizeProducts('semi_random')" 
+                                onclick="randomizeProducts('semi_random')"
                                 data-bs-toggle="tooltip" title="Auto-select products randomly">
                             <i class="fas fa-random"></i> Randomize
                         </button>
 
                         <!-- Clear Filter -->
                         <button type="button" class="btn btn-outline-secondary d-flex align-items-center gap-1 me-1"
-                                onclick="clearRandomizedFilter(this)" 
+                                onclick="clearRandomizedFilter(this)"
                                 data-bs-toggle="tooltip" title="Remove all filters and randomized items">
                             <i class="fa-solid fa-filter-circle-xmark"></i> Clear
                         </button>
 
                         <!-- Generate Invoice -->
                         <button type="button" class="btn btn-primary d-flex align-items-center gap-1 me-1"
-                                onclick="generateInvoice(event)" 
+                                onclick="generateInvoice(event)"
                                 data-bs-toggle="tooltip" title="Generate the invoice for selected products">
                             <i class="bi bi-receipt-cutoff"></i> Generate Invoice
                         </button>
@@ -365,7 +365,7 @@
 
                     </div>
 
-                </div>  
+                </div>
                     <!-- Product Table -->
                     <div class="table-responsive border rounded shadow-sm">
                         <table class="table table-bordered table-hover align-middle mb-0">
@@ -379,6 +379,7 @@
                                         </span>
                                     </th>
                                     <th class="text-center" style="width: 25%;">Editable Price</th>
+                                    <th class="text-center" style="width: 10%;">Urgency</th>
                                     <th class="text-center" style="width: 10%;">Remove</th>
                                 </tr>
                             </thead>
@@ -397,7 +398,7 @@
 <div class="modal fade" id="addmoreproducts" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" >
     <div class="modal-dialog modal-xl modal-dialog-scrollable">
         <div class="modal-content">
-            
+
             <!-- Modal Header -->
             <div class="modal-header bg-white shadow-sm rounded-3 p-3 d-flex align-items-center justify-content-between">
                 <div class="d-flex align-items-center">
@@ -409,7 +410,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
-            
+
             <!-- Modal Body -->
             <div class="modal-body bg-white">
                 <div class="container-fluid">
@@ -425,7 +426,7 @@
                                 <button class="btn btn-light border-0" type="button" title="Voice Search" onclick="startVoiceSearch('customizeKeywordInput','customizeMicIcon')">
                                     <i class="fas fa-microphone text-primary" id="customizeMicIcon"></i>
                                 </button>
-                            
+
                             </div>
                         </div>
                         <div class="col-md-5">
@@ -466,8 +467,8 @@
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="rounded shadow-sm p-2"> 
+
+                    <div class="rounded shadow-sm p-2">
                         <table id="customize-products-table" class="table table-bordered table-hover align-middle mb-0 table-responsive" style="width:100% !important;">
                             <thead class="text-center">
                                 <tr>
@@ -489,7 +490,7 @@
                     </div>
                 </div>
                 </div>
-            
+
             <div class="modal-footer bg-light border-top">
                 <div class="d-flex flex-wrap gap-2">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" >
@@ -511,7 +512,7 @@
 <div class="modal fade" id="sitechangemodel" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 rounded-4 shadow-sm overflow-hidden">
-            
+
             <div class="modal-header bg-primary text-white border-0">
                 <h5 class="modal-title fw-bold" id="siteChangeModalLabel">Want to change website? </h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -552,7 +553,7 @@
 </script>
 <script>
     $(document).ready(function() {
-        $('html, body').animate({ scrollTop: 200 }, 500); 
+        $('html, body').animate({ scrollTop: 200 }, 500);
         $('#current_amount').val('loading...');
         $('#discount_amount').prop('type', 'text').val('loading...').prop('readonly', true);
     });
@@ -597,7 +598,7 @@
     const minUnitPrice = @json($min_unit_price);
     const maxUnitPrice = @json($max_unit_price);
     const currency = "{{ site_currency() }}";
-    
+
     const updateHiddenInputs = (min, max, type) => {
         if (type === 'randomize') {
             $('#hidden_randomize_price_from_input_id').val(min).trigger('input');
@@ -613,7 +614,7 @@
         connect: true,
         step: 5,
         range: { min: minUnitPrice, max: maxUnitPrice },
-        tooltips: [true , true], 
+        tooltips: [true , true],
         format: {
             to: v => `${currency}${Math.round(v)}`,
             from: v => Number(v.replace(currency, ''))
@@ -625,7 +626,7 @@
         connect: true,
         step: 5,
         range: { min: minUnitPrice, max: maxUnitPrice },
-        tooltips: [true, true], 
+        tooltips: [true, true],
         format: {
             to: v => `${currency}${Math.round(v)}`,
             from: v => Number(v.replace(currency, ''))
@@ -643,7 +644,7 @@
     let randomizeSliderTimer;
     let sortUnitPriceTimer;
     let lastSortUnitPrice = $('#sort_unit_price').val();
-   
+
     customizePriceSlider.noUiSlider.on('change', function (values) {
         clearTimeout(customizeSliderTimer);
         customizeSliderTimer = setTimeout(() => {
@@ -665,8 +666,8 @@
     });
 
     $('#customizeKeywordInput').on('keypress', function (e) {
-    if (e.which === 13) { 
-            e.preventDefault(); 
+    if (e.which === 13) {
+            e.preventDefault();
             customizeProducts();
         }
     });
@@ -786,7 +787,7 @@
         if (search_type === 'reset') {
             $('#customizeKeywordInput').val('');
         }
-        
+
 
 
         let btn = $('#add-custom-products');
@@ -799,7 +800,7 @@
         let invoice_amount = parseFloat($('#invoice_amount').val()) || 0;
         let current_amount = parseFloat($('#current_amount').val()) || 0;
         let discountAmount = Math.max(current_amount - invoice_amount, 0);
-        
+
         $('#temp_current_amount_text').text(current_amount.toFixed(2));
         $('#temp_invoice_amount_text').text(invoice_amount.toFixed(2));
         $('#temp_discount_amount_text').text(discountAmount.toFixed(2));
@@ -841,7 +842,7 @@
                 $('#customize-product-table-body').html(response.tableRows);
                 $('#customize-pagination').html(response.paginationHtml);
                 $('#current_page_number').val(response.currentPage);
-                
+
                 calculateTotalPrice();
             },
             error: function (xhr, textStatus) {
@@ -853,7 +854,7 @@
             },
             complete: function () {
                 console.log("Request complete");
-                customizeRequest = null; 
+                customizeRequest = null;
             }
         });
     }
@@ -882,7 +883,7 @@ function clearRandomizedFilter(button) {
             $('#randomize-product-table-body').html(getErrorRowHTML('Randomize filter cleared. You can now randomize products again or add custom products.'));
             toastr.success('Randomized products filter has been reset');
             calculateTotalPrice();
-            
+
         },
         error: function(xhr, status, error) {
             icon.removeClass('fa-spinner fa-spin').addClass(originalIconClass);
@@ -957,7 +958,7 @@ function clearRandomizedFilter(button) {
             const interval = setInterval(() => {
                 invoiceNumber.toggleClass('border border-danger');
                 blinkCount++;
-                if (blinkCount >= 10) { 
+                if (blinkCount >= 10) {
                     clearInterval(interval);
                     invoiceNumber.removeClass('border border-danger');
                 }
@@ -978,7 +979,7 @@ function clearRandomizedFilter(button) {
             }));
         });
 
-       
+
         let blinkCount = 0;
         const maxBlinkCount = 30;
         const blinkInterval = 500;
@@ -1027,10 +1028,10 @@ function clearRandomizedFilter(button) {
     $('#generateInvoiceNumber').on('click', function() {
         toastr.info('Generating an invoice number for you...', 'Please wait');
         $.ajax({
-            url: "{{ route('generate.invoice.number') }}", 
+            url: "{{ route('generate.invoice.number') }}",
             method: 'GET',
             data: {
-                site_name : "{{ $customer['site_name'] }}", 
+                site_name : "{{ $customer['site_name'] }}",
             },
             success: function(response) {
                 if (response.success && response.new_invoice_number) {
@@ -1056,7 +1057,7 @@ function clearRandomizedFilter(button) {
             allowClear: true,
             width: '100%'
         });
-       
+
     });
 
 </script>
@@ -1113,19 +1114,19 @@ $(document).ready(function () {
     $(document).on('click', '#update_invoice_amount', function () {
         let currentVal = parseFloat($('#invoice_amount').val());
         if (isNaN(currentVal) || currentVal === sessionAmount) {
-            return; 
+            return;
         }
 
         setLoader();
 
-        let invoice_amount = $('#invoice_amount').val(); 
-        let invoice_date = $('#invoice_date').val(); 
-        let customer_name = $('#customer_name').val(); 
-        let customer_email = $('#customer_email').val(); 
-        let customer_mobile = $('#customer_mobile').val(); 
+        let invoice_amount = $('#invoice_amount').val();
+        let invoice_date = $('#invoice_date').val();
+        let customer_name = $('#customer_name').val();
+        let customer_email = $('#customer_email').val();
+        let customer_mobile = $('#customer_mobile').val();
 
         $.ajax({
-            url: "{{ route('update.invoice.amount') }}", 
+            url: "{{ route('update.invoice.amount') }}",
             type: 'POST',
             data: {
                 invoice_amount,
@@ -1133,11 +1134,11 @@ $(document).ready(function () {
                 customer_name,
                 customer_email,
                 customer_mobile,
-                _token: '{{ csrf_token() }}' 
+                _token: '{{ csrf_token() }}'
             },
             success: function (response) {
                 if (response.success) {
-                    sessionAmount = parseFloat(invoice_amount); 
+                    sessionAmount = parseFloat(invoice_amount);
                     setSuccessIcon();
 
                     $('#invoice_amount').val(response.updated.invoice_amount);
