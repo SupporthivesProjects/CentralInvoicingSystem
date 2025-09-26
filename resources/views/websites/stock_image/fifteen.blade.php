@@ -16,6 +16,10 @@
             background-size: cover;
             height: 150px;
             vertical-align: bottom;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
         }
     </style>
 </head>
@@ -24,8 +28,8 @@
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
             <td align="center" bgcolor="#f2f2f2" style="padding: 20px 0;">
-                <table width="600" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
-                    style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);max-width: 600px;">
+                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
+                    style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);max-width: 100%;">
                     <!-- Header -->
                     <tr>
                         <td style="padding: 0px;">
@@ -65,7 +69,7 @@
                                     <div style="display: flex;flex-direction: column;">
                                         <span
                                             style="color: #002052;font-size:10px;font-weight:600;font-family: Poppins;">
-                                            TOTAL DUES:
+                                            TOTAL DUE:
                                         </span>
                                         <p
                                             style="color:#7E0E53;font-size:24px;font-weight:400;font-family: Poppins;margin: 0px;">
@@ -267,7 +271,7 @@
 
 
         <!-----------Footer----------->
-        <tr>
+        <!-- <tr>
             <td align="center" class="footer_bg">
                 <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;">
                     <tr>
@@ -277,7 +281,13 @@
                     </tr>
                 </table>
             </td>
-        </tr>
+        </tr> -->
+        <div style="background-color: #f5f5f5; text-align: center;">
+            <div style="width: 100%; padding-left: 40px; padding-bottom: 20px; display: flex; align-items: flex-end;">
+                <img src="{{ $invoice_footer_image }}" alt="" style="height: 40px;">
+            </div>
+        </div>
+
     </table>
     </td>
     </tr>
