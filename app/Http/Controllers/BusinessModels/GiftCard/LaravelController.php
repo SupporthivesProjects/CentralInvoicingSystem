@@ -90,27 +90,18 @@ class LaravelController extends Controller
 
         $bestMatch = null;
         $bestTotal = 0;
-
-        $checkSingleProductQuery = clone $subQuery;
-        $matchingProducts = $checkSingleProductQuery->where('unit_price', $invoiceAmount)->get();
     
-        if ($matchingProducts->isNotEmpty()) {
-            $randomProduct = $matchingProducts->shuffle()->first();
-            $bestMatch = collect([$randomProduct]);
-            $bestTotal = $invoiceAmount;
-        }
-    
-        // if (mt_rand(1, 100) <= 40) {
+        if (mt_rand(1, 100) <= 40) {
 
-        //     $checkSingleProductQuery = clone $subQuery;
-        //     $matchingProducts = $checkSingleProductQuery->where('unit_price', $invoiceAmount)->get();
+            $checkSingleProductQuery = clone $subQuery;
+            $matchingProducts = $checkSingleProductQuery->where('unit_price', $invoiceAmount)->get();
         
-        //     if ($matchingProducts->isNotEmpty()) {
-        //         $randomProduct = $matchingProducts->shuffle()->first();
-        //         $bestMatch = collect([$randomProduct]);
-        //         $bestTotal = $invoiceAmount;
-        //     }
-        // }
+            if ($matchingProducts->isNotEmpty()) {
+                $randomProduct = $matchingProducts->shuffle()->first();
+                $bestMatch = collect([$randomProduct]);
+                $bestTotal = $invoiceAmount;
+            }
+        }
     
         if (!$bestMatch) {
             $bestDistance = PHP_INT_MAX;

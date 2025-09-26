@@ -31,11 +31,11 @@
                                             </h1>
                                             <div style="display: flex;gap: 30px;">
                                                 <p
-                                                    style="color: #ffff;font-family: Poppins SemiBold;font-size:9px;font-weight: 600px;margin: 0px;">
+                                                    style="color: #ffff;font-family: Poppins SemiBold;font-size:14px;font-weight: 600px;margin: 0px;">
                                                     {{ $invoice_date }}
                                                 </p>
                                                 <p
-                                                    style="color: #ffff;font-family: Poppins SemiBold;font-size:9px;font-weight: 600px;margin: 0px;">
+                                                    style="color: #ffff;font-family: Poppins SemiBold;font-size:14px;font-weight: 600px;margin: 0px;">
                                                     NO: {{ $invoice_number }}
                                                 </p>
                                             </div>
@@ -63,7 +63,7 @@
                                     </p>
                                 </td>
                                 <td
-                                    style="display: flex;flex-direction: column;align-items:flex-end;justify-content: right;gap: 10px;padding-top: 10px;vertical-align: top;">
+                                    style="display: flex;flex-direction: column;align-items:flex-end;justify-content: flex-start;gap: 10px;padding-top: 10px;vertical-align: top;">
                                     <img src="{{ $company_logo }}" alt=""
                                         style="height:30px;width:70px;margin-right: 90px;">
                                     <div>
@@ -76,7 +76,7 @@
                                             <b style="color:#000000;">E:</b> {{ $company_email }}
                                         </p>
                                         <p
-                                            style="color:#767171;font-size:9px;font-weight:500;font-family: Poppins;margin: 0px;line-height:16px;text-transform:capitalize;">
+                                            style="color:#767171;font-size:9px;font-weight:500;font-family: Poppins;margin: 0px;line-height:16px;">
                                             <b style="color:#000000;">W:</b> {{ $site->site_link }}
                                         </p>
                                     </div>
