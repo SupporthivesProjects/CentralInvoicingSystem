@@ -63,7 +63,7 @@
                                     </p>
                                 </td>
                                 <td
-                                    style="display: flex;flex-direction: column;align-items:flex-start;justify-content: flex-start;gap: 10px;padding-top: 10px;vertical-align: top;">
+                                    style="display: flex;flex-direction: column;align-items:flex-start;justify-content: flex-start;gap: 10px;padding-top: 10px;background: red;">
                                     <img src="{{ $company_logo }}" alt=""
                                         style="height:30px;width:70px;margin-right: 90px;">
                                     <div>
