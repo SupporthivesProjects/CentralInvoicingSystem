@@ -29,16 +29,16 @@
 </head>
 
 <body>
-    <table width="100%" cellspacing="0" cellpadding="0" border="0">
+    <table width="100%" cellspacing="0" cellpadding="0" border="0" width="100%" >
         <tr>
             <td align="center" bgcolor="#ffffff" style="padding: 0px 0;">
-                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
-                    style="border-collapse: collapse;max-width: 100%;">
+                <!-- <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
+                    style="border-collapse: collapse;max-width: 100%;"> -->
                     <!-- Header -->
-                    <tr>
-                        <td style="padding: 0px;">
-                            <table style="border-collapse: collapse;width: 100%;" border="0">
-                                <td style="padding: 40px;vertical-align: top;">
+                    <!-- <tr>
+                        <td style="padding: 0px;"> -->
+                            <!-- <table style="border-collapse: collapse;width: 100%;" border="0">
+                                <td style="padding: 40px;vertical-align: top;"> -->
                                     <div
                                         style="display: flex;width: 100%;justify-content: space-between;vertical-align: top;">
                                         <img src="{{ $company_logo }}" alt="" style="height: 60px;">
@@ -53,9 +53,9 @@
                                             </p>
                                         </div>
                                     </div>
-                                </td>
-                    </tr>
-                </table>
+                                <!-- </td> -->
+                    <!-- </tr>
+                </table> -->
             </td>
         </tr>
         <!-- Header End -->
