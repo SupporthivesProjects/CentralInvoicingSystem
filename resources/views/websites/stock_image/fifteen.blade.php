@@ -10,10 +10,10 @@
         rel="stylesheet">
     <style>
         .footer_bg {
-            background: url('{{ $invoice_image1 }}');
+            /* background: url('{{ $invoice_image1 }}');
             background-repeat: no-repeat;
             background-position: center;
-            background-size: cover;
+            background-size: cover; */
             height: 150px;
             vertical-align: bottom;
             position: fixed;
@@ -271,7 +271,7 @@
 
 
         <!-----------Footer----------->
-        <!-- <tr>
+        <tr>
             <td align="center" class="footer_bg">
                 <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;">
                     <tr>
@@ -281,7 +281,7 @@
                     </tr>
                 </table>
             </td>
-        </tr> -->
+        </tr>
         <div style="background-color: #f5f5f5; text-align: center;">
             <div style="width: 100%; padding-left: 40px; padding-bottom: 20px; display: flex; align-items: flex-end;">
                 <img src="{{ $invoice_footer_image }}" alt="" style="height: 40px;">
