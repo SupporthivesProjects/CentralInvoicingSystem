@@ -17,9 +17,13 @@
             height: 150px;
             vertical-align: bottom;
             position: absolute;
-            bottom: 0;
+            bottom: -1px;
             left: 0;
-            right: 0;
+            right: -1px;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: center;
         }
     </style>
 </head>
