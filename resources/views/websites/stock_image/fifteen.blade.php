@@ -40,7 +40,7 @@
                             <!-- <table style="border-collapse: collapse;width: 100%;" border="0">
                                 <td style="padding: 40px;vertical-align: top;"> -->
                                     <div
-                                        style="display: flex;width: 100%;justify-content: space-between;vertical-align: top;">
+                                        style="display: flex;width: fit-content;justify-content: space-between;">
                                         <img src="{{ $company_logo }}" alt="" style="height: 60px;">
                                         <div>
                                             <h1
@@ -173,7 +173,7 @@
 
                         </td>
                         <td style="display: flex;vertical-align: top;padding: 0px;">
-                            <table border="0" style="border-collapse: collapse;">
+                            <table border="0" style="border-collapse: collapse;" width="100%" >
                                 <tr style="height:50px;border-bottom: 1px solid grey;">
                                     <td style="width: 200px;padding-left: 10px;">
                                         <p
