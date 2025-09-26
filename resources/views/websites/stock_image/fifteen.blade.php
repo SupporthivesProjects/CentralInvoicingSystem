@@ -16,7 +16,7 @@
             background-size: cover; */
             height: 150px;
             vertical-align: bottom;
-            position: fixed;
+            position: absolute;
             bottom: 0;
             left: 0;
             right: 0;
@@ -27,9 +27,9 @@
 <body>
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
-            <td align="center" bgcolor="#f2f2f2" style="padding: 20px 0;">
+            <td align="center" bgcolor="#ffffff" style="padding: 0px 0;">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
-                    style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);max-width: 100%;">
+                    style="border-collapse: collapse;max-width: 100%;">
                     <!-- Header -->
                     <tr>
                         <td style="padding: 0px;">
@@ -271,7 +271,7 @@
 
 
         <!-----------Footer----------->
-        <tr>
+        <!-- <tr>
             <td align="center" class="footer_bg">
                 <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;">
                     <tr>
@@ -281,7 +281,7 @@
                     </tr>
                 </table>
             </td>
-        </tr>
+        </tr> -->
         <div style="background-color: #f5f5f5; text-align: center;">
             <div style="width: 100%; padding-left: 40px; padding-bottom: 20px; display: flex; align-items: flex-end;">
                 <img src="{{ $invoice_footer_image }}" alt="" style="height: 40px;">
