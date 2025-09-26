@@ -92,8 +92,8 @@
                                         <p style="font-weight: normal;font-size: 8px; margin: 0;"><b>Urgency:</b> {{ $product->is_urgent ? 'Yes (+' . site_currency() . number_format($product->urgent_amount, 2) . ')' : 'No' }}</p>
                                     </td>
                                     <td style="text-align: center; vertical-align: middle;font-size: 8px; padding: 0;">{{$product->pages}}</td>
-                                    <td style="text-align: center; vertical-align: middle;font-size: 8px;  padding: 0;">{{ site_currency() . number_format($product->unit_price) }}</td>
-                                    <td style="text-align: center; vertical-align: middle;font-size: 8px;  padding: 0;">{{ site_currency() . number_format($product->line_total) }}</td>
+                                    <td style="text-align: center; vertical-align: middle;font-size: 8px;  padding: 0;">{{ site_currency() . number_format($product->unit_price, 2) }}</td>
+                                    <td style="text-align: center; vertical-align: middle;font-size: 8px;  padding: 0;">{{ site_currency() . number_format($product->line_total, 2) }}</td>
                                 </tr>
                                 @endforeach
                             </table>
