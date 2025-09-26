@@ -44,11 +44,11 @@
                                         <img src="{{ $company_logo }}" alt="" style="height: 60px;">
                                         <div>
                                             <h1
-                                                style="margin: 0px;font-family: Poppins;font-size: 16px;text-align: right; margin-right: 80px;">
+                                                style="margin: 0px;font-family: Poppins;font-size: 16px;text-align: right; margin-right: 0px;">
                                                 INVOICE NO: #{{ $invoice_number }}
                                             </h1>
                                             <p
-                                                style="margin: 0px;font-family: Poppins;font-size: 12px;text-align: right; margin-right: 80px">
+                                                style="margin: 0px;font-family: Poppins;font-size: 12px;text-align: right; margin-right: 0px">
                                                 {{ \Carbon\Carbon::parse($invoice_date)->format('d M Y') }}
                                             </p>
                                         </div>
