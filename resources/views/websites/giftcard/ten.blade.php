@@ -66,7 +66,7 @@
                                     style="display: flex;flex-direction: column;align-items:flex-end;justify-content: flex-start;gap: 10px;padding-top: 10px;">
                                     <div style="display: flex;flex-direction: column;align-items:flex-start;justify-content: flex-start;gap: 10px;">
                                         <img src="{{ $company_logo }}" alt=""
-                                            style="height:30px;width:70px;margin-right: 90px;">
+                                            style="width:70px;margin-right: 90px;">
                                         <div style="padding-left: 4px;">
                                             <h2
                                                 style="color:#000000;font-size: 12px;font-weight:500;font-family: Poppins;margin: 0px;line-height:18px;text-transform:capitalize;">
