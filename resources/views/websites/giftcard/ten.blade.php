@@ -38,8 +38,8 @@
                                     <td style="padding: 0px;">
                                         <div
                                             style="background:#1F2139;margin-top:160px;height:70px;width: 320px;padding: 10px 0px 10px 40px;display: flex;flex-direction: column;gap: 10px;">
-                                            <h1
-                                                style="color: #ffff;font-family: Poppins SemiBold;font-size: 36px;font-weight: 600px;margin: 0px;text-transform: uppercase;">
+                                            <h1  class="semi_bold"
+                                                style="color: #ffff;font-size: 36px;margin: 0px;text-transform: uppercase;">
                                                 Invoice
                                             </h1>
                                             <div style="display: flex;gap: 30px;">
