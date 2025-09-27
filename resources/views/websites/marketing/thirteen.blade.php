@@ -116,7 +116,7 @@
     <br>
 
     <!-- Product Table -->
-    <div  style="min-height: 620px;">
+    <div  style="min-height: 627px;">
     <table class="items-table">
         <thead>
             <tr>
