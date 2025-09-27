@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Invoice</title>
+    <title>{{ $site_name }} - #{{ $invoice_number }}</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -13,14 +13,18 @@
 
         table {
             width: 100%;
+            max-width: 100%;
             border-collapse: collapse;
         }
 
         .container {
-            width: 600px;
+            width: 90%;
+            max-width: 100%;
             margin: 0 auto;
             background-color: #ffffff;
-            padding: 40px;
+            padding-top: 40px;
+            padding-left: 40px;
+            padding-right: 40px;
         }
 
         .header img {
@@ -29,6 +33,7 @@
         }
         .footer img {
             width: 100%;
+            max-width: 100%;
             height: auto;
         }
 
@@ -95,12 +100,10 @@
         <tr>
             <td width="50%">
                 <div class="section-title">Billed From:</div>
-                <p>Javago<br>
-                    Website: {{ $site_name ?? 'Company Name' }}<br>
-                    Email: {{ $company_email ?? 'support@writecontent4me.com' }}<br>
-                    Address: FDRK0114 Compass Building,<br>
-                    Al Shohada Road, AL Hamra Industrial Zone-FZ,<br>
-                    Ras Al Khaimah, United Arab Emirates
+                <p> {{ $site_name ?? 'Company Name' }}<br>
+                    Email: {{ $company_email ?? 'support@javago.com' }}<br>
+                    {{ $company_name}},<br>
+                    {!! $company_address !!}
                 </p>
             </td>
             <td width="50%" align="right">
@@ -113,11 +116,12 @@
     <br>
 
     <!-- Product Table -->
+    <div  style="min-height: 620px;">
     <table class="items-table">
         <thead>
             <tr>
                 <th>Product & Service</th>
-                <th>QTY & Duration</th>
+                <th>Duration</th>
                 <th>Unit Price</th>
                 <th>Total</th>
             </tr>
@@ -126,25 +130,26 @@
         @foreach($products as $product)
             <tr>
                 <td>{{ $product->name }}</td>
-                <td>Qty:{{ $product->quantity ?? 1 }} & {{ $product->subscription }}</td>
-                <td>{{ site_currency_code() }}{{ number_format($product->unit_price, 2) }}</td>
-                <td>{{ site_currency_code() }}{{ number_format($product->unit_price * ($product->quantity ?? 1), 2) }}</td>
+                <td>{{ $product->subscription }}</td>
+                <td>{{ site_currency() }} {{ number_format($product->unit_price, 2) }}</td>
+                <td>{{ site_currency() }} {{ number_format($product->unit_price * ($product->quantity ?? 1), 2) }}</td>
             </tr>
         @endforeach
             <tr class="total-row">
                 <td colspan="3" style="text-align: end;">Subtotal</td>
-                <td>{{ site_currency_code() }}{{ number_format($invoice_amount + $discount_amount, 2) }}</td>
+                <td>{{ site_currency() }} {{ number_format($invoice_amount + $discount_amount, 2) }}</td>
             </tr>
             <tr>
                 <td colspan="3" style="text-align: end;">Discount</td>
-                <td>{{ site_currency_code() }}{{ number_format($discount_amount, 2) }}</td>
+                <td>{{ site_currency() }} {{ number_format($discount_amount, 2) }}</td>
             </tr>
             <tr>
                 <td colspan="3" style="text-align: end;">Total</td>
-                <td>{{ site_currency_code() }}{{ number_format($invoice_amount, 2) }}</td>
+                <td>{{ site_currency() }} {{ number_format($invoice_amount, 2) }}</td>
             </tr>
         </tbody>
     </table>
+    </div>
 
     <!-- Footer -->
     <div class="footer-note">
