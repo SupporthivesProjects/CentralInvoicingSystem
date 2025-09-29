@@ -90,17 +90,17 @@
                             </tr>
                             @foreach($products as $product)
                             <tr>
-                                <td style="font-weight:700; padding:10px 8px;">{{ $product->name }}</td>
-                                <td style="text-align:center; padding:10px 8px;">01</td>
-                                <td style="text-align:center; padding:10px 8px;">{{ site_currency() }} {{  number_format($product->unit_price, 2) }}</td>
-                                <td style="text-align:center; padding:10px 8px;">{{ site_currency() }} {{  number_format($product->unit_price, 2) }}</td>
+                                <td style="font-weight:700; padding:10px 8px; border-bottom:1px solid #231f20;">{{ $product->name }}</td>
+                                <td style="text-align:center; padding:10px 8px; border-bottom:1px solid #231f20;">01</td>
+                                <td style="text-align:center; padding:10px 8px; border-bottom:1px solid #231f20;">{{ site_currency() }} {{  number_format($product->unit_price, 2) }}</td>
+                                <td style="text-align:center; padding:10px 8px; border-bottom:1px solid #231f20;">{{ site_currency() }} {{  number_format($product->unit_price, 2) }}</td>
                             </tr>
                             @endforeach
                             <tr>
-                                <td style="font-weight:700; padding:20px 8px;"></td>
-                                <td style="text-align:center; padding:20px 8px;"></td>
-                                <td style="text-align:center; padding:20px 8px;"></td>
-                                <td style="text-align:center; padding:20px 8px;"></td>
+                                <td style="font-weight:700; padding:20px 8px; border-bottom:1px solid #231f20;"></td>
+                                <td style="text-align:center; padding:20px 8px; border-bottom:1px solid #231f20;"></td>
+                                <td style="text-align:center; padding:20px 8px; border-bottom:1px solid #231f20;"></td>
+                                <td style="text-align:center; padding:20px 8px; border-bottom:1px solid #231f20;"></td>
                             </tr>
                         </table>
                     </td>
@@ -149,7 +149,7 @@
                     style="border-top: 2px solid #8ea5d3; padding-top: 10px;">
                     <tr class="d-flex" style=" display: flex; justify-content: center;">
                         <!-- Location -->
-                        <td align="center" width="170" style="padding: 10px;display: flex;align-items: center;justify-content: center;gap: 6px;">
+                        <td align="center" width="190" style="padding: 10px;display: flex;align-items: center;justify-content: center;gap: 6px;">
                             <img src="{{ $invoice_image2 }}" alt="Location Icon"
                                 style="vertical-align: middle; max-width: 25px;" class="iconn img-fluid" />
                             <div style="color: #000000; font-size: 14px;">{{ $company_name }}</div>
