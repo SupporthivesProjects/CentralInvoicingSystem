@@ -98,7 +98,7 @@
                     </tr>
                     @foreach($products as $product)
                     <tr>
-                        <td style="font-weight:700; padding:10px 8px;">{{ $product->name }} - {{ $product->category_name }}</td>
+                        <td style="font-weight:700; padding:10px 8px;">{{ $product->name }}</td>
                         <td style="text-align:center; padding:10px 8px;">01</td>
                         <td style="text-align:center; padding:10px 8px;">{{ site_currency() }} {{  number_format($product->unit_price, 2) }}</td>
                         <td style="text-align:center; padding:10px 8px;">{{ site_currency() }} {{  number_format($product->unit_price, 2) }}</td>
@@ -122,6 +122,10 @@
                         <td
                             style="padding:10px 8px; border-bottom:1px solid #231f20; font-size:15px; text-align:right; background:#f7f7f7;">
                             {{ site_currency() }} {{ number_format(($invoice_amount + $discount_amount), 2) }}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:10px 8px; border-bottom:1px solid #231f20; font-size:15px; background:#fff;"></td>
+                        <td style="padding:10px 8px; border-bottom:1px solid #231f20; font-size:15px; text-align:right; background:#fff;"></td>
                     </tr>
                     <tr>
                         <td style="padding:10px 8px; border-bottom:1px solid #231f20; font-size:15px; background:#fff;">
