@@ -96,30 +96,29 @@
                             style="background:#cfc3e6; color:#231f20; padding:10px 8px; text-align:center; font-size:15px; font-weight:700;">
                             TOTAL</th>
                     </tr>
+                    @foreach($products as $product)
+                    <tr class="myrow">
+                        <td colspan="2" style="padding: 0 40px;">
+                            <table width="100%" cellpadding="0" cellspacing="0">
+                                <tr>
+                                <td style="font-weight:700; padding:10px 8px;">{{ $product->name }} - {{ $product->category_name }}</td>
+                                    <td style="text-align:center; padding:10px 8px;">01</td>
+                                    <td style="text-align:center; padding:10px 8px;">{{ site_currency() }} {{  number_format($product->unit_price, 2) }}</td>
+                                    <td style="text-align:center; padding:10px 8px;">{{ site_currency() }} {{  number_format($product->unit_price, 2) }}</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4" style="height:30px; border-bottom:2px solid #231f20;"></td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                    @endforeach
                    
                 </table>
             </td>
         </tr>
 
-
-        @foreach($products as $product)
-        <tr class="myrow">
-            <td colspan="2" style="padding: 0 40px;">
-                <table width="100%" cellpadding="0" cellspacing="0">
-                    <tr>
-                    <td style="font-weight:700; padding:10px 8px;">{{ $product->name }} - {{ $product->category_name }}</td>
-                        <td style="text-align:center; padding:10px 8px;">01</td>
-                        <td style="text-align:center; padding:10px 8px;">{{ site_currency() }} {{  number_format($product->unit_price, 2) }}</td>
-                        <td style="text-align:center; padding:10px 8px;">{{ site_currency() }} {{  number_format($product->unit_price, 2) }}</td>
-                    </tr>
-                    <tr>
-                        <td colspan="4" style="height:30px; border-bottom:2px solid #231f20;"></td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-
-        @endforeach
        
         <!-- Totals -->
         <tr>
