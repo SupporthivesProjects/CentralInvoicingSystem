@@ -18,10 +18,9 @@
 
         <!-- Header Section -->
         <tr>
-            <td colspan="2"style="position: relative; background: url('{{ $invoice_header_image }}') no-repeat; background-size: cover; height: 165px;">
+            <td colspan="2"style="position: relative; background: url('{{ $invoice_header_image }}') no-repeat; height: 165px; width: 165px">
                 <!-- Logos -->
-                <img src="{{ $company_logo }}" style="position: absolute; top: 94px; left: 91px; height: 70px; z-index: 1;">
-                <img src="{{ $invoice_image1 }}" style="position: absolute; top: 0px; left: 0px; width: 100px; z-index: 2;">
+                <img src="{{ $company_logo }}" style="position: absolute; top: 64px; left: 91px; height: 70px; z-index: 1;">
 
                 <!-- Invoice Info (Right Aligned) -->
                 <div style="position: absolute; top: 20px; right: 30px; color: #fff; text-align: right;">
@@ -36,9 +35,7 @@
                         </tr>
                         <tr>
                             <td colspan="4">
-                                <div
-                                    style="width: 170px; height:5px; background-image: url(./img/linee.png); margin-top:10px;">
-                                </div>
+                                <img src="{{ $invoice_image1 }}" style="width: 100px; z-index: 2;">
                             </td>
                         </tr>
                     </table>
