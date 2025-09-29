@@ -71,7 +71,6 @@
             <tr>
                 <td colspan="2" style="height:30px;"></td>
             </tr>
-            <div style="min-height: 400px;">
                 <tr>
                     <td colspan="2" style="padding: 0 40px;">
                         <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
@@ -97,7 +96,12 @@
                                 <td style="text-align:center; padding:10px 8px;">{{ site_currency() }} {{  number_format($product->unit_price, 2) }}</td>
                             </tr>
                             @endforeach
-                        
+                            <tr>
+                                <td style="font-weight:700; padding:20px 8px;"></td>
+                                <td style="text-align:center; padding:20px 8px;"></td>
+                                <td style="text-align:center; padding:20px 8px;"></td>
+                                <td style="text-align:center; padding:20px 8px;"></td>
+                            </tr>
                         </table>
                     </td>
                 </tr>
@@ -116,8 +120,8 @@
                                     {{ site_currency() }} {{ number_format(($invoice_amount + $discount_amount), 2) }}</td>
                             </tr>
                             <tr>
-                                <td style="padding:10px 8px; border-bottom:1px solid #231f20; font-size:15px; background:#fff;"></td>
-                                <td style="padding:10px 8px; border-bottom:1px solid #231f20; font-size:15px; text-align:right; background:#fff;"></td>
+                                <td style="padding:20px 8px; border-bottom:1px solid #231f20; font-size:15px; background:#fff;"></td>
+                                <td style="padding:20px 8px; border-bottom:1px solid #231f20; font-size:15px; text-align:right; background:#fff;"></td>
                             </tr>
                             <tr>
                                 <td style="padding:10px 8px; border-bottom:1px solid #231f20; font-size:15px; background:#fff;">
@@ -137,7 +141,6 @@
                         </table>
                     </td>
                 </tr>
-            </div>
 
         <!-- Footer -->
         <tr>
