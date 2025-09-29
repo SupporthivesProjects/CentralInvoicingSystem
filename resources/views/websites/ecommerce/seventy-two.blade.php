@@ -18,7 +18,7 @@
 
         <!-- Header Section -->
         <tr>
-            <td colspan="2"style="position: relative; background: url('{{ $invoice_header_image }}') no-repeat; height: 165px; width: 165px">
+            <td colspan="2"style="position: relative; background: url('{{ $invoice_header_image }}') no-repeat; background-size: contain; height: 165px; width: 165px">
                 <!-- Logos -->
                 <img src="{{ $company_logo }}" style="position: absolute; top: 64px; left: 91px; height: 70px; z-index: 1;">
 
@@ -34,7 +34,7 @@
                             <td style="font-size:14px;">{{ $invoice_number}}</td>
                         </tr>
                         <tr>
-                            <td colspan="4">
+                            <td colspan="4" style="width: 100%;">
                                 <img src="{{ $invoice_image1 }}" style="width: 100px; z-index: 2;">
                             </td>
                         </tr>
