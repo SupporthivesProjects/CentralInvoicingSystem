@@ -25,15 +25,15 @@
                 <!-- Invoice Info (Right Aligned) -->
                 <div style="position: absolute; top: 20px; right: 30px; color: #fff; text-align: right;">
                     <table style="color: black;">
-                        <tr>
+                        <tr style="width: 100%;">
                             <td style="font-weight:600; font-size:14px;">Invoice Date</td>
                             <td style="font-size:14px;">{{ $invoice_date }}</td>
                         </tr>
-                        <tr>
+                        <tr style="width: 100%;">
                             <td style="font-weight:600; font-size:14px;">Invoice No:</td>
                             <td style="font-size:14px;">{{ $invoice_number}}</td>
                         </tr>
-                        <tr>
+                        <tr style="width: 100%;">
                             <td style="width: 100%;">
                                 <img src="{{ $invoice_image1 }}" style="width: 100px; z-index: 2;">
                             </td>
@@ -66,13 +66,12 @@
 
         </tr>
 
-        <div style="min-height: 700px;">
             <!-- Invoice Title -->
             <tr>
                 <td colspan="2" style="padding:10px 40px 0 0; text-align:right;">
                 </td>
             </tr>
-
+            
             <!-- Spacer -->
             <tr>
                 <td colspan="2" style="height:30px;"></td>
@@ -106,7 +105,6 @@
                     </table>
                 </td>
             </tr>
-
         
             <!-- Totals -->
             <tr>
@@ -143,7 +141,6 @@
                     </table>
                 </td>
             </tr>
-        </div>
 
         <!-- Footer -->
         <tr>
