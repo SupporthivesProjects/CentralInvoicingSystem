@@ -23,8 +23,8 @@
                 <img src="{{ $company_logo }}" style="position: absolute; top: 64px; left: 91px; height: 70px; z-index: 1;">
 
                 <!-- Invoice Info (Right Aligned) -->
-                <div style="position: absolute; top: 40px; right: 40px; color: #fff; text-align: right; width: 400px;">
-                    <table style="color: black; width: 100%;">
+                <div style="position: absolute; top: 40px; right: 40px; color: #fff; text-align: right; width: 500px;">
+                    <table style="color: black; width: 500px;">
                         <tr style="width: 100%;">
                             <td style="font-weight:600; font-size:14px;">Invoice Date</td>
                             <td style="font-size:14px;">{{ $invoice_date }}</td>
@@ -34,8 +34,8 @@
                             <td style="font-size:14px;">{{ $invoice_number}}</td>
                         </tr>
                         <tr style="width: 100%;">
-                            <td style="width: 100%;">
-                                <img src="{{ $invoice_image1 }}" style="width: 100px; z-index: 2;">
+                            <td>
+                                <img src="{{ $invoice_image1 }}" style="width: 100%; z-index: 2;">
                             </td>
                         </tr>
                     </table>
