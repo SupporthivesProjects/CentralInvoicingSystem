@@ -23,13 +23,13 @@
                 <img src="{{ $company_logo }}" style="position: absolute; top: 64px; left: 91px; height: 70px; z-index: 1;">
 
                 <!-- Invoice Info (Right Aligned) -->
-                <div style="position: absolute; top: 40px; right: 40px; color: #fff; text-align: right; width: 400px;">
-                    <table style="color: black; width: 400px; margin-bottom: 5px solid #8397c9;">
-                        <tr style="width: 400px;">
+                <div style="position: absolute; top: 40px; right: 40px; color: #fff; text-align: right; width: 300px;">
+                    <table style="color: black; width: 300px; border-bottom: 5px solid #8397c9;">
+                        <tr style="width: 300px;">
                             <td style="font-weight:600; font-size:14px;">Invoice Date</td>
                             <td style="font-size:14px;">{{ $invoice_date }}</td>
                         </tr>
-                        <tr style="width: 400px;">
+                        <tr style="width: 300px;">
                             <td style="font-weight:600; font-size:14px;">Invoice No:</td>
                             <td style="font-size:14px;">{{ $invoice_number}}</td>
                         </tr>
