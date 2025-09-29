@@ -371,8 +371,8 @@
                         <table class="table table-bordered table-hover align-middle mb-0">
                             <thead class="">
                             <tr>
-                                <th class="text-center" style="width: 10%;">PID</th>
-                                <th class="text-center" style="width: 30%;">Product Name</th>
+                                <th class="text-center" style="width: 6%;">PID</th>
+                                <th class="text-center" style="width: 36%;">Product Name</th>
                                 <th class="text-center unit-price-header" style="width: 20%;" data-column="3" data-order="desc">
                                     <span class="d-inline-flex align-items-center justify-content-center gap-1">
                                     Unit Price <i class="bi bi-caret-down-fill"></i>
@@ -380,7 +380,7 @@
                                 </th>
                                 <th class="text-center" style="width: 20%;">Editable Price</th>
                                 <th class="text-center" style="width: 20%;">Urgency</th>
-                                <th class="text-center" style="width: 10%;">Remove</th>
+                                <th class="text-center" style="width: 6%;">Remove</th>
                                 </tr>
 
                             </thead>
