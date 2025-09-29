@@ -68,7 +68,7 @@
         </tr>
         <tr>
             <td>
-                <div>
+                <div style="min-height: 500px;">
                     <table>
                         <!-- Spacer -->
                     <tr>
