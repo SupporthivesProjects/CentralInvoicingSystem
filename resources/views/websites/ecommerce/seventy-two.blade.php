@@ -41,8 +41,8 @@
         <!-- Company Info and Recipient -->
         <tr>
             <td style="padding:82px 0 0 40px;" valign="top">
-                <strong>Kindred Spirits</strong><br>
-                Taiji Enterprises FZ-LLC<br>
+                <strong>{{ $site_name }}</strong><br>
+                {{ $company_name }}<br>{!! $company_address !!} <br>
                 <a href="mailto:{{ $company_email }}"
                     style="color:#3b3bb3; text-decoration:underline;">{{ $company_email }}</a>
             </td>
