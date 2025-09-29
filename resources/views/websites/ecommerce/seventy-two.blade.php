@@ -77,7 +77,7 @@
                         </tr>
                         <tr>
                             <td colspan="2" style="padding: 0 40px;">
-                                <div style="min-height: 600px;">
+                                <div style="min-height: 700px;">
                                     <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
                                         <tr>
                                             <th
