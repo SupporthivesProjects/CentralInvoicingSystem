@@ -14,7 +14,7 @@
 
 <body style="margin:0; padding:0; font-family:Montserrat, Arial, sans-serif; background-color:#fff;">
 
-    <table width="100%" align="center" cellpadding="0" cellspacing="0" style="background:url('{{ $invoice_image5 }}') no-repeat; border-collapse:collapse;">
+    <table width="100%" align="center" cellpadding="0" cellspacing="0" style="background:url('{{ $invoice_image5 }}') no-repeat; background-size: cover; border-collapse:collapse;">
 
         <!-- Header Section -->
         <tr>
@@ -23,8 +23,8 @@
                 <img src="{{ $company_logo }}" style="position: absolute; top: 64px; left: 91px; height: 70px; z-index: 1;">
 
                 <!-- Invoice Info (Right Aligned) -->
-                <div style="position: absolute; top: 20px; right: 30px; color: #fff; text-align: right;">
-                    <table style="color: black;">
+                <div style="position: absolute; top: 40px; right: 40px; color: #fff; text-align: right; width: 400px;">
+                    <table style="color: black; width: 100%;">
                         <tr style="width: 100%;">
                             <td style="font-weight:600; font-size:14px;">Invoice Date</td>
                             <td style="font-size:14px;">{{ $invoice_date }}</td>
