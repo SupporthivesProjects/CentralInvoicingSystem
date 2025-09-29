@@ -14,7 +14,7 @@
 
 <body style="margin:0; padding:0; font-family:Montserrat, Arial, sans-serif; background-color:#fff;">
 
-    <table width="100%" align="center" cellpadding="0" cellspacing="0" style="background:#fff; border-collapse:collapse;">
+    <table width="100%" align="center" cellpadding="0" cellspacing="0" style="background:url('{{ $invoice_image5 }}') no-repeat; border-collapse:collapse;">
 
         <!-- Header Section -->
         <tr>
