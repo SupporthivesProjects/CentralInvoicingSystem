@@ -61,16 +61,18 @@
 
         </tr>
 
-            <!-- Invoice Title -->
-            <tr>
-                <td colspan="2" style="padding:10px 40px 0 0; text-align:right;">
-                </td>
-            </tr>
-            
-            <!-- Spacer -->
-            <tr>
-                <td colspan="2" style="height:30px;"></td>
-            </tr>
+        <!-- Invoice Title -->
+        <tr>
+            <td colspan="2" style="padding:10px 40px 0 0; text-align:right;">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <table>
+                    <!-- Spacer -->
+                <tr>
+                    <td colspan="2" style="height:30px;"></td>
+                </tr>
                 <tr>
                     <td colspan="2" style="padding: 0 40px;">
                         <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
@@ -141,6 +143,10 @@
                         </table>
                     </td>
                 </tr>
+                </table>
+            </td>
+        </tr>
+                
 
         <!-- Footer -->
         <tr>
