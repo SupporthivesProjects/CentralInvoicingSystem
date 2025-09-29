@@ -24,7 +24,11 @@
 
                 <!-- Invoice Info (Right Aligned) -->
                 <div style="position: absolute; top: 40px; right: 40px; color: #fff; text-align: right; width: 400px;">
+<<<<<<< HEAD
                     <table style="color: black; width: 400px; margin-bottom: 5px solid #8397c9;">
+=======
+                    <table style="color: black; width: 400px; border-bottom: 5px solid #8397c9;">
+>>>>>>> rahul
                         <tr style="width: 400px;">
                             <td style="font-weight:600; font-size:14px;">Invoice Date</td>
                             <td style="font-size:14px;">{{ $invoice_date }}</td>
