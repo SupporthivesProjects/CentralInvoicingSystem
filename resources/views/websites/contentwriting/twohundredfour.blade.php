@@ -128,8 +128,8 @@
                                 <tr>
                                     <td
                                         style="color: white; padding: 40px; width: 50%; vertical-align: middle;">
-                                        <p style="margin: 0; font-weight: bold; color: #d6d94d; font-size: 8px;">CONTACT US</p>
-                                        <p style="margin: 5px 0 0; font-weight: bold; font-size: 8px; color: #d6d94d;">{{ $company_name }}
+                                        <p style="margin: 0; font-weight: bold; color: #d6d94d; font-size:16px;">CONTACT US</p>
+                                        <p style="margin: 5px 0 0; font-weight: bold; font-size:10px; color: #d6d94d;">{{ $company_name }}
                                         </p>
                                         <p style="margin: 5px 0 0; font-size: 7px;">{!! $company_address !!}<br>
                                             {{ $company_mobile }}
