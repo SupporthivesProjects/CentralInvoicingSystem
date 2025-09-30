@@ -116,10 +116,6 @@
                                 </tr>
 
                             </table>
-
-
-
-
                         </td>
                     </tr>
                     <!-- Content End-->
@@ -131,7 +127,7 @@
                             <table class="footer-fixed" style="width: 100%; border-collapse: collapse; font-family: 'ole';">
                                 <tr>
                                     <td
-                                        style="color: white; padding: 40px; width: 50%; vertical-align: middle;">
+                                        style="color: white; padding: 40px; width: 50%; vertical-align: middle;background:#1b2f32;">
                                         <p style="margin: 0; font-weight: bold; color: #d6d94d; font-size: 8px;">CONTACT US</p>
                                         <p style="margin: 5px 0 0; font-weight: bold; font-size: 8px; color: #d6d94d;">{{ $company_name }}
                                         </p>
