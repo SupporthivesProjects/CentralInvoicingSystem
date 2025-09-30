@@ -43,7 +43,7 @@
                             <table width="100%">
                                 <tr>
                                     <td width="50%"
-                                        style="font-size: 32px; font-weight: bold; padding-left: 60px; padding-top: 13px;">
+                                        style="font-size: 32px; font-weight: bold; padding-top: 13px;">
                                         {{ site_currency() . number_format($invoice_amount ?? 0, 2) }}</td>
                                     <td align="right"
                                         style="font-size: 16px; padding-right: 10px; vertical-align: middle; font-weight: bold;">{{ $customer_name ? $customer_name : '' }}</td>
