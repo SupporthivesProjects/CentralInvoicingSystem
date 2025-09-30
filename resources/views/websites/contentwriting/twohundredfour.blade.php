@@ -16,10 +16,10 @@
     </style>
 </head>
 
-<body style="margin: 0px; padding: 0px;">
+<body style="margin: 0px; padding: 0px;background-image: url('{{ $invoice_image1 }}'); background-position: top center; background-repeat: no-repeat; background-size: cover; height: 100%;">
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
-            <td align="center" bgcolor="#f2f2f2" style="padding: 0px 0;background-image: url('{{ $invoice_image1 }}'); background-position: top center; background-repeat: no-repeat; background-size: cover; height: 100%;">
+            <td align="center" bgcolor="#f2f2f2" style="padding: 0px 0;">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
                     style="border-collapse: collapse;">
                     <!-- Header -->
