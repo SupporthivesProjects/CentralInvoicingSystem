@@ -34,7 +34,7 @@
                         <td
                             style="font-family: 'Poppins'; font-size: 9px; vertical-align: top; padding: 55px 40px 0px 40px; width: 100%;">
                             <table style="font-size: 12px; width: 100%;">
-                                <td>Total Due</td>
+                                <td>Total Due:</td>
                                 <td>
                                     <div style="height: 1px; width: 575px; background-color: #E48920;"></div>
                                 </td>
