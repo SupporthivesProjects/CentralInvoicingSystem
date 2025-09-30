@@ -42,7 +42,7 @@
                                                 style="color: #ffff;font-size: 36px;margin: 0px;text-transform: uppercase;">
                                                 Invoice
                                             </h1>
-                                            <div style="display: flex;gap: 30px;">
+                                            <div style="display: flex;gap: 10px;">
                                                 <p class="poppins_regular"
                                                     style="color: #ffff;font-size:14px;margin: 0px;">
                                                     {{ $invoice_date }}
