@@ -84,7 +84,7 @@
         }
          
         .table-list th{
-            background:#E9FCF7;
+            background: #E9FCF7;
         }
         .table-list th {
             background: #ffffff;
@@ -98,7 +98,7 @@
         .table-list td{
             border: 1px solid #ff7f00;
             padding: 7px 10px;
-            background: #FFF;
+            background: #FFFFFF;
         }
 
         table{
@@ -162,8 +162,8 @@
         
     </style>
 </head>
-<body style="background:#ccb58733;padding:0px,margin:0px;">
-    <table width="800" cellspacing="0" cellpadding="0" border="0" style="margin:0px;background:#ccb58733;">
+<body style="padding:0px,margin:0px;">
+    <table width="800" cellspacing="0" cellpadding="0" border="0" style="margin:0px;">
         <tr>
             <td style="background-size: cover; height: 100vh;margin:0px:padding:0px;vertical-align:top;">
             @php
@@ -172,7 +172,7 @@
                 $padRows = $minRows - $rowCount;
             @endphp
 
-            <table width="800" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse;background:#ccb58733;">
+            <table width="800" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse;">
                 <tbody>
                     <!-- Invoice Header -->
                     <tr>
