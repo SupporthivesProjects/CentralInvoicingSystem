@@ -162,7 +162,7 @@
         
     </style>
 </head>
-<body>
+<body style="background:#e7e0cf;">
     <table width="800" cellspacing="0" cellpadding="0" border="0" style="margin:0px;">
         <tr>
             <td style="background-size: cover; height: 100%;">
@@ -306,7 +306,7 @@
                 </tfoot> -->
                   <tfoot>
                     <tr>
-                        <td style="width: 100%; background:  #e7ddcf;padding: 60px 0px;">
+                        <td style="width: 100%; background:#e7e0cf;padding: 60px 0px;">
                             <!-- <div style="text-align: center;">
                                 <h5>Notes</h5>
                                 <p>{{ $site->site_description }}</p>
