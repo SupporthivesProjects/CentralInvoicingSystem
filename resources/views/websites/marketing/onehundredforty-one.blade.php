@@ -183,12 +183,12 @@
                                         <h2>INVOICE</h2>
                                         <div style="display: flex; gap: 24px; margin-top: 10px;">
                                             <div>
-                                                <p>Company Name</p>
-                                                <p>{{ $site_name }}</p>
+                                                <p style="color:#ffffff">Company Name</p>
+                                                <p style="color:#ffffff">{{ $site_name }}</p>
                                             </div>
                                             <div>
-                                                <p>Address</p>
-                                                <p>
+                                                <p style="color:#ffffff">Address</p>
+                                                <p style="color:#ffffff">
                                                     {{ $company_email }}<br>
                                                     {{ $company_mobile }}<br>
                                                     {!! $company_address !!}
