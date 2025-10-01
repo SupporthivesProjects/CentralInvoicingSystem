@@ -42,13 +42,13 @@
         table td h2{
             font-family: 'Mazzard M';
             font-size: 24px;
-            color: #fff;
+            color: #ffffff;
             font-weight: bold;
             letter-spacing: 0px;
         }
         .table-div p{
             font-family: 'centurygothic';
-            color: #fff;
+            color: #ffffff;
             font-weight: normal;
             font-size: 8px;
         }
@@ -87,7 +87,7 @@
             background:#E9FCF7;
         }
         .table-list th {
-            background: #fff;
+            background: #ffffff;
             padding: 10px 10px;
             color: #000000f5;
             font-family: 'Mazzard M';
@@ -108,14 +108,14 @@
             font-size: 10px;
             font-family: 'Mazzard';
             font-weight: normal;
-            color: #000;
+            color: #000000;
             text-align: center;
         }
         .table-list td div p{
             text-align: left;
         }
         .table-list td div h6{
-            color: #000;
+            color: #000000;
             font-family: 'Mazzard M';
             font-size: 9px;
             font-weight: bold;
@@ -127,14 +127,14 @@
             font-size: 10px;
             font-family: 'Mazzard';
             font-weight: normal;
-            color: #000;
+            color: #000000;
             text-align: left;
         }
         .table-right td:last-child{
            text-align: right;
         }
         .table-right h6{
-            color: #000;
+            color: #000000;
             font-family: 'Mazzard M';
             font-size: 10px;
             font-weight: bold;
@@ -143,14 +143,14 @@
             font-size: 6px;
             font-family: 'Mazzard M';
             font-weight: normal;
-            color: #fff;
+            color: #ffffff;
             text-align: center;
         }
         tfoot div h5{
             font-size: 12px;
             font-family: 'Mazzard M';
             font-weight: bold;
-            color: #fff;
+            color: #ffffff;
             text-align: center;
             margin-bottom: 5px;
         }
@@ -162,8 +162,8 @@
         
     </style>
 </head>
-<body style="background:#e7e0cf;">
-    <table width="800" cellspacing="0" cellpadding="0" border="0" style="margin:0px;">
+<body style="background:#ccb58733;height:100vh;padding:0px,margin:0px;">
+    <table width="800" cellspacing="0" cellpadding="0" border="0" style="margin:0px;background:#ccb58733;">
         <tr>
             <td style="background-size: cover; height: 100%;">
             @php
@@ -176,7 +176,7 @@
                 <tbody>
                     <!-- Invoice Header -->
                     <tr>
-                        <td style="background: url('{{ $invoice_header_image }}') no-repeat; background-size: cover; padding:45px 58px;">
+                        <td style="background: url('{{ $invoice_header_image }}') no-repeat; background-size: cover; padding:40px 50px;">
                             <table class="table-div" style="background: transparent;">
                                 <tr>
                                     <td>
@@ -304,18 +304,7 @@
                         </td>
                     </tr>
                 </tfoot> -->
-                  <tfoot>
-                    <tr>
-                        <td style="width: 100%; background:#e7e0cf;padding: 60px 0px;">
-                            <!-- <div style="text-align: center;">
-                                <h5>Notes</h5>
-                                <p>{{ $site->site_description }}</p>
-                            </div> -->
-                        </td>
-                    </tr>
-                </tfoot>
 
-              
             </table>
 
             </td>
