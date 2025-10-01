@@ -184,12 +184,14 @@
                                         <div style="display: flex; gap: 24px; margin-top: 10px;">
                                             <div>
                                                 <p style="color:#ffffff">Company Name</p>
-                                                <p style="color:#ffffff">{{ $site_name }}</p>
+                                                <p style="color:#ffffff">{{ $site_name }} <br>
+                                                  {{ $company_email }}<br>
+                                                </p>
                                             </div>
                                             <div>
                                                 <p style="color:#ffffff">Address</p>
                                                 <p style="color:#ffffff">
-                                                    {{ $company_email }}<br>
+                                                    
                                                     {{ $company_mobile }}<br>
                                                     {!! $company_address !!}
                                                 </p>
@@ -292,7 +294,7 @@
                 </tbody>
 
                 <!-- Footer (Always at Bottom) -->
-                <tfoot>
+                <!-- <tfoot>
                     <tr>
                         <td style="width: 100%; background: url('{{ $invoice_footer_image }}') no-repeat; background-size: cover; padding: 60px 0px;">
                             <div style="text-align: center;">
@@ -301,7 +303,7 @@
                             </div>
                         </td>
                     </tr>
-                </tfoot>
+                </tfoot> -->
             </table>
 
             </td>
