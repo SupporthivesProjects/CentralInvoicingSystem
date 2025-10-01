@@ -102,7 +102,7 @@
         }
 
         table{
-            background: #ccb58733;
+            background: #e7e0cf;
         }
         .table-list td p{
             font-size: 10px;
@@ -162,17 +162,17 @@
         
     </style>
 </head>
-<body style="padding:0px,margin:0px;">
-    <table width="800" cellspacing="0" cellpadding="0" border="0" style="margin:0px;">
+<body style="padding:0px,margin:0px; background: #e7e0cf;">
+    <table width="800" cellspacing="0" cellpadding="0" border="0" style="margin:0px; background: #e7e0cf;">
         <tr>
-            <td style="background-size: cover; height: 100vh;margin:0px:padding:0px;vertical-align:top;">
+            <td style="background-size: cover; height: 100vh;margin:0px:padding:0px;vertical-align:top; background: #e7e0cf;">
             @php
                 $minRows = 10; 
                 $rowCount = count($products);
                 $padRows = $minRows - $rowCount;
             @endphp
 
-            <table width="800" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse;">
+            <table width="800" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse; background: #e7e0cf;">
                 <tbody>
                     <!-- Invoice Header -->
                     <tr>
