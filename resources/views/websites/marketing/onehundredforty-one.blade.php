@@ -162,10 +162,10 @@
         
     </style>
 </head>
-<body style="background:#ccb58733;height:100vh;padding:0px,margin:0px;">
+<body style="background:#ccb58733;padding:0px,margin:0px;">
     <table width="800" cellspacing="0" cellpadding="0" border="0" style="margin:0px;background:#ccb58733;">
         <tr>
-            <td style="background-size: cover; height: 100%;">
+            <td style="background-size: cover; height: 100vh;margin:0px:padding:0px;">
             @php
                 $minRows = 10; 
                 $rowCount = count($products);
@@ -176,7 +176,7 @@
                 <tbody>
                     <!-- Invoice Header -->
                     <tr>
-                        <td style="background: url('{{ $invoice_header_image }}') no-repeat; background-size: cover; padding:40px 50px;">
+                        <td style="background: url('{{ $invoice_header_image }}') no-repeat; background-size: cover; padding:50px 50px;">
                             <table class="table-div" style="background: transparent;">
                                 <tr>
                                     <td>
