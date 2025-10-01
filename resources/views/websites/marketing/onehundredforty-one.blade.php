@@ -163,7 +163,7 @@
     </style>
 </head>
 <body>
-    <table width="800" cellspacing="0" cellpadding="0" border="0" style="margin: auto;">
+    <table width="800" cellspacing="0" cellpadding="0" border="0" style="margin:0px;">
         <tr>
             <td style="background-size: cover; height: 100%;">
             @php
@@ -176,7 +176,7 @@
                 <tbody>
                     <!-- Invoice Header -->
                     <tr>
-                        <td style="background: url('{{ $invoice_header_image }}') no-repeat; background-size: cover; padding: 53px 58px;">
+                        <td style="background: url('{{ $invoice_header_image }}') no-repeat; background-size: cover; padding:45px 58px;">
                             <table class="table-div" style="background: transparent;">
                                 <tr>
                                     <td>
@@ -304,6 +304,18 @@
                         </td>
                     </tr>
                 </tfoot> -->
+                  <tfoot>
+                    <tr>
+                        <td style="width: 100%; background:  #e7ddcf;padding: 60px 0px;">
+                            <!-- <div style="text-align: center;">
+                                <h5>Notes</h5>
+                                <p>{{ $site->site_description }}</p>
+                            </div> -->
+                        </td>
+                    </tr>
+                </tfoot>
+
+              
             </table>
 
             </td>
