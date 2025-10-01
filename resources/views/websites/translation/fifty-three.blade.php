@@ -71,8 +71,8 @@
                             <table  style="width: 100%; margin-top: 5px;">
                                 <tr>
                                     <td>
-                                        <p style="font-size: 10px;font-family: arial; color: #000000; margin: 0px;"> Homer & Grimer Services Limited<br>
-                                            www.123translators.com<br>
+                                        <p style="font-size: 10px;font-family: arial; color: #000000; margin: 0px;">
+                                            {{ $site_name }}<br>
                                             {{ $company_email ?? 'support@123translators.com' }}
                                             </p>
                                     </td>
@@ -101,8 +101,8 @@
                                         <p style="font-weight: normal;font-size: 8px; margin: 0;margin-top: 10px"><b>Urgency:</b> {{ $product->is_urgent ? 'Yes (+' . site_currency() . number_format($product->urgent_amount, 2) . ')' : 'No' }}</p>
                                     </td>
                                     <td style="text-align: center; vertical-align: middle;font-size: 8px; padding: 0;">{{$product->pages}}</td>
-                                    <td style="text-align: center; vertical-align: middle;font-size: 8px;  padding: 0;">{{ site_currency() . number_format($product->unit_price) }}</td>
-                                    <td style="text-align: center; vertical-align: middle;font-size: 8px;  padding: 0;">{{ site_currency() . number_format($product->line_total) }}</td>
+                                    <td style="text-align: center; vertical-align: middle;font-size: 8px;  padding: 0;">{{ site_currency() . number_format($product->unit_price,2) }}</td>
+                                    <td style="text-align: center; vertical-align: middle;font-size: 8px;  padding: 0;">{{ site_currency() . number_format($product->line_total,2) }}</td>
                                 </tr>
                                 @endforeach
                             </table>
