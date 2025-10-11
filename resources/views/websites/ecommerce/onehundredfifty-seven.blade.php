@@ -24,7 +24,7 @@
             </td>
         </tr>
 
-        <tr style="height:650px;>
+        <tr >
                         <td style="padding:30px 60px 60px 60px;">
                             <table border="0" style="border-collapse: collapse;width: 100%;">
 
