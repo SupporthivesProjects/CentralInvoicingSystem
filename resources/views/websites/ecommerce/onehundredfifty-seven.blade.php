@@ -6,7 +6,7 @@
     <style>
         .for_bttom {
             position: fixed;
-            bottom: 0px;
+            bottom: -2px;
             left: 0;
             right: 0;
             width: 100%;
@@ -24,7 +24,7 @@
                             <!-- Logo -->
                             <img src="{{ $company_logo }}" alt="Logo" style="height: 70px; position: absolute; top: 20px; right: 94px;" />
                             <!-- INVOICE Text -->
-                            <div style="position: absolute; top: 85px; font-size: 37px; font-weight: bold; color: white; text-align: right; width: 353px;">
+                            <div style="position: absolute; top: 105px; font-size: 42px; font-weight: bold; color: white; text-align: center; width: 353px;">
                                 INVOICE
                             </div>
                         </td>
@@ -51,6 +51,7 @@
                                             <strong>Phone :</strong> {{ $company_mobile }}<br />
                                             <strong>Email :</strong> {{ $company_email }}
                                         </td>
+                                        <td colspan="3" style="padding: 10px; border-bottom: 1px solid #ddd; font-size: 14px; min-width: 30px"></td>
                                         <td colspan="3" style="padding: 10px; border-bottom: 1px solid #ddd; font-size: 14px">
                                             <strong>{{ $customer_name }}</strong><br />
                                             <!-- <strong>Phone :</strong> {{ $customer_mobile }}<br />
