@@ -49,50 +49,43 @@
                                     </tr>
 
                                     <!-- ITEM TABLE HEADERS -->
+                                    <tr style="background-color: #f1e9df; font-weight: bold; text-align: left">
+                                        <td style="padding: 10px; border: 1px solid #ddd" colspan="2">ITEM</td>
+                                        <!-- <td style="padding: 10px; border: 1px solid #ddd" colspan="2">DESCRIPTION</td> -->
+                                        <td style="padding: 10px; border: 1px solid #ddd">QTY</td>
+                                        <td style="padding: 10px; border: 1px solid #ddd">UNIT PRICE</td>
+                                        <td style="padding: 10px; border: 1px solid #ddd">TOTAL</td>
+                                    </tr>
+                                    @foreach($products as $product)
+                                    <tr style="border-bottom: 1px solid grey;">
+                                        <td style="padding: 10px" colspan="2">{{ $product->name }}</td>
+                                        <!-- <td colspan="2" style="padding: 10px">{!! \Illuminate\Support\Str::limit(strip_tags($product->description), 150) !!}</td> -->
+                                        <td style="padding: 10px">1</td>
+                                        <td style="padding: 10px">{{ site_currency() }} {{ number_format($product->unit_price, 2) }}</td>
+                                        <td style="padding: 10px">{{ site_currency() }} {{ number_format($product->unit_price, 2) }}</td>
+                                    </tr>
+                                    @endforeach
 
-                                <tr style="height:585px;vertical-align:top;">
-                                    <td style="width:100%;vertical-align:top;">
-                                        <table style="border-collapse: collapse;width:100%;">
-                                            <tr style="background-color: #f1e9df; font-weight: bold; text-align: left">
-                                                <td style="padding: 10px; border: 1px solid #ddd" colspan="2">ITEM</td>
-                                                <!-- <td style="padding: 10px; border: 1px solid #ddd" colspan="2">DESCRIPTION</td> -->
-                                                <td style="padding: 10px; border: 1px solid #ddd">QTY</td>
-                                                <td style="padding: 10px; border: 1px solid #ddd">UNIT PRICE</td>
-                                                <td style="padding: 10px; border: 1px solid #ddd">TOTAL</td>
-                                            </tr>
-                                            @foreach($products as $product)
-                                            <tr style="border-bottom: 1px solid grey;">
-                                                <td style="padding: 10px" colspan="2">{{ $product->name }}</td>
-                                                <!-- <td colspan="2" style="padding: 10px">{!! \Illuminate\Support\Str::limit(strip_tags($product->description), 150) !!}</td> -->
-                                                <td style="padding: 10px">1</td>
-                                                <td style="padding: 10px">{{ site_currency() }} {{ number_format($product->unit_price, 2) }}</td>
-                                                <td style="padding: 10px">{{ site_currency() }} {{ number_format($product->unit_price, 2) }}</td>
-                                            </tr>
-                                            @endforeach
-
-                                            <!-- TOTAL SECTION -->
-                                            <tr>
-                                                <td colspan="3"></td>
-                                                <td colspan="3" style="padding: 20px 10px">
-                                                    <table width="100%" cellpadding="5">
-                                                        <tr style="border-bottom: 1px solid grey;">
-                                                            <td style="text-align: right">SUBTOTAL</td>
-                                                            <td style="text-align: right">{{ site_currency() }} {{  number_format(($invoice_amount + $discount_amount), 2) }}</td>
-                                                        </tr>
-                                                        <tr style="border-bottom: 1px solid grey;">
-                                                            <td style="text-align: right">DISCOUNT (5%)</td>
-                                                            <td style="text-align: right">{{ site_currency() }} {{  number_format(($discount_amount), 2) }}</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td style="text-align: right; font-weight: bold">GRAND TOTAL</td>
-                                                            <td style="text-align: right; font-weight: bold">{{ site_currency() }} {{  number_format(($invoice_amount), 2) }}</td>
-                                                        </tr>
-                                                    </table>
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                </tr>
+                                    <!-- TOTAL SECTION -->
+                                    <tr>
+                                        <td colspan="3"></td>
+                                        <td colspan="3" style="padding: 20px 10px">
+                                            <table width="100%" cellpadding="5">
+                                                <tr style="border-bottom: 1px solid grey;">
+                                                    <td style="text-align: right">SUBTOTAL</td>
+                                                    <td style="text-align: right">{{ site_currency() }} {{  number_format(($invoice_amount + $discount_amount), 2) }}</td>
+                                                </tr>
+                                                <tr style="border-bottom: 1px solid grey;">
+                                                    <td style="text-align: right">DISCOUNT (5%)</td>
+                                                    <td style="text-align: right">{{ site_currency() }} {{  number_format(($discount_amount), 2) }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="text-align: right; font-weight: bold">GRAND TOTAL</td>
+                                                    <td style="text-align: right; font-weight: bold">{{ site_currency() }} {{  number_format(($invoice_amount), 2) }}</td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
 
         </table>
                         </td>
