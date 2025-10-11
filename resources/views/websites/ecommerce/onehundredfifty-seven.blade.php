@@ -13,7 +13,7 @@
                     <tr>
                         <td style="background-image: url('{{ $invoice_image1 }}'); background-repeat: no-repeat; background-position: center; background-size: cover; height: 141px; position: relative; padding: 0;">
                             <!-- Logo -->
-                            <img src="{{ $company_logo }}" alt="Logo" style="height: 70px; position: absolute; top: 3px; right: 94px;" />
+                            <img src="{{ $company_logo }}" alt="Logo" style="height: 70px; position: absolute; top: 10px; right: 94px;" />
                             <!-- INVOICE Text -->
                             <div style="position: absolute; top: 85px; font-size: 37px; font-weight: bold; color: white; text-align: right; width: 353px;">
                                 INVOICE
@@ -38,23 +38,23 @@
             </td>
             <td colspan="3" style="padding: 10px; border-bottom: 1px solid #ddd; font-size: 14px">
                 <strong>{{ $customer_name }}</strong><br />
-                <strong>Phone :</strong> {{ $customer_mobile }}<br />
-                <strong>Email :</strong> {{ $customer_email }}
+                <!-- <strong>Phone :</strong> {{ $customer_mobile }}<br />
+                <strong>Email :</strong> {{ $customer_email }} -->
             </td>
         </tr>
 
         <!-- ITEM TABLE HEADERS -->
         <tr style="background-color: #f1e9df; font-weight: bold; text-align: left">
-            <td style="padding: 10px; border: 1px solid #ddd">ITEM</td>
-            <td style="padding: 10px; border: 1px solid #ddd" colspan="2">DESCRIPTION</td>
+            <td style="padding: 10px; border: 1px solid #ddd" colspan="2">ITEM</td>
+            <!-- <td style="padding: 10px; border: 1px solid #ddd" colspan="2">DESCRIPTION</td> -->
             <td style="padding: 10px; border: 1px solid #ddd">QTY</td>
             <td style="padding: 10px; border: 1px solid #ddd">UNIT PRICE</td>
             <td style="padding: 10px; border: 1px solid #ddd">TOTAL</td>
         </tr>
         @foreach($products as $product)
         <tr style="border-bottom: 1px solid grey;">
-            <td style="padding: 10px">{{ $product->name }}</td>
-            <td colspan="2" style="padding: 10px">{!! \Illuminate\Support\Str::limit(strip_tags($product->description), 150) !!}</td>
+            <td style="padding: 10px" colspan="2">{{ $product->name }}</td>
+            <!-- <td colspan="2" style="padding: 10px">{!! \Illuminate\Support\Str::limit(strip_tags($product->description), 150) !!}</td> -->
             <td style="padding: 10px">1</td>
             <td style="padding: 10px">{{ site_currency() }} {{ number_format($product->unit_price, 2) }}</td>
             <td style="padding: 10px">{{ site_currency() }} {{ number_format($product->unit_price, 2) }}</td>
