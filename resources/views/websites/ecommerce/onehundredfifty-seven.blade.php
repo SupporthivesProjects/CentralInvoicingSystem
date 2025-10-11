@@ -25,7 +25,7 @@
         </tr>
 
         <tr>
-                        <td style="padding:20px 40px 40px 40px;">
+                        <td style="padding:40px;">
                             <table border="0" style="border-collapse: collapse;width: 100%;">
 
 
@@ -57,7 +57,7 @@
                                         <td style="padding: 10px; border: 1px solid #ddd">TOTAL</td>
                                     </tr>
                                     @foreach($products as $product)
-                                    <tr style="border-bottom: 1px solid grey;">
+                                    <tr style="border-bottom: 1px solid grey;height:585px;">
                                         <td style="padding: 10px" colspan="2">{{ $product->name }}</td>
                                         <!-- <td colspan="2" style="padding: 10px">{!! \Illuminate\Support\Str::limit(strip_tags($product->description), 150) !!}</td> -->
                                         <td style="padding: 10px">1</td>
