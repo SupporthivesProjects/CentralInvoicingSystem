@@ -24,8 +24,6 @@
             </td>
         </tr>
 
-        <div style="padding: 20px;">
-  <table style="width: 100%; border-collapse: collapse; ">
 
         <!-- BILL FROM / BILL TO -->
         <tr>
@@ -85,8 +83,7 @@
             </td>
         </tr>
 
-        </table>
-</div>
+     
 
         <!-- Footer Space -->
         <!-- Footer Section -->
