@@ -39,28 +39,28 @@
                                         </h2>
                                     </td> 
                                   </tr>
-                                  <tr style="height:40px;"></tr>
+                                  <!-- <tr style="height:40px;"></tr> -->
                                   <tr style="height:585px;">
                                     <td style="width:70%;">
                                       <table style="border-collapse: collapse;width:100%;">
                                         <tr style="border-top: 1px solid #ffffff;border-bottom: 1px solid #ffffff;">
                                             <td style="padding:10px;width:40%;">
-                                            <p style="margin:0px;color:#ffffff;font-size:9px;font-family: DM Sans;line-height: 18px;font-weight: 400;">
+                                            <p style="margin:0px;color:#ffffff;font-size:12px;font-family: DM Sans;line-height: 18px;font-weight: 400;">
                                             DESCRIPTION
                                             </p>
                                             </td>
                                              <td style="padding: 10px;width: 30%;" align="center">
-                                            <p style="margin:0px;color:#ffffff;font-size:9px;font-family: DM Sans;line-height: 18px;font-weight: 400;">
+                                            <p style="margin:0px;color:#ffffff;font-size:12px;font-family: DM Sans;line-height: 18px;font-weight: 400;">
                                             UNIT PRICE
                                             </p>
                                             </td>
                                              <td style="padding: 10px;width: 15%;" align="center">
-                                            <p style="margin:0px;color:#ffffff;font-size:9px;font-family: DM Sans;line-height: 18px;font-weight: 400;">
+                                            <p style="margin:0px;color:#ffffff;font-size:12px;font-family: DM Sans;line-height: 18px;font-weight: 400;">
                                             QTY
                                             </p>
                                             </td>
                                              <td style="padding:10px 0px;width:15%;" align="center">
-                                            <p style="margin:0px;color:#ffffff;font-size:9px;font-family: DM Sans;line-height: 18px;font-weight: 400;">
+                                            <p style="margin:0px;color:#ffffff;font-size:12px;font-family: DM Sans;line-height: 18px;font-weight: 400;">
                                             TOTAL
                                             </p>
                                             </td>
@@ -68,22 +68,22 @@
                                         @foreach ($products as $product)
                                         <tr>
                                             <td style="padding:10px;width:40%;">
-                                            <p style="margin:0px;color:#ffffff;font-size:8px;font-family: DM Sans;line-height: 18px;font-weight: 400;">
+                                            <p style="margin:0px;color:#ffffff;font-size:10px;font-family: DM Sans;line-height: 18px;font-weight: 400;">
                                                 {{ $product->name }}
                                             </p>
                                             </td>
                                              <td style="padding: 10px;width: 30%;" align="center">
-                                            <p style="margin:0px;color:#ffffff;font-size:8px;font-family: DM Sans;line-height: 18px;font-weight: 400;">
+                                            <p style="margin:0px;color:#ffffff;font-size:10px;font-family: DM Sans;line-height: 18px;font-weight: 400;">
                                                 {{ site_currency() . number_format($product->unit_price ?? 0, 2) }}
                                             </p>
                                             </td>
                                              <td style="padding: 10px;width: 15%;" align="center">
-                                            <p style="margin:0px;color:#ffffff;font-size:8px;font-family: DM Sans;line-height: 18px;font-weight: 400;">
+                                            <p style="margin:0px;color:#ffffff;font-size:10px;font-family: DM Sans;line-height: 18px;font-weight: 400;">
                                             1
                                             </p>
                                             </td>
                                              <td style="padding: 10px 0px;width:15%;" align="center">
-                                            <p style="margin:0px;color:#ffffff;font-size:8px;font-family: DM Sans;line-height: 18px;font-weight: 400;">
+                                            <p style="margin:0px;color:#ffffff;font-size:10px;font-family: DM Sans;line-height: 18px;font-weight: 400;">
                                                 {{ site_currency() . number_format($product->unit_price ?? 0, 2) }}
                                             </p>
                                             </td>
@@ -129,14 +129,14 @@
                                         <p style="margin:0px;color:#ffffff;font-size:11px;font-family: DM Sans;line-height:18px;font-weight:700;">
                                             Invoice Number
                                         </p>
-                                        <p style="margin:0px;color:#ffffff;font-size:9px;font-family: DM Sans;line-height:12px;">
+                                        <p style="margin:0px;color:#ffffff;font-size:12px;font-family: DM Sans;line-height:12px;">
                                             {{ $invoice_number }}
                                         </p>
                                         <br>
                                         <p style="margin:0px;color:#ffffff;font-size:11px;font-family: DM Sans;line-height:18px;font-weight:700;">
                                             Invoice Date
                                         </p>
-                                        <p style="margin:0px;color:#ffffff;font-size:9px;font-family: DM Sans;line-height:12px;">
+                                        <p style="margin:0px;color:#ffffff;font-size:12px;font-family: DM Sans;line-height:12px;">
                                             {{ $invoice_date }}
                                         </p>
                                     </td>
@@ -154,7 +154,7 @@
                                         <h2 style="margin:0px;color:#ffffff;font-size:12px;font-family: DM Sans;line-height: 18px;">
                                             {{ $company_name }}
                                         </h2>
-                                        <p style="margin:0px;color:#ffffff;font-size:9px;font-family: DM Sans;line-height: 16px;">
+                                        <p style="margin:0px;color:#ffffff;font-size:12px;font-family: DM Sans;line-height: 16px;">
                                             {{ $company_email }}<br>
                                             {!! $company_address !!}<br>
                                             {{ $company_mobile }}
