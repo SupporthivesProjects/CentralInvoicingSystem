@@ -41,7 +41,7 @@
                                     <!-- BILL FROM / BILL TO -->
                                     <tr>
                                         <td colspan="3" style="padding: 10px; background-color: #f1e9df; font-weight: bold">BILL FROM</td>
-                                        <td colspan="3" style="padding: 10px; background-color: #f1e9df; font-weight: bold ; min-width: 30px"></td>
+                                        <!-- <td colspan="" style="padding: 10px; background-color: #f1e9df; font-weight: bold ; min-width: 30px"></td> -->
                                         <td colspan="3" style="padding: 10px; background-color: #f1e9df; font-weight: bold">BILL TO</td>
                                     </tr>
                                     <tr>
@@ -51,7 +51,7 @@
                                             <strong>Phone :</strong> {{ $company_mobile }}<br />
                                             <strong>Email :</strong> {{ $company_email }}
                                         </td>
-                                        <td colspan="3" style="padding: 10px; border-bottom: 1px solid #ddd; font-size: 14px; min-width: 30px"></td>
+                                        <!-- <td colspan="" style="padding: 10px; border-bottom: 1px solid #ddd; font-size: 14px; min-width: 30px"></td> -->
                                         <td colspan="3" style="padding: 10px; border-bottom: 1px solid #ddd; font-size: 14px">
                                             <strong>{{ $customer_name }}</strong><br />
                                             <!-- <strong>Phone :</strong> {{ $customer_mobile }}<br />
