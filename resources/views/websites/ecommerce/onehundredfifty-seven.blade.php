@@ -82,6 +82,7 @@
                                     <tr>
                                         <td colspan="1"></td>
                                         <td colspan="1"></td>
+                                        <td colspan="1"></td>
                                         <td colspan="2" style="padding: 20px 10px">
                                             <table width="100%" cellpadding="5">
                                                 <tr style="border-bottom: 1px solid grey;">
