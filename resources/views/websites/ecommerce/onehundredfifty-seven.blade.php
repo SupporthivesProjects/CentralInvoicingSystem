@@ -3,6 +3,15 @@
 <head>
     <meta charset="UTF-8" />
     <title>Invoice</title>
+    <style>
+        .for_bttom {
+            position: fixed;
+            bottom: 0px;
+            left: 0;
+            right: 0;
+            width: 100%;
+        }
+    </style>
 </head>
 <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #fff;">
     <table width="100%" align="center" cellpadding="0" cellspacing="0" style="border-collapse: collapse; background-color: #ffffff">
@@ -11,7 +20,7 @@
             <td colspan="6" style="padding: 0px 0px 40px; margin: 0">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse">
                     <tr>
-                        <td style="background-image: url('{{ $invoice_image1 }}'); background-repeat: no-repeat; background-position: center; background-size: cover; height: 141px; position: relative; padding: 0;">
+                        <td style="background-image: url('{{ $invoice_image1 }}'); background-repeat: no-repeat; background-position: center; background-size: cover; height: 180px; position: relative; padding: 0;">
                             <!-- Logo -->
                             <img src="{{ $company_logo }}" alt="Logo" style="height: 70px; position: absolute; top: 20px; right: 94px;" />
                             <!-- INVOICE Text -->
@@ -32,6 +41,7 @@
                                     <!-- BILL FROM / BILL TO -->
                                     <tr>
                                         <td colspan="3" style="padding: 10px; background-color: #f1e9df; font-weight: bold">BILL FROM</td>
+                                        <td colspan="3" style="padding: 10px; background-color: #f1e9df; font-weight: bold ; min-width: 30px"></td>
                                         <td colspan="3" style="padding: 10px; background-color: #f1e9df; font-weight: bold">BILL TO</td>
                                     </tr>
                                     <tr>
@@ -98,18 +108,16 @@
         <!-- Footer Section -->
         <tr>
             <td colspan="6" style="padding: 0; margin: 0;">
-                <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse: collapse;">
+                <!-- <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse: collapse;">
                     <tr>
                         <td style="background-image: url('{{ $invoice_footer_image }}'); background-repeat: no-repeat; background-position: center; background-size: cover; padding: 30px; font-size: 14px; color: #000;">
                             <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse: collapse;">
                                 <tr>
-                                    <!-- Left Column -->
                                     <td style="vertical-align: top; width: 60%;">
                                         <p style="margin: 0; padding-bottom: 10px;"><strong>Phone :</strong> {{ $company_mobile }}</p>
                                         <p style="margin: 0; padding-bottom: 10px;"><strong>Email :</strong> {{ $company_email }}</p>
                                         <p style="margin: 0;"><strong>Website :</strong> {{ $site->site_link }}</p>
                                     </td>
-                                    <!-- Right Column -->
                                     <td style="vertical-align: top; text-align: right;">
                                         <p style="margin: 0; padding-bottom: 10px;">{{ $company_address }}</p>
                                     </td>
@@ -117,7 +125,23 @@
                             </table>
                         </td>
                     </tr>
-                </table>
+                </table> -->
+                <div style="width: 100%; background-image: url('{{ $invoice_footer_image }}'); background-repeat: no-repeat; background-position: center; background-size: cover; padding: 30px; font-size: 14px; color: #000; box-sizing: border-box;" class="for_bttom">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap;">
+                        <!-- Left Column -->
+                        <div style="width: 60%; min-width: 250px;">
+                        <p style="margin: 0; padding-bottom: 10px;"><strong>Phone :</strong> {{ $company_mobile }}</p>
+                        <p style="margin: 0; padding-bottom: 10px;"><strong>Email :</strong> {{ $company_email }}</p>
+                        <p style="margin: 0;"><strong>Website :</strong> {{ $site->site_link }}</p>
+                        </div>
+
+                        <!-- Right Column -->
+                        <div style="text-align: right; min-width: 200px;">
+                        <p style="margin: 0; padding-bottom: 10px;">{{ $company_address }}</p>
+                        </div>
+                    </div>
+                </div>
+
             </td>
         </tr>
     </table>
