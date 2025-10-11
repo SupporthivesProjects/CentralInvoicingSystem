@@ -24,7 +24,7 @@
             </td>
         </tr>
 
-        <tr>
+        <tr style="height:650px;>
                         <td style="padding:30px 60px 60px 60px;">
                             <table border="0" style="border-collapse: collapse;width: 100%;">
 
@@ -47,6 +47,7 @@
                                             <strong>Email :</strong> {{ $customer_email }} -->
                                         </td>
                                     </tr>
+                                    <tr style="height:40px;"></tr>
 
                                     <!-- ITEM TABLE HEADERS -->
                                     <tr style="background-color: #f1e9df; font-weight: bold; text-align: left">
