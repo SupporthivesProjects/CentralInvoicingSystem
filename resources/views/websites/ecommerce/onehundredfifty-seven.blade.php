@@ -81,7 +81,8 @@
                                     <!-- TOTAL SECTION -->
                                     <tr>
                                         <td colspan="1"></td>
-                                        <td colspan="3" style="padding: 20px 10px">
+                                        <td colspan="1"></td>
+                                        <td colspan="2" style="padding: 20px 10px">
                                             <table width="100%" cellpadding="5">
                                                 <tr style="border-bottom: 1px solid grey;">
                                                     <td style="text-align: right">SUBTOTAL</td>
@@ -97,6 +98,22 @@
                                                 </tr>
                                             </table>
                                         </td>
+                                        <!-- <td colspan="3" style="padding: 20px 10px">
+                                            <table width="100%" cellpadding="5">
+                                                <tr style="border-bottom: 1px solid grey;">
+                                                    <td style="text-align: right">SUBTOTAL</td>
+                                                    <td style="text-align: right">{{ site_currency() }} {{  number_format(($invoice_amount + $discount_amount), 2) }}</td>
+                                                </tr>
+                                                <tr style="border-bottom: 1px solid grey;">
+                                                    <td style="text-align: right">DISCOUNT (5%)</td>
+                                                    <td style="text-align: right">{{ site_currency() }} {{  number_format(($discount_amount), 2) }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="text-align: right; font-weight: bold">GRAND TOTAL</td>
+                                                    <td style="text-align: right; font-weight: bold">{{ site_currency() }} {{  number_format(($invoice_amount), 2) }}</td>
+                                                </tr>
+                                            </table>
+                                        </td> -->
                                     </tr>
 
         </table>
