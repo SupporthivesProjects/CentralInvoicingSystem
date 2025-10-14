@@ -18,7 +18,7 @@
             border-collapse: separate;
             border-spacing: 0;
             background: #f7f7fa;
-            border-radius: 8px;
+            /* border-radius: 8px; */
             overflow: hidden;
         }
 
@@ -102,7 +102,7 @@
             padding: 28px 28px 28px 50px;
             font-size: 14px;
             color: #222;
-            border-bottom-left-radius: 8px;
+            /* border-bottom-left-radius: 8px; */
             vertical-align: top;
         }
 
@@ -119,7 +119,7 @@
             color: #fff;
             text-align: right;
             padding: 28px 50px 28px 28px;
-            border-bottom-right-radius: 8px;
+            /* border-bottom-right-radius: 8px; */
             vertical-align: top;
         }
 
