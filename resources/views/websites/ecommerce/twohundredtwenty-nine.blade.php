@@ -51,7 +51,7 @@
 
                     <!-- Content -->
                     <tr>
-                        <td style="padding:30px;padding-top:0px;">
+                        <td style="padding:30px;padding-top:20px;">
                             <h1
                                 style="text-align: center;color: darkgreen;font-size: 75px;margin:0px;font-family: 'Space Mono', monospace;">
                                 INVOICE</h1>
@@ -64,16 +64,38 @@
                                             style="font-family: arial;font-size: 14px;margin: 0px;font-weight: 400; text-align: left;padding-bottom: 5px;padding-left: 5px;color: darkgreen;">
                                             <b>Invoice to</b>
                                         </p>
+                                        <br>
+                                        <p
+                                            style="font-family: arial;font-size: 12px;margin: 0px;font-weight: 400; text-align: left;padding-top: 5px;padding-bottom: 5px;padding-left: 5px;">
+                                            {{ $customer_name }}
+                                        </p>
                                     </td>
 
                                     <td style="padding-top: 10px;width: 300px;">
                                         <p
                                             style="font-family: arial;font-size: 14px;margin: 0px;font-weight: 400; text-align: left;padding-bottom: 5px;padding-right: 5px;color: darkgreen;">
-                                            <b>Invoice Form</b>
+                                            <b>Billed from:</b>
+                                        </p>
+                                        <br>
+                                        <p
+                                            style="font-family: arial;font-size: 12px;margin: 0px;font-weight: 400;text-align: left; padding-top: 5px;padding-bottom: 5px;padding-left: 5px;">
+                                            {{ $company_name }}
+                                        </p>
+                                        <p
+                                            style="font-family: arial;font-size: 14px;margin: 0px;font-weight: 400; text-align: left;padding-bottom: 5px;padding-right: 5px;color: darkgreen;">
+                                            <b>Address:</b>
+                                        </p>
+                                        <p
+                                            style="font-family: arial;font-size: 14px;margin: 0px;font-weight: 400; text-align: left;padding-bottom: 5px;padding-right: 5px;color: darkgreen;">
+                                            <b>Website:</b>
+                                        </p>
+                                        <p
+                                            style="font-family: arial;font-size: 14px;margin: 0px;font-weight: 400; text-align: left;padding-bottom: 5px;padding-right: 5px;color: darkgreen;">
+                                            <b>Email:</b>
                                         </p>
                                     </td>
                                 </tr>
-                                <tr>
+                                <!-- <tr>
                                     <td style="padding-top: 10px;width: 300px;">
                                         <p
                                             style="font-family: arial;font-size: 12px;margin: 0px;font-weight: 400; text-align: left;padding-top: 5px;padding-bottom: 5px;padding-left: 5px;">
@@ -99,7 +121,7 @@
                                             <b>Email:</b>
                                         </p>
                                     </td>
-                                </tr>
+                                </tr> -->
                             </table>
                             <table
                                 style="border-collapse: collapse;border-bottom: 0px;border: 0px; border-radius: 10px; background-image: linear-gradient(to bottom, #349651, #377548);">
