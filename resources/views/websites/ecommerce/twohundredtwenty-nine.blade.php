@@ -61,24 +61,24 @@
                                 <tr style="border-collapse: collapse;">
                                     <td style="padding-top: 10px;width: 300px;vertical-align: top;">
                                         <p
-                                            style="font-family: arial;font-size: 14px;margin: 0px;font-weight: 400; text-align: left;padding-bottom: 5px;padding-left: 5px;color: darkgreen;">
+                                            style="font-family: arial;font-size: 14px;margin: 0px;font-weight: 400; text-align: left;margin-bottom: 8px;padding-left: 5px;color: darkgreen;">
                                             <b>Invoice to</b>
                                         </p>
                                         <br>
                                         <p
-                                            style="font-family: arial;font-size: 12px;margin: 0px;font-weight: 400; text-align: left;padding-top: 5px;padding-bottom: 5px;padding-left: 5px;">
+                                            style="font-family: arial;font-size: 12px;margin: 0px;font-weight: 400; text-align: left;margin-bottom: 8px;padding-left: 5px;">
                                             {{ $customer_name }}
                                         </p>
                                     </td>
 
                                     <td style="padding-top: 10px;width: 300px;vertical-align: top;">
                                         <p
-                                            style="font-family: arial;font-size: 14px;margin: 0px;font-weight: 400; text-align: left;padding-bottom: 5px;padding-right: 5px;color: darkgreen;">
+                                            style="font-family: arial;font-size: 14px;margin: 0px;font-weight: 400; text-align: left;margin-bottom: 8px;padding-right: 5px;color: darkgreen;">
                                             <b>Billed from:</b>
                                         </p>
                                         <br>
                                         <p
-                                            style="font-family: arial;font-size: 12px;margin: 0px;font-weight: 400;text-align: left; padding-top: 5px;padding-bottom: 5px;padding-left: 5px;">
+                                            style="font-family: arial;font-size: 12px;margin: 0px;font-weight: 400;text-align: left; margin-bottom: 8px;padding-left: 5px;">
                                             {{ $company_name }}
                                         </p>
                                         <p
