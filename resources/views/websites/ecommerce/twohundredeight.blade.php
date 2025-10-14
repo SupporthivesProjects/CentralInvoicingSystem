@@ -95,7 +95,7 @@
                                             SUBTOTAL
                                             </p>
                                              <td style="padding:0px 10px;padding-top: 10px;" align="center">
-                                            <p style="margin:0px;color:#ffffff;font-size:11px;font-family: DM Sans;line-height: 18px;font-weight:500;">
+                                            <p style="margin:0px;color:#ffffff;font-size:14px;font-family: DM Sans;line-height: 18px;font-weight:500;">
                                                 {{ site_currency() . number_format($invoice_amount + $discount_amount ?? 0, 2) }}
                                             </p>
                                             </td>
@@ -107,7 +107,7 @@
                                             </p>
                                             </td>
                                              <td style="padding:10px;" align="center">
-                                            <p style="margin:0px;color:#ffffff;font-size:11px;font-family: DM Sans;line-height: 18px;font-weight:500;">
+                                            <p style="margin:0px;color:#ffffff;font-size:14px;font-family: DM Sans;line-height: 18px;font-weight:500;">
                                                 {{ site_currency() . number_format($discount_amount ?? 0, 2) }}
                                             </p>
                                             </td>
