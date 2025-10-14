@@ -18,7 +18,7 @@
         <tr>
             <td align="center" bgcolor="#f2f2f2" style="padding:0px;">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
-                    style="border-collapse: collapse; background: url({{ $invoice_image1 }}) no-repeat;background-position:center;background-size:cover;">
+                    style="border-collapse: collapse; background: url({{ $invoice_image1 }}) no-repeat;background-position:center;background-size:contain;">
                     <!-- Header -->
                     <tr>
                         <td style="height: 20px;"></td>
