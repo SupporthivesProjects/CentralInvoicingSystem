@@ -272,7 +272,8 @@
 
                                     <td style="width: 33.33%; text-align: right; font-family: arial; font-size: 10px; font-weight: 400; color: #5E5E5E; padding-top: 10px; padding-left: 5px; white-space: nowrap;">
                                     <img src="{{ $invoice_image2 }}" alt="" style="height: 10px; vertical-align: middle; padding-right: 10px;">
-                                    {{ $site->site_link }}
+                                    <a href="https://www.arrowservices.co/" style="text-decoration: none; color: #000;">arrowservices.co</a>
+
                                     </td>
                                 </tr>
 
@@ -295,7 +296,8 @@
             <tr style="background: url('{{ $invoice_footer_image }}') no-repeat center; background-size: cover;">
                 <td style="text-align:center; height: 45px;">
                     <p style="font-family: arial; font-size: 10px; font-weight: 700; color: whitesmoke; color: black; margin-top: -50px;">
-                        {{ $site_name }} | {{ $company_email }} | {{ $site->site_link }}
+                        {{ $site_name }} | {{ $company_email }} | <a href="https://www.arrowservices.co/" style="text-decoration: none; color: #000;">arrowservices.co</a>
+
                     </p>
                 </td>
             </tr>
