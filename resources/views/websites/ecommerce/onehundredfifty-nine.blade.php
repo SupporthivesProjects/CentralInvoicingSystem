@@ -9,18 +9,17 @@
             margin: 0;
             padding: 0;
             font-family: Arial, sans-serif;
-            background: #fff;
+            background: #f7f7fa;
         }
 
         .main-table {
             width: 900px;
-            margin: 40px auto;
+            margin: auto;
             border-collapse: separate;
             border-spacing: 0;
             background: #f7f7fa;
-            border-radius: 8px;
+            /* border-radius: 8px; */
             overflow: hidden;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
         }
 
         .header-row td,
@@ -103,7 +102,7 @@
             padding: 28px 28px 28px 50px;
             font-size: 14px;
             color: #222;
-            border-bottom-left-radius: 8px;
+            /* border-bottom-left-radius: 8px; */
             vertical-align: top;
         }
 
@@ -120,7 +119,7 @@
             color: #fff;
             text-align: right;
             padding: 28px 50px 28px 28px;
-            border-bottom-right-radius: 8px;
+            /* border-bottom-right-radius: 8px; */
             vertical-align: top;
         }
 
@@ -140,6 +139,13 @@
         .section-space {
             height: 18px;
             background: transparent;
+        }
+        .for_bttom {
+            position: fixed;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            width: 100%;
         }
     </style>
 </head>
@@ -236,8 +242,8 @@
         <!-- Notes and Total Row -->
         <tr class="notes-total-row">
             <td class="notes-cell">
-                <strong>NOTES:</strong>
-                {{ $invoice_notes ?? 'Thank you for your business!' }}
+                <!-- <strong>NOTES:</strong>
+                {{ $invoice_notes ?? 'Thank you for your business!' }} -->
             </td>
             <td class="total-cell">
                 <span class="total-label">TOTAL</span>
@@ -257,12 +263,15 @@
             <td colspan="2"></td>
         </tr>
         <!-- Footer -->
-        <tr>
+        <!-- <tr>
             <td colspan="2"
                 style="position: relative; background: url('{{ $invoice_footer_image }}') no-repeat center center; background-size: cover; height: 133px;">
-                <!-- Optional content like logo/title can go here -->
+               
             </td>
-        </tr>
+        </tr> -->
+        <div style=" background: url('{{ $invoice_footer_image }}') no-repeat center center; background-size: cover; height: 133px; width: 100%;" class="for_bttom">
+    <!-- Optional content like logo/title can go here -->
+</div>
     </table>
 </body>
 

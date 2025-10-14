@@ -50,7 +50,7 @@
                             <table style="border-collapse: collapse;;">
                                 <tr style="border-collapse: collapse;height: 35px;">
                                     <td
-                                        style="width: 300px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;color: #5E5E5E;">
+                                        style="width: 500px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;color: #5E5E5E;">
                                         <img src="{{ $invoice_image5 }}" alt="" style="height: 10px;"> {{ $company_address }},
                                     </td>
                                     <td
@@ -64,7 +64,7 @@
                                 </tr>
                                 <tr style="border-collapse: collapse;height: 25px;">
                                     <td
-                                        style="width: 100%;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;color: #5E5E5E;">
+                                        style="width: 500px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;color: #5E5E5E;">
                                         <img src="{{ $invoice_image3 }}" alt="" style="height: 10px;">
                                         {{ $company_mobile }}
                                     </td>
@@ -79,7 +79,7 @@
                                 </tr>
                                 <tr style="border-collapse: collapse;height: 25px;">
                                     <td
-                                        style="width: 300px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;color: #5E5E5E;">
+                                        style="width: 500px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;color: #5E5E5E;">
                                         <img src="{{ $invoice_image4 }}" alt="" style="height: 10px;">
                                         {{ $company_email }}
                                     </td>
@@ -97,24 +97,24 @@
 
                             <br>
                             <br>
-                            <div style="min-height: 500px !important;">
+                            <div style="min-height: 480px !important;">
                                 <table style="border-collapse: collapse;">
                                     <tr
                                         style="border-collapse: collapse;height: 24px;border-top: 1px solid black;border-bottom: 1px solid black;">
                                         <td
-                                            style="width: 250px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;border-right: 1px solid black;">
+                                            style="width: 250px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;border-right: 1px solid black;padding: 12px">
                                             <b>Item Descriptions</b>
                                         </td>
                                         <td
-                                            style="width: 150px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;border-right: 1px solid black;">
+                                            style="width: 150px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;border-right: 1px solid black;padding: 12px">
                                             <b>Unit Price</b>
                                         </td>
                                         <td
-                                            style="width: 150px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;border-right: 1px solid black;">
+                                            style="width: 150px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;border-right: 1px solid black;padding: 12px">
                                             <b>Quantity</b>
                                         </td>
                                         <td
-                                            style="width: 150px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
+                                            style="width: 150px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding: 12px">
                                             <b>AMOUNT</b>
                                         </td>
                                     </tr>
@@ -141,19 +141,19 @@
                                 <tr
                                     style="border-collapse: collapse;height: 24px;border-top: 1px solid black;border-bottom: 1px solid black;">
                                     <td
-                                        style="width: 250px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;border-right: 1px solid black;">
+                                        style="width: 250px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;border-right: 1px solid black;padding: 12px">
                                         <b>{{ $product->name }}</b>
                                     </td>
                                     <td
-                                        style="width: 150px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;border-right: 1px solid black;">
+                                        style="width: 150px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;border-right: 1px solid black;padding: 12px">
                                         <b>{{ site_currency() . number_format($product->unit_price, 2) }}</b>
                                     </td>
                                     <td
-                                        style="width: 150px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;border-right: 1px solid black;">
+                                        style="width: 150px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;border-right: 1px solid black;padding: 12px">
                                         <b>1</b>
                                     </td>
                                     <td
-                                        style="width: 150px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
+                                        style="width: 150px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding: 12px">
                                         <b>{{ site_currency() . number_format($product->unit_price, 2) }}</b>
                                     </td>
                                 </tr>
@@ -244,7 +244,7 @@
                                         {{ $company_address }}
                                     </td>
                                 </tr>
-                                <tr style="border-collapse: collapse;">
+                                <!-- <tr style="border-collapse: collapse;">
                                     <td
                                         style=" width: 200px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;color: #5E5E5E;padding-left: 40px;padding-top: 10px;">
                                         <img src="{{ $invoice_image3 }}" alt="" style="height: 10px; padding-right: 10px;">+1 132 456 9873
@@ -258,7 +258,25 @@
                                         style="width: 200px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;color: #5E5E5E;padding-top: 10px;padding-left: 5px;">
                                         <img src="{{ $invoice_image2 }}" alt="" style="height: 10px; padding-right: 10px;">{{ $site->site_link }}
                                     </td>
+                                </tr> -->
+                                <tr style="border-collapse: collapse;">
+                                    <td style="width: 33.33%; text-align: left; font-family: arial; font-size: 10px; font-weight: 400; color: #5E5E5E; padding-left: 40px; padding-top: 10px; white-space: nowrap;">
+                                    <img src="{{ $invoice_image3 }}" alt="" style="height: 10px; vertical-align: middle; padding-right: 10px;">
+                                    +1 132 456 9873
+                                    </td>
+
+                                    <td style="width: 33.33%; text-align: center; font-family: arial; font-size: 10px; font-weight: 400; color: #5E5E5E; padding-top: 10px; padding-left: 5px; white-space: nowrap;">
+                                    <img src="{{ $invoice_image4 }}" alt="" style="height: 10px; vertical-align: middle; padding-right: 10px;">
+                                    {{ $company_email }}
+                                    </td>
+
+                                    <td style="width: 33.33%; text-align: right; font-family: arial; font-size: 10px; font-weight: 400; color: #5E5E5E; padding-top: 10px; padding-left: 5px; white-space: nowrap;">
+                                    <img src="{{ $invoice_image2 }}" alt="" style="height: 10px; vertical-align: middle; padding-right: 10px;">
+                                    <a href="https://www.arrowservices.co/" style="text-decoration: none; color: #000;">arrowservices.co</a>
+
+                                    </td>
                                 </tr>
+
                             </table>
                             </div>
 
@@ -278,7 +296,8 @@
             <tr style="background: url('{{ $invoice_footer_image }}') no-repeat center; background-size: cover;">
                 <td style="text-align:center; height: 45px;">
                     <p style="font-family: arial; font-size: 10px; font-weight: 700; color: whitesmoke; color: black; margin-top: -50px;">
-                        {{ $site_name }} | {{ $company_email }} | {{ $site->site_link }}
+                        {{ $site_name }} | {{ $company_email }} | <a href="https://www.arrowservices.co/" style="text-decoration: none; color: #000;">arrowservices.co</a>
+
                     </p>
                 </td>
             </tr>
