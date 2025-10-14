@@ -50,45 +50,45 @@
                             <table style="border-collapse: collapse;;">
                                 <tr style="border-collapse: collapse;height: 35px;">
                                     <td
-                                        style="width: 200px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;color: #5E5E5E;">
+                                        style="width: 250px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;color: #5E5E5E;">
                                         <img src="{{ $invoice_image5 }}" alt="" style="height: 10px;"> {{ $company_address }},
                                     </td>
                                     <td
-                                        style="width: 600px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;border-bottom: 1px solid black;">
+                                        style="width: 100px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;border-bottom: 1px solid black;">
                                         <b>Total Due:</b>
                                     </td>
                                     <td
-                                        style="width: 600px;text-align: right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;border-bottom: 1px solid black;">
+                                        style="width: 100px;text-align: right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;border-bottom: 1px solid black;">
                                         <b>{{ site_currency() . number_format($invoice_amount, 2) }}</b>
                                     </td>
                                 </tr>
                                 <tr style="border-collapse: collapse;height: 25px;">
                                     <td
-                                        style="width: 200px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;color: #5E5E5E;">
+                                        style="width: 250px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;color: #5E5E5E;">
                                         <img src="{{ $invoice_image3 }}" alt="" style="height: 10px;">
                                         {{ $company_mobile }}
                                     </td>
                                     <td
-                                        style="width: 600px;text-align: left;font-family: Raleway;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;color: #5E5E5E;">
+                                        style="width: 100px;text-align: left;font-family: Raleway;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;color: #5E5E5E;">
                                         Invoice Number
                                     </td>
                                     <td
-                                        style="width: 600px;text-align: right;font-family: Raleway;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;color: #5E5E5E;">
+                                        style="width: 100px;text-align: right;font-family: Raleway;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;color: #5E5E5E;">
                                         Invoice Date
                                     </td>
                                 </tr>
                                 <tr style="border-collapse: collapse;height: 25px;">
                                     <td
-                                        style="width: 200px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;color: #5E5E5E;">
+                                        style="width: 250px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;color: #5E5E5E;">
                                         <img src="{{ $invoice_image4 }}" alt="" style="height: 10px;">
                                         {{ $company_email }}
                                     </td>
                                     <td
-                                        style="width: 600px;text-align: left;font-family: Raleway;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;color: #5E5E5E;">
+                                        style="width: 100px;text-align: left;font-family: Raleway;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;color: #5E5E5E;">
                                         {{ $invoice_number }}
                                     </td>
                                     <td
-                                        style="width: 600px;text-align: right;font-family: Raleway;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;color: #5E5E5E;">
+                                        style="width: 100px;text-align: right;font-family: Raleway;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;color: #5E5E5E;">
                                         {{ $invoice_date }}
                                     </td>
                                 </tr>
