@@ -9,7 +9,7 @@
             margin: 0;
             padding: 0;
             font-family: Arial, sans-serif;
-            background: #fff;
+            background: #f7f7fa;
         }
 
         .main-table {
@@ -20,7 +20,6 @@
             background: #f7f7fa;
             border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
         }
 
         .header-row td,
@@ -270,7 +269,7 @@
                
             </td>
         </tr> -->
-        <div style="position: relative; background: url('{{ $invoice_footer_image }}') no-repeat center center; background-size: cover; height: 133px; width: 100%;" class="for_bttom">
+        <div style=" background: url('{{ $invoice_footer_image }}') no-repeat center center; background-size: cover; height: 133px; width: 100%;" class="for_bttom">
     <!-- Optional content like logo/title can go here -->
 </div>
     </table>
