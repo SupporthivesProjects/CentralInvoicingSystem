@@ -24,7 +24,7 @@
                         <td style="height: 20px;"></td>
                     </tr>
                     <tr>
-                        <td style="padding-top : 30px ">
+                        <td style="padding-top : 35px ">
                             <table width="100%" cellspacing="0" cellpadding="" border="0px">
                                 <tr
                                     style="border-collapse: collapse; height: 100px; width: 600px; border-collapse: collapse; ">
@@ -76,15 +76,27 @@
                                 <tr>
                                     <td style="padding-top: 10px;width: 300px;">
                                         <p
-                                            style="font-family: arial;font-size: 10px;margin: 0px;font-weight: 400; text-align: left;padding-top: 5px;padding-bottom: 5px;padding-left: 5px;">
+                                            style="font-family: arial;font-size: 12px;margin: 0px;font-weight: 400; text-align: left;padding-top: 5px;padding-bottom: 5px;padding-left: 5px;">
                                             {{ $customer_name }}
                                         </p>
                                     </td>
 
                                     <td style="padding-top: 10px;width: 300px;">
                                         <p
-                                            style="font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;text-align: left; padding-top: 5px;padding-bottom: 5px;padding-left: 5px;">
+                                            style="font-family: arial;font-size: 12px;margin: 0px;font-weight: 400;text-align: left; padding-top: 5px;padding-bottom: 5px;padding-left: 5px;">
                                             {{ $company_name }}
+                                        </p>
+                                        <p
+                                            style="font-family: arial;font-size: 14px;margin: 0px;font-weight: 400; text-align: left;padding-bottom: 5px;padding-right: 5px;color: darkgreen;">
+                                            <b>Address:</b>
+                                        </p>
+                                        <p
+                                            style="font-family: arial;font-size: 14px;margin: 0px;font-weight: 400; text-align: left;padding-bottom: 5px;padding-right: 5px;color: darkgreen;">
+                                            <b>Website:</b>
+                                        </p>
+                                        <p
+                                            style="font-family: arial;font-size: 14px;margin: 0px;font-weight: 400; text-align: left;padding-bottom: 5px;padding-right: 5px;color: darkgreen;">
+                                            <b>Email:</b>
                                         </p>
                                     </td>
                                 </tr>
@@ -127,15 +139,15 @@
                                         
                                     </td>
                                     <td
-                                        style="width:150px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;">
+                                        style="width:150px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 12px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;">
                                         {{ site_currency() }} {{  number_format($product->unit_price, 2) }}
                                     </td>
                                     <td
-                                        style="width:100px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;">
+                                        style="width:100px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 12px;margin: 0px;font-weight: 400; border-collapse: collapse;">
                                         1
                                     </td>
                                     <td
-                                        style="width:100px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-right: 2px;">
+                                        style="width:100px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 12px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-right: 2px;">
                                         {{ site_currency() }} {{  number_format($product->unit_price, 2) }}
                                     </td>
                                 </tr>
@@ -155,7 +167,7 @@
 
                                     </td>
                                     <td
-                                        style="width:100px;text-align:center;font-family: 'Space Mono', monospace;color: darkgreen; font-size: 10px;margin: 0px;font-weight: 600; border-collapse: collapse;">
+                                        style="width:100px;text-align:center;font-family: 'Space Mono', monospace;color: darkgreen; font-size: 12px;margin: 0px;font-weight: 600; border-collapse: collapse;">
                                         DISCOUNT
                                     </td>
                                     <td
