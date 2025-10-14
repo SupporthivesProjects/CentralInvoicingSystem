@@ -50,7 +50,7 @@
                             <table style="border-collapse: collapse;;">
                                 <tr style="border-collapse: collapse;height: 35px;">
                                     <td
-                                        style="width: 450px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;color: #5E5E5E;">
+                                        style="width: 500px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;color: #5E5E5E;">
                                         <img src="{{ $invoice_image5 }}" alt="" style="height: 10px;"> {{ $company_address }},
                                     </td>
                                     <td
@@ -64,7 +64,7 @@
                                 </tr>
                                 <tr style="border-collapse: collapse;height: 25px;">
                                     <td
-                                        style="width: 450px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;color: #5E5E5E;">
+                                        style="width: 500px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;color: #5E5E5E;">
                                         <img src="{{ $invoice_image3 }}" alt="" style="height: 10px;">
                                         {{ $company_mobile }}
                                     </td>
@@ -79,7 +79,7 @@
                                 </tr>
                                 <tr style="border-collapse: collapse;height: 25px;">
                                     <td
-                                        style="width: 450px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;color: #5E5E5E;">
+                                        style="width: 500px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;color: #5E5E5E;">
                                         <img src="{{ $invoice_image4 }}" alt="" style="height: 10px;">
                                         {{ $company_email }}
                                     </td>
@@ -244,7 +244,7 @@
                                         {{ $company_address }}
                                     </td>
                                 </tr>
-                                <tr style="border-collapse: collapse;">
+                                <!-- <tr style="border-collapse: collapse;">
                                     <td
                                         style=" width: 200px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;color: #5E5E5E;padding-left: 40px;padding-top: 10px;">
                                         <img src="{{ $invoice_image3 }}" alt="" style="height: 10px; padding-right: 10px;">+1 132 456 9873
@@ -258,7 +258,26 @@
                                         style="width: 200px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;color: #5E5E5E;padding-top: 10px;padding-left: 5px;">
                                         <img src="{{ $invoice_image2 }}" alt="" style="height: 10px; padding-right: 10px;">{{ $site->site_link }}
                                     </td>
-                                </tr>
+                                </tr> -->
+                                <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 10px;">
+
+                                    <div style="display: flex; align-items: center; width: 200px; font-family: arial; font-size: 10px; font-weight: 400; color: #5E5E5E; padding-left: 40px;">
+                                        <img src="{{ $invoice_image3 }}" alt="" style="height: 10px; padding-right: 10px;">
+                                        +1 132 456 9873
+                                    </div>
+
+                                    <div style="display: flex; align-items: center; width: 200px; font-family: arial; font-size: 10px; font-weight: 400; color: #5E5E5E; padding-left: 5px;">
+                                        <img src="{{ $invoice_image4 }}" alt="" style="height: 10px; padding-right: 10px;">
+                                        {{ $company_email }}
+                                    </div>
+
+                                    <div style="display: flex; align-items: center; width: 200px; font-family: arial; font-size: 10px; font-weight: 400; color: #5E5E5E; padding-left: 5px;">
+                                        <img src="{{ $invoice_image2 }}" alt="" style="height: 10px; padding-right: 10px;">
+                                        {{ $site->site_link }}
+                                    </div>
+
+                                </div>
+
                             </table>
                             </div>
 
