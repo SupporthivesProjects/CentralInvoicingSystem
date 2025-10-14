@@ -259,24 +259,22 @@
                                         <img src="{{ $invoice_image2 }}" alt="" style="height: 10px; padding-right: 10px;">{{ $site->site_link }}
                                     </td>
                                 </tr> -->
-                                <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 10px;">
+                                <tr style="border-collapse: collapse;">
+                                    <td style="width: 33.33%; text-align: left; font-family: arial; font-size: 10px; font-weight: 400; color: #5E5E5E; padding-left: 40px; padding-top: 10px; white-space: nowrap;">
+                                    <img src="{{ $invoice_image3 }}" alt="" style="height: 10px; vertical-align: middle; padding-right: 10px;">
+                                    +1 132 456 9873
+                                    </td>
 
-                                    <div style="display: flex; align-items: center; width: 200px; font-family: arial; font-size: 10px; font-weight: 400; color: #5E5E5E; padding-left: 40px;">
-                                        <img src="{{ $invoice_image3 }}" alt="" style="height: 10px; padding-right: 10px;">
-                                        +1 132 456 9873
-                                    </div>
+                                    <td style="width: 33.33%; text-align: center; font-family: arial; font-size: 10px; font-weight: 400; color: #5E5E5E; padding-top: 10px; padding-left: 5px; white-space: nowrap;">
+                                    <img src="{{ $invoice_image4 }}" alt="" style="height: 10px; vertical-align: middle; padding-right: 10px;">
+                                    {{ $company_email }}
+                                    </td>
 
-                                    <div style="display: flex; align-items: center; width: 200px; font-family: arial; font-size: 10px; font-weight: 400; color: #5E5E5E; padding-left: 5px;">
-                                        <img src="{{ $invoice_image4 }}" alt="" style="height: 10px; padding-right: 10px;">
-                                        {{ $company_email }}
-                                    </div>
-
-                                    <div style="display: flex; align-items: center; width: 200px; font-family: arial; font-size: 10px; font-weight: 400; color: #5E5E5E; padding-left: 5px;">
-                                        <img src="{{ $invoice_image2 }}" alt="" style="height: 10px; padding-right: 10px;">
-                                        {{ $site->site_link }}
-                                    </div>
-
-                                </div>
+                                    <td style="width: 33.33%; text-align: right; font-family: arial; font-size: 10px; font-weight: 400; color: #5E5E5E; padding-top: 10px; padding-left: 5px; white-space: nowrap;">
+                                    <img src="{{ $invoice_image2 }}" alt="" style="height: 10px; vertical-align: middle; padding-right: 10px;">
+                                    {{ $site->site_link }}
+                                    </td>
+                                </tr>
 
                             </table>
                             </div>
