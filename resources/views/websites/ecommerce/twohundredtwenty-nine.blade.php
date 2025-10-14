@@ -59,7 +59,7 @@
 
 
                                 <tr style="border-collapse: collapse;">
-                                    <td style="padding-top: 10px;width: 300px;">
+                                    <td style="padding-top: 10px;width: 300px;vertical-align: top;">
                                         <p
                                             style="font-family: arial;font-size: 14px;margin: 0px;font-weight: 400; text-align: left;padding-bottom: 5px;padding-left: 5px;color: darkgreen;">
                                             <b>Invoice to</b>
@@ -71,7 +71,7 @@
                                         </p>
                                     </td>
 
-                                    <td style="padding-top: 10px;width: 300px;">
+                                    <td style="padding-top: 10px;width: 300px;vertical-align: top;">
                                         <p
                                             style="font-family: arial;font-size: 14px;margin: 0px;font-weight: 400; text-align: left;padding-bottom: 5px;padding-right: 5px;color: darkgreen;">
                                             <b>Billed from:</b>
@@ -220,24 +220,9 @@
                                     </td>
                                 </tr>
                                 <tr style="border-collapse: collapse;height: 50px;color: white;">
-                                    <td
-                                        style="width: 100px;text-align: center;font-family: 'Montserrat', sans-serif;font-size: 11px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 2px;">
-                                        <b></b>
-                                    </td>
-                                    <td
-                                        style="width: 300px;text-align:left;font-family: 'Montserrat', sans-serif;font-size:8px;margin: 0px;font-weight: 400; border-collapse: collapse;">
-
-                                    </td>
-                                    <td
-                                        style="width:100px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 8px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;">
-
-                                    </td>
-                                    <td
-                                        style="width:100px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 8px;margin: 0px;font-weight: 400; border-collapse: collapse;">
-
-                                    </td>
-                                    <td
-                                        style="width:100px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 28px;margin: 0px;font-weight: 800; border-collapse: collapse;padding-right: 2px;">
+                                   
+                                    <td colspan="5"
+                                        style="width:100px;text-align:right;font-family: 'Montserrat', sans-serif;font-size: 28px;margin: 0px;font-weight: 800; border-collapse: collapse;padding-right: 2px;">
                                         {{ site_currency() }} {{ number_format(($invoice_amount ), 2) }}
                                     </td>
                                 </tr>
