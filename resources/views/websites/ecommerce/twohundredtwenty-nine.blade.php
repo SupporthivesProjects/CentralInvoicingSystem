@@ -24,10 +24,10 @@
                         <td style="height: 20px;"></td>
                     </tr>
                     <tr>
-                        <td style="height: 75px; ">
+                        <td style="padding-top : 30px ">
                             <table width="100%" cellspacing="0" cellpadding="" border="0px">
                                 <tr
-                                    style="border-collapse: collapse; height: 100px; width: 600px; border-collapse: collapse; padding-top : 30px">
+                                    style="border-collapse: collapse; height: 100px; width: 600px; border-collapse: collapse; ">
                                     <td style="width: 300px;border:0px;">
                                         <img src="{{ $invoice_header_image }}" alt=""
                                             style="height: 60px; justify-content: left;padding-left: 40px;padding-top: 10px;">
