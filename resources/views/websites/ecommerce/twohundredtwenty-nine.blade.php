@@ -16,7 +16,7 @@
 <body>
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
-            <td align="center" bgcolor="#f2f2f2" style="padding:0px;">
+            <td align="center" bgcolor="#fff" style="padding:0px;">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
                     style="border-collapse: collapse; background: url({{ $invoice_image1 }}) no-repeat;background-position: top center;background-size:contain;">
                     <!-- Header -->
@@ -27,7 +27,7 @@
                         <td style="height: 75px; ">
                             <table width="100%" cellspacing="0" cellpadding="" border="0px">
                                 <tr
-                                    style="border-collapse: collapse; height: 100px; width: 600px; border-collapse: collapse;">
+                                    style="border-collapse: collapse; height: 100px; width: 600px; border-collapse: collapse; padding-top : 30px">
                                     <td style="width: 300px;border:0px;">
                                         <img src="{{ $invoice_header_image }}" alt=""
                                             style="height: 60px; justify-content: left;padding-left: 40px;padding-top: 10px;">
