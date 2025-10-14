@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Your Email Title</title>
+    <title>{{ $site_name }} - #{{ $invoice_number }}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -10,10 +10,10 @@
         rel="stylesheet">
 </head>
 
-<body>
+<body style="margin:0px !important;padding:0px!important;">
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
-            <td align="center" bgcolor="#f2f2f2" style="padding: 20px 0;">
+            <td align="center" bgcolor="#f2f2f2" style="padding:0px 0;">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
                     style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
                     <!---header--->
@@ -54,7 +54,7 @@
                                             Billed From :
                                         </p>
                                         <p style="margin: 0px;font-family: Arial;font-size: 10px;line-height: 18px;">
-                                            {{ $site_name }}
+                                            Websites Ur Way
                                         </p>
                                     </td>
                                     <td align="right">
@@ -74,18 +74,24 @@
                                             <b>Email : </b>{{ $company_email }}
                                         </p>
                                         <p style="margin: 0px;font-family: Arial;font-size: 10px;line-height: 18px;">
-                                            <b>Website : </b>{{ $site->site_link }}
+                                            <b>Website : </b>{{ $site_name }}
                                         </p>
-                                        <p style="margin: 0px;font-family: Arial;font-size: 10px;line-height: 18px;">
-                                            <b>Phone : </b>{{ $company_mobile }}
-                                        </p>
-                                        <p style="margin: 0px;font-family: Arial;font-size: 10px;line-height: 18px;">
-                                            <b>Address : </b>{{ $company_address }}
-                                        </p>
+                                        @if(!empty($company_mobile))
+                                            <p style="margin: 0px;font-family: Arial;font-size: 10px;line-height: 18px;">
+                                                <b>Phone : </b>{{ $company_mobile }}
+                                            </p>
+                                        @endif
+
+                                        @if(!empty($company_address))
+                                            <p style="margin: 0px;font-family: Arial;font-size: 10px;line-height: 18px;">
+                                                <b>Address : </b>{{ $company_address }}
+                                            </p>
+                                        @endif
+
                                     </td>
                                 </tr>
                             </table>
-                            <div style="min-height: 450px !important;">
+                            <div style="min-height: 654px !important;">
                                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
                                     style="border-collapse: collapse;margin-top: 40px;">
                                     <tr style="background:#f0ae8f;">

@@ -46,7 +46,7 @@
                                     </tr>
                                     <tr>
                                         <td colspan="1" style="padding: 10px; border-bottom: 1px solid #ddd; font-size: 14px">
-                                            <strong>{{ $site_name }}</strong><br />
+                                            <strong>Relationship Resource Hub</strong><br />
                                             {{ $company_address }}<br />
                                             <strong>Phone :</strong> {{ $company_mobile }}<br />
                                             <strong>Email :</strong> {{ $company_email }}
@@ -90,7 +90,7 @@
                                                     <td style="text-align: right">{{ site_currency() }} {{  number_format(($invoice_amount + $discount_amount), 2) }}</td>
                                                 </tr>
                                                 <tr style="border-bottom: 1px solid grey;">
-                                                    <td style="text-align: right">DISCOUNT (5%)</td>
+                                                    <td style="text-align: right">DISCOUNT ({{ round(($discount_amount / ($invoice_amount + $discount_amount)) * 100) }}%)</td>
                                                     <td style="text-align: right">{{ site_currency() }} {{  number_format(($discount_amount), 2) }}</td>
                                                 </tr>
                                                 <tr>
@@ -127,36 +127,17 @@
         <!-- Footer Section -->
         <tr>
             <td colspan="6" style="padding: 0; margin: 0;">
-                <!-- <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse: collapse;">
-                    <tr>
-                        <td style="background-image: url('{{ $invoice_footer_image }}'); background-repeat: no-repeat; background-position: center; background-size: cover; padding: 30px; font-size: 14px; color: #000;">
-                            <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse: collapse;">
-                                <tr>
-                                    <td style="vertical-align: top; width: 60%;">
-                                        <p style="margin: 0; padding-bottom: 10px;"><strong>Phone :</strong> {{ $company_mobile }}</p>
-                                        <p style="margin: 0; padding-bottom: 10px;"><strong>Email :</strong> {{ $company_email }}</p>
-                                        <p style="margin: 0;"><strong>Website :</strong> {{ $site->site_link }}</p>
-                                    </td>
-                                    <td style="vertical-align: top; text-align: right;">
-                                        <p style="margin: 0; padding-bottom: 10px;">{{ $company_address }}</p>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                </table> -->
                 <div style="width: 100%; background-image: url('{{ $invoice_footer_image }}'); background-repeat: no-repeat; background-position: center; background-size: cover; padding: 30px; font-size: 14px; color: #000; box-sizing: border-box;" class="for_bttom">
                     <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap;">
                         <!-- Left Column -->
                         <div style="width: 60%; min-width: 250px;">
                         <p style="margin: 0; padding-bottom: 10px;"><strong>Phone :</strong> {{ $company_mobile }}</p>
                         <p style="margin: 0; padding-bottom: 10px;"><strong>Email :</strong> {{ $company_email }}</p>
-                        <p style="margin: 0;"><strong>Website :</strong> {{ $site->site_link }}</p>
+                        <p style="margin: 0;"><strong>Website :</strong> {{ $site_name }}</p>
                         </div>
 
-                        <!-- Right Column -->
                         <div style="text-align: right; min-width: 200px;">
-                        <p style="margin: 0; padding-bottom: 10px;">{{ $company_address }}</p>
+                        <p style="margin: 0; padding-bottom: 10px;"></p>
                         </div>
                     </div>
                 </div>

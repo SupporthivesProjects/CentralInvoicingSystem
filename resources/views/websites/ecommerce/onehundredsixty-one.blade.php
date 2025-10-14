@@ -6,12 +6,16 @@
 </head>
 <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background: #fff;">
     <!-- Main Wrapper Table -->
-    <table width="100%" cellpadding="0" cellspacing="0" style="background: #fff; margin: auto;">
+    <table width="95%" cellpadding="0" cellspacing="0" style="background: #fff; margin: auto;">
         <!-- Header Row with Background -->
         <tr>
-            <td colspan="2"
-                style="position: relative; background: url('{{ $invoice_header_image }}') no-repeat center center; background-size: cover; height: 165px;">
-                <!-- Optional content like logo/title can go here -->
+            <td colspan="2" 
+                style="position: relative; 
+                    background: url('{{ $invoice_header_image }}') no-repeat center center; 
+                    background-size: cover; 
+                    height: 165px; 
+                    padding-left: 20px; 
+                    padding-right: 20px;">
             </td>
         </tr>
         <!-- Invoice Content Row -->
@@ -58,7 +62,7 @@
                                 </p>
                             </div>
                             <!-- Table Header -->
-                            <div style="min-height: 450px !important;">
+                            <div style="min-height: 670px !important;">
                             <table width="100%" cellpadding="10" cellspacing="0"
                                 style="margin-top: 30px; font-size: 13px; border-collapse: collapse;">
                                 <thead>
@@ -73,10 +77,7 @@
                                     @foreach($products as $product)
                                     <tr style="border-bottom: 1px solid #ddd;">
                                         <td style="padding: 12px 8px;">
-                                            <strong>{{ $product->name }}</strong><br>
-                                            <span style="color: #333;">
-                                                {!! \Illuminate\Support\Str::limit(strip_tags($product->description), 60) !!}
-                                            </span>
+                                            <strong>{{ $product->name }}</strong>
                                         </td>
                                         <td align="right">{{ site_currency() . number_format($product->unit_price, 2) }}</td>
                                         <td align="right">1</td>
