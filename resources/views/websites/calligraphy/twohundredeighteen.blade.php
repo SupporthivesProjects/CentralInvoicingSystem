@@ -55,6 +55,7 @@
                                                 style="font-family: Arial;text-align: end; font-size: 10px;margin: 0px;font-weight: 400;">
                                                 <b>To:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b>
                                                 {{ $customer_name }}<br>
+                                                {{ $customer_email }}
                                             </p>
                                         </div>
                                     </td>
@@ -166,7 +167,7 @@
                                 <tr>
                                     <td
                                         style="width: 120px; padding-top: 16px; color:#000000; text-align:center;padding-left:10px;font-family:  Arial;font-size:9px;margin: 0px;font-weight: 400;border-collapse: collapse;">
-                                        {{ $company_name }} {!! $company_address !!}
+                                        {{ $company_name }} | {!! $company_address !!}
                                     </td>
                                 </tr>
                             </table>
