@@ -76,6 +76,7 @@
                                             <td style="padding: 12px; text-align: right; border-bottom: 1px solid #ccc;">
                                                 {{-- site_currency() . number_format($invoice_amount ?? 0, 2) --}}
                                                 {{ site_currency() . number_format($product->unit_price, 2) }}
+                                                
                                             </td>
                                         </tr>
                                         @endforeach
