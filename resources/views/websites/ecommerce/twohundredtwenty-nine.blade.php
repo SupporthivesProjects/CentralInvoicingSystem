@@ -55,10 +55,10 @@
                             <h1
                                 style="text-align: center;color: darkgreen;font-size: 75px;margin:0px;font-family: 'Space Mono', monospace;">
                                 INVOICE</h1>
-                            <table style="border-collapse: collapse;border-bottom: 0px;border: 0px;">
+                            <table style="border-collapse: collapse;border-bottom: 0px;border: 0px; width:100%">
 
 
-                                <tr style="border-collapse: collapse;">
+                                <tr style="border-collapse: collapse;width:100%">
                                     <td style="padding-top: 10px;width: 50%;vertical-align: top;">
                                         <p
                                             style="font-family: arial;font-size: 14px;margin: 0px;font-weight: 400; text-align: left;margin-bottom: 8px;padding-left: 5px;color: darkgreen;">
