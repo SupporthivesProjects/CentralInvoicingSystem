@@ -36,6 +36,7 @@
                     <tr style="background: url('{{ $invoice_image4 }}') no-repeat;background-position: center;background-size: cover;">
                         <td style="padding: 70px;padding-top:0px;">
                             <table>
+                                <br>
                                 <tr>
                                     <td style="padding-top: 30px; width: 100%;">
                                         <p style="font-family: arial;font-size:10px;margin: 0px;font-weight: 400;">
@@ -69,7 +70,7 @@
                                  
                             </table>
                             
-                            <div style="min-height: 790px !important;">
+                            <div style="min-height: 792px !important;">
                             <table style="border-collapse: collapse;border-bottom: 0px;border: 0px;">
                                 <tr style="border-collapse: collapse;height: 30px;background-color: #0078D7; color: white;border-bottom: 0px;border: 0px;">
                                     <td style="width: 200px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 600;border-collapse: collapse;padding-left: 5px;">
