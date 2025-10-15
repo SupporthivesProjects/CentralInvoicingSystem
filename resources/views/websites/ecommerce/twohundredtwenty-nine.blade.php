@@ -81,7 +81,7 @@
                                         </p>
                                         <p
                                             style="font-family: arial;font-size: 14px;margin: 0px;font-weight: 400; text-align: left;padding-bottom: 5px;padding-right: 5px;color: darkgreen;">
-                                            <b> Address : </b>  {!! $company_address !!} 
+                                            <b> Address : </b>  {{ $company_address }} 
                                         </p>
                                         <p
                                             style="font-family: arial;font-size: 14px;margin: 0px;font-weight: 400; text-align: left;padding-bottom: 5px;padding-right: 5px;color: darkgreen;">
