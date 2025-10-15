@@ -13,8 +13,8 @@
                         <td style="padding: 0px;max-height: 130px;">
                             <table>
                                 <tr >
-                                    <td style="height: 150px; background: url({{ $invoice_header_image }}) no-repeat;background-position:center;background-size:cover;width: 600px;">
-                                        <b style="padding-left: 70px;color: white;font-size: 22px;font-family: 'Courier New', Courier, monospace;"> Invioce</b><br>
+                                    <td style="height: 150px; background: url({{ $invoice_header_image }}) no-repeat;background-position:center;background-size:cover;width: 100%;">
+                                        <b style="padding-left: 70px;color: white;font-size: 22px;font-family: 'Courier New', Courier, monospace;"> Invoice</b><br>
                                         <b style="padding-left: 75px;color: white;font-size: 9px;font-family: 'Courier New', Courier, monospace;">No.{{ $invoice_number }}</b>
                                     </td>
 
