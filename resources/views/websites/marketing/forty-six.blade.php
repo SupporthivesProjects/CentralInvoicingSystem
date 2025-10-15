@@ -133,7 +133,7 @@
     <table width="100%" class="maintable" cellspacing="0" cellpadding="0" border="0" style="margin: auto;">
         <tr>
             <td style="height:100vh;vertical-align:top;">
-                <table  width="100%" cellspacing="0" cellpadding="0" border="0"  style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
+                <table  width="100%" cellspacing="0" cellpadding="0" border="0"  style="border-collapse: collapse;">
                 
                     <tbody>
                         <tr>
