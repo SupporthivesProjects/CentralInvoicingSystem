@@ -10,12 +10,10 @@
         <!-- Header Row with Background -->
         <tr>
             <td colspan="2" 
-                style="position: relative; 
-                    background: url('{{ $invoice_header_image }}') no-repeat center center; 
-                    background-size: cover; 
-                    height: 165px; 
-                    padding-left: 20px; 
-                    padding-right: 20px;">
+                style="
+                    background: url('{{ $invoice_header_image }}') no-repeat center; 
+                    background-size: contain; 
+                    height: 165px;">
             </td>
         </tr>
         <!-- Invoice Content Row -->
@@ -27,7 +25,7 @@
                         <td width="42%" valign="top"
                             style="padding: 50px 40px 30px; border-right: 1px solid #ccc; font-size: 14px; line-height: 1.6;">
                             <div style="margin-bottom: 28px;">
-                                <p style="margin: 0; font-size: 11px; color: #888; letter-spacing: 1px;">DATE</p>
+                                <p style="margin: 0; font-size: 11px; color: #888; letter-spacing: 1px;">DATEee</p>
                                 <p style="margin: 5px 0 0; color: #000;">{{ $invoice_date }}</p>
                             </div>
                             <div style="margin-bottom: 28px;">
