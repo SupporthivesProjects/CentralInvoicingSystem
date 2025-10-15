@@ -13,13 +13,13 @@
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
             <td align="center" bgcolor="#f2f2f2" style="">
-                <table width="600" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse; ">
+                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse; ">
                     <!-- Header -->
                     <tr>
                         <td style="padding: 10px;max-height: 130px;">
                             <table>
                                 <tr >
-                                    <td style="height: 120px; background: url('{{ $invoice_header_image }}') no-repeat;background-position:center;background-size:100% 100%;width: 600px;text-align: center;">
+                                    <td style="height: 120px; background: url('{{ $invoice_header_image }}') no-repeat;background-position:center;background-size:100% 100%;width: 100%;text-align: center;">
                                       <img src="{{ $company_logo  }}" alt="" style="height: 50px; ">
                                     </td>
                                     
