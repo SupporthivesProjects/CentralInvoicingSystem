@@ -295,10 +295,10 @@
         <table width="100%" cellspacing="0" cellpadding="0" border="0">
             <tr style="background: url('{{ $invoice_footer_image }}') no-repeat center; background-size: cover;">
                 <td style="text-align:center; height: 45px;">
-                    <p style="font-family: arial; font-size: 10px; font-weight: 700; color: whitesmoke; color: black; margin-top: -50px;">
+                    <!-- <p style="font-family: arial; font-size: 10px; font-weight: 700; color: whitesmoke; color: black; margin-top: -50px;">
                         {{ $site_name }} | {{ $company_email }} | <a href="https://www.arrowservices.co/" style="text-decoration: none; color: #000;">arrowservices.co</a>
 
-                    </p>
+                    </p> -->
                 </td>
             </tr>
         </table>
