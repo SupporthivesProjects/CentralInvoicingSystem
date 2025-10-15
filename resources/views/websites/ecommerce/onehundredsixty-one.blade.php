@@ -25,7 +25,7 @@
                         <td width="42%" valign="top"
                             style="padding: 50px 40px 30px; border-right: 1px solid #ccc; font-size: 14px; line-height: 1.6;">
                             <div style="margin-bottom: 28px;">
-                                <p style="margin: 0; font-size: 11px; color: #888; letter-spacing: 1px;">DATE</p>
+                                <p style="margin: 0; font-size: 11px; color: #888; letter-spacing: 1px;">DATEee</p>
                                 <p style="margin: 5px 0 0; color: #000;">{{ $invoice_date }}</p>
                             </div>
                             <div style="margin-bottom: 28px;">
