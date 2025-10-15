@@ -79,7 +79,7 @@
                                         {{ $product->name }}
                                     </td>
                                     <td style="width: 100px;text-align: center;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;border-right: 1px solid black;">
-                                        Silver
+                                        {{ $packageName = trim(explode('-', $product->name)[1] ?? '') }}
                                     </td>
                                     <td style="width: 100px;text-align: center;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;border-right: 1px solid black;">
                                         {{ $product->subscription ?? '-' }}
