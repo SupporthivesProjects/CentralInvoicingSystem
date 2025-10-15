@@ -40,7 +40,7 @@
                                         <p style="font-family: arial;font-size: 26px;margin: 0px;font-weight: 400;  text-align: left; ">
                                             <b>INVOICE</b>
                                         </p>
-                                        <p style="margin-bottom: 0px;"><b>INVOICE NUMBER12 :</b> {{ $invoice_number }}</p>
+                                        <p style="margin-bottom: 0px;"><b>INVOICE NUMBER :</b> {{ $invoice_number }}</p>
                                         <p style="margin-top: 0px;"><b>DATE :</b>{{ $invoice_date }}</p>
                                         <p><b>Billed To :</b>{{ $customer_name ? $customer_name : '' }}<br>
                                             {{ $customer_email ? $customer_email : '' }}<br>

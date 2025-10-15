@@ -172,12 +172,19 @@
                                     </td>
                                 </tr>
                                 @endforeach
-                                <tr style="border-collapse: collapse;height: 30px;background-color: white;">
-                                    <td
-                                        style="border-top-left-radius: 10px;border-bottom-left-radius: 10px; width: 100px;color: darkgreen; text-align: center;font-family: 'Space Mono', monospace;font-size: 11px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 2px;">
-                                        <b>SUBTOTAL</b>
+                                <tr style="border-collapse: collapse;">
+
+                                    <td colspan="5"
+                                        style="border-top-left-radius: 10px;border-bottom-left-radius: 10px; width: 100px;font-weight: 400; border-collapse: collapse;padding-left: 2px;">
+                                        <div style="display: flex; flex-direction: row;justfiy-content: space-between;align-items: flex-end;background-color: white;max-width: 400px; border-radius:10px; height: 40px ">
+                                            <b style="color: darkgreen; text-align: center;font-family: 'Space Mono', monospace;font-size: 11px;margin: 0px;">SUBTOTAL</b>
+                                            <p>{{ site_currency() }} {{ number_format(($invoice_amount + $discount_amount), 2) }}</p>
+                                            <b style="color: darkgreen; text-align: center;font-family: 'Space Mono', monospace;font-size: 11px;margin: 0px;">DISCOUNT</b>
+                                            <p>{{ site_currency() }} {{ number_format(($discount_amount), 2) }}</p>
+                                        </div>
+                                        
                                     </td>
-                                    <td
+                                    <!-- <td
                                         style="width: 300px;padding-left: 5px; text-align:left;font-family: 'Montserrat', sans-serif;font-size:9px;margin: 0px;font-weight: 400; border-collapse: collapse;">
                                         {{ site_currency() }} {{ number_format(($invoice_amount + $discount_amount), 2) }}
 
@@ -193,7 +200,7 @@
                                     <td
                                         style="border-top-right-radius: 10px;border-bottom-right-radius: 10px; width:100px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 9px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-right: 2px;">
                                         {{ site_currency() }} {{ number_format(($discount_amount), 2) }}
-                                    </td>
+                                    </td> -->
                                 </tr>
                                 <tr style="border-collapse: collapse;height: 50px;color: white;">
                                     <td
