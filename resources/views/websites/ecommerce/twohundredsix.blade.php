@@ -63,7 +63,7 @@
                                         <td>1</td>
                                         <td align="left">{{ $product->name  }}</td>
                                         <td align="right">{{ site_currency() }}{{ number_format($product->unit_price, 2) }}</td>
-                                        <td align="right">{{ number_format($invoice_amount, 2) }}</td>
+                                        <td align="right">{{ site_currency() }}{{ number_format($product->unit_price, 2) }}</td>
                                     </tr>
                                     @endforeach
                                 </table>
