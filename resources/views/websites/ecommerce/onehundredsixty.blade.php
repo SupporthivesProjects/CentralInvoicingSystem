@@ -22,7 +22,7 @@
                         <td style="padding: 0px;max-height: 130px;width: 100%;">
                             <table style="width: 100%;">
                                 <tr style="width: 100%;">
-                                    <td style="height: 150px; background: url({{ $invoice_header_image }}) no-repeat;background-position:center;background-size:cover;width: 100%;">
+                                    <td style="height: 150px; background: url({{ $invoice_header_image }}) no-repeat;background-position: top center;background-size:cover;width: 100%;">
                                         <b style="padding-left: 70px;color: white;font-size: 22px;font-family: 'Courier New', Courier, monospace;"> Invoice</b><br>
                                         <b style="padding-left: 75px;color: white;font-size: 9px;font-family: 'Courier New', Courier, monospace;">No.{{ $invoice_number }}</b>
                                     </td>
@@ -157,8 +157,8 @@
                     <!-- Content End-->
 
                     <!-----------Footer----------->
-                    <!-- <tr>
-                        <td style="height: 130px;">
+                    <tr>
+                        <td style="height: 130px;" class="for_bttom">
                             <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;">
                                 <tr style="background: url({{ $invoice_footer_image }}) no-repeat;background-position: center;background-size: cover;height: 80px;padding:50px;background-size:cover;width: 100%;">
                                     <td style="width: 150px;">
@@ -176,8 +176,8 @@
                                 <tr>
                             </table>
                         </td>
-                    </tr> -->
-                    <div style="height: 130px;" class="for_bttom">
+                    </tr>
+                    <!-- <div style="height: 130px;" class="for_bttom">
                         <div style="background: url('{{ $invoice_footer_image }}') no-repeat center / cover; height: 80px; padding: 50px; width: 100%;">
                             <div style="width: 150px; margin: 0 auto; text-align: center;">
                             <p style="font-family: arial; font-size: 10px; margin: 0; color: #00A8DC; font-weight: bold;">
@@ -189,7 +189,7 @@
                             </p>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
 
                     <!-----------Footer End----------->
 
