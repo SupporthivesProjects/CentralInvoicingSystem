@@ -79,10 +79,10 @@
                                         {{ $product->name }}
                                     </td>
                                     <td style="width: 100px;text-align: center;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;border-right: 1px solid black;">
-                                        {{ $product->subscription ?? '-' }}
+                                        {{ $product->description }}
                                     </td>
                                     <td style="width: 100px;text-align: center;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;border-right: 1px solid black;">
-                                        1 Month
+                                        {{ $product->subscription ?? '-' }}
                                     </td>
                                     <td style="width: 100px;text-align: right;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
                                         {{ site_currency() }} {{ number_format($product->unit_price ?? 0, 2) }}
