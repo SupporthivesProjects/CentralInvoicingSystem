@@ -6,7 +6,7 @@
 </head>
 <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background: #fff;">
     <!-- Main Wrapper Table -->
-    <table width="95%" cellpadding="0" cellspacing="0" style="background: #fff; margin: auto;">
+    <table width="90%" cellpadding="0" cellspacing="0" style="background: #fff; margin: auto;">
         <!-- Header Row with Background -->
         <tr>
             <td colspan="2" 
@@ -39,9 +39,10 @@
                                 </p>
                             </div>
                             <div style="margin-bottom: 28px;">
-                                <p style="margin: 0; font-size: 11px; color: #888; letter-spacing: 1px;">BILLED FROM</p>
-                                <p style="margin: 5px 0 0; color: #000;">
+                                <p style="margin: 0; color: #000; font-size: 11px; color: #888; letter-spacing: 1px;">BILLED FROM</p>
+                                <p style="margin: 5px 0 0;">
                                     <strong>{{ $site_name }}</strong><br>
+                                        {!! $company_address !!}
                                 </p>
                             </div>
                             <div>
@@ -62,7 +63,7 @@
                                 </p>
                             </div>
                             <!-- Table Header -->
-                            <div style="min-height: 670px !important;">
+                            <div style="min-height: 671px !important;">
                             <table width="100%" cellpadding="10" cellspacing="0"
                                 style="margin-top: 30px; font-size: 13px; border-collapse: collapse;">
                                 <thead>
