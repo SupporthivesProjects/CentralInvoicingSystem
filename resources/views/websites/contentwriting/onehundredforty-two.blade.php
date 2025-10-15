@@ -7,6 +7,7 @@
         body {
             margin: 0;
             padding: 0;
+            background: #E9FCF7;
         }
         .footer-fixed {
             position: fixed;
@@ -128,9 +129,7 @@
             color: #E9FCF7;
             text-align: center;
         }
-        table {
-            background: #E9FCF7;
-        }
+       
     </style>
 
 </head>
@@ -138,7 +137,7 @@
     <table width="800" cellspacing="0" cellpadding="0" border="0" style="margin: auto;">
         <tr>
             <td style="background-size: cover; height: 100%;">
-                <table width="800" cellspacing="0" cellpadding="0" border="0"  style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
+                <table width="800" cellspacing="0" cellpadding="0" border="0"  style="border-collapse: collapse;">
                    <tbody>
                     <tr>
                         <td style="background: url('{{ $invoice_header_image }}') no-repeat; background-size:cover;padding: 66px 0px;">
@@ -219,15 +218,6 @@
                                             <td>{{ site_currency() }} {{ number_format($product->unit_price, 2) }}</td>
                                             <td>{{ site_currency() }} {{ number_format($product->unit_price, 2) }}</td>
                                         </tr>
-                                    @else
-                                        {{-- Empty row --}}
-                                        <tr>
-                                            <td style="height: 45px;">&nbsp;</td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                        </tr>
                                     @endif
                                 @endfor
                                 <tr>
@@ -270,20 +260,6 @@
                     
                    </tbody>
                    <tfoot>
-                        <!-- <tr>
-                            <td style="width: 100%; background: url('{{ $invoice_footer_image }}') no-repeat; background-size:contain;">
-                                <p style="text-align: center;">
-                                    <div style="width: 340px !important; text-align: center; margin: auto;">
-                                        <p style="padding-bottom: 5px;"> <strong></strong></p>
-                                        <p>
-                                           {!! $site->site_description !!}
-                                        </p>
-                                    </div>
-                                </p>
-                            </td>
-                        </tr> -->
-
-                         <!-- Original Footer Row (Hidden for PDF rendering) -->
                     <tr>
                         <td style="display:none;"></td>
                     </tr>
