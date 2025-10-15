@@ -6,7 +6,7 @@
 <body>
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
-            <td align="center" bgcolor="#f2f2f2" style="padding: 20px 0;">
+            <td align="center" bgcolor="#f2f2f2" style="">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
                     <!-- Header -->
                     <tr>
@@ -97,7 +97,7 @@
                                 @endforeach
                                 <tr style="border-collapse: collapse;height: 30px; border-bottom: 0px;border: 0px; ">
                                     <td style="width: 600px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-left: 5px;">
-                                       <b>Our Payment Methods:</b>
+                                       <!-- <b>Our Payment Methods:</b> -->
                                     </td>
                                     <td style="width: 200px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
 
@@ -112,7 +112,7 @@
                                 </tr>
                                 <tr style="border-collapse: collapse;height: 30px; border-bottom: 0px;border: 0px; ">
                                     <td style="width: 600px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-left: 5px;">
-                                       Invoice # {{ $invoice_number }}
+                                       <!-- Invoice # {{ $invoice_number }} -->
                                     </td>
                                     <td style="width: 200px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
 
@@ -127,13 +127,13 @@
                                 </tr>
                                 <tr style="border-collapse: collapse;height: 30px; border-bottom: 0px;border: 0px; ">
                                     <td style="width: 600px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-left: 5px;">
-                                       PayPal, Wire Transfer, Payoneer
+                                       <!-- PayPal, Wire Transfer, Payoneer -->
                                     </td>
                                     <td style="width: 200px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
 
                                     </td>
                                     <td style="width: 200px;text-align: right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;background-color: #F2F2F2;">
-                                       <b>Total Due</b>>
+                                       <b>Total Due</b>
                                     </td>
                                     <td style="width: 200px;text-align:right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;background-color: #F2F2F2;">
                                         <b>{{ site_currency() . number_format($invoice_amount, 2) }}</b>

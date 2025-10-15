@@ -50,7 +50,7 @@
                             <table style="border-collapse: collapse;;">
                                 <tr style="border-collapse: collapse;height: 35px;">
                                     <td
-                                        style="width: 500px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;color: #5E5E5E;">
+                                        style="width: 300px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;color: #5E5E5E;">
                                         <img src="{{ $invoice_image5 }}" alt="" style="height: 10px;"> {{ $company_address }},
                                     </td>
                                     <td
@@ -58,7 +58,7 @@
                                         <b>Total Due:</b>
                                     </td>
                                     <td
-                                        style="width: 100px;text-align: right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;border-bottom: 1px solid black;">
+                                        style="width: 100px;text-align: right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;border-bottom: 1px solid black; color:#00A89D">
                                         <b>{{ site_currency() . number_format($invoice_amount, 2) }}</b>
                                     </td>
                                 </tr>
