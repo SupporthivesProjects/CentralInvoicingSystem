@@ -155,8 +155,8 @@
                                             {{ $company_name }}
                                         </h2>
                                         <p style="margin:0px;color:#ffffff;font-size:14px;font-family: DM Sans;line-height: 16px;">
-                                            {{ $company_email }}<br>
                                             {!! $company_address !!}<br>
+                                            {{ $company_email }}<br>
                                             {{ $company_mobile }}
                                         </p>
                                     </td>
