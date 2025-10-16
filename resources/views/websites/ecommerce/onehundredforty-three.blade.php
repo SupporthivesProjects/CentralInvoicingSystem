@@ -3,6 +3,13 @@
 
 <head>
     <title>Your Email Title</title>
+    <style>
+        
+        *{
+            margin:0px;
+            padding:0px;
+        }
+    </style>
 </head>
 
 <body>

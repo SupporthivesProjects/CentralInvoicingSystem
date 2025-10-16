@@ -10,6 +10,10 @@
             right: 0;
             width: 100%;
         }
+        *{
+            margin:0px;
+            padding:0px;
+        }
     </style>
 </head>
 <body>
