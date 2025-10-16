@@ -87,7 +87,7 @@
                             <tr style="background-color: #FF444E !important; height: 30px;">
                                 <td>
                                     <p style="margin: 0px;color:#FFFFFF;font-family: Poppins;font-size: 10px;font-weight: 500;text-align: center;text-transform: uppercase;">
-                                        QTYY.
+                                        QTY.
                                     </p>
                                 </td>
                                 <td>
