@@ -122,7 +122,7 @@
                         <td colspan="4"></td>
                         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                         <td colspan="2" style="text-align: right; font-weight: bold; color: #e87c7c; padding: 0px;">
-                            Grand Total
+                            Grand Total2
                         </td>
                         <td style="font-weight: bold; color: #e87c7c; padding: 12px; width: 60px;text-align: right;">
                             {{ site_currency() . number_format($invoice_amount, 2) }}
