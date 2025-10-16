@@ -20,17 +20,183 @@
                     style="border-collapse: collapse; ">
                     <!-- Header -->
                     <tr>
-                        <td style="padding: 0px;max-height: 130px;">
+                        <td colspan="2" style="padding: 0px;max-height: 130px;">
                             
                             <img src="{{ $invoice_header_image }}" alt=""
-                                style="height: 20px; width: 190px; padding-left: 20px;">
+                                style="height: 20px; width: 190px;">
                                    
                         </td>
                     </tr>
                     <!-- Header End -->
 
-                    <!-- Content -->
                     <tr>
+                        <td>
+                            <div class="">
+                                <img src="{{ $invoice_image4 }}" alt="" style="height: 20px;">
+                                <div class="">
+                                    <b style="font-size: 12px;">Area</b> 
+                                    <p style="font-family: arial;font-size:10px;margin: 0px;font-weight: 400;">123 London road, kent, abc 123</p>
+                                </div>
+                            </div>
+                            <div class="">
+                                <img src="{{ $invoice_image5 }}" alt="" style="height: 20px;">
+                                <div class="">
+                                    <b style="font-size: 12px;">Phone</b> 
+                                    <p style="font-family: arial;font-size:10px;margin: 0px;font-weight: 400;">+44 123 456 789</p>
+                                </div>
+                            </div>
+                            <div class="">
+                                <img src="{{ $invoice_image3 }}" alt="" style="height: 20px;">
+                                <div class="">
+                                    <b style="font-size: 12px;">Email</b> 
+                                    <p style="font-family: arial;font-size:10px;margin: 0px;font-weight: 400;">info@estarsolutions.com</p>
+                                </div>
+                            </div>
+                            <div class="">
+                                <img src="{{ $invoice_image2 }}" alt="" style="height: 20px;">
+                                <div class="">
+                                    <b style="font-size: 12px;">Website</b> 
+                                    <p style="font-family: arial;font-size:10px;margin: 0px;font-weight: 400;"><a href="{{ $site->site_link }}" style="text-decoration:none;">www.estarsolutions.co</a></p>
+                                </div>
+                            </div>
+                            <br>
+                            <br>
+                            <div style="background: #fff; padding: 16px 24px;">
+
+                                <!-- Billed From Section -->
+                                <div style="margin-bottom: 40px;">
+                                    <h3 style="font-size: 14px;font-weight: 600; color: #000000; margin-bottom: 8px;">Billed From:</h3>
+                                    <hr>
+                                    <h3 style="font-size: 16px;font-weight: 600; color: #000000; margin-bottom: 8px;">Evolron L.L.C-FZ</h3>
+                                    <p style="font-family: arial;font-size:10px;margin: 0px;font-weight: 400;">
+                                        Meydan Grandstand,<br>
+                                        6th floor, Meydan Road,<br>
+                                        Nad Al Sheba, Dubai, U.A.E.
+                                    </p>
+                                </div>
+
+                                <!-- Invoice To Section -->
+                                <div style="margin-top: 50px;">
+                                    <h3 style="font-size: 14px;font-weight: 600; color: #000000; margin-bottom: 8px;">Invoice To</h3>
+                                    <hr>
+                                    <h3 style="font-size: 14px;font-weight: 600; color: #000000; margin-bottom: 8px;">John Smith</h3>
+                                </div>
+
+                            </div>
+                        </td>
+                        <td>
+                            <table style="width:100%; border-collapse: collapse; margin-bottom: 20px;">
+                                <tr>
+                                    <td style="text-align: right;">
+                                        <h1 style="margin: 0; font-size: 38px; letter-spacing: 4px;">INVOICE</h1>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <hr style="border: none; margin-bottom: 20px;">
+
+                            <!-- Invoice Summary -->
+                            <table style="width: 100%; border-collapse: collapse; text-align: center; margin-bottom: 30px;">
+                                <tr>
+                                    <td style="border-right: 1px solid #ccc; padding: 10px;">
+                                        <p style="margin: 0; font-size: 13px;">Due Amount:</p>
+                                        <p style="margin: 5px 0 0; font-weight: 700;">£1000.00</p>
+                                    </td>
+                                    <td style="border-right: 1px solid #ccc; padding: 10px;">
+                                        <p style="margin: 0; font-size: 13px;">Invoice Date:</p>
+                                        <p style="margin: 5px 0 0; font-weight: 700;">18 August 2023</p>
+                                    </td>
+                                    <td style="padding: 10px;">
+                                        <p style="margin: 0; font-size: 13px;">Invoice No:</p>
+                                        <p style="margin: 5px 0 0; font-weight: 700;">#12345678</p>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- Items Table -->
+                            <table
+                                style="width: 100%; border-collapse: collapse; margin-bottom: 20px; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc;">
+                                <tr style="background: #fff;">
+                                    <th
+                                        style="text-align: left; padding: 10px 0; font-size: 14px; border-bottom: 1px solid #ccc;">
+                                        Descriptions</th>
+                                    <th
+                                        style="text-align: left; padding: 10px 0; font-size: 14px; border-bottom: 1px solid #ccc;">
+                                        Qty</th>
+                                    <th
+                                        style="text-align: left; padding: 10px 0; font-size: 14px; border-bottom: 1px solid #ccc;">
+                                        Price</th>
+                                    <th
+                                        style="text-align: left; padding: 10px 0; font-size: 14px; border-bottom: 1px solid #ccc;">
+                                        Total</th>
+                                </tr>
+
+                                <tr>
+                                    <td style="padding: 10px 0; font-weight: 700;">Business Item 1</td>
+                                    <td>1</td>
+                                    <td>£100.00</td>
+                                    <td>£100.00</td>
+                                </tr>
+
+                                <tr>
+                                    <td style="padding: 10px 0; font-weight: 700;">Business Item 1</td>
+                                    <td>2</td>
+                                    <td>£100.00</td>
+                                    <td>£100.00</td>
+                                </tr>
+
+                                <tr>
+                                    <td style="padding: 10px 0; font-weight: 700;">Business Item 1</td>
+                                    <td>1</td>
+                                    <td>£100.00</td>
+                                    <td>£100.00</td>
+                                </tr>
+
+                                <tr>
+                                    <td style="padding: 10px 0; font-weight: 700;">Business Item 1</td>
+                                    <td>2</td>
+                                    <td>£100.00</td>
+                                    <td>£100.00</td>
+                                </tr>
+
+                                <tr>
+                                    <td style="padding: 10px 0; font-weight: 700;">Business Item 1</td>
+                                    <td>1</td>
+                                    <td>£100.00</td>
+                                    <td>£100.00</td>
+                                </tr>
+                            </table>
+
+                            <!-- Subtotal Section -->
+                            <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">
+                                <tr>
+                                    <td style="width: 70%;"></td>
+                                    <td style="width: 15%; text-align: right; padding-right: 10px;">Sub Total:</td>
+                                    <td style="width: 15%; text-align: right;">£1000.00</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td style="text-align: right; padding-right: 10px;">Discount</td>
+                                    <td style="text-align: right;">£1000.00</td>
+                                </tr>
+                            </table>
+
+                            <hr style="border: none; border-top: 1px solid #ccc;">
+
+                            <!-- Grand Total -->
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <tr>
+                                    <td style="width: 70%;"></td>
+                                    <td style="width: 15%; text-align: right; font-weight: 700;">GRAND TOTAL</td>
+                                    <td style="width: 15%; text-align: right; font-weight: 700;">£1000.00</td>
+                                </tr>
+                            </table>
+
+                        </td>
+                    </tr>
+
+                    <!-- Content -->
+                    <!-- <tr>
                         <td style="padding-left:40px;padding-right: 40px; padding-top:0px;">
                             <table>
                                 <tr>
@@ -159,7 +325,7 @@
                                             <td>
                                                 <p
                                                     style="font-family: arial;font-size:8px;margin: 0px;font-weight: 400;padding-bottom: 5px;">
-                                                    <!-- <b style="font-size: 9px;">P:</b> {{ $customer_mobile }} -->
+                                                   
                                                 </p>
                                             </td>
                                         </tr>
@@ -167,7 +333,7 @@
                                             <td>
                                                 <p
                                                     style="font-family: arial;font-size:8px;margin: 0px;font-weight: 400;padding-bottom: 5px;">
-                                                    <!-- <b style="font-size: 9px;">E:</b> {{ $customer_email }} -->
+                                                   
                                                 </p>
                                             </td>
                                         </tr>
@@ -289,14 +455,7 @@
                                         <tr style="text-align: right; width: 400px;">
                                             <td style="width: 100px;text-align: right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;padding-right: 10px;"
                                                 colspan="4">
-                                                <!-- <p
-                                                    style="font-family: arial;font-size:11px;margin: 0px;font-weight: 400;padding-bottom: 5px;">
-                                                    <b>Notes:</b>
-                                                </p>
-                                                <p
-                                                    style="font-family: arial;font-size:11px;margin: 0px;font-weight: 400;padding-bottom: 5px;">
-                                                    Lorem ipsum dolor sit amet, sed diam nonummy nibh euismod dolor<br>
-                                                    tincidunt ut laoreet dolore magna aliquam erat volutpat. -->
+                                                
 
                                             </td>
                                         </tr>
@@ -310,7 +469,7 @@
 
 
 
-
+ -->
 
 
 
