@@ -60,7 +60,7 @@
                                 </div>
                             </div>
                             <br>
-                            <div style="background-image: url({{ $invoice_image1 }}) cover no-repeat; padding: 24px 16px; min-height: 820px;">
+                            <div style="background-image: url({{ $invoice_image1 }});background-size: cover;background-repeat:no-repeat;background-position: top center; padding: 24px 16px; min-height: 820px;">
 
                                 <!-- Billed From Section -->
                                 <div style="margin-bottom: 40px;">
@@ -176,22 +176,13 @@
                                     <td style="text-align: right; padding-right: 10px;">Discount:</td>
                                     <td style="text-align: right;">£1000.00</td>
                                 </tr>
-                                <tr>
-                                    <td colspan="1"></td>
-                                    <td colspan="2" style="text-align: right; padding-right: 10px;">Sub Total:</td>
-                                    <td colspan="1" style="text-align: right;">£1000.00</td>
-                                </tr>
                             </table>
 
-                            
-
-                            <hr style="border: none; border-top: 1px solid #ccc;">
 
                             <!-- Grand Total -->
                             <table style="width: 100%; border-collapse: collapse;">
                                 <tr>
-                                    <td style="width: 70%;"></td>
-                                    <td style="width: 15%; text-align: right; font-weight: 700;">GRAND TOTAL</td>
+                                    <td style="text-align: right; font-weight: 700;">GRAND TOTAL</td>
                                     <td style="width: 15%; text-align: right; font-weight: 700;">£1000.00</td>
                                 </tr>
                             </table>
