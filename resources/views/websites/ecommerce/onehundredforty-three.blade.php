@@ -126,7 +126,7 @@
                                         style="text-align: left; padding: 10px 0; font-size: 14px; border-bottom: 1px solid #ccc;">
                                         Price</th>
                                     <th
-                                        style="text-align: left; padding: 10px 0; font-size: 14px; border-bottom: 1px solid #ccc;">
+                                        style="text-align: right; padding: 10px 0; font-size: 14px; border-bottom: 1px solid #ccc;">
                                         Total</th>
                                 </tr>
 
@@ -134,51 +134,56 @@
                                     <td style="padding: 10px 0; font-weight: 700; border-bottom: 1px solid #ccc;">Business Item 1</td>
                                     <td>1</td>
                                     <td>£100.00</td>
-                                    <td>£100.00</td>
+                                    <td style="text-align: right;">£100.00</td>
                                 </tr>
 
                                 <tr>
                                     <td style="padding: 10px 0; font-weight: 700; border-bottom: 1px solid #ccc;">Business Item 1</td>
                                     <td>2</td>
                                     <td>£100.00</td>
-                                    <td>£100.00</td>
+                                    <td style="text-align: right;">£100.00</td>
                                 </tr>
 
                                 <tr>
                                     <td style="padding: 10px 0; font-weight: 700; border-bottom: 1px solid #ccc;">Business Item 1</td>
                                     <td>1</td>
                                     <td>£100.00</td>
-                                    <td>£100.00</td>
+                                    <td style="text-align: right;">£100.00</td>
                                 </tr>
 
                                 <tr>
                                     <td style="padding: 10px 0; font-weight: 700; border-bottom: 1px solid #ccc;">Business Item 1</td>
                                     <td>2</td>
                                     <td>£100.00</td>
-                                    <td>£100.00</td>
+                                    <td style="text-align: right;">£100.00</td>
                                 </tr>
 
                                 <tr>
                                     <td style="padding: 10px 0; font-weight: 700; border-bottom: 1px solid #ccc;">Business Item 1</td>
                                     <td>1</td>
                                     <td>£100.00</td>
-                                    <td>£100.00</td>
+                                    <td style="text-align: right;">£100.00</td>
                                 </tr>
-                            </table>
 
                             <!-- Subtotal Section -->
-                            <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">
                                 <tr>
-                                    <td style="width: 70%;"></td>
-                                    <td style="width: 15%; text-align: right; padding-right: 10px;">Sub Total:</td>
-                                    <td style="width: 15%; text-align: right;">£1000.00</td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td style="text-align: right; padding-right: 10px;">Discount</td>
+                                    <td colspan="2"></td>
+                                    <td style="text-align: right; padding-right: 10px;">Sub Total:</td>
                                     <td style="text-align: right;">£1000.00</td>
                                 </tr>
+                                <tr>
+                                    <td colspan="2"></td>
+                                    <td style="text-align: right; padding-right: 10px;">Discount:</td>
+                                    <td style="text-align: right;">£1000.00</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="1"></td>
+                                    <td colspan="2" style="text-align: right; padding-right: 90px;">Sub Total:</td>
+                                    <td colspan="1" style="text-align: right;">£1000.00</td>
+                                </tr>
                             </table>
+
+                            
 
                             <hr style="border: none; border-top: 1px solid #ccc;">
 
