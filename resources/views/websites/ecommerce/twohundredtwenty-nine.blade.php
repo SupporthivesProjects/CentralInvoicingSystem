@@ -59,7 +59,7 @@
 
 
                                 <tr style="border-collapse: collapse;width:100%">
-                                    <td style="padding-top: 10px;width: 50%;vertical-align: top;">
+                                    <td style="padding-top: 20px;width: 50%;vertical-align: top;">
                                         <p
                                             style="font-family: arial;font-size: 14px;margin: 0px;font-weight: 400; text-align: left;margin-bottom: 8px;padding-left: 5px;color: darkgreen;">
                                             <b>Invoice to</b>
@@ -70,7 +70,7 @@
                                         </p>
                                     </td>
 
-                                    <td style="padding-top: 10px;width: 50%;vertical-align: top;">
+                                    <td style="padding-top: 20px;width: 50%;vertical-align: top;">
                                         <p
                                             style="font-family: arial;font-size: 14px;margin: 0px;font-weight: 400; text-align: left;margin-bottom: 8px;padding-right: 5px;color: darkgreen;">
                                             <b>Billed from:</b>
@@ -81,7 +81,7 @@
                                         </p>
                                         <p
                                             style="font-family: arial;font-size: 14px;margin: 0px;font-weight: 400; text-align: left;padding-bottom: 5px;padding-right: 5px;color: darkgreen;">
-                                            <b> Address : </b>  <span style="color: black; width: 60px; margin-left: 10px">{{ $company_address }} </span>
+                                            <b> Address : </b>  <span style="color: black;display: inline-block; width: 80px; margin-left: 10px">{{ $company_address }} </span>
                                         </p>
                                         <p
                                             style="font-family: arial;font-size: 14px;margin: 0px;font-weight: 400; text-align: left;padding-bottom: 5px;padding-right: 5px;color: darkgreen;">
