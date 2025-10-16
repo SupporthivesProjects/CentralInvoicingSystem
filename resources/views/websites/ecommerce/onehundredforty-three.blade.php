@@ -60,7 +60,7 @@
                                 </div>
                             </div>
                             <br>
-                            <div style="background-image: url({{ $invoice_image1 }}); padding: 24px 16px; min-height: 500px;">
+                            <div style="background-image: url({{ $invoice_image1 }}); padding: 24px 16px; min-height: 800px;">
 
                                 <!-- Billed From Section -->
                                 <div style="margin-bottom: 40px;">
