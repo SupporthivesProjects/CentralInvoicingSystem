@@ -119,7 +119,7 @@
                                     <td style="width: 200px;text-align: right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;">
                                         <b>Sub Total</b>
                                     </td>
-                                    <td style="width: 200px;text-align:right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
+                                    <td style="width: 200px;text-align:right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 10px">
                                         <b>{{ site_currency() . number_format($invoice_amount + $discount_amount, 2) }}</b>
                                     </td>
 
@@ -134,7 +134,7 @@
                                     <td style="width: 200px;text-align: right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;">
                                         <b>Discount</b>
                                     </td>
-                                    <td style="width: 200px;text-align:right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
+                                    <td style="width: 200px;text-align:right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 10px">
                                         <b>{{ site_currency() . number_format($discount_amount, 2) }}</b>
                                     </td>
 
@@ -149,7 +149,7 @@
                                     <td style="width: 200px;text-align: right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;background-color: #F2F2F2;">
                                        <b>Total Due</b>
                                     </td>
-                                    <td style="width: 200px;text-align:right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;background-color: #F2F2F2;">
+                                    <td style="width: 200px;text-align:right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;background-color: #F2F2F2;padding-right: 10px">
                                         <b>{{ site_currency() . number_format($invoice_amount, 2) }}</b>
                                     </td>
 
