@@ -123,7 +123,7 @@
                                         style="text-align: left; padding: 10px 0; font-size: 14px; border-bottom: 1px solid #ccc;">
                                         Qty</th>
                                     <th
-                                        style="text-align: right; padding: 10px 0; font-size: 14px; border-bottom: 1px solid #ccc;">
+                                        style="text-align: right; padding: 10px 0;padding-right: 10px; font-size: 14px; border-bottom: 1px solid #ccc;">
                                         Price</th>
                                     <th
                                         style="text-align: right; padding: 10px 0; font-size: 14px; border-bottom: 1px solid #ccc;">
@@ -183,7 +183,7 @@
                             <table style="width: 100%; border-collapse: collapse;">
                                 <tr>
                                     <td style="text-align: right; font-weight: 700;">GRAND TOTAL</td>
-                                    <td style="width: 15%; text-align: right; font-weight: 700;">£1000.00</td>
+                                    <td style="width: 10%; text-align: right; font-weight: 700;">£1000.00</td>
                                 </tr>
                             </table>
 
