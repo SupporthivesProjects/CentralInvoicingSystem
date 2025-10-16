@@ -133,35 +133,35 @@
                                 <tr>
                                     <td style="padding: 10px 0; font-weight: 700; border-bottom: 1px solid #ccc;">Business Item 1</td>
                                     <td style="border-bottom: 1px solid #ccc;">1</td>
-                                    <td style="border-bottom: 1px solid #ccc;">£100.00</td>
+                                    <td style="text-align: right; padding-right: 10px;border-bottom: 1px solid #ccc;">£100.00</td>
                                     <td style="text-align: right;border-bottom: 1px solid #ccc;">£100.00</td>
                                 </tr>
 
                                 <tr>
                                     <td style="padding: 10px 0; font-weight: 700; border-bottom: 1px solid #ccc;">Business Item 1</td>
                                     <td style="border-bottom: 1px solid #ccc;">2</td>
-                                    <td style="border-bottom: 1px solid #ccc;">£100.00</td>
+                                    <td style="text-align: right; padding-right: 10px;border-bottom: 1px solid #ccc;">£100.00</td>
                                     <td style="text-align: right;border-bottom: 1px solid #ccc;">£100.00</td>
                                 </tr>
 
                                 <tr>
                                     <td style="padding: 10px 0; font-weight: 700; border-bottom: 1px solid #ccc;">Business Item 1</td>
                                     <td style="border-bottom: 1px solid #ccc;">1</td>
-                                    <td style="border-bottom: 1px solid #ccc;">£100.00</td>
+                                    <td style="text-align: right; padding-right: 10px;border-bottom: 1px solid #ccc;">£100.00</td>
                                     <td style="text-align: right;border-bottom: 1px solid #ccc;">£100.00</td>
                                 </tr>
 
                                 <tr>
                                     <td style="padding: 10px 0; font-weight: 700; border-bottom: 1px solid #ccc;">Business Item 1</td>
                                     <td style="border-bottom: 1px solid #ccc;">2</td>
-                                    <td style="border-bottom: 1px solid #ccc;">£100.00</td>
+                                    <td style="text-align: right; padding-right: 10px;border-bottom: 1px solid #ccc;">£100.00</td>
                                     <td style="text-align: right;border-bottom: 1px solid #ccc;">£100.00</td>
                                 </tr>
 
                                 <tr>
                                     <td style="padding: 10px 0; font-weight: 700; border-bottom: 1px solid #ccc;">Business Item 1</td>
                                     <td style="border-bottom: 1px solid #ccc;">1</td>
-                                    <td style="border-bottom: 1px solid #ccc;">£100.00</td>
+                                    <td style="text-align: right; padding-right: 10px;border-bottom: 1px solid #ccc;">£100.00</td>
                                     <td style="text-align: right;border-bottom: 1px solid #ccc;">£100.00</td>
                                 </tr>
 
