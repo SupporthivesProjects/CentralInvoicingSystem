@@ -60,7 +60,7 @@
                                 </div>
                             </div>
                             <br>
-                            <div style="background-image: url({{ $invoice_image1 }}); padding: 24px 16px; min-height: 800px;">
+                            <div style="background-image: url({{ $invoice_image1 }}) contain top center no-repeat; padding: 24px 16px; min-height: 820px;">
 
                                 <!-- Billed From Section -->
                                 <div style="margin-bottom: 40px;">
@@ -168,17 +168,17 @@
                             <!-- Subtotal Section -->
                                 <tr>
                                     <td colspan="2"></td>
-                                    <td style="text-align: right; padding-right: 10px;">Sub Total:</td>
+                                    <td style="text-align: left; padding-right: 10px;">Sub Total:</td>
                                     <td style="text-align: right;">£1000.00</td>
                                 </tr>
                                 <tr>
                                     <td colspan="2"></td>
-                                    <td style="text-align: right; padding-right: 10px;">Discount:</td>
+                                    <td style="text-align: left; padding-right: 10px;">Discount:</td>
                                     <td style="text-align: right;">£1000.00</td>
                                 </tr>
                                 <tr>
                                     <td colspan="1"></td>
-                                    <td colspan="2" style="text-align: right; padding-right: 90px;">Sub Total:</td>
+                                    <td colspan="2" style="text-align: left; padding-right: 10px;">Sub Total:</td>
                                     <td colspan="1" style="text-align: right;">£1000.00</td>
                                 </tr>
                             </table>
