@@ -158,7 +158,7 @@
                             </tr>           
                             </table> -->
                             <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse;"> 
-                                <tr style="height: 80px; font-family: 'Poppins', sans-serif;">
+                                <tr style="height: 100px; font-family: 'Poppins', sans-serif;">
 
                                     <!-- Column 1 -->
                                     <td style="width: 33.33%; text-align: left; font-size: 10px; color: #5E5E5E; padding-left: 40px; padding-top: 10px;">
