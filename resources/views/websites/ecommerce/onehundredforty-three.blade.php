@@ -31,29 +31,29 @@
 
                     <tr>
                         <td style="vertical-align: top;">
-                            <div class="" style="display: flex; flex-direction: row; justify-content: flex-start; align-items: flex-start; gap: 16px;">
-                                <img src="{{ $invoice_image4 }}" alt="" style="height: 20px;">
+                            <div class="" style="display: flex; flex-direction: row; justify-content: flex-start; align-items: flex-start; gap: 12px;margin-bottom: 8px;padding-left: 12px;">
+                                <img src="{{ $invoice_image4 }}" alt="" style="height: 30px; width: 30px;">
                                 <div class="" style="display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-start;">
                                     <b style="font-size: 12px;">Area</b> 
                                     <p style="font-family: arial;font-size:10px;margin: 0px;font-weight: 400;">123 London road, kent, abc 123</p>
                                 </div>
                             </div>
-                            <div class="" style="display: flex; flex-direction: row; justify-content: flex-start; align-items: flex-start; gap: 16px;">
-                                <img src="{{ $invoice_image5 }}" alt="" style="height: 20px;">
+                            <div class="" style="display: flex; flex-direction: row; justify-content: flex-start; align-items: flex-start; gap: 12px;margin-bottom: 8px;padding-left: 12px;">
+                                <img src="{{ $invoice_image5 }}" alt="" style="height: 30px; width: 30px;">
                                 <div class="" style="display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-start;">
                                     <b style="font-size: 12px;">Phone</b> 
                                     <p style="font-family: arial;font-size:10px;margin: 0px;font-weight: 400;">+44 123 456 789</p>
                                 </div>
                             </div>
-                            <div class="" style="display: flex; flex-direction: row; justify-content: flex-start; align-items: flex-start; gap: 16px;">
-                                <img src="{{ $invoice_image3 }}" alt="" style="height: 20px;">
+                            <div class="" style="display: flex; flex-direction: row; justify-content: flex-start; align-items: flex-start; gap: 12px;margin-bottom: 8px;padding-left: 12px;">
+                                <img src="{{ $invoice_image3 }}" alt="" style="height: 30px; width: 30px;">
                                 <div class="" style="display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-start;">
                                     <b style="font-size: 12px;">Email</b> 
                                     <p style="font-family: arial;font-size:10px;margin: 0px;font-weight: 400;">info@estarsolutions.com</p>
                                 </div>
                             </div>
-                            <div class="" style="display: flex; flex-direction: row; justify-content: flex-start; align-items: flex-start; gap: 16px;">
-                                <img src="{{ $invoice_image2 }}" alt="" style="height: 20px;">
+                            <div class="" style="display: flex; flex-direction: row; justify-content: flex-start; align-items: flex-start; gap: 12px;margin-bottom: 8px;padding-left: 12px;">
+                                <img src="{{ $invoice_image2 }}" alt="" style="height: 30px; width: 30px;">
                                 <div class="" style="display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-start;">
                                     <b style="font-size: 12px;">Website</b> 
                                     <p style="font-family: arial;font-size:10px;margin: 0px;font-weight: 400;"><a href="{{ $site->site_link }}" style="text-decoration:none; color: #000000;">www.estarsolutions.co</a></p>
@@ -93,7 +93,7 @@
                                 </tr>
                             </table>
 
-                            <div style="width: 100%; height: 1px; background: #000000;"></div>
+                            <div style="width: 100%; height: 1px; background: #000000;margin-bottom: 20px;"></div>
 
                             <!-- Invoice Summary -->
                             <table style="width: 100%; border-collapse: collapse; text-align: center; margin-bottom: 30px;">
