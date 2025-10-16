@@ -5,7 +5,7 @@
     <title>Your Email Title</title>
     <style>
         
-        *{
+        *, body {
             margin:0px;
             padding:0px;
         }
@@ -15,7 +15,7 @@
 <body>
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
-            <td align="center" bgcolor="#f2f2f2" style="">
+            <td align="center" bgcolor="#ffffff" style="">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
                     style="border-collapse: collapse; ">
                     <!-- Header -->
