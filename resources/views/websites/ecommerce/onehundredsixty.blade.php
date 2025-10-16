@@ -27,8 +27,8 @@
                             <table style="width: 100%;">
                                 <tr style="width: 100%;">
                                     <td style="height: 230px; background: url({{ $invoice_header_image }}) no-repeat;background-position: top center;background-size:cover;width: 100%;">
-                                        <b style="padding-left: 120px;color: white;font-size: 22px;font-family: 'Courier New', Courier, monospace;"> Invoice</b><br>
-                                        <b style="padding-left: 120px;color: white;font-size: 9px;font-family: 'Courier New', Courier, monospace;">No.{{ $invoice_number }}</b>
+                                        <b style="padding-left: 90px;color: white;font-size: 22px;font-family: 'Courier New', Courier, monospace;"> Invoice</b><br>
+                                        <b style="padding-left: 92px;color: white;font-size: 9px;font-family: 'Courier New', Courier, monospace;">No.{{ $invoice_number }}</b>
                                     </td>
 
                                 </tr>
