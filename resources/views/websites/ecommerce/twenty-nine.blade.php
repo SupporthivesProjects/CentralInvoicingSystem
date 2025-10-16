@@ -34,7 +34,7 @@
 
                      <!-- Content -->
                     <tr style="background: url('{{ $invoice_image4 }}') no-repeat;background-position: center;background-size: cover;">
-                        <td style="padding: 70px;padding-top:30px;">
+                        <td style="padding: 70px;padding-top:26px;">
                             <table>
                                 <br>
                                 <tr>
