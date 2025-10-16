@@ -81,19 +81,45 @@
                                         </p>
                                         <p
                                             style="font-family: arial;font-size: 14px;margin: 0px;font-weight: 400; text-align: left;padding-bottom: 5px;padding-right: 5px;color: darkgreen;">
-                                            <b> Address : </b>  <span style="font-size: 15px; color: black;display: inline-block; width: 80px; margin-left: 10px">{{ $company_address }} </span>
+                                            <b> Address : </b>  <span style="color: black;display: inline-block; width: 80px; margin-left: 10px">{{ $company_address }} </span>
                                         </p>
                                         <p
                                             style="font-family: arial;font-size: 14px;margin: 0px;font-weight: 400; text-align: left;padding-bottom: 5px;padding-right: 5px;color: darkgreen;">
-                                            <b> Website : </b>  <span style="font-size: 15px; color: black;margin-left: 10px">{{ $site_name }}</span>
+                                            <b> Website : </b>  <span style="color: black;margin-left: 10px">{{ $site_name }}</span>
                                         </p>
                                         <p
                                             style="font-family: arial;font-size: 14px;margin: 0px;font-weight: 400; text-align: left;padding-bottom: 5px;padding-right: 5px;color: darkgreen;">
-                                            <b> Email : </b>  <span style="font-size: 15px; color: black;margin-left: 10px">{{ $company_email }}</span>
+                                            <b> Email : </b>  <span style="color: black;margin-left: 10px">{{ $company_email }}</span>
                                         </p>
                                     </td>
                                 </tr>
-                                
+                                <!-- <tr>
+                                    <td style="padding-top: 10px;width: 300px;">
+                                        <p
+                                            style="font-family: arial;font-size: 12px;margin: 0px;font-weight: 400; text-align: left;padding-top: 5px;padding-bottom: 5px;padding-left: 5px;">
+                                            {{ $customer_name }}
+                                        </p>
+                                    </td>
+
+                                    <td style="padding-top: 10px;width: 300px;">
+                                        <p
+                                            style="font-family: arial;font-size: 12px;margin: 0px;font-weight: 400;text-align: left; padding-top: 5px;padding-bottom: 5px;padding-left: 5px;">
+                                            {{ $company_name }}
+                                        </p>
+                                        <p
+                                            style="font-family: arial;font-size: 14px;margin: 0px;font-weight: 400; text-align: left;padding-bottom: 5px;padding-right: 5px;color: darkgreen;">
+                                            <b>Address:</b>
+                                        </p>
+                                        <p
+                                            style="font-family: arial;font-size: 14px;margin: 0px;font-weight: 400; text-align: left;padding-bottom: 5px;padding-right: 5px;color: darkgreen;">
+                                            <b>Website:</b>
+                                        </p>
+                                        <p
+                                            style="font-family: arial;font-size: 14px;margin: 0px;font-weight: 400; text-align: left;padding-bottom: 5px;padding-right: 5px;color: darkgreen;">
+                                            <b>Email:</b>
+                                        </p>
+                                    </td>
+                                </tr> -->
                             </table>
                             <table
                                 style="border-collapse: collapse;border-bottom: 0px;border: 0px; border-radius: 10px; background-image: linear-gradient(to bottom, #349651, #377548);">
