@@ -76,7 +76,7 @@
                                 </tr>
                             </table>
                             <br>
-                            <table width="100%" border="0" cellspacing="0" cellpadding="11" style="border-collapse: collapse; color: white;height:500px;">
+                            <table width="100%" border="0" cellspacing="0" cellpadding="11" style="border-collapse: collapse; color: white;height:400px;margin-top:50px;">
                                 <tr style="background-color: #0d1f1f; font-size: 10px;">
                                     <th align="left" style="color: #c3d94c; padding-left: 40px; width: 251px;">
                                         DESCRIPTION</th>
@@ -100,7 +100,7 @@
                             </table>
                             <br>
                             <table align="right" width="27%" border="0" cellspacing="0" cellpadding="0"
-                                style="color: #ffffff; font-size: 9px; margin-top: 35px; padding-right: 40px;">
+                                style="color: #ffffff; font-size: 9px; margin-top:100px; padding-right: 40px;">
                                 <tr>
                                     <td style="padding-bottom: 12px">Sub Total</td>
                                     <td align="right" style="padding-bottom: 12px font-size: 10px;">{{ site_currency() . number_format($invoice_amount + $discount_amount, 2) }}</td>
