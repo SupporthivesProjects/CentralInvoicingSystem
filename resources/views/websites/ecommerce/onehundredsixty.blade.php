@@ -23,12 +23,12 @@
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse;">
                     <!-- Header -->
                     <tr style="width: 100%;">
-                        <td style="padding: 0px;max-height: 130px;width: 100%;">
+                        <td style="padding: 0px;max-height: 300px;width: 100%;">
                             <table style="width: 100%;">
                                 <tr style="width: 100%;">
-                                    <td style="height: 150px; background: url({{ $invoice_header_image }}) no-repeat;background-position: top center;background-size:cover;width: 100%;">
-                                        <b style="padding-left: 70px;color: white;font-size: 22px;font-family: 'Courier New', Courier, monospace;"> Invoice</b><br>
-                                        <b style="padding-left: 75px;color: white;font-size: 9px;font-family: 'Courier New', Courier, monospace;">No.{{ $invoice_number }}</b>
+                                    <td style="height: 300px; background: url({{ $invoice_header_image }}) no-repeat;background-position: top center;background-size:cover;width: 100%;">
+                                        <b style="padding-left: 120px;color: white;font-size: 22px;font-family: 'Courier New', Courier, monospace;"> Invoice</b><br>
+                                        <b style="padding-left: 120px;color: white;font-size: 9px;font-family: 'Courier New', Courier, monospace;">No.{{ $invoice_number }}</b>
                                     </td>
 
                                 </tr>
@@ -43,7 +43,7 @@
                             <table>
 
                                 <tr>
-                                    <td style="padding-top: 10px;width: 200px;">
+                                    <td style="padding-top: 10px;width: 50%;vertical-align: top;">
                                         <p style="font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;  text-align: left; padding-top: 5px;padding-bottom: 5px;padding-left: 5px;">
                                             <b>BILLED TO:</b>
                                         </p>
@@ -56,7 +56,8 @@
                                         <p style="font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;  text-align: left; padding-top: 5px;padding-bottom: 5px;padding-left: 5px;">
                                            {{ $customer_email }}
                                         </p>
-                                     <td style="padding-top: 10px;width: 200px;">
+                                    </td> 
+                                     <td style="padding-top: 10px;width: 50%;vertical-align: top;">
                                        <p style="font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;  text-align: left; padding-top: 5px;padding-bottom: 5px;padding-left: 5px;">
                                             <b>BILLED FROM:</b>
                                         </p>
