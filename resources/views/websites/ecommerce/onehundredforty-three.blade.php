@@ -15,7 +15,7 @@
 <body>
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
-            <td align="center" bgcolor="#f2f2f2" style="padding: 0px 16px;">
+            <td align="center" bgcolor="#ffffff" style="padding: 0px 16px;">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
                     style="border-collapse: collapse; ">
                     <!-- Header -->
@@ -30,7 +30,7 @@
                     <!-- Header End -->
 
                     <tr>
-                        <td style="vertical-align: top;">
+                        <td style="vertical-align: top;width: 190px;padding-top: 40px;">
                             <div class="" style="display: flex; flex-direction: row; justify-content: flex-start; align-items: flex-start; gap: 12px;margin-bottom: 8px;padding-left: 12px;">
                                 <img src="{{ $invoice_image4 }}" alt="" style="height: 30px; width: 30px;">
                                 <div class="" style="display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-start;">
@@ -84,7 +84,7 @@
 
                             </div>
                         </td>
-                        <td style="vertical-align: top;">
+                        <td style="vertical-align: top;padding-top: 40px;">
                             <table style="width:100%; border-collapse: collapse; margin-bottom: 20px;">
                                 <tr>
                                     <td style="text-align: right;">
