@@ -10,7 +10,7 @@
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
                     <!-- Header -->
                    <tr>
-                        <td style="height: 75px; margin-top: 60px">
+                        <td style="height: 75px;">
                             <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse; height: 153px; background: url({{ $invoice_header_image }}) no-repeat;background-position:center;background-size:cover;width: 100%; border-collapse: collapse;">
                                 <tr >
                                     <td style="width: 300px;border:0px; height: 50px;padding-top: 25px;" >
@@ -73,7 +73,7 @@
                                      </div>
                                 </tr>
                             </table>
-                            <div style="min-height: 790px !important;">
+                            <div style="min-height: 787px !important;">
                             <table style="border-collapse: collapse;border-bottom: 0px;border: 0px;">
                                 <tr style="border-collapse: collapse;height: 50px; color: white;border-bottom: 1px solid black;border: 0px;">
                                     <td style="padding-left: 2px; width: 500px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 600;border-collapse: collapse;padding-left: 5px;border-right: 1px solid black;background-color: #3C7F79;">
