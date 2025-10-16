@@ -34,7 +34,7 @@
 <body>
 <table width="100%" cellspacing="0" cellpadding="0" border="0" style="margin: 0 auto; text-align: center;">
         <tr>
-            <td align="center" style="padding: 0px;">
+            <td align="center" style="padding: 0px !important;">
             <table class="invoice_header_image" width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
 
                 <tr >
