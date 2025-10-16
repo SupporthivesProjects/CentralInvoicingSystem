@@ -20,7 +20,7 @@
                     <!-- Header -->
                     <tr style="width: 100%;">
                         <td style="padding: 0px;max-height: 130px; width: 100%;">
-                            <table style="width: 100%;">
+                            <table style="width: 100%; border-spacing: 0px">
                                 <tr style="width: 100%;">
                                     <td style="height: 64px; background: url('{{ $invoice_header_image }}') no-repeat;background-position:center;background-size:cover;width: 100%;">
                                          <img src="{{ $company_logo }}" alt="" style="margin: auto; height: 50px; display: block;">
@@ -222,9 +222,9 @@
 
                     <!-----------Footer----------->
                     <tr>
-                        <td style="height: 75px;">
+                        <td style="height: 75px; border-spacing: 0px;">
                             <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;"> 
-                                <tr style="height: 70px; background: url('{{ $invoice_footer_image }}') no-repeat;background-position:center;background-size:cover;width: 600px; border-collapse: collapse;">
+                                <tr style="height: 75px; background: url('{{ $invoice_footer_image }}') no-repeat;background-position:center;background-size:cover;width: 600px; border-collapse: collapse;">
                                     <td style="width: 300px;border:0px" > 
                                         <img src="{{ $invoice_image1 }}" alt="" style="margin: auto; height: 20px; display: block;">
                                         <p style="font-family: arial;font-size: 8px;margin: auto;font-weight: 200; color: white; text-align: center; padding-top: 10px;">+44 330 027 2570</p>
