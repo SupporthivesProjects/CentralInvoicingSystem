@@ -60,13 +60,12 @@
                                 </div>
                             </div>
                             <br>
-                            <br>
-                            <div style="background-image: url({{ $invoice_image1 }}); padding: 24px 16px;">
+                            <div style="background-image: url({{ $invoice_image1 }}); padding: 24px 16px; min-height: 500px;">
 
                                 <!-- Billed From Section -->
                                 <div style="margin-bottom: 40px;">
                                     <h3 style="font-size: 14px;font-weight: 600; color: #000000; margin-bottom: 8px;">Billed From:</h3>
-                                    <div style="width: 100%; height: 1px; background: #000000;"></div>
+                                    <div style="width: 100%; height: 1px; background: #000000; margin-bottom: 8px;"></div>
                                     <h3 style="font-size: 16px;font-weight: 600; color: #000000; margin-bottom: 8px;">Evolron L.L.C-FZ</h3>
                                     <p style="font-family: arial;font-size:10px;margin: 0px;font-weight: 400;">
                                         Meydan Grandstand,<br>
@@ -78,13 +77,13 @@
                                 <!-- Invoice To Section -->
                                 <div style="margin-top: 50px;">
                                     <h3 style="font-size: 14px;font-weight: 600; color: #000000; margin-bottom: 8px;">Invoice To</h3>
-                                    <div style="width: 100%; height: 1px; background: #000000;"></div>
+                                    <div style="width: 100%; height: 1px; background: #000000; margin-bottom: 8px;"></div>
                                     <h3 style="font-size: 14px;font-weight: 600; color: #000000; margin-bottom: 8px;">John Smith</h3>
                                 </div>
 
                             </div>
                         </td>
-                        <td style="vertical-align: top;padding-top: 40px;">
+                        <td style="vertical-align: top;padding-top: 40px;padding-left: 30px;padding-right: 30px;">
                             <table style="width:100%; border-collapse: collapse; margin-bottom: 20px;">
                                 <tr>
                                     <td style="text-align: right;">
