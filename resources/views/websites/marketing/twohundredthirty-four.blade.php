@@ -19,11 +19,11 @@
     </style>
 
 </head>
-<body>
-    <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse; background: url('{{ $invoice_image1 }}') no-repeat;background-position: center;background-size: 100% 100%;">
+<body style="border-collapse: collapse; background: url('{{ $invoice_image1 }}') no-repeat;background-position: center;background-size: 100% 100%;">
+    <table width="100%" cellspacing="0" cellpadding="0" border="0" >
         <tr>
             <td  style="padding:0;">
-                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"  >
+                <table width="100%" cellspacing="0" cellpadding="0" border="0"   >
                     <!-- Header -->
                     <tr style="width: 100%">
                         <td style="padding-left: 40px;">
