@@ -45,7 +45,7 @@
                                                 font-weight: 800;
                                                 width: 119px;
                                                 border-radius: 5%;
-                                                margin-bottom: 8px;">
+                                                margin-bottom: 7px;">
                                            {{ $invoice_number }}
                                         </div>
                                     </div>
