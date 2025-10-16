@@ -135,27 +135,24 @@
 
                 <table style="width: 43%; font-size: 12px; display: flex; margin-left: auto; border-collapse: collapse;">
                     <tr>
-                        <td class="custom-line" style="padding-bottom: 10px; color: #333;text-align: right;">
-                            {{ $company_mobile }}
-                            <span style="float:right;">
+                        <td class="custom-line" style="padding-bottom: 10px; color: #333; display: flex; align-items: center; justify-content: flex-end; gap: 6px;">
+                          
+                            <span>{{ $company_mobile }}</span>
                                 <img style="width: 18px;" src="{{ $invoice_image6 }}" alt="">
-                            </span>
                         </td>
                     </tr>
                     <tr>
-                        <td class="custom-line" style="padding: 10px 0; color: #333;text-align: right;">
-                            {{ $company_email }}
-                            <span style="float:right; margin-left:6px;">
+                        <td class="custom-line" style="padding-bottom: 10px; color: #333; display: flex; align-items: center; justify-content: flex-end; gap: 6px;">
+                            
+                            <span>{{ $company_email }}</span>
                                 <img style="width: 18px;" src="{{ $invoice_image3 }}" alt="">
-                            </span>
                         </td>
                     </tr>
                     <tr>
-                        <td class="custom-line" style="padding-top: 10px; color: #333;text-align: right;">
-                            {!! $company_address !!}
-                            <span style="float:right;">
+                        <td class="custom-line" style="padding-bottom: 10px; color: #333; display: flex; align-items: center; justify-content: flex-end; gap: 6px;">
+                             <span>{!! $company_address !!}</span>
                                 <img style="width: 18px;" src="{{ $invoice_image4 }}" alt="">
-                            </span>
+                            
                         </td>
                     </tr>
                 </table>
