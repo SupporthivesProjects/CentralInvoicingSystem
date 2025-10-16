@@ -15,22 +15,16 @@
 <body>
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
-            <td align="center" bgcolor="#ffffff" style="">
+            <td align="center" bgcolor="#f2f2f2" style="">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
                     style="border-collapse: collapse; ">
                     <!-- Header -->
                     <tr>
                         <td style="padding: 0px;max-height: 130px;">
-                            <table>
-                                <tr>
-                                    <td>
-                                        <img src="{{ $invoice_header_image }}" alt=""
-                                            style="height: 20px; width: 190px; padding-left: 20px;">
-                                    </td>
-
-                                </tr>
-
-                            </table>
+                            
+                            <img src="{{ $invoice_header_image }}" alt=""
+                                style="height: 20px; width: 190px; padding-left: 20px;">
+                                   
                         </td>
                     </tr>
                     <!-- Header End -->
