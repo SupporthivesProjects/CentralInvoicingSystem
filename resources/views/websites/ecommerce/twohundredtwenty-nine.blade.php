@@ -177,13 +177,13 @@
                                     <td colspan="5"
                                         style="border-top-left-radius: 10px;border-bottom-left-radius: 10px; width: 100%;font-weight: 400; border-collapse: collapse;padding-left: 2px;  text-align: right;">
                                         <!-- <div style="display: flex; flex-direction: row; justify-content: flex-end;"> -->
-                                            <div style="display:  inline-flex; flex-direction: row;justify-content: space-around;gap: 8px;align-items: center;background-color: white;width: 400px; border-radius:10px; height: 40px ">
+                                            <div style="display:  inline-flex; flex-direction: row;justify-content: space-around;gap: 8px;align-items: center;background-color: white;width: 500px; border-radius:10px; height: 40px, margin-right : 20px ">
                                                 <span style="font-size: 20px; color: black;">•</span>
                                                 <b style="color: darkgreen; text-align: center;font-family: 'Space Mono', monospace;font-size: 11px;margin: 0px;">SUBTOTAL</b>
-                                                <p>{{ site_currency() }} {{ number_format(($invoice_amount + $discount_amount), 2) }}</p>
+                                                <p style="color: darkgreen;">{{ site_currency() }} {{ number_format(($invoice_amount + $discount_amount), 2) }}</p>
                                                 <span style="font-size: 20px; color: black;">•</span>
                                                 <b style="color: darkgreen; text-align: center;font-family: 'Space Mono', monospace;font-size: 11px;margin: 0px;">DISCOUNT</b>
-                                                <p>{{ site_currency() }} {{ number_format(($discount_amount), 2) }}</p>
+                                                <p style="color: darkgreen;">{{ site_currency() }} {{ number_format(($discount_amount), 2) }}</p>
                                             </div>
                                         <!-- </div> -->
                                         
