@@ -68,7 +68,7 @@
                                             {{ $company_name }}
                                         </p>
                                         <p style="font-family: arial;font-size: 11px;margin: 0px;font-weight: 400;">
-                                            {{ $company_address }}
+                                            {!! $company_address !!}
                                         </p>
                                         <br>
                                         <br>
@@ -97,7 +97,7 @@
                                             {{ $customer_name }}
                                         </p>
                                         <p style="font-family: arial;font-size: 11px;margin: 0px;font-weight: 400;">
-                                            {{ $customer_mobile }} | {{ $customer_email }}
+                                            {{ $customer_mobile }}  {{ $customer_email }}
                                         </p>
                                     <td style="padding-top: 10px;width: 300px;text-align: right;">
                                         <p style="font-family: arial;font-size: 11px;margin: 0px;font-weight: 400;">
