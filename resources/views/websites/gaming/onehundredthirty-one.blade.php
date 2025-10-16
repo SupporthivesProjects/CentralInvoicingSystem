@@ -121,7 +121,7 @@
                                         </p>
                                     </td>
                                     <td style="width: 60px;"></td>
-                                    <td style="vertical-align: top; padding-left:100px">
+                                    <td style="vertical-align: top; padding-left:110px">
                                         <h1
                                             style="margin: 0px;font-family: Lato;font-size: 12px;color: #4D4D4D;line-height:18px;">
                                             Bill To
