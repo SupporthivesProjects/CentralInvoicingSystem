@@ -8,9 +8,9 @@
 <body>
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
-            <td align="center" bgcolor="#f2f2f2" style="padding: 20px 0;">
+            <td align="center" bgcolor="#f2f2f2" style="">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
-                    style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
+                    style="border-collapse: collapse; ">
                     <!-- Header -->
                     <tr>
                         <td style="padding: 0px;max-height: 130px;">
@@ -64,7 +64,7 @@
                                     <td style="width: 200px;">
                                         <p
                                             style="font-family: arial;font-size:8px;margin: 0px;font-weight: 400;padding-bottom: 5px;">
-                                            <img src="E.png" alt="" style="height: 20px;"> <b
+                                            <img src="{{ $invoice_image3 }}" alt="" style="height: 20px;"> <b
                                                 style="font-size: 9px;">Email</b> <br> info@estarsolutions.com
                                         </p>
                                     <td style="text-align: left; width: 100px;border-right: 1 px solid black;">
@@ -158,7 +158,7 @@
                                             <td>
                                                 <p
                                                     style="font-family: arial;font-size:8px;margin: 0px;font-weight: 400;padding-bottom: 5px;">
-                                                    <b style="font-size: 9px;">P:</b> {{ $customer_mobile }}
+                                                    <!-- <b style="font-size: 9px;">P:</b> {{ $customer_mobile }} -->
                                                 </p>
                                             </td>
                                         </tr>
@@ -166,7 +166,7 @@
                                             <td>
                                                 <p
                                                     style="font-family: arial;font-size:8px;margin: 0px;font-weight: 400;padding-bottom: 5px;">
-                                                    <b style="font-size: 9px;">E:</b> {{ $customer_email }}
+                                                    <!-- <b style="font-size: 9px;">E:</b> {{ $customer_email }} -->
                                                 </p>
                                             </td>
                                         </tr>
@@ -288,14 +288,14 @@
                                         <tr style="text-align: right; width: 400px;">
                                             <td style="width: 100px;text-align: right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;padding-right: 10px;"
                                                 colspan="4">
-                                                <p
+                                                <!-- <p
                                                     style="font-family: arial;font-size:11px;margin: 0px;font-weight: 400;padding-bottom: 5px;">
                                                     <b>Notes:</b>
                                                 </p>
                                                 <p
                                                     style="font-family: arial;font-size:11px;margin: 0px;font-weight: 400;padding-bottom: 5px;">
                                                     Lorem ipsum dolor sit amet, sed diam nonummy nibh euismod dolor<br>
-                                                    tincidunt ut laoreet dolore magna aliquam erat volutpat.
+                                                    tincidunt ut laoreet dolore magna aliquam erat volutpat. -->
 
                                             </td>
                                         </tr>
