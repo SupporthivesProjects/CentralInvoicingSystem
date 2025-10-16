@@ -75,7 +75,7 @@
                             <th style="padding: 8px;">ITEM DESCRIPTION</th>
                             <!-- <th style="padding: 8px;">UNIT PRICE</th> -->
                             <th style="padding: 8px;">QTY</th>
-                            <th style="padding: 8px;">AMOUNT</th>
+                            <th style="padding: 8px;text-align: right;">AMOUNT</th>
                         </tr>
                     </thead>
                     <tbody style="font-size: 13px; color: #333;">
@@ -91,7 +91,7 @@
                                 {{ site_currency() . number_format($product->unit_price, 2) }}
                             </td> -->
                             <td style="padding: 8px 8px 20px;">1</td>
-                            <td style="padding: 8px 8px 20px;">
+                            <td style="padding: 8px 8px 20px;text-align: right;">
                                 {{ site_currency() . number_format($product->unit_price, 2) }}
                             </td>
                         </tr>
@@ -104,7 +104,7 @@
                         <td colspan="4" style="text-align: right; padding: 12px;"></td>
                         <td style="padding: 12px; width: 195px;"></td>
                         <td colspan="2" style="text-align: right; padding: 0px;">Sub Total</td>
-                        <td style="padding: 12px; width: 60px;">
+                        <td style="padding: 12px; width: 60px;text-align: right;">
                             {{ site_currency() . number_format($invoice_amount + $discount_amount, 2) }}
                         </td>
                     </tr>
@@ -114,7 +114,7 @@
                         <td colspan="2" style="text-align: right; padding: 12px; border-bottom: 1px solid #444;">
                             Discount
                         </td>
-                        <td style="padding: 12px; width: 60px; border-bottom: 1px solid #444;">
+                        <td style="padding: 12px; width: 60px; border-bottom: 1px solid #444;text-align: right;">
                             {{ site_currency() . number_format($discount_amount, 2) }}
                         </td>
                     </tr>
@@ -124,7 +124,7 @@
                         <td colspan="2" style="text-align: right; font-weight: bold; color: #e87c7c; padding: 0px;">
                             Grand Total
                         </td>
-                        <td style="font-weight: bold; color: #e87c7c; padding: 12px; width: 60px;">
+                        <td style="font-weight: bold; color: #e87c7c; padding: 12px; width: 60px;text-align: right;">
                             {{ site_currency() . number_format($invoice_amount, 2) }}
                         </td>
                     </tr>
