@@ -131,7 +131,7 @@
                 </table>
 
                 <!-- Contact Section -->
-                <h4 style="margin-top: 30px; font-size: 14px; color: #e87c7c; text-align: right;">CONTACT</h4>
+                <!-- <h4 style="margin-top: 30px; font-size: 14px; color: #e87c7c; text-align: right;">CONTACT</h4>
 
                 <table style="width: 43%; font-size: 12px; display: flex; margin-left: auto; border-collapse: collapse;">
                     <tr>
@@ -155,7 +155,36 @@
                             
                         </td>
                     </tr>
+                </table> -->
+                <h4 style="margin-top: 30px; font-size: 14px; color: #e87c7c; text-align: right;">CONTACT</h4>
+
+                <table style="width: 43%; font-size: 12px; margin-left: auto; border-collapse: collapse;">
+                    <tr>
+                        <td style="padding-bottom: 10px; color: #333;">
+                            <div style="display: flex; align-items: center; justify-content: flex-end; gap: 6px;">
+                                <span>{{ $company_mobile }}</span>
+                                <img style="width: 18px;" src="{{ $invoice_image6 }}" alt="">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px 0; color: #333;">
+                            <div style="display: flex; align-items: center; justify-content: flex-end; gap: 6px;">
+                                <span>{{ $company_email }}</span>
+                                <img style="width: 18px;" src="{{ $invoice_image3 }}" alt="">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding-top: 10px; color: #333;">
+                            <div style="display: flex; align-items: center; justify-content: flex-end; gap: 6px;">
+                                <span>{!! $company_address !!}</span>
+                                <img style="width: 18px;" src="{{ $invoice_image4 }}" alt="">
+                            </div>
+                        </td>
+                    </tr>
                 </table>
+
             </td>
         </tr>
     </table>
