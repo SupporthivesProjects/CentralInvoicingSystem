@@ -19,7 +19,7 @@
     </style>
 
 </head>
-<body style="border-collapse: collapse; background: url('{{ $invoice_image1 }}') no-repeat;background-position: center;background-size: cover">
+<body style="border-collapse: collapse; background: url('{{ $invoice_image1 }}') no-repeat;background-position: top center;background-size: cover">
     <table width="100%" cellspacing="0" cellpadding="0" border="0" >
         <tr>
             <td  style="padding:0;">
