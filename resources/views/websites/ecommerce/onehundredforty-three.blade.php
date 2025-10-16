@@ -60,7 +60,7 @@
                                 </div>
                             </div>
                             <br>
-                            <div style="background-image: url({{ $invoice_image1 }});background-size: cover;background-repeat:no-repeat;background-position: top center; padding: 24px 16px; min-height: 820px;">
+                            <div style="background-image: url({{ $invoice_image1 }});background-size: cover;background-repeat:no-repeat;background-position: top center; padding: 24px 16px; min-height: 830px;">
 
                                 <!-- Billed From Section -->
                                 <div style="margin-bottom: 40px;">
@@ -123,7 +123,7 @@
                                         style="text-align: left; padding: 10px 0; font-size: 14px; border-bottom: 1px solid #ccc;">
                                         Qty</th>
                                     <th
-                                        style="text-align: left; padding: 10px 0; font-size: 14px; border-bottom: 1px solid #ccc;">
+                                        style="text-align: right; padding: 10px 0; font-size: 14px; border-bottom: 1px solid #ccc;">
                                         Price</th>
                                     <th
                                         style="text-align: right; padding: 10px 0; font-size: 14px; border-bottom: 1px solid #ccc;">
