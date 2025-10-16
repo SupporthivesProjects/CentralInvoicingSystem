@@ -20,10 +20,10 @@
 
 </head>
 <body>
-    <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse; background: url('{{ $invoice_image1 }}') no-repeat;background-position: center;background-size: 100% 100%;">
+    <table width="100%" cellspacing="0" cellpadding="0" border="0" >
         <tr>
             <td  bgcolor="#f2f2f2" style="padding:0;">
-                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" >
+                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse; background: url('{{ $invoice_image1 }}') no-repeat;background-position: center;background-size: 100% 100%;" >
                     <!-- Header -->
                     <tr style="width: 100%">
                         <td style="padding-left: 40px;">
@@ -134,7 +134,7 @@
                     
                     <tr>
                         <td>
-                            <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;"> 
+                            <!-- <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;"> 
                                  <tr style="border-collapse: collapse; height: 80px;font-family: 'Poppins', sans-serif;">
                                     <td style=" text-align: left;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;color: #5E5E5E;padding-left: 40px;padding-top: 10px;">
                                        <img src="{{ $invoice_image2 }}" alt="" style="height: 25px;">
@@ -155,7 +155,28 @@
                                        <p>{{ $company_address }}</p>
                                     </td>
                             </tr>           
-                            </table>
+                            </table> -->
+                            <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse;"> 
+    <tr style="height: 80px; font-family: 'Poppins', sans-serif;">
+
+        <td style="text-align: left; font-size: 10px; color: #5E5E5E; padding-left: 40px; padding-top: 10px;">
+            <img src="{{ $invoice_image2 }}" alt="" style="height: 25px; vertical-align: middle;">
+            <span style="margin-left: 5px; vertical-align: middle;">{{ $company_email }}</span>
+        </td>
+
+        <td style="text-align: left; font-size: 10px; color: #5E5E5E; padding-top: 10px;">
+            <img src="{{ $invoice_image3 }}" alt="" style="height: 25px; vertical-align: middle;">
+            <span style="margin-left: 5px; vertical-align: middle;">{{ $company_mobile }}</span>
+        </td>
+
+        <td style="text-align: left; font-size: 10px; color: #5E5E5E; padding-top: 10px;">
+            <img src="{{ $invoice_image4 }}" alt="" style="height: 25px; vertical-align: middle;">
+            <span style="margin-left: 5px; vertical-align: middle;">{{ $company_address }}</span>
+        </td>
+
+    </tr>           
+</table>
+
                         </td>
                     </tr> 
                     </table>
