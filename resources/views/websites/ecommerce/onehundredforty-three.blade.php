@@ -131,35 +131,35 @@
                                 </tr>
 
                                 <tr>
-                                    <td style="padding: 10px 0; font-weight: 700;">Business Item 1</td>
+                                    <td style="padding: 10px 0; font-weight: 700; border-bottom: 1px solid #ccc;">Business Item 1</td>
                                     <td>1</td>
                                     <td>£100.00</td>
                                     <td>£100.00</td>
                                 </tr>
 
                                 <tr>
-                                    <td style="padding: 10px 0; font-weight: 700;">Business Item 1</td>
+                                    <td style="padding: 10px 0; font-weight: 700; border-bottom: 1px solid #ccc;">Business Item 1</td>
                                     <td>2</td>
                                     <td>£100.00</td>
                                     <td>£100.00</td>
                                 </tr>
 
                                 <tr>
-                                    <td style="padding: 10px 0; font-weight: 700;">Business Item 1</td>
+                                    <td style="padding: 10px 0; font-weight: 700; border-bottom: 1px solid #ccc;">Business Item 1</td>
                                     <td>1</td>
                                     <td>£100.00</td>
                                     <td>£100.00</td>
                                 </tr>
 
                                 <tr>
-                                    <td style="padding: 10px 0; font-weight: 700;">Business Item 1</td>
+                                    <td style="padding: 10px 0; font-weight: 700; border-bottom: 1px solid #ccc;">Business Item 1</td>
                                     <td>2</td>
                                     <td>£100.00</td>
                                     <td>£100.00</td>
                                 </tr>
 
                                 <tr>
-                                    <td style="padding: 10px 0; font-weight: 700;">Business Item 1</td>
+                                    <td style="padding: 10px 0; font-weight: 700; border-bottom: 1px solid #ccc;">Business Item 1</td>
                                     <td>1</td>
                                     <td>£100.00</td>
                                     <td>£100.00</td>
