@@ -81,7 +81,7 @@
                                         </p>
                                         <p
                                             style="font-family: arial;font-size: 14px;margin: 0px;font-weight: 400; text-align: left;padding-bottom: 5px;padding-right: 5px;color: darkgreen;">
-                                            <b> Address : </b>  <span style="color: black; width: 100px; margin-left: 10px">{{ $company_address }} </span>
+                                            <b> Address : </b>  <span style="color: black; width: 60px; margin-left: 10px">{{ $company_address }} </span>
                                         </p>
                                         <p
                                             style="font-family: arial;font-size: 14px;margin: 0px;font-weight: 400; text-align: left;padding-bottom: 5px;padding-right: 5px;color: darkgreen;">
