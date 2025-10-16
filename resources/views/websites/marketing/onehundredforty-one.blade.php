@@ -42,13 +42,13 @@
         table td h2{
             font-family: 'Mazzard M';
             font-size: 24px;
-            color: #fff;
+            color: #ffffff;
             font-weight: bold;
             letter-spacing: 0px;
         }
         .table-div p{
             font-family: 'centurygothic';
-            color: #fff;
+            color: #ffffff;
             font-weight: normal;
             font-size: 8px;
         }
@@ -84,10 +84,10 @@
         }
          
         .table-list th{
-            background:#E9FCF7;
+            background: #E9FCF7;
         }
         .table-list th {
-            background: #fff;
+            background: #ffffff;
             padding: 10px 10px;
             color: #000000f5;
             font-family: 'Mazzard M';
@@ -98,24 +98,24 @@
         .table-list td{
             border: 1px solid #ff7f00;
             padding: 7px 10px;
-            background: #FFF;
+            background: #FFFFFF;
         }
 
         table{
-            background: #ccb58733;
+            background: #e7e0cf;
         }
         .table-list td p{
             font-size: 10px;
             font-family: 'Mazzard';
             font-weight: normal;
-            color: #000;
+            color: #000000;
             text-align: center;
         }
         .table-list td div p{
             text-align: left;
         }
         .table-list td div h6{
-            color: #000;
+            color: #000000;
             font-family: 'Mazzard M';
             font-size: 9px;
             font-weight: bold;
@@ -127,14 +127,14 @@
             font-size: 10px;
             font-family: 'Mazzard';
             font-weight: normal;
-            color: #000;
+            color: #000000;
             text-align: left;
         }
         .table-right td:last-child{
            text-align: right;
         }
         .table-right h6{
-            color: #000;
+            color: #000000;
             font-family: 'Mazzard M';
             font-size: 10px;
             font-weight: bold;
@@ -143,14 +143,14 @@
             font-size: 6px;
             font-family: 'Mazzard M';
             font-weight: normal;
-            color: #fff;
+            color: #ffffff;
             text-align: center;
         }
         tfoot div h5{
             font-size: 12px;
             font-family: 'Mazzard M';
             font-weight: bold;
-            color: #fff;
+            color: #ffffff;
             text-align: center;
             margin-bottom: 5px;
         }
@@ -162,34 +162,36 @@
         
     </style>
 </head>
-<body>
-    <table width="800" cellspacing="0" cellpadding="0" border="0" style="margin: auto;">
+<body style="padding:0px,margin:0px; background: #e7e0cf;">
+    <table width="800" cellspacing="0" cellpadding="0" border="0" style="margin:0px; background: #e7e0cf;">
         <tr>
-            <td style="background-size: cover; height: 100%;">
+            <td style="background-size: cover; height: 100vh;margin:0px:padding:0px;vertical-align:top; background: #e7e0cf;">
             @php
                 $minRows = 10; 
                 $rowCount = count($products);
                 $padRows = $minRows - $rowCount;
             @endphp
 
-            <table width="800" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
+            <table width="800" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse; background: #e7e0cf;">
                 <tbody>
                     <!-- Invoice Header -->
                     <tr>
-                        <td style="background: url('{{ $invoice_header_image }}') no-repeat; background-size: cover; padding: 53px 58px;">
+                        <td style="background: url('{{ $invoice_header_image }}') no-repeat; background-size: cover; padding:50px 50px;">
                             <table class="table-div" style="background: transparent;">
                                 <tr>
                                     <td>
                                         <h2>INVOICE</h2>
                                         <div style="display: flex; gap: 24px; margin-top: 10px;">
                                             <div>
-                                                <p>Company Name</p>
-                                                <p>{{ $site_name }}</p>
+                                                <p style="color:#ffffff">Company Name</p>
+                                                <p style="color:#ffffff">{{ $site_name }} <br>
+                                                  {{ $company_email }}<br>
+                                                </p>
                                             </div>
                                             <div>
-                                                <p>Address</p>
-                                                <p>
-                                                    {{ $company_email }}<br>
+                                                <p style="color:#ffffff">Address</p>
+                                                <p style="color:#ffffff">
+                                                    
                                                     {{ $company_mobile }}<br>
                                                     {!! $company_address !!}
                                                 </p>
@@ -292,7 +294,7 @@
                 </tbody>
 
                 <!-- Footer (Always at Bottom) -->
-                <tfoot>
+                <!-- <tfoot>
                     <tr>
                         <td style="width: 100%; background: url('{{ $invoice_footer_image }}') no-repeat; background-size: cover; padding: 60px 0px;">
                             <div style="text-align: center;">
@@ -301,7 +303,8 @@
                             </div>
                         </td>
                     </tr>
-                </tfoot>
+                </tfoot> -->
+
             </table>
 
             </td>

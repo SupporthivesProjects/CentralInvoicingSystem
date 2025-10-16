@@ -16,38 +16,46 @@
             background-size: cover;
             height: 150px;
             vertical-align: bottom;
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: -1px;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: center;
         }
     </style>
 </head>
 
 <body>
-    <table width="100%" cellspacing="0" cellpadding="0" border="0">
+    <table width="100%" cellspacing="0" cellpadding="0" border="0" width="100%" >
         <tr>
-            <td align="center" bgcolor="#f2f2f2" style="padding: 20px 0;">
-                <table width="600" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
-                    style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);max-width: 600px;">
+            <td align="center" bgcolor="#ffffff" style="padding: 0px 0;">
+                <!-- <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
+                    style="border-collapse: collapse;max-width: 100%;"> -->
                     <!-- Header -->
-                    <tr>
+                    <!-- <tr>
                         <td style="padding: 0px;">
                             <table style="border-collapse: collapse;width: 100%;" border="0">
-                                <td style="padding: 40px;vertical-align: top;">
+                                <td style="padding: 40px;vertical-align: top;"> -->
                                     <div
-                                        style="display: flex;width: 100%;justify-content: space-between;vertical-align: top;">
+                                        style="display: flex;width: 100%;justify-content: space-between;">
                                         <img src="{{ $company_logo }}" alt="" style="height: 60px;">
                                         <div>
                                             <h1
-                                                style="margin: 0px;font-family: Poppins;font-size: 16px;text-align: right; margin-right: 80px;">
+                                                style="margin: 0px;font-family: Poppins;font-size: 16px;text-align: right; margin-right: 0px;">
                                                 INVOICE NO: #{{ $invoice_number }}
                                             </h1>
                                             <p
-                                                style="margin: 0px;font-family: Poppins;font-size: 12px;text-align: right; margin-right: 80px">
+                                                style="margin: 0px;font-family: Poppins;font-size: 12px;text-align: right; margin-right: 0px">
                                                 {{ \Carbon\Carbon::parse($invoice_date)->format('d M Y') }}
                                             </p>
                                         </div>
                                     </div>
-                                </td>
+                                <!-- </td>
                     </tr>
-                </table>
+                </table> -->
             </td>
         </tr>
         <!-- Header End -->
@@ -65,7 +73,7 @@
                                     <div style="display: flex;flex-direction: column;">
                                         <span
                                             style="color: #002052;font-size:10px;font-weight:600;font-family: Poppins;">
-                                            TOTAL DUES:
+                                            TOTAL DUE:
                                         </span>
                                         <p
                                             style="color:#7E0E53;font-size:24px;font-weight:400;font-family: Poppins;margin: 0px;">
@@ -165,7 +173,7 @@
 
                         </td>
                         <td style="display: flex;vertical-align: top;padding: 0px;">
-                            <table border="0" style="border-collapse: collapse;">
+                            <table border="0" style="border-collapse: collapse;" width="100%" >
                                 <tr style="height:50px;border-bottom: 1px solid grey;">
                                     <td style="width: 200px;padding-left: 10px;">
                                         <p
@@ -267,7 +275,7 @@
 
 
         <!-----------Footer----------->
-        <tr>
+        <!-- <tr>
             <td align="center" class="footer_bg">
                 <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;">
                     <tr>
@@ -277,7 +285,13 @@
                     </tr>
                 </table>
             </td>
-        </tr>
+        </tr> -->
+        <div class="footer_bg" style="background-color: #f5f5f5; text-align: center;">
+            <div style="width: 100%; padding-left: 40px; padding-bottom: 20px; display: flex; align-items: flex-end;">
+                <img src="{{ $invoice_footer_image }}" alt="" style="height: 40px;">
+            </div>
+        </div>
+
     </table>
     </td>
     </tr>

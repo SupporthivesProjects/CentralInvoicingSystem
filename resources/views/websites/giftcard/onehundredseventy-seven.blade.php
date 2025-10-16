@@ -27,10 +27,13 @@
                                     <td style="font-size: 12px;">Invoice To:</td>
                                     <td><strong style="font-size: 12px;">{{ $customer_name ? $customer_name : '' }}</strong></td>
                                 </tr>
+                                @if(!empty($customer_email))
                                 <tr>
                                     <td style="font-size: 12px;">Email:</td>
-                                    <td style="font-size: 12px;">{{ $customer_email ? $customer_email : '' }}</td>
+                                    <td style="font-size: 12px;">{{ $customer_email }}</td>
                                 </tr>
+                                @endif
+
                             </table>
                         </td>
 
@@ -76,9 +79,9 @@
                                
                             </span>
                         </td>
-                        <td align="center">{{ site_currency() . number_format($product->rrp ?? 0, 2) }}</td>
+                        <td align="center">{{ site_currency() }} {{ number_format($product->rrp ?? 0, 2) }}</td>
                         <td align="center">1</td>
-                        <td align="center">{{ site_currency() . number_format($product->unit_price ?? 0, 2) }}</td>
+                        <td align="center">{{ site_currency() }} {{  number_format($product->unit_price ?? 0, 2) }}</td>
                     </tr>
                     @endforeach
                   
@@ -90,18 +93,18 @@
                             <span style="font-size: 8px;">Card Payment</span>
                         </td>
                         <td align="right" style="padding-top: 30px; font-size: 10px;"><strong>Subtotal</strong></td>
-                        <td align="right" style="padding-top: 30px; font-size: 10px;">{{ site_currency() . number_format($invoice_amount + $discount_amount ?? 0, 2) }}</td>
+                        <td align="right" style="padding-top: 30px; font-size: 10px;">{{ site_currency() }} {{  number_format($invoice_amount + $discount_amount ?? 0, 2) }}</td>
                     </tr>
                     <tr>
                         <td align="right"><strong>Discount</strong></td>
-                        <td align="right">{{ site_currency() . number_format($discount_amount ?? 0, 2) }}</td>
+                        <td align="right">{{ site_currency() }} {{  number_format($discount_amount ?? 0, 2) }}</td>
                     </tr>
                     <tr>
                         <td align="right" style="border-top: 2px solid #293f8c; padding-top: 10px;">
                             <strong style="font-size: 10px;">Total</strong>
                         </td>
                         <td align="right" style="border-top: 2px solid #293f8c; padding-top: 10px;">
-                            <strong style="font-size: 16px;">{{ site_currency() . number_format($invoice_amount ?? 0, 2) }}</strong>
+                            <strong style="font-size: 16px;">{{ site_currency() }} {{  number_format($invoice_amount ?? 0, 2) }}</strong>
                         </td>
                     </tr>
                     </table>

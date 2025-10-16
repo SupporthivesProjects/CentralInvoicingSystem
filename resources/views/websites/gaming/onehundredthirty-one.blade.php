@@ -176,7 +176,7 @@
                                     <td style="padding:5px 10px;">
                                         <p
                                             style="margin: 0px;font-family: Helvetica;font-size:10px;color: #000000;line-height: 12px;">
-                                            {{ $product['name'] }}
+                                            {{ ucwords(strtolower($product['name'])) }}
                                         </p>
                                     </td>
                                     <td style="padding:5px 10px;">

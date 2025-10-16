@@ -34,7 +34,7 @@
                         <td
                             style="font-family: 'Poppins'; font-size: 9px; vertical-align: top; padding: 55px 40px 0px 40px; width: 100%;">
                             <table style="font-size: 12px; width: 100%;">
-                                <td>Total Due</td>
+                                <td>Total Due:</td>
                                 <td>
                                     <div style="height: 1px; width: 575px; background-color: #E48920;"></div>
                                 </td>
@@ -43,7 +43,7 @@
                             <table width="100%">
                                 <tr>
                                     <td width="50%"
-                                        style="font-size: 32px; font-weight: bold; padding-left: 60px; padding-top: 13px;">
+                                        style="font-size: 32px; font-weight: bold; padding-top: 13px;">
                                         {{ site_currency() . number_format($invoice_amount ?? 0, 2) }}</td>
                                     <td align="right"
                                         style="font-size: 16px; padding-right: 10px; vertical-align: middle; font-weight: bold;">{{ $customer_name ? $customer_name : '' }}</td>
@@ -74,7 +74,10 @@
                                             <td style="padding: 12px; text-align: center; border-bottom: 1px solid #ccc;">1
                                             </td>
                                             <td style="padding: 12px; text-align: right; border-bottom: 1px solid #ccc;">
-                                                {{ site_currency() . number_format($invoice_amount ?? 0, 2) }}<</td>
+                                                {{-- site_currency() . number_format($invoice_amount ?? 0, 2) --}}
+                                                {{ site_currency() . number_format($product->unit_price, 2) }}
+                                                
+                                            </td>
                                         </tr>
                                         @endforeach
                                         {{-- <tr>
@@ -124,7 +127,7 @@
                                                     <td
                                                         style="font-weight: bold; padding-right: 20px; padding-bottom: 20px;">
                                                         SUBTOTAL</td>
-                                                    <td style="font-size: 11px; padding-bottom: 20px;">{{ site_currency() . number_format($invoice_amount ?? 0, 2) }}<</td>
+                                                    <td style="font-size: 11px; padding-bottom: 20px;">{{ site_currency() . number_format($invoice_amount ?? 0, 2) }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td style="font-weight: bold; padding-right: 20px;">DISCOUNT</td>

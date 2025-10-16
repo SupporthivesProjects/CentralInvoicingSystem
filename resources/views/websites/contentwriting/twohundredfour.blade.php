@@ -16,12 +16,12 @@
     </style>
 </head>
 
-<body style="margin: 0px; padding: 0px;">
+<body style="margin: 0px; padding: 0px;background-image: url('{{ $invoice_image1 }}'); background-position: top center; background-repeat: no-repeat; background-size: cover; height: 100%;">
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
             <td align="center" bgcolor="#f2f2f2" style="padding: 0px 0;">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
-                    style="border-collapse: collapse; background-image: url('{{ $invoice_image1 }}'); background-position: top center; background-repeat: no-repeat; background-size: cover; height: 100%;">
+                    style="border-collapse: collapse;background-image: url('{{ $invoice_image1 }}'); background-position: top center; background-repeat: no-repeat; background-size: cover; height: 100%;">
                     <!-- Header -->
                     <tr>
                         <td style="height: 165px;">
@@ -76,8 +76,7 @@
                                 </tr>
                             </table>
                             <br>
-                            <table width="100%" border="0" cellspacing="0" cellpadding="11"
-                                style="border-collapse: collapse; color: white;">
+                            <table width="100%" border="0" cellspacing="0" cellpadding="11" style="border-collapse: collapse; color: white;height:300px;margin-top:100;">
                                 <tr style="background-color: #0d1f1f; font-size: 10px;">
                                     <th align="left" style="color: #c3d94c; padding-left: 40px; width: 251px;">
                                         DESCRIPTION</th>
@@ -116,10 +115,6 @@
                                 </tr>
 
                             </table>
-
-
-
-
                         </td>
                     </tr>
                     <!-- Content End-->
@@ -132,8 +127,8 @@
                                 <tr>
                                     <td
                                         style="color: white; padding: 40px; width: 50%; vertical-align: middle;">
-                                        <p style="margin: 0; font-weight: bold; color: #d6d94d; font-size: 8px;">CONTACT US</p>
-                                        <p style="margin: 5px 0 0; font-weight: bold; font-size: 8px; color: #d6d94d;">{{ $company_name }}
+                                        <p style="margin: 0; font-weight: bold; color: #d6d94d; font-size:16px;">CONTACT US</p>
+                                        <p style="margin: 5px 0 0; font-weight: bold; font-size:10px; color: #d6d94d;">{{ $company_name }}
                                         </p>
                                         <p style="margin: 5px 0 0; font-size: 7px;">{!! $company_address !!}<br>
                                             {{ $company_mobile }}

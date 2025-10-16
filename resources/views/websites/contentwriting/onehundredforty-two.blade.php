@@ -7,6 +7,7 @@
         body {
             margin: 0;
             padding: 0;
+            background: #E9FCF7;
         }
         .footer-fixed {
             position: fixed;
@@ -128,9 +129,7 @@
             color: #E9FCF7;
             text-align: center;
         }
-        table {
-            background: #E9FCF7;
-        }
+       
     </style>
 
 </head>
@@ -138,7 +137,7 @@
     <table width="800" cellspacing="0" cellpadding="0" border="0" style="margin: auto;">
         <tr>
             <td style="background-size: cover; height: 100%;">
-                <table width="800" cellspacing="0" cellpadding="0" border="0"  style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
+                <table width="800" cellspacing="0" cellpadding="0" border="0"  style="border-collapse: collapse;">
                    <tbody>
                     <tr>
                         <td style="background: url('{{ $invoice_header_image }}') no-repeat; background-size:cover;padding: 66px 0px;">
@@ -159,11 +158,12 @@
                                <tbody>
                                  
                                  <tr>
-                                    <td class="addrss" style="width: 40%;">
-                                        <h4>BILLED FROM:</h4>
+                                 <td class="addrss" style="width: 40%; vertical-align: top;">
+                                        <h4>BILLED TO:</h4>
                                         <p>{{ $customer_name }}</p>
                                         <p>{{ $customer_email }}</p>
                                     </td>
+
                                     <td class="addrss">
                                         <h4>Billed From:</h4>
                                         <p>{{ $site_name }}</p>
@@ -191,352 +191,64 @@
                                     <th>Price</th>
                                     <th>Amount</th>
                                 </tr>
-                                @foreach($products as $product)
+                                @php
+                                    $totalRows = 10; 
+                                    $productCount = count($products);
+                                @endphp
+
+                                @for($i = 0; $i < $totalRows; $i++)
+                                    @if($i < $productCount)
+                                        @php $product = $products[$i]; @endphp
+                                        <tr>
+                                            <td>
+                                                <div>
+                                                    <h6>{{ $product->name }}</h6>
+                                                    <p>
+                                                        @if($product->quality)<span class="me-2 badge bg-light text-dark"><strong>Quality:</strong> {{ $product->quality }}</span>@endif
+                                                        @if($product->quantity)<span class="me-2 badge bg-light text-dark"><strong>Quantity:</strong> {{ $product->quantity }}</span>@endif
+                                                        @if($product->turnaround)<span class="me-2 badge bg-light text-dark"><strong>Turnaround:</strong> {{ $product->turnaround }}</span>@endif
+                                                        @if($product->delivery)<span class="me-2 badge bg-light text-dark"><strong>Delivery:</strong> {{ $product->delivery }}</span>@endif
+                                                        @if($product->project_title)<span class="me-2 badge bg-light text-dark"><strong>Project Title:</strong> {{ $product->project_title }}</span>@endif
+                                                        @if($product->note)<span class="badge bg-light text-dark"><strong>Note:</strong> {{ $product->note }}</span>@endif
+                                                    </p>
+                                                </div>
+                                            </td>
+                                            <td>{{ $product->imagecount }}</td>
+                                            <td>{{ $product->wordcount }}</td>
+                                            <td>{{ site_currency() }} {{ number_format($product->unit_price, 2) }}</td>
+                                            <td>{{ site_currency() }} {{ number_format($product->unit_price, 2) }}</td>
+                                        </tr>
+                                    @endif
+                                @endfor
                                 <tr>
-                                    <td>
+                                    <td colspan="4" style="border: 0px;">
                                         <div>
-                                            <h6>
-                                                {{ $product->name }}
-                                            </h6>
-                                            <p>
-                                            @if($product->quality)<span class="me-2 badge bg-light text-dark"><strong>Quality:</strong> {{ $product->quality }}</span>@endif
-                                            @if($product->quantity)<span class="me-2 badge bg-light text-dark"><strong>Quantity:</strong> {{ $product->quantity }}</span>@endif
-                                            @if($product->turnaround)<span class="me-2 badge bg-light text-dark"><strong>Turnaround Time:</strong> {{ $product->turnaround }}</span>@endif
-                                            @if($product->delivery)<span class="me-2 badge bg-light text-dark"><strong>Delivery In:</strong> {{ $product->delivery }}</span>@endif<br>
-                                            @if($product->project_title)<span class="me-2 badge bg-light text-dark"><strong>Project Title:</strong> {{ $product->project_title }}</span>@endif
-                                            @if($product->subject)<span class="me-2 badge bg-light text-dark"><strong>Subject:</strong> {{ $product->subject }}</span>@endif
-                                            @if($product->preferred_voice)<span class="me-2 badge bg-light text-dark"><strong>Preferred Voice:</strong> {{ $product->preferred_voice }}</span>@endif
-                                            @if($product->preferred_writing_style)<span class="me-2 badge bg-light text-dark"><strong>Preferred Writing Style:</strong> {{ $product->preferred_writing_style }}</span>@endif
-                                            @if($product->brand_name)<span class="me-2 badge bg-light text-dark"><strong>Brand Name:</strong> {{ $product->brand_name }}</span>@endif
-                                            @if($product->audience)<span class="me-2 badge bg-light text-dark"><strong>Audience:</strong> {{ $product->audience }}</span>@endif
-                                            @if($product->reference_link)
-                                            <span class="me-2 badge bg-light text-dark"><strong>Reference link:</strong> 
-                                                <a href="{{ $product->reference_link }}" target="_blank" class="text-primary text-decoration-underline">{{ $product->reference_link }}</a>
-                                            </span>
-                                            @endif
-                                            @if($product->note)<span class="badge bg-light text-dark"><strong>Additional Note:</strong> {{ $product->note }}</span>@endif
-                                            
-                                            </p>
+                                            <h6 style="font-size: 14px; font-weight: 600; font-family: 'Bahnschrift'; margin: 0;">Subtotal</h6>
                                         </div>
                                     </td>
-                                    <td>{{ $product->imagecount }}</td>
-                                    <td>{{ $product->wordcount }}</td>
-                                    <td>{{ site_currency() }} {{ number_format($product->unit_price, 2) }}</td>
-                                    <td>{{ site_currency() }} {{ number_format($product->unit_price, 2) }}</td>
-                                </tr>
-                                @endforeach
-                                
-                                <tr>
-                                    <td>
-                                        <div>
-                                            <h6>
-                                                &nbsp;
-                                            </h6>
-                                            <p>
-                                            @if($product->quality)<span class="me-2 badge bg-light text-dark"><strong>Quality:</strong> &nbsp;</span>@endif
-                                            @if($product->quantity)<span class="me-2 badge bg-light text-dark"><strong>Quantity:</strong> &nbsp;</span>@endif
-                                            @if($product->turnaround)<span class="me-2 badge bg-light text-dark"><strong>Turnaround Time:</strong> &nbsp;</span>@endif
-                                            @if($product->delivery)<span class="me-2 badge bg-light text-dark"><strong>Delivery In:</strong> &nbsp;</span>@endif<br>
-                                            @if($product->project_title)<span class="me-2 badge bg-light text-dark"><strong>Project Title:</strong> &nbsp;</span>@endif
-                                            @if($product->subject)<span class="me-2 badge bg-light text-dark"><strong>Subject:</strong> &nbsp;</span>@endif
-                                            @if($product->preferred_voice)<span class="me-2 badge bg-light text-dark"><strong>Preferred Voice:</strong>&nbsp;</span>@endif
-                                            @if($product->preferred_writing_style)<span class="me-2 badge bg-light text-dark"><strong>Preferred Writing Style:</strong> &nbsp;</span>@endif
-                                            @if($product->brand_name)<span class="me-2 badge bg-light text-dark"><strong>Brand Name:</strong> &nbsp;</span>@endif
-                                            @if($product->audience)<span class="me-2 badge bg-light text-dark"><strong>Audience:</strong> &nbsp;</span>@endif
-                                            @if($product->reference_link)
-                                            <span class="me-2 badge bg-light text-dark"><strong>Reference link:</strong> 
-                                                <a href="{{ $product->reference_link }}" target="_blank" class="text-primary text-decoration-underline">{{ $product->reference_link }}</a>
-                                            </span>
-                                            @endif
-                                            @if($product->note)<span class="badge bg-light text-dark"><strong>Additional Note:</strong> &nbsp;</span>@endif
-                                            
-                                            </p>
-                                        </div>
+                                    <td style="border: 0px; text-align: right; font-size: 14px; font-weight: 500; font-family: 'Bahnschrift';">
+                                        {{ site_currency() }} {{ number_format(($invoice_amount + $discount_amount), 2) }}
                                     </td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div>
-                                            <h6>
-                                                &nbsp;
-                                            </h6>
-                                            <p>
-                                            @if($product->quality)<span class="me-2 badge bg-light text-dark"><strong>Quality:</strong> &nbsp;</span>@endif
-                                            @if($product->quantity)<span class="me-2 badge bg-light text-dark"><strong>Quantity:</strong> &nbsp;</span>@endif
-                                            @if($product->turnaround)<span class="me-2 badge bg-light text-dark"><strong>Turnaround Time:</strong> &nbsp;</span>@endif
-                                            @if($product->delivery)<span class="me-2 badge bg-light text-dark"><strong>Delivery In:</strong> &nbsp;</span>@endif<br>
-                                            @if($product->project_title)<span class="me-2 badge bg-light text-dark"><strong>Project Title:</strong> &nbsp;</span>@endif
-                                            @if($product->subject)<span class="me-2 badge bg-light text-dark"><strong>Subject:</strong> &nbsp;</span>@endif
-                                            @if($product->preferred_voice)<span class="me-2 badge bg-light text-dark"><strong>Preferred Voice:</strong>&nbsp;</span>@endif
-                                            @if($product->preferred_writing_style)<span class="me-2 badge bg-light text-dark"><strong>Preferred Writing Style:</strong> &nbsp;</span>@endif
-                                            @if($product->brand_name)<span class="me-2 badge bg-light text-dark"><strong>Brand Name:</strong> &nbsp;</span>@endif
-                                            @if($product->audience)<span class="me-2 badge bg-light text-dark"><strong>Audience:</strong> &nbsp;</span>@endif
-                                            @if($product->reference_link)
-                                            <span class="me-2 badge bg-light text-dark"><strong>Reference link:</strong> 
-                                                <a href="{{ $product->reference_link }}" target="_blank" class="text-primary text-decoration-underline">{{ $product->reference_link }}</a>
-                                            </span>
-                                            @endif
-                                            @if($product->note)<span class="badge bg-light text-dark"><strong>Additional Note:</strong> &nbsp;</span>@endif
-                                            
-                                            </p>
-                                        </div>
-                                    </td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div>
-                                            <h6>
-                                                &nbsp;
-                                            </h6>
-                                            <p>
-                                            @if($product->quality)<span class="me-2 badge bg-light text-dark"><strong>Quality:</strong> &nbsp;</span>@endif
-                                            @if($product->quantity)<span class="me-2 badge bg-light text-dark"><strong>Quantity:</strong> &nbsp;</span>@endif
-                                            @if($product->turnaround)<span class="me-2 badge bg-light text-dark"><strong>Turnaround Time:</strong> &nbsp;</span>@endif
-                                            @if($product->delivery)<span class="me-2 badge bg-light text-dark"><strong>Delivery In:</strong> &nbsp;</span>@endif<br>
-                                            @if($product->project_title)<span class="me-2 badge bg-light text-dark"><strong>Project Title:</strong> &nbsp;</span>@endif
-                                            @if($product->subject)<span class="me-2 badge bg-light text-dark"><strong>Subject:</strong> &nbsp;</span>@endif
-                                            @if($product->preferred_voice)<span class="me-2 badge bg-light text-dark"><strong>Preferred Voice:</strong>&nbsp;</span>@endif
-                                            @if($product->preferred_writing_style)<span class="me-2 badge bg-light text-dark"><strong>Preferred Writing Style:</strong> &nbsp;</span>@endif
-                                            @if($product->brand_name)<span class="me-2 badge bg-light text-dark"><strong>Brand Name:</strong> &nbsp;</span>@endif
-                                            @if($product->audience)<span class="me-2 badge bg-light text-dark"><strong>Audience:</strong> &nbsp;</span>@endif
-                                            @if($product->reference_link)
-                                            <span class="me-2 badge bg-light text-dark"><strong>Reference link:</strong> 
-                                                <a href="{{ $product->reference_link }}" target="_blank" class="text-primary text-decoration-underline">{{ $product->reference_link }}</a>
-                                            </span>
-                                            @endif
-                                            @if($product->note)<span class="badge bg-light text-dark"><strong>Additional Note:</strong> &nbsp;</span>@endif
-                                            
-                                            </p>
-                                        </div>
-                                    </td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div>
-                                            <h6>
-                                                &nbsp;
-                                            </h6>
-                                            <p>
-                                            @if($product->quality)<span class="me-2 badge bg-light text-dark"><strong>Quality:</strong> &nbsp;</span>@endif
-                                            @if($product->quantity)<span class="me-2 badge bg-light text-dark"><strong>Quantity:</strong> &nbsp;</span>@endif
-                                            @if($product->turnaround)<span class="me-2 badge bg-light text-dark"><strong>Turnaround Time:</strong> &nbsp;</span>@endif
-                                            @if($product->delivery)<span class="me-2 badge bg-light text-dark"><strong>Delivery In:</strong> &nbsp;</span>@endif<br>
-                                            @if($product->project_title)<span class="me-2 badge bg-light text-dark"><strong>Project Title:</strong> &nbsp;</span>@endif
-                                            @if($product->subject)<span class="me-2 badge bg-light text-dark"><strong>Subject:</strong> &nbsp;</span>@endif
-                                            @if($product->preferred_voice)<span class="me-2 badge bg-light text-dark"><strong>Preferred Voice:</strong>&nbsp;</span>@endif
-                                            @if($product->preferred_writing_style)<span class="me-2 badge bg-light text-dark"><strong>Preferred Writing Style:</strong> &nbsp;</span>@endif
-                                            @if($product->brand_name)<span class="me-2 badge bg-light text-dark"><strong>Brand Name:</strong> &nbsp;</span>@endif
-                                            @if($product->audience)<span class="me-2 badge bg-light text-dark"><strong>Audience:</strong> &nbsp;</span>@endif
-                                            @if($product->reference_link)
-                                            <span class="me-2 badge bg-light text-dark"><strong>Reference link:</strong> 
-                                                <a href="{{ $product->reference_link }}" target="_blank" class="text-primary text-decoration-underline">{{ $product->reference_link }}</a>
-                                            </span>
-                                            @endif
-                                            @if($product->note)<span class="badge bg-light text-dark"><strong>Additional Note:</strong> &nbsp;</span>@endif
-                                            
-                                            </p>
-                                        </div>
-                                    </td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div>
-                                            <h6>
-                                                &nbsp;
-                                            </h6>
-                                            <p>
-                                            @if($product->quality)<span class="me-2 badge bg-light text-dark"><strong>Quality:</strong> &nbsp;</span>@endif
-                                            @if($product->quantity)<span class="me-2 badge bg-light text-dark"><strong>Quantity:</strong> &nbsp;</span>@endif
-                                            @if($product->turnaround)<span class="me-2 badge bg-light text-dark"><strong>Turnaround Time:</strong> &nbsp;</span>@endif
-                                            @if($product->delivery)<span class="me-2 badge bg-light text-dark"><strong>Delivery In:</strong> &nbsp;</span>@endif<br>
-                                            @if($product->project_title)<span class="me-2 badge bg-light text-dark"><strong>Project Title:</strong> &nbsp;</span>@endif
-                                            @if($product->subject)<span class="me-2 badge bg-light text-dark"><strong>Subject:</strong> &nbsp;</span>@endif
-                                            @if($product->preferred_voice)<span class="me-2 badge bg-light text-dark"><strong>Preferred Voice:</strong>&nbsp;</span>@endif
-                                            @if($product->preferred_writing_style)<span class="me-2 badge bg-light text-dark"><strong>Preferred Writing Style:</strong> &nbsp;</span>@endif
-                                            @if($product->brand_name)<span class="me-2 badge bg-light text-dark"><strong>Brand Name:</strong> &nbsp;</span>@endif
-                                            @if($product->audience)<span class="me-2 badge bg-light text-dark"><strong>Audience:</strong> &nbsp;</span>@endif
-                                            @if($product->reference_link)
-                                            <span class="me-2 badge bg-light text-dark"><strong>Reference link:</strong> 
-                                                <a href="{{ $product->reference_link }}" target="_blank" class="text-primary text-decoration-underline">{{ $product->reference_link }}</a>
-                                            </span>
-                                            @endif
-                                            @if($product->note)<span class="badge bg-light text-dark"><strong>Additional Note:</strong> &nbsp;</span>@endif
-                                            
-                                            </p>
-                                        </div>
-                                    </td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div>
-                                            <h6>
-                                                &nbsp;
-                                            </h6>
-                                            <p>
-                                            @if($product->quality)<span class="me-2 badge bg-light text-dark"><strong>Quality:</strong> &nbsp;</span>@endif
-                                            @if($product->quantity)<span class="me-2 badge bg-light text-dark"><strong>Quantity:</strong> &nbsp;</span>@endif
-                                            @if($product->turnaround)<span class="me-2 badge bg-light text-dark"><strong>Turnaround Time:</strong> &nbsp;</span>@endif
-                                            @if($product->delivery)<span class="me-2 badge bg-light text-dark"><strong>Delivery In:</strong> &nbsp;</span>@endif<br>
-                                            @if($product->project_title)<span class="me-2 badge bg-light text-dark"><strong>Project Title:</strong> &nbsp;</span>@endif
-                                            @if($product->subject)<span class="me-2 badge bg-light text-dark"><strong>Subject:</strong> &nbsp;</span>@endif
-                                            @if($product->preferred_voice)<span class="me-2 badge bg-light text-dark"><strong>Preferred Voice:</strong>&nbsp;</span>@endif
-                                            @if($product->preferred_writing_style)<span class="me-2 badge bg-light text-dark"><strong>Preferred Writing Style:</strong> &nbsp;</span>@endif
-                                            @if($product->brand_name)<span class="me-2 badge bg-light text-dark"><strong>Brand Name:</strong> &nbsp;</span>@endif
-                                            @if($product->audience)<span class="me-2 badge bg-light text-dark"><strong>Audience:</strong> &nbsp;</span>@endif
-                                            @if($product->reference_link)
-                                            <span class="me-2 badge bg-light text-dark"><strong>Reference link:</strong> 
-                                                <a href="{{ $product->reference_link }}" target="_blank" class="text-primary text-decoration-underline">{{ $product->reference_link }}</a>
-                                            </span>
-                                            @endif
-                                            @if($product->note)<span class="badge bg-light text-dark"><strong>Additional Note:</strong> &nbsp;</span>@endif
-                                            
-                                            </p>
-                                        </div>
-                                    </td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div>
-                                            <h6>
-                                                &nbsp;
-                                            </h6>
-                                            <p>
-                                            @if($product->quality)<span class="me-2 badge bg-light text-dark"><strong>Quality:</strong> &nbsp;</span>@endif
-                                            @if($product->quantity)<span class="me-2 badge bg-light text-dark"><strong>Quantity:</strong> &nbsp;</span>@endif
-                                            @if($product->turnaround)<span class="me-2 badge bg-light text-dark"><strong>Turnaround Time:</strong> &nbsp;</span>@endif
-                                            @if($product->delivery)<span class="me-2 badge bg-light text-dark"><strong>Delivery In:</strong> &nbsp;</span>@endif<br>
-                                            @if($product->project_title)<span class="me-2 badge bg-light text-dark"><strong>Project Title:</strong> &nbsp;</span>@endif
-                                            @if($product->subject)<span class="me-2 badge bg-light text-dark"><strong>Subject:</strong> &nbsp;</span>@endif
-                                            @if($product->preferred_voice)<span class="me-2 badge bg-light text-dark"><strong>Preferred Voice:</strong>&nbsp;</span>@endif
-                                            @if($product->preferred_writing_style)<span class="me-2 badge bg-light text-dark"><strong>Preferred Writing Style:</strong> &nbsp;</span>@endif
-                                            @if($product->brand_name)<span class="me-2 badge bg-light text-dark"><strong>Brand Name:</strong> &nbsp;</span>@endif
-                                            @if($product->audience)<span class="me-2 badge bg-light text-dark"><strong>Audience:</strong> &nbsp;</span>@endif
-                                            @if($product->reference_link)
-                                            <span class="me-2 badge bg-light text-dark"><strong>Reference link:</strong> 
-                                                <a href="{{ $product->reference_link }}" target="_blank" class="text-primary text-decoration-underline">{{ $product->reference_link }}</a>
-                                            </span>
-                                            @endif
-                                            @if($product->note)<span class="badge bg-light text-dark"><strong>Additional Note:</strong> &nbsp;</span>@endif
-                                            
-                                            </p>
-                                        </div>
-                                    </td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div>
-                                            <h6>
-                                                &nbsp;
-                                            </h6>
-                                            <p>
-                                            @if($product->quality)<span class="me-2 badge bg-light text-dark"><strong>Quality:</strong> &nbsp;</span>@endif
-                                            @if($product->quantity)<span class="me-2 badge bg-light text-dark"><strong>Quantity:</strong> &nbsp;</span>@endif
-                                            @if($product->turnaround)<span class="me-2 badge bg-light text-dark"><strong>Turnaround Time:</strong> &nbsp;</span>@endif
-                                            @if($product->delivery)<span class="me-2 badge bg-light text-dark"><strong>Delivery In:</strong> &nbsp;</span>@endif<br>
-                                            @if($product->project_title)<span class="me-2 badge bg-light text-dark"><strong>Project Title:</strong> &nbsp;</span>@endif
-                                            @if($product->subject)<span class="me-2 badge bg-light text-dark"><strong>Subject:</strong> &nbsp;</span>@endif
-                                            @if($product->preferred_voice)<span class="me-2 badge bg-light text-dark"><strong>Preferred Voice:</strong>&nbsp;</span>@endif
-                                            @if($product->preferred_writing_style)<span class="me-2 badge bg-light text-dark"><strong>Preferred Writing Style:</strong> &nbsp;</span>@endif
-                                            @if($product->brand_name)<span class="me-2 badge bg-light text-dark"><strong>Brand Name:</strong> &nbsp;</span>@endif
-                                            @if($product->audience)<span class="me-2 badge bg-light text-dark"><strong>Audience:</strong> &nbsp;</span>@endif
-                                            @if($product->reference_link)
-                                            <span class="me-2 badge bg-light text-dark"><strong>Reference link:</strong> 
-                                                <a href="{{ $product->reference_link }}" target="_blank" class="text-primary text-decoration-underline">{{ $product->reference_link }}</a>
-                                            </span>
-                                            @endif
-                                            @if($product->note)<span class="badge bg-light text-dark"><strong>Additional Note:</strong> &nbsp;</span>@endif
-                                            
-                                            </p>
-                                        </div>
-                                    </td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div>
-                                            <h6>
-                                                &nbsp;
-                                            </h6>
-                                            <p>
-                                            @if($product->quality)<span class="me-2 badge bg-light text-dark"><strong>Quality:</strong> &nbsp;</span>@endif
-                                            @if($product->quantity)<span class="me-2 badge bg-light text-dark"><strong>Quantity:</strong> &nbsp;</span>@endif
-                                            @if($product->turnaround)<span class="me-2 badge bg-light text-dark"><strong>Turnaround Time:</strong> &nbsp;</span>@endif
-                                            @if($product->delivery)<span class="me-2 badge bg-light text-dark"><strong>Delivery In:</strong> &nbsp;</span>@endif<br>
-                                            @if($product->project_title)<span class="me-2 badge bg-light text-dark"><strong>Project Title:</strong> &nbsp;</span>@endif
-                                            @if($product->subject)<span class="me-2 badge bg-light text-dark"><strong>Subject:</strong> &nbsp;</span>@endif
-                                            @if($product->preferred_voice)<span class="me-2 badge bg-light text-dark"><strong>Preferred Voice:</strong>&nbsp;</span>@endif
-                                            @if($product->preferred_writing_style)<span class="me-2 badge bg-light text-dark"><strong>Preferred Writing Style:</strong> &nbsp;</span>@endif
-                                            @if($product->brand_name)<span class="me-2 badge bg-light text-dark"><strong>Brand Name:</strong> &nbsp;</span>@endif
-                                            @if($product->audience)<span class="me-2 badge bg-light text-dark"><strong>Audience:</strong> &nbsp;</span>@endif
-                                            @if($product->reference_link)
-                                            <span class="me-2 badge bg-light text-dark"><strong>Reference link:</strong> 
-                                                <a href="{{ $product->reference_link }}" target="_blank" class="text-primary text-decoration-underline">{{ $product->reference_link }}</a>
-                                            </span>
-                                            @endif
-                                            @if($product->note)<span class="badge bg-light text-dark"><strong>Additional Note:</strong> &nbsp;</span>@endif
-                                            
-                                            </p>
-                                        </div>
-                                    </td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
                                 </tr>
                                 <tr>
                                     <td colspan="4" style="border: 0px;">
                                         <div>
-                                            <h6>Subtotal</h6>
+                                            <h6 style="font-size: 14px; font-weight: 600; font-family: 'Bahnschrift'; margin: 0;">Discount</h6>
                                         </div>
                                     </td>
-                                    <td style="border: 0px; text-align: right;">{{ site_currency() }} {{ number_format(($invoice_amount + $discount_amount), 2) }}</td>
+                                    <td style="border: 0px; text-align: right; font-size: 14px; font-weight: 500; font-family: 'Bahnschrift';">
+                                        {{ site_currency() }} {{ number_format($discount_amount, 2) }}
+                                    </td>
                                 </tr>
                                 <tr>
-                                    <td colspan="4" style="border: 0px;">
+                                    <td colspan="4" style="border: 0px; background: #132028; color: #d3e9e3f5; font-size: 15px; font-weight: bold; font-family: 'Bahnschrift';">
                                         <div>
-                                            <h6>Discount</h6>
+                                            <h6 style="color: #d3e9e3f5; font-size: 15px; font-weight: bold; font-family: 'Bahnschrift'; margin: 0;">Total Due</h6>
                                         </div>
                                     </td>
-                                    <td style="border: 0px; text-align: right;">{{ site_currency() }} {{ number_format($discount_amount, 2) }}</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="4" style="border: 0px; background: #132028;color: #d3e9e3f5;font-size: 12px;font-weight: bold;    font-family: 'Bahnschrift';">
-                                        <div>
-                                            <h6 style="color: #d3e9e3f5;font-size: 12px;font-weight: bold;    font-family: 'Bahnschrift';">Total Due</h6>
-                                        </div>
+                                    <td style="border: 0px; text-align: right; background: #132028; color: #d3e9e3f5; font-size: 15px; font-weight: bold; font-family: 'Bahnschrift';">
+                                        {{ site_currency() }} {{ number_format($invoice_amount, 2) }}
                                     </td>
-                                    <td style="border: 0px; text-align: right;  background: #132028;color: #d3e9e3f5;font-size: 12px;font-weight: bold;    font-family: 'Bahnschrift';">{{ site_currency() }} {{ number_format($invoice_amount, 2) }}</td>
                                 </tr>
 
 
@@ -548,20 +260,6 @@
                     
                    </tbody>
                    <tfoot>
-                        <!-- <tr>
-                            <td style="width: 100%; background: url('{{ $invoice_footer_image }}') no-repeat; background-size:contain;">
-                                <p style="text-align: center;">
-                                    <div style="width: 340px !important; text-align: center; margin: auto;">
-                                        <p style="padding-bottom: 5px;"> <strong></strong></p>
-                                        <p>
-                                           {!! $site->site_description !!}
-                                        </p>
-                                    </div>
-                                </p>
-                            </td>
-                        </tr> -->
-
-                         <!-- Original Footer Row (Hidden for PDF rendering) -->
                     <tr>
                         <td style="display:none;"></td>
                     </tr>

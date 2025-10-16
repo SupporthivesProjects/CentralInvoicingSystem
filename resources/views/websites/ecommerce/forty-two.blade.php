@@ -107,7 +107,7 @@
                                                                 <p style=" font-size: 10px;font-weight: 400;font-family: Arial; color: #000;margin-bottom: 6px;"><span style="font-size: 10.5px; font-weight: 900;">Date:</span> {{ $invoice_date }}</p>
                                                                 <p style=" font-size: 10px;font-weight: 400;font-family: Arial; color: #000;margin-bottom: 6px;"><span style="font-size: 10.5px; font-weight: 900;">Invoice Number:</span> {{$invoice_number}}</p>
                                                             </td>
-                                                            <td>
+                                                            <td style="padding-right: 20px;">
                                                                 <h2 style="font-family: Arial; font-size: 28px; font-weight: 900; color: #000;">INVOICE</h2>
                                                             </td>
                                                         </tr>
@@ -117,7 +117,7 @@
                                                                 <p style=" font-size: 10px;font-weight: 400;font-family: Arial; color: #000; margin-top: 6px;">Art 2 Cart Devs </p>
                                                             </td>
                                                             
-                                                            <td>
+                                                            <td style="padding-right: 20px;">
                                                                 <h6 style=" font-size: 10px;font-weight: 900;font-family: Arial; color: #000; margin-top: 10px;">Billed To:</h6>
                                                                 <p style=" font-size: 10px;font-weight: 400;font-family: Arial; color: #000; margin-top: 6px;">
                                                                     {{ $customer_name }}
@@ -128,7 +128,7 @@
                                                             <td>
                                                                 <p style=" font-size: 10px;font-weight: 400;font-family: Arial; color: #000; margin-top: 6px;">{!! $company_address !!}</p>
                                                             </td>
-                                                            <td>
+                                                            <td style="padding-right: 20px;">
                                                                 <p style="font-family: Arial; font-size: 10px; font-weight: 400; color: #000; margin-top: 16px;"> <span style="font-weight: 900;">Email:</span> {{ $company_email ?? 'support@art2cartdevs.com' }}</p>
                                                                 <p style="font-family: Arial; font-size: 10px; font-weight: 400; color: #000;"> <span style="font-weight: 900;">Website:</span> www.art2cartdevs.com</p>
                                                             </td>

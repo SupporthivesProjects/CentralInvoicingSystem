@@ -2,19 +2,28 @@
 <html>
 <head>
     <title>Your Email Title</title>
+    <style>
+            .for_bttom {
+            position: fixed;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            width: 100%;
+        }
+    </style>
 </head>
 <body>
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
-            <td align="center" bgcolor="#f2f2f2" style="padding: 20px 0;">
-                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
+            <td align="center" bgcolor="#ffffff" style="">
+                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse;">
                     <!-- Header -->
-                    <tr>
-                        <td style="padding: 0px;max-height: 130px;">
-                            <table>
-                                <tr >
-                                    <td style="height: 150px; background: url({{ $invoice_header_image }}) no-repeat;background-position:center;background-size:cover;width: 600px;">
-                                        <b style="padding-left: 70px;color: white;font-size: 22px;font-family: 'Courier New', Courier, monospace;"> Invioce</b><br>
+                    <tr style="width: 100%;">
+                        <td style="padding: 0px;max-height: 130px;width: 100%;">
+                            <table style="width: 100%;">
+                                <tr style="width: 100%;">
+                                    <td style="height: 150px; background: url({{ $invoice_header_image }}) no-repeat;background-position: top center;background-size:cover;width: 100%;">
+                                        <b style="padding-left: 70px;color: white;font-size: 22px;font-family: 'Courier New', Courier, monospace;"> Invoice</b><br>
                                         <b style="padding-left: 75px;color: white;font-size: 9px;font-family: 'Courier New', Courier, monospace;">No.{{ $invoice_number }}</b>
                                     </td>
 
@@ -97,7 +106,7 @@
                                 @endforeach
                                 <tr style="border-collapse: collapse;height: 30px; border-bottom: 0px;border: 0px; ">
                                     <td style="width: 600px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-left: 5px;">
-                                       <b>Our Payment Methods:</b>
+                                       <!-- <b>Our Payment Methods:</b> -->
                                     </td>
                                     <td style="width: 200px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
 
@@ -112,7 +121,7 @@
                                 </tr>
                                 <tr style="border-collapse: collapse;height: 30px; border-bottom: 0px;border: 0px; ">
                                     <td style="width: 600px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-left: 5px;">
-                                       Invoice # {{ $invoice_number }}
+                                       <!-- Invoice # {{ $invoice_number }} -->
                                     </td>
                                     <td style="width: 200px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
 
@@ -127,13 +136,13 @@
                                 </tr>
                                 <tr style="border-collapse: collapse;height: 30px; border-bottom: 0px;border: 0px; ">
                                     <td style="width: 600px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-left: 5px;">
-                                       PayPal, Wire Transfer, Payoneer
+                                       <!-- PayPal, Wire Transfer, Payoneer -->
                                     </td>
                                     <td style="width: 200px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
 
                                     </td>
                                     <td style="width: 200px;text-align: right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;background-color: #F2F2F2;">
-                                       <b>Total Due</b>>
+                                       <b>Total Due</b>
                                     </td>
                                     <td style="width: 200px;text-align:right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;background-color: #F2F2F2;">
                                         <b>{{ site_currency() . number_format($invoice_amount, 2) }}</b>
@@ -149,7 +158,7 @@
 
                     <!-----------Footer----------->
                     <tr>
-                        <td style="height: 130px;">
+                        <td style="height: 130px;" class="for_bttom">
                             <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;">
                                 <tr style="background: url({{ $invoice_footer_image }}) no-repeat;background-position: center;background-size: cover;height: 80px;padding:50px;background-size:cover;width: 100%;">
                                     <td style="width: 150px;">
@@ -168,6 +177,20 @@
                             </table>
                         </td>
                     </tr>
+                    <!-- <div style="height: 130px;" class="for_bttom">
+                        <div style="background: url('{{ $invoice_footer_image }}') no-repeat center / cover; height: 80px; padding: 50px; width: 100%;">
+                            <div style="width: 150px; margin: 0 auto; text-align: center;">
+                            <p style="font-family: arial; font-size: 10px; margin: 0; color: #00A8DC; font-weight: bold;">
+                                Notes
+                            </p>
+                            <br>
+                            <p style="font-family: arial; font-size: 10px; margin: 0;">
+                                {{ $invoice_notes ?? 'Thank you for your business!' }}
+                            </p>
+                            </div>
+                        </div>
+                    </div> -->
+
                     <!-----------Footer End----------->
 
                 </table>

@@ -73,7 +73,7 @@
                         style="font-size: 12px; color: #e87c7c; text-align: left; border-bottom: 1px solid grey; border-top: 1px solid grey;">
                         <tr>
                             <th style="padding: 8px;">ITEM DESCRIPTION</th>
-                            <th style="padding: 8px;">UNIT PRICE</th>
+                            <!-- <th style="padding: 8px;">UNIT PRICE</th> -->
                             <th style="padding: 8px;">QTY</th>
                             <th style="padding: 8px;">AMOUNT</th>
                         </tr>
@@ -83,13 +83,13 @@
                         <tr>
                             <td style="padding: 8px 8px 20px;">
                                 <strong>{{ $product->name }}</strong><br>
-                                <span style="color: #666; font-size: 12px;">
+                                <!-- <span style="color: #666; font-size: 12px;">
                                     {{ Str::limit(strip_tags($product->description), 100) }}
-                                </span>
+                                </span> -->
                             </td>
-                            <td style="padding: 8px 8px 20px;">
+                            <!-- <td style="padding: 8px 8px 20px;">
                                 {{ site_currency() . number_format($product->unit_price, 2) }}
-                            </td>
+                            </td> -->
                             <td style="padding: 8px 8px 20px;">1</td>
                             <td style="padding: 8px 8px 20px;">
                                 {{ site_currency() . number_format($product->unit_price, 2) }}

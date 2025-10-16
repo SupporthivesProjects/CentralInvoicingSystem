@@ -3,12 +3,25 @@
 
 <head>
     <title>Your Email Title</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
-        rel="stylesheet">
-</head>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+    <style>
+        .semi_bold {
+            font-family: "Poppins", sans-serif;
+            font-weight: 600;
+            font-style: normal;
+        }
+
+        .poppins_regular {
+            font-family: "Poppins", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+        }
+    </style>
+
+    </head>
 
 <body style="margin: 0 !important; padding: 0 !important;">
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
@@ -20,22 +33,22 @@
                     <tr>
                         <td style="padding:0px;">
                             <table
-                                style="background: url({{ $invoice_header_image }});background-repeat: no-repeat;background-size: cover;margin: auto; display: block;height:200px;width: 100%;border-collapse: collapse;z-index: 9999999;">
+                                style="background: url({{ $invoice_header_image }});background-repeat: no-repeat;background-size: cover;margin: auto; display: block;height:250px;width: 100%;border-collapse: collapse;z-index: 9999999;">
                                 <tr style="vertical-align: bottom;">
                                     <td style="padding: 0px;">
                                         <div
-                                            style="background:#1F2139;margin-top:107px;height:70px;width: 320px;padding: 10px 0px 10px 40px;display: flex;flex-direction: column;gap: 10px;">
-                                            <h1
-                                                style="color: #ffff;font-family: Poppins SemiBold;font-size: 36px;font-weight: 600px;margin: 0px;text-transform: uppercase;">
+                                            style="background:#1F2139;margin-top:150px;height:100px;width: 320px;padding: 10px 0px 10px 40px;display: flex;flex-direction: column;gap: 5px;">
+                                            <h1  class="semi_bold"
+                                                style="color: #ffff;font-size: 36px;margin: 0px;text-transform: uppercase;">
                                                 Invoice
                                             </h1>
-                                            <div style="display: flex;gap: 30px;">
-                                                <p
-                                                    style="color: #ffff;font-family: Poppins SemiBold;font-size:9px;font-weight: 600px;margin: 0px;">
+                                            <div style="display: flex;gap: 10px;">
+                                                <p class="poppins_regular"
+                                                    style="color: #ffff;font-size:14px;margin: 0px;">
                                                     {{ $invoice_date }}
                                                 </p>
-                                                <p
-                                                    style="color: #ffff;font-family: Poppins SemiBold;font-size:9px;font-weight: 600px;margin: 0px;">
+                                                <p class="poppins_regular"
+                                                    style="color: #ffff;font-size:14px;margin: 0px;">
                                                     NO: {{ $invoice_number }}
                                                 </p>
                                             </div>
@@ -63,23 +76,26 @@
                                     </p>
                                 </td>
                                 <td
-                                    style="display: flex;flex-direction: column;align-items:flex-end;justify-content: right;gap: 10px;padding-top: 10px;vertical-align: top;">
-                                    <img src="{{ $company_logo }}" alt=""
-                                        style="height:30px;width:70px;margin-right: 90px;">
-                                    <div>
-                                        <h2
-                                            style="color:#000000;font-size: 12px;font-weight:500;font-family: Poppins;margin: 0px;line-height:18px;text-transform:capitalize;">
-                                            {!! $company_address !!}
-                                        </h2>
-                                        <p
-                                            style="color:#767171;font-size:9px;font-weight:500;font-family: Poppins;margin: 0px;line-height:16px;text-transform:capitalize;">
-                                            <b style="color:#000000;">E:</b> {{ $company_email }}
-                                        </p>
-                                        <p
-                                            style="color:#767171;font-size:9px;font-weight:500;font-family: Poppins;margin: 0px;line-height:16px;text-transform:capitalize;">
-                                            <b style="color:#000000;">W:</b> {{ $site->site_link }}
-                                        </p>
+                                    style="display: flex;flex-direction: column;align-items:flex-end;justify-content: flex-start;gap: 10px;padding-top: 10px;">
+                                    <div style="display: flex;flex-direction: column;align-items:flex-start;justify-content: flex-start;gap: 10px;">
+                                        <img src="{{ $company_logo }}" alt=""
+                                            style="width:103px;margin-right: 90px;">
+                                        <div style="padding-left: 4px;">
+                                            <h2
+                                                style="color:#000000;font-size: 12px;font-weight:500;font-family: Poppins;margin: 0px;line-height:18px;text-transform:capitalize;">
+                                                {!! $company_address !!}
+                                            </h2>
+                                            <p class="poppins_regular"
+                                                style="color:#767171;font-size:9px;margin: 0px;line-height:16px;">
+                                                <b style="color:#000000;">E:</b> {{ $company_email }}
+                                            </p>
+                                            <p class="poppins_regular"
+                                                style="color:#767171;font-size:9px;margin: 0px;line-height:16px;">
+                                                <b style="color:#000000;">W:</b> <a href="{{ $site->site_link }}" style="text-decoration: none;color: #767171;">www.puregiftcard.com</a>
+                                            </p>
+                                        </div>
                                     </div>
+                                    
                                 </td>
                             </table>
                             <div style="min-height: 400px !important;">
@@ -87,26 +103,26 @@
                                     style="border-collapse: collapse;margin-top:40px;">
                                     <tr style="height:40px;background:#1F2139 ;">
                                         <td style="width:300px;">
-                                            <p
-                                                style="color:#ffff;font-size: 12px;font-weight:400;font-family:Poppins;margin: 0px;line-height: 28px;text-align: left;padding-left:10px;">
+                                            <p class="semi_bold"
+                                                style="color:#ffff;font-size: 12px;margin: 0px;line-height: 28px;text-align: left;padding-left:10px;">
                                                 Product Name
                                             </p>
                                         </td>
                                         <td style="width:50px;">
-                                            <p
-                                                style="color:#ffff;font-size: 12px;font-weight:400;font-family:Poppins;margin: 0px;line-height: 28px;text-align:right;padding-right:10px;">
+                                            <p class="semi_bold"
+                                                style="color:#ffff;font-size: 12px;margin: 0px;line-height: 28px;text-align:right;padding-right:10px;">
                                                 Qty
                                             </p>
                                         </td>
                                         <td style="width:100px;">
-                                            <p
-                                                style="color:#ffff;font-size: 12px;font-weight:400;font-family:Poppins;margin: 0px;line-height: 28px;text-align:right;padding-right:10px;">
+                                            <p class="semi_bold"
+                                                style="color:#ffff;font-size: 12px;margin: 0px;line-height: 28px;text-align:right;padding-right:10px;">
                                                 Unit Price
                                             </p>
                                         </td>
                                         <td style="width:100px;">
-                                            <p
-                                                style="color:#ffff;font-size: 12px;font-weight:400;font-family:Poppins;margin: 0px;line-height: 28px;text-align:right;padding-right:10px;">
+                                            <p class="semi_bold"
+                                                style="color:#ffff;font-size: 12px;margin: 0px;line-height: 28px;text-align:right;padding-right:10px;">
                                                 Total
                                             </p>
                                         </td>
@@ -114,26 +130,26 @@
                                     @foreach ($products as $product)
                                         <tr style="height:40px;">
                                             <td>
-                                                <p
+                                                <p 
                                                     style="color:black;font-size: 11px;font-weight: 500;font-family:Poppins;margin: 0px;line-height: 28px;text-align: left;padding-left:10px;">
                                                     {{ $product->name }}
                                                 </p>
                                             </td>
                                             <td>
-                                                <p
-                                                    style="color:black;font-size: 11px;font-weight: 500;font-family:Poppins;margin: 0px;line-height:16px;text-align:right;padding-right:10px;">
+                                                <p class="poppins_regular"
+                                                    style="color:black;font-size: 11px;margin: 0px;line-height:16px;text-align:right;padding-right:10px;">
                                                     {{ $product->quantity ?? 1 }}
                                                 </p>
                                             </td>
                                             <td>
-                                                <p
-                                                    style="color:black;font-size: 11px;font-weight: 500;font-family:Poppins;margin: 0px;line-height: 28px;text-align:right;padding-right:10px;">
+                                                <p class="poppins_regular"
+                                                    style="color:black;font-size: 11px;margin: 0px;line-height: 28px;text-align:right;padding-right:10px;">
                                                     {{ site_currency() }} {{ number_format($product->unit_price, 2) }}
                                                 </p>
                                             </td>
                                             <td>
-                                                <p
-                                                    style="color:black;font-size: 11px;font-weight: 500;font-family: Poppins;margin: 0px;line-height: 28px;text-align:right;padding-right:10px;">
+                                                <p class="poppins_regular"
+                                                    style="color:black;font-size: 11px;margin: 0px;line-height: 28px;text-align:right;padding-right:10px;">
                                                     {{ site_currency() }}{{ number_format(($product->quantity ?? 1) * $product->unit_price, 2) }}
                                                 </p>
                                             </td>
@@ -147,8 +163,8 @@
                                             </p>
                                         </td>
                                         <td>
-                                            <p
-                                                style="color:#000000;font-size: 12px;font-weight:500;font-family: Poppins;margin: 0px;line-height: 28px;text-align:right;padding-right:10px;text-transform: uppercase;">
+                                            <p class="poppins_regular"
+                                                style="color:#000000;font-size: 12px;margin: 0px;line-height: 28px;text-align:right;padding-right:10px;text-transform: uppercase;">
                                                 {{ site_currency() }}{{ number_format($invoice_amount + $discount_amount, 2) }}
                                             </p>
                                         </td>
