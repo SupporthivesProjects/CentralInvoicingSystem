@@ -27,7 +27,7 @@
                 <table width="100%" cellspacing="0" cellpadding="0" border="0"   >
                     <!-- Header -->
                     <tr style="width: 100%">
-                        <td style="padding: 50px;">
+                        <td style="padding: 20px;">
                             <table>
                             </table>
                         </td>
