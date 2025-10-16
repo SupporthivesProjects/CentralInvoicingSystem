@@ -67,6 +67,7 @@
                                     </thead>
                                     <tbody style="color: white;">
                                         @foreach ($products as $product)
+<<<<<<< HEAD
                                         <tr>
                                             <td style="padding: 12px; border-bottom: 1px solid #ccc;">{{ $product->name }}</td>
                                             <td style="padding: 12px; text-align: right; border-bottom: 1px solid #ccc;">
@@ -79,7 +80,21 @@
                                                 
                                             </td>
                                         </tr>
+=======
+                                            <tr>
+                                                <td style="padding: 12px; border-bottom: 1px solid #ccc;">{{ $product->name }}</td>
+                                                <td style="padding: 12px; text-align: right; border-bottom: 1px solid #ccc;">
+                                                    {{ site_currency() }} {{  number_format($product->unit_price ?? 0, 2) }}</td>
+                                                <td style="padding: 12px; text-align: center; border-bottom: 1px solid #ccc;">1
+                                                </td>
+                                                <td style="padding: 12px; text-align: right; border-bottom: 1px solid #ccc;">
+                                                    {{ site_currency() }} {{ number_format($product->unit_price, 2) }}
+                                                    
+                                                </td>
+                                            </tr>
+>>>>>>> Swarali
                                         @endforeach
+
                                         {{-- <tr>
                                             <td style="padding: 12px; border-bottom: 1px solid #ccc;">Item Name</td>
                                             <td style="padding: 12px; text-align: right; border-bottom: 1px solid #ccc;">
