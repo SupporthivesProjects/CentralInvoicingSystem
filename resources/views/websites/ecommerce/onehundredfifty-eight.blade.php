@@ -111,7 +111,7 @@
                     <tr>
                         <td colspan="4"></td>
                         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                        <td colspan="2" style="text-align: right; padding: 12px; border-bottom: 1px solid #444;">
+                        <td colspan="2" style="text-align: right; padding: 0px; border-bottom: 1px solid #444;">
                             Discount
                         </td>
                         <td style="padding: 12px; width: 60px; border-bottom: 1px solid #444;text-align: right;">
@@ -122,7 +122,7 @@
                         <td colspan="4"></td>
                         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                         <td colspan="2" style="text-align: right; font-weight: bold; color: #e87c7c; padding: 0px;">
-                            Grand Total2
+                            Grand Total
                         </td>
                         <td style="font-weight: bold; color: #e87c7c; padding: 12px; width: 60px;text-align: right;">
                             {{ site_currency() . number_format($invoice_amount, 2) }}
@@ -135,7 +135,7 @@
 
                 <table style="width: 43%; font-size: 12px; display: flex; margin-left: auto; border-collapse: collapse;">
                     <tr>
-                        <td class="custom-line" style="padding-bottom: 10px; color: #333;">
+                        <td class="custom-line" style="padding-bottom: 10px; color: #333;text-align: right;">
                             {{ $company_mobile }}
                             <span style="float:right;">
                                 <img style="width: 18px;" src="{{ $invoice_image6 }}" alt="">
@@ -143,7 +143,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="custom-line" style="padding: 10px 0; color: #333;">
+                        <td class="custom-line" style="padding: 10px 0; color: #333;text-align: right;">
                             {{ $company_email }}
                             <span style="float:right; margin-left:6px;">
                                 <img style="width: 18px;" src="{{ $invoice_image3 }}" alt="">
@@ -151,7 +151,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="custom-line" style="padding-top: 10px; color: #333;">
+                        <td class="custom-line" style="padding-top: 10px; color: #333;text-align: right;">
                             {!! $company_address !!}
                             <span style="float:right;">
                                 <img style="width: 18px;" src="{{ $invoice_image4 }}" alt="">
