@@ -157,25 +157,29 @@
                             </tr>           
                             </table> -->
                             <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse;"> 
-    <tr style="height: 80px; font-family: 'Poppins', sans-serif;">
+                                <tr style="height: 80px; font-family: 'Poppins', sans-serif;">
 
-        <td style="text-align: left; font-size: 10px; color: #5E5E5E; padding-left: 40px; padding-top: 10px;">
-            <img src="{{ $invoice_image2 }}" alt="" style="height: 25px; vertical-align: middle;">
-            <span style="margin-left: 5px; vertical-align: middle;">{{ $company_email }}</span>
-        </td>
+                                    <!-- Column 1 -->
+                                    <td style="width: 33.33%; text-align: left; font-size: 10px; color: #5E5E5E; padding-left: 40px; padding-top: 10px;">
+                                        <img src="{{ $invoice_image2 }}" alt="" style="height: 25px; vertical-align: middle;">
+                                        <span style="margin-left: 5px; vertical-align: middle;">{{ $company_email }}</span>
+                                    </td>
 
-        <td style="text-align: left; font-size: 10px; color: #5E5E5E; padding-top: 10px;">
-            <img src="{{ $invoice_image3 }}" alt="" style="height: 25px; vertical-align: middle;">
-            <span style="margin-left: 5px; vertical-align: middle;">{{ $company_mobile }}</span>
-        </td>
+                                    <!-- Column 2 -->
+                                    <td style="width: 33.33%; text-align: left; font-size: 10px; color: #5E5E5E; padding-top: 10px;">
+                                        <img src="{{ $invoice_image3 }}" alt="" style="height: 25px; vertical-align: middle;">
+                                        <span style="margin-left: 5px; vertical-align: middle;">{{ $company_mobile }}</span>
+                                    </td>
 
-        <td style="text-align: left; font-size: 10px; color: #5E5E5E; padding-top: 10px;">
-            <img src="{{ $invoice_image4 }}" alt="" style="height: 25px; vertical-align: middle;">
-            <span style="margin-left: 5px; vertical-align: middle;">{{ $company_address }}</span>
-        </td>
+                                    <!-- Column 3 -->
+                                    <td style="width: 33.33%; text-align: left; font-size: 10px; color: #5E5E5E; padding-top: 10px;">
+                                        <img src="{{ $invoice_image4 }}" alt="" style="height: 25px; vertical-align: middle;">
+                                        <span style="margin-left: 5px; vertical-align: middle;">{{ $company_address }}</span>
+                                    </td>
 
-    </tr>           
-</table>
+                                </tr>           
+                            </table>
+
 
                         </td>
                     </tr> 
