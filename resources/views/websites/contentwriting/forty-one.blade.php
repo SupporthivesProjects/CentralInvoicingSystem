@@ -19,7 +19,7 @@
                             <table  width="100%" cellspacing="0" cellpadding="0">
                                 <tr>
                                     <td style="height: 100px; background: url('{{ $invoice_header_image }}') no-repeat;background-position: 100% 100%;background-size:cover;width: 725px;">
-                                        <p style="color: white;padding-left: 275px;font-size: 10px; margin-top: -10px;"> {{ $company_name }}<br>{{ $company_email }}</p>
+                                        <p style="color: white;padding-left: 275px;font-size: 10px; margin-top: -16px;"> {{ $company_name }}<br>{{ $company_email }}</p>
                                     </td>
                                     
                                 </tr>
