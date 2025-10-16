@@ -24,7 +24,7 @@
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse;margin:0; padding:0; ">
                     <!-- Header -->
                     <tr style="width: 100%">
-                        <td style="padding: 10px;max-height: 130px;width: 100% ">
+                        <td style="max-height: 130px;width: 100% ">
                             <table width="100%">
                                 <tr style="width: 100%">
                                     <td style="height: 120px; background: url('{{ $invoice_header_image }}') no-repeat;background-position:center;background-size:100% 100%;width: 100%;text-align: center;">
