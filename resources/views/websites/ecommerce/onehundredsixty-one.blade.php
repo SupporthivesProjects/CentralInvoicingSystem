@@ -33,8 +33,8 @@
                             <div style="margin-bottom: 28px;">
                                 <p style="margin: 0; font-size: 11px; color: #888; letter-spacing: 1px;">BILLED TO</p>
                                 <p style="margin: 5px 0 0; color: #000;">
-                                    <strong>{{ $customer_name }}</strong><br>
-                                    {{ $customer_mobile }}<br>
+                                    <strong>{{ $customer_name }}</strong>
+                                    {{ $customer_mobile }}
                                     {{ $customer_email }}
                                 </p>
                             </div>
