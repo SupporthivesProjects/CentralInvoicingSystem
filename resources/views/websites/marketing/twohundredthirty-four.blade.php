@@ -8,16 +8,24 @@
             margin:0px;
             padding:0px;
         }
+        .footer_bottom {
+            position: fixed;
+            bottom: 0px;
+            left: 0px;
+            right: 0px;
+            width: 100%;
+            
+        }
     </style>
 
 </head>
 <body>
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
-            <td align="center" bgcolor="#f2f2f2" style="">
+            <td  bgcolor="#f2f2f2" style="padding:0;">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse; background: url('{{ $invoice_image1 }}') no-repeat;background-position: center;background-size: 100% 100%;">
                     <!-- Header -->
-                    <tr>
+                    <tr style="width: 100%">
                         <td style="padding-left: 40px;">
                             <table>
                                 
@@ -122,6 +130,8 @@
                     <!-- Content End-->
 
                     <!-----------Footer----------->
+                    <table class="footer_bottom">
+                    
                     <tr>
                         <td>
                             <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;"> 
@@ -148,6 +158,7 @@
                             </table>
                         </td>
                     </tr> 
+                    </table>
                     <!-----------Footer End----------->
 
                 </table>
