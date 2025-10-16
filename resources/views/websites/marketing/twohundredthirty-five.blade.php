@@ -7,6 +7,14 @@
             margin:0px;
             padding:0px;
         }
+        .footer_bottom {
+            position: fixed;
+            bottom: 0px;
+            left: 0px;
+            right: 0px;
+            width: 100%;
+            
+        }
     </style>
 </head>
 <body>
@@ -15,10 +23,10 @@
             <td  bgcolor="#f2f2f2" style="padding:0;">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse;margin:0; padding:0; ">
                     <!-- Header -->
-                    <tr>
-                        <td style="padding: 10px;max-height: 130px;">
-                            <table>
-                                <tr >
+                    <tr style="width: 100%">
+                        <td style="padding: 10px;max-height: 130px;width: 100% ">
+                            <table width="100%">
+                                <tr style="width: 100%">
                                     <td style="height: 120px; background: url('{{ $invoice_header_image }}') no-repeat;background-position:center;background-size:100% 100%;width: 100%;text-align: center;">
                                       <img src="{{ $company_logo  }}" alt="" style="height: 50px; ">
                                     </td>
@@ -116,7 +124,9 @@
                     <!-- Content End-->
 
                     <!-----------Footer----------->
-                    <tr>
+                    <table class="footer_bottom">
+
+                    <tr >
                         <td style="height: 130px;">
                             <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;"> 
                                 <tr style="background: url('{{ $invoice_image1 }}') no-repeat;background-position: center;background-size: cover;height: 80px;background-size:cover;width: 100%;text-align: center;">
@@ -134,6 +144,7 @@
                             </table>
                         </td>
                     </tr> 
+                    </table>
                     <!-----------Footer End----------->
 
                 </table>
