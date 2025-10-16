@@ -23,10 +23,10 @@
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse;">
                     <!-- Header -->
                     <tr style="width: 100%;">
-                        <td style="padding: 0px;max-height: 300px;width: 100%;">
+                        <td style="padding: 0px;max-height: 200px;width: 100%;">
                             <table style="width: 100%;">
                                 <tr style="width: 100%;">
-                                    <td style="height: 300px; background: url({{ $invoice_header_image }}) no-repeat;background-position: top center;background-size:cover;width: 100%;">
+                                    <td style="height: 200px; background: url({{ $invoice_header_image }}) no-repeat;background-position: top center;background-size:cover;width: 100%;">
                                         <b style="padding-left: 120px;color: white;font-size: 22px;font-family: 'Courier New', Courier, monospace;"> Invoice</b><br>
                                         <b style="padding-left: 120px;color: white;font-size: 9px;font-family: 'Courier New', Courier, monospace;">No.{{ $invoice_number }}</b>
                                     </td>
@@ -40,7 +40,7 @@
                      <!-- Content -->
                     <tr >
                         <td style="padding:60px;padding-top:0px;">
-                            <table>
+                            <table width="100%" style="border-collapse: collapse; table-layout: fixed;">
 
                                 <tr>
                                     <td style="padding-top: 10px;width: 50%;vertical-align: top;">
@@ -78,7 +78,7 @@
                             <div style="min-height: 500px !important">
                             <table style="border-collapse: collapse;border-bottom: 0px;border: 0px;">
                                 <tr style="border-collapse: collapse;height: 30px; border-bottom: 0px;border: 0px; background-color: #00A8DC;">
-                                    <td style="width: 600px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-left: 5px;">
+                                    <td style="width: 600px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-left: 10px;">
                                        <b>Service</b>
                                     </td>
                                     <td style="width: 200px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
@@ -87,14 +87,14 @@
                                     <td style="width: 200px;text-align: right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;">
                                         <b>Price</b>
                                     </td>
-                                    <td style="width: 200px;text-align:right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
+                                    <td style="width: 200px;text-align:right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 10px">
                                         <b>Cost</b>
                                     </td>
 
                                 </tr>
                                 @foreach($products as $product)
                                  <tr style="border-collapse: collapse;height: 30px; border-bottom: 0px;border: 0px; ">
-                                    <td style="width: 600px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-left: 5px;">
+                                    <td style="width: 600px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-left: 10px;">
                                        {{ $product->name }}
                                     </td>
                                     <td style="width: 200px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
@@ -103,7 +103,7 @@
                                     <td style="width: 200px;text-align: right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;">
                                         {{ site_currency() . number_format($product->unit_price, 2) }}
                                     </td>
-                                    <td style="width: 200px;text-align:right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
+                                    <td style="width: 200px;text-align:right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 10px">
                                         {{ site_currency() . number_format($product->unit_price, 2) }}
                                     </td>
 
