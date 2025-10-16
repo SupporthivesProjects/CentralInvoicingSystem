@@ -14,6 +14,7 @@
             left: 0px;
             right: 0px;
             width: 100%;
+            background: url('{{ $invoice_footer_image }}') no-repeat;background-position: top center;background-size: cover;
             
         }
     </style>
