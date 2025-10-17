@@ -262,7 +262,7 @@
                                 <tr style="border-collapse: collapse;">
                                     <td style="width: 33.33%; text-align: left; font-family: arial; font-size: 10px; font-weight: 400; color: #5E5E5E; padding-left: 40px; padding-top: 10px; white-space: nowrap;">
                                     <img src="{{ $invoice_image3 }}" alt="" style="height: 10px; vertical-align: middle; padding-right: 10px;">
-                                    +1 132 456 9873
+                                    {{ $company_email }}
                                     </td>
 
                                     <td style="width: 33.33%; text-align: center; font-family: arial; font-size: 10px; font-weight: 400; color: #5E5E5E; padding-top: 10px; padding-left: 5px; white-space: nowrap;">
