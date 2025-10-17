@@ -160,20 +160,20 @@
                                  <tr>
                                  <td class="addrss" style="width: 40%; vertical-align: top;">
                                         <h4>BILLED TO:</h4>
-                                        <p>{{ $customer_name }}</p>
-                                        <p>{{ $customer_email }}</p>
+                                        <p style="font-size: 12px;">{{ $customer_name }}</p>
+                                        <p style="font-size: 12px;">{{ $customer_email }}</p>
                                     </td>
 
                                     <td class="addrss">
                                         <h4>Billed From:</h4>
-                                        <p>{{ $site_name }}</p>
-                                        <p>{!! $company_address !!}</p>
-                                        <p>{{ $company_email }}</p>
-                                        <p>{{ $company_mobile }}</p>
+                                        <p style="font-size: 12px;">{{ $site_name }}</p>
+                                        <p style="font-size: 12px;">{!! $company_address !!}</p>
+                                        <p style="font-size: 12px;">{{ $company_email }}</p>
+                                        <p style="font-size: 12px;">{{ $company_mobile }}</p>
                                     </td>
                                     <td class="addrss" style="display: flex; flex-direction: column; text-align: right; align-items: flex-end;">
                                         <h4>DATE</h4>
-                                        <p>{{ $invoice_date }}</p>
+                                        <p style="font-size: 12px;">{{ $invoice_date }}</p>
                                     </td>
                                  </tr>
                                </tbody>
@@ -185,7 +185,7 @@
                           <table class="table-list" style="width: 100%;"> 
                             <tbody>
                                 <tr>
-                                    <th>Service</th>
+                                    <th style="text-align: left;">Service</th>
                                     <th style="text-align: left;">Images</th>
                                     <th>Qty of Words</th>
                                     <th>Price</th>
@@ -204,12 +204,12 @@
                                                 <div>
                                                     <h6>{{ $product->name }}</h6>
                                                     <p>
-                                                        @if($product->quality)<span class="me-2 badge bg-light text-dark"><strong>Quality:</strong> {{ $product->quality }}</span>@endif
-                                                        @if($product->quantity)<span class="me-2 badge bg-light text-dark"><strong>Quantity:</strong> {{ $product->quantity }}</span>@endif
-                                                        @if($product->turnaround)<span class="me-2 badge bg-light text-dark"><strong>Turnaround:</strong> {{ $product->turnaround }}</span>@endif
-                                                        @if($product->delivery)<span class="me-2 badge bg-light text-dark"><strong>Delivery:</strong> {{ $product->delivery }}</span>@endif
-                                                        @if($product->project_title)<span class="me-2 badge bg-light text-dark"><strong>Project Title:</strong> {{ $product->project_title }}</span>@endif
-                                                        @if($product->note)<span class="badge bg-light text-dark"><strong>Note:</strong> {{ $product->note }}</span>@endif
+                                                        @if($product->quality)<span class="me-2 badge bg-light text-dark" style="font-size: 12px;"><strong>Quality:</strong> {{ $product->quality }}</span>@endif
+                                                        @if($product->quantity)<span class="me-2 badge bg-light text-dark" style="font-size: 12px;"><strong>Quantity:</strong> {{ $product->quantity }}</span>@endif
+                                                        @if($product->turnaround)<span class="me-2 badge bg-light text-dark" style="font-size: 12px;"><strong>Turnaround:</strong> {{ $product->turnaround }}</span>@endif
+                                                        @if($product->delivery)<span class="me-2 badge bg-light text-dark" style="font-size: 12px;"><strong>Delivery:</strong> {{ $product->delivery }}</span>@endif
+                                                        @if($product->project_title)<span class="me-2 badge bg-light text-dark" style="font-size: 12px;"><strong>Project Title:</strong> {{ $product->project_title }}</span>@endif
+                                                        @if($product->note)<span class="badge bg-light text-dark" style="font-size: 12px;"><strong>Note:</strong> {{ $product->note }}</span>@endif
                                                     </p>
                                                 </div>
                                             </td>
