@@ -143,11 +143,6 @@
                                         {{ site_currency() }} {{  number_format($product->unit_price, 2) }}
                                     </td>
                                 </tr>
-<<<<<<< HEAD
-                                
-=======
-
->>>>>>> Swarali
                                 @endforeach
                                 <tr style="border-collapse: collapse;">
 
