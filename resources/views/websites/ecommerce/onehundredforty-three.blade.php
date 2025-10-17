@@ -28,7 +28,6 @@
                         </td>
                     </tr>
                     <!-- Header End -->
-
                     <tr>
                         <td style="vertical-align: top;width: 190px;padding-top: 40px;">
                             <div class="" style="display: flex; flex-direction: row; justify-content: flex-start; align-items: flex-start; gap: 12px;margin-bottom: 8px;padding-left: 12px;">
