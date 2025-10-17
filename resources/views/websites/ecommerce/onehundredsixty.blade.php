@@ -17,10 +17,10 @@
     </style>
 </head>
 <body>
-    <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: separate; padding: 0px, margin: 0px">
-        <tr>
-            <td bgcolor="#ffffff" style="">
-                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse;border-collapse: collapse; padding: 0px, margin: 0px">
+    <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse; padding: 0px; margin: 0px;">
+        <tr style="width: 100%;">
+            <td bgcolor="#ffffff" style="width: 100%;">
+                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse;border-collapse: collapse; padding: 0px; margin: 0px;">
                     <!-- Header -->
                     <tr style="width: 100%;">
                         <td style="padding: 0px;max-height: 230px;width: 100%;">
