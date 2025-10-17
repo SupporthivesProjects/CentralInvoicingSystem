@@ -25,7 +25,7 @@
                     <!-- Header -->
                     <tr style="width: 100%">
                         <td style="max-height: 130px;width: 100% ">
-                            <table width="100%">
+                            <table width="100%" style="border-spacing: 0px;">
                                 <tr style="width: 100%">
                                     <td style="height: 120px; background: url('{{ $invoice_header_image }}') no-repeat;background-position:center;background-size:100% 100%;width: 100%;text-align: center;">
                                       <img src="{{ $company_logo  }}" alt="" style="height: 50px; ">
