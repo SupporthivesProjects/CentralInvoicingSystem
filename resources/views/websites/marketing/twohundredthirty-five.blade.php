@@ -48,8 +48,8 @@
                                         <p style="font-family: arial;font-size: 26px;margin: 0px;font-weight: 400;  text-align: left; ">
                                             <b>INVOICE</b>
                                         </p>
-                                        <p style="margin-bottom: 0px;"><b>INVOICE NUMBER :</b> {{ $invoice_number }}</p>
-                                        <p style="margin-top: 0px;"><b>DATE :</b>{{ $invoice_date }}</p>
+                                        <p style="margin-bottom: 0px;"><b>INVOICE NUMBER :</b> {{ $invoice_number }}</p><br>
+                                        <p style="margin-top: 0px;"><b>DATE :</b>{{ $invoice_date }}</p><br>
                                         <p><b>Billed To :</b>{{ $customer_name ? $customer_name : '' }}<br>
                                             {{ $customer_email ? $customer_email : '' }}<br>
                                             {{ $customer_mobile ? $customer_mobile : '' }}
@@ -124,11 +124,11 @@
                     <!-- Content End-->
 
                     <!-----------Footer----------->
-                    <table class="footer_bottom">
+                    <table class="footer_bottom" style="border-spacing: 0px;">
 
                     <tr >
                         <td style="height: 130px;">
-                            <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;"> 
+                            <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse; border-spacing: 0px;"> 
                                 <tr style="background: url('{{ $invoice_image1 }}') no-repeat;background-position: center;background-size: cover;height: 80px;background-size:cover;width: 100%;text-align: center;">
                                     <td style="width: 150px;"> 
                                         <img src="{{ $invoice_image2 }}" alt="" style="height: 110px;padding-top: 10px;">

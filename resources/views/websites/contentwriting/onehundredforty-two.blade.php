@@ -213,10 +213,10 @@
                                                     </p>
                                                 </div>
                                             </td>
-                                            <td>{{ $product->imagecount }}</td>
-                                            <td>{{ $product->wordcount }}</td>
-                                            <td>{{ site_currency() }} {{ number_format($product->unit_price, 2) }}</td>
-                                            <td>{{ site_currency() }} {{ number_format($product->unit_price, 2) }}</td>
+                                            <td style="font-size: 12px;">{{ $product->imagecount }}</td>
+                                            <td style="font-size: 12px;">{{ $product->wordcount }}</td>
+                                            <td style="font-size: 12px;">{{ site_currency() }} {{ number_format($product->unit_price, 2) }}</td>
+                                            <td style="font-size: 12px;">{{ site_currency() }} {{ number_format($product->unit_price, 2) }}</td>
                                         </tr>
                                     @endif
                                 @endfor
