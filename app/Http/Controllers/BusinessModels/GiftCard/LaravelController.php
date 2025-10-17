@@ -107,7 +107,7 @@ class LaravelController extends Controller
             $bestDistance = PHP_INT_MAX;
             $minTotal = ($categoryName || $noOfProducts) ? $invoiceAmount * 0.6 : $invoiceAmount;
             $maxTotal = $invoiceAmount * 1.10;
-            $fetchLimit = $noOfProducts ? ($noOfProducts * 10) : 200;
+            $fetchLimit = $noOfProducts ? ($noOfProducts * 10) : 500;
 
             $products = $subQuery->orderByDesc('unit_price')->limit($fetchLimit)->get();
 
@@ -658,7 +658,7 @@ class LaravelController extends Controller
                 $lastPriceChanged = Carbon::parse($history->last_price_changed);
                 $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
                 $remainingDays = now()->diffInDays($nextPriceChangeDate, false);
-                $product->remaining_days = max(round($daysLeft), 0);
+                $product->remaining_days = max(round($remainingDays), 0);
                 $product->can_edit_price = now()->greaterThanOrEqualTo($nextPriceChangeDate) ? 1 : 0;
             } else {
                 $product->can_edit_price = 1;
