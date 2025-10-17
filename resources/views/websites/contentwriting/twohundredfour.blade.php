@@ -76,8 +76,8 @@
                                 </tr>
                             </table>
                             <br>
-                            <table width="100%" border="0" cellspacing="0" cellpadding="11" style="border-collapse: collapse; color: white;height:300px;margin-top:100;">
 
+                            <table width="100%" border="0" cellspacing="0" cellpadding="11" style="border-collapse: collapse; color: white;height:400px;margin-top:100px;">
                                 <tr style="background-color: #0d1f1f; font-size: 10px;">
                                     <th align="left" style="color: #c3d94c; padding-left: 40px; width: 251px;">
                                         DESCRIPTION</th>
