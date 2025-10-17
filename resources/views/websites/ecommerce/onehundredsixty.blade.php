@@ -19,7 +19,7 @@
 <body>
     <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse;">
         <tr>
-            <td align="center" bgcolor="#ffffff" style="">
+            <td bgcolor="#ffffff" style="">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse;">
                     <!-- Header -->
                     <tr style="width: 100%;">
