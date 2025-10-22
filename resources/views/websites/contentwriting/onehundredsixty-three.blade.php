@@ -38,7 +38,7 @@
 
                     <!-- Content -->
                     <tr>
-                        <td style="padding:40px;padding-top:0px;">
+                        <td style="padding:20px;padding-top:0px;">
                             <table width="100%">
                                 <tr>
                                     <td style="">
@@ -95,7 +95,7 @@
                     </tr>
                     <tr>
                          <table width="100%"
-                                style="border: 1px solid black;border-collapse: collapse;border-bottom: 0px;border-left: 0px;">
+                                style="border: 1px solid black;border-collapse: collapse;border-bottom: 0px;border-left: 0px;padding-left:20px;padding-right:20px;">
                                 <tr style="border: 1px solid black;border-collapse: collapse;height: 24px;">
                                     <td
                                         style="width: 100px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border: 1px solid black;border-collapse: collapse;">
@@ -197,7 +197,7 @@
                             display: flex;
                             align-items: center;
                             justify-content: center;
-                            padding-top: 50px;
+                            padding-top: 100px;
                         ">
                             <p style="
                                 text-align: center;
