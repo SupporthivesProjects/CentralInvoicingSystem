@@ -6,9 +6,9 @@
 
 </head>
 <body>
-    <table width="100%" cellspacing="0" cellpadding="0" border="0">
+    <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse;">
         <tr>
-            <td align="center" bgcolor="#ffffff" style="padding: 0px 0;">
+            <td bgcolor="#ffffff" style="padding: 0px 0;">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse; background: url('{{ $invoice_image1 }}') no-repeat;background-position:top center;background-size:cover">
                     <!-- Header -->
                     <tr>
