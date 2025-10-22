@@ -24,7 +24,7 @@
                     <!-- Header -->
                     <tr>
                         <td style="padding: 0px;max-height: 130px;">
-                            <table>
+                            <table width="100%">
                                 <tr>
                                     <td style="height: 40px; width: 600px;">
                                         <!-- <img src="Picture1.png" alt="" style="margin: auto; display: block;height:60px;"> -->
@@ -39,7 +39,7 @@
                     <!-- Content -->
                     <tr>
                         <td style="padding:40px;padding-top:0px;">
-                            <table>
+                            <table width="100%">
                                 <tr>
                                     <td style="">
                                         <img src="{{ $invoice_header_image }}" alt=""
@@ -94,7 +94,7 @@
                         </td>
                     </tr>
                     <tr>
-                         <table
+                         <table width="100%"
                                 style="border: 1px solid black;border-collapse: collapse;border-bottom: 0px;border-left: 0px;">
                                 <tr style="border: 1px solid black;border-collapse: collapse;height: 24px;">
                                     <td
