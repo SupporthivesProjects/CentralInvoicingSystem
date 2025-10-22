@@ -10,6 +10,21 @@
             margin: 0px;
             padding: 0px;
         }
+        .footer_bg {
+            /* background: url('{{ $invoice_image1 }}');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover; */
+            /* height: 150px; */
+            /* vertical-align: bottom; */
+            position: absolute;
+            bottom: 0px;
+            left: 0;
+            /* display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: center; */
+        }
     </style>
 </head>
 <body>
