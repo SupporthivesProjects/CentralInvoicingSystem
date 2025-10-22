@@ -34,97 +34,85 @@
         </tr>
 
         <tr >
-                        <td style="padding:30px 60px 60px 60px;">
-                            <table border="0" style="border-collapse: collapse;width: 100%;">
+            <td style="padding:30px 60px 60px 60px;">
+            <table border="0" style="border-collapse: collapse;width: 100%;">
 
 
-                                    <!-- BILL FROM / BILL TO -->
-                                    <tr>
-                                        <td colspan="1" style="padding: 10px; background-color: #f1e9df; font-weight: bold">BILL FROM</td>
-                                        <td colspan="1" style="padding: 10px; background-color: #ffffff; font-weight: bold ; min-width: 30px"></td>
-                                        <td colspan="3" style="padding: 10px; background-color: #f1e9df; font-weight: bold">BILL TO</td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="1" style="padding: 10px; border-bottom: 1px solid #ddd; font-size: 14px">
-                                            <strong>Relationship Resource Hub</strong><br />
-                                            {{ $company_address }}<br />
-                                            <strong>Phone :</strong> {{ $company_mobile }}<br />
-                                            <strong>Email :</strong> {{ $company_email }}
-                                        </td>
-                                        <td colspan="1" style="padding: 10px; border-bottom: 1px solid #ddd; font-size: 14px; min-width: 30px"></td>
-                                        <td colspan="3" style="padding: 10px; border-bottom: 1px solid #ddd; font-size: 14px">
-                                            <strong>{{ $customer_name }}</strong><br />
-                                            <!-- <strong>Phone :</strong> {{ $customer_mobile }}<br />
-                                            <strong>Email :</strong> {{ $customer_email }} -->
-                                        </td>
-                                    </tr>
-                                    <tr style="height:40px;"></tr>
+                    <!-- BILL FROM / BILL TO -->
+                    <tr>
+                        <td colspan="1" style="padding: 10px; background-color: #f1e9df; font-weight: bold">BILL FROM</td>
+                        <td colspan="1" style="padding: 10px; background-color: #ffffff; font-weight: bold ; min-width: 30px"></td>
+                        <td colspan="3" style="padding: 10px; background-color: #f1e9df; font-weight: bold">BILL TO</td>
+                    </tr>
+                    <tr>
+                        <td colspan="1" style="padding: 10px; border-bottom: 1px solid #ddd; font-size: 14px">
+                            <strong>Relationship Resource Hub</strong><br />
+                            {{ $company_address }}<br />
+                            <strong>Phone :</strong> {{ $company_mobile }}<br />
+                            <strong>Email :</strong> {{ $company_email }}
+                        </td>
+                        <td colspan="1" style="padding: 10px; border-bottom: 1px solid #ddd; font-size: 14px; min-width: 30px"></td>
+                        <td colspan="3" style="padding: 10px; border-bottom: 1px solid #ddd; font-size: 14px">
+                            <strong>{{ $customer_name }}</strong><br />
+                            <!-- <strong>Phone :</strong> {{ $customer_mobile }}<br />
+                            <strong>Email :</strong> {{ $customer_email }} -->
+                        </td>
+                    </tr>
+                    <tr style="height:40px;"></tr>
 
-                                    <!-- ITEM TABLE HEADERS -->
-                                    <tr style="background-color: #f1e9df; font-weight: bold; text-align: left">
-                                        <td style="padding: 10px; border: 1px solid #ddd" colspan="2">ITEM</td>
-                                        <!-- <td style="padding: 10px; border: 1px solid #ddd" colspan="2">DESCRIPTION</td> -->
-                                        <td style="padding: 10px; border: 1px solid #ddd">QTY</td>
-                                        <td style="padding: 10px; border: 1px solid #ddd">UNIT PRICE</td>
-                                        <td style="padding: 10px; border: 1px solid #ddd">TOTAL</td>
-                                    </tr>
-                                    @foreach($products as $product)
-                                    <tr style="border-bottom: 1px solid grey;">
-                                        <td style="padding: 10px" colspan="2">{{ $product->name }}</td>
-                                        <!-- <td colspan="2" style="padding: 10px">{!! \Illuminate\Support\Str::limit(strip_tags($product->description), 150) !!}</td> -->
-                                        <td style="padding: 10px">1</td>
-                                        <td style="padding: 10px">{{ site_currency() }} {{ number_format($product->unit_price, 2) }}</td>
-                                        <td style="padding: 10px">{{ site_currency() }} {{ number_format($product->unit_price, 2) }}</td>
-                                    </tr>
-                                    @endforeach
+                 <!-- ITEM TABLE HEADERS -->
+                    <tr style="background-color: #f1e9df; font-weight: bold; text-align: left">
+                        <td style="padding: 10px; border: 1px solid #ddd; width: 35%;" colspan="2">ITEM</td>
+                        <td style="padding: 10px; border: 1px solid #ddd; width: 10%;">QTY</td>
+                        <td style="padding: 10px; border: 1px solid #ddd; width: 20%;">UNIT PRICE</td>
+                        <td style="padding: 10px; border: 1px solid #ddd; width: 20%;">TOTAL</td>
+                    </tr>
 
-                                    <!-- TOTAL SECTION -->
-                                    <tr>
-                                        <td colspan="1"></td>
-                                        <td colspan="1"></td>
-                                        <td colspan="1"></td>
-                                        <td colspan="2" style="padding: 20px 10px">
-                                            <table width="100%" cellpadding="5">
-                                                <tr style="border-bottom: 1px solid grey;">
-                                                    <td style="text-align: right">SUBTOTAL</td>
-                                                    <td style="text-align: right">{{ site_currency() }} {{  number_format(($invoice_amount + $discount_amount), 2) }}</td>
-                                                </tr>
-                                                <tr style="border-bottom: 1px solid grey;">
-                                                    <td style="text-align: right">DISCOUNT ({{ round(($discount_amount / ($invoice_amount + $discount_amount)) * 100) }}%)</td>
-                                                    <td style="text-align: right">{{ site_currency() }} {{  number_format(($discount_amount), 2) }}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td style="text-align: right; font-weight: bold">GRAND TOTAL</td>
-                                                    <td style="text-align: right; font-weight: bold">{{ site_currency() }} {{  number_format(($invoice_amount), 2) }}</td>
-                                                </tr>
-                                            </table>
-                                        </td>
-                                        <!-- <td colspan="3" style="padding: 20px 10px">
-                                            <table width="100%" cellpadding="5">
-                                                <tr style="border-bottom: 1px solid grey;">
-                                                    <td style="text-align: right">SUBTOTAL</td>
-                                                    <td style="text-align: right">{{ site_currency() }} {{  number_format(($invoice_amount + $discount_amount), 2) }}</td>
-                                                </tr>
-                                                <tr style="border-bottom: 1px solid grey;">
-                                                    <td style="text-align: right">DISCOUNT (5%)</td>
-                                                    <td style="text-align: right">{{ site_currency() }} {{  number_format(($discount_amount), 2) }}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td style="text-align: right; font-weight: bold">GRAND TOTAL</td>
-                                                    <td style="text-align: right; font-weight: bold">{{ site_currency() }} {{  number_format(($invoice_amount), 2) }}</td>
-                                                </tr>
-                                            </table>
-                                        </td> -->
-                                    </tr>
+                    <!-- ITEM ROWS -->
+                    @foreach($products as $product)
+                    <tr style="border-bottom: 1px solid grey;">
+                        <td style="padding: 10px" colspan="2">{{ $product->name }}</td>
+                        <td style="padding: 10px">1</td>
+                        <td style="padding: 10px">{{ site_currency() }} {{ number_format($product->unit_price, 2) }}</td>
+                        <td style="padding: 10px">{{ site_currency() }} {{ number_format($product->unit_price, 2) }}</td>
+                    </tr>
+                    @endforeach
 
-        </table>
+                    <!-- TOTAL SECTION -->
+                    <tr style="border-top: 2px solid #ddd;">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td style="padding: 10px; text-align: right;">SUBTOTAL</td>
+                        <td style="padding: 10px; text-align: left;">
+                            {{ site_currency() }} {{ number_format(($invoice_amount + $discount_amount), 2) }}
                         </td>
                     </tr>
 
-     
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td style="padding: 10px; text-align: right; white-space: nowrap;">
+                            DISCOUNT ({{ round(($discount_amount / ($invoice_amount + $discount_amount)) * 100) }}%)
+                        </td>
+                        <td style="padding: 10px; text-align: left;">
+                            {{ site_currency() }} {{ number_format($discount_amount, 2) }}
+                        </td>
+                    </tr>
 
-        <!-- Footer Space -->
-        <!-- Footer Section -->
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td style="padding: 10px; text-align: right; font-weight: bold;">GRAND TOTAL</td>
+                        <td style="padding: 10px; text-align: left; font-weight: bold;">
+                            {{ site_currency() }} {{ number_format($invoice_amount, 2) }}
+                        </td>
+                    </tr>
+
+
+
         <tr>
             <td colspan="6" style="padding: 0; margin: 0;">
                 <div style="width: 100%; background-image: url('{{ $invoice_footer_image }}'); background-repeat: no-repeat; background-position: center; background-size: cover; padding: 30px; font-size: 14px; color: #000; box-sizing: border-box;" class="for_bttom">
