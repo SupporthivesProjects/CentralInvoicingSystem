@@ -120,8 +120,15 @@
                                             </td>
                                         </tr>
                                        </table>
+                                       <div width="100%" style="height: 100px;display:flex;flex-direction:row;justify-content:flex-start;align-items:center;gap:100px;">
+                                        
+                                                <img src="{{ $invoice_image1 }}" alt="" style="width: 200px;rotate: 90deg;">
+                                        
+                                                <img src="{{ $invoice_footer_image }}" alt="" style="width:100px;">
+                                        
+                                        </div>
 
-                                       <table width="100%" style="height: 100px;">
+                                       <!-- <table width="100%" style="height: 100px;">
                                         <tr>
                                             <td style="padding: 0px;" align="left">
                                                 <img src="{{ $invoice_image1 }}" alt="" style="width: 200px;rotate: 90deg;">
@@ -130,7 +137,7 @@
                                                 <img src="{{ $invoice_footer_image }}" alt="" style="width:100px;">
                                             </td>
                                         </tr>
-                                       </table>
+                                       </table> -->
                                     </td>
                                     <td style="width:20px;"></td>
                                     <td align="center" style="min-height: 900px;vertical-align: top;width:200px;height:100%;background:url('{{ $invoice_image2 }}');background-size: cover;background-repeat: no-repeat;background-position: center;border-top: 1px solid black;padding: 20px 0px 0px 20px;">
