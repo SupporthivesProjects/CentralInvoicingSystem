@@ -157,7 +157,7 @@
                                 <table class="table-main-list" style="width: 100%;">
                                     <tbody>
                                         <tr>
-                                            <td style="width: 40%;">
+                                            <td style="width: 40%;vertical-align: top;">
                                                 <div>
                                                     <p>TOTAL</p>
                                                     <h4>{{ site_currency() }} {{ number_format($invoice_amount ?? 0, 2) }}</h4>
@@ -167,19 +167,19 @@
                                                     <h6>{{ $customer_name }}</h6>
                                                 </div>
                                             </td>
-                                            <td style="width: 60%;">
+                                            <td style="width: 60%;vertical-align: top;">
                                                 <table class="table-list-product" style="width: 100%;">
                                                     <tbody>
                                                         <tr>
                                                             <th>Product</th>
-                                                            <th>Length</th>
+                                                            <th style="text-align: end;">Length</th>
                                                             <th style="text-align: center; border-bottom: 3px solid red;">QTY</th>
                                                             <th style="text-align: end; border-bottom: 3px solid red;">PRICE</th>
                                                         </tr>
                                                         @foreach($products as $product)
                                                         <tr>
                                                             <td>{{ $product->name }}</td>
-                                                            <td>{{ $product->subscription ?? '-' }}</td>
+                                                            <td style="text-align: end;">{{ $product->subscription ?? '-' }}</td>
                                                             <td style="text-align: center;">01</td>
                                                             <td >{{ site_currency() }} {{ number_format($product->unit_price ?? 0, 2) }}</td>
                                                         </tr>
@@ -190,7 +190,7 @@
                                                         <tr>
                                                             <td></td>
                                                             
-                                                            <td style="padding-left: 20px;">
+                                                            <td style="padding-left: 20px;text-align: end;">
                                                                 <p style="font-family: 'Roboto';font-size: 9px;line-height: normal;color: gray;">SUB TOTAL<br>
                                                                     DISCOUNT</p>
                                                             </td>
@@ -204,7 +204,7 @@
                                                         <tr>
                                                             <td style="padding-left: 20px; border: 0px;"></td>
                                                             
-                                                            <td style="padding-left: 20px; border: 0px;">
+                                                            <td style="padding-left: 20px; border: 0px;text-align: end;">
                                                                 <h6 style="font-family: 'Roboto';font-size: 9px;line-height: normal;color: #ff0000b8;">GRAND TOTAL</h6>
                                                             </td>
                                                             <td style="padding-left: 20px; border: 0px;"></td>
