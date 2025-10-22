@@ -37,7 +37,7 @@
                         <td align="center" style="height:140px;background:url('{{ $invoice_header_image }}');background-size: cover;background-repeat: no-repeat;background-position: center;">
                             <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;">
                                          <tr>
-                                            <td align="left" style="width: 50%;padding-left: 10px;">
+                                            <td align="left" style="width: 50%;padding-left: 25px;">
                                                 <h1 style="margin: 0px;font-family:Source Sans Pro;font-size:21px;color: #000000;">
                                                    Invoice Details
                                                 </h1>
@@ -135,7 +135,7 @@
                                             </td>
                                         </tr>
                                        </table>
-                                       <div class="footer_bg" width="100%" style="height: 100px;display:flex;flex-direction:row;justify-content:flex-start;align-items:center;gap:100px;">
+                                       <div class="footer_bg" width="100%" style="height: 100px;display:flex;flex-direction:row;justify-content:flex-start;align-items:center;gap:135px;">
                                         
                                                 <img src="{{ $invoice_image1 }}" alt="" style="width: 200px;rotate: 90deg;">
                                         
