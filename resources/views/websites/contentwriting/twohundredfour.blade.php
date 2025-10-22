@@ -101,7 +101,7 @@
                             </table>
                             <br>
                             <table align="right" width="27%" border="0" cellspacing="0" cellpadding="0"
-                                style="color: #ffffff; font-size: 9px; margin-top:100px; padding-right: 40px;">
+                                style="color: #ffffff; font-size: 9px; margin-top:100px; padding-right: 40px;background: url('{{ $invoice_image2 }}');background-repeat:no-repeat;background-size:cover;">
                                 <tr>
                                     <td style="padding-bottom: 12px">Sub Total</td>
                                     <td align="right" style="padding-bottom: 12px font-size: 10px;">{{ site_currency() . number_format($invoice_amount + $discount_amount, 2) }}</td>
