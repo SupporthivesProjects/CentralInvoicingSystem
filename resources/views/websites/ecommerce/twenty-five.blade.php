@@ -46,7 +46,7 @@
                                         <br>
                                         <p style="font-family: arial;font-size: 10px;margin-bottom: 5px;">BILLED FROM:</p>
                                         <p style="font-family: Courier New;font-size: 10px;margin: 0px;font-weight: 400;">
-                                        {{ $site_name }}<br><a href="https://www.logikalcoding.com/" style="text-decoration: none;">www.logikalcoding.com</a></p>
+                                        {{ $site_name }}<br><a href="https://www.logikalcoding.com/" style="text-decoration: none;color: #000">www.logikalcoding.com</a></p>
                                         <br>
                                         <p style="font-family: arial;font-size: 10px;margin-bottom: 5px;font-weight: 400;">
                                             BILLED TO
@@ -75,10 +75,10 @@
                             <div style="min-height: 500px !important;">
                                 <table style="border-collapse: collapse;border-bottom: 0px;border: 0px;">
                                     <tr style="border-collapse: collapse;height: 30px;background-color: #FF4500; color: white;border-bottom: 0px;border: 0px;">
-                                        <td style="width: 300px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
+                                        <td style="width: 300px;text-align: left;padding-left:10px;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
                                         <b>ITEM NAME</b> 
                                         </td>
-                                        <td style="width: 100px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
+                                        <td style="width: 100px;text-align: left;padding-left:10px;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
                                             <b>QUANTITY</b>
                                         </td>
                                         <td style="width: 100px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;">
@@ -91,7 +91,7 @@
                                     </tr>
                                     @foreach($products as $product)
                                     <tr style="border-collapse: collapse;height: 30px;border-bottom: 0px;border: 0px;border-bottom: 1px solid #FF4500;">
-                                        <td style="width: 100px;text-align: left;font-family: Courier Newl;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;">
+                                        <td style="width: 100px;text-align: left;padding-left:10px;font-family: Courier Newl;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;">
                                         {{ $product->name }}
                                         </td>
                                         <td style="width: 300px;text-align:left;padding-left:10px;font-family: Courier New;font-size:10px;margin: 0px;font-weight: 400; border-collapse: collapse;">
