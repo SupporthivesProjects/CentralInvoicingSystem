@@ -118,7 +118,7 @@
                                         SUBTOTAL 
                                     </td>
                                     <td style="width:100px;text-align:right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-right: 10px;border-bottom: 1px solid black;">
-                                        {{ number_format($invoice_amount + $discount_amount, 2) }}
+                                        {{ site_currency() }} {{ number_format($invoice_amount + $discount_amount, 2) }}
                                     </td>
                                 </tr>
                                   <tr style="border-collapse: collapse;height: 30px;border-bottom: 0px;border: 0px;border-bottom: 1px solid goldenrod;">
