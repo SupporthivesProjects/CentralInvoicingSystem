@@ -66,14 +66,14 @@
                                         <p style="font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;padding-bottom: 5px;">
                                             <b>{{ $site_name }}</b>
                                         </p>
-                                        <p style="font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;padding-bottom: 5px;color: #8C8C8C; width: 150px;">{{ $company_address }},</p>
+                                        <p style="font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;padding-bottom: 5px;color: #8C8C8C; width: 180px;text-align: right;">{{ $company_address }},</p>
                                           <p style="font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;padding-bottom: 5px;color: #8C8C8C;">{{ $company_mobile }}</p>
                                            <p style="font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;padding-bottom: 5px;color: #8C8C8C;">{{ $company_email }}</p>
                                      </td>
                                      </div>
                                 </tr>
                             </table>
-                            <div style="min-height: 790px !important;">
+                            <div style="min-height: 750px !important;">
                             <table style="border-collapse: collapse;border-bottom: 0px;border: 0px;">
                                 <tr style="border-collapse: collapse;height: 50px; color: white;border-bottom: 1px solid black;border: 0px;">
                                     <td style="padding-left: 2px; width: 500px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 600;border-collapse: collapse;padding-left: 5px;border-right: 1px solid black;background-color: #3C7F79;">
