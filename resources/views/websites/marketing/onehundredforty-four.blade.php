@@ -66,7 +66,7 @@
                                         <p style="font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;padding-bottom: 5px;">
                                             <b>{{ $site_name }}</b>
                                         </p>
-                                        <p style="font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;padding-bottom: 5px;color: #8C8C8C; display: inline-block; width: 180px; text-align: right; word-wrap: break-word;">{{ $company_address }},</p>
+                                        <p style="font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;padding-bottom: 5px;color: #8C8C8C; display: inline-block; width: 180px; text-align: right; word-wrap: break-word;">{{ $company_address }}</p>
                                           <p style="font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;padding-bottom: 5px;color: #8C8C8C;">{{ $company_mobile }}</p>
                                            <p style="font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;padding-bottom: 5px;color: #8C8C8C;">{{ $company_email }}</p>
                                      </td>
