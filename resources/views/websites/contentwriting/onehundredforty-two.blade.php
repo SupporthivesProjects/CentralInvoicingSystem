@@ -185,11 +185,11 @@
                           <table class="table-list" style="width: 100%;"> 
                             <tbody>
                                 <tr>
-                                    <th style="text-align: left;">Service</th>
-                                    <th style="text-align: left;">Images</th>
-                                    <th>Qty of Words</th>
-                                    <th>Price</th>
-                                    <th>Amount</th>
+                                    <th style="text-align: left;font-size: 18px;">Service</th>
+                                    <th style="text-align: left;font-size: 18px;">Images</th>
+                                    <th style="font-size: 18px;">Qty of Words</th>
+                                    <th style="font-size: 18px;">Price</th>
+                                    <th style="font-size: 18px;">Amount</th>
                                 </tr>
                                 @php
                                     $totalRows = 10; 
@@ -202,7 +202,7 @@
                                         <tr>
                                             <td>
                                                 <div>
-                                                    <h4>{{ $product->name }}</h4>
+                                                    <h4 style="font-size: 16px;">{{ $product->name }}</h4>
                                                     <p>
                                                         @if($product->quality)<span class="me-2 badge bg-light text-dark" style="font-size: 12px;"><strong>Quality:</strong> {{ $product->quality }}</span>@endif
                                                         @if($product->quantity)<span class="me-2 badge bg-light text-dark" style="font-size: 12px;"><strong>Quantity:</strong> {{ $product->quantity }}</span>@endif
