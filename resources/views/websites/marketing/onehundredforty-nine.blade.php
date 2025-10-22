@@ -113,7 +113,7 @@
 
                     <tr>
                         <td colspan="2" align="center">
-                            <p style="border-bottom: 2px solid black;width: 100%;"></p>
+                            <p style="border-bottom: 2px solid black;width: 580px;"></p>
                         </td>
                     </tr>
                     <tr>
