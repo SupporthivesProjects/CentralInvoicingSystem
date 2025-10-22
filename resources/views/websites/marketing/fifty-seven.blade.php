@@ -252,12 +252,12 @@
                         </div>
 
                         <!-- Company Info -->
-                        <div style="flex: 1; text-align: right;">
-                            <p style="font-family: 'Roboto'; font-size: 9px; font-weight: 400; color: #fff;">
+                        <div style="flex: 1; text-align: right; padding-top: 30px;">
+                            <p style="font-family: 'Roboto'; font-size: 9px; font-weight: 400; color: #fff;padding-bottom: 10px;">
                             {{ $company_name }}<br>
                             {!! $company_address !!}<br>
                             </p>
-                            <p style="font-family: 'Roboto'; font-size: 9px; font-weight: 400; color: #fff; padding: 5px 0;">
+                            <p style="font-family: 'Roboto'; font-size: 9px; font-weight: 400; color: #fff; padding: 5px 0;padding-bottom: 20px;">
                             {{ $site->company_mobile }}
                             </p>
                             <p style="font-family: 'Roboto'; font-size: 9px; font-weight: 400; color: pink;">
