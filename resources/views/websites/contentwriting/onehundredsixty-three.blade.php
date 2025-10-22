@@ -113,16 +113,16 @@
                                             1
                                         </td>
                                         <td
-                                            style="width: 250px;text-align: center;padding-left:10px;font-family: arial;font-size:10px;margin: 0px;font-weight: 400;border: 1px solid black;border-collapse: collapse;">
+                                            style="width: 250px;text-align: center;font-family: arial;font-size:10px;margin: 0px;font-weight: 400;border: 1px solid black;border-collapse: collapse;">
                                             {{ $product->name }}<br />
                                         </td>
 
                                         <td
-                                            style="width:100px;text-align:center;padding-right:10px;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border: 1px solid black;border-collapse: collapse;">
+                                            style="width:100px;text-align:center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border: 1px solid black;border-collapse: collapse;">
                                             {{ site_currency() }} {{ number_format($product->unit_price, 2) }}
                                         </td>
                                         <td
-                                            style="width:100px;text-align:center;padding-right:10px;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border: 1px solid black;border-collapse: collapse;">
+                                            style="width:100px;text-align:center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border: 1px solid black;border-collapse: collapse;">
                                             {{ site_currency() }} {{ number_format($product->unit_price, 2) }}
                                         </td>
                                     </tr>
