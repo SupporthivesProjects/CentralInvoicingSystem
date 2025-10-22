@@ -5,6 +5,16 @@
     <title>Your Email Title</title>
 </head>
 
+<style>
+
+    .footer-fixed {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+    }
+</style>
+
 <body>
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
@@ -179,7 +189,7 @@
                     <!-- Content End-->
 
                     <!-----------Footer----------->
-                    <div style="width: 100%; border-collapse: collapse;">
+                    <div class="footer-fixed" style="width: 100%; border-collapse: collapse;">
                         <div style="
                             background: url({{ $invoice_footer_image }}) no-repeat;
                             background-size: cover;
