@@ -17,7 +17,7 @@
                                 <tr>
                                     <td style="height: 122px; width: 600px;padding-left: 40px; font-family: 'Nunito', sans-serif;">
                                         <p style="font-size: 26px;color: #7B5CFF;">INVOICE [{{ $invoice_number }}]</p>
-                                        <p style="font-size: 10px;margin: 0px;color: #7B5CFF;"> {{ $company_name }}</p>
+                                        <p style="font-size: 10px;margin: 0px;color: #7B5CFF;">{{ $company_name }}</p>
                                           <p style="font-size: 9px;margin-top: 0px;">{{ $company_address }}<br>{{ $company_email }}</p> 
                                     </td>
                                     
@@ -161,7 +161,7 @@
                             <tr style="height:100px;width: 100%;">
                                     <td style="width: 150px;text-align: center;color: white;font-family: 'Nunito', sans-serif;font-size: 8px;padding-top: 10px;"> 
                                     <p style="margin: 0px;">{{ $company_mobile }}</p>  
-                                    <p style="color: goldenrod;padding-bottom: 10px;margin-top: 0px;">{{ $company_email  }}</p>
+                                    <p style="color: goldenrod;padding-bottom: 10px;margin-top: 0px;">{{ $company_email }}</p>
                                     </td> 
                                           
                                 </tr>
