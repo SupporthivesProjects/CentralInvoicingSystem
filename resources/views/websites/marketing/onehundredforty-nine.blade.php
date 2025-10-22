@@ -31,7 +31,7 @@
 
                     <!-- Content -->
                     <tr>
-                        <td style="padding-left:40px;vertical-align:bottom;overflow:hidden;display: flex;gap:100px;"
+                        <td style="padding-left:40px;vertical-align:bottom;overflow:hidden;display: flex;gap:95px;"
                             align="left">
                             <div>
                                 <p style="font-family: arial;font-size:9px;color: #414042;margin: 0px;">
@@ -49,7 +49,7 @@
                                     {{ site_currency() . $invoice_amount }}
                                 </p>
                             </div>
-                            <div>
+                            <div style="padding-left:40px;">
                                 <p
                                     style="font-family: arial;font-size:10px;color: #414042;margin: 0px;font-weight: 700;">
                                     Invoice To
@@ -86,7 +86,7 @@
                     <tr>
                         <!-- <td colspan="2" align="center"> -->
                         <td style="padding-left:40px;width: 100%;padding-right:40px;">
-                            <p style="border-bottom: 2px solid black;width: 590px;"></p>
+                            <p style="border-bottom: 2px solid black;width: 100%;"></p>
                         </td>
                     </tr>
                     <tr>
