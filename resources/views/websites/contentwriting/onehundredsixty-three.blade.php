@@ -197,7 +197,7 @@
                             display: flex;
                             align-items: center;
                             justify-content: center;
-                            padding-top: 20px;
+                            padding-top: 50px;
                         ">
                             <p style="
                                 text-align: center;
