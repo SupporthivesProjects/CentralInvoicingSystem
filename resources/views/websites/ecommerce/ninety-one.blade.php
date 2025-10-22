@@ -18,7 +18,7 @@
             /* height: 150px; */
             /* vertical-align: bottom; */
             position: absolute;
-            bottom: 0px;
+            bottom: 50px;
             left: 0;
             /* display: flex;
             flex-direction: row;
@@ -37,7 +37,7 @@
                         <td align="center" style="height:140px;background:url('{{ $invoice_header_image }}');background-size: cover;background-repeat: no-repeat;background-position: center;">
                             <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;">
                                          <tr>
-                                            <td align="left" style="width: 50%;">
+                                            <td align="left" style="width: 50%;padding-left: 10px;">
                                                 <h1 style="margin: 0px;font-family:Source Sans Pro;font-size:21px;color: #000000;">
                                                    Invoice Details
                                                 </h1>
