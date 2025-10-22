@@ -41,7 +41,7 @@
 
                                         </p>
                                         <p style="font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;">
-                                            {{ $site_name }}
+                                            www.thedigitalkreator.co
                                         </p>
 
                                         <p style="font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;">
