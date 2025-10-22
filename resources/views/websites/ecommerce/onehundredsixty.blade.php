@@ -33,19 +33,21 @@
                                         <b style="padding-left: 102px;color: white;font-size: 9px;font-family: 'Courier New', Courier, monospace;">No.{{ $invoice_number }}</b>
                                     </td> -->
                                     <td>
-                                        <div style="height: 230px;
+                                        <div
+                                            style="
+                                                height: 230px;
                                                 background: url({{ $invoice_header_image }});
                                                 background-repeat: no-repeat;
                                                 background-position: top center;
-                                                background-size: cover;">
-
-                                        <div
-                                            style="
-                                                width: 100%;
+                                                background-size: cover;
+                                                width: calc(100% + 5px);
                                                 padding-left: 100px;
                                                 display: flex;
                                                 flex-direction: column;
                                                 justify-content: center;
+                                                position: relative;
+                                                top: -2px;
+                                                left: -2px;
                                             "
                                             >
                                             <b
@@ -57,17 +59,18 @@
                                             >
                                                 Invoice
                                             </b>
-                                            <b style="
+                                            <b
+                                                style="
                                                 color: white;
                                                 font-size: 9px;
                                                 font-family: 'Courier New', Courier, monospace;
                                                 margin-top: 4px;
-                                            ">
+                                                "
+                                            >
                                                 No.{{ $invoice_number }}
                                             </b>
                                             </div>
 
-                                        </div>
                                     </td>
                                 </tr>
                             </table>
