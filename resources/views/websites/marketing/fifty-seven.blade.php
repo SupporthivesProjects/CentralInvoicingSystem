@@ -179,7 +179,7 @@
                                                         @foreach($products as $product)
                                                         <tr>
                                                             <td>{{ $product->name }}</td>
-                                                            <td style="text-align: end;">{{ $product->subscription ?? '-' }}</td>
+                                                            <td style="text-align: end;padding-right:10px;">{{ $product->subscription ?? '-' }}</td>
                                                             <td style="text-align: center;">01</td>
                                                             <td >{{ site_currency() }} {{ number_format($product->unit_price ?? 0, 2) }}</td>
                                                         </tr>
@@ -190,7 +190,7 @@
                                                         <tr>
                                                             <td></td>
                                                             
-                                                            <td style="padding-left: 20px;text-align: end;">
+                                                            <td style="padding-left: 20px;text-align: end;padding-right:10px;">
                                                                 <p style="font-family: 'Roboto';font-size: 9px;line-height: normal;color: gray;">SUB TOTAL<br>
                                                                     DISCOUNT</p>
                                                             </td>
@@ -204,7 +204,7 @@
                                                         <tr>
                                                             <td style="padding-left: 20px; border: 0px;"></td>
                                                             
-                                                            <td style="padding-left: 20px; border: 0px;text-align: end;">
+                                                            <td style="padding-left: 20px; border: 0px;text-align: end;padding-right:10px;">
                                                                 <h6 style="font-family: 'Roboto';font-size: 9px;line-height: normal;color: #ff0000b8;">GRAND TOTAL</h6>
                                                             </td>
                                                             <td style="padding-left: 20px; border: 0px;"></td>
