@@ -84,14 +84,18 @@
 
                                         @if(!empty($company_address))
                                             <p style="margin: 0px;font-family: Arial;font-size: 10px;line-height: 18px;">
-                                                <b>Address : </b>{{ $company_address }}
+                                                <b>Address : </b><br>
+                                                KHAZANOVA STRATEGIC EXPERIENCES<br>
+                                                Meydan Grandstand,<br><br>
+                                                6th floor  Meydan Road,<br><br>
+                                                Nad Al Sheba  Dubai, U.A.E
                                             </p>
                                         @endif
 
                                     </td>
                                 </tr>
                             </table>
-                            <div style="min-height: 654px !important;">
+                            <div style="min-height: 550px !important;">
                                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
                                     style="border-collapse: collapse;margin-top: 40px;">
                                     <tr style="background:#f0ae8f;">
