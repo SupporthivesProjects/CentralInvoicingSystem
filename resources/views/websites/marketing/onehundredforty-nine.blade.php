@@ -84,9 +84,8 @@
                    
 
                     <tr>
-                        <!-- <td colspan="2" align="center"> -->
-                        <td style="padding-left:40px;width: 100%;padding-right:40px;">
-                            <p style="border-bottom: 2px solid black;width: 100%;"></p>
+                        <td colspan="2" align="center">
+                            <p style="border-bottom: 2px solid black;width: 90%;"></p>
                         </td>
                     </tr>
                     <tr>
