@@ -189,11 +189,12 @@
                                                     <tfoot>
                                                         <tr>
                                                             <td></td>
-                                                            <td></td>
+                                                            
                                                             <td style="padding-left: 20px;">
                                                                 <p style="font-family: 'Roboto';font-size: 9px;line-height: normal;color: gray;">SUB TOTAL<br>
                                                                     DISCOUNT</p>
                                                             </td>
+                                                            <td></td>
                                                             <td style="padding-left: 20px; border-bottom: 3px solid red; padding-top: 20px;">
                                                                 <p>{{ site_currency() }} {{ number_format(($invoice_amount + $discount_amount) ?? 0, 2) }}<br>
                                                                 {{ site_currency() }} {{ number_format($discount_amount ?? 0, 2) }}
@@ -202,10 +203,11 @@
                                                         </tr>
                                                         <tr>
                                                             <td style="padding-left: 20px; border: 0px;"></td>
-                                                            <td style="padding-left: 20px; border: 0px;"></td>
+                                                            
                                                             <td style="padding-left: 20px; border: 0px;">
                                                                 <h6 style="font-family: 'Roboto';font-size: 9px;line-height: normal;color: #ff0000b8;">GRAND TOTAL</h6>
                                                             </td>
+                                                            <td style="padding-left: 20px; border: 0px;"></td>
                                                             <td style="border: 0px;" >
                                                                 <h6 style="font-family: 'Roboto';font-size: 16px;line-height: normal;color: #ff0000b8;">{{ site_currency() }} {{ number_format($invoice_amount ?? 0, 2) }}</h6>
                                                             </td>
