@@ -22,18 +22,18 @@
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
                     style="border-collapse: collapse;">
                     <!-- Header -->
-                    <!-- <tr>
+                    <tr>
                         <td style="padding: 0px;max-height: 130px;">
                             <table>
                                 <tr>
-                                    <td style="height: 40px; width: 600px;"> -->
+                                    <td style="height: 40px; width: 600px;">
                                         <!-- <img src="Picture1.png" alt="" style="margin: auto; display: block;height:60px;"> -->
-                                    <!-- </td>
+                                    </td>
 
                                 </tr>
                             </table>
                         </td>
-                    </tr> -->
+                    </tr>
                     <!-- Header End -->
 
                     <!-- Content -->
