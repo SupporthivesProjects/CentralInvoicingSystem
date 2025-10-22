@@ -33,12 +33,14 @@
                                         <b style="padding-left: 102px;color: white;font-size: 9px;font-family: 'Courier New', Courier, monospace;">No.{{ $invoice_number }}</b>
                                     </td> -->
                                     <td>
+                                        <div style="height: 230px;
+                                                background: url({{ $invoice_header_image }});
+                                                background-repeat: no-repeat;
+                                                background-position: top center;
+                                                background-size: cover;">
+
                                         <div
                                             style="
-                                                height: 230px;
-                                                background: url({{ $invoice_header_image }}) no-repeat;
-                                                background-position: top center;
-                                                background-size: cover;
                                                 width: 100%;
                                                 padding-left: 100px;
                                                 display: flex;
@@ -55,18 +57,17 @@
                                             >
                                                 Invoice
                                             </b>
-                                            <b
-                                                style="
+                                            <b style="
                                                 color: white;
                                                 font-size: 9px;
                                                 font-family: 'Courier New', Courier, monospace;
                                                 margin-top: 4px;
-                                                "
-                                            >
+                                            ">
                                                 No.{{ $invoice_number }}
                                             </b>
                                             </div>
 
+                                        </div>
                                     </td>
                                 </tr>
                             </table>
