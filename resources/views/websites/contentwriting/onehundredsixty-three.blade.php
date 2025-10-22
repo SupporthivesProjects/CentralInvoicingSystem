@@ -41,7 +41,8 @@
                         <td style="padding:40px;padding-top:0px;">
                             <table>
                                 <tr>
-                                    <td style="width: 207px;"><img src="{{ $invoice_header_image }}" alt=""
+                                    <td style="">
+                                        <img src="{{ $invoice_header_image }}" alt=""
                                             style="margin: auto;margin-left: 0px; display: block;height: 30px;">
                                         <br>
                                         <br>
@@ -65,10 +66,7 @@
                                         <p style="font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;">
                                             Address: {{ $company_address }}</p>
                                     </td>
-                                    <td
-                                        style="width:300px;
-                                    padding: 40px; padding-top: 0px;
-                                    text-align: right;">
+                                    <td style="text-align: right;">
                                         <h1
                                             style="font-family: arial;font-size: 20px;margin: 0px;font-weight: 700;padding-top: 0px;">
                                             INVOICE</h1><br><br>
@@ -200,6 +198,7 @@
                             display: flex;
                             align-items: center;
                             justify-content: center;
+                            padding-top: 20px;
                         ">
                             <p style="
                                 text-align: center;
