@@ -94,8 +94,9 @@
                         </td>
                     </tr>
                     <tr>
-                         <table width="100%"
-                                style="border: 1px solid black;border-collapse: collapse;border-bottom: 0px;border-left: 0px;padding-left:20px;padding-right:20px;">
+                        <td style="padding-left:20px;padding-right:20px;">
+                            <table width="100%"
+                                style="border: 1px solid black;border-collapse: collapse;border-bottom: 0px;border-left: 0px;">
                                 <tr style="border: 1px solid black;border-collapse: collapse;height: 24px;">
                                     <td
                                         style="width: 100px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border: 1px solid black;border-collapse: collapse;">
@@ -182,6 +183,8 @@
                                     </td>
                                 </tr>
                             </table>
+                    
+                        </td>
                     </tr>
                     <!-- Content End-->
 
