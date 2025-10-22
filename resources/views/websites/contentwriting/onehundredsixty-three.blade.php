@@ -8,9 +8,9 @@
 <body>
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
-            <td align="center" bgcolor="#f2f2f2" style="padding: 20px 0;">
+            <td align="center" bgcolor="#ffffff" style="padding: 0px 0;">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
-                    style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
+                    style="border-collapse: collapse;">
                     <!-- Header -->
                     <tr>
                         <td style="padding: 0px;max-height: 130px;">
@@ -179,7 +179,33 @@
                     <!-- Content End-->
 
                     <!-----------Footer----------->
-                    <tr>
+                    <div style="width: 100%; border-collapse: collapse;">
+                        <div style="
+                            background: url({{ $invoice_footer_image }}) no-repeat;
+                            background-size: cover;
+                            height: 192px;
+                            padding: 50px;
+                            width: 100%;
+                            text-align: center;
+                            display: flex;
+                            align-items: start;
+                            justify-content: center;
+                            padding-top: 15px;
+                        ">
+                            <p style="
+                                text-align: center;
+                                font-family: arial;
+                                font-size: 10px;
+                                margin: 0px;
+                                font-weight: 700;
+                                color: black;
+                            ">
+                                <b>THANK YOU FOR CHOOSING TO SHOP WITH US</b>
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- <tr>
                         <td>
                             <table width="100%" cellspacing="0" cellpadding="" border="0px"
                                 style="border-collapse: collapse;">
@@ -195,7 +221,7 @@
                                 <tr>
                             </table>
                         </td>
-                    </tr>
+                    </tr> -->
                     <!-----------Footer End----------->
 
                 </table>
