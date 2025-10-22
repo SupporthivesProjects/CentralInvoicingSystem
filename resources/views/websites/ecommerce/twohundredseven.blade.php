@@ -138,7 +138,7 @@
                                  </td>
                                  <td style="padding: 5px 10px;" align="center">
                                     <p style="margin: 0px;font-size:10px;font-weight:700;font-family:Lato;line-height:14px;">
-                                       {{ wp_currency_symbol() ." ". number_format($invoice_amount + $discount_amount ?? 0, 2) }}
+                                       {{ wp_currency_symbol() . number_format($invoice_amount + $discount_amount ?? 0, 2) }}
                                     </p>
                                  </td>
                               </tr>
@@ -151,7 +151,7 @@
                                  </td>
                                  <td style="padding: 5px 10px;" align="center">
                                     <p style="margin: 0px;font-size:10px;font-weight:700;font-family:Lato;line-height:14px;">
-                                       {{ wp_currency_symbol() ." ". number_format($discount_amount ?? 0, 2) }}
+                                       {{ wp_currency_symbol() . number_format($discount_amount ?? 0, 2) }}
                                     </p>
                                  </td>
                               </tr>
@@ -173,7 +173,7 @@
                                  </td>
                                  <td style="padding: 5px 10px;background: #d81d3f;" align="center">
                                     <p style="margin: 0px;font-size:12px;font-weight:700;font-family:Lato;line-height:14px;color: #ffffff;">
-                                       {{ wp_currency_symbol() ." ". number_format($invoice_amount ?? 0, 2) }}
+                                       {{ wp_currency_symbol() . number_format($invoice_amount ?? 0, 2) }}
                                     </p>
                                  </td>
                               </tr>
