@@ -19,20 +19,55 @@
     </style>
 </head>
 <body>
-    <!-- <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse; padding: 0px; margin: 0px;">
+    <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse; padding: 0px; margin: 0px;">
         <tr style="width: 100%;">
-            <td bgcolor="#ffffff" style="width: 100%;"> -->
+            <td bgcolor="#ffffff" style="width: 100%;">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse;border-collapse: collapse; padding: 0px; margin: 0px;">
                     <!-- Header -->
                     <tr style="width: 100%;">
                         <td style="padding: 0px;max-height: 230px;width: 100%;">
                             <table style="width: 100%;" style="border-collapse: collapse; padding: 0px; margin: 0px;">
                                 <tr style="width: 100%;">
-                                    <td style="height: 230px; background: url({{ $invoice_header_image }}) no-repeat;background-position: top center;background-size:cover;width: 100%;">
+                                    <!-- <td style="height: 230px; background: url({{ $invoice_header_image }}) no-repeat;background-position: top center;background-size:cover;width: 100%;">
                                         <b style="padding-left: 100px;color: white;font-size: 22px;font-family: 'Courier New', Courier, monospace;"> Invoice</b><br>
                                         <b style="padding-left: 102px;color: white;font-size: 9px;font-family: 'Courier New', Courier, monospace;">No.{{ $invoice_number }}</b>
-                                    </td>
+                                    </td> -->
+                                    <td>
+                                        <div
+                                            style="
+                                                height: 230px;
+                                                background: url({{ $invoice_header_image }}) no-repeat;
+                                                background-position: top center;
+                                                background-size: cover;
+                                                width: 100%;
+                                                padding-left: 100px;
+                                                display: flex;
+                                                flex-direction: column;
+                                                justify-content: center;
+                                            "
+                                            >
+                                            <b
+                                                style="
+                                                color: white;
+                                                font-size: 22px;
+                                                font-family: 'Courier New', Courier, monospace;
+                                                "
+                                            >
+                                                Invoice
+                                            </b>
+                                            <b
+                                                style="
+                                                color: white;
+                                                font-size: 9px;
+                                                font-family: 'Courier New', Courier, monospace;
+                                                margin-top: 4px;
+                                                "
+                                            >
+                                                No.{{ $invoice_number }}
+                                            </b>
+                                            </div>
 
+                                    </td>
                                 </tr>
                             </table>
                         </td>
@@ -201,8 +236,8 @@
                     <!-----------Footer End----------->
 
                 </table>
-            <!-- </td>
+            </td>
         </tr>
-    </table> -->
+    </table>
 </body>
 </html>
