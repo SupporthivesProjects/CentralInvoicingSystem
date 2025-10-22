@@ -103,7 +103,7 @@
                                         style="border-collapse: collapse;height: 24px;border-top: 1px solid black;border-bottom: 1px solid black;">
                                         <td
                                             style="width: 250px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;border-right: 1px solid black;padding: 12px">
-                                            <b>Item Descriptions</b>
+                                            <b>Product Name</b>
                                         </td>
                                         <td
                                             style="width: 150px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;border-right: 1px solid black;padding: 12px">
@@ -115,7 +115,7 @@
                                         </td>
                                         <td
                                             style="width: 150px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding: 12px">
-                                            <b>AMOUNT</b>
+                                            <b>Amount</b>
                                         </td>
                                     </tr>
                                     <tr
