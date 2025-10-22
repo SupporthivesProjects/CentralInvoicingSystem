@@ -138,13 +138,13 @@
                             <!-- Subtotal Section -->
                                 <tr>
                                     <td colspan="2"></td>
-                                    <td style="text-align: right; padding-right: 10px;">Sub Total:</td>
-                                    <td style="text-align: right;">{{ site_currency() . number_format($invoice_amount + $discount_amount ?? 0, 2) }}</td>
+                                    <td style="text-align: right;padding: 10px 0px; padding-right: 10px;">Sub Total:</td>
+                                    <td style="text-align: right;padding: 10px 0px;">{{ site_currency() . number_format($invoice_amount + $discount_amount ?? 0, 2) }}</td>
                                 </tr>
                                 <tr>
                                     <td colspan="2"></td>
-                                    <td style="text-align: right; padding-right: 10px;">Discount:</td>
-                                    <td style="text-align: right;">{{ site_currency() . number_format($discount_amount ?? 0, 2) }}</td>
+                                    <td style="text-align: right;padding: 10px 0px;padding-right: 10px;">Discount:</td>
+                                    <td style="text-align: right;padding: 10px 0px;">{{ site_currency() . number_format($discount_amount ?? 0, 2) }}</td>
                                 </tr>
                             </table>
 
@@ -152,7 +152,7 @@
                             <!-- Grand Total -->
                             <table style="width: 100%; border-collapse: collapse;">
                                 <tr>
-                                    <td style="text-align: right; font-weight: 700;">GRAND TOTAL</td>
+                                    <td style="text-align: right; font-weight: 700;padding-right: 10px;">GRAND TOTAL</td>
                                     <td style="width: 10%; text-align: right; font-weight: 700;">{{ site_currency() . number_format($invoice_amount ?? 0, 2) }}</td>
                                 </tr>
                             </table>
