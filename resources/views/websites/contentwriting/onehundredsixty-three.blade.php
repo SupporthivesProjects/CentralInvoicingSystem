@@ -113,28 +113,29 @@
                                             1
                                         </td>
                                         <td
-                                            style="width: 250px;text-align:left;padding-left:10px;font-family: arial;font-size:10px;margin: 0px;font-weight: 400;border: 1px solid black;border-collapse: collapse;">
+                                            style="width: 250px;text-align: center;padding-left:10px;font-family: arial;font-size:10px;margin: 0px;font-weight: 400;border: 1px solid black;border-collapse: collapse;">
                                             {{ $product->name }}<br />
                                         </td>
 
                                         <td
-                                            style="width:100px;text-align:right;padding-right:10px;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border: 1px solid black;border-collapse: collapse;">
+                                            style="width:100px;text-align:center;padding-right:10px;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border: 1px solid black;border-collapse: collapse;">
                                             {{ site_currency() }} {{ number_format($product->unit_price, 2) }}
                                         </td>
                                         <td
-                                            style="width:100px;text-align:right;padding-right:10px;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border: 1px solid black;border-collapse: collapse;">
+                                            style="width:100px;text-align:center;padding-right:10px;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border: 1px solid black;border-collapse: collapse;">
                                             {{ site_currency() }} {{ number_format($product->unit_price, 2) }}
                                         </td>
                                     </tr>
                                 @endforeach
                                 <tr>
-                                    <td style="width: 100px;text-align: right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;padding-right: 10px;"
-                                        colspan="3">
+                                    <td colspan="2"></td>
+                                    <td style="width: 100px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;padding-right: 10px;"
+                                        colspan="1">
                                         <p><b>
                                                 SUBTOTAL
                                             </b></p>
                                     </td>
-                                    <td style="text-align:right;font-family: arial;font-size: 10px;font-weight: 400;border: 1px solid black;"
+                                    <td style="text-align:center;font-family: arial;font-size: 10px;font-weight: 400;border: 1px solid black;"
                                         colspan="4">
                                         <p><b>
                                             {{ site_currency() }} {{  number_format(($invoice_amount + $discount_amount), 2) }}
@@ -142,13 +143,14 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td style="width: 100px;text-align: right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;padding-right: 10px;"
-                                        colspan="3">
+                                    <td colspan="2"></td>
+                                    <td style="width: 100px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;padding-right: 10px;"
+                                        colspan="1">
                                         <p>
                                             Discount
                                         </p>
                                     </td>
-                                    <td style="text-align:right;font-family: arial;font-size: 10px;font-weight: 400;border: 1px solid black;"
+                                    <td style="text-align:center;font-family: arial;font-size: 10px;font-weight: 400;border: 1px solid black;"
                                         colspan="4">
                                         <p><b>
                                             {{ site_currency() }} {{  number_format($discount_amount, 2) }}
@@ -156,13 +158,14 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td style="width: 100px;text-align: right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;padding-right: 10px;"
-                                        colspan="3">
+                                    <td colspan="2"></td>
+                                    <td style="width: 100px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;padding-right: 10px;"
+                                        colspan="1">
                                         <p>
                                             TOTAL DUE
                                         </p>
                                     </td>
-                                    <td style="text-align:right;font-family: arial;font-size: 10px;font-weight: 400;border: 1px solid black;"
+                                    <td style="text-align:center;font-family: arial;font-size: 10px;font-weight: 400;border: 1px solid black;"
                                         colspan="4">
                                         <p><b>
                                             {{ site_currency() }} {{  number_format(($invoice_amount), 2) }}
@@ -182,7 +185,7 @@
                                 style="border-collapse: collapse;">
                                 <tr
                                     style="background: url({{ $invoice_footer_image }}) no-repeat;height:192px;padding:50px;background-size:cover;width: 100%;">
-                                    <td style="text-align:center;">
+                                    <td style="text-align:center;padding-top: 15px;">
                                         <p
                                             style="text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight:700;color:black;">
                                             <b>THANK YOU FOR CHOOSING TO SHOP WITH US</b>
