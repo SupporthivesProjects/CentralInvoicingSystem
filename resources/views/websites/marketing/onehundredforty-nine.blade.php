@@ -85,18 +85,18 @@
 
                     <tr>
                         <td colspan="2" align="center">
-                            <p style="border-bottom: 2px solid black;width: 580px;"></p>
+                            <p style="border-bottom: 2px solid black;width: 590px;"></p>
                         </td>
                     </tr>
                     <tr>
                         <td style="padding:40px;width: 100%;padding-top:20px;" colspan="2">
-                            <div style="min-height: 555px;">
+                            <div style="min-height: 495px;">
                                 <table cellspacing="0" cellpadding="0" border="0" width="100%"
                                     style="border-collapse: collapse;">
                                     <tr style="width:520px;height:40px;background: #000000;">
-                                        <td style="width: 150px;">
+                                        <td style="width: 150px;padding-left: 10px">
                                             <p
-                                                style="color:#ffffff;font-size:16px;font-weight: 700;font-family:arial;margin: 0px;line-height: 28px;text-align: center;text-transform: uppercase;">
+                                                style="color:#ffffff;font-size:16px;font-weight: 700;font-family:arial;margin: 0px;line-height: 28px;text-align: left;text-transform: uppercase;">
                                                 product & service
                                             </p>
                                         </td>
