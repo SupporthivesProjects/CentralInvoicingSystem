@@ -82,15 +82,19 @@
                                             </p>
                                         @endif
 
-                                        @if(!empty($company_address))
+                                        <!-- @if(!empty($company_address))
                                             <p style="margin: 0px;font-family: Arial;font-size: 10px;line-height: 18px;">
+                                                <b>Address : </b>{{ $company_address }}
+                                            </p>
+                                        @endif -->
+
+                                        <p style="margin: 0px;font-family: Arial;font-size: 10px;line-height: 18px;">
                                                 <b>Address : </b><br>
                                                 KHAZANOVA STRATEGIC EXPERIENCES<br>
                                                 Meydan Grandstand,<br><br>
                                                 6th floor  Meydan Road,<br><br>
                                                 Nad Al Sheba  Dubai, U.A.E
                                             </p>
-                                        @endif
 
                                     </td>
                                 </tr>
