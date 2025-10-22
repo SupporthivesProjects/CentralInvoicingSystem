@@ -9,7 +9,7 @@
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
             <td align="center" bgcolor="#ffffff" style="padding: 0px 0;">
-                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1); background: url('{{ $invoice_image1 }}') no-repeat;background-position:center;background-size:100% 100%;">
+                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse; background: url('{{ $invoice_image1 }}') no-repeat;background-position:top center;background-size:cover">
                     <!-- Header -->
                     <tr>
                         <td style="padding: 0px;max-height: 130px;">
