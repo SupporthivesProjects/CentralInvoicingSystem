@@ -31,7 +31,7 @@
 
                     <!-- Content -->
                     <tr>
-                        <td style="padding-left:40px;vertical-align:bottom;overflow:hidden;display: flex;gap:80px;"
+                        <td style="padding-left:40px;vertical-align:bottom;overflow:hidden;display: flex;gap:100px;"
                             align="left">
                             <div>
                                 <p style="font-family: arial;font-size:9px;color: #414042;margin: 0px;">
@@ -84,7 +84,8 @@
                    
 
                     <tr>
-                        <td colspan="2" align="center">
+                        <!-- <td colspan="2" align="center"> -->
+                        <td style="padding-left:40px;width: 100%;padding-right:40px;">
                             <p style="border-bottom: 2px solid black;width: 590px;"></p>
                         </td>
                     </tr>
