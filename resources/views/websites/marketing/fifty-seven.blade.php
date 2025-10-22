@@ -90,7 +90,7 @@
             padding: 12px 10px;
         }
         .table-list-product td:last-child {
-           /* background-color: #8080801c;  */
+           background-color: #8080801c; 
            font-family: 'Roboto';
            font-size: 12px;
            font-weight: 500;
@@ -100,15 +100,14 @@
         }
 
         .table-list-product td:nth-last-child(2) {
-           /* background-color: #8080801c; */
+           background-color: #8080801c;
            font-family: 'Roboto';
            font-size: 9px;
            font-weight: 300;
            color: grey;
         }
-        .table-list-product tr:not(:last-child) td:last-child,
-        .table-list-product tr:not(:last-child) td:nth-last-child(2) {
-            background-color: #8080801c;
+        .table-list-product tr.total-row td {
+        background-color: transparent !important;
         }
         .table-list-product td:nth-last-child(3) {
            font-family: 'Roboto';
@@ -205,7 +204,7 @@
                                                                     </p>
                                                             </td>
                                                         </tr>
-                                                        <tr>
+                                                        <tr class="total-row">
                                                             <td style="padding-left: 20px; border: 0px;"></td>
                                                             
                                                             <td style="padding-left: 20px; border: 0px;text-align: end;padding-right:10px;">
