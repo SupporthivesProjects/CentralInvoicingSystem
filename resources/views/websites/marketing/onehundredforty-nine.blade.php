@@ -10,10 +10,10 @@
         <tr>
             <td align="center" bgcolor="#ffffff" style="padding:0;">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0"
-                    style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);background: url({{ $invoice_image3 }});background-repeat: no-repeat;background-position: center;background-size: cover;">
+                    style="border-collapse: collapse; background: url({{ $invoice_image3 }});background-repeat: no-repeat;background-position: center;background-size: cover;">
                     <!-- Header -->
                     <tr>
-                        <td style="padding: 40px;vertical-align:bottom;background:url({{ $invoice_header_image }});background-repeat: no-repeat;background-position: center;background-size: cover;"
+                        <td style="padding: 70px;vertical-align:bottom;background:url({{ $invoice_header_image }});background-repeat: no-repeat;background-position: center;background-size: cover;"
                             align="left" colspan="2">
                             <img src="{{ $company_logo }}" alt="" style="margin:0px; display: block;width:200px;">
                         </td>
@@ -31,7 +31,7 @@
 
                     <!-- Content -->
                     <tr>
-                        <td style="padding-left:40px;vertical-align:bottom;overflow:hidden;display: flex;gap:80px;"
+                        <td style="padding-left:40px;vertical-align:bottom;overflow:hidden;display: flex;gap:95px;"
                             align="left">
                             <div>
                                 <p style="font-family: arial;font-size:9px;color: #414042;margin: 0px;">
@@ -49,7 +49,7 @@
                                     {{ site_currency() . $invoice_amount }}
                                 </p>
                             </div>
-                            <div>
+                            <div style="padding-left:40px;">
                                 <p
                                     style="font-family: arial;font-size:10px;color: #414042;margin: 0px;font-weight: 700;">
                                     Invoice To
@@ -81,20 +81,23 @@
                             </div>
                         </td>
                     </tr>
+                   
+
                     <tr>
-                        <td colspan="2" align="center">
-                            <p style="border-bottom: 2px solid black;width: 520px;"></p>
+                        <!-- <td colspan="2" align="center"> -->
+                        <td style="padding-left:40px;width: 100%;padding-right:40px;">
+                            <p style="border-bottom: 2px solid black;width: 100%;"></p>
                         </td>
                     </tr>
                     <tr>
                         <td style="padding:40px;width: 100%;padding-top:20px;" colspan="2">
-                            <div style="min-height: 555px;">
+                            <div style="min-height: 495px;">
                                 <table cellspacing="0" cellpadding="0" border="0" width="100%"
                                     style="border-collapse: collapse;">
                                     <tr style="width:520px;height:40px;background: #000000;">
-                                        <td style="width: 150px;">
+                                        <td style="width: 150px;padding-left: 10px">
                                             <p
-                                                style="color:#ffffff;font-size:16px;font-weight: 700;font-family:arial;margin: 0px;line-height: 28px;text-align: center;text-transform: uppercase;">
+                                                style="color:#ffffff;font-size:16px;font-weight: 700;font-family:arial;margin: 0px;line-height: 28px;text-align: left;text-transform: uppercase;">
                                                 product & service
                                             </p>
                                         </td>
@@ -116,9 +119,9 @@
                                                 billing cycle
                                             </p>
                                         </td>
-                                        <td style="width: 100px;">
+                                        <td style="width: 100px;text-align: right; padding-right: 10px">
                                             <p
-                                                style="color:#ffffff;font-size:16px;font-weight: 700;font-family:arial;margin: 0px;line-height: 28px;text-align: center;text-transform: uppercase;">
+                                                style="color:#ffffff;font-size:16px;font-weight: 700;font-family:arial;margin: 0px;line-height: 28px;text-align: right;text-transform: uppercase;">
                                                 Total
                                             </p>
                                         </td>
@@ -149,9 +152,9 @@
                                                     One Time
                                                 </p>
                                             </td>
-                                            <td style="width: 100px;">
+                                            <td style="width: 100px;text-align: right; padding-right: 10px">
                                                 <p
-                                                    style="color:#000000;font-size:9px;font-weight: 400;font-family:arial;margin: 0px;line-height: 28px;text-align: center;text-transform: uppercase;">
+                                                    style="color:#000000;font-size:9px;font-weight: 400;font-family:arial;margin: 0px;line-height: 28px;text-align: right;text-transform: uppercase;">
                                                     {{ site_currency() . number_format($product->unit_price ?? 0, 2) }}
                                                 </p>
                                             </td>

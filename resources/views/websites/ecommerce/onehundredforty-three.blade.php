@@ -37,13 +37,13 @@
                                     <p style="font-family: arial;font-size:10px;margin: 0px;font-weight: 400;">{{ $company_address }}</p>
                                 </div>
                             </div>
-                            <div class="" style="display: flex; flex-direction: row; justify-content: flex-start; align-items: flex-start; gap: 12px;margin-bottom: 8px;padding-left: 12px;">
+                            <!-- <div class="" style="display: flex; flex-direction: row; justify-content: flex-start; align-items: flex-start; gap: 12px;margin-bottom: 8px;padding-left: 12px;">
                                 <img src="{{ $invoice_image5 }}" alt="" style="height: 30px; width: 30px;">
                                 <div class="" style="display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-start;">
                                     <b style="font-size: 12px;">Phone</b> 
                                     <p style="font-family: arial;font-size:10px;margin: 0px;font-weight: 400;">{{ $company_mobile }}</p>
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="" style="display: flex; flex-direction: row; justify-content: flex-start; align-items: flex-start; gap: 12px;margin-bottom: 8px;padding-left: 12px;">
                                 <img src="{{ $invoice_image3 }}" alt="" style="height: 30px; width: 30px;">
                                 <div class="" style="display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-start;">
@@ -59,7 +59,7 @@
                                 </div>
                             </div>
                             <br>
-                            <div style="background-image: url({{ $invoice_image1 }});background-size: cover;background-repeat:no-repeat;background-position: top center; padding: 24px 16px; min-height: 830px;">
+                            <div style="background-image: url({{ $invoice_image1 }});background-size: cover;background-repeat:no-repeat;background-position: top center; padding: 24px 16px; min-height: 850px;">
 
                                 <!-- Billed From Section -->
                                 <div style="margin-bottom: 40px;">
