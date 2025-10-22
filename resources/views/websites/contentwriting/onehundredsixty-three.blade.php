@@ -90,10 +90,11 @@
                                     </td>
                                 </tr>
                             </table>
-                            <br>
-                            <br>
-                            <div style="min-height: 500px !important;">
-                            <table
+                           
+                        </td>
+                    </tr>
+                    <tr>
+                         <table
                                 style="border: 1px solid black;border-collapse: collapse;border-bottom: 0px;border-left: 0px;">
                                 <tr style="border: 1px solid black;border-collapse: collapse;height: 24px;">
                                     <td
@@ -181,8 +182,6 @@
                                     </td>
                                 </tr>
                             </table>
-                            </div>
-                        </td>
                     </tr>
                     <!-- Content End-->
 
