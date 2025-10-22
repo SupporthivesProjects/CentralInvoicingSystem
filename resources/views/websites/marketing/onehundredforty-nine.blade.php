@@ -30,7 +30,7 @@
 
 
                     <!-- Content -->
-                    <!-- <tr>
+                    <tr>
                         <td style="padding-left:40px;vertical-align:bottom;overflow:hidden;display: flex;gap:80px;"
                             align="left">
                             <div>
@@ -80,40 +80,12 @@
                                 </p>
                             </div>
                         </td>
-                    </tr> -->
-                    <tr>
-                        <td style="padding-left:40px; vertical-align:bottom; overflow:hidden; width:33.33%;">
-                            <p style="font-family: arial; font-size:9px; color:#414042; margin:0;">Invoice No : #{{ $invoice_number }}</p>
-                            <p style="font-family: arial; font-size:9px; color:#414042; margin:0;">Date : {{ $invoice_date }}</p>
-                            <p style="border-bottom:1px solid black; width:150px; margin:5px 0;"></p>
-                            <p style="font-family: arial; font-size:10px; color:#414042; margin:0;">Total Amount Due</p>
-                            <p style="font-family: arial; font-size:22px; color:#414042; margin:0; font-weight:700;">
-                            {{ site_currency() . $invoice_amount }}
-                            </p>
-                        </td>
-
-                        <td style="vertical-align:bottom; text-align:center; width:33.33%;">
-                            <p style="font-family: arial; font-size:10px; color:#414042; margin:0; font-weight:700;">Invoice To</p>
-                            <p style="font-family: arial; font-size:12px; color:#414042; margin:0; font-weight:700;">{{ $customer_name }}</p>
-                        </td>
-
-                        <td style="padding-right:40px; vertical-align:top; text-align:right; width:33.33%;">
-                            <p style="font-family: arial; font-size:10px; color:#414042; margin:0; font-weight:700;">Invoice From</p>
-                            <p style="font-family: arial; font-size:12px; color:#414042; margin:0; font-weight:700;">{{ $site_name }}</p>
-                            <a href="mailto:{{ $company_email }}" 
-                            style="font-family: arial; font-size:9px; color:#0563C1; margin:0; text-decoration:underline; display:inline-block;">
-                            {{ $company_email }}
-                            </a>
-                            <p style="font-family: arial; font-size:9px; color:#414042; margin:0; max-width:150px; display:inline-block;">
-                            {{ $company_mobile }} <br>
-                            {{ $company_address }}
-                            </p>
-                        </td>
                     </tr>
+                   
 
                     <tr>
                         <td colspan="2" align="center">
-                            <p style="border-bottom: 2px solid black;width: 580px;"></p>
+                            <p style="border-bottom: 2px solid black;width: 100%;"></p>
                         </td>
                     </tr>
                     <tr>
