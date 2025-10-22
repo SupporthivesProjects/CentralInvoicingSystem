@@ -46,7 +46,7 @@
                                                 flex-direction: column;
                                                 justify-content: center;
                                                 position: relative;
-                                                top: -2px;
+                                                top: -4px;
                                                 left: -2px;
                                             "
                                             >
