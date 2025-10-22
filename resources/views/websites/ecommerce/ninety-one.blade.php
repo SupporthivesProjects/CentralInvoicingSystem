@@ -135,7 +135,7 @@
                                             </td>
                                         </tr>
                                        </table>
-                                       <div width="100%" style="height: 100px;display:flex;flex-direction:row;justify-content:flex-start;align-items:center;gap:100px;">
+                                       <div class="footer_bg" width="100%" style="height: 100px;display:flex;flex-direction:row;justify-content:flex-start;align-items:center;gap:100px;">
                                         
                                                 <img src="{{ $invoice_image1 }}" alt="" style="width: 200px;rotate: 90deg;">
                                         
