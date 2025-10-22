@@ -405,4 +405,23 @@ if (!function_exists('compact_number')) {
 }
 
 
+// For Wordpress currency symbols | Rishav Mandal | 22/10/2025
+if (!function_exists('wp_currency_symbol')) {
+    /**
+     * Get currency symbol from currency code
+     *
+     * @param string|null $currencyCode
+     * @return string
+     */
+    function wp_currency_symbol($currencyCode = null)
+    {
+        $currencyCode = $currencyCode ?? site_currency();
+        
+        $symbols = [
+            'USD' => '$',
+            'GHS' => '₵',
+        ];
 
+        return $symbols[strtoupper($currencyCode)] ?? $currencyCode;
+    }
+}

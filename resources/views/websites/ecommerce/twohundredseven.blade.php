@@ -27,7 +27,6 @@
     </style>
 </head>
 <body>
-   {{ dd(site_currency())}}
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
             <td align="center">
@@ -115,7 +114,7 @@
                                  </td>
                                  <td style="padding: 5px 10px;" align="center">
                                     <p style="margin: 0px;font-size:10px;font-weight:700;font-family:Lato;line-height:14px;">
-                                       {{ site_currency() }} {{  number_format($product->unit_price, 2) }}
+                                       {{ wp_currency_symbol() }} {{  number_format($product->unit_price, 2) }}
                                     </p>
                                  </td>
                                 <td style="padding: 5px 10px;" align="center">
@@ -125,7 +124,7 @@
                                  </td>
                                  <td style="padding: 5px 10px;" align="center">
                                     <p style="margin: 0px;font-size:10px;font-weight:700;font-family:Lato;line-height:14px;">
-                                       {{ site_currency() }} {{  number_format($product->unit_price, 2) }}
+                                       {{ wp_currency_symbol() }} {{  number_format($product->unit_price, 2) }}
                                     </p>
                                  </td>
                               </tr>
@@ -139,7 +138,7 @@
                                  </td>
                                  <td style="padding: 5px 10px;" align="center">
                                     <p style="margin: 0px;font-size:10px;font-weight:700;font-family:Lato;line-height:14px;">
-                                       {{ site_currency() ." ". number_format($invoice_amount + $discount_amount ?? 0, 2) }}
+                                       {{ wp_currency_symbol() ." ". number_format($invoice_amount + $discount_amount ?? 0, 2) }}
                                     </p>
                                  </td>
                               </tr>
@@ -152,7 +151,7 @@
                                  </td>
                                  <td style="padding: 5px 10px;" align="center">
                                     <p style="margin: 0px;font-size:10px;font-weight:700;font-family:Lato;line-height:14px;">
-                                       {{ site_currency() ." ". number_format($discount_amount ?? 0, 2) }}
+                                       {{ wp_currency_symbol() ." ". number_format($discount_amount ?? 0, 2) }}
                                     </p>
                                  </td>
                               </tr>
@@ -174,7 +173,7 @@
                                  </td>
                                  <td style="padding: 5px 10px;background: #d81d3f;" align="center">
                                     <p style="margin: 0px;font-size:12px;font-weight:700;font-family:Lato;line-height:14px;color: #ffffff;">
-                                       {{ site_currency() ." ". number_format($invoice_amount ?? 0, 2) }}
+                                       {{ wp_currency_symbol() ." ". number_format($invoice_amount ?? 0, 2) }}
                                     </p>
                                  </td>
                               </tr>
