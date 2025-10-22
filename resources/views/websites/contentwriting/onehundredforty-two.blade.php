@@ -202,7 +202,7 @@
                                         <tr>
                                             <td>
                                                 <div>
-                                                    <h6>{{ $product->name }}</h6>
+                                                    <h4>{{ $product->name }}</h4>
                                                     <p>
                                                         @if($product->quality)<span class="me-2 badge bg-light text-dark" style="font-size: 12px;"><strong>Quality:</strong> {{ $product->quality }}</span>@endif
                                                         @if($product->quantity)<span class="me-2 badge bg-light text-dark" style="font-size: 12px;"><strong>Quantity:</strong> {{ $product->quantity }}</span>@endif
