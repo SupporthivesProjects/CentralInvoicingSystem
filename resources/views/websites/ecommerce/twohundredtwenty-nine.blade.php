@@ -79,7 +79,7 @@
                                             {{ $company_name }}
                                         </p>
                                         <p style="font-family: arial;font-size: 14px;margin: 0;font-weight: 400;text-align: left;padding-bottom: 5px;color: darkgreen;">                               
-                                            <b> Address : </b>  <span style="font-size: 19px; color: black;display: inline-block; width: 80px; margin-left: 10px">{{ $company_address }} </span>
+                                            <b> Address : </b>  <span style=" color: black;margin-left: 10px">{{ $company_address }} </span>
                                         </p>
 
                                         <p
@@ -143,7 +143,6 @@
                                         {{ site_currency() }} {{  number_format($product->unit_price, 2) }}
                                     </td>
                                 </tr>
-                                
                                 @endforeach
                                 <tr style="border-collapse: collapse;">
 

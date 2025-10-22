@@ -100,7 +100,7 @@
                                         Subtotal
                                     </td>
                                     <td style="width: 200px;text-align: right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px; border-bottom: 1px solid black;">
-                                        {{ site_currency_code() }}{{ number_format($invoice_amount + $discount_amount, 2) }}
+                                    {{ site_currency() }} {{ number_format($invoice_amount + $discount_amount, 2) }}
                                     </td>
                                     
                                 </tr>
@@ -112,7 +112,7 @@
                                         <b>Total (Including Discount) </b>
                                     </td>
                                     <td style="width: 200px;text-align: right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;">
-                                        <b>{{ site_currency_code() }}{{ number_format($invoice_amount, 2) }}</b>
+                                        <b>{{ site_currency() }} {{ number_format($invoice_amount, 2) }}</b>
                                     </td>
                                     
                                 </tr>
