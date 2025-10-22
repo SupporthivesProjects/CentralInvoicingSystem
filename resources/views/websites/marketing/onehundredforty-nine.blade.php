@@ -13,7 +13,7 @@
                     style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);background: url({{ $invoice_image3 }});background-repeat: no-repeat;background-position: center;background-size: cover;">
                     <!-- Header -->
                     <tr>
-                        <td style="padding: 40px;vertical-align:bottom;background:url({{ $invoice_header_image }});background-repeat: no-repeat;background-position: center;background-size: cover;"
+                        <td style="padding: 50px;vertical-align:bottom;background:url({{ $invoice_header_image }});background-repeat: no-repeat;background-position: center;background-size: cover;"
                             align="left" colspan="2">
                             <img src="{{ $company_logo }}" alt="" style="margin:0px; display: block;width:200px;">
                         </td>
@@ -30,7 +30,7 @@
 
 
                     <!-- Content -->
-                    <tr>
+                    <!-- <tr>
                         <td style="padding-left:40px;vertical-align:bottom;overflow:hidden;display: flex;gap:80px;"
                             align="left">
                             <div>
@@ -80,10 +80,40 @@
                                 </p>
                             </div>
                         </td>
+                    </tr> -->
+                    <tr>
+                        <td style="padding-left:40px; vertical-align:bottom; overflow:hidden; width:33.33%;">
+                            <p style="font-family: arial; font-size:9px; color:#414042; margin:0;">Invoice No : #{{ $invoice_number }}</p>
+                            <p style="font-family: arial; font-size:9px; color:#414042; margin:0;">Date : {{ $invoice_date }}</p>
+                            <p style="border-bottom:1px solid black; width:150px; margin:5px 0;"></p>
+                            <p style="font-family: arial; font-size:10px; color:#414042; margin:0;">Total Amount Due</p>
+                            <p style="font-family: arial; font-size:22px; color:#414042; margin:0; font-weight:700;">
+                            {{ site_currency() . $invoice_amount }}
+                            </p>
+                        </td>
+
+                        <td style="vertical-align:bottom; text-align:center; width:33.33%;">
+                            <p style="font-family: arial; font-size:10px; color:#414042; margin:0; font-weight:700;">Invoice To</p>
+                            <p style="font-family: arial; font-size:12px; color:#414042; margin:0; font-weight:700;">{{ $customer_name }}</p>
+                        </td>
+
+                        <td style="padding-right:40px; vertical-align:top; text-align:right; width:33.33%;">
+                            <p style="font-family: arial; font-size:10px; color:#414042; margin:0; font-weight:700;">Invoice From</p>
+                            <p style="font-family: arial; font-size:12px; color:#414042; margin:0; font-weight:700;">{{ $site_name }}</p>
+                            <a href="mailto:{{ $company_email }}" 
+                            style="font-family: arial; font-size:9px; color:#0563C1; margin:0; text-decoration:underline; display:inline-block;">
+                            {{ $company_email }}
+                            </a>
+                            <p style="font-family: arial; font-size:9px; color:#414042; margin:0; max-width:150px; display:inline-block;">
+                            {{ $company_mobile }} <br>
+                            {{ $company_address }}
+                            </p>
+                        </td>
                     </tr>
+
                     <tr>
                         <td colspan="2" align="center">
-                            <p style="border-bottom: 2px solid black;width: 520px;"></p>
+                            <p style="border-bottom: 2px solid black;width: 100%;"></p>
                         </td>
                     </tr>
                     <tr>
@@ -116,9 +146,9 @@
                                                 billing cycle
                                             </p>
                                         </td>
-                                        <td style="width: 100px;">
+                                        <td style="width: 100px;text-align: right">
                                             <p
-                                                style="color:#ffffff;font-size:16px;font-weight: 700;font-family:arial;margin: 0px;line-height: 28px;text-align: center;text-transform: uppercase;">
+                                                style="color:#ffffff;font-size:16px;font-weight: 700;font-family:arial;margin: 0px;line-height: 28px;text-align: right;text-transform: uppercase;">
                                                 Total
                                             </p>
                                         </td>
@@ -149,9 +179,9 @@
                                                     One Time
                                                 </p>
                                             </td>
-                                            <td style="width: 100px;">
+                                            <td style="width: 100px;text-align: right;">
                                                 <p
-                                                    style="color:#000000;font-size:9px;font-weight: 400;font-family:arial;margin: 0px;line-height: 28px;text-align: center;text-transform: uppercase;">
+                                                    style="color:#000000;font-size:9px;font-weight: 400;font-family:arial;margin: 0px;line-height: 28px;text-align: right;text-transform: uppercase;">
                                                     {{ site_currency() . number_format($product->unit_price ?? 0, 2) }}
                                                 </p>
                                             </td>
