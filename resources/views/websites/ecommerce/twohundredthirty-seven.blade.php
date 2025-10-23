@@ -45,7 +45,7 @@
                 <td style="border:1px solid #ff6666; padding:8px; vertical-align:top;">
                     <div style="display:flex; gap:32px; justify-content: space-between; margin-bottom: 15px;">
                         <strong>Name</strong>
-                        <span>{{ $site_name }}</span>
+                        <span>{{ $company_name }}</span>
                     </div>
                     <div style="display:flex; gap:20px; margin-bottom: 15px;">
                         <strong>Address</strong>
@@ -86,7 +86,7 @@
                 <td style="border:1px solid #ff6666; padding:8px;">1</td>
                 <td style="border:1px solid #ff6666; padding:8px;">{{ $product->name }}</td>
                 <td style="border:1px solid #ff6666; padding:8px; text-align: right;">{{ site_currency() . number_format($product->unit_price ?? 0, 2) }}</td>
-                <td style="border:1px solid #ff6666; padding:8px; text-align: right;">{{site_currency() . number_format($invoice_amount ?? 0, 2) }}</td>
+                <td style="border:1px solid #ff6666; padding:8px; text-align: right;">{{ site_currency() . number_format($product->unit_price ?? 0, 2) }}</td>
             </tr>
             @endforeach
             
