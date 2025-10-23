@@ -6,11 +6,12 @@
     <style>
     /* Target only tr elements with this class */
     tr.row-color:nth-child(odd) {
-        background-color: #ffffff; /* White rows */
+       
+        background-color: #F6F1FA; 
     }
 
     tr.row-color:nth-child(even) {
-        background-color: #ffcccc; /* Light red rows */
+        background-color: #ffffff;
     }
 </style>
 </head>
