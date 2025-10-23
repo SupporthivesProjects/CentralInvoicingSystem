@@ -253,7 +253,7 @@
                 <div class="total-amount">{{ site_currency() }} {{  number_format(($invoice_amount), 2) }}</div>
             </td>
         </tr>
-        <tr class="section-space">
+        <!-- <tr class="section-space">
             <td colspan="2"></td>
         </tr>
         <tr class="section-space">
@@ -264,7 +264,7 @@
         </tr>
         <tr class="section-space">
             <td colspan="2"></td>
-        </tr>
+        </tr> -->
         <!-- Footer -->
         <!-- <tr>
             <td colspan="2"
