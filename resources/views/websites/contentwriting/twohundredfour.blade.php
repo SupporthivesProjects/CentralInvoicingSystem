@@ -1,42 +1,30 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-    <title>{{ $site_name . $invoice_number }}</title>
     <style>
-        .footer-fixed {
-            position: fixed;
-            bottom: 0px;
-            left: 0;
-            right: 0;
-            width: 100%;
-            /* background: url('{{ $invoice_footer_image }}') center center no-repeat; */
-            /* background-size: cover; */
+        *{
+            margin: 0px;
+            padding: 0px;
         }
     </style>
+    <title>{{ $site_name . $invoice_number }}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 </head>
-
-<body style="margin: 0px; padding: 0px;background-position: top center; background-repeat: no-repeat; background-size: cover; height: 100%;">
+<body>
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
-            <td align="center" bgcolor="#f2f2f2" style="padding: 0px 0;">
-                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
-                    style="border-collapse: collapse;background-position: top center; background-repeat: no-repeat; background-size: cover; height: 100%;">
+            <td align="center" style="padding:0px;">
+                <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse;">
                     <!-- Header -->
-                    <tr>
-                        <td style="height:200px;background-image: url('{{ $invoice_image3 }}'); background-position: top center; background-repeat: no-repeat; background-size: cover;">
-                            <table style="font-family: 'ole'; padding: 35px; width: 100%;">
-                                <tr>
-                                    <td align="left">
-                                        <img src="{{ $company_logo }}" alt="" style="width: 231px; height: 20px;">
-                                    </td>
-                                    <td align="right">
-                                        <p style="font-size: 39px; font-weight: bold; color: #BEC543; margin: 0%;">
-                                            INVOICE</p>
-                                    </td>
-                                </tr>
+                    <tr style="height:100px;background:url('{{ $invoice_header_image }}');background-size:cover;background-repeat:no-repeat;">
+                        <td style="width: 50%;">
+                            <img src="{{ $company_logo }}" alt="" style="width:200px;margin-left:50px;">
 
-                            </table>
+                        </td>
+                        <td style="width: 50%;padding-right:50px;">
+                          <h1 style="font-family: Soleil Bk;font-size:39px;color:#bfc543;text-align:right;margin:0px;">INVOICE</h1>
                         </td>
                     </tr>
                     <!-- Header End -->
@@ -44,111 +32,156 @@
 
                     <!-- Content -->
                     <tr>
-
-                        <td style="font-family: 'ole'; font-size: 9px; vertical-align: top;">
-
-                            <table width="100%" cellpadding="1" style="padding:40px; padding-bottom: 0%;padding-top: 50px;">
-                                <tr>
-                                    <td align="left" width="52%">
-                                        <p style="margin: 0%; color: #ffffff; font-size: 11px; font-weight: bold;">
-                                            Invoice To : </p>
-                                    </td>
-                                    <td align="left">
-                                        <p style="margin: 0%; font-size: 11px; font-weight: bold;">Invoice Information :
-                                        </p>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td align="left" style="vertical-align: top;">
-                                        <p style="margin: 0%;  color: #BEC543; font-size: 12px; font-weight: bold;">
-                                            {{ $customer_name }}</p>
-                                    </td>
-                                    <td align="left">
-                                        <p style="margin: 0%; font-size: 9px;">Number <br>{{ $invoice_number }}</p>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td align="left"> </td>
-                                    <td align="left">
-                                        <p style="margin: 0%; font-size: 9px;">Invoice Date <br>{{ $invoice_date }}
-                                        </p>
-                                    </td>
-                                </tr>
-                            </table>
-                            <br>
-
-                            <table width="100%" border="0" cellspacing="0" cellpadding="11" style="border-collapse: collapse; color: white;margin-top:40px;">
-                                <tr style="background-color: #0d1f1f; font-size: 10px;">
-                                    <th align="left" style="color: #c3d94c; padding-left: 40px; width: 251px;">
-                                        DESCRIPTION</th>
-                                    <th align="center" style="color: #c3d94c;">UNIT PRICE</th>
-                                    <th align="center" style="color: #c3d94c;">QTY</th>
-                                    <th align="center" style="color: #c3d94c; padding-right: 40px;">TOTAL</th>
-                                </tr>
-
-                                <!-- Row 1 -->
-                                 @foreach($products as $product)
-                                <tr style="font-size: 9px;">
-                                    <td style="padding-left: 40px; font-size: 9px; border-bottom: 1px solid #D9D9D9;">
-                                        <strong>{{ $product->name }}</strong><br>
-                                        <span style="font-size: 7px;">IMAGES : {{ $product->imagecount }}<br>WORDS : {{ $product->wordcount }}</span>
-                                    </td>
-                                    <td align="center" style="color: black;">{{ site_currency() . number_format($product->unit_price, 2) }}</td>
-                                    <td align="center" style="color: black;">1</td>
-                                    <td align="center" style="color: black; padding-right: 40px;">{{ site_currency() . number_format($product->unit_price, 2) }}</td>
-                                </tr>
-                                @endforeach
-                            </table>
-                            <br>
-                            <table align="right" width="50%" border="0" cellspacing="0" cellpadding="0"
-                                style="color: #ffffff; font-size: 9px;padding-right: 40px;background: url('{{ $invoice_image2 }}');background-repeat:no-repeat;background-size:cover;height:300px;">
-                                <tr>
-                                    <td style="padding-bottom: 12px">Sub Total</td>
-                                    <td align="right" style="padding-bottom: 12px font-size: 10px;">{{ site_currency() . number_format($invoice_amount + $discount_amount, 2) }}</td>
-                                </tr>
-                                <tr>
-                                    <td style="padding-bottom: 12px">Discount</td>
-                                    <td align="right" style="padding-bottom: 12px font-size: 10px;">{{ site_currency() . number_format($discount_amount, 2) }}</td>
-                                </tr>
-                                <tr>
-                                    <td style="border-top: 1px solid #BEC543; color: #BEC543; padding-top: 12px">TOTAL</td>
-                                    <td align="right" style="border-top: 1px solid #BEC543;font-size: 10px; color: #BEC543; padding-top: 12px">{{ site_currency() . number_format($invoice_amount, 2) }}</td>
-                                </tr>
-
-                            </table>
-                        </td>
+                       <td colspan="2" style="height:700px;">
+                        <table width="100%" style="border-collapse: collapse;">
+                            <tr>
+                                <td style="background:#172f32;width:46.4%;vertical-align:top;padding:10px 50px">
+                                    <p style="font-family: Soleil Bk;font-size:11px;color:#ffffff;margin:0px;line-height:24px">
+                                    Invoice To : 
+                                    </p>
+                                    <p style="font-family: Soleil Bk;font-size:12px;color:#bfc543;margin:0px;line-height:24px">
+                                        {{ $customer_name }}
+                                    </p>
+                                </td>
+                                <td style="padding:10px 50px;">
+                                    <p style="font-family: Soleil Bk;font-size:11px;color:#000000;margin:0px;line-height:24px;font-weight:700;">
+                                    Invoice Information : 
+                                    </p>
+                                    <p style="font-family: Soleil Bk;font-size:9px;color:#000000;margin:0px;line-height:14px;">
+                                    Invoice Number <br>
+                                    {{ $invoice_number }} <br> <br>
+                                    Invoice Date  <br>
+                                    {{ $invoice_date }}
+                                    </p>
+                                </td>
+                            </tr>
+                        </table>
+                        <table style="width: 100%;border-collapse:collapse;">
+                            <tr style="background:#111f21;height:60px;">
+                                <td style="padding:10px;width:46.4%;padding-left:50px;">
+                                <p style="font-family: Soleil Bk;font-size:10px;color:#bfc543;margin:0px;line-height:16px">
+                                    DESCRIPTION
+                                </p>
+                                </td>
+                                <td style="padding:10px;" align="center">
+                                 <p style="font-family: Soleil Bk;font-size:10px;color:#bfc543;margin:0px;line-height:16px">
+                                    UNIT PRICE
+                                </p>
+                                </td>
+                                <td style="padding:10px;" align="center">
+                                 <p style="font-family: Soleil Bk;font-size:10px;color:#bfc543;margin:0px;line-height:16px">
+                                    QTY
+                                </p>
+                                </td>
+                                <td style="padding:10px;" align="center">
+                                 <p style="font-family: Soleil Bk;font-size:10px;color:#bfc543;margin:0px;line-height:16px">
+                                    TOTAL
+                                </p>
+                                </td>
+                            </tr>
+                            @foreach($products as $index => $product)
+                            <tr style="max-height:60px;">
+                                <td style="padding:10px;width:46.4%;padding-left:50px;background:#172f32;border-bottom:1px solid #ffffff;">
+                                <p style="font-family: Soleil Lt;font-size:9px;color:#ffffff;margin:0px;line-height:12px;font-weight:600">
+                                    {{ $product->name }}
+                                </p>
+                                <p style="font-family: Soleil Lt;font-size:7px;color:#ffffff;margin:0px;line-height:10px;">
+                                    IMAGES : {{ $product->imagecount }}
+                                </p>
+                                <p style="font-family: Soleil Lt;font-size:7px;color:#ffffff;margin:0px;line-height:10px;">
+                                  WORDS :  {{ $product->wordcount }}
+                                </p>
+                                </td>
+                                <td style="padding:10px;" align="center">
+                                 <p style="font-family: Soleil Lt;font-size:9px;color:#000000;margin:0px;line-height:16px">
+                                    {{ site_currency() . number_format($product->unit_price, 2) }}
+                                </p>
+                                </td>
+                                <td style="padding:10px;" align="center">
+                                 <p style="font-family: Soleil Lt;font-size:9px;color:#000000;margin:0px;line-height:16px">
+                                   1
+                                </p>
+                                </td>
+                                <td style="padding:10px;" align="center">
+                                 <p style="font-family: Soleil Lt;font-size:9px;color:#000000;margin:0px;line-height:16px">
+                                    {{ site_currency() . number_format($product->unit_price, 2) }}
+                                </p>
+                                </td>
+                            </tr>
+                            @endforeach
+                            <tr style="height:195px;">
+                                <td style="background:#172f32;"></td>
+                                <td colspan="3" style="background:url('{{ $invoice_image1 }}');background-repeat:no-repeat;background-size:cover;padding:20px;vertical-align:top;" align="right">
+                                    <table style="width: 50%;border-collapse:collapse;">
+                                        <tr>
+                                            <td align="center">
+                                            <p style="font-family: Soleil Bk;font-size:9px;color:#ffffff;margin:0px;line-height:24px">
+                                            Sub Total
+                                            </p>
+                                            </td>
+                                            <td align="center">
+                                            <p style="font-family: Soleil Bk;font-size:9px;color:#ffffff;margin:0px;line-height:24px">
+                                                {{ site_currency() . number_format($invoice_amount + $discount_amount, 2) }}
+                                            </p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td align="center">
+                                            <p style="font-family: Soleil Bk;font-size:9px;color:#ffffff;margin:0px;line-height:24px">
+                                           Discount
+                                            </p>
+                                            </td>
+                                            <td align="center">
+                                            <p style="font-family: Soleil Bk;font-size:9px;color:#ffffff;margin:0px;line-height:24px">
+                                                {{ site_currency() . number_format($discount_amount, 2) }}
+                                            </p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td align="center" style="border-top:1px solid #bfc543;">
+                                            <p style="font-family: Soleil Bk;font-size:9px;color:#bfc543;margin:0px;line-height:24px">
+                                           TOTAL
+                                            </p>
+                                            </td>
+                                            <td align="center" style="border-top:1px solid #bfc543;">
+                                            <p style="font-family: Soleil Bk;font-size:9px;color:#bfc543;margin:0px;line-height:24px">
+                                                {{ site_currency() . number_format($invoice_amount, 2) }}
+                                            </p>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                       </td> 
                     </tr>
                     <!-- Content End-->
 
 
                     <!-----------Footer----------->
                     <tr>
-                        <td>
-                            <table class="footer-fixed" style="width: 100%; border-collapse: collapse; font-family: 'ole';">
-                                <tr>
-                                    <td
-                                        style="color: white; padding: 40px; width: 50%; vertical-align: middle;">
-                                        <p style="margin: 0; font-weight: bold; color: #d6d94d; font-size:16px;">CONTACT US</p>
-                                        <p style="margin: 5px 0 0; font-weight: bold; font-size:10px; color: #d6d94d;">{{ $company_name }}
-                                        </p>
-                                        <p style="margin: 5px 0 0; font-size: 7px;">{!! $company_address !!}<br>
-                                            {{ $company_mobile }}
-                                        </p>
-                                        <p style="margin: 10px 0 0; font-size: 7px; color: white;">{{ $company_email }}</p>
-                                    </td>
-                                    <td
-                                        style=" padding: 40px;vertical-align: bottom; color: #0f1f20; text-align: end; font-size: 28px;">
-                                        Thank You!
-                                    </td>
-                                </tr>
-                            </table>
+                        <td style="background:#172f32;padding:50px;width:40%;">
+                            <p style="font-family: Soleil Bk;font-size:9px;color:#bfc543;margin:0px;line-height:12px">
+                            CONTACT US <br>
+                            SISISERVICES OI
+                            </p>
+                            <p style="font-family: Soleil Bk;font-size:7px;color:#ffffff;margin:0px;line-height:12px">
+                                {{ $company_name }}<br>
+                                {!! $company_address !!} <br>
+                                {{ $company_mobile }}</br>
+                                {{ $company_email }}
+                            </p>
                         </td>
-                    </tr>
-                    <!-----------Footer End----------->
+                        <td style="padding:20px;" align="right">
+                            <p style="font-family: Soleil Bk;font-size:28px;color:#000000;margin:0px;line-height:32px">
+                                Thank You!
+                            </p>
+                        </td>
+                    </tr> 
+                    <!-----------Footer End----------->    
                 </table>
             </td>
         </tr>
     </table>
 </body>
-
 </html>

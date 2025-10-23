@@ -94,21 +94,22 @@ class LaravelController extends Controller
 
         if ($invoiceAmount < 100) {
             $allProducts = $allProducts->sortBy('unit_price');
-            $minTotal = max($invoiceAmount * 0.4, 1); 
+            $minTotal = $invoiceAmount; 
+            $maxTotal = $invoiceAmount * 1.10; 
         } elseif ($categoryId || $noOfProducts) {
-            $minTotal = $invoiceAmount * 0.6;
-            $allProducts = $allProducts->sortByDesc('unit_price');
+            $minTotal = $invoiceAmount; 
+            $maxTotal = $invoiceAmount * 1.10; 
+            $allProducts = $allProducts->sortByDesc('unit_price'); 
         } else {
-            $minTotal = $invoiceAmount * 0.5;
-            $allProducts = $allProducts->sortBy('unit_price');
+            $minTotal = $invoiceAmount; 
+            $maxTotal = $invoiceAmount * 1.10;
+            $allProducts = $allProducts->sortBy('unit_price'); 
         }
-
-        $maxTotal = $invoiceAmount * 1.10;
 
         $bestMatch = null;
         $bestTotal = 0;
 
-        for ($i = 0; $i < 20; $i++) {
+        for ($i = 0; $i < 50; $i++) {
             $shuffled = $allProducts->shuffle();
             $selected = [];
             $currentTotal = 0;
