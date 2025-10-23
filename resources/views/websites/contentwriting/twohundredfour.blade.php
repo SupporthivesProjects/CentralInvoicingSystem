@@ -33,7 +33,7 @@
                     <!-- Content -->
                     <tr>
                        <td colspan="2">
-                        <table width="100%" style="border-collapse: collapse;height:300px;">
+                        <table width="100%" style="border-collapse: collapse;">
                             <tr>
                                 <td style="background:#172f32;width:46.4%;vertical-align:top;padding:10px 50px">
                                     <p style="font-family: Soleil Bk;font-size:11px;color:#ffffff;margin:0px;line-height:24px">
@@ -56,7 +56,7 @@
                                 </td>
                             </tr>
                         </table>
-                        <table style="width: 100%;border-collapse:collapse;">
+                        <table style="width: 100%;border-collapse:collapse;height:300px;">
                             <tr style="background:#111f21;height:60px;">
                                 <td style="padding:10px;width:46.4%;padding-left:50px;">
                                 <p style="font-family: Soleil Bk;font-size:10px;color:#bfc543;margin:0px;line-height:16px">
