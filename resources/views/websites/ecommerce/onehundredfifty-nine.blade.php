@@ -92,7 +92,7 @@
         }
 
         .notes-total-row td {
-            padding: 100px;
+            padding: 40px 40px 400px 40px;
             border: none;
             flex: 1;
         }
