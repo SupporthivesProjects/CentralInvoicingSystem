@@ -44,22 +44,22 @@
                                 
                                 
                                 <tr>
-                                    <td style="padding-top: 10px;width: 300px;font-size: 11px;">
+                                    <td style="padding-top: 10px;font-size: 11px;">
                                         <p style="font-family: arial;font-size: 26px;margin: 0px;font-weight: 400;  text-align: left; ">
                                             <b>INVOICE</b>
                                         </p>
-                                        <p style="margin-bottom: 0px;"><b>INVOICE NUMBER :</b> {{ $invoice_number }}</p><br>
-                                        <p style="margin-top: 0px;"><b>DATE :</b>{{ $invoice_date }}</p><br>
-                                        <p><b>Billed To :</b>{{ $customer_name ? $customer_name : '' }}<br>
+                                        <p style="margin-bottom: 0px;"><b>INVOICE NUMBER: </b> {{ $invoice_number }}</p><br>
+                                        <p style="margin-top: 0px;"><b>DATE: </b>{{ $invoice_date }}</p><br>
+                                        <p><b>Billed To: </b>{{ $customer_name ? $customer_name:  '' }}<br>
                                             {{ $customer_email ? $customer_email : '' }}<br>
                                             {{ $customer_mobile ? $customer_mobile : '' }}
                                         </p>
                                     </td>
-                                    <td style="padding-top: 10px;width: 300px;text-align: right;font-size: 11px;">
+                                    <td style="padding-top: 10px; text-align: right;font-size: 11px;">
                                         <p style="font-family: arial;font-size: 14px;font-weight: 400;  text-align: right; ">
                                             <b>Brandflaire.com</b>
                                         </p>
-                                        <p style="margin-top: 0px;">{{ $company_address }}<br>
+                                        <p style="margin-top: 0px; text-align: right;">{{ $company_address }}<br>
                                             {{ $company_mobile }}<br>{{ $company_email }}
                                         </p>
                                     </td>
