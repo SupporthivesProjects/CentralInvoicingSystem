@@ -18,7 +18,7 @@
             <td align="center" style="padding:0px;">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse;">
                     <!-- Header -->
-                    <tr style="height:150px;background:url('{{ $invoice_header_image }}');background-size:cover;background-repeat:no-repeat;">
+                    <tr style="height:100px;background:url('{{ $invoice_header_image }}');background-size:cover;background-repeat:no-repeat;">
                         <td style="width: 50%;">
                             <img src="{{ $company_logo }}" alt="" style="width:200px;margin-left:50px;">
 
