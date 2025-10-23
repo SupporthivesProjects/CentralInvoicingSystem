@@ -53,9 +53,9 @@
                     <!-- Content -->
                     <tr style="background:#ffff ;">
                         <td style="padding:0px;">
-                            <div style="">
-                            <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;">
-                                <tr style="">
+                            <!-- <div style="min-height: 950px !important;"> -->
+                            <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;min-height: 950px !important;">
+                                <tr style="min-height: 950px !important;">
                                     <td style="width:20px;"></td>
                                     <td align="center" style="vertical-align: top;">
                                        <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;">
@@ -229,7 +229,7 @@
                                     </td>
                                 </tr>
                             </table>
-                            </div>
+                            <!-- </div> -->
                         </td>
                     </tr>
                     <!-- Content End-->
