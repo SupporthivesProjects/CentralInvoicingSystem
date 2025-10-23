@@ -42,8 +42,8 @@
         </tr>
         <!-- Contact Info -->
         <tr>
-            <td colspan="2" style="padding:0 20px 0 270px; ">
-                <table align="top" valign="top" width="100%" cellpadding="0" cellspacing="0" style="margin-top:100px;position: relative; top: -20px;">
+            <td colspan="2" style="padding:0 30px 0 270px; ">
+                <table align="top" valign="top" width="100%" cellpadding="0" cellspacing="0" style="margin-top:100px;position: relative; top: -60px;">
                     <tr>
                         <td style="font-size:0.98em; padding-right:20px;width:30%;vertical-align: top;">
                             <b>📞&nbsp;Phone:</b><br>
