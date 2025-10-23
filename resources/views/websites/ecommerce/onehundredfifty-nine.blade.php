@@ -104,7 +104,6 @@
             color: #222;
             /* border-bottom-left-radius: 8px; */
             vertical-align: top;
-            flex: 1;
         }
 
         .notes-cell strong {
@@ -122,7 +121,6 @@
             padding: 28px 50px 200px 28px;
             /* border-bottom-right-radius: 8px; */
             vertical-align: top;
-            flex: 1;
         }
 
         .total-label {
@@ -156,7 +154,7 @@
     <table class="main-table">
         <!-- Header -->
         <tr class="header-row"
-            style="height: 220px; background-image: url({{ $invoice_header_image }})no-repeat;background-position:center;background-size:cover; position: relative;">
+            style="height: 220px; background-image: url({{ $invoice_header_image }}); position: relative;">
             <td colspan="2" style="padding: 0;">
                 <table width="100%" style="height: 220px; border-collapse: collapse;">
                     <tr>
