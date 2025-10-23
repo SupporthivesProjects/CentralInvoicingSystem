@@ -6,16 +6,16 @@
 
 </head>
 <body>
-    <table width="100%" cellspacing="0" cellpadding="0" border="0">
+    <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse;">
         <tr>
-            <td align="center" bgcolor="#f2f2f2" style="padding: 20px 0;">
-                <table width="600" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1); background: url('{{ $invoice_image1 }}') no-repeat;background-position:center;background-size:100% 100%;">
+            <td bgcolor="#ffffff" style="padding: 0px 0;">
+                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse; background: url('{{ $invoice_image1 }}') no-repeat;background-position:top center;background-size:cover">
                     <!-- Header -->
                     <tr>
                         <td style="padding: 0px;max-height: 130px;">
                             <table>
                                 <tr>
-                                    <td style="height: 122px; width: 600px;padding-left: 40px; font-family: 'Nunito', sans-serif;">
+                                    <td style="height: 122px; width: 100%;padding-left: 40px; font-family: 'Nunito', sans-serif;">
                                         <p style="font-size: 26px;color: #7B5CFF;">INVOICE [{{ $invoice_number }}]</p>
                                         <p style="font-size: 10px;margin: 0px;color: #7B5CFF;">{{ $company_name }}</p>
                                           <p style="font-size: 9px;margin-top: 0px;">{!! $company_address !!}<br>{{ $company_email }}</p> 
@@ -152,8 +152,8 @@
                                 <br><br><br>
                             </table>
                             <table>
-                            <tr style="width: 600px; height: 150px;">
-                                <td style="width: 600px;text-align: center; color: #7B5CFF; font-size: 11px;font-family: 'Nunito', sans-serif;margin: 0px;padding-bottom: 100px;">
+                            <tr style="width: 100%; height: 150px;">
+                                <td style="width: 100%;text-align: center; color: #7B5CFF; font-size: 11px;font-family: 'Nunito', sans-serif;margin: 0px;padding-bottom: 100px;">
                                     <p style="margin: 0px;">Thank you for your business!</p></td>
                             </tr>
                             
