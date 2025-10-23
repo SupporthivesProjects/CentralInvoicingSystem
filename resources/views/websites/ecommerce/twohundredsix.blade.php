@@ -95,7 +95,7 @@
                             <table width="100%" cellspacing="0" cellpadding="" border="0px"
                                 style="border-collapse: collapse;">
                                 <tr
-                                    style="background: url('{{ $invoice_footer_image }}') no-repeat;background-position: center;background-size: cover;height:141px;padding:50px;background-size:cover;width: 100%;">
+                                    style="background: url('{{ $invoice_footer_image }}') no-repeat;background-position: center;background-size: cover;height:130px;padding:50px;background-size:cover;width: 100%;">
                                     <td style="text-align:center;">
                                         <p
                                             style="text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight:700;color:whitesmoke;">
