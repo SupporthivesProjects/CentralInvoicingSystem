@@ -16,15 +16,15 @@
     </style>
 </head>
 
-<body style="margin: 0px; padding: 0px;background-image: url('{{ $invoice_image1 }}'); background-position: top center; background-repeat: no-repeat; background-size: cover; height: 100%;">
+<body style="margin: 0px; padding: 0px;background-position: top center; background-repeat: no-repeat; background-size: cover; height: 100%;">
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
             <td align="center" bgcolor="#f2f2f2" style="padding: 0px 0;">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
-                    style="border-collapse: collapse;background-image: url('{{ $invoice_image1 }}'); background-position: top center; background-repeat: no-repeat; background-size: cover; height: 100%;">
+                    style="border-collapse: collapse;background-position: top center; background-repeat: no-repeat; background-size: cover; height: 100%;">
                     <!-- Header -->
                     <tr>
-                        <td style="height: 165px;">
+                        <td style="height:200px;background-image: url('{{ $invoice_image3 }}'); background-position: top center; background-repeat: no-repeat; background-size: cover;">
                             <table style="font-family: 'ole'; padding: 35px; width: 100%;">
                                 <tr>
                                     <td align="left">
@@ -76,8 +76,8 @@
                                 </tr>
                             </table>
                             <br>
-                            <table width="100%" border="0" cellspacing="0" cellpadding="11" style="border-collapse: collapse; color: white;height:300px;margin-top:100;">
 
+                            <table width="100%" border="0" cellspacing="0" cellpadding="11" style="border-collapse: collapse; color: white;margin-top:40px;">
                                 <tr style="background-color: #0d1f1f; font-size: 10px;">
                                     <th align="left" style="color: #c3d94c; padding-left: 40px; width: 251px;">
                                         DESCRIPTION</th>
@@ -100,8 +100,8 @@
                                 @endforeach
                             </table>
                             <br>
-                            <table align="right" width="27%" border="0" cellspacing="0" cellpadding="0"
-                                style="color: #ffffff; font-size: 9px; margin-top:100px; padding-right: 40px;">
+                            <table align="right" width="50%" border="0" cellspacing="0" cellpadding="0"
+                                style="color: #ffffff; font-size: 9px;padding-right: 40px;background: url('{{ $invoice_image2 }}');background-repeat:no-repeat;background-size:cover;height:300px;">
                                 <tr>
                                     <td style="padding-bottom: 12px">Sub Total</td>
                                     <td align="right" style="padding-bottom: 12px font-size: 10px;">{{ site_currency() . number_format($invoice_amount + $discount_amount, 2) }}</td>

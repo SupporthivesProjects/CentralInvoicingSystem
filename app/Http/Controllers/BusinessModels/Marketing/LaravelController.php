@@ -92,11 +92,14 @@ class LaravelController extends Controller
             ->inRandomOrder()
             ->get();
 
-        if ($categoryId || $noOfProducts) {
+        if ($invoiceAmount < 100) {
+            $allProducts = $allProducts->sortBy('unit_price');
+            $minTotal = max($invoiceAmount * 0.4, 1); 
+        } elseif ($categoryId || $noOfProducts) {
             $minTotal = $invoiceAmount * 0.6;
             $allProducts = $allProducts->sortByDesc('unit_price');
         } else {
-            $minTotal = $invoiceAmount;
+            $minTotal = $invoiceAmount * 0.5;
             $allProducts = $allProducts->sortBy('unit_price');
         }
 

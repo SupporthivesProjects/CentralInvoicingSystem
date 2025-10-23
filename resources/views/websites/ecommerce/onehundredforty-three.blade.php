@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Your Email Title</title>
+    <title>{{ $site_name }} #{{ $invoice_number }}</title>
     <style>
         
         *, body {
@@ -28,28 +28,27 @@
                         </td>
                     </tr>
                     <!-- Header End -->
-
                     <tr>
                         <td style="vertical-align: top;width: 190px;padding-top: 40px;">
                             <div class="" style="display: flex; flex-direction: row; justify-content: flex-start; align-items: flex-start; gap: 12px;margin-bottom: 8px;padding-left: 12px;">
                                 <img src="{{ $invoice_image4 }}" alt="" style="height: 30px; width: 30px;">
                                 <div class="" style="display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-start;">
                                     <b style="font-size: 12px;">Area</b> 
-                                    <p style="font-family: arial;font-size:10px;margin: 0px;font-weight: 400;">123 London road, kent, abc 123</p>
+                                    <p style="font-family: arial;font-size:10px;margin: 0px;font-weight: 400;">{{ $company_address }}</p>
                                 </div>
                             </div>
-                            <div class="" style="display: flex; flex-direction: row; justify-content: flex-start; align-items: flex-start; gap: 12px;margin-bottom: 8px;padding-left: 12px;">
+                            <!-- <div class="" style="display: flex; flex-direction: row; justify-content: flex-start; align-items: flex-start; gap: 12px;margin-bottom: 8px;padding-left: 12px;">
                                 <img src="{{ $invoice_image5 }}" alt="" style="height: 30px; width: 30px;">
                                 <div class="" style="display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-start;">
                                     <b style="font-size: 12px;">Phone</b> 
-                                    <p style="font-family: arial;font-size:10px;margin: 0px;font-weight: 400;">+44 123 456 789</p>
+                                    <p style="font-family: arial;font-size:10px;margin: 0px;font-weight: 400;">{{ $company_mobile }}</p>
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="" style="display: flex; flex-direction: row; justify-content: flex-start; align-items: flex-start; gap: 12px;margin-bottom: 8px;padding-left: 12px;">
                                 <img src="{{ $invoice_image3 }}" alt="" style="height: 30px; width: 30px;">
                                 <div class="" style="display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-start;">
                                     <b style="font-size: 12px;">Email</b> 
-                                    <p style="font-family: arial;font-size:10px;margin: 0px;font-weight: 400;">info@estarsolutions.com</p>
+                                    <p style="font-family: arial;font-size:10px;margin: 0px;font-weight: 400;">{{ $company_email }}</p>
                                 </div>
                             </div>
                             <div class="" style="display: flex; flex-direction: row; justify-content: flex-start; align-items: flex-start; gap: 12px;margin-bottom: 8px;padding-left: 12px;">
@@ -60,17 +59,15 @@
                                 </div>
                             </div>
                             <br>
-                            <div style="background-image: url({{ $invoice_image1 }});background-size: cover;background-repeat:no-repeat;background-position: top center; padding: 24px 16px; min-height: 830px;">
+                            <div style="background-image: url({{ $invoice_image1 }});background-size: cover;background-repeat:no-repeat;background-position: top center; padding: 24px 16px; min-height: 850px;">
 
                                 <!-- Billed From Section -->
                                 <div style="margin-bottom: 40px;">
                                     <h3 style="font-size: 14px;font-weight: 600; color: #000000; margin-bottom: 8px;">Billed From:</h3>
                                     <div style="width: 100%; height: 1px; background: #000000; margin-bottom: 8px;"></div>
-                                    <h3 style="font-size: 16px;font-weight: 600; color: #000000; margin-bottom: 8px;">Evolron L.L.C-FZ</h3>
+                                    <h3 style="font-size: 16px;font-weight: 600; color: #000000; margin-bottom: 8px;">{{ $company_name }}</h3>
                                     <p style="font-family: arial;font-size:10px;margin: 0px;font-weight: 400;">
-                                        Meydan Grandstand,<br>
-                                        6th floor, Meydan Road,<br>
-                                        Nad Al Sheba, Dubai, U.A.E.
+                                        {{ $company_address }}
                                     </p>
                                 </div>
 
@@ -78,7 +75,7 @@
                                 <div style="margin-top: 50px;">
                                     <h3 style="font-size: 14px;font-weight: 600; color: #000000; margin-bottom: 8px;">Invoice To</h3>
                                     <div style="width: 100%; height: 1px; background: #000000; margin-bottom: 8px;"></div>
-                                    <h3 style="font-size: 14px;font-weight: 600; color: #000000; margin-bottom: 8px;">John Smith</h3>
+                                    <h3 style="font-size: 14px;font-weight: 600; color: #000000; margin-bottom: 8px;">{{ $customer_name }}</h3>
                                 </div>
 
                             </div>
@@ -99,15 +96,15 @@
                                 <tr>
                                     <td style="border-right: 1px solid #ccc; padding: 10px;">
                                         <p style="margin: 0; font-size: 13px;">Due Amount:</p>
-                                        <p style="margin: 5px 0 0; font-weight: 700;">£1000.00</p>
+                                        <p style="margin: 5px 0 0; font-weight: 700;">{{ site_currency() . number_format($invoice_amount ?? 0, 2) }}</p>
                                     </td>
                                     <td style="border-right: 1px solid #ccc; padding: 10px;">
                                         <p style="margin: 0; font-size: 13px;">Invoice Date:</p>
-                                        <p style="margin: 5px 0 0; font-weight: 700;">18 August 2023</p>
+                                        <p style="margin: 5px 0 0; font-weight: 700;">{{ $invoice_date }}</p>
                                     </td>
                                     <td style="padding: 10px;">
                                         <p style="margin: 0; font-size: 13px;">Invoice No:</p>
-                                        <p style="margin: 5px 0 0; font-weight: 700;">#12345678</p>
+                                        <p style="margin: 5px 0 0; font-weight: 700;">{{ $invoice_number }}</p>
                                     </td>
                                 </tr>
                             </table>
@@ -129,52 +126,25 @@
                                         style="text-align: right; padding: 10px 0; font-size: 14px; border-bottom: 1px solid #ccc;">
                                         Total</th>
                                 </tr>
-
-                                <tr>
-                                    <td style="padding: 10px 0; font-weight: 700; border-bottom: 1px solid #ccc;">Business Item 1</td>
-                                    <td style="border-bottom: 1px solid #ccc;">1</td>
-                                    <td style="text-align: right; padding-right: 10px;border-bottom: 1px solid #ccc;">£100.00</td>
-                                    <td style="text-align: right;border-bottom: 1px solid #ccc;">£100.00</td>
-                                </tr>
-
-                                <tr>
-                                    <td style="padding: 10px 0; font-weight: 700; border-bottom: 1px solid #ccc;">Business Item 1</td>
-                                    <td style="border-bottom: 1px solid #ccc;">2</td>
-                                    <td style="text-align: right; padding-right: 10px;border-bottom: 1px solid #ccc;">£100.00</td>
-                                    <td style="text-align: right;border-bottom: 1px solid #ccc;">£100.00</td>
-                                </tr>
-
-                                <tr>
-                                    <td style="padding: 10px 0; font-weight: 700; border-bottom: 1px solid #ccc;">Business Item 1</td>
-                                    <td style="border-bottom: 1px solid #ccc;">1</td>
-                                    <td style="text-align: right; padding-right: 10px;border-bottom: 1px solid #ccc;">£100.00</td>
-                                    <td style="text-align: right;border-bottom: 1px solid #ccc;">£100.00</td>
-                                </tr>
-
-                                <tr>
-                                    <td style="padding: 10px 0; font-weight: 700; border-bottom: 1px solid #ccc;">Business Item 1</td>
-                                    <td style="border-bottom: 1px solid #ccc;">2</td>
-                                    <td style="text-align: right; padding-right: 10px;border-bottom: 1px solid #ccc;">£100.00</td>
-                                    <td style="text-align: right;border-bottom: 1px solid #ccc;">£100.00</td>
-                                </tr>
-
-                                <tr>
-                                    <td style="padding: 10px 0; font-weight: 700; border-bottom: 1px solid #ccc;">Business Item 1</td>
-                                    <td style="border-bottom: 1px solid #ccc;">1</td>
-                                    <td style="text-align: right; padding-right: 10px;border-bottom: 1px solid #ccc;">£100.00</td>
-                                    <td style="text-align: right;border-bottom: 1px solid #ccc;">£100.00</td>
-                                </tr>
+                                @foreach($products as $product)
+                                    <tr>
+                                        <td style="padding: 10px 0; font-weight: 700; border-bottom: 1px solid #ccc;">{{ $product->name }}</td>
+                                        <td style="border-bottom: 1px solid #ccc;">1</td>
+                                        <td style="text-align: right; padding-right: 10px;border-bottom: 1px solid #ccc;">{{ site_currency() . number_format($product->unit_price ?? 0, 2) }}</td>
+                                        <td style="text-align: right;border-bottom: 1px solid #ccc;">{{ site_currency() . number_format($product->unit_price ?? 0, 2) }}</td>
+                                    </tr>
+                                @endforeach
 
                             <!-- Subtotal Section -->
                                 <tr>
                                     <td colspan="2"></td>
-                                    <td style="text-align: right; padding-right: 10px;">Sub Total:</td>
-                                    <td style="text-align: right;">£1000.00</td>
+                                    <td style="text-align: right;padding: 10px 0px; padding-right: 10px;">Sub Total:</td>
+                                    <td style="text-align: right;padding: 10px 0px;">{{ site_currency() . number_format($invoice_amount + $discount_amount ?? 0, 2) }}</td>
                                 </tr>
                                 <tr>
                                     <td colspan="2"></td>
-                                    <td style="text-align: right; padding-right: 10px;">Discount:</td>
-                                    <td style="text-align: right;">£1000.00</td>
+                                    <td style="text-align: right;padding: 10px 0px;padding-right: 10px;">Discount:</td>
+                                    <td style="text-align: right;padding: 10px 0px;">{{ site_currency() . number_format($discount_amount ?? 0, 2) }}</td>
                                 </tr>
                             </table>
 
@@ -182,8 +152,8 @@
                             <!-- Grand Total -->
                             <table style="width: 100%; border-collapse: collapse;">
                                 <tr>
-                                    <td style="text-align: right; font-weight: 700;">GRAND TOTAL</td>
-                                    <td style="width: 10%; text-align: right; font-weight: 700;">£1000.00</td>
+                                    <td style="text-align: right; font-weight: 700;padding-right: 10px;">GRAND TOTAL</td>
+                                    <td style="width: 10%; text-align: right; font-weight: 700;">{{ site_currency() . number_format($invoice_amount ?? 0, 2) }}</td>
                                 </tr>
                             </table>
 

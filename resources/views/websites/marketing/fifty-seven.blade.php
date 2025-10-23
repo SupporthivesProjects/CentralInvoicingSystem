@@ -90,7 +90,7 @@
             padding: 12px 10px;
         }
         .table-list-product td:last-child {
-           background-color: #8080801c; /* Last TH */
+           background-color: #8080801c; 
            font-family: 'Roboto';
            font-size: 12px;
            font-weight: 500;
@@ -100,11 +100,14 @@
         }
 
         .table-list-product td:nth-last-child(2) {
-           background-color: #8080801c; /* Second last TH */
+           background-color: #8080801c;
            font-family: 'Roboto';
            font-size: 9px;
            font-weight: 300;
            color: grey;
+        }
+        .table-list-product tr.total-row td {
+        background-color: transparent !important;
         }
         .table-list-product td:nth-last-child(3) {
            font-family: 'Roboto';
@@ -157,7 +160,7 @@
                                 <table class="table-main-list" style="width: 100%;">
                                     <tbody>
                                         <tr>
-                                            <td style="width: 40%;">
+                                            <td style="width: 40%;vertical-align: top;">
                                                 <div>
                                                     <p>TOTAL</p>
                                                     <h4>{{ site_currency() }} {{ number_format($invoice_amount ?? 0, 2) }}</h4>
@@ -167,19 +170,19 @@
                                                     <h6>{{ $customer_name }}</h6>
                                                 </div>
                                             </td>
-                                            <td style="width: 60%;">
+                                            <td style="width: 60%;vertical-align: top;">
                                                 <table class="table-list-product" style="width: 100%;">
                                                     <tbody>
                                                         <tr>
                                                             <th>Product</th>
-                                                            <th>Length</th>
+                                                            <th style="text-align: end;">Length</th>
                                                             <th style="text-align: center; border-bottom: 3px solid red;">QTY</th>
                                                             <th style="text-align: end; border-bottom: 3px solid red;">PRICE</th>
                                                         </tr>
                                                         @foreach($products as $product)
                                                         <tr>
                                                             <td>{{ $product->name }}</td>
-                                                            <td>{{ $product->subscription ?? '-' }}</td>
+                                                            <td style="text-align: end;padding-right:10px;">{{ $product->subscription ?? '-' }}</td>
                                                             <td style="text-align: center;">01</td>
                                                             <td >{{ site_currency() }} {{ number_format($product->unit_price ?? 0, 2) }}</td>
                                                         </tr>
@@ -189,23 +192,25 @@
                                                     <tfoot>
                                                         <tr>
                                                             <td></td>
-                                                            <td></td>
-                                                            <td style="padding-left: 20px;">
+                                                            
+                                                            <td style="padding-left: 20px;text-align: end;padding-right:10px;">
                                                                 <p style="font-family: 'Roboto';font-size: 9px;line-height: normal;color: gray;">SUB TOTAL<br>
                                                                     DISCOUNT</p>
                                                             </td>
+                                                            <td style="border-bottom: 3px solid red;"></td>
                                                             <td style="padding-left: 20px; border-bottom: 3px solid red; padding-top: 20px;">
                                                                 <p>{{ site_currency() }} {{ number_format(($invoice_amount + $discount_amount) ?? 0, 2) }}<br>
                                                                 {{ site_currency() }} {{ number_format($discount_amount ?? 0, 2) }}
                                                                     </p>
                                                             </td>
                                                         </tr>
-                                                        <tr>
+                                                        <tr class="total-row">
                                                             <td style="padding-left: 20px; border: 0px;"></td>
-                                                            <td style="padding-left: 20px; border: 0px;"></td>
-                                                            <td style="padding-left: 20px; border: 0px;">
+                                                            
+                                                            <td style="padding-left: 20px; border: 0px;text-align: end;padding-right:10px;">
                                                                 <h6 style="font-family: 'Roboto';font-size: 9px;line-height: normal;color: #ff0000b8;">GRAND TOTAL</h6>
                                                             </td>
+                                                            <td style="padding-left: 20px; border: 0px;"></td>
                                                             <td style="border: 0px;" >
                                                                 <h6 style="font-family: 'Roboto';font-size: 16px;line-height: normal;color: #ff0000b8;">{{ site_currency() }} {{ number_format($invoice_amount ?? 0, 2) }}</h6>
                                                             </td>
@@ -247,12 +252,12 @@
                         </div>
 
                         <!-- Company Info -->
-                        <div style="flex: 1; text-align: right;">
-                            <p style="font-family: 'Roboto'; font-size: 9px; font-weight: 400; color: #fff;">
+                        <div style="flex: 1; text-align: right; padding-top: 70px;">
+                            <p style="font-family: 'Roboto'; font-size: 9px; font-weight: 400; color: #fff;padding-bottom: 10px;">
                             {{ $company_name }}<br>
                             {!! $company_address !!}<br>
                             </p>
-                            <p style="font-family: 'Roboto'; font-size: 9px; font-weight: 400; color: #fff; padding: 5px 0;">
+                            <p style="font-family: 'Roboto'; font-size: 9px; font-weight: 400; color: #fff; padding: 5px 0;padding-bottom: 15px;">
                             {{ $site->company_mobile }}
                             </p>
                             <p style="font-family: 'Roboto'; font-size: 9px; font-weight: 400; color: pink;">

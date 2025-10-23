@@ -2,12 +2,25 @@
 <html>
 <head>
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
+    <style>
+            .for_bttom {
+            position: fixed;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            width: 100%;
+        }
+        *{
+            margin:0px;
+            padding:0px;
+        }
+    </style>
 </head>
 <body>
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
             <td align="center" bgcolor="#f2f2f2" style="padding: 0px 0;">
-                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
+                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse; ">
                     <tr>
                         <td style="padding: 0px;max-height: 130px;">
                             <table width="100%" cellspacing="0" cellpadding="0" border="0">
@@ -33,7 +46,7 @@
                                         <br>
                                         <p style="font-family: arial;font-size: 10px;margin-bottom: 5px;">BILLED FROM:</p>
                                         <p style="font-family: Courier New;font-size: 10px;margin: 0px;font-weight: 400;">
-                                        {{ $site_name }}<br>{{ $site->site_link }}</p>
+                                        {{ $site_name }}<br><a href="https://www.logikalcoding.com/" style="text-decoration: none;color: #000">www.logikalcoding.com</a></p>
                                         <br>
                                         <p style="font-family: arial;font-size: 10px;margin-bottom: 5px;font-weight: 400;">
                                             BILLED TO
@@ -62,23 +75,23 @@
                             <div style="min-height: 500px !important;">
                                 <table style="border-collapse: collapse;border-bottom: 0px;border: 0px;">
                                     <tr style="border-collapse: collapse;height: 30px;background-color: #FF4500; color: white;border-bottom: 0px;border: 0px;">
-                                        <td style="width: 300px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
+                                        <td style="width: 300px;text-align: left;padding-left:10px;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
                                         <b>ITEM NAME</b> 
                                         </td>
-                                        <td style="width: 100px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
+                                        <td style="width: 100px;text-align: left;padding-left:10px;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
                                             <b>QUANTITY</b>
                                         </td>
-                                        <td style="width: 100px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;">
+                                        <td style="width: 100px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;">
                                             <b>UNITY PRICE</b>
                                         </td>
-                                        <td style="width: 100px;text-align:center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
+                                        <td style="width: 100px;text-align:left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
                                             <b>TOTAL</b>
                                         </td>
                                         
                                     </tr>
                                     @foreach($products as $product)
                                     <tr style="border-collapse: collapse;height: 30px;border-bottom: 0px;border: 0px;border-bottom: 1px solid #FF4500;">
-                                        <td style="width: 100px;text-align: left;font-family: Courier Newl;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;">
+                                        <td style="width: 100px;text-align: left;padding-left:10px;font-family: Courier Newl;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;">
                                         {{ $product->name }}
                                         </td>
                                         <td style="width: 300px;text-align:left;padding-left:10px;font-family: Courier New;font-size:10px;margin: 0px;font-weight: 400; border-collapse: collapse;">
@@ -139,7 +152,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>
+                        <td class="for_bttom">
                             <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;"> 
                                 <tr style="background: url('{{ $invoice_image2 }}') no-repeat;background-position: center;height:141px; background-size:cover;width: 100%;">
                                     <td style="text-align:center;">

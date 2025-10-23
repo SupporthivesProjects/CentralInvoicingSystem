@@ -103,7 +103,7 @@
                                         style="border-collapse: collapse;height: 24px;border-top: 1px solid black;border-bottom: 1px solid black;">
                                         <td
                                             style="width: 250px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;border-right: 1px solid black;padding: 12px">
-                                            <b>Item Descriptions</b>
+                                            <b>Product Name</b>
                                         </td>
                                         <td
                                             style="width: 150px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;border-right: 1px solid black;padding: 12px">
@@ -115,7 +115,7 @@
                                         </td>
                                         <td
                                             style="width: 150px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding: 12px">
-                                            <b>AMOUNT</b>
+                                            <b>Amount</b>
                                         </td>
                                     </tr>
                                     <tr
@@ -262,7 +262,7 @@
                                 <tr style="border-collapse: collapse;">
                                     <td style="width: 33.33%; text-align: left; font-family: arial; font-size: 10px; font-weight: 400; color: #5E5E5E; padding-left: 40px; padding-top: 10px; white-space: nowrap;">
                                     <img src="{{ $invoice_image3 }}" alt="" style="height: 10px; vertical-align: middle; padding-right: 10px;">
-                                    +1 132 456 9873
+                                    {{ $company_mobile }}
                                     </td>
 
                                     <td style="width: 33.33%; text-align: center; font-family: arial; font-size: 10px; font-weight: 400; color: #5E5E5E; padding-top: 10px; padding-left: 5px; white-space: nowrap;">
