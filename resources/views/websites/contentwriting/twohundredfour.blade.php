@@ -165,7 +165,7 @@
 
                     <!-----------Footer----------->
                     <tr>
-                        <td style="background:#172f32;padding:20px 50px;height:100px;" width="200px !important">
+                        <td style="background:#172f32;padding:20px 50px;height:80px;width:46.4%">
                             <p style="font-family: Soleil Bk;font-size:9px;color:#bfc543;margin:0px;line-height:12px">
                             CONTACT US <br>
                             SISISERVICES OI
@@ -177,7 +177,7 @@
                                 {{ $company_email }}
                             </p>
                         </td>
-                        <td style="padding:20px;" align="right">
+                        <td style="padding:20px;width:53.6" align="right"> 
                             <p style="font-family: Soleil Bk;font-size:28px;color:#000000;margin:0px;line-height:32px">
                                 Thank You!
                             </p>
