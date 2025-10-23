@@ -56,7 +56,7 @@
                                 </td>
                             </tr>
                         </table>
-                        <table style="width: 100%;border-collapse:collapse;height:500px;">
+                        <table style="width: 100%;border-collapse:collapse;height:600px;">
                             <tr style="background:#111f21;height:60px;">
                                 <td style="padding:10px;width:46.4%;padding-left:50px;">
                                 <p style="font-family: Soleil Bk;font-size:10px;color:#bfc543;margin:0px;line-height:16px">
@@ -108,8 +108,9 @@
                                 </p>
                                 </td>
                             </tr>
+                            
                             @endforeach
-                            <tr style="height:260px;">
+                            <tr style="height:265px;">
                                 <td style="background:#172f32;"></td>
                                 <td colspan="3" style="background:url('{{ $invoice_image1 }}');background-repeat:no-repeat;background-size:cover;padding:20px;vertical-align:top;" align="right">
                                     <table style="width: 50%;border-collapse:collapse;">
@@ -152,6 +153,10 @@
                                     </table>
                                 </td>
                             </tr>
+                            <tr height="100%">
+                            <td style="background:#172f32;"></td>
+                            <td></td>
+                            </tr>
                         </table>
                        </td> 
                     </tr>
@@ -160,7 +165,7 @@
 
                     <!-----------Footer----------->
                     <tr>
-                        <td style="background:#172f32;padding:20px 50px;max-width:46.4% !important;height:150px;">
+                        <td style="background:#172f32;padding:20px 50px;height:150px;" width="46.4%">
                             <p style="font-family: Soleil Bk;font-size:9px;color:#bfc543;margin:0px;line-height:12px">
                             CONTACT US <br>
                             SISISERVICES OI
