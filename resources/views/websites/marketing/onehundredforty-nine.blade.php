@@ -126,7 +126,7 @@
                                         </td>
                                     </tr>
                                     @foreach ($products as $product)
-                                        <tr style="width:520px;height:60px; background-color: {{ $index % 2 == 0 ? '#ffffff' : '#ffcccc' }};">
+                                        <tr style="width:520px;height:60px;">
                                             <td style="width: 150px;padding: 10px;" align="left">
                                                 <p
                                                     style="color:#000000;font-size:12px;font-weight:400;font-family:arial;margin: 0px;line-height:16px;">
