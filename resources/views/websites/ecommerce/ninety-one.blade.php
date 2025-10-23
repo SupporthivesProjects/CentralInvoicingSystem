@@ -17,6 +17,7 @@
             background-size: cover; */
             /* height: 150px; */
             /* vertical-align: bottom; */
+            background: red;
             position: absolute;
             bottom: 50px;
             left: 0;
