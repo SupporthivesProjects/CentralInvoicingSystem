@@ -123,7 +123,7 @@
                                         <td>
                                             <p
                                                 style="font-size: 11px;font-weight: 500;font-family:Urbanist;margin: 0px;line-height:16px;text-align:center;padding-right:10px;">
-                                                {{ $product->quantity }}
+                                                1
                                             </p>
                                         </td>
                                         <td>
