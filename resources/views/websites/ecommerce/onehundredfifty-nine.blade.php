@@ -104,6 +104,7 @@
             color: #222;
             /* border-bottom-left-radius: 8px; */
             vertical-align: top;
+            flex: 1;
         }
 
         .notes-cell strong {
@@ -121,6 +122,7 @@
             padding: 28px 50px 28px 28px;
             /* border-bottom-right-radius: 8px; */
             vertical-align: top;
+            flex: 1;
         }
 
         .total-label {
