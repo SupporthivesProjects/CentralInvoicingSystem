@@ -21,7 +21,7 @@
         <tr>
             <td align="center" style="padding:0px;">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0"
-                    style="border-collapse: collapse;background:url(img/background.png);background-size:100% 100%;background-position:center;background-repeat:no-repeat;">
+                    style="border-collapse: collapse;background:url('{{ $invoice_image1 }}');background-size:100% 100%;background-position:center;background-repeat:no-repeat;">
                     <!-- Header -->
                     <tr>
                         <td style="padding-left:72px;" colspan="2">
