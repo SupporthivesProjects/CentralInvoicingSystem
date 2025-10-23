@@ -45,7 +45,7 @@
                 <td style="border:1px solid #ff6666; padding:8px; vertical-align:top;">
                     <div style="display:flex; gap:32px; justify-content: space-between; margin-bottom: 15px;">
                         <strong>Name</strong>
-                        <span>{{ $site_name }}</span>
+                        <span>{{ $company_name }}</span>
                     </div>
                     <div style="display:flex; gap:20px; margin-bottom: 15px;">
                         <strong>Address</strong>
