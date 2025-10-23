@@ -33,7 +33,7 @@
                     <!-- Content -->
                     <tr>
                        <td colspan="2">
-                        <table width="100%" style="border-collapse: collapse;height:600px;">
+                        <table width="100%" style="border-collapse: collapse;height:300px;">
                             <tr>
                                 <td style="background:#172f32;width:46.4%;vertical-align:top;padding:10px 50px">
                                     <p style="font-family: Soleil Bk;font-size:11px;color:#ffffff;margin:0px;line-height:24px">
@@ -160,7 +160,7 @@
 
                     <!-----------Footer----------->
                     <tr>
-                        <td style="background:#172f32;padding:0px;max-width:30%;">
+                        <td style="background:#172f32;padding:20px 50px;max-width:46.4% !important;">
                             <p style="font-family: Soleil Bk;font-size:9px;color:#bfc543;margin:0px;line-height:12px">
                             CONTACT US <br>
                             SISISERVICES OI
