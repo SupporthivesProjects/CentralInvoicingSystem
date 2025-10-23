@@ -28,7 +28,7 @@
         <tr>
             <td align="center" bgcolor="#f2f2f2" style="padding: 0px 0;">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
-                    style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
+                    style="border-collapse: collapse; ">
                     <!-- Header -->
                     <tr style=" background: url('{{ $invoice_header_image }}');
                       background-repeat: no-repeat;
