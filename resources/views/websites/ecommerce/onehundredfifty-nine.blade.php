@@ -99,7 +99,7 @@
         .notes-cell {
             width: 60%;
             background: #c7c7f7;
-            padding: 28px 28px 28px 50px;
+            padding: 28px 28px 200px 50px;
             font-size: 14px;
             color: #222;
             /* border-bottom-left-radius: 8px; */
@@ -119,7 +119,7 @@
             background: #f07edb;
             color: #fff;
             text-align: right;
-            padding: 28px 50px 28px 28px;
+            padding: 28px 50px 200px 28px;
             /* border-bottom-right-radius: 8px; */
             vertical-align: top;
             flex: 1;
