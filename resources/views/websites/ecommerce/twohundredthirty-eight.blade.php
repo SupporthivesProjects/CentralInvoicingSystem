@@ -129,7 +129,7 @@
                                         <td>
                                             <p
                                                 style="font-size: 11px;font-weight: 500;font-family: Urbanist;margin: 0px;line-height:16px;text-align:center;padding-right:10px;">
-                                                {{ site_currency() . number_format($product->unit_price * $product->quantity, 2) }}
+                                                {{ site_currency() . number_format($product->unit_price, 2) }}
                                             </p>
                                         </td>
                                     </tr>
