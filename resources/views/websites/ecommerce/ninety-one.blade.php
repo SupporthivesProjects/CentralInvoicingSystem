@@ -155,7 +155,7 @@
                                        </table> -->
                                     </td>
                                     <td style="width:20px;"></td>
-                                    <td align="center" style="vertical-align: top;width:200px;height:100%;background:url('{{ $invoice_image2 }}');background-size: cover;background-repeat: no-repeat;background-position: center;border-top: 1px solid black;padding: 20px 0px 0px 20px;">
+                                    <td align="center" style="min-height: 950px;vertical-align: top;width:200px;height:100%;background:url('{{ $invoice_image2 }}');background-size: cover;background-repeat: no-repeat;background-position: center;border-top: 1px solid black;padding: 20px 0px 0px 20px;">
                                         <table width="100%">
                                         <tr>
                                             <td>
