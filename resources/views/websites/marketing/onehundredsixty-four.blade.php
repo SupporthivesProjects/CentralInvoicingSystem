@@ -30,7 +30,7 @@
                         <td style="width:180px; padding:0; ">
                             <!-- Logo image here -->
                             <img src="{{ $company_logo }}" alt="Brandexx Logo"
-                                style="display:block;width: 163px;height: 288px;margin:10px auto 10px auto;border-radius:8px;position: absolute;top: -156px;left: 54px;margin-top: 6px;">
+                                style="display:block;width: 183px;height: 288px;margin:10px auto 10px auto;border-radius:8px;position: absolute;top: -156px;left: 54px;margin-top: 6px;">
                         </td>
                         <td
                             style="text-align:right; vertical-align:middle; font-size:1.4em; letter-spacing:2px; color:#222; padding-right:40px;">
@@ -42,7 +42,7 @@
         </tr>
         <!-- Contact Info -->
         <tr>
-            <td colspan="2" style="padding:0 0px 0 250px; ">
+            <td colspan="2" style="padding:0 20px 0 270px; ">
                 <table align="top" valign="top" width="100%" cellpadding="0" cellspacing="0" style="margin-top:100px;position: relative; top: -20px;">
                     <tr>
                         <td style="font-size:0.98em; padding-right:20px;width:30%;vertical-align: top;">
