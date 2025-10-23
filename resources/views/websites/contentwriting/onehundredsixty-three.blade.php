@@ -56,7 +56,7 @@
                                         </p>
 
                                         <p style="font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;">
-                                            Website: {{ $site->site_link }}
+                                            Website: <a href="{{ $site->site_link }}" style="text-decoration: none; color: #000;">www.thedigitalkreator.co</a>
                                         </p>
                                         <p style="font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;">
                                             Email: {{ $company_email }}
