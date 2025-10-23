@@ -156,9 +156,9 @@
     <table class="main-table">
         <!-- Header -->
         <tr class="header-row"
-            style="height: 200px; background-image: url({{ $invoice_header_image }}); position: relative;">
+            style="height: 220px; background-image: url({{ $invoice_header_image }})no-repeat;background-position:center;background-size:cover; position: relative;">
             <td colspan="2" style="padding: 0;">
-                <table width="100%" style="height: 200px; border-collapse: collapse;">
+                <table width="100%" style="height: 220px; border-collapse: collapse;">
                     <tr>
                         <!-- Logo and Title -->
                         <td style="width: 60%; padding-left: 36px; vertical-align: middle;">
