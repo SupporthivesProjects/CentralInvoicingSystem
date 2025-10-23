@@ -16,7 +16,7 @@
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
             <td align="center" style="padding:0px;">
-                <table width="600px" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse;">
+                <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse;">
                     <!-- Header -->
                     <tr style="height:205px;background:url('{{ $invoice_header_image }}');background-size:cover;background-repeat:no-repeat;">
                         <td style="width: 50%;">
