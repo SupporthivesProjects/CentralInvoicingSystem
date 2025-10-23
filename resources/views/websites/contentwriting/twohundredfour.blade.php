@@ -164,8 +164,8 @@
 
 
                     <!-----------Footer----------->
-                    <tr>
-                        <td style="background:#172f32;padding:20px 50px;height:80px;width:46.4%">
+                    <tr style="width:100%">
+                        <td style="background:#172f32;padding:20px 50px;height:90px;width:46.4%">
                             <p style="font-family: Soleil Bk;font-size:9px;color:#bfc543;margin:0px;line-height:12px">
                             CONTACT US <br>
                             SISISERVICES OI
