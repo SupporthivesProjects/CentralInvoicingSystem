@@ -94,16 +94,18 @@
         .notes-total-row td {
             padding: 40px;
             border: none;
+            flex: 1;
         }
 
         .notes-cell {
             width: 60%;
             background: #c7c7f7;
-            padding: 28px 28px 28px 50px;
+            padding: 28px 28px 200px 50px;
             font-size: 14px;
             color: #222;
             /* border-bottom-left-radius: 8px; */
             vertical-align: top;
+            flex: 1;
         }
 
         .notes-cell strong {
@@ -118,9 +120,10 @@
             background: #f07edb;
             color: #fff;
             text-align: right;
-            padding: 28px 50px 28px 28px;
+            padding: 28px 50px 200px 28px;
             /* border-bottom-right-radius: 8px; */
             vertical-align: top;
+            flex: 1;
         }
 
         .total-label {
@@ -154,9 +157,9 @@
     <table class="main-table">
         <!-- Header -->
         <tr class="header-row"
-            style="height: 140px; background-image: url({{ $invoice_header_image }}); position: relative;">
+            style="height: 220px; background-image: url({{ $invoice_header_image }}); position: relative;">
             <td colspan="2" style="padding: 0;">
-                <table width="100%" style="height: 140px; border-collapse: collapse;">
+                <table width="100%" style="height: 220px; border-collapse: collapse;">
                     <tr>
                         <!-- Logo and Title -->
                         <td style="width: 60%; padding-left: 36px; vertical-align: middle;">
@@ -250,7 +253,7 @@
                 <div class="total-amount">{{ site_currency() }} {{  number_format(($invoice_amount), 2) }}</div>
             </td>
         </tr>
-        <tr class="section-space">
+        <!-- <tr class="section-space">
             <td colspan="2"></td>
         </tr>
         <tr class="section-space">
@@ -261,7 +264,7 @@
         </tr>
         <tr class="section-space">
             <td colspan="2"></td>
-        </tr>
+        </tr> -->
         <!-- Footer -->
         <!-- <tr>
             <td colspan="2"
