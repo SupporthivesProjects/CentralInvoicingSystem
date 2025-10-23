@@ -56,7 +56,7 @@
                                 </td>
                             </tr>
                         </table>
-                        <table style="width: 100%;border-collapse:collapse;height:300px;">
+                        <table style="width: 100%;border-collapse:collapse;height:500px;">
                             <tr style="background:#111f21;height:60px;">
                                 <td style="padding:10px;width:46.4%;padding-left:50px;">
                                 <p style="font-family: Soleil Bk;font-size:10px;color:#bfc543;margin:0px;line-height:16px">
@@ -160,7 +160,7 @@
 
                     <!-----------Footer----------->
                     <tr>
-                        <td style="background:#172f32;padding:20px 50px;max-width:46.4% !important;">
+                        <td style="background:#172f32;padding:20px 50px;max-width:46.4% !important;height:150px;">
                             <p style="font-family: Soleil Bk;font-size:9px;color:#bfc543;margin:0px;line-height:12px">
                             CONTACT US <br>
                             SISISERVICES OI
