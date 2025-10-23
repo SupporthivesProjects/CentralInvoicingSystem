@@ -3,6 +3,24 @@
 
 <head>
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        .footer-fixed {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: url('{{ $invoice_footer_image }}');
+                    background-repeat: no-repeat;
+                    background-size: cover;
+                    background-position: center;
+                    height: 100px;
+            
+        }
+    </style>
 </head>
 
 <body style=" margin: 0 !important;padding: 0 !important;">
@@ -10,7 +28,7 @@
         <tr>
             <td align="center" bgcolor="#f2f2f2" style="padding: 0px 0;">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
-                    style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
+                    style="border-collapse: collapse; ">
                     <!-- Header -->
                     <tr style=" background: url('{{ $invoice_header_image }}');
                       background-repeat: no-repeat;
@@ -46,7 +64,9 @@
                                   <td style="text-align: center; padding-top: 8px; vertical-align: top;font-size: 12px;">{{ $customer_name }}</td>
                                   <td style="text-align: center; padding-top: 8px;vertical-align: top;font-size: 12px;">
                                     {{ $site_name }}<br>
-                                    {!! $company_address !!} &nbsp;&nbsp;
+                                    <div style="display: inline-block; width: 200px; text-align: center;">
+                                      {!! $company_address !!}
+                                    </div> &nbsp;&nbsp;<br />
                                     {{ $company_mobile }}<br />
                                     <a href="mailto:{{ $company_email }}" style="color: #0070C0; text-decoration: underline;font-size: 12px;">{{$company_email}}</a>
                                   </td>
@@ -99,7 +119,7 @@
 
 
                     <!-----------Footer----------->
-                    <tr style=" background: url('{{ $invoice_footer_image }}');
+                    <!-- <tr style=" background: url('{{ $invoice_footer_image }}');
                     background-repeat: no-repeat;
                     background-size: cover;
                     background-position: center;
@@ -109,6 +129,10 @@
 
                         </td>
 
+                    </tr> -->
+
+                    <tr class="footer-fixed">
+                        <td ></td>
                     </tr>
                     <!-----------Footer End----------->
                 </table>
