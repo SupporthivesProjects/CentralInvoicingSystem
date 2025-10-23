@@ -86,7 +86,7 @@
                 <td style="border:1px solid #ff6666; padding:8px;">1</td>
                 <td style="border:1px solid #ff6666; padding:8px;">{{ $product->name }}</td>
                 <td style="border:1px solid #ff6666; padding:8px; text-align: right;">{{ site_currency() . number_format($product->unit_price ?? 0, 2) }}</td>
-                <td style="border:1px solid #ff6666; padding:8px; text-align: right;">{{site_currency() . number_format($invoice_amount ?? 0, 2) }}</td>
+                <td style="border:1px solid #ff6666; padding:8px; text-align: right;">{{ site_currency() . number_format($product->unit_price ?? 0, 2) }}</td>
             </tr>
             @endforeach
             
