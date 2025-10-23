@@ -94,6 +94,7 @@
         .notes-total-row td {
             padding: 40px;
             border: none;
+            flex: 1;
         }
 
         .notes-cell {
@@ -104,6 +105,7 @@
             color: #222;
             /* border-bottom-left-radius: 8px; */
             vertical-align: top;
+            flex: 1;
         }
 
         .notes-cell strong {
@@ -121,6 +123,7 @@
             padding: 28px 50px 200px 28px;
             /* border-bottom-right-radius: 8px; */
             vertical-align: top;
+            flex: 1;
         }
 
         .total-label {
