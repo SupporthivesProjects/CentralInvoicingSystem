@@ -33,7 +33,7 @@
                     <!-- Content -->
                     <tr>
                        <td colspan="2">
-                        <table width="100%" style="border-collapse: collapse;">
+                        <table width="100%" style="border-collapse: collapse;height:600px;">
                             <tr>
                                 <td style="background:#172f32;width:46.4%;vertical-align:top;padding:10px 50px">
                                     <p style="font-family: Soleil Bk;font-size:11px;color:#ffffff;margin:0px;line-height:24px">
@@ -109,7 +109,7 @@
                                 </td>
                             </tr>
                             @endforeach
-                            <tr style="height:250px;">
+                            <tr style="height:260px;">
                                 <td style="background:#172f32;"></td>
                                 <td colspan="3" style="background:url('{{ $invoice_image1 }}');background-repeat:no-repeat;background-size:cover;padding:20px;vertical-align:top;" align="right">
                                     <table style="width: 50%;border-collapse:collapse;">
