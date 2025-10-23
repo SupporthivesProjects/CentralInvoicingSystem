@@ -174,7 +174,7 @@
                         </td>
                         <td style="padding:20px;" align="right">
                             <p style="font-family: Soleil Bk;font-size:28px;color:#000000;margin:0px;line-height:32px">
-                                Thank You!
+                                Thank You!!!
                             </p>
                         </td>
                     </tr> 
