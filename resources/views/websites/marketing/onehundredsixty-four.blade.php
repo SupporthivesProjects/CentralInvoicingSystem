@@ -30,7 +30,7 @@
                         <td style="width:180px; padding:0; ">
                             <!-- Logo image here -->
                             <img src="{{ $company_logo }}" alt="Brandexx Logo"
-                                style="display:block;width: 183px;height: 228px;margin:10px auto 10px auto;border-radius:8px;position: absolute;top: -156px;left: 54px;margin-top: 6px;">
+                                style="display:block;width: 143px;height: 288px;margin:10px auto 10px auto;border-radius:8px;position: absolute;top: -156px;left: 54px;margin-top: 6px;">
                         </td>
                         <td
                             style="text-align:right; vertical-align:middle; font-size:1.4em; letter-spacing:2px; color:#222; padding-right:40px;">
@@ -75,7 +75,7 @@
                             style="width:36%; font-size:0.97em; padding:10px 15px; vertical-align:top; border-left: 1px solid #282828">
                             <b>Invoice Details</b><br>
                             Invoice Date: {{ $invoice_date }}<br>
-                            Issue Date: {{ $invoice_date }}<br>
+                            <!-- Issue Date: {{ $invoice_date }}<br> -->
                             Total Due: {{ site_currency() }} {{ number_format(($invoice_amount) ?? 0, 2) }}
                         </td>
                         <td
