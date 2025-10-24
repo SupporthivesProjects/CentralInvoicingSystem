@@ -24,8 +24,8 @@
                     style="border-collapse: collapse;background:url('{{ $invoice_image1 }}');background-size:cover;background-position:center;background-repeat:no-repeat;height:100vh">
                     <!-- Header -->
                     <tr>
-                        <td style="padding-left:50px;" colspan="2">
-                            <table style="margin-top:115px">
+                        <td style="padding-left:40px;" colspan="2">
+                            <table style="margin-top:125px">
                                 <tr style="height: 20px;">
                                     <td style="padding: 5px;">
                                         <p
