@@ -2,6 +2,20 @@
 <html>
 <head>
     <title>Your Email Title</title>
+    <style>
+        *{
+            margin:0px;
+            padding:0px;
+        }
+        .footer_bottom {
+            position: fixed;
+            bottom: 0px;
+            left: 0px;
+            right: 0px;
+            width: 100%;
+            
+        }
+    </style>
 </head>
 <body style="margin: 0px; padding: 0px;">
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
@@ -73,7 +87,7 @@
                                      </div>
                                 </tr>
                             </table>
-                            <div style="min-height: 748px !important;">
+                            <div style="min-height: 718px !important;">
                             <table style="border-collapse: collapse;border-bottom: 0px;border: 0px;">
                                 <tr style="border-collapse: collapse;height: 50px; color: white;border-bottom: 1px solid black;border: 0px;">
                                     <td style="padding-left: 2px; width: 500px;text-align: left;font-family: arial;font-size: 12px;margin: 0px;font-weight: 600;border-collapse: collapse;padding-left: 5px;border-right: 1px solid black;background-color: #3C7F79;">
@@ -173,7 +187,7 @@
 
                     <!-----------Footer----------->
                     <tr>
-                        <td style="height: 40px;">
+                        <td style="height: 40px;" class="footer_bottom">
                             <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;">
                                 <tr style="height: 45px; background: url({{ $invoice_footer_image }}) no-repeat;background-position:center;background-size:cover;width: 600px; border-collapse: collapse;">
                                     <td style="width: 300px;border:0px" >
