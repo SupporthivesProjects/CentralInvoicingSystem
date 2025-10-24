@@ -165,7 +165,10 @@
 
                     <!-----------Footer----------->
                     <tr style="width:100%">
-                        <td style="background:#172f32;padding:20px 50px;height:95px;width:46.4%">
+                        <td colspan="2">
+                            <table style="border-collapse:collapse;width:100%;">
+                                <tr>
+                                   <td style="background:#172f32;padding:20px 50px;height:95px;width:46.4%">
                             <p style="font-family: Soleil Bk;font-size:9px;color:#bfc543;margin:0px;line-height:12px">
                             CONTACT US <br>
                             SISISERVICES OI
@@ -181,6 +184,9 @@
                             <p style="font-family: Soleil Bk;font-size:28px;color:#000000;margin:0px;line-height:32px">
                                 Thank You!
                             </p>
+                        </td>
+                                </tr>
+                            </table>
                         </td>
                     </tr> 
                     <!-----------Footer End----------->    
