@@ -148,7 +148,7 @@
 
           <!-----------Footer----------->
 
-          <tr
+          {{-- <tr
             style=" background: url({{ $invoice_footer_image }});
                     background-repeat: no-repeat;
                     background-size: cover;
@@ -156,7 +156,7 @@
                     height: 124px; display: flex; justify-content: center; flex-direction: column; align-items: center;">
 
 
-          </tr>
+          </tr> --}}
           <!-----------Footer End----------->
         </table>
       </td>
