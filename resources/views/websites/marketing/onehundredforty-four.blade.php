@@ -44,7 +44,7 @@
                             <table style="width: 100%;">
                                 <tr style="width: 100%;">
                                     <div style="display: flex; flex-direction: row; justify-content: space-between;">
-                                    <td style="padding-top: 30px;min-width: 200px;vertical-align: top;">
+                                    <td style="padding-top: 10px;min-width: 200px;vertical-align: top;">
                                         <p style="font-family: arial;font-size: 12px;margin: 0px;font-weight: 400;padding-bottom: 5px;">
                                             <b>BILLED TO</b>
                                         </p>
@@ -73,7 +73,7 @@
                                      </div>
                                 </tr>
                             </table>
-                            <div style="min-height: 768px !important;">
+                            <div style="min-height: 748px !important;">
                             <table style="border-collapse: collapse;border-bottom: 0px;border: 0px;">
                                 <tr style="border-collapse: collapse;height: 50px; color: white;border-bottom: 1px solid black;border: 0px;">
                                     <td style="padding-left: 2px; width: 500px;text-align: left;font-family: arial;font-size: 12px;margin: 0px;font-weight: 600;border-collapse: collapse;padding-left: 5px;border-right: 1px solid black;background-color: #3C7F79;">
