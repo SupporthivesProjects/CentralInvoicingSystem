@@ -74,10 +74,10 @@
                                 </tr> -->
                                 <tr style="width:100%">
                                     <td style="width:100%">
-                                        <div style="display:flex; align-items: flex-end; flex-direction: column; gap: 8;width:100%;  padding-top: 44px; padding-left:30px;">
+                                        <div style="display:flex; align-items: flex-end; flex-direction: column; gap: 8;width:100%;  padding-top: 44px; padding-left:70px;">
                                             <div style="display:flex; align-items: flex-start; flex-direction: column; gap: 30;">
                                                 <p class="new_p">Invoice Date<span style="margin-left: 60px;">:{{ $invoice_date }}</span></p>
-                                                <p class="new_p" style="margin-top:16px;">Invoice No.<span style="margin-left: 64px; margin-top: 16px">:#{{ $invoice_number }}</p>
+                                                <p class="new_p" style="margin-top:8px;">Invoice No.<span style="margin-left: 64px; margin-top: 16px">:#{{ $invoice_number }}</p>
                                             </div>     
                                         </div>
                                     </td>
