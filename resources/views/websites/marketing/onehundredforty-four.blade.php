@@ -15,6 +15,19 @@
             width: 100%;
             
         }
+        .invoice-info {
+            width: 100%;
+            }
+
+            .invoice-info td {
+            width: 100%;
+            text-align: right;
+            color: white;
+            font-family: Arial, sans-serif;
+            font-size: 9px;
+            padding: 0 10px;
+            line-height: 1.2; /* reduces gap between rows */
+            }
     </style>
 </head>
 <body style="margin: 0px; padding: 0px;">
@@ -37,15 +50,21 @@
                                             <h1 style="justify-content: right; color: white;text-align: right;padding-right: 40px;">INVOICE</h1>
                                         </td>
                                 </tr>
-                                <tr >
+                                <!-- <tr > -->
                                     <!-- <td colspan="1" style="border-bottom: 0px; color: white;"></td> -->
                                     <!-- <td colspan="1" style="color: white;width: 100px; text-align: left;padding-left: 430px;font-family: Arial;font-size: 9px;">Invoice Date:</td> -->
-                                    <td style="color: white;padding-right: 5px;width: 100px;text-align: center;font-family: Arial;font-size: 9px;text-align: right;margin-bottom: -26px;">Invoice Date: {{ $invoice_date }}</td>
-                                </tr>
-                                <tr >
+                                    <!-- <td style="color: white;padding-right: 5px;width: 100px;text-align: center;font-family: Arial;font-size: 9px;text-align: right;margin-bottom: -26px;">Invoice Date: {{ $invoice_date }}</td> -->
+                                <!-- </tr> -->
+                                <!-- <tr > -->
                                     <!-- <td colspan="1" style="border-bottom: 0px; color: white;"></td> -->
                                     <!-- <td colspan="1" style="color: white;width: 100px; text-align: left;padding-left: 430px;font-family: Arial;font-size: 9px;">Invoice No.</td> -->
-                                    <td style="color: white;padding-right: 5px;width: 100px;text-align: center;font-family: Arial;font-size: 9px;text-align: right;margin-bottom: -6px;">Invoice No.: #{{ $invoice_number }}</td>
+                                    <!-- <td style="color: white;padding-right: 5px;width: 100px;text-align: center;font-family: Arial;font-size: 9px;text-align: right;margin-bottom: -6px;">Invoice No.: #{{ $invoice_number }}</td> -->
+                                <!-- </tr> -->
+                                <tr class="invoice-info">
+                                    <td class="invoice-date">Invoice Date: {{ $invoice_date }}</td>
+                                    </tr>
+                                    <tr class="invoice-info">
+                                    <td class="invoice-no">Invoice No.: #{{ $invoice_number }}</td>
                                 </tr>
                             </table>
                         </td>
