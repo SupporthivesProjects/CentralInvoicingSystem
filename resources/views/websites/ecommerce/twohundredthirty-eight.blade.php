@@ -19,13 +19,13 @@
 <body>
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
-            <td align="center" style="padding:0px;">
+            <td align="center" style="padding:0px;vertical-align:top;">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0"
-                    style="border-collapse: collapse;background:url('{{ $invoice_image1 }}');background-size:100% 100%;background-position:center;background-repeat:no-repeat;">
+                    style="border-collapse: collapse;background:url('{{ $invoice_image1 }}');background-size:cover;background-position:center;background-repeat:no-repeat;height:100vh">
                     <!-- Header -->
                     <tr>
-                        <td style="padding-left:72px;" colspan="2">
-                            <table style="margin-top:110px">
+                        <td style="padding-left:40px;" colspan="2">
+                            <table style="margin-top:125px">
                                 <tr style="height: 20px;">
                                     <td style="padding: 5px;">
                                         <p
@@ -77,7 +77,7 @@
 
                     <!-- Content -->
                     <tr>
-                        <td style="padding:20px;padding-bottom: 0px;width:80%" align="center">
+                        <td style="padding:20px;padding-bottom: 0px;width:80%;vertical-align:top;margin-top:10px;" align="center">
                             <table cellspacing="0" cellpadding="0" border="0" width="100%"
                                 style="border-collapse: collapse;margin-top:40px;">
                                 <tr style="height:50px;border-bottom:1px solid black;">
@@ -186,6 +186,7 @@
                         </td>
                         <td style="width: 20%;"></td>
                     </tr>
+                    <tr style="height:100%"></tr>
                     <!-- Content End-->
 
 

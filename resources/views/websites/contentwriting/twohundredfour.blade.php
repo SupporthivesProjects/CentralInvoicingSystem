@@ -110,7 +110,7 @@
                             </tr>
                             
                             @endforeach
-                            <tr style="height:260px;">
+                            <tr style="height:260.5px;">
                                 <td style="background:#172f32;"></td>
                                 <td colspan="3" style="background:url('{{ $invoice_image1 }}');background-repeat:no-repeat;background-size:cover;padding:20px;vertical-align:top;" align="right">
                                     <table style="width: 50%;border-collapse:collapse;">
@@ -165,7 +165,10 @@
 
                     <!-----------Footer----------->
                     <tr style="width:100%">
-                        <td style="background:#172f32;padding:20px 50px;height:95px;width:46.4%">
+                        <td colspan="2">
+                            <table style="border-collapse:collapse;width:100%;">
+                                <tr>
+                                   <td style="background:#172f32;padding:20px 50px;height:98px;width:46.4%">
                             <p style="font-family: Soleil Bk;font-size:9px;color:#bfc543;margin:0px;line-height:12px">
                             CONTACT US <br>
                             SISISERVICES OI
@@ -181,6 +184,9 @@
                             <p style="font-family: Soleil Bk;font-size:28px;color:#000000;margin:0px;line-height:32px">
                                 Thank You!
                             </p>
+                        </td>
+                                </tr>
+                            </table>
                         </td>
                     </tr> 
                     <!-----------Footer End----------->    
