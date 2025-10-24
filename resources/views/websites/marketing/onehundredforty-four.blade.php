@@ -27,7 +27,7 @@
                         <td style="height: 75px;">
                             <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse; height: 203px; background: url({{ $invoice_header_image }}) no-repeat;background-position:center;background-size:cover;width: 100%; border-collapse: collapse;">
                                 <tr >
-                                    <td style="width: 300px;border:0px; height: 50px;padding-top: 55px;" >
+                                    <td style="width: 300px;border:0px; height: 50px;padding-top: 45px;" >
                                         <img src="{{ $company_logo }}" alt="" style="height: 60px; justify-content: left;padding-left: 40px;">
                                         </td>
                                         <td style="width: 300px;border:0px;height: 50px;">
@@ -39,13 +39,13 @@
                                 </tr>
                                 <tr >
                                     <!-- <td colspan="1" style="border-bottom: 0px; color: white;"></td> -->
-                                    <td colspan="1" style="color: white;width: 100px; text-align: left;padding-left: 430px;font-family: Arial;font-size: 9px;">Invoice Date:</td>
-                                    <td style="color: white;padding-right: 5px;width: 100px;text-align: center;font-family: Arial;font-size: 9px;"> {{ $invoice_date }}</td>
+                                    <!-- <td colspan="1" style="color: white;width: 100px; text-align: left;padding-left: 430px;font-family: Arial;font-size: 9px;">Invoice Date:</td> -->
+                                    <td style="color: white;padding-right: 5px;width: 100px;text-align: center;font-family: Arial;font-size: 9px;">Invoice Date: {{ $invoice_date }}</td>
                                 </tr>
                                 <tr >
                                     <!-- <td colspan="1" style="border-bottom: 0px; color: white;"></td> -->
-                                    <td colspan="1" style="color: white;width: 100px; text-align: left;padding-left: 430px;font-family: Arial;font-size: 9px;">Invoice No.</td>
-                                    <td style="color: white;padding-right: 5px;width: 100px;text-align: center;font-family: Arial;font-size: 9px;"> #{{ $invoice_number }}</td>
+                                    <!-- <td colspan="1" style="color: white;width: 100px; text-align: left;padding-left: 430px;font-family: Arial;font-size: 9px;">Invoice No.</td> -->
+                                    <td style="color: white;padding-right: 5px;width: 100px;text-align: center;font-family: Arial;font-size: 9px;">Invoice No. #{{ $invoice_number }}</td>
                                 </tr>
                             </table>
                         </td>
