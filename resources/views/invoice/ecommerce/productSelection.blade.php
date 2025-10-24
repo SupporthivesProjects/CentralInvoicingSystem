@@ -785,6 +785,8 @@
         }
         if (search_type === 'reset') {
             $('#customizeKeywordInput').val('');
+            customizePriceSlider.noUiSlider.set([minUnitPrice, maxUnitPrice]);
+            updateHiddenInputs(minUnitPrice, maxUnitPrice, 'customize');
         }
         
 
@@ -867,10 +869,8 @@ function clearRandomizedFilter(button) {
     const icon = $(button).find('i');
     const originalIconClass = 'fa-filter-circle-xmark';
     icon.removeClass(originalIconClass).addClass('fa-spinner fa-spin');
-    $('#customizeKeywordInput').val('');
-    customizePriceSlider.noUiSlider.set([minUnitPrice, maxUnitPrice]);
-    updateHiddenInputs(minUnitPrice, maxUnitPrice, 'customize');
-    
+   
+
     $.ajax({
         url: "{{ route('clear.products') }}",
         type: 'GET',
