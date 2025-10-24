@@ -110,7 +110,7 @@
                             </tr>
                             
                             @endforeach
-                            <tr style="height:260px;">
+                            <tr style="height:260.5px;">
                                 <td style="background:#172f32;"></td>
                                 <td colspan="3" style="background:url('{{ $invoice_image1 }}');background-repeat:no-repeat;background-size:cover;padding:20px;vertical-align:top;" align="right">
                                     <table style="width: 50%;border-collapse:collapse;">
