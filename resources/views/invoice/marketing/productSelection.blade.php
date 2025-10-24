@@ -657,7 +657,7 @@
         customizeSliderTimer = setTimeout(() => {
             const [min, max] = values.map(v => Math.round(parseFloat(v.replace(currency, ''))));
             updateHiddenInputs(min, max, 'customize');
-            customizeProducts('range', currentPageNumber);
+            customizeProducts('range', 1);
         }, 1500);
     });
 
