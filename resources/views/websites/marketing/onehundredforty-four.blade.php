@@ -38,14 +38,14 @@
                                         </td>
                                 </tr>
                                 <tr >
-                                    <td colspan="1" style="border-bottom: 0px; color: white;"></td>
-                                    <td colspan="1" style="color: white;width: 300px; text-align: left;padding-left: 130px;padding-top: 10px;font-family: Arial;font-size: 9px;">Invoice Date</td>
-                                    <td style="color: white;padding-right: 40px;width: 300px;text-align: center;padding-top: 10px;font-family: Arial;font-size: 9px;">: {{ $invoice_date }}</td>
+                                    <!-- <td colspan="1" style="border-bottom: 0px; color: white;"></td> -->
+                                    <td colspan="1" style="color: white;width: 100px; text-align: left;padding-left: 230px;padding-top: 10px;font-family: Arial;font-size: 9px;">Invoice Date:</td>
+                                    <td style="color: white;padding-right: 40px;width: 100px;text-align: center;padding-top: 10px;font-family: Arial;font-size: 9px;"> {{ $invoice_date }}</td>
                                 </tr>
                                 <tr >
-                                    <td colspan="1" style="border-bottom: 0px; color: white;"></td>
-                                    <td colspan="1" style="color: white;width: 300px; text-align: left;padding-left: 130px;font-family: Arial;font-size: 9px;">Invoice No.</td>
-                                    <td style="color: white;padding-right: 40px;width: 300px;text-align: center;font-family: Arial;font-size: 9px;">: #{{ $invoice_number }}</td>
+                                    <!-- <td colspan="1" style="border-bottom: 0px; color: white;"></td> -->
+                                    <td colspan="1" style="color: white;width: 100px; text-align: left;padding-left: 230px;font-family: Arial;font-size: 9px;">Invoice No.</td>
+                                    <td style="color: white;padding-right: 40px;width: 100px;text-align: center;font-family: Arial;font-size: 9px;"> #{{ $invoice_number }}</td>
                                 </tr>
                             </table>
                         </td>
