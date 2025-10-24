@@ -76,8 +76,8 @@
                                     <td style="width:100%">
                                         <div style="display:flex; align-items: flex-end; flex-direction: column; gap: 8;width:100%;  padding-top: 50px;">
                                             <div style="display:flex; align-items: flex-start; flex-direction: column; gap: 30;">
-                                                <p class="new_p">Invoice Date                  : {{ $invoice_date }}</p>
-                                                <p class="new_p">Invoice No.                   : #{{ $invoice_number }}</p>
+                                                <p class="new_p">Invoice Date<span style="margin-left: 20px;">:{{ $invoice_date }}</span></p>
+                                                <p class="new_p">Invoice No.<span style="margin-left: 20px;">:#{{ $invoice_number }}</p>
                                             </div>     
                                         </div>
                                     </td>
