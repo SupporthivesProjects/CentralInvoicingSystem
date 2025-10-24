@@ -785,6 +785,8 @@
         }
         if (search_type === 'reset') {
             $('#customizeKeywordInput').val('');
+            customizePriceSlider.noUiSlider.set([minUnitPrice, maxUnitPrice]);
+            updateHiddenInputs(minUnitPrice, maxUnitPrice, 'customize');
         }
         
 
@@ -867,6 +869,7 @@ function clearRandomizedFilter(button) {
     const icon = $(button).find('i');
     const originalIconClass = 'fa-filter-circle-xmark';
     icon.removeClass(originalIconClass).addClass('fa-spinner fa-spin');
+   
 
     $.ajax({
         url: "{{ route('clear.products') }}",
@@ -879,14 +882,7 @@ function clearRandomizedFilter(button) {
             $('#temp_current_amount_text').text('0.00');
             $('#temp_discount_amount_text').text('0.00');
             $('#temp_invoice_amount_text').text($('#invoice_amount').val());
-            // Reset sliders to default min/max values
-            randomizePriceSlider.noUiSlider.set([minUnitPrice, maxUnitPrice]);
-            customizePriceSlider.noUiSlider.set([minUnitPrice, maxUnitPrice]);
 
-            // Update hidden inputs accordingly
-            updateHiddenInputs(minUnitPrice, maxUnitPrice, 'randomize');
-            updateHiddenInputs(minUnitPrice, maxUnitPrice, 'customize');
-            
             $('#randomize-product-table-body').html(getErrorRowHTML('Randomize filter cleared. You can now randomize products again or add custom products.'));
             toastr.success('Randomized products filter has been reset');
             calculateTotalPrice();
