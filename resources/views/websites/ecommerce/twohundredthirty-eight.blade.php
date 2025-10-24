@@ -19,12 +19,12 @@
 <body>
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
-            <td align="center" style="padding:0px;">
+            <td align="center" style="padding:0px;vertical-align:top;">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0"
                     style="border-collapse: collapse;background:url('{{ $invoice_image1 }}');background-size:cover;background-position:center;background-repeat:no-repeat;height:100vh">
                     <!-- Header -->
                     <tr>
-                        <td style="padding-left:72px;" colspan="2">
+                        <td style="padding-left:50px;" colspan="2">
                             <table style="margin-top:110px">
                                 <tr style="height: 20px;">
                                     <td style="padding: 5px;">
