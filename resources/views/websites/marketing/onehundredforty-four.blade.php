@@ -25,8 +25,8 @@
             color: white;
             font-family: Arial, sans-serif;
             font-size: 9px;
-            padding: 0 10px;
-            line-height: 1.2; /* reduces gap between rows */
+            padding: 0 40px 0 0; 
+            line-height: 1.1; 
             }
     </style>
 </head>
@@ -62,8 +62,8 @@
                                 <!-- </tr> -->
                                 <tr class="invoice-info">
                                     <td class="invoice-date">Invoice Date: {{ $invoice_date }}</td>
-                                    </tr>
-                                    <tr class="invoice-info">
+                                </tr>
+                                <tr class="invoice-info">
                                     <td class="invoice-no">Invoice No.: #{{ $invoice_number }}</td>
                                 </tr>
                             </table>
