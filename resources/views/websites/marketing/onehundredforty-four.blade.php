@@ -40,12 +40,12 @@
                                 <tr >
                                     <!-- <td colspan="1" style="border-bottom: 0px; color: white;"></td> -->
                                     <!-- <td colspan="1" style="color: white;width: 100px; text-align: left;padding-left: 430px;font-family: Arial;font-size: 9px;">Invoice Date:</td> -->
-                                    <td style="color: white;padding-right: 5px;width: 100px;text-align: center;font-family: Arial;font-size: 9px;">Invoice Date: {{ $invoice_date }}</td>
+                                    <td style="color: white;padding-right: 5px;width: 100px;text-align: center;font-family: Arial;font-size: 9px;text-align: right;margin-bottom: -26px;">Invoice Date: {{ $invoice_date }}</td>
                                 </tr>
                                 <tr >
                                     <!-- <td colspan="1" style="border-bottom: 0px; color: white;"></td> -->
                                     <!-- <td colspan="1" style="color: white;width: 100px; text-align: left;padding-left: 430px;font-family: Arial;font-size: 9px;">Invoice No.</td> -->
-                                    <td style="color: white;padding-right: 5px;width: 100px;text-align: center;font-family: Arial;font-size: 9px;">Invoice No. #{{ $invoice_number }}</td>
+                                    <td style="color: white;padding-right: 5px;width: 100px;text-align: center;font-family: Arial;font-size: 9px;text-align: right;margin-bottom: -6px;">Invoice No.: #{{ $invoice_number }}</td>
                                 </tr>
                             </table>
                         </td>
