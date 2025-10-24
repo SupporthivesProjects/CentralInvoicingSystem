@@ -64,7 +64,7 @@
                                 </tr>
                                 <tr>
                                     <td style="padding-top: 10px;width: 300px;">
-                                        <p style="font-family: arial;font-size: 11px;margin: 0px;font-weight: 400; margin-top: 50px;">
+                                        <p style="font-family: arial;font-size: 11px;margin: 0px;font-weight: 400;">
                                             {{ $company_name }}
                                         </p>
                                         <p style="font-family: arial;font-size: 11px;margin: 0px;font-weight: 400;">
@@ -79,7 +79,7 @@
                                             {{ $company_email }} 
                                         </p>
                                     <td style="padding-top: 10px;width: 300px;text-align: right;">
-                                        <p style="font-family: arial;font-size: 11px;margin: 0px;font-weight: 400;">
+                                        <p style="font-family: arial;font-size: 11px;margin: 0px;font-weight: 400; margin-top: -35px;">
                                             <b style="color: #00B5D9;">INVOICE #</b> {{ $invoice_number }}
                                         </p>
                                         <p style="font-family: arial;font-size: 11px;margin: 0px;font-weight: 400;">
@@ -91,7 +91,7 @@
                                 <tr>
                                     <td style="padding-top: 10px;width: 300px;">
                                         <p style="font-family: arial;font-size: 11px;margin: 0px;font-weight: 400;">
-                                            TO
+                                            To
                                         </p>
                                         <p style="font-family: arial;font-size: 11px;margin: 0px;font-weight: 400;">
                                             {{ $customer_name }}
@@ -193,7 +193,7 @@
                                 Payment is due within 30 days.
                             </p> -->
                             <p
-                                style="font-family: arial;font-size:11px;margin: 0px;font-weight: 400;padding-bottom: 5px;">
+                                style="font-family: arial;font-size:11px;margin: 0px;font-weight: 400;padding-bottom: 5px; text-align: center;">
                                 If you have any questions concerning this invoice, contact {{ $site_name }} | {{ $company_mobile }} | {{ $company_email }}
                             </p>
 
