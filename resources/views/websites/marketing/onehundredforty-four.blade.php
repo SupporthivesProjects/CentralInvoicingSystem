@@ -28,6 +28,12 @@
             padding: 0 40px 0 0; 
             line-height: 1.1; 
             }
+
+            .new_p {
+                color: white;
+                font-family: Arial, sans-serif;
+                font-size: 9px;
+            }
     </style>
 </head>
 <body style="margin: 0px; padding: 0px;">
@@ -60,11 +66,19 @@
                                     <!-- <td colspan="1" style="color: white;width: 100px; text-align: left;padding-left: 430px;font-family: Arial;font-size: 9px;">Invoice No.</td> -->
                                     <!-- <td style="color: white;padding-right: 5px;width: 100px;text-align: center;font-family: Arial;font-size: 9px;text-align: right;margin-bottom: -6px;">Invoice No.: #{{ $invoice_number }}</td> -->
                                 <!-- </tr> -->
-                                <tr class="invoice-info">
+                                <!-- <tr class="invoice-info">
                                     <td class="invoice-date">Invoice Date: {{ $invoice_date }}</td>
                                 </tr>
                                 <tr class="invoice-info">
                                     <td class="invoice-no">Invoice No.: #{{ $invoice_number }}</td>
+                                </tr> -->
+                                <tr style="width:100%">
+                                    <td style="width:100%">
+                                        <div style="display:flex; align-items: flex-end; flex-direction: column; gap: 8;width:100%, padding-right: 40px;background-color: red">
+                                            <p class="new_p">Invoice Date: {{ $invoice_date }}</p>
+                                            <p class="new_p">Invoice No.: #{{ $invoice_number }}</p>
+                                        </div>
+                                    </td>
                                 </tr>
                             </table>
                         </td>
