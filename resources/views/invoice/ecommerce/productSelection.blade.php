@@ -881,7 +881,7 @@ function clearRandomizedFilter(button) {
             $('#temp_invoice_amount_text').text($('#invoice_amount').val());
 
             $('#customizeKeywordInput').val('');
-            customizeSliderTimer.noUiSlider.set([minUnitPrice, maxUnitPrice]);
+            customizePriceSlider.noUiSlider.set([minUnitPrice, maxUnitPrice]);
             updateHiddenInputs(minUnitPrice, maxUnitPrice, 'customize');
 
             $('#randomize-product-table-body').html(getErrorRowHTML('Randomize filter cleared. You can now randomize products again or add custom products.'));
