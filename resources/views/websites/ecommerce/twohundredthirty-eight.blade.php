@@ -25,7 +25,7 @@
                     <!-- Header -->
                     <tr>
                         <td style="padding-left:50px;" colspan="2">
-                            <table style="margin-top:110px">
+                            <table style="margin-top:60px">
                                 <tr style="height: 20px;">
                                     <td style="padding: 5px;">
                                         <p
@@ -77,7 +77,7 @@
 
                     <!-- Content -->
                     <tr>
-                        <td style="padding:20px;padding-bottom: 0px;width:80%" align="center">
+                        <td style="padding:20px;padding-bottom: 0px;width:80%;vertical-align:top;" align="center">
                             <table cellspacing="0" cellpadding="0" border="0" width="100%"
                                 style="border-collapse: collapse;margin-top:40px;">
                                 <tr style="height:50px;border-bottom:1px solid black;">
@@ -186,6 +186,7 @@
                         </td>
                         <td style="width: 20%;"></td>
                     </tr>
+                    <tr style="height:100%"></tr>
                     <!-- Content End-->
 
 
