@@ -18,7 +18,7 @@
             <td align="center" style="padding:0px;">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse;">
                     <!-- Header -->
-                    <tr style="height:100px;background:url('{{ $invoice_header_image }}');background-size:cover;background-repeat:no-repeat;">
+                    <tr style="height:270px;background:url('{{ $invoice_header_image }}');background-size:cover;background-repeat:no-repeat;">
                         <td style="width: 50%;">
                             <img src="{{ $company_logo }}" alt="" style="width:200px;margin-left:50px;">
 
@@ -32,7 +32,7 @@
 
                     <!-- Content -->
                     <tr>
-                       <td colspan="2" style="height:700px;">
+                       <td colspan="2">
                         <table width="100%" style="border-collapse: collapse;">
                             <tr>
                                 <td style="background:#172f32;width:46.4%;vertical-align:top;padding:10px 50px">
@@ -56,7 +56,7 @@
                                 </td>
                             </tr>
                         </table>
-                        <table style="width: 100%;border-collapse:collapse;">
+                        <table style="width: 100%;border-collapse:collapse;height:600px;">
                             <tr style="background:#111f21;height:60px;">
                                 <td style="padding:10px;width:46.4%;padding-left:50px;">
                                 <p style="font-family: Soleil Bk;font-size:10px;color:#bfc543;margin:0px;line-height:16px">
@@ -108,8 +108,9 @@
                                 </p>
                                 </td>
                             </tr>
+                            
                             @endforeach
-                            <tr style="height:195px;">
+                            <tr style="height:260px;">
                                 <td style="background:#172f32;"></td>
                                 <td colspan="3" style="background:url('{{ $invoice_image1 }}');background-repeat:no-repeat;background-size:cover;padding:20px;vertical-align:top;" align="right">
                                     <table style="width: 50%;border-collapse:collapse;">
@@ -152,6 +153,10 @@
                                     </table>
                                 </td>
                             </tr>
+                            <tr height="100%">
+                            <td style="background:#172f32;"></td>
+                            <td></td>
+                            </tr>
                         </table>
                        </td> 
                     </tr>
@@ -159,8 +164,8 @@
 
 
                     <!-----------Footer----------->
-                    <tr>
-                        <td style="background:#172f32;padding:50px;width:40%;">
+                    <tr style="width:100%">
+                        <td style="background:#172f32;padding:20px 50px;height:95px;width:46.4%">
                             <p style="font-family: Soleil Bk;font-size:9px;color:#bfc543;margin:0px;line-height:12px">
                             CONTACT US <br>
                             SISISERVICES OI
@@ -172,7 +177,7 @@
                                 {{ $company_email }}
                             </p>
                         </td>
-                        <td style="padding:20px;" align="right">
+                        <td style="padding:20px;width:53.6" align="right"> 
                             <p style="font-family: Soleil Bk;font-size:28px;color:#000000;margin:0px;line-height:32px">
                                 Thank You!
                             </p>
