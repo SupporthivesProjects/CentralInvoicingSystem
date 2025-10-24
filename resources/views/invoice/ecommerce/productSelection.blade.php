@@ -879,6 +879,14 @@ function clearRandomizedFilter(button) {
             $('#temp_current_amount_text').text('0.00');
             $('#temp_discount_amount_text').text('0.00');
             $('#temp_invoice_amount_text').text($('#invoice_amount').val());
+            // Reset sliders to default min/max values
+            randomizePriceSlider.noUiSlider.set([minUnitPrice, maxUnitPrice]);
+            customizePriceSlider.noUiSlider.set([minUnitPrice, maxUnitPrice]);
+
+            // Update hidden inputs accordingly
+            updateHiddenInputs(minUnitPrice, maxUnitPrice, 'randomize');
+            updateHiddenInputs(minUnitPrice, maxUnitPrice, 'customize');
+            
             $('#randomize-product-table-body').html(getErrorRowHTML('Randomize filter cleared. You can now randomize products again or add custom products.'));
             toastr.success('Randomized products filter has been reset');
             calculateTotalPrice();
