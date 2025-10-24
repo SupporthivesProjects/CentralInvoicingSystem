@@ -74,8 +74,8 @@
                                 </tr> -->
                                 <tr style="width:100%">
                                     <td style="width:100%">
-                                        <div style="display:flex; align-items: flex-end; flex-direction: column; gap: 8;width:100%, background-color: red">
-                                            <div style="display:flex; align-items: flex-start; flex-direction: column; gap: 18;background-color: yellow">
+                                        <div style="display:flex; align-items: flex-end; flex-direction: column; gap: 8;width:100%; background-color: red; padding-top: 50px;">
+                                            <div style="display:flex; align-items: flex-start; flex-direction: column; gap: 30;background-color: yellow">
                                                 <p class="new_p">Invoice Date: {{ $invoice_date }}</p>
                                                 <p class="new_p">Invoice No.: #{{ $invoice_number }}</p>
                                             </div>     
