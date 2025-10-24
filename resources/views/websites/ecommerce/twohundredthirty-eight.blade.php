@@ -77,7 +77,7 @@
 
                     <!-- Content -->
                     <tr>
-                        <td style="padding:20px;padding-bottom: 0px;width:80%;vertical-align:top;" align="center">
+                        <td style="padding:20px;padding-bottom: 0px;width:80%;vertical-align:top;margin-top:10px;" align="center">
                             <table cellspacing="0" cellpadding="0" border="0" width="100%"
                                 style="border-collapse: collapse;margin-top:40px;">
                                 <tr style="height:50px;border-bottom:1px solid black;">
