@@ -15,7 +15,7 @@
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
             <td align="center">
-                <table width="600px" cellspacing="0" cellpadding="0" border="0"  style="  border: 40px solid #ECECFF;background: #ECECFF;">
+                <table width="100%" cellspacing="0" cellpadding="0" border="0"  style="  border: 40px solid #ECECFF;background: #ECECFF;">
                     <!-- Header -->
                     <tr >
                         <td >
