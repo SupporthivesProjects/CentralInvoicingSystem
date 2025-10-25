@@ -40,20 +40,20 @@
 
                     <!-- BILL FROM / BILL TO -->
                     <tr>
-                        <td colspan="1" style="padding: 10px; background-color: #f1e9df; font-weight: bold">BILL FROM</td>
-                        <td colspan="1" style="padding: 10px; background-color: #ffffff; font-weight: bold ; min-width: 30px"></td>
-                        <td colspan="3" style="padding: 10px; background-color: #f1e9df; font-weight: bold">BILL TO</td>
+                        <td colspan="3" style="padding: 10px; background-color: #f1e9df; font-weight: bold">BILL FROM</td>
+                        <td colspan="1" style="padding: 10px; background-color: #ffffff; font-weight: bold ; max-width: 40px"></td>
+                        <td colspan="2" style="padding: 10px; background-color: #f1e9df; font-weight: bold">BILL TO</td>
                     </tr>
                     <tr>
-                        <td colspan="1" style="padding: 10px; border-bottom: 1px solid #ddd; font-size: 14px">
+                        <td colspan="3" style="padding: 10px; border-bottom: 1px solid #ddd; font-size: 14px">
                             <strong>Relationship Resource Hub</strong><br />
                             {{ $company_address }}<br />
                             <strong>Phone :</strong> {{ $company_mobile }}<br />
                             <strong>Email :</strong> {{ $company_email }}
                         </td>
-                        <td colspan="1" style="padding: 10px; border-bottom: 1px solid #ddd; font-size: 14px; min-width: 30px"></td>
-                        <td colspan="3" style="padding: 10px; border-bottom: 1px solid #ddd; font-size: 14px">
-                            <strong>{{ $customer_name }}</strong><br />
+                        <td colspan="1" style="padding: 10px; border-bottom: 1px solid #ddd; font-size: 14px; max-width: 40px"></td>
+                        <td colspan="2" style="padding: 10px; border-bottom: 1px solid #ddd;">
+                            <p style="margin-top: -25px; font-size: 14px;"><strong>{{ $customer_name }}</strong></p><br />
                             <!-- <strong>Phone :</strong> {{ $customer_mobile }}<br />
                             <strong>Email :</strong> {{ $customer_email }} -->
                         </td>
@@ -63,18 +63,18 @@
                  <!-- ITEM TABLE HEADERS -->
                     <tr style="background-color: #f1e9df; font-weight: bold; text-align: left">
                         <td style="padding: 10px; border: 1px solid #ddd; width: 35%;" colspan="2">ITEM</td>
-                        <td style="padding: 10px; border: 1px solid #ddd; width: 10%;">QTY</td>
-                        <td style="padding: 10px; border: 1px solid #ddd; width: 20%;">UNIT PRICE</td>
-                        <td style="padding: 10px; border: 1px solid #ddd; width: 20%;">TOTAL</td>
+                        <td style="padding: 10px; border: 1px solid #ddd; width: 10%; text-align: center;">QTY</td>
+                        <td style="padding: 10px; border: 1px solid #ddd; width: 20%; text-align: center;">UNIT PRICE</td>
+                        <td style="padding: 10px; border: 1px solid #ddd; width: 20%; text-align: end;">TOTAL</td>
                     </tr>
 
                     <!-- ITEM ROWS -->
                     @foreach($products as $product)
                     <tr style="border-bottom: 1px solid grey;">
-                        <td style="padding: 10px" colspan="2">{{ $product->name }}</td>
-                        <td style="padding: 10px">1</td>
-                        <td style="padding: 10px">{{ site_currency() }} {{ number_format($product->unit_price, 2) }}</td>
-                        <td style="padding: 10px">{{ site_currency() }} {{ number_format($product->unit_price, 2) }}</td>
+                        <td style="padding: 10px;" colspan="2">{{ $product->name }}</td>
+                        <td style="padding: 10px; text-align: center;">1</td>
+                        <td style="padding: 10px; text-align: center;">{{ site_currency() }} {{ number_format($product->unit_price, 2) }}</td>
+                        <td style="padding: 10px; text-align: end;">{{ site_currency() }} {{ number_format($product->unit_price, 2) }}</td>
                     </tr>
                     @endforeach
 
@@ -84,7 +84,7 @@
                         <td></td>
                         <td></td>
                         <td style="padding: 10px; text-align: right;">SUBTOTAL</td>
-                        <td style="padding: 10px; text-align: left;">
+                        <td style="padding: 10px; text-align: end;">
                             {{ site_currency() }} {{ number_format(($invoice_amount + $discount_amount), 2) }}
                         </td>
                     </tr>
@@ -96,7 +96,7 @@
                         <td style="padding: 10px; text-align: right; white-space: nowrap;">
                             DISCOUNT ({{ round(($discount_amount / ($invoice_amount + $discount_amount)) * 100) }}%)
                         </td>
-                        <td style="padding: 10px; text-align: left;">
+                        <td style="padding: 10px; text-align: end;">
                             {{ site_currency() }} {{ number_format($discount_amount, 2) }}
                         </td>
                     </tr>
@@ -106,7 +106,7 @@
                         <td></td>
                         <td></td>
                         <td style="padding: 10px; text-align: right; font-weight: bold;">GRAND TOTAL</td>
-                        <td style="padding: 10px; text-align: left; font-weight: bold;">
+                        <td style="padding: 10px; text-align: left; font-weight: bold; text-align: end;">
                             {{ site_currency() }} {{ number_format($invoice_amount, 2) }}
                         </td>
                     </tr>

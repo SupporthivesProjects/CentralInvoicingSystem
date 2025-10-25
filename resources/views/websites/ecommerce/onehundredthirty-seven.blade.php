@@ -51,11 +51,11 @@
                                     <td>
                                         <p
                                             style="margin: 0px;font-family: Arial;font-size: 10px;line-height: 18px;font-weight: 700;">
-                                            Billed From :
+                                            Billed From : Websites Ur Way
                                         </p>
-                                        <p style="margin: 0px;font-family: Arial;font-size: 10px;line-height: 18px;">
+                                        <!-- <p style="margin: 0px;font-family: Arial;font-size: 10px;line-height: 18px;">
                                             Websites Ur Way
-                                        </p>
+                                        </p> -->
                                     </td>
                                     <td align="right">
                                         <p
@@ -89,8 +89,7 @@
                                         @endif -->
 
                                         <p style="margin: 0px;font-family: Arial;font-size: 10px;line-height: 18px;">
-                                                <b>Address : </b><br>
-                                                KHAZANOVA STRATEGIC EXPERIENCES<br>
+                                                <b>Address : </b>KHAZANOVA STRATEGIC EXPERIENCES<br>
                                                 Meydan Grandstand,<br>
                                                 6th floor  Meydan Road,<br>
                                                 Nad Al Sheba  Dubai, U.A.E
@@ -99,7 +98,7 @@
                                     </td>
                                 </tr>
                             </table>
-                            <div style="min-height: 563px !important;">
+                            <div style="min-height: 580px !important;">
                                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
                                     style="border-collapse: collapse;margin-top: 40px;">
                                     <tr style="background:#f0ae8f;">

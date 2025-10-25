@@ -85,9 +85,9 @@
                                     style="font-family: arial;font-size:9px;color: #0563C1;margin: 0px;text-decoration: underline;">
                                     {{ $company_email }}
                                 </a>
-                                <p style="font-family: arial;font-size:9px;color: #414042;margin: 0px; max-width: 100px">
-                                    {{ $company_mobile }} <br>
-                                    {{ $company_address }}
+                                <p style="font-family: arial;font-size:9px;color: #414042;margin: 0px; max-width: 150px">
+                                    {{ $company_address }}<br>
+                                    {{ $company_mobile }} 
                                 </p>
                             </div>
                         </td>
