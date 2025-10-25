@@ -195,7 +195,6 @@
                             background-size: cover;
                             height: 150px;
                             padding: 50px;
-                            width: 100%;
                             text-align: center;
                             display: flex;
                             align-items: center;
