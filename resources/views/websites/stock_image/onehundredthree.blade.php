@@ -6,7 +6,7 @@
 </head>
 
 <body style=" margin:0px; padding: 0px 0;">
-  <table style=" margin:0px; padding: 0px 0;" width="100%" cellspacing="0" cellpadding="0" border="0">
+  <table style=" margin:0px; padding: 0px 0;" width="100%"height="100%" cellspacing="0" cellpadding="0" border="0">
     <tr>
       <td align="center" bgcolor="#f2f2f2" style="padding: 0px 0;">
         <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
@@ -52,7 +52,7 @@
 
           <tr style="background: url('{{ $invoice_image1 }}');
                      background-repeat: no-repeat;
-                     background-size: cover;
+                     background-size: 100vh;
                      background-position: center;">
 
 
