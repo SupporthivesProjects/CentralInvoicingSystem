@@ -91,7 +91,7 @@
                                 <tr>
                                     <td style="padding-top: 10px;width: 300px;">
                                         <p style="font-family: arial;font-size: 11px;margin: 0px;font-weight: 400;">
-                                            To
+                                            Billed To: 
                                         </p>
                                         <p style="font-family: arial;font-size: 11px;margin: 0px;font-weight: 400;">
                                             {{ $customer_name }}
