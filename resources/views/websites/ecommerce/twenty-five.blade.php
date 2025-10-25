@@ -37,7 +37,7 @@
                         <td style="padding:40px;padding-top:10px;">
                             <table style="background: url('{{ $invoice_image1 }}') no-repeat;background-position: center;height:141px; width: 100%;border-collapse: collapse;">
                                 <tr >
-                                    <td style="width: 290px;">
+                                    <td style="width:70%;">
                                          <p style="font-family: arial;font-size:20px;margin-bottom: 5px;font-weight: 400;">
                                            <b>INVOICE</b> 
                                         </p>
@@ -45,18 +45,18 @@
                                         
                                         <br>
                                         <p style="font-family: arial;font-size: 10px;margin-bottom: 5px;">BILLED FROM:</p>
-                                        <p style="font-family: Courier New;font-size: 10px;margin: 0px;font-weight: 400;">
+                                        <p style="font-family: Courier New;font-size: 10px;margin: 0px;font-weight: 600;">
                                         {{ $site_name }}<br><a href="https://www.logikalcoding.com/" style="text-decoration: none;color: #000">www.logikalcoding.com</a></p>
                                         <br>
                                         <p style="font-family: arial;font-size: 10px;margin-bottom: 5px;font-weight: 400;">
                                             BILLED TO
                                         </p>
-                                        <p style="font-family: Courier New;font-size: 10px;margin-bottom: 5px;font-weight: 400;">
+                                        <p style="font-family: Courier New;font-size: 10px;margin-bottom: 5px;font-weight: 600;">
                                         {{ $customer_name }}</p>
                                     </td>
-                                    <td style="width:300px;
+                                    <td style="width:30%;
                                     padding: 40px;padding-top: 0px;padding-right: 0px;
-                                    text-align: right">
+                                    text-align:left">
                                         <p style="font-family: Courier New;font-size: 10px;margin: 0px;font-weight: 400;">
                                             <b>Date:</b> {{ $invoice_date }}
                                         </p>
