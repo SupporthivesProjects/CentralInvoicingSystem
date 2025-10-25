@@ -78,7 +78,7 @@
                                         <td style="width: 300px;text-align: left;padding-left:10px;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
                                         <b>ITEM NAME</b> 
                                         </td>
-                                        <td style="width: 100px;text-align: left;padding-left:10px;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
+                                        <td style="width: 100px;text-align:center;padding-left:10px;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
                                             <b>QUANTITY</b>
                                         </td>
                                         <td style="width: 100px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;">
