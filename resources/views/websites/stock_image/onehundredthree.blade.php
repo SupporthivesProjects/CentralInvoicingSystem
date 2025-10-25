@@ -91,7 +91,7 @@
                 </tr>
 
               </table>
-              <div style="min-height: 500px !important;">
+              <div style="min-height: 750px !important;">
                 <table
                   style="width: 100%; border: 2px solid #aaa; border-collapse: collapse; font-family: Arial, sans-serif; text-align: left; font-size: 9px; margin-top: 24px;">
                   <thead>
