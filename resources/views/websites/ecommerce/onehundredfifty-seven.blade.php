@@ -53,7 +53,7 @@
                         </td>
                         <td colspan="1" style="padding: 10px; border-bottom: 1px solid #ddd; font-size: 14px; max-width: 40px"></td>
                         <td colspan="2" style="padding: 10px; border-bottom: 1px solid #ddd;">
-                            <p style="margin-top: -50px; font-size: 14px;"><strong>{{ $customer_name }}</strong></p><br />
+                            <p style="margin-top: -25px; font-size: 14px;"><strong>{{ $customer_name }}</strong></p><br />
                             <!-- <strong>Phone :</strong> {{ $customer_mobile }}<br />
                             <strong>Email :</strong> {{ $customer_email }} -->
                         </td>
