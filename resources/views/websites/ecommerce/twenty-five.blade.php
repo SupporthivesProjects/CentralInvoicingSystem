@@ -33,11 +33,11 @@
                             </table>
                         </td>
                     </tr>
-                    <tr >
-                        <td style="padding:40px;padding-top:10px;">
+                    <tr>
+                        <td style="padding:40px;padding-top:20px;">
                             <table style="background: url('{{ $invoice_image1 }}') no-repeat;background-position: center;height:141px; width: 100%;border-collapse: collapse;">
-                                <tr >
-                                    <td style="width:70%;">
+                                <tr>
+                                    <td style="width:70%;vertical-align:top;">
                                          <p style="font-family: arial;font-size:20px;margin-bottom: 5px;font-weight: 400;">
                                            <b>INVOICE</b> 
                                         </p>
@@ -56,7 +56,7 @@
                                     </td>
                                     <td style="width:30%;
                                     padding: 40px;padding-top: 0px;padding-right: 0px;
-                                    text-align:left">
+                                    text-align:left;vertical-align:top;">
                                         <p style="font-family: Courier New;font-size: 10px;margin: 0px;font-weight: 400;">
                                             <b>Date:</b> {{ $invoice_date }}
                                         </p>
