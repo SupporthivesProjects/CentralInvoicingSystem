@@ -10,7 +10,7 @@
 <body style="font-family: Arial, sans-serif; color: #000; background-color: #fff; margin:0; padding:0;">
 
     <!-- HEADER IMAGE SECTION -->
-    <table style="width:600px; margin:0 auto; border-collapse:collapse;">
+    <table style="width:100%; margin:0 auto; border-collapse:collapse;">
         <tr>
             <td style="width:100%; height:100px; background-color:#fcdce0; text-align:center; vertical-align:middle;">
                 <img src="{{ $invoice_header_image }}" alt="Header Image" style="width:100%; height:100%; object-fit:cover;">
@@ -66,7 +66,7 @@
 
         <br>
 
-        <table style="width:70%; border-collapse:collapse; font-size:9px; margin: 0 auto;">
+        <table style="width:70%; border-collapse:collapse; font-size:9px; margin: 0 auto;height: 420px;">
             <tr>
                 <th
                     style="width:10%; border:1px solid #ff6666; background-color:#ffd9d9; text-align:left; padding:8px;">
@@ -145,7 +145,7 @@
     </div>
 
     <!-- FOOTER IMAGE SECTION -->
-    <table style="width:600px; margin:0 auto; border-collapse:collapse; border:1px solid #ff6666;">
+    <table style="width:100%; margin:0 auto; border-collapse:collapse; border:1px solid #ff6666;">
         <tr>
             <td style="width:100%; height:120px; background-color:#fcdce0; text-align:center; vertical-align:middle;">
                 <img src="{{ $invoice_footer_image }}" alt="Footer Image" style="width:100%; height:100%; object-fit:cover;">

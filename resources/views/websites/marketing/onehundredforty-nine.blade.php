@@ -3,6 +3,17 @@
 
 <head>
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
+    <style>
+    /* Target only tr elements with this class */
+    tr.row-color:nth-child(odd) {
+       
+        background-color: #F6F1FA; 
+    }
+
+    tr.row-color:nth-child(even) {
+        background-color: #ffffff;
+    }
+</style>
 </head>
 
 <body style="margin: 0 !important; padding: 0 !important;">
@@ -74,9 +85,9 @@
                                     style="font-family: arial;font-size:9px;color: #0563C1;margin: 0px;text-decoration: underline;">
                                     {{ $company_email }}
                                 </a>
-                                <p style="font-family: arial;font-size:9px;color: #414042;margin: 0px; max-width: 100px">
-                                    {{ $company_mobile }} <br>
-                                    {{ $company_address }}
+                                <p style="font-family: arial;font-size:9px;color: #414042;margin: 0px; max-width: 150px">
+                                    {{ $company_address }}<br>
+                                    {{ $company_mobile }} 
                                 </p>
                             </div>
                         </td>
@@ -126,7 +137,7 @@
                                         </td>
                                     </tr>
                                     @foreach ($products as $product)
-                                        <tr style="width:520px;height:60px;">
+                                        <tr class="row-color" style="width:520px;height:60px;">
                                             <td style="width: 150px;padding: 10px;" align="left">
                                                 <p
                                                     style="color:#000000;font-size:12px;font-weight:400;font-family:arial;margin: 0px;line-height:16px;">

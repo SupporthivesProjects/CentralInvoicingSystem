@@ -33,11 +33,11 @@
                             </table>
                         </td>
                     </tr>
-                    <tr >
-                        <td style="padding:40px;padding-top:10px;">
+                    <tr>
+                        <td style="padding:40px;padding-top:20px;">
                             <table style="background: url('{{ $invoice_image1 }}') no-repeat;background-position: center;height:141px; width: 100%;border-collapse: collapse;">
-                                <tr >
-                                    <td style="width: 290px;">
+                                <tr>
+                                    <td style="width:70%;vertical-align:top;">
                                          <p style="font-family: arial;font-size:20px;margin-bottom: 5px;font-weight: 400;">
                                            <b>INVOICE</b> 
                                         </p>
@@ -45,18 +45,18 @@
                                         
                                         <br>
                                         <p style="font-family: arial;font-size: 10px;margin-bottom: 5px;">BILLED FROM:</p>
-                                        <p style="font-family: Courier New;font-size: 10px;margin: 0px;font-weight: 400;">
+                                        <p style="font-family: Courier New;font-size: 10px;margin: 0px;font-weight: 600;">
                                         {{ $site_name }}<br><a href="https://www.logikalcoding.com/" style="text-decoration: none;color: #000">www.logikalcoding.com</a></p>
                                         <br>
                                         <p style="font-family: arial;font-size: 10px;margin-bottom: 5px;font-weight: 400;">
                                             BILLED TO
                                         </p>
-                                        <p style="font-family: Courier New;font-size: 10px;margin-bottom: 5px;font-weight: 400;">
+                                        <p style="font-family: Courier New;font-size: 10px;margin-bottom: 5px;font-weight: 600;">
                                         {{ $customer_name }}</p>
                                     </td>
-                                    <td style="width:300px;
+                                    <td style="width:30%;
                                     padding: 40px;padding-top: 0px;padding-right: 0px;
-                                    text-align: right">
+                                    text-align:left;vertical-align:top;">
                                         <p style="font-family: Courier New;font-size: 10px;margin: 0px;font-weight: 400;">
                                             <b>Date:</b> {{ $invoice_date }}
                                         </p>
@@ -78,7 +78,7 @@
                                         <td style="width: 300px;text-align: left;padding-left:10px;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
                                         <b>ITEM NAME</b> 
                                         </td>
-                                        <td style="width: 100px;text-align: left;padding-left:10px;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
+                                        <td style="width: 100px;text-align:center;padding-left:10px;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
                                             <b>QUANTITY</b>
                                         </td>
                                         <td style="width: 100px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;">
@@ -94,7 +94,7 @@
                                         <td style="width: 100px;text-align: left;padding-left:10px;font-family: Courier Newl;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;">
                                         {{ $product->name }}
                                         </td>
-                                        <td style="width: 300px;text-align:left;padding-left:10px;font-family: Courier New;font-size:10px;margin: 0px;font-weight: 400; border-collapse: collapse;">
+                                        <td style="width: 300px;text-align:center;padding-left:10px;font-family: Courier New;font-size:10px;margin: 0px;font-weight: 400; border-collapse: collapse;">
                                             1
                                         </td>
                                         <td style="width:100px;text-align:left;padding-right:10px;font-family: Courier New;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;">
@@ -137,13 +137,13 @@
                                         <td style="width: 100px;text-align: left;font-family: Courier Newl;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;">
                                         
                                         </td>
-                                        <td style="width: 300px;text-align:left;padding-left:10px;font-family: arial;font-size:10px;margin: 0px;font-weight: 400; border-collapse: collapse;background-color: #FF4500;">
+                                        <td style="width: 300px;text-align:left;padding-left:10px;font-family: arial;font-size:10px;margin: 0px;font-weight: 400; border-collapse: collapse;background-color: #FF4500; color: white;">
                                             GRAND TOTAL
                                         </td>
                                         <td style="width:100px;text-align:left;padding-right:10px;font-family: Courier New;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;background-color: #FF4500;">
                                         
                                         </td>
-                                        <td style="width:100px;text-align:left;padding-right:10px;font-family: Courier New;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;background-color: #FF4500;">
+                                        <td style="width:100px;text-align:left;padding-right:10px;font-family: Courier New;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;background-color: #FF4500; color: white;">
                                             {{ site_currency() . number_format($invoice_amount, 2) }}
                                         </td>
                                     </tr><br><br>

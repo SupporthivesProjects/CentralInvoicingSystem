@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
     <style>
-        body{
+        body {
             margin: 0px;
             padding: 0px;
         }
-        
+
         .footer-fixed {
             position: fixed;
             bottom: 0px;
@@ -19,28 +20,33 @@
         }
     </style>
 </head>
+
 <body>
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
             <td align="center" bgcolor="#FFFFFF" style="padding: 0px;">
-                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse;">
+                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
+                    style="border-collapse: collapse;">
                     <!-- Header -->
                     <tr>
-                        <td style="height: 100px; background: url('{{ $invoice_header_image }}') no-repeat;background-position:center;background-size:cover;width: 100%;text-align: center;">
-                                <img src="{{ $invoice_image2 }}" alt="" >
+                        <td
+                            style="height: 100px; background: url('{{ $invoice_header_image }}') no-repeat;background-position:center;background-size:cover;width: 100%;text-align: center;">
+                            <img src="{{ $invoice_image2 }}" alt="">
                         </td>
-                                    
+
                     </tr>
                     <!-- Header End -->
 
-                     <!-- Content -->
-                    <tr style=" background: url('{{ $invoice_image1 }}') no-repeat;background-position:center;background-size:cover;">
+                    <!-- Content -->
+                    <tr
+                        style=" background: url('{{ $invoice_image1 }}') no-repeat;background-position:center;background-size:cover;">
                         <td style="padding:40px;padding-top:0px;">
                             <table>
                                 <tr>
                                     <td style="width: 100%;">
-                                         <p style="font-family: Sora SemiBold;font-size: 28px;margin-bottom: 5px;font-weight: 400;">
-                                           INVOICE
+                                        <p
+                                            style="font-family: Sora SemiBold;font-size: 28px;margin-bottom: 5px;font-weight: 400;">
+                                            INVOICE
                                         </p>
                                     </td>
                                 </tr>
@@ -58,9 +64,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td>                                       
-                                        <p style="font-family: arial;font-size: 10px;margin-bottom: 5px;font-weight: 700;">
-                                         Billed To: 
+                                    <td>
+                                        <p
+                                            style="font-family: arial;font-size: 10px;margin-bottom: 5px;font-weight: 700;">
+                                            Billed To:
                                         </p>
                                         <p style="font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;">
                                             {{ $customer_name }}
@@ -68,10 +75,11 @@
                                     </td>
                                 </tr>
 
-                                 <tr>
-                                    <td>                                       
-                                        <p style="font-family: arial;font-size: 10px;margin-bottom: 5px;font-weight: 700;">
-                                        Billed From:
+                                <tr>
+                                    <td>
+                                        <p
+                                            style="font-family: arial;font-size: 10px;margin-bottom: 5px;font-weight: 700;">
+                                            Billed From:
                                         </p>
                                         <p style="font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;">
                                             {{ $site_name }}
@@ -81,7 +89,8 @@
 
                                 <tr>
                                     <td>
-                                        <p style="font-family: arial;font-size: 10px;margin-bottom: 5px;font-weight: 400;">
+                                        <p
+                                            style="font-family: arial;font-size: 10px;margin-bottom: 5px;font-weight: 400;">
                                             <strong>Email:</strong> {{ $company_email }}
                                         </p>
                                         <p style="font-family: arial;font-size: 10px;margin-bottom: 5px;font-weight: 400;">
@@ -91,7 +100,7 @@
                                         <p style="font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;">
                                             <b>Address:</b> {!! $company_address !!}</p>
                                     </td>
-                                    
+
                                 </tr>
                             </table>
                             
@@ -172,9 +181,10 @@
                     <!-- Content End-->
 
                     <!-----------Footer----------->
-                    <div class="footer-fixed" style="height: 120px; background: url('{{ $invoice_footer_image }}'); background-repeat: no-repeat;background-position:center;background-size:cover;">
-                        
-                    </div> 
+                    <div class="footer-fixed"
+                        style="height: 120px; background: url('{{ $invoice_footer_image }}'); background-repeat: no-repeat;background-position:center;background-size:cover;">
+
+                    </div>
                     <!-----------Footer End----------->
 
                 </table>
@@ -182,4 +192,5 @@
         </tr>
     </table>
 </body>
+
 </html>

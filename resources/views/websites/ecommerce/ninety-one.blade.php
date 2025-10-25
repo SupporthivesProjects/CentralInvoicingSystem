@@ -53,7 +53,7 @@
                     <!-- Content -->
                     <tr style="background:#ffff ;">
                         <td style="padding:0px;">
-                            <div style="min-height: 980px !important;">
+                            <!-- <div style="min-height: 950px !important;"> -->
                             <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;min-height: 980px !important;">
                                 <tr style="min-height: 980px !important;">
                                     <td style="width:20px;"></td>
@@ -155,7 +155,7 @@
                                        </table> -->
                                     </td>
                                     <td style="width:20px;"></td>
-                                    <td align="center" style="min-height: 900px;vertical-align: top;width:200px;height:100%;background:url('{{ $invoice_image2 }}');background-size: cover;background-repeat: no-repeat;background-position: center;border-top: 1px solid black;padding: 20px 0px 0px 20px;">
+                                    <td align="center" style="min-height: 980px;vertical-align: top;width:200px;height:100%;background:url('{{ $invoice_image2 }}');background-size: cover;background-repeat: no-repeat;background-position: center;border-top: 1px solid black;padding: 20px 0px 0px 20px;">
                                         <table width="100%">
                                         <tr>
                                             <td>
@@ -229,7 +229,7 @@
                                     </td>
                                 </tr>
                             </table>
-                            </div>
+                            <!-- </div> -->
                         </td>
                     </tr>
                     <!-- Content End-->
