@@ -42,6 +42,12 @@
         .tab1 p {
             margin-bottom: 0px;
         }
+        .linement {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: flex-start;
+        }
        
  </style>
 </head>
@@ -71,7 +77,7 @@
                                                     #{{ $invoice_number }}
                                     </td>
                                     <td>
-                                        <div>
+                                        <div class="linement">
                                             <img src="{{ $invoice_image1 }}" alt="" style="width: 24px;">
                                             <div>
                                                 <p style="color: #136476; font-weight: 700;">Email:</p><br>
@@ -91,7 +97,7 @@
                                                     {{ $invoice_date }}
                                     </td>
                                     <td>
-                                        <div>
+                                        <div class="linement">
                                             <img src="{{ $invoice_image2 }}" alt="" style="width: 24px;">
                                             <div>
                                                 <p style="color: #136476; font-weight: 700;">Website Address:</p><br>
