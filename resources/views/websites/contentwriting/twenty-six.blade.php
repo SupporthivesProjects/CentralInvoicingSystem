@@ -35,7 +35,7 @@
             background-position: center !important;
             background-size: cover !important;
             height:90px !important;
-            width: 100% !important;
+            width: calc(100% + 1px) !important;
             position: absolute;
             bottom: -1px;
             left: 0;
