@@ -29,13 +29,6 @@
                     <tr style="width: 100%">
                         <td style="padding: 20px;">
                             <table>
-<<<<<<< HEAD
-                                <tr style="height: 100px;">
-                                </tr>
-                                
-                               
-=======
->>>>>>> cf9151e0a8959737883115dc1eb76787afe74191
                             </table>
                         </td>
                     </tr>
