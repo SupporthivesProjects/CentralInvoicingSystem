@@ -42,12 +42,16 @@
         .tab1 p {
             margin-bottom: 0px;
         }
+        .tab1 tr td {
+            padding-bottom: 16px;
+        }
         
         .linement {
             display: flex;
             flex-direction: row;
             justify-content: flex-start;
             align-items: flex-start;
+            gap: 4px;
         }
         .linement2 {
             display: flex;
