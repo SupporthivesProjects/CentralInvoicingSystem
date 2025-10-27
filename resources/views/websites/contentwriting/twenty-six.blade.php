@@ -11,6 +11,7 @@
             padding: 0;
             background-color: transparent !important; 
             border-collapse: collapse;
+            font-family: 'Poppins';
         }
 
         .invoice_header_image {
