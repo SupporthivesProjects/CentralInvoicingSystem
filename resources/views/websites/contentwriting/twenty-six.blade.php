@@ -6,7 +6,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 <style>
-        body {
+        *,body {
             margin: 0 !important;
             padding: 0 !important;
             background-color: transparent !important; 
@@ -42,11 +42,20 @@
         .tab1 p {
             margin-bottom: 0px;
         }
+        
         .linement {
             display: flex;
             flex-direction: row;
             justify-content: flex-start;
             align-items: flex-start;
+            border: 1px solid black;
+        }
+        .linement2 {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-start;
+            border: 1px solid black;
         }
        
  </style>
@@ -73,14 +82,14 @@
                                         <p >Invoice To</p>
                                     </td>
                                     <td>
-                                        <p style="color: #136476; font-weight: 700;">Invoice Number</p><br>
+                                        <p style="color: #136476; font-weight: 700;">Invoice Number</p>
                                                     #{{ $invoice_number }}
                                     </td>
                                     <td>
                                         <div class="linement">
                                             <img src="{{ $invoice_image1 }}" alt="" style="width: 24px;">
-                                            <div>
-                                                <p style="color: #136476; font-weight: 700;">Email:</p><br>
+                                            <div class="linement2">
+                                                <p style="color: #136476; font-weight: 700;">Email:</p>
                                                 {{ $company_email  }}
                                             </div>
                                         </div>
@@ -89,18 +98,18 @@
                                 <tr valign="top">
 
                                     <td width="40%">
-                                        <p style="color: #136476; font-weight: 700;">Customer Name:</p><br>
+                                        <p style="color: #136476; font-weight: 700;">Customer Name:</p>
                                                 {{ !empty($customer_name) ? $customer_name : 'Customer' }}
                                     </td>
                                     <td>
-                                       <p style="color: #136476; font-weight: 700;">Invoice Date</p><br>
+                                       <p style="color: #136476; font-weight: 700;">Invoice Date</p>
                                                     {{ $invoice_date }}
                                     </td>
                                     <td>
                                         <div class="linement">
                                             <img src="{{ $invoice_image2 }}" alt="" style="width: 24px;">
-                                            <div>
-                                                <p style="color: #136476; font-weight: 700;">Website Address:</p><br>
+                                            <div class="linement2">
+                                                <p style="color: #136476; font-weight: 700;">Website Address:</p>
                                                     {{ $site->site_link }}
                                             </div>
                                         </div>
