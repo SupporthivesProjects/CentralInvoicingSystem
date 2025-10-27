@@ -106,7 +106,8 @@
                                             {{ $site_name }}
                                         </p>
                                         <p style="font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;  text-align: left; padding-top: 5px;padding-bottom: 5px;padding-left: 5px;width: 250px;">
-                                            {{ $company_address }}
+                                            <!-- {{ $company_address }} -->
+                                            {!! nl2br(e(str_replace(',', ",\n", $company_address))) !!}
                                         </p>
                                         <p style="font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;  text-align: left; padding-top: 5px;padding-bottom: 5px;padding-left: 5px;">
                                             {{ $company_mobile }}
