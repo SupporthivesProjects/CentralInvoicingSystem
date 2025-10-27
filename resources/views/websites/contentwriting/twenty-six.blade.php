@@ -37,8 +37,9 @@
             height:90px !important;
             width: 100% !important;
             position: absolute;
-            bottom: 0px;
+            bottom: -1px;
             left: 0;
+            right: -1px;
         }
         .tab1 p {
             margin-bottom: 0px;
