@@ -39,6 +39,9 @@
             bottom: 0px;
             left: 0;
         }
+        .tab1 p {
+            margin-bottom: 0px;
+        }
        
  </style>
 </head>
@@ -58,7 +61,7 @@
                         <td style="padding:40px;display: flex;flex-direction: column;max-width: 100%;">
 
 
-                            <table cellspacing="0" cellpadding="0" border="0" width="100%" style="font-family: Calibri; font-size: 12px;">
+                            <table class="tab1" cellspacing="0" cellpadding="0" border="0" width="100%" style="font-family: Calibri; font-size: 12px;">
                                 <tr valign="top">
                                     <td width="40%">
                                         <p >Invoice To</p>
