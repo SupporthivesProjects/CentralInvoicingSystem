@@ -199,7 +199,6 @@
                             display: flex;
                             align-items: center;
                             justify-content: center;
-                            padding-top: 100px;
                         ">
                             <p style="
                                 text-align: center;
