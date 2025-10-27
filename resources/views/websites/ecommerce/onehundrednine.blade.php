@@ -53,7 +53,7 @@
                                             Billed From :
                                         </p>
                                         <p style="margin: 0px;font-family: Arial;font-size: 12px;line-height: 18px;">
-                                            {{ $site_name }}
+                                            Corporate Content
                                         </p>
                                     </td>
                                     <td align="right">
@@ -72,7 +72,7 @@
                                             <b>Email : </b>{{ $company_email }}
                                         </p>
                                         <p style="margin: 0px;font-family: Arial;font-size: 10px;line-height: 18px;">
-                                            <b>Website : </b>{{ $site->site_link }}
+                                            <b>Website : </b>{{ $site_name }}
                                         </p>
 
                                         <p style="margin: 0px;font-family: Arial;font-size: 10px;line-height: 18px;">
