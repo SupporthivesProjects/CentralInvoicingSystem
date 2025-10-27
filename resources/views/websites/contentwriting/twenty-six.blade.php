@@ -154,17 +154,17 @@
                                             @foreach($products as $product)
                                                 <tr style="border-bottom: 1px solid black;">
                                                     <td style="padding 16px 0px 16px 16px;">
-                                                        <p style="margin: 0px; font-family: Calibri; font-size: 8px; color: #041021;text-align: left;">
+                                                        <p style="margin: 0px; font-family: Calibri; font-size: 8px; color: #041021;text-align: left;padding 16px 0px 16px 16px;">
                                                             {{ $product->name }} <br>
                                                             Quality: {{ $product->quality }}, {{ $product->delivery }}, Turnaround: {{ $product->turnaround }}, <br>
                                                             Images: {{ $product->imagecount }} 
                                                         </p>
                                                     </td>
                                                     <td style="padding 16px 16px 16px 16px;">
-                                                        <p style="margin: 0px; font-family: Calibri; font-size: 10px; color: #041021;text-align: center;">1</p>
+                                                        <p style="margin: 0px; font-family: Calibri; font-size: 10px; color: #041021;text-align: center;padding 16px 16px 16px 16px;">1</p>
                                                     </td>
                                                     <td style="padding 16px 0px 16px 16px;">
-                                                        <p style="margin: 0px; font-family: Calibri; font-size: 11px; color: #041021;text-align: right;">{{ site_currency() }} {{ number_format($product->unit_price, 2) }}</p>
+                                                        <p style="margin: 0px; font-family: Calibri; font-size: 11px; color: #041021;text-align: right;padding 16px 0px 16px 16px;">{{ site_currency() }} {{ number_format($product->unit_price, 2) }}</p>
                                                     </td>
                                                 </tr>
                                             @endforeach
