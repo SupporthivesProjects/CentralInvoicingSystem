@@ -223,11 +223,12 @@
                                                 </td>
                                             </tr>
                                             @foreach($products as $product)
-                                                <tr style="border-bottom: 1px solid black;height: 60px !important;">
+                                                <tr style="border-bottom: 1px solid black;padding: 16px 0px;">
                                                     <td style="padding-left 16px;">
                                                         <p style="margin: 0px; font-family: Calibri; font-size: 8px; color: #041021;text-align: left;">
                                                             {{ $product->name }} <br>
-                                                            Quality: {{ $product->quality }}, {{ $product->delivery }}, Turnaround: {{ $product->turnaround }}, Images: {{ $product->imagecount }} 
+                                                            Quality: {{ $product->quality }}, {{ $product->delivery }}, Turnaround: {{ $product->turnaround }}, <br>
+                                                            Images: {{ $product->imagecount }} 
                                                         </p>
                                                     </td>
                                                     <td >
