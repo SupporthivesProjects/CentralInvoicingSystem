@@ -31,6 +31,10 @@
             background-size: cover !important;
             height:90px !important;
             width: 100% !important;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
         }
        
  </style>
@@ -40,22 +44,16 @@
         <tr>
             <td align="center" bgcolor="#f2f2f2" style="padding: 0px 0;">
             <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
-                <tr>
+                    <tr>
                         <td style="padding: 0px;">
                             <div class="invoice_header_image">
-                                <table width="100%" height="120">
-                                    <tr align="center">
-                                        <td style="width: 600px; height: 120px; vertical-align: middle;">
-                                            <img src="{{ $company_logo }}" alt="" style="width:250px;">
-                                        </td>
-                                    </tr>
-                                </table>
+                                <img src="{{ $company_logo }}" alt="" style="width:350px;">
                             </div>
                         </td>
                     </tr>
                     <tr style="background:#ffff ;max-width: 100%;">
                         <td style="padding:40px;display: flex;flex-direction: column;max-width: 100%;">
-                        <table cellspacing="0" cellpadding="0" border="0" width="100%" style="font-family: Calibri; font-size: 10px;">
+                        <table cellspacing="0" cellpadding="0" border="0" width="100%" style="font-family: Calibri; font-size: 12px;">
                             <tr valign="top">
                             <td width="30%">
                                     <table cellspacing="0" cellpadding="0" border="0" style="margin-bottom: 10px;">
@@ -129,7 +127,7 @@
                                 <tr>
                                     <!-- Left side: 25% for vertical "INVOICE" text -->
                                     <td style="width: 20%; vertical-align: top; position: relative;">
-                                        <div style="font-weight: 900; transform: rotate(90deg); transform-origin: top left; position: absolute; top: 0px; left: 100px; font-family: Calibri, sans-serif; font-size: 120px; color: #041021; margin: 0; white-space: nowrap;">INVOICE</div>
+                                        <p style="font-weight: 900; transform: rotate(90deg); transform-origin: top left; position: absolute; top: 0px; left: 100px; font-family: Calibri, sans-serif; font-size: 120px; color: #041021; margin: 0; white-space: nowrap;">INVOICE</p>
                                     </td>
 
 
