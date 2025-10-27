@@ -17,15 +17,9 @@
             background-size: cover; */
             /* height: 150px; */
             /* vertical-align: bottom; */
-            /* position: absolute;
+            position: absolute;
             bottom: 50px;
-            left: 0; */
-
-            position: relative;
-            margin-top: 30px;
-
-
-
+            left: 0;
             /* display: flex;
             flex-direction: row;
             justify-content: flex-start;
