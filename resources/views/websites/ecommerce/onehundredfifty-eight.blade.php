@@ -32,12 +32,12 @@
 
                 <h4
                     style="margin-top: 30px; font-size: 16px; color: #333; border-bottom: 1px solid #d9b3b3; padding-bottom: 5px;">
-                    Invoice From</h4>
+                    Invoice To</h4>
                 <p style="font-weight: bold; color: #333; margin-top: -10px;">{{ $customer_name }}</p>
 
                 <h4
                     style="margin-top: 200px; font-size: 16px; color: #333; border-bottom: 1px solid #d9b3b3; padding-bottom: 5px;">
-                    Invoice To</h4>
+                    Invoice From</h4>
                 <p style="font-weight: bold; color: #333; margin-top: -10px;">{{ $site_name }}</p>
                 <p style="font-size: 14px; color: #333;">
                     {!! $company_address !!}<br><br>
