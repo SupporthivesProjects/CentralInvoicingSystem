@@ -207,34 +207,34 @@
                                         <table cellspacing="0" cellpadding="0" border="0" width="100%" style="border-collapse: collapse; width: 100%;">
                                             <tr style="border-top: 1px solid black; border-bottom: 2px solid black; height: 30px;">
                                                 <td style="padding-left 16px;">
-                                                    <h1 style="margin: 0px; font-family: Calibri; font-size: 11px; color: #041021;">
+                                                    <h1 style="margin: 0px; font-family: Calibri; font-size: 11px; color: #041021;text-align: left;">
                                                         Product Name / Service Details
                                                     </h1>
                                                 </td>
                                                 <td>
-                                                    <h1 style="margin: 0px; font-family: Calibri; font-size: 11px; color: #041021;">
+                                                    <h1 style="margin: 0px; font-family: Calibri; font-size: 11px; color: #041021;text-align: center;">
                                                         Quantity
                                                     </h1>
                                                 </td>
                                                 <td style="padding-right: 16px;">
-                                                    <h1 style="margin: 0px; font-family: Calibri; font-size: 11px; color: #041021;">
+                                                    <h1 style="margin: 0px; font-family: Calibri; font-size: 11px; color: #041021;text-align: right;">
                                                         Amount
                                                     </h1>
                                                 </td>
                                             </tr>
                                             @foreach($products as $product)
                                                 <tr style="border-bottom: 1px solid black;height: 60px !important;">
-                                                    <td >
-                                                        <p style="margin: 0px; font-family: Calibri; font-size: 8px; color: #041021;">
+                                                    <td style="padding-left 16px;">
+                                                        <p style="margin: 0px; font-family: Calibri; font-size: 8px; color: #041021;text-align: left;">
                                                             {{ $product->name }} <br>
                                                             Quality: {{ $product->quality }}, {{ $product->delivery }}, Turnaround: {{ $product->turnaround }}, Images: {{ $product->imagecount }} 
                                                         </p>
                                                     </td>
                                                     <td >
-                                                        <p style="margin: 0px; font-family: Calibri; font-size: 10px; color: #041021;">1</p>
+                                                        <p style="margin: 0px; font-family: Calibri; font-size: 10px; color: #041021;text-align: center;">1</p>
                                                     </td>
-                                                    <td >
-                                                        <p style="margin: 0px; font-family: Calibri; font-size: 11px; color: #041021;">{{ site_currency() }} {{ number_format($product->unit_price, 2) }}</p>
+                                                    <td style="padding-right: 16px;">
+                                                        <p style="margin: 0px; font-family: Calibri; font-size: 11px; color: #041021;text-align: right;">{{ site_currency() }} {{ number_format($product->unit_price, 2) }}</p>
                                                     </td>
                                                 </tr>
                                                 @endforeach
