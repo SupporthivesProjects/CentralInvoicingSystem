@@ -26,16 +26,16 @@
             align-items: center; */
         }
         @page {
-            size: A4;
-            margin: 0;
-            }
+        size: A4;
+        margin: 0;
+        }
 
-            html, body {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            overflow: hidden;
-            }
+        html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden;
+        }
 
 
     </style>
