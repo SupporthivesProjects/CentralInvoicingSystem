@@ -32,7 +32,7 @@
 
                 <h4
                     style="margin-top: 30px; font-size: 16px; color: #333; border-bottom: 1px solid #d9b3b3; padding-bottom: 5px;">
-                    Invoice To</h4>
+                    Invoice From</h4>
                 <p style="font-weight: bold; color: #333; margin-top: -10px;">{{ $customer_name }}</p>
 
                 <h4
@@ -57,9 +57,9 @@
                         <td style=" border-right: 1px solid grey; text-align: left;">Issue Date<br><br>
                             <span style="color: #e87c7c;">{{ $invoice_date }}</span>
                         </td>
-                        <td style=" border-right: 1px solid grey; text-align: center;">Invoice Date<br><br>
+                        <!-- <td style=" border-right: 1px solid grey; text-align: center;">Invoice Date<br><br>
                             <span style="color: #e87c7c;">{{ $invoice_date }}</span>
-                        </td>
+                        </td> -->
                         <td style="text-align: right;">Total Due<br><br>
                             <span style="color: #e87c7c; font-weight: bold; font-size: 12px;">
                                 {{ site_currency() . number_format($invoice_amount, 2) }}
