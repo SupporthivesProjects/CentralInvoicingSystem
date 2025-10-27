@@ -60,7 +60,7 @@
                                         <tr>
                                             <td style="padding-right: 5px; vertical-align: middle;"></td>
                                             <td style="vertical-align: middle;">
-                                                <span >Invoice To</span><br>
+                                                <p >Invoice To</p><br>
                                                
                                             </td>
                                         </tr>
@@ -69,7 +69,7 @@
                                         <tr>
                                             <td style="padding-right: 5px; vertical-align: middle;"></td>
                                             <td style="vertical-align: middle;">
-                                            <span style="color: #136476; font-weight: 700;">Customer Name:</span><br>
+                                            <p style="color: #136476; font-weight: 700;">Customer Name:</p><br>
                                              {{ !empty($customer_name) ? $customer_name : 'Customer' }}
                                             </td>
                                         </tr>
@@ -80,7 +80,7 @@
                                         <tr>
                                             <td style="padding-right: 5px; vertical-align: middle;"></td>
                                             <td style="vertical-align: middle;">
-                                                <span style="color: #136476; font-weight: 700;">Invoice Number</span><br>
+                                                <p style="color: #136476; font-weight: 700;">Invoice Number</p><br>
                                                 #{{ $invoice_number }}
                                             </td>
                                         </tr>
@@ -89,7 +89,7 @@
                                         <tr>
                                             <td style="padding-right: 5px; vertical-align: middle;"></td>
                                             <td style="vertical-align: middle;">
-                                                <span style="color: #136476; font-weight: 700;">Invoice Date</span><br>
+                                                <p style="color: #136476; font-weight: 700;">Invoice Date</p><br>
                                                 {{ $invoice_date }}
                                             </td>
                                         </tr>
@@ -102,7 +102,7 @@
                                                 <img src="{{ $invoice_image1 }}" alt="" style="width: 24px;">
                                             </td>
                                             <td style="vertical-align: middle;">
-                                                <span style="color: #136476; font-weight: 700;">Email:</span><br>
+                                                <p style="color: #136476; font-weight: 700;">Email:</p><br>
                                                     {{ $company_email  }}
                                             </td>
                                         </tr>
@@ -113,7 +113,7 @@
                                                 <img src="{{ $invoice_image2 }}" alt="" style="width: 24px;">
                                             </td>
                                             <td style="vertical-align: middle;">
-                                                <span style="color: #136476; font-weight: 700;">Website Address:</span><br>
+                                                <p style="color: #136476; font-weight: 700;">Website Address:</p><br>
                                                 {{ $site->site_link }}
                                             </td>
                                         </tr>
@@ -136,7 +136,7 @@
                                         <div style="min-height: 651px !important;">
                                         <table cellspacing="0" cellpadding="0" border="0" width="100%" style="border-collapse: collapse; width: 100%;">
                                             <tr style="border-top: 1px solid black; border-bottom: 2px solid black; height: 30px;">
-                                                <td>
+                                                <td style="padding-left 16px;">
                                                     <h1 style="margin: 0px; font-family: Calibri; font-size: 11px; color: #041021;">
                                                         Product Name / Service Details
                                                     </h1>
@@ -146,7 +146,7 @@
                                                         Quantity
                                                     </h1>
                                                 </td>
-                                                <td>
+                                                <td style="padding-right: 16px;">
                                                     <h1 style="margin: 0px; font-family: Calibri; font-size: 11px; color: #041021;">
                                                         Amount
                                                     </h1>
