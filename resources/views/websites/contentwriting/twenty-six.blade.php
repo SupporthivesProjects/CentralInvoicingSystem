@@ -18,10 +18,13 @@
             background-position: center !important;
             background-size: cover !important;
             margin: auto !important;
-            display: block !important;
             height:160px !important;
             width: 100% !important;
             border-collapse: collapse !important;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
         }
 
         .invoice_footer_image {
@@ -31,10 +34,6 @@
             background-size: cover !important;
             height:90px !important;
             width: 100% !important;
-            display: flex;
-            flex-direction: row;
-            justify-content: center;
-            align-items: center;
         }
        
  </style>
