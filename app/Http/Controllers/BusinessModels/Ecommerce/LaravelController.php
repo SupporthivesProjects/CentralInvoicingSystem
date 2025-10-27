@@ -359,6 +359,9 @@ class LaravelController extends Controller
 
         session()->put('ready_products', $updatedProducts);
         if (empty($updatedProducts)) {
+            
+            session()->forget('current_amount');
+
             return response()->json([
                 'tableRows' => '',
                 'currency' => null,
