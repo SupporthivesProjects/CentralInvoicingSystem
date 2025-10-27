@@ -7,8 +7,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 <style>
         *,body {
-            margin: 0 !important;
-            padding: 0 !important;
+            margin: 0;
+            padding: 0;
             background-color: transparent !important; 
             border-collapse: collapse;
         }
@@ -48,14 +48,12 @@
             flex-direction: row;
             justify-content: flex-start;
             align-items: flex-start;
-            border: 1px solid black;
         }
         .linement2 {
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
             align-items: flex-start;
-            border: 1px solid black;
         }
        
  </style>
