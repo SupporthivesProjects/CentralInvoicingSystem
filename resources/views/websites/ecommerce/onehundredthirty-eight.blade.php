@@ -35,7 +35,7 @@
                     <!-- Content -->
                     <tr style="background:#ffff ;">
                         <td style="padding: 40px;padding-top: 0px;">
-                            <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
+                            <table width="100%%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
                                 style="font-family:'Poppins',Arial,sans-serif;border-collapse:collapse;color:#000;">
                                 <!-- ORDER INFO -->
                                 <tr>
@@ -57,66 +57,71 @@
                                     </td>
                                 </tr>
 
-                                <!-- Divider -->
-                                <tr>
-                                    <td colspan="2" style="border-bottom:1px solid #ccc;padding-top:15px;"></td>
-                                </tr>
+                        
 
-                                <!-- TOTALS SECTION -->
-                                <tr>
-                                    <td colspan="2" style="padding-top:15px;">
-                                        <p style="margin:0;font-size:12px;letter-spacing:1px;color:#777;">INVOICE TOTAL
-                                        </p>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2" style="border-bottom:1px solid #ccc;padding:10px 0;"></td>
-                                </tr>
+                         <!-- TOTALS SECTION (in a new compact table) -->
+<table width="30%" align="left" cellspacing="0" cellpadding="0" border="0" 
+    style="font-family:'Poppins',Arial,sans-serif;border-collapse:collapse;color:#000;
+           margin:0 auto;padding:10px;border-radius:6px;">
 
-                                <tr>
-                                    <td style="padding-top:10px;">
-                                        <p style="margin:0;font-size:12px;color:#555;">Subtotal</p>
-                                    </td>
-                                    <td align="right" style="padding-top:10px;">
-                                        <p style="margin:0;font-size:12px;color:#555;">
-                                            {{ site_currency() . number_format($invoice_amount + $discount_amount, 2) }}
-                                        </p>
-                                    </td>
-                                </tr>
+    <tr>
+        <td colspan="2" style="padding-top:10px;">
+            <p style="margin:0;font-size:8px;letter-spacing:1px;color:#777;">INVOICE TOTAL</p>
+        </td>
+    </tr>
 
-                                <tr>
-                                    <td style="padding-top:6px;">
-                                        <p style="margin:0;font-size:12px;color:#555;">Discount</p>
-                                    </td>
-                                    <td align="right" style="padding-top:6px;">
-                                        <p style="margin:0;font-size:12px;color:#555;">
-                                            {{ site_currency() . number_format($discount_amount, 2) }}
-                                        </p>
-                                    </td>
-                                </tr>
+    <tr>
+        <td colspan="2" style="border-bottom:1px solid #ccc;padding:6px 0;"></td>
+    </tr>
 
-                                <!-- GRAND TOTAL -->
-                                <tr>
-                                    <td colspan="2" style="padding-top:15px;">
-                                        <table width="100%" cellspacing="0" cellpadding="0"
-                                            style="border-collapse:collapse;">
-                                            <tr>
-                                                <td
-                                                    style="background:#c8a951;padding:6px 10px;font-size:12px;font-weight:700;text-transform:uppercase;">
-                                                    Grand Total
-                                                </td>
-                                                <td align="right"
-                                                    style="background:#c8a951;padding:6px 10px;font-size:12px;font-weight:700;">
-                                                    {{ site_currency() . number_format($invoice_amount, 2) }}
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                </tr>
+    <tr>
+        <td style="padding-top:8px;">
+            <p style="margin:0;font-size:8px;color:#555;">Subtotal</p>
+        </td>
+        
+        <td align="right" style="padding-top:8px;">
+            <p style="margin:0;font-size:8px;color:#555;">
+                {{ site_currency() . number_format($invoice_amount + $discount_amount, 2) }}
+            </p>
+        </td>
+    </tr>
+<tr>
+        <td colspan="2" style="border-bottom:1px solid #ccc;padding:6px 0;"></td>
+    </tr>
+    <tr>
+        <td style="padding-top:6px;">
+            <p style="margin:0;font-size:12px;color:#555;">Discount</p>
+        </td>
+        <td align="right" style="padding-top:6px;">
+            <p style="margin:0;font-size:12px;color:#555;">
+                {{ site_currency() . number_format($discount_amount, 2) }}
+            </p>
+        </td>
+    </tr>
+<tr>
+        <td colspan="2" style="border-bottom:1px solid #ccc;padding:6px 0;"></td>
+    </tr>
+    <!-- GRAND TOTAL -->
+    <tr>
+        <td colspan="2" style="padding-top:12px;">
+            <table width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;">
+                <tr>
+                    <td style="background:#c8a951;padding:6px 10px;font-size:11px;font-weight:700;text-transform:uppercase;">
+                        Grand Total
+                    </td>
+                    <td align="right" style="background:#c8a951;padding:6px 10px;font-size:12px;font-weight:700;">
+                        {{ site_currency() . number_format($invoice_amount, 2) }}
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
 
                                 <!-- BILLED FROM INFO -->
                                 <tr>
-                                    <td colspan="2" style="padding-top:15px;">
+                                    <td colspan="2" style="padding:15px 40px ;">
                                         <p
                                             style="margin:0;font-size:12px;font-weight:700;color:#013220;text-transform:uppercase;">
                                             Billed From:
