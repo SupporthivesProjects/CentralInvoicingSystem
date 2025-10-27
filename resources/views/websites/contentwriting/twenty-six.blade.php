@@ -6,7 +6,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 <style>
-        *,body {
+        body {
             margin: 0 !important;
             padding: 0 !important;
             background-color: transparent !important; 
@@ -35,6 +35,9 @@
             background-size: cover !important;
             height:90px !important;
             width: 100% !important;
+            position: absolute;
+            bottom: 0px;
+            left: 0;
         }
        
  </style>
@@ -53,74 +56,120 @@
                     </tr>
                     <tr style="background:#ffff ;max-width: 100%;">
                         <td style="padding:40px;display: flex;flex-direction: column;max-width: 100%;">
-                        <table cellspacing="0" cellpadding="0" border="0" width="100%" style="font-family: Calibri; font-size: 12px;">
-                            <tr valign="top">
-                            <td width="30%">
-                                    <table cellspacing="0" cellpadding="0" border="0" style="margin-bottom: 10px;">
-                                        <tr>
-                                            <td style="padding-right: 5px; vertical-align: middle;"></td>
-                                            <td style="vertical-align: middle;">
-                                                <p >Invoice To</p><br>
-                                               
-                                            </td>
-                                        </tr>
-                                    </table>
-                                    <table cellspacing="0" cellpadding="0" border="0">
-                                        <tr>
-                                            <td style="padding-right: 5px; vertical-align: middle;"></td>
-                                            <td style="vertical-align: middle;">
-                                            <p style="color: #136476; font-weight: 700;">Customer Name:</p><br>
-                                             {{ !empty($customer_name) ? $customer_name : 'Customer' }}
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                                <td width="30%">
-                                    <table cellspacing="0" cellpadding="0" border="0" style="margin-bottom: 10px;">
-                                        <tr>
-                                            <td style="padding-right: 5px; vertical-align: middle;"></td>
-                                            <td style="vertical-align: middle;">
-                                                <p style="color: #136476; font-weight: 700;">Invoice Number</p><br>
-                                                #{{ $invoice_number }}
-                                            </td>
-                                        </tr>
-                                    </table>
-                                    <table cellspacing="0" cellpadding="0" border="0">
-                                        <tr>
-                                            <td style="padding-right: 5px; vertical-align: middle;"></td>
-                                            <td style="vertical-align: middle;">
-                                                <p style="color: #136476; font-weight: 700;">Invoice Date</p><br>
-                                                {{ $invoice_date }}
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                                <td width="40%">
-                                    <table cellspacing="0" cellpadding="0" border="0" style="margin-bottom: 10px;">
-                                        <tr>
-                                            <td style="padding-right: 5px; vertical-align: middle;">
-                                                <img src="{{ $invoice_image1 }}" alt="" style="width: 24px;">
-                                            </td>
-                                            <td style="vertical-align: middle;">
+
+
+                            <table cellspacing="0" cellpadding="0" border="0" width="100%" style="font-family: Calibri; font-size: 12px;">
+                                <tr valign="top">
+                                    <td width="40%">
+                                        <p >Invoice To</p>
+                                    </td>
+                                    <td>
+                                        <p style="color: #136476; font-weight: 700;">Invoice Number</p><br>
+                                                    #{{ $invoice_number }}
+                                    </td>
+                                    <td>
+                                        <div>
+                                            <img src="{{ $invoice_image1 }}" alt="" style="width: 24px;">
+                                            <div>
                                                 <p style="color: #136476; font-weight: 700;">Email:</p><br>
-                                                    {{ $company_email  }}
-                                            </td>
-                                        </tr>
-                                    </table>
-                                    <table cellspacing="0" cellpadding="0" border="0">
-                                        <tr>
-                                            <td style="padding-right: 5px; vertical-align: middle;">
-                                                <img src="{{ $invoice_image2 }}" alt="" style="width: 24px;">
-                                            </td>
-                                            <td style="vertical-align: middle;">
+                                                {{ $company_email  }}
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr valign="top">
+
+                                    <td width="40%">
+                                        <p style="color: #136476; font-weight: 700;">Customer Name:</p><br>
+                                                {{ !empty($customer_name) ? $customer_name : 'Customer' }}
+                                    </td>
+                                    <td>
+                                       <p style="color: #136476; font-weight: 700;">Invoice Date</p><br>
+                                                    {{ $invoice_date }}
+                                    </td>
+                                    <td>
+                                        <div>
+                                            <img src="{{ $invoice_image2 }}" alt="" style="width: 24px;">
+                                            <div>
                                                 <p style="color: #136476; font-weight: 700;">Website Address:</p><br>
-                                                {{ $site->site_link }}
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-                        </table>
+                                                    {{ $site->site_link }}
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+
+<!-- 
+                            <table cellspacing="0" cellpadding="0" border="0" width="100%" style="font-family: Calibri; font-size: 12px;">
+                                <tr valign="top">
+                                    <td width="30%">
+                                        <table cellspacing="0" cellpadding="0" border="0" style="margin-bottom: 10px;">
+                                            <tr>
+                                                <td style="padding-right: 5px; vertical-align: middle;"></td>
+                                                <td style="vertical-align: middle;">
+                                                    <p >Invoice To</p>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <table cellspacing="0" cellpadding="0" border="0">
+                                            <tr>
+                                                <td style="padding-right: 5px; vertical-align: middle;"></td>
+                                                <td style="vertical-align: middle;">
+                                                <p style="color: #136476; font-weight: 700;">Customer Name:</p><br>
+                                                {{ !empty($customer_name) ? $customer_name : 'Customer' }}
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td width="30%">
+                                        <table cellspacing="0" cellpadding="0" border="0" style="margin-bottom: 10px;">
+                                            <tr>
+                                                <td style="padding-right: 5px; vertical-align: middle;"></td>
+                                                <td style="vertical-align: middle;">
+                                                    <p style="color: #136476; font-weight: 700;">Invoice Number</p><br>
+                                                    #{{ $invoice_number }}
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <table cellspacing="0" cellpadding="0" border="0">
+                                            <tr>
+                                                <td style="padding-right: 5px; vertical-align: middle;"></td>
+                                                <td style="vertical-align: middle;">
+                                                    <p style="color: #136476; font-weight: 700;">Invoice Date</p><br>
+                                                    {{ $invoice_date }}
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td width="40%">
+                                        <table cellspacing="0" cellpadding="0" border="0" style="margin-bottom: 10px;">
+                                            <tr>
+                                                <td style="padding-right: 5px; vertical-align: middle;">
+                                                    <img src="{{ $invoice_image1 }}" alt="" style="width: 24px;">
+                                                </td>
+                                                <td style="vertical-align: middle;">
+                                                    <p style="color: #136476; font-weight: 700;">Email:</p><br>
+                                                        {{ $company_email  }}
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <table cellspacing="0" cellpadding="0" border="0">
+                                            <tr>
+                                                <td style="padding-right: 5px; vertical-align: middle;">
+                                                    <img src="{{ $invoice_image2 }}" alt="" style="width: 24px;">
+                                                </td>
+                                                <td style="vertical-align: middle;">
+                                                    <p style="color: #136476; font-weight: 700;">Website Address:</p><br>
+                                                    {{ $site->site_link }}
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr valign="top">
+
+                                </tr>
+                            </table> -->
 
 
                             <table cellspacing="0" cellpadding="0" border="0" width="100%" style="border-collapse: collapse; width: 100%;margin-top:80px">
@@ -207,11 +256,9 @@
                         </td>
                     </tr>
                     <!-- Content End-->
-                    <tr>
-                        <td align="center" class="invoice_footer_image">
+                    <div class="invoice_footer_image">
                             
-                        </td>
-                    </tr> 
+                    </div>
                    
                 </table>
             </td>
