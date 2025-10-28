@@ -28,6 +28,8 @@
                                             {{ $site_name }}</p>
                                         <p style="font-family: 'Arial'; font-size: 9px; margin-top: 0%;">Email:
                                             {{ $company_email }}</p>
+                                        <p style="font-family: 'Arial'; font-size: 9px; margin-top: 0%;">Address:
+                                            {!! $company_address !!}</p>
                                     </td>
 
                                     <!-- Right Side: Invoice Info -->
