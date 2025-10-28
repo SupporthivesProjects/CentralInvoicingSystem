@@ -50,7 +50,7 @@
                                     <th style="text-align: left; padding: 10px; font-weight: bold;">INVOICE NO. {{$invoice_number}}</th>
                                     <th style="text-align: right; padding: 10px;"></th>
 
-                                    <th style="text-align: right; padding: 10px;">DATE  {{$invoice_date}}</th>
+                                    <th style="text-align: right; padding: 10px;">DATE  <!--{{$invoice_date}}--> {{ \Carbon\Carbon::parse($invoice_date)->format('d/m/Y') }}</th>
                                 </tr>
                             </table>
 
