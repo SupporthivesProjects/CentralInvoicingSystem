@@ -157,6 +157,11 @@
                                                 <img src="{{ $invoice_footer_image }}" alt="" style="width:100px;">
                                         
                                         </div> -->
+                                        <div style="width:100px; height:100px; overflow:hidden; display:flex; justify-content:center; align-items:center;">
+  <img src="{{ $invoice_image1 }}" alt=""
+       style="width:200px; transform: rotate(90deg); display:block;">
+</div>
+
 
                                        <!-- <table width="100%" style="height: 100px;">
                                         <tr>
