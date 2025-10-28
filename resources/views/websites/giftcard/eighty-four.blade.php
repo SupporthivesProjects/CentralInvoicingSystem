@@ -64,7 +64,7 @@
                                   <td style="text-align: center; padding-top: 8px; vertical-align: top;font-size: 12px; line-height: 1.8;">{{ $customer_name }}</td>
                                   <td style="text-align: center; padding-top: 8px;vertical-align: top;font-size: 12px;line-height: 1.8;">
                                     {{ $site_name }}<br>
-                                    <div style="display: inline-block; width: 200px; text-align: center;line-height: 1.8;">
+                                    <div style="display: inline-block; width: 200px; text-align: center;">
                                       {!! $company_address !!}
                                     </div> &nbsp;&nbsp;<br />
                                     {{ $company_mobile }}<br />
