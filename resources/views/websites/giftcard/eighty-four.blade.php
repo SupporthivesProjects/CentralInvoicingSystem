@@ -47,7 +47,7 @@
                             <table
                                 style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 12px;">
                                 <tr style="background-color: #0070C0; color: white;">
-                                    <th style="text-align: left; padding: 10px;">INVOICE No. {{$invoice_number}}</th>
+                                    <th style="text-align: left; padding: 10px; font-weight: bold;">INVOICE NO. {{$invoice_number}}</th>
                                     <th style="text-align: right; padding: 10px;"></th>
 
                                     <th style="text-align: right; padding: 10px;">DATE  {{$invoice_date}}</th>
@@ -55,16 +55,16 @@
                             </table>
 
 
-                            <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 10px; color: #444; margin-top: 30px;">
+                            <table style="width: 100%; border-collapse: collapse; font-family: Mazzard H Medium; font-size: 10px; color: #444; margin-top: 30px;">
                                 <tr style="border-bottom: 1px solid #527ba0;">
                                   <th style="width: 50%; padding-bottom: 5px; font-variant: small-caps; color: #0070C0; text-align: center;font-size: 12px;">Billed To</th>
                                   <th style="width: 50%; padding-bottom: 5px; font-variant: small-caps; color: #0070C0; text-align: center;font-size: 12px;">Billed From</th>
                                 </tr>
                                 <tr>
-                                  <td style="text-align: center; padding-top: 8px; vertical-align: top;font-size: 12px;">{{ $customer_name }}</td>
-                                  <td style="text-align: center; padding-top: 8px;vertical-align: top;font-size: 12px;">
+                                  <td style="text-align: center; padding-top: 8px; vertical-align: top;font-size: 12px; line-height: 1.8;">{{ $customer_name }}</td>
+                                  <td style="text-align: center; padding-top: 8px;vertical-align: top;font-size: 12px;line-height: 1.8;">
                                     {{ $site_name }}<br>
-                                    <div style="display: inline-block; width: 200px; text-align: center;">
+                                    <div style="display: inline-block; width: 200px; text-align: center;line-height: 1.8;">
                                       {!! $company_address !!}
                                     </div> &nbsp;&nbsp;<br />
                                     {{ $company_mobile }}<br />
@@ -105,8 +105,8 @@
                                 </td>
                               </tr>
                               <tr style="border-bottom: 1px solid #999;">
-                                <td style="padding: 10px; font-weight: bold; color: #0070C0; font-variant: small-caps; font-size: 12px;">Total</td>
-                                <td style="padding: 10px; text-align: right; color: #0070C0; font-size: 12px; font-weight: bold;">
+                                <td style="padding: 10px; font-weight: bold; color: #0070C0; font-variant: small-caps; font-size: 14px;">Total</td>
+                                <td style="padding: 10px; text-align: right; color: #0070C0; font-size: 14px; font-weight: bold;">
                                   {{ site_currency() . number_format($invoice_amount, 2) }}
                                 </td>
                               </tr>
