@@ -37,6 +37,19 @@
         overflow: hidden;
         }
 
+        body::after {
+  content: "";
+  display: block;
+  height: 0;
+  clear: both;
+  page-break-after: avoid;
+}
+html, body {
+  height: auto !important;
+  overflow: visible !important;
+}
+
+
 
     </style>
 </head>
