@@ -43,7 +43,7 @@
 
                 <!-- Bill From -->
                 <td style="border:1px solid #ff6666; padding:8px; vertical-align:top;">
-                    <div style="display:flex; gap:20px; margin-bottom: 15px;">
+                    <div style="display:flex; gap:30px; margin-bottom: 15px;">
                         <strong>Name</strong>
                         <span>{{ $company_name }}</span>
                     </div>
