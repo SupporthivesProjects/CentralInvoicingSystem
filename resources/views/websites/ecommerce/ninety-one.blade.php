@@ -150,17 +150,13 @@
                                             </td>
                                         </tr>
                                        </table>
-                                       <!-- <div class="footer_bg" width="100%" style="height: 100px;display:flex;flex-direction:row;justify-content:flex-start;align-items:center;gap:135px;">
-                                        
-                                                <img src="{{ $invoice_image1 }}" alt="" style="width: 200px;rotate: 90deg;">
-                                        
+                                       <div class="footer_bg" width="100%" style="height: 100px;display:flex;flex-direction:row;justify-content:flex-start;align-items:center;gap:135px;">
+                                                <!-- <img src="{{ $invoice_image1 }}" alt="" style="width: 200px;rotate: 90deg;"> -->
+                                                <img src="{{ $invoice_image1 }}" alt=""
+     style="width: 100px; height: auto; transform: rotate(90deg); display: block; object-fit: contain; margin-top: -40px;">
+
                                                 <img src="{{ $invoice_footer_image }}" alt="" style="width:100px;">
-                                        
-                                        </div> -->
-                                        <div style="width:100px; height:100px; overflow:hidden; display:flex; justify-content:center; align-items:center;">
-  <img src="{{ $invoice_image1 }}" alt=""
-       style="width:200px; transform: rotate(90deg); display:block;">
-</div>
+                                        </div>
 
 
                                        <!-- <table width="100%" style="height: 100px;">
