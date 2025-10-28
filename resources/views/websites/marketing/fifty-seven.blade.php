@@ -160,7 +160,7 @@
                                 <table class="table-main-list" style="width: 100%;">
                                     <tbody>
                                         <tr>
-                                            <td style="width: 40%;vertical-align: top;">
+                                            <td style="width: 40%;vertical-align: top; padding: 15px 0px;">
                                                 <div>
                                                     <p>TOTAL</p>
                                                     <h4>{{ site_currency() }} {{ number_format($invoice_amount ?? 0, 2) }}</h4>
