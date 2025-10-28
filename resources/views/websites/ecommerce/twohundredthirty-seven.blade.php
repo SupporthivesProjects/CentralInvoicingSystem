@@ -66,7 +66,7 @@
 
         <br>
 
-        <div style="min-height: 626px;">
+        <div style="min-height: 624px;">
             <table style="width:100%; border-collapse:collapse; font-size:9px; margin: 0 auto;height: 420px;">
             <tr>
                 <th
