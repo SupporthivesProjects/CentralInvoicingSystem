@@ -35,7 +35,7 @@
             <tr>
                 <!-- Bill To -->
                 <td style="border:1px solid #ff6666; padding:8px; vertical-align:top;">
-                    <div style="display:flex; gap:4px; justify-content: space-between;">
+                    <div style="display:flex; gap:20px;">
                         <strong>Name</strong>
                         <span>{{ $customer_name ? $customer_name : '' }}</span>
                     </div>
