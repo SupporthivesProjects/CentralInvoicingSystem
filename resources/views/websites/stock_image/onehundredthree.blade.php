@@ -37,7 +37,7 @@
 
 
                 <p style="width: fit-content; font-size: 8px; color: #FFFFFF;font-family: arial;">
-                  {{ $company_address }}<br>
+                  {!! $company_address !!}<br>
                   {{ $company_mobile }}
                 </p>
               </div>
