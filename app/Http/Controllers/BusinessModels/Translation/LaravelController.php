@@ -444,7 +444,7 @@ class LaravelController extends Controller
         session()->put('ready_products', $updatedProducts);
 
         if (empty($updatedProducts)) {
-            session(['current_amount' => 0]);
+            session()->forget('current_amount');
             return response()->json([
                 'tableRows' => '',
                 'total' => 0,

@@ -283,6 +283,7 @@ class LaravelController extends Controller
         //dd($updatedGames);
 
         if (empty($updatedGames)) {
+            session()->forget('current_amount');
             return response()->json([
                 'tableRows' => '',
                 'total'     => 0,

@@ -1,5 +1,9 @@
 <?php
 
+
+ini_set('max_execution_time', 120); // increase limit to 120 seconds
+ini_set('memory_limit', '512M');
+
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 
@@ -18,3 +22,4 @@ require __DIR__.'/../vendor/autoload.php';
 $app = require_once __DIR__.'/../bootstrap/app.php';
 
 $app->handleRequest(Request::capture());
+

@@ -25,6 +25,19 @@
             justify-content: flex-start;
             align-items: center; */
         }
+        @page {
+        size: A4;
+        margin: 0;
+        }
+
+        html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden;
+        }
+
+
     </style>
 </head>
 <body>

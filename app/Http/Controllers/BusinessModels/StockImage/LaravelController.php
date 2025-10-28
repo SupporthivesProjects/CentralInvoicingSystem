@@ -258,6 +258,7 @@ class LaravelController extends Controller
 
         // If no products left, return empty response
         if (empty($readyProducts)) {
+            session()->forget('current_amount');
             return response()->json([
                 'tableRows' => '<tr><td colspan="6" class="text-center text-muted">All products removed. Please add random or custom products.<br><button class="btn btn-info mt-2 ms-2" data-bs-toggle="modal" data-bs-target="#addmoreproducts" onclick="customizeProducts(\'onload\')">Add Custom Pack</button></td></tr>',
                 'total' => 0
