@@ -37,18 +37,7 @@
         overflow: hidden;
         }
 
-        body::after {
-  content: "";
-  display: block;
-  height: 0;
-  clear: both;
-  page-break-after: avoid;
-}
-html, body {
-  height: auto !important;
-  overflow: visible !important;
-}
-
+     
 
 
     </style>
@@ -161,13 +150,13 @@ html, body {
                                             </td>
                                         </tr>
                                        </table>
-                                       <div class="footer_bg" width="100%" style="height: 100px;display:flex;flex-direction:row;justify-content:flex-start;align-items:center;gap:135px;">
+                                       <!-- <div class="footer_bg" width="100%" style="height: 100px;display:flex;flex-direction:row;justify-content:flex-start;align-items:center;gap:135px;">
                                         
                                                 <img src="{{ $invoice_image1 }}" alt="" style="width: 200px;rotate: 90deg;">
                                         
                                                 <img src="{{ $invoice_footer_image }}" alt="" style="width:100px;">
                                         
-                                        </div>
+                                        </div> -->
 
                                        <!-- <table width="100%" style="height: 100px;">
                                         <tr>
