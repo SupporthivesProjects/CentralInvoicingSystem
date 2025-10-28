@@ -67,7 +67,7 @@
                     <tr style="background:#ffff ;">
                         <td style="padding:0px;">
                             <!-- <div style="min-height: 950px !important;"> -->
-                            <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;min-height: auto !important;">
+                            <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;min-height: 980px !important;">
                                 <tr style="min-height: 980px !important;">
                                     <td style="width:20px;"></td>
                                     <td align="center" style="vertical-align: top;">
