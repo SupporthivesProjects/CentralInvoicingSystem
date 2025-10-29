@@ -43,11 +43,11 @@
                                         <p
                                             style="font-size:9px;font-weight:700;font-family:Urbanist;margin: 0px;text-align:left;color:white;margin-bottom: 4px;">
                                             Invoice No.
-                                        </p><br>
+                                        </p>
                                         <p
                                             style="font-size:9px;font-weight:700;font-family:Urbanist;margin: 0px;text-align:left;color:white;margin-bottom: 4px;">
                                             Date:
-                                        </p><br><br>
+                                        </p><br>
                                         <p
                                             style="font-size:9px;font-weight:700;font-family:Urbanist;margin: 0px;text-align:left;color:white;margin-bottom: 4px;">
                                             Invoice To:
@@ -57,11 +57,11 @@
                                         <p
                                             style="font-size:9px;font-weight:400;font-family:Urbanist;margin: 0px;text-align:left;color:white;margin-bottom: 4px;">
                                             {{ $invoice_number }}
-                                        </p><br>
+                                        </p>
                                         <p
                                             style="font-size:9px;font-weight:400;font-family:Urbanist;margin: 0px;text-align:left;color:white;margin-bottom: 4px;">
                                             {{ $invoice_date }}
-                                        </p><br><br>
+                                        </p><br>
                                         <p
                                             style="font-size:9px;font-weight:400;font-family:Urbanist;margin: 0px;text-align:left;color:white;margin-bottom: 4px;">
                                             {{ $customer_name }}
