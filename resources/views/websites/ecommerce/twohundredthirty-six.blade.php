@@ -11,7 +11,7 @@
         }
     </style>
 </head>
-<body>
+<body style="background: #ECECFF;">
     <table width="100%" cellspacing="0" cellpadding="0" border="0" style="background: #ECECFF;">
         <tr>
             <td align="center">
@@ -45,7 +45,7 @@
                     <tr style="background: #FFFFFF;">
                         <td style="padding:20px;border-radius: 20px 0px 0px 0px;">
                             
-                            <table style="border-collapse: collapse;">
+                            <table width="100%" style="border-collapse: collapse;">
                                 
                                 <tr style="border-top: 1px solid goldenrod; border-collapse: collapse; color: #7B5CFF;">
                                     <td style="padding-top: 10px;width: 33.3%; ">
@@ -65,17 +65,17 @@
                                      </td>
                                 </tr>
                                  <tr style="border-collapse: collapse; border-bottom: 1px solid goldenrod;">
-                                    <td style="width: 200px;">
+                                    <td style="width: 33.3%;">
                                         <p style="font-family: 'Nunito', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; text-align: left;padding-bottom: 5px;padding-left: 5px;">
                                             {{ $invoice_date }}
                                         </p>
                                     </td>
-                                     <td style="width: 200px;">
+                                     <td style="width: 33.3%;">
                                        <p style="font-family: 'Nunito', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; text-align: left;padding-bottom: 5px;padding-right: 5px;">
                                          {{ $customer_name }}
                                         </p>
                                      </td>
-                                     <td style="width: 200px;">
+                                     <td style="width: 33.3%;">
                                        <p style="font-family: 'Nunito', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; text-align: left;padding-bottom: 5px;padding-right: 5px;">
                                             Haven of Wellbeing
                                         </p>
@@ -160,7 +160,7 @@
                                     </td>
                                 </tr>
                             </table>
-                            <table>
+                            <table width="100%">
                             <tr style="width: 100%; ">
                                 <td style="width: 100%;text-align: center; color: #7B5CFF; font-size: 11px;font-family: 'Nunito', sans-serif;">
                                     <p>Thank you for your business!</p></td>
