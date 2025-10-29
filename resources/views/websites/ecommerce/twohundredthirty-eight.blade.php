@@ -26,7 +26,7 @@
                     <tr>
                         <td style="padding: 20px 0px 0px 45px;" colspan="2">
                             <table style="margin-top:125px">
-                                <tr style="height: 20px;">
+                                <tr style=";">
                                     <td style="padding: 5px;">
                                         <p
                                             style="font-size:9px;font-weight:700;font-family:Urbanist;margin: 0px;line-height:16px;text-align:left;color:white;margin-bottom: 0px;">
@@ -40,7 +40,7 @@
                                         </p>
                                     </td>
                                 </tr>
-                                <tr style="height: 20px;">
+                                <tr style=";">
                                     <td style="padding: 5px;">
                                         <p
                                             style="font-size:9px;font-weight:700;font-family:Urbanist;margin: 0px;line-height:16px;text-align:left;color:white;margin-bottom: 0px;">
@@ -54,8 +54,8 @@
                                         </p>
                                     </td>
                                 </tr>
-                                <tr style="height: 20px;"></tr>
-                                <tr style="height: 20px;">
+                                <tr style=";"></tr>
+                                <tr style=";">
                                     <td style="padding: 5px;">
                                         <p
                                             style="font-size:9px;font-weight:700;font-family:Urbanist;margin: 0px;line-height:16px;text-align:left;color:white;margin-bottom: 0px;">
