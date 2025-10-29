@@ -165,14 +165,40 @@ if (!function_exists('site_currency')) {
             \App\Services\DynamicDatabaseService::connect($site);
 
             if ($site->technology === 'wordpress') {
+
                 $currencyTable = $site->currency_table ?? 'wp_options';
-            
+
                 $currencyRow = DB::connection('dynamic')
                     ->table($currencyTable)
                     ->where('option_name', 'woocommerce_currency')
                     ->first();
-            
-                return $currencyRow?->option_value ?? 'USD';
+
+                $currencyCode = $currencyRow?->option_value ?? 'USD';
+
+                $symbols = [
+                    'USD' => '$',   // US Dollar
+                    'EUR' => '€',   // Euro
+                    'INR' => '₹',   // Indian Rupee
+                    'GBP' => '£',   // British Pound
+                    'AED' => 'د.إ', // UAE Dirham
+                    'NGN' => '₦',   // Nigerian Naira
+                    'AUD' => 'A$',  // Australian Dollar
+                    'CAD' => 'C$',  // Canadian Dollar
+                    'SGD' => 'S$',  // Singapore Dollar
+                    'JPY' => '¥',   // Japanese Yen
+                    'CNY' => '¥',   // Chinese Yuan
+                    'ZAR' => 'R',   // South African Rand
+                    'CHF' => 'CHF', // Swiss Franc
+                    'MYR' => 'RM',  // Malaysian Ringgit
+                    'THB' => '฿',   // Thai Baht
+                    'PKR' => '₨',   // Pakistani Rupee
+                    'BDT' => '৳',   // Bangladeshi Taka
+                    'LKR' => 'Rs',  // Sri Lankan Rupee
+                    'KWD' => 'KD',  // Kuwaiti Dinar
+                    'QAR' => 'QR',  // Qatari Riyal
+                ];
+
+                return $symbols[$currencyCode] ?? $currencyCode;
             }
             
             $site_currency = DB::connection('dynamic')->table('business_settings')->where('type', 'system_default_currency')->first()
@@ -212,8 +238,34 @@ if (!function_exists('site_currency_code')) {
                     ->table($currencyTable)
                     ->where('option_name', 'woocommerce_currency')
                     ->first();
+                
 
-                return $currencyRow?->option_value ?? 'USD';
+                    $currencyCode = $currencyRow?->option_value ?? 'USD';
+
+                    $symbols = [
+                        'USD' => '$',   // US Dollar
+                        'EUR' => '€',   // Euro
+                        'INR' => '₹',   // Indian Rupee
+                        'GBP' => '£',   // British Pound
+                        'AED' => 'د.إ', // UAE Dirham
+                        'NGN' => '₦',   // Nigerian Naira
+                        'AUD' => 'A$',  // Australian Dollar
+                        'CAD' => 'C$',  // Canadian Dollar
+                        'SGD' => 'S$',  // Singapore Dollar
+                        'JPY' => '¥',   // Japanese Yen
+                        'CNY' => '¥',   // Chinese Yuan
+                        'ZAR' => 'R',   // South African Rand
+                        'CHF' => 'CHF', // Swiss Franc
+                        'MYR' => 'RM',  // Malaysian Ringgit
+                        'THB' => '฿',   // Thai Baht
+                        'PKR' => '₨',   // Pakistani Rupee
+                        'BDT' => '৳',   // Bangladeshi Taka
+                        'LKR' => 'Rs',  // Sri Lankan Rupee
+                        'KWD' => 'KD',  // Kuwaiti Dinar
+                        'QAR' => 'QR',  // Qatari Riyal
+                    ];
+    
+                    return $symbols[$currencyCode] ?? $currencyCode;
             }
 
             $site_currency = DB::connection('dynamic')->table('business_settings')

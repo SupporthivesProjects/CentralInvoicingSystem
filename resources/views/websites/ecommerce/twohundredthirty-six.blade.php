@@ -11,30 +11,34 @@
         }
     </style>
 </head>
-<body>
-    <table width="100%" cellspacing="0" cellpadding="0" border="0">
+<body style="background: #ECECFF;">
+    <table width="100%" cellspacing="0" cellpadding="0" border="0" style="background: #ECECFF;">
         <tr>
             <td align="center">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0"  style="  border: 40px solid #ECECFF;background: #ECECFF;">
                     <!-- Header -->
                     <tr >
                         <td >
-                            <table style=" background-color: #FFFFFF;border-collapse: collapse;">
+                            <!-- <table style=" background-color: #FFFFFF;border-collapse: collapse;"> -->
+                            <table width="100%" style="border-collapse: collapse; table-layout: fixed; background: #ECECFF;">
                                 <tr >
-                                    <td style="background: #ECECFF; height: 140px; width: 200px;padding-left: 20px; font-family: 'Nunito', sans-serif; border-bottom-right-radius: 20px;">
-                                        <p style="font-size: 26px;color: #7B5CFF;">INVOICE [{{ $invoice_number }}]</p>
+                                    <td style="background: #ECECFF; height: 140px; width: 320px;padding-left: 20px; font-family: 'Nunito', sans-serif; border-bottom-right-radius: 20px;">
+                                        <p style="font-size: 24px;color: black">INVOICE <span style="font-size: 24px;color: #7B5CFF;">[{{ $invoice_number }}]</span></p>
                                         <p style="font-size: 10px;margin: 0px;color: #7B5CFF;">{{ $company_name }}</p>
                                         <p style="font-size: 9px;margin-top: 0px;">{!! $company_address !!}</p> 
                                     </td>
-                                    <td style="width: 300px;background: #ECECFF; text-align: end;">
+                                    <!-- <td style="width: 320px;background: #ECECFF; text-align: end;">
                                        <table style="border-collapse: collapse;">
                                             <tr>
-                                                <td style="width: 300px;height: 140px;background: url('{{ $invoice_header_image }}');background-size: cover;background-position: top right;background-repeat: no-repeat;border-radius: 20px 0px 0px 0px;">
+                                                <td style="width: 320px;height: 140px;background: url('{{ $invoice_header_image }}');background-size: cover;background-position: top right;background-repeat: no-repeat;border-radius: 20px 0px 0px 0px;">
                                                     
                                                 </td>
                                             </tr>
                                        </table>
-                                     </td>
+                                     </td> -->
+                                    <td style="width: 100%; text-align: right; background: #ECECFF;">
+                                        <div style="width: 300px; height: 144px; background: url('{{ $invoice_header_image }}') top right / cover no-repeat; border-radius: 20px 0 0 0; margin-left: auto;"></div>
+                                    </td>
                                 </tr>
                             </table>
                         </td>
@@ -45,59 +49,85 @@
                     <tr style="background: #FFFFFF;">
                         <td style="padding:20px;border-radius: 20px 0px 0px 0px;">
                             
-                            <table style="border-collapse: collapse;">
+                            <!-- <table width="100%" style="border-collapse: collapse;">
                                 
                                 <tr style="border-top: 1px solid goldenrod; border-collapse: collapse; color: #7B5CFF;">
-                                    <td style="padding-top: 10px;width: 200px; ">
+                                    <td style="padding-top: 10px;width: 33.3%; ">
                                         <p style="font-family: 'Nunito', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; text-align: left;padding-bottom: 5px;padding-left: 5px;">
                                             Date
                                         </p>
                                     </td>
-                                     <td style="padding-top: 10px;width: 200px;">
+                                     <td style="padding-top: 10px;width: 33.3%;">
                                        <p style="font-family: 'Nunito', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; text-align: left;padding-bottom: 5px;padding-right: 5px;">
                                             To
                                         </p>
                                      </td>
-                                     <td style="padding-top: 10px;width: 200px;">
+                                     <td style="padding-top: 10px;width: 33.3%;">
                                        <p style="font-family: 'Nunito', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; text-align: left;padding-bottom: 5px;padding-right: 5px;">
                                             Billed From
                                         </p>
                                      </td>
                                 </tr>
                                  <tr style="border-collapse: collapse; border-bottom: 1px solid goldenrod;">
-                                    <td style="width: 200px;">
+                                    <td style="width: 33.3%;">
                                         <p style="font-family: 'Nunito', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; text-align: left;padding-bottom: 5px;padding-left: 5px;">
                                             {{ $invoice_date }}
                                         </p>
                                     </td>
-                                     <td style="width: 200px;">
+                                     <td style="width: 33.3%;">
                                        <p style="font-family: 'Nunito', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; text-align: left;padding-bottom: 5px;padding-right: 5px;">
                                          {{ $customer_name }}
                                         </p>
                                      </td>
-                                     <td style="width: 200px;">
+                                     <td style="width: 33.3%;">
                                        <p style="font-family: 'Nunito', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; text-align: left;padding-bottom: 5px;padding-right: 5px;">
                                             Haven of Wellbeing
                                         </p>
                                      </td>
                                 </tr>
                                 
+                            </table> -->
+                            <table width="100%" style="border-collapse: collapse; table-layout: fixed;">
+                                <tr style="border-top: 1px solid goldenrod; color: #7B5CFF;">
+                                    <td style="padding: 8px; text-align: left; width: 33.33%;">
+                                    <p style="font-family: 'Nunito', sans-serif; font-size: 10px; margin: 0; font-weight: 400;">Date</p>
+                                    </td>
+                                    <td style="padding: 8px; text-align: left; width: 33.33%;">
+                                    <p style="font-family: 'Nunito', sans-serif; font-size: 10px; margin: 0; font-weight: 400;">To</p>
+                                    </td>
+                                    <td style="padding: 8px; text-align: left; width: 33.33%;">
+                                    <p style="font-family: 'Nunito', sans-serif; font-size: 10px; margin: 0; font-weight: 400;">Billed From</p>
+                                    </td>
+                                </tr>
+
+                                <tr style="border-bottom: 1px solid goldenrod;">
+                                    <td style="padding: 8px; text-align: left; width: 33.33%;">
+                                    <p style="font-family: 'Nunito', sans-serif; font-size: 10px; margin: 0; font-weight: 400;">{{ $invoice_date }}</p>
+                                    </td>
+                                    <td style="padding: 8px; text-align: left; width: 33.33%;">
+                                    <p style="font-family: 'Nunito', sans-serif; font-size: 10px; margin: 0; font-weight: 400;">{{ $customer_name }}</p>
+                                    </td>
+                                    <td style="padding: 8px; text-align: left; width: 33.33%;">
+                                    <p style="font-family: 'Nunito', sans-serif; font-size: 10px; margin: 0; font-weight: 400;">Haven of Wellbeing</p>
+                                    </td>
+                                </tr>
                             </table>
+
                             <br>
                             <table style="border-collapse: collapse;border-bottom: 0px;border: 0px;">
                                
                                 <tr style="border-collapse: collapse;height: 30px; background-color: #7B5CFF;color: white;">
                                     <td style="width: 200px;text-align: left;font-family: 'Nunito', sans-serif;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-left: 5px;">
-                                       <b>QUANTITY </b> 
+                                       <b>Quantity </b> 
                                     </td>
                                     <td style="width: 400px;text-align: left;font-family: 'Nunito', sans-serif;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
                                         <b>	Description</b>
                                     </td>
                                     <td style="width: 200px;text-align: right;font-family: 'Nunito', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;">
-                                        <b>UNIT PRICE</b>
+                                        <b>Unit Price</b>
                                     </td>
                                     <td style="width:200px;text-align: right;font-family: 'Nunito', sans-serif;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 10px; ">
-                                        <b>TOTAL</b>
+                                        <b>Total</b>
                                     </td>
                                 </tr>
                                 @foreach ($products as $product)
@@ -124,8 +154,8 @@
                                     <td style="width: 300px;text-align:left;font-family: arial;font-size:10px;margin: 0px;font-weight: 400; border-collapse: collapse;border-bottom: 1px solid black;">
                                         
                                     </td>
-                                    <td style="width:100px;text-align:left;font-family: 'Nunito', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;border-bottom: 1px solid black;">
-                                        SUBTOTAL 
+                                    <td style="width:100px;text-align:right;font-family: 'Nunito', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;border-bottom: 1px solid black;">
+                                        Subtotal
                                     </td>
                                     <td style="width:100px;text-align:right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-right: 10px;border-bottom: 1px solid black;">
                                         {{ site_currency() }} {{ number_format($invoice_amount + $discount_amount, 2) }}
@@ -138,8 +168,8 @@
                                     <td style="width: 300px;text-align:left;font-family: arial;font-size:10px;margin: 0px;font-weight: 400; border-collapse: collapse;">
                                         
                                     </td>
-                                    <td style="width:100px;text-align:left;font-family: 'Nunito', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;">
-                                        DISCOUNT
+                                    <td style="width:100px;text-align:right;font-family: 'Nunito', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;">
+                                        Discount
                                     </td>
                                     <td style="width:100px;text-align:right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-right: 10px;">
                                         {{ site_currency() }} {{ number_format($discount_amount, 2) }}
@@ -152,21 +182,24 @@
                                     <td style="width: 300px;text-align:left;font-family: arial;font-size:10px;margin: 0px;font-weight: 400; border-collapse: collapse;">
                                         
                                     </td>
-                                    <td style="width:100px;text-align:left;font-family: 'Nunito', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;">
-                                        <b>TOTAL Due</b>
+                                    <td style="width:100px;text-align:right;font-family: 'Nunito', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;">
+                                        <b>Total Due</b>
                                     </td>
                                     <td style="width:100px;text-align:right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-right: 10px;">
                                         {{ site_currency() }} {{ number_format($invoice_amount, 2) }}
                                     </td>
                                 </tr>
                             </table>
-                            <table>
-                            <tr style="width: 600px; ">
-                                <td style="width: 600px;text-align: center; color: #7B5CFF; font-size: 11px;font-family: 'Nunito', sans-serif;">
+                            <!-- <table width="100%">
+                            <tr style="width: 100%; ">
+                                <td style="width: 100%;text-align: center; color: #7B5CFF; font-size: 11px;font-family: 'Nunito', sans-serif;">
                                     <p>Thank you for your business!</p></td>
                             </tr>
                             
-                            </table>
+                            </table> -->
+                            <div style="width: 100%; text-align: center; color: #7B5CFF; font-size: 11px; font-family: 'Nunito', sans-serif;margin-top: 10px;">
+                                <p style="margin: 0;">Thank you for your business!</p>
+                            </div>
                             
                         </td>
                     </tr>
