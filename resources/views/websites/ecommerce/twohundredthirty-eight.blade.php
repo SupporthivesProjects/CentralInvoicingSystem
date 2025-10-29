@@ -145,8 +145,7 @@
                                     <td style="text-align:center;border-bottom:1px solid grey ;">
                                         <p
                                             style="font-size:9px;font-weight:500;font-family:Urbanist;margin: 0px;line-height: 28px;text-align:center;padding-right:10px;text-transform: uppercase;">
-                                            {{ site_currency_code() . number_format($invoice_amount + $discount_amount, 2) }}
-                                            {{ site_currency() }} {{ number_format($product->unit_price ?? 0, 2) }}
+                                            {{ site_currency_code() }} {{ number_format($product->unit_price ?? 0, 2) }}
                                         </p>
                                     </td>
                                 </tr>
