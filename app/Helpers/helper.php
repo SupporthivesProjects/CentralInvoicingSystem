@@ -176,12 +176,26 @@ if (!function_exists('site_currency')) {
                 $currencyCode = $currencyRow?->option_value ?? 'USD';
 
                 $symbols = [
-                    'USD' => '$',
-                    'EUR' => '€',
-                    'INR' => '₹',
-                    'GBP' => '£',
-                    'AED' => 'د.إ',
-                    'NGN' => '₦'
+                    'USD' => '$',   // US Dollar
+                    'EUR' => '€',   // Euro
+                    'INR' => '₹',   // Indian Rupee
+                    'GBP' => '£',   // British Pound
+                    'AED' => 'د.إ', // UAE Dirham
+                    'NGN' => '₦',   // Nigerian Naira
+                    'AUD' => 'A$',  // Australian Dollar
+                    'CAD' => 'C$',  // Canadian Dollar
+                    'SGD' => 'S$',  // Singapore Dollar
+                    'JPY' => '¥',   // Japanese Yen
+                    'CNY' => '¥',   // Chinese Yuan
+                    'ZAR' => 'R',   // South African Rand
+                    'CHF' => 'CHF', // Swiss Franc
+                    'MYR' => 'RM',  // Malaysian Ringgit
+                    'THB' => '฿',   // Thai Baht
+                    'PKR' => '₨',   // Pakistani Rupee
+                    'BDT' => '৳',   // Bangladeshi Taka
+                    'LKR' => 'Rs',  // Sri Lankan Rupee
+                    'KWD' => 'KD',  // Kuwaiti Dinar
+                    'QAR' => 'QR',  // Qatari Riyal
                 ];
 
                 return $symbols[$currencyCode] ?? $currencyCode;
