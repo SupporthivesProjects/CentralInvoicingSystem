@@ -19,22 +19,26 @@
                     <!-- Header -->
                     <tr >
                         <td >
-                            <table style=" background-color: #FFFFFF;border-collapse: collapse;">
+                            <!-- <table style=" background-color: #FFFFFF;border-collapse: collapse;"> -->
+                            <table width="100%" style="border-collapse: collapse; table-layout: fixed; background: #ECECFF;">
                                 <tr >
                                     <td style="background: #ECECFF; height: 140px; width: 200px;padding-left: 20px; font-family: 'Nunito', sans-serif; border-bottom-right-radius: 20px;">
                                         <p style="font-size: 26px;color: black">INVOICE <span style="font-size: 26px;color: #7B5CFF;">[{{ $invoice_number }}]</span></p>
                                         <p style="font-size: 10px;margin: 0px;color: #7B5CFF;">{{ $company_name }}</p>
                                         <p style="font-size: 9px;margin-top: 0px;">{!! $company_address !!}</p> 
                                     </td>
-                                    <td style="width: 300px;background: #ECECFF; text-align: end;">
+                                    <!-- <td style="width: 320px;background: #ECECFF; text-align: end;">
                                        <table style="border-collapse: collapse;">
                                             <tr>
-                                                <td style="width: 300px;height: 140px;background: url('{{ $invoice_header_image }}');background-size: cover;background-position: top right;background-repeat: no-repeat;border-radius: 20px 0px 0px 0px;">
+                                                <td style="width: 320px;height: 140px;background: url('{{ $invoice_header_image }}');background-size: cover;background-position: top right;background-repeat: no-repeat;border-radius: 20px 0px 0px 0px;">
                                                     
                                                 </td>
                                             </tr>
                                        </table>
-                                     </td>
+                                     </td> -->
+                                    <td style="width: 100%; text-align: right; background: #ECECFF;">
+                                        <div style="width: 320px; height: 140px; background: url('{{ $invoice_header_image }}') top right / cover no-repeat; border-radius: 20px 0 0 0; margin-left: auto;"></div>
+                                    </td>
                                 </tr>
                             </table>
                         </td>
@@ -45,7 +49,7 @@
                     <tr style="background: #FFFFFF;">
                         <td style="padding:20px;border-radius: 20px 0px 0px 0px;">
                             
-                            <table width="100%" style="border-collapse: collapse;">
+                            <!-- <table width="100%" style="border-collapse: collapse;">
                                 
                                 <tr style="border-top: 1px solid goldenrod; border-collapse: collapse; color: #7B5CFF;">
                                     <td style="padding-top: 10px;width: 33.3%; ">
@@ -82,7 +86,33 @@
                                      </td>
                                 </tr>
                                 
+                            </table> -->
+                            <table width="100%" style="border-collapse: collapse; table-layout: fixed;">
+                                <tr style="border-top: 1px solid goldenrod; color: #7B5CFF;">
+                                    <td style="padding: 8px; text-align: left; width: 33.33%;">
+                                    <p style="font-family: 'Nunito', sans-serif; font-size: 10px; margin: 0; font-weight: 400;">Date</p>
+                                    </td>
+                                    <td style="padding: 8px; text-align: left; width: 33.33%;">
+                                    <p style="font-family: 'Nunito', sans-serif; font-size: 10px; margin: 0; font-weight: 400;">To</p>
+                                    </td>
+                                    <td style="padding: 8px; text-align: left; width: 33.33%;">
+                                    <p style="font-family: 'Nunito', sans-serif; font-size: 10px; margin: 0; font-weight: 400;">Billed From</p>
+                                    </td>
+                                </tr>
+
+                                <tr style="border-bottom: 1px solid goldenrod;">
+                                    <td style="padding: 8px; text-align: left; width: 33.33%;">
+                                    <p style="font-family: 'Nunito', sans-serif; font-size: 10px; margin: 0; font-weight: 400;">{{ $invoice_date }}</p>
+                                    </td>
+                                    <td style="padding: 8px; text-align: left; width: 33.33%;">
+                                    <p style="font-family: 'Nunito', sans-serif; font-size: 10px; margin: 0; font-weight: 400;">{{ $customer_name }}</p>
+                                    </td>
+                                    <td style="padding: 8px; text-align: left; width: 33.33%;">
+                                    <p style="font-family: 'Nunito', sans-serif; font-size: 10px; margin: 0; font-weight: 400;">Haven of Wellbeing</p>
+                                    </td>
+                                </tr>
                             </table>
+
                             <br>
                             <table style="border-collapse: collapse;border-bottom: 0px;border: 0px;">
                                
@@ -160,13 +190,16 @@
                                     </td>
                                 </tr>
                             </table>
-                            <table width="100%">
+                            <!-- <table width="100%">
                             <tr style="width: 100%; ">
                                 <td style="width: 100%;text-align: center; color: #7B5CFF; font-size: 11px;font-family: 'Nunito', sans-serif;">
                                     <p>Thank you for your business!</p></td>
                             </tr>
                             
-                            </table>
+                            </table> -->
+                            <div style="width: 100%; text-align: center; color: #7B5CFF; font-size: 11px; font-family: 'Nunito', sans-serif;">
+                                <p style="margin: 0;">Thank you for your business!</p>
+                            </div>
                             
                         </td>
                     </tr>
