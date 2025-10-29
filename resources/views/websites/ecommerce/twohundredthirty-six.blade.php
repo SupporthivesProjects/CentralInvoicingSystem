@@ -12,7 +12,7 @@
     </style>
 </head>
 <body>
-    <table width="100%" cellspacing="0" cellpadding="0" border="0">
+    <table width="100%" cellspacing="0" cellpadding="0" border="0" style="background: #ECECFF;">
         <tr>
             <td align="center">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0"  style="  border: 40px solid #ECECFF;background: #ECECFF;">
@@ -22,7 +22,7 @@
                             <table style=" background-color: #FFFFFF;border-collapse: collapse;">
                                 <tr >
                                     <td style="background: #ECECFF; height: 140px; width: 200px;padding-left: 20px; font-family: 'Nunito', sans-serif; border-bottom-right-radius: 20px;">
-                                        <p style="font-size: 26px;color: #7B5CFF;">INVOICE [{{ $invoice_number }}]</p>
+                                        <p style="font-size: 26px;color: black">INVOICE <span style="font-size: 26px;color: #7B5CFF;">[{{ $invoice_number }}]</span></p>
                                         <p style="font-size: 10px;margin: 0px;color: #7B5CFF;">{{ $company_name }}</p>
                                         <p style="font-size: 9px;margin-top: 0px;">{!! $company_address !!}</p> 
                                     </td>
@@ -48,17 +48,17 @@
                             <table style="border-collapse: collapse;">
                                 
                                 <tr style="border-top: 1px solid goldenrod; border-collapse: collapse; color: #7B5CFF;">
-                                    <td style="padding-top: 10px;width: 200px; ">
+                                    <td style="padding-top: 10px;width: 33.3%; ">
                                         <p style="font-family: 'Nunito', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; text-align: left;padding-bottom: 5px;padding-left: 5px;">
                                             Date
                                         </p>
                                     </td>
-                                     <td style="padding-top: 10px;width: 200px;">
+                                     <td style="padding-top: 10px;width: 33.3%;">
                                        <p style="font-family: 'Nunito', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; text-align: left;padding-bottom: 5px;padding-right: 5px;">
                                             To
                                         </p>
                                      </td>
-                                     <td style="padding-top: 10px;width: 200px;">
+                                     <td style="padding-top: 10px;width: 33.3%;">
                                        <p style="font-family: 'Nunito', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; text-align: left;padding-bottom: 5px;padding-right: 5px;">
                                             Billed From
                                         </p>
@@ -88,16 +88,16 @@
                                
                                 <tr style="border-collapse: collapse;height: 30px; background-color: #7B5CFF;color: white;">
                                     <td style="width: 200px;text-align: left;font-family: 'Nunito', sans-serif;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-left: 5px;">
-                                       <b>QUANTITY </b> 
+                                       <b>Quantity </b> 
                                     </td>
                                     <td style="width: 400px;text-align: left;font-family: 'Nunito', sans-serif;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
                                         <b>	Description</b>
                                     </td>
                                     <td style="width: 200px;text-align: right;font-family: 'Nunito', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;">
-                                        <b>UNIT PRICE</b>
+                                        <b>Unit Price</b>
                                     </td>
                                     <td style="width:200px;text-align: right;font-family: 'Nunito', sans-serif;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 10px; ">
-                                        <b>TOTAL</b>
+                                        <b>Total</b>
                                     </td>
                                 </tr>
                                 @foreach ($products as $product)
@@ -161,8 +161,8 @@
                                 </tr>
                             </table>
                             <table>
-                            <tr style="width: 600px; ">
-                                <td style="width: 600px;text-align: center; color: #7B5CFF; font-size: 11px;font-family: 'Nunito', sans-serif;">
+                            <tr style="width: 100%; ">
+                                <td style="width: 100%;text-align: center; color: #7B5CFF; font-size: 11px;font-family: 'Nunito', sans-serif;">
                                     <p>Thank you for your business!</p></td>
                             </tr>
                             
