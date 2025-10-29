@@ -24,18 +24,18 @@
                     style="border-collapse: collapse;background:url('{{ $invoice_image1 }}');background-size:cover;background-position:center;background-repeat:no-repeat;height:100vh">
                     <!-- Header -->
                     <tr>
-                        <td style="padding-left:40px;" colspan="2">
+                        <td style="padding: 20px 0px 0px 45px;" colspan="2">
                             <table style="margin-top:125px">
                                 <tr style="height: 20px;">
                                     <td style="padding: 5px;">
                                         <p
-                                            style="font-size:9px;font-weight:400;font-family:Urbanist;margin: 0px;line-height:16px;text-align:left;color:white;">
+                                            style="font-size:9px;font-weight:700;font-family:Urbanist;margin: 0px;line-height:16px;text-align:left;color:white;margin-bottom: 0px;">
                                             Invoice No.
                                         </p>
                                     </td>
                                     <td style="padding: 5px;">
                                         <p
-                                            style="font-size:9px;font-weight:400;font-family:Urbanist;margin: 0px;line-height:16px;text-align:left;color:white;">
+                                            style="font-size:9px;font-weight:400;font-family:Urbanist;margin: 0px;line-height:16px;text-align:left;color:white;margin-bottom: 0px;">
                                             {{ $invoice_number }}
                                         </p>
                                     </td>
@@ -43,13 +43,13 @@
                                 <tr style="height: 20px;">
                                     <td style="padding: 5px;">
                                         <p
-                                            style="font-size:9px;font-weight:400;font-family:Urbanist;margin: 0px;line-height:16px;text-align:left;color:white;">
+                                            style="font-size:9px;font-weight:700;font-family:Urbanist;margin: 0px;line-height:16px;text-align:left;color:white;margin-bottom: 0px;">
                                             Date:
                                         </p>
                                     </td>
                                     <td style="padding: 5px;">
                                         <p
-                                            style="font-size:9px;font-weight:400;font-family:Urbanist;margin: 0px;line-height:16px;text-align:left;color:white;">
+                                            style="font-size:9px;font-weight:400;font-family:Urbanist;margin: 0px;line-height:16px;text-align:left;color:white;margin-bottom: 0px;">
                                             {{ $invoice_date }}
                                         </p>
                                     </td>
@@ -58,13 +58,13 @@
                                 <tr style="height: 20px;">
                                     <td style="padding: 5px;">
                                         <p
-                                            style="font-size:9px;font-weight:400;font-family:Urbanist;margin: 0px;line-height:16px;text-align:left;color:white;">
+                                            style="font-size:9px;font-weight:700;font-family:Urbanist;margin: 0px;line-height:16px;text-align:left;color:white;margin-bottom: 0px;">
                                             Invoice To:
                                         </p>
                                     </td>
                                     <td style="padding: 5px;">
                                         <p
-                                            style="font-size:9px;font-weight:400;font-family:Urbanist;margin: 0px;line-height:16px;text-align:left;color:white;">
+                                            style="font-size:9px;font-weight:400;font-family:Urbanist;margin: 0px;line-height:16px;text-align:left;color:white;margin-bottom: 0px;">
                                             {{ $customer_name }}
                                         </p>
                                     </td>
