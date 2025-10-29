@@ -41,7 +41,7 @@
                                                 background-position: top center;
                                                 background-size: cover;
                                                 width: calc(100% + 5px);
-                                                padding-left: 100px;
+                                                padding-left: 140px;
                                                 display: flex;
                                                 flex-direction: column;
                                                 justify-content: center;
