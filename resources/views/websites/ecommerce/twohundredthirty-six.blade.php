@@ -23,7 +23,7 @@
                             <table width="100%" style="border-collapse: collapse; table-layout: fixed; background: #ECECFF;">
                                 <tr >
                                     <td style="background: #ECECFF; height: 140px; width: 200px;padding-left: 20px; font-family: 'Nunito', sans-serif; border-bottom-right-radius: 20px;">
-                                        <p style="font-size: 26px;color: black">INVOICES <span style="font-size: 26px;color: #7B5CFF;">[{{ $invoice_number }}]</span></p>
+                                        <p style="font-size: 24px;color: black">INVOICES <span style="font-size: 24px;color: #7B5CFF;">[{{ $invoice_number }}]</span></p>
                                         <p style="font-size: 10px;margin: 0px;color: #7B5CFF;">{{ $company_name }}</p>
                                         <p style="font-size: 9px;margin-top: 0px;">{!! $company_address !!}</p> 
                                     </td>
@@ -37,7 +37,7 @@
                                        </table>
                                      </td> -->
                                     <td style="width: 100%; text-align: right; background: #ECECFF;">
-                                        <div style="width: 320px; height: 140px; background: url('{{ $invoice_header_image }}') top right / cover no-repeat; border-radius: 20px 0 0 0; margin-left: auto;"></div>
+                                        <div style="width: 320px; height: 144px; background: url('{{ $invoice_header_image }}') top right / cover no-repeat; border-radius: 20px 0 0 0; margin-left: auto;"></div>
                                     </td>
                                 </tr>
                             </table>
@@ -154,8 +154,8 @@
                                     <td style="width: 300px;text-align:left;font-family: arial;font-size:10px;margin: 0px;font-weight: 400; border-collapse: collapse;border-bottom: 1px solid black;">
                                         
                                     </td>
-                                    <td style="width:100px;text-align:left;font-family: 'Nunito', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;border-bottom: 1px solid black;">
-                                        SUBTOTAL 
+                                    <td style="width:100px;text-align:right;font-family: 'Nunito', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;border-bottom: 1px solid black;">
+                                        Subtotal
                                     </td>
                                     <td style="width:100px;text-align:right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-right: 10px;border-bottom: 1px solid black;">
                                         {{ site_currency() }} {{ number_format($invoice_amount + $discount_amount, 2) }}
@@ -168,8 +168,8 @@
                                     <td style="width: 300px;text-align:left;font-family: arial;font-size:10px;margin: 0px;font-weight: 400; border-collapse: collapse;">
                                         
                                     </td>
-                                    <td style="width:100px;text-align:left;font-family: 'Nunito', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;">
-                                        DISCOUNT
+                                    <td style="width:100px;text-align:right;font-family: 'Nunito', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;">
+                                        Discount
                                     </td>
                                     <td style="width:100px;text-align:right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-right: 10px;">
                                         {{ site_currency() }} {{ number_format($discount_amount, 2) }}
@@ -182,8 +182,8 @@
                                     <td style="width: 300px;text-align:left;font-family: arial;font-size:10px;margin: 0px;font-weight: 400; border-collapse: collapse;">
                                         
                                     </td>
-                                    <td style="width:100px;text-align:left;font-family: 'Nunito', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;">
-                                        <b>TOTAL Due</b>
+                                    <td style="width:100px;text-align:right;font-family: 'Nunito', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;">
+                                        <b>Total Due</b>
                                     </td>
                                     <td style="width:100px;text-align:right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-right: 10px;">
                                         {{ site_currency() }} {{ number_format($invoice_amount, 2) }}
