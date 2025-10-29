@@ -166,13 +166,24 @@ if (!function_exists('site_currency')) {
 
             if ($site->technology === 'wordpress') {
                 $currencyTable = $site->currency_table ?? 'wp_options';
-            
+
                 $currencyRow = DB::connection('dynamic')
                     ->table($currencyTable)
                     ->where('option_name', 'woocommerce_currency')
                     ->first();
-            
-                return $currencyRow?->option_value ?? 'USD';
+
+                $currencyCode = $currencyRow?->option_value ?? 'USD';
+
+                $symbols = [
+                    'USD' => '$',
+                    'EUR' => '€',
+                    'INR' => '₹',
+                    'GBP' => '£',
+                    'AED' => 'د.إ'
+                ];
+
+                return $symbols[$currencyCode] ?? $currencyCode;
+                
             }
             
             $site_currency = DB::connection('dynamic')->table('business_settings')->where('type', 'system_default_currency')->first()
