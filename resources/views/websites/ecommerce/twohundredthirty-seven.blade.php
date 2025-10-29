@@ -23,7 +23,7 @@
         <p style="text-align:center; font-weight:bold; color:#cc0000; font-size:9px; margin:20px 0;">INVOICE {{ $invoice_number }}</p>
 
         <table
-            style="width:70%; border-collapse:collapse; font-size:9px; margin:0 auto; font-family:Arial, sans-serif; table-layout:fixed;">
+            style="width:100%; border-collapse:collapse; font-size:9px; margin:0 auto; font-family:Arial, sans-serif; table-layout:fixed;">
             <tr>
                 <th
                     style="border:1px solid #ff6666; background-color:#ffe5e5; text-align:left; padding:6px; width:50%;">
@@ -35,7 +35,7 @@
             <tr>
                 <!-- Bill To -->
                 <td style="border:1px solid #ff6666; padding:8px; vertical-align:top;">
-                    <div style="display:flex; gap:4px; justify-content: space-between;">
+                    <div style="display:flex; gap:20px;">
                         <strong>Name</strong>
                         <span>{{ $customer_name ? $customer_name : '' }}</span>
                     </div>
@@ -43,7 +43,7 @@
 
                 <!-- Bill From -->
                 <td style="border:1px solid #ff6666; padding:8px; vertical-align:top;">
-                    <div style="display:flex; gap:32px; justify-content: space-between; margin-bottom: 15px;">
+                    <div style="display:flex; gap:30px; margin-bottom: 15px;">
                         <strong>Name</strong>
                         <span>{{ $company_name }}</span>
                     </div>
@@ -66,7 +66,8 @@
 
         <br>
 
-        <table style="width:70%; border-collapse:collapse; font-size:9px; margin: 0 auto;height: 420px;">
+        <div style="min-height: 624px;">
+            <table style="width:100%; border-collapse:collapse; font-size:9px; margin: 0 auto;height: 420px;">
             <tr>
                 <th
                     style="width:10%; border:1px solid #ff6666; background-color:#ffd9d9; text-align:left; padding:8px;">
@@ -134,8 +135,8 @@
                     Total</td>
                 <td style="border:1px solid #ff6666; font-weight:bold; text-align:right; padding:8px;">{{ site_currency() . number_format($invoice_amount ?? 0, 2) }}</td>
             </tr>
-        </table>
-
+            </table>
+        </div>
 
 
         <div style="text-align:center; font-size:9px; margin-top:25px; margin-bottom: 25px;">

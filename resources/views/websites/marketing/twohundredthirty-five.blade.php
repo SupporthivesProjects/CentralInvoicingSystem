@@ -56,10 +56,10 @@
                                         </p>
                                     </td>
                                     <td style="padding-top: 10px; text-align: right;font-size: 11px; width: 100%;">
-                                        <p style="font-family: arial;font-size: 14px;font-weight: 400;  text-align: right; ">
+                                        <p style="font-family: arial;font-size: 14px;font-weight: 400;  text-align: left; ">
                                             <b>Brandflaire.com</b>
                                         </p>
-                                        <p style="margin-top: 0px; text-align: right;">{{ $company_address }}<br>
+                                        <p style="margin-top: 0px; text-align: left;">{{ $company_address }}<br>
                                             {{ $company_mobile }}<br>{{ $company_email }}
                                         </p>
                                     </td>
