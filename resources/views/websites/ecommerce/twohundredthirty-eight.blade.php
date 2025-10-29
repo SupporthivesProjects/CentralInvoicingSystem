@@ -18,7 +18,7 @@
 
         .sub_tab {
         	width: fit-content;
-            position: fixed;
+            position: absolute;
             right: 0px;
         }
         .sub_tab tr td {
@@ -76,7 +76,7 @@
 
                     <!-- Content -->
                     <tr>
-                        <td style="padding:40px 20px 0px 20px;width:80%;vertical-align:top;margin-top:10px;" align="center">
+                        <td style="padding:40px 20px 0px 20px;width:80%;vertical-align:top;margin-top:10px; position: relative;" align="center">
                             <table cellspacing="0" cellpadding="0" border="0" width="100%"
                                 style="border-collapse: collapse;margin-top:40px;">
                                 <tr style="height:50px;border-bottom:1px solid black;">
