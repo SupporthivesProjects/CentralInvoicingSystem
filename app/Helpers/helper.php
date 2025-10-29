@@ -165,7 +165,7 @@ if (!function_exists('site_currency')) {
             \App\Services\DynamicDatabaseService::connect($site);
 
             if ($site->technology === 'wordpress') {
-                
+
                 $currencyTable = $site->currency_table ?? 'wp_options';
 
                 $currencyRow = DB::connection('dynamic')
@@ -180,7 +180,8 @@ if (!function_exists('site_currency')) {
                     'EUR' => '€',
                     'INR' => '₹',
                     'GBP' => '£',
-                    'AED' => 'د.إ'
+                    'AED' => 'د.إ',
+                    'NGN' => '₦'
                 ];
 
                 return $symbols[$currencyCode] ?? $currencyCode;
