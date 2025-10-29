@@ -194,7 +194,7 @@
                                                             <td></td>
                                                             
                                                             <td style="padding-left: 20px;text-align: end;padding-right:10px;">
-                                                                <p style="font-family: 'Roboto';font-size: 9px;line-height: normal;color: gray;line-height:1.3; padding-top: 10px;">SUB TOTAL<br>
+                                                                <p style="font-family: 'Roboto';font-size: 9px;color: gray;line-height:1.3; padding-top: 10px;">SUB TOTAL<br>
                                                                     DISCOUNT</p>
                                                             </td>
                                                             <td style="border-bottom: 3px solid red;"></td>
