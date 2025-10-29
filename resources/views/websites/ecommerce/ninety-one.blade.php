@@ -26,15 +26,15 @@
             align-items: center; */
         }
         @page {
-        size: A4;
-        margin: 0;
+            size: A4;
+            margin: 0;
         }
 
         html, body {
-        margin: 0;
-        padding: 0;
-        height: 100%;
-        overflow: hidden;
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
         }
 
      
@@ -92,7 +92,7 @@
                                             </td>
                                         </tr>
                                         @foreach($products as $product)
-                                        <tr style="border-top: 1px solid black;border-bottom: 1px solid black;height:50px;">
+                                        <tr style="border-top: 1px solid black;border-bottom: 1px solid black;height:30px;">
                                             <td style="width: 50%;padding-left: 10px;">
                                                  <p style="margin: 0px;font-family:Source Sans Pro;font-size:9px;color: #000000;">
                                                   {{ $product->name }}
@@ -222,7 +222,7 @@
                                         <tr>
                                             <td>
                                                 <p style="margin: 0px;font-family:Source Sans Pro;font-size:9px;color: #000000;line-height: 12px;">
-                                                  Company Address:
+                                                  Company Name:
                                                 </p>
                                                 <p style="margin: 0px;font-family:Source Sans Pro;font-size:9px;color:#808080;line-height: 12px;">
                                                  {{ $company_address }}<br />

@@ -18,11 +18,13 @@
 
         .sub_tab {
         	width: fit-content;
-            position: fixed;
-            right: 0px;
+            position: absolute;
+            right: 20px;
         }
         .sub_tab tr td {
             border: 1px solid black;
+            padding: 5px 20px;
+            text-align: right;
         }
     </style>
 </head>
@@ -42,11 +44,11 @@
                                         <p
                                             style="font-size:9px;font-weight:700;font-family:Urbanist;margin: 0px;text-align:left;color:white;margin-bottom: 4px;">
                                             Invoice No.
-                                        </p><br>
+                                        </p>
                                         <p
                                             style="font-size:9px;font-weight:700;font-family:Urbanist;margin: 0px;text-align:left;color:white;margin-bottom: 4px;">
                                             Date:
-                                        </p><br><br>
+                                        </p><br>
                                         <p
                                             style="font-size:9px;font-weight:700;font-family:Urbanist;margin: 0px;text-align:left;color:white;margin-bottom: 4px;">
                                             Invoice To:
@@ -56,11 +58,11 @@
                                         <p
                                             style="font-size:9px;font-weight:400;font-family:Urbanist;margin: 0px;text-align:left;color:white;margin-bottom: 4px;">
                                             {{ $invoice_number }}
-                                        </p><br>
+                                        </p>
                                         <p
                                             style="font-size:9px;font-weight:400;font-family:Urbanist;margin: 0px;text-align:left;color:white;margin-bottom: 4px;">
                                             {{ $invoice_date }}
-                                        </p><br><br>
+                                        </p><br>
                                         <p
                                             style="font-size:9px;font-weight:400;font-family:Urbanist;margin: 0px;text-align:left;color:white;margin-bottom: 4px;">
                                             {{ $customer_name }}
@@ -76,7 +78,7 @@
 
                     <!-- Content -->
                     <tr>
-                        <td style="padding:40px 20px 0px 20px;width:80%;vertical-align:top;margin-top:10px;" align="center">
+                        <td style="padding:40px 20px 0px 20px;width:80%;vertical-align:top;margin-top:20px; position: relative;top: 10px;" align="center">
                             <table cellspacing="0" cellpadding="0" border="0" width="100%"
                                 style="border-collapse: collapse;margin-top:40px;">
                                 <tr style="height:50px;border-bottom:1px solid black;">
