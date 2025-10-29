@@ -165,6 +165,7 @@ if (!function_exists('site_currency')) {
             \App\Services\DynamicDatabaseService::connect($site);
 
             if ($site->technology === 'wordpress') {
+                
                 $currencyTable = $site->currency_table ?? 'wp_options';
 
                 $currencyRow = DB::connection('dynamic')
@@ -183,7 +184,6 @@ if (!function_exists('site_currency')) {
                 ];
 
                 return $symbols[$currencyCode] ?? $currencyCode;
-                
             }
             
             $site_currency = DB::connection('dynamic')->table('business_settings')->where('type', 'system_default_currency')->first()
