@@ -24,6 +24,7 @@
         .sub_tab tr td {
             border: 1px solid black;
             padding: 5px 20px;
+            text-align: right;
         }
     </style>
 </head>
