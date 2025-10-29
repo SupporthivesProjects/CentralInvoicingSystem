@@ -13,9 +13,9 @@
 <body style="margin:0px;padding:0px">
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
-            <td align="center" bgcolor="#f2f2f2" style="padding: 0px 0;">
+            <td align="center" bgcolor="#f2f2f2" style="padding: 0px 0; background: white;">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
-                    style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
+                    style="border-collapse: collapse;">
                     <!---header--->
                     <tr>
                         <td align="center" style="height:100px;background:#416529;padding:20px;vertical-align: middle;">
@@ -135,7 +135,7 @@
                             </table>
 
                             <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
-                                style="border-collapse: collapse;margin-top: 40px;">
+                                style="border-collapse: collapse;margin: 0px 40px;background:#fff; ;>
                                 <tr style="background:#416529;">
                                     <td>
                                         <p
