@@ -2,18 +2,29 @@
 <html>
 
 <head>
-    <style>
-        * {
-            margin: 0px;
-            padding: 0px;
-        }
-    </style>
     <title>Your Email Title</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
         rel="stylesheet">
+
+
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        .sub_tab {
+        	width: fit-content;
+            position: fixed;
+            right: 0px;
+        }
+        .sub_tab tr td {
+            border: 1px solid black;
+        }
+    </style>
 </head>
 
 <body>
@@ -122,8 +133,11 @@
                                         </td>
                                     </tr>
                                 @endforeach
+                            </table>
+                            <table class="sub_tab" cellspacing="0" cellpadding="0" border="0" width="100%"
+                                style="border-collapse: collapse;margin-top:40px;">
+                                
                                 <tr style="height:50px;">
-                                    <td colspan="2"></td>
                                     <td style="text-align:center;border-bottom:1px solid grey ;">
                                         <p
                                             style="font-size:9px;font-weight:700;font-family:Urbanist;margin: 0px;line-height: 28px;text-align:center;padding-left:10px;text-transform:capitalize;">
@@ -138,7 +152,6 @@
                                     </td>
                                 </tr>
                                 <tr style="height:50px;">
-                                    <td colspan="2"></td>
                                     <td style="text-align:center;border-bottom:1px solid grey ;">
                                         <p
                                             style="font-size:9px;font-weight:700;font-family:Urbanist;margin: 0px;line-height: 28px;text-align:center;padding-left:10px;text-transform:capitalize;">
@@ -154,7 +167,6 @@
                                     </td>
                                 </tr>
                                 <tr style="height:50px;">
-                                    <td colspan="2"></td>
                                     <td style="text-align:center;border-bottom:1px solid grey ;">
                                         <p
                                             style="font-size:11px;font-weight:700;font-family:Urbanist;margin: 0px;line-height: 28px;text-align:center;padding-left:10px;text-transform:capitalize;">
