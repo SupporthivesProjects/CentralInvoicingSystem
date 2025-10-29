@@ -37,10 +37,10 @@
                                         <h5
                                             style="margin-bottom: 5px;margin-top: 7px; color: darkgreen;font-size: 16px;">
                                             Invoice Number <img src="{{ $invoice_image2 }}" alt=""
-                                                style="height: 5px;"> </h5>{{ $invoice_number }}
+                                                style="height: 5px;"> </h5><p style="font-size: 16px;">{{ $invoice_number }}</p>
                                         <h5 style="margin-bottom: 0;margin-top: 5px; color: darkgreen;font-size: 16px;">
                                             Invoice Date <img src="{{ $invoice_image2 }}" alt=""
-                                                style="height: 5px;"></h5>{{ $invoice_date }}
+                                                style="height: 5px;"></h5><p style="font-size: 16px;">{{ $invoice_date }}</p>
                                     </td>
                                 </tr>
                             </table>
