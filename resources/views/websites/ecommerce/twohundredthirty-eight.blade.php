@@ -26,49 +26,37 @@
                     <tr>
                         <td style="padding: 20px 0px 0px 45px;" colspan="2">
                             <table style="margin-top:125px">
-                                <tr style=";">
+                                <tr>
                                     <td style="padding: 5px;">
                                         <p
-                                            style="font-size:9px;font-weight:700;font-family:Urbanist;margin: 0px;line-height:16px;text-align:left;color:white;margin-bottom: 0px;">
+                                            style="font-size:9px;font-weight:700;font-family:Urbanist;margin: 0px;text-align:left;color:white;margin-bottom: 4px;">
                                             Invoice No.
-                                        </p>
-                                    </td>
-                                    <td style="padding: 5px;">
+                                        </p><br>
                                         <p
-                                            style="font-size:9px;font-weight:400;font-family:Urbanist;margin: 0px;line-height:16px;text-align:left;color:white;margin-bottom: 0px;">
-                                            {{ $invoice_number }}
-                                        </p>
-                                    </td>
-                                </tr>
-                                <tr style=";">
-                                    <td style="padding: 5px;">
-                                        <p
-                                            style="font-size:9px;font-weight:700;font-family:Urbanist;margin: 0px;line-height:16px;text-align:left;color:white;margin-bottom: 0px;">
+                                            style="font-size:9px;font-weight:700;font-family:Urbanist;margin: 0px;text-align:left;color:white;margin-bottom: 4px;">
                                             Date:
-                                        </p>
-                                    </td>
-                                    <td style="padding: 5px;">
+                                        </p><br><br>
                                         <p
-                                            style="font-size:9px;font-weight:400;font-family:Urbanist;margin: 0px;line-height:16px;text-align:left;color:white;margin-bottom: 0px;">
-                                            {{ $invoice_date }}
-                                        </p>
-                                    </td>
-                                </tr>
-                                <tr style=";"></tr>
-                                <tr style=";">
-                                    <td style="padding: 5px;">
-                                        <p
-                                            style="font-size:9px;font-weight:700;font-family:Urbanist;margin: 0px;line-height:16px;text-align:left;color:white;margin-bottom: 0px;">
+                                            style="font-size:9px;font-weight:700;font-family:Urbanist;margin: 0px;text-align:left;color:white;margin-bottom: 4px;">
                                             Invoice To:
                                         </p>
                                     </td>
                                     <td style="padding: 5px;">
                                         <p
-                                            style="font-size:9px;font-weight:400;font-family:Urbanist;margin: 0px;line-height:16px;text-align:left;color:white;margin-bottom: 0px;">
+                                            style="font-size:9px;font-weight:400;font-family:Urbanist;margin: 0px;text-align:left;color:white;margin-bottom: 4px;">
+                                            {{ $invoice_number }}
+                                        </p><br>
+                                        <p
+                                            style="font-size:9px;font-weight:400;font-family:Urbanist;margin: 0px;text-align:left;color:white;margin-bottom: 4px;">
+                                            {{ $invoice_date }}
+                                        </p><br><br>
+                                        <p
+                                            style="font-size:9px;font-weight:400;font-family:Urbanist;margin: 0px;text-align:left;color:white;margin-bottom: 4px;">
                                             {{ $customer_name }}
                                         </p>
                                     </td>
                                 </tr>
+                                
                             </table>
                         </td>
                     </tr>
