@@ -23,7 +23,7 @@
         }
         .sub_tab tr td {
             border: 1px solid black;
-            padding: 10px 20px;
+            padding: 5px 20px;
         }
     </style>
 </head>
