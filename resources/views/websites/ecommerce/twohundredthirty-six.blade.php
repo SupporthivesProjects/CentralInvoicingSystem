@@ -22,7 +22,7 @@
                             <!-- <table style=" background-color: #FFFFFF;border-collapse: collapse;"> -->
                             <table width="100%" style="border-collapse: collapse; table-layout: fixed; background: #ECECFF;">
                                 <tr >
-                                    <td style="background: #ECECFF; height: 140px; padding-left: 20px; font-family: 'Nunito', sans-serif; border-bottom-right-radius: 20px;">
+                                    <td style="background: #ECECFF; height: 140px; width: 300px;padding-left: 20px; font-family: 'Nunito', sans-serif; border-bottom-right-radius: 20px;">
                                         <p style="font-size: 24px;color: black">INVOICES <span style="font-size: 24px;color: #7B5CFF;">[{{ $invoice_number }}]</span></p>
                                         <p style="font-size: 10px;margin: 0px;color: #7B5CFF;">{{ $company_name }}</p>
                                         <p style="font-size: 9px;margin-top: 0px;">{!! $company_address !!}</p> 
@@ -37,7 +37,7 @@
                                        </table>
                                      </td> -->
                                     <td style="width: 100%; text-align: right; background: #ECECFF;">
-                                        <div style="width: 320px; height: 144px; background: url('{{ $invoice_header_image }}') top right / cover no-repeat; border-radius: 20px 0 0 0; margin-left: auto;"></div>
+                                        <div style="width: 300px; height: 144px; background: url('{{ $invoice_header_image }}') top right / cover no-repeat; border-radius: 20px 0 0 0; margin-left: auto;"></div>
                                     </td>
                                 </tr>
                             </table>
