@@ -55,7 +55,7 @@
                                             {{ $customer_mobile ? $customer_mobile : '' }}
                                         </p>
                                     </td>
-                                    <td style="padding-top: 10px; text-align: right;font-size: 11px; width: 100%;min-width: 350px;">
+                                    <td style="padding-top: 10px; text-align: right;font-size: 11px; width: 100%;min-width: 375px;">
                                         <p style="font-family: arial;font-size: 14px;font-weight: 400;  text-align: right; ">
                                             <b>Brandflaire.com</b>
                                         </p>
