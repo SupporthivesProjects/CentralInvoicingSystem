@@ -63,8 +63,21 @@
                                         </p>
                                         <!-- <p style="font-family: arial;font-size: 13px;margin: 0px;font-weight: 400;">
                                             Number: {{ $company_mobile }}</p> -->
-                                        <p style="font-family: arial;font-size: 13px;margin: 0px;font-weight: 400;">
-                                            Address: {{ $company_address }}</p>
+                                        <!-- <p style="font-family: arial;font-size: 13px;margin: 0px;font-weight: 400;">
+                                            Address: {{ $company_address }}</p> -->
+                                            @php
+                                            $parts = explode(',', $company_address);
+                                            if (count($parts) > 2) {
+                                                $formatted_address = implode(',', array_slice($parts, 0, 2)) . ',<br>' . implode(',', array_slice($parts, 2));
+                                            } else {
+                                                $formatted_address = $company_address;
+                                            }
+                                            @endphp
+
+                                            <p style="font-family: arial;font-size: 13px;margin: 0px;font-weight: 400;">Address: {!! $formatted_address !!}</p>
+                                            
+
+
                                     </td>
                                     <td style="text-align: right;min-width: 200px;">
                                         <h1
