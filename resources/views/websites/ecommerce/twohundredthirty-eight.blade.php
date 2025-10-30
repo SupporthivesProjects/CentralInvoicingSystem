@@ -205,16 +205,30 @@
                                         <h4
                                             style="font-size:10px;font-weight:400;font-family:Urbanist;margin: 0px;line-height: 28px;text-align:left;padding-left:10px;text-transform:capitalize;">
                                             {{ $company_email }} <br>
+                                            <!-- {!! $company_address !!}  -->
                                             @php
                                                 $parts = explode(',', $company_address);
+
+                                                // Insert line breaks after specific commas
+                                                $formatted_address = '';
+                                                foreach ($parts as $index => $part) {
+                                                    $formatted_address .= trim($part);
+                                                    if ($index < count($parts) - 1) {
+                                                        $formatted_address .= ',';
+                                                    }
+
+                                                    // Add <br> after 1st and 4th commas
+                                                    if (in_array($index, [0, 3])) {
+                                                        $formatted_address .= '<br><br>';
+                                                    } else {
+                                                        $formatted_address .= ' ';
+                                                    }
+                                                }
                                             @endphp
-                                            @foreach($parts as $index => $part)
-                                                {{ trim($part) }}@if($index < count($parts) - 1),@endif
-                                                @if($index === 1 || $index === 5)
-                                                    <br>
-                                                @endif
-                                            @endforeach
-                                         </h4>
+
+                                            {!! $formatted_address !!}
+
+                                        </h4>
                                     </td>
                                 </tr>
                             </table>
