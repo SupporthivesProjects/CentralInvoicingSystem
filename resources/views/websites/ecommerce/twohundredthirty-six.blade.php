@@ -114,7 +114,7 @@
                             </table>
 
                             <br>
-                            <table style="border-collapse: collapse;border-bottom: 0px;border: 0px;">
+                            <table style="border-collapse: collapse;border-bottom: 0px;border: 0px; min-height: 560px !important;">
                                
                                 <tr style="border-collapse: collapse;height: 30px; background-color: #7B5CFF;color: white;">
                                     <td style="width: 200px;text-align: left;font-family: 'Nunito', sans-serif;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-left: 5px;">
