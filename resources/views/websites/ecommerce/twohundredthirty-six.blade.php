@@ -114,8 +114,8 @@
                             </table>
 
                             <br>
-                            <!-- <div style="min-height: 560px !important;"> -->
-  
+                            <div style="min-height: 560px; display: flex; align-items: flex-start;">
+                                <div style="display: inline-block;">
                             <table style="border-collapse: collapse;border-bottom: 0px;border: 0px; ">
                                
                                 <tr style="border-collapse: collapse;height: 30px; background-color: #7B5CFF;color: white;">
@@ -192,7 +192,8 @@
                                     </td>
                                 </tr>
                             </table>
-                            <!-- </div> -->
+                            </div>
+</div>
                             <!-- <table width="100%">
                             <tr style="width: 100%; ">
                                 <td style="width: 100%;text-align: center; color: #7B5CFF; font-size: 11px;font-family: 'Nunito', sans-serif;">
