@@ -23,7 +23,7 @@
         }
         .sub_tab tr td {
             border: 1px solid black;
-            padding: 5px 20px;
+            padding: 5px;
             text-align: right;
         }
     </style>
@@ -84,25 +84,25 @@
                                 <tr style="height:50px;border-bottom:1px solid black;">
                                     <td style="width:40%;">
                                         <p
-                                            style="font-size: 10px;font-weight:700;font-family:Urbanist;margin: 0px;line-height: 28px;text-align: left;padding-left:10px;text-transform:uppercase;">
+                                            style="font-size: 12px;font-weight:700;font-family:Urbanist;margin: 0px;line-height: 28px;text-align: left;padding-left:10px;text-transform:uppercase;">
                                             ITEM DESCRIPTION
                                         </p>
                                     </td>
                                     <td style="width:20%;">
                                         <p
-                                            style="font-size: 10px;font-weight:700;font-family:Urbanist;margin: 0px;line-height: 28px;text-align:center;padding-right:10px;text-transform:uppercase;">
+                                            style="font-size: 12px;font-weight:700;font-family:Urbanist;margin: 0px;line-height: 28px;text-align:center;padding-right:10px;text-transform:uppercase;">
                                             UNIT PRICE
                                         </p>
                                     </td>
                                     <td style="width:20%;">
                                         <p
-                                            style="font-size: 10px;font-weight:700;font-family:Urbanist;margin: 0px;line-height: 28px;text-align:center;padding-right:10px;text-transform:uppercase;">
+                                            style="font-size: 12px;font-weight:700;font-family:Urbanist;margin: 0px;line-height: 28px;text-align:center;padding-right:10px;text-transform:uppercase;">
                                             QTY
                                         </p>
                                     </td>
                                     <td style="width:20%;">
                                         <p
-                                            style="font-size: 10px;font-weight:700;font-family:Urbanist;margin: 0px;line-height: 28px;text-align:center;padding-right:10px;text-transform:uppercase;">
+                                            style="font-size: 12px;font-weight:700;font-family:Urbanist;margin: 0px;line-height: 28px;text-align:center;padding-right:10px;text-transform:uppercase;">
                                             Total
                                         </p>
                                     </td>
@@ -139,7 +139,7 @@
                             <table class="sub_tab" cellspacing="0" cellpadding="0" border="0" width="100%"
                                 style="border-collapse: collapse;margin-top:40px;">
                                 
-                                <tr style="height:50px;">
+                                <tr >
                                     <td style="text-align:center;border-bottom:1px solid grey ;">
                                         <p
                                             style="font-size:9px;font-weight:700;font-family:Urbanist;margin: 0px;line-height: 28px;text-align:center;padding-left:10px;text-transform:capitalize;">
@@ -153,7 +153,7 @@
                                         </p>
                                     </td>
                                 </tr>
-                                <tr style="height:50px;">
+                                <tr >
                                     <td style="text-align:center;border-bottom:1px solid grey ;">
                                         <p
                                             style="font-size:9px;font-weight:700;font-family:Urbanist;margin: 0px;line-height: 28px;text-align:center;padding-left:10px;text-transform:capitalize;">
@@ -168,7 +168,7 @@
                                         </p>
                                     </td>
                                 </tr>
-                                <tr style="height:50px;">
+                                <tr >
                                     <td style="text-align:center;border-bottom:1px solid grey ;">
                                         <p
                                             style="font-size:11px;font-weight:700;font-family:Urbanist;margin: 0px;line-height: 28px;text-align:center;padding-left:10px;text-transform:capitalize;">
