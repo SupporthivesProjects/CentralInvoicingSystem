@@ -114,7 +114,9 @@
                             </table>
 
                             <br>
-                            <table style="border-collapse: collapse;border-bottom: 0px;border: 0px; min-height: 560px !important;">
+                            <div style="min-height: 560px !important;">
+  
+                            <table style="border-collapse: collapse;border-bottom: 0px;border: 0px; ">
                                
                                 <tr style="border-collapse: collapse;height: 30px; background-color: #7B5CFF;color: white;">
                                     <td style="width: 200px;text-align: left;font-family: 'Nunito', sans-serif;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-left: 5px;">
@@ -190,6 +192,7 @@
                                     </td>
                                 </tr>
                             </table>
+                            </div>
                             <!-- <table width="100%">
                             <tr style="width: 100%; ">
                                 <td style="width: 100%;text-align: center; color: #7B5CFF; font-size: 11px;font-family: 'Nunito', sans-serif;">
