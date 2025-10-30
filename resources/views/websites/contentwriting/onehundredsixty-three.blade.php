@@ -66,7 +66,7 @@
                                         <p style="font-family: arial;font-size: 13px;margin: 0px;font-weight: 400;">
                                             Address: {{ $company_address }}</p>
                                     </td>
-                                    <td style="text-align: right;">
+                                    <td style="text-align: right;min-width: 150px;">
                                         <h1
                                             style="font-family: arial;font-size: 24px;margin: 0px;font-weight: 700;padding-top: 0px;">
                                             INVOICE</h1><br><br>
@@ -104,7 +104,7 @@
                                     </td>
                                     <td
                                         style="width: 250px;text-align: center;font-family: arial;font-size: 13px;margin: 0px;font-weight: 400;border: 1px solid black;border-collapse: collapse;">
-                                        <b>Product</b>
+                                        <b>PRODUCT</b>
                                     </td>
 
                                     <td
@@ -157,7 +157,7 @@
                                     <td style="width: 100px;text-align: center;font-family: arial;font-size: 13px;margin: 0px;font-weight: 400;padding-right: 10px;"
                                         colspan="1">
                                         <p>
-                                            Discount
+                                            DISCOUNT
                                         </p>
                                     </td>
                                     <td style="text-align:center;font-family: arial;font-size: 13px;font-weight: 400;border: 1px solid black;"
