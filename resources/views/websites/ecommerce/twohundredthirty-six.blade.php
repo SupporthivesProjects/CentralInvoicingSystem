@@ -114,7 +114,7 @@
                             </table>
 
                             <br>
-                            <div style="min-height: 560px; display: flex; align-items: flex-start;">
+                            <div style="min-height: 460px; display: flex; align-items: flex-start;">
                                 <div style="display: inline-block;">
                             <table style="border-collapse: collapse;border-bottom: 0px;border: 0px; ">
                                
