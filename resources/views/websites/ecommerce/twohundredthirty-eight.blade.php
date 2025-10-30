@@ -143,7 +143,7 @@
                                     <td style="border-bottom:1px solid grey ;">
                                         <p
                                             style="font-size:9px;font-weight:700;font-family:Urbanist;margin: 0px;padding-left:10px;text-transform:capitalize;">
-                                            Sub total
+                                            Subtotal
                                         </p>
                                     </td>
                                     <td style="border-bottom:1px solid grey ;">
@@ -162,7 +162,7 @@
                                     </td>
                                     <td style="border-bottom:1px solid grey ;">
                                         <p
-                                            style="font-size:9px;font-weight:500;font-family:Urbanist;margin: 0px;padding-right:10px;text-transform: uppercase;color:rgb(137, 240, 133);">
+                                            style="font-size:9px;font-weight:500;font-family:Urbanist;margin: 0px;padding-right:10px;text-transform: uppercase;color:#4EA72E;">
                                             {{ site_currency() . number_format($discount_amount, 2) }}
 
                                         </p>
