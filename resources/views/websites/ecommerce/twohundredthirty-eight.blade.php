@@ -219,7 +219,7 @@
 
                                                     // Add <br> after 1st and 4th commas
                                                     if (in_array($index, [0, 3])) {
-                                                        $formatted_address .= '<br><br>';
+                                                        $formatted_address .= '<br>';
                                                     } else {
                                                         $formatted_address .= ' ';
                                                     }
