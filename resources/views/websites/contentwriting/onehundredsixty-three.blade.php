@@ -66,11 +66,11 @@
                                         <p style="font-family: arial;font-size: 13px;margin: 0px;font-weight: 400;">
                                             Address: {{ $company_address }}</p>
                                     </td>
-                                    <td style="text-align: right;min-width: 150px;">
+                                    <td style="text-align: right;min-width: 200px;">
                                         <h1
                                             style="font-family: arial;font-size: 24px;margin: 0px;font-weight: 700;padding-top: 0px;">
                                             INVOICE</h1><br><br>
-                                        <p style="font-family: arial;font-size:13px;margin: 0px;font-weight: 400;">
+                                        <p style="font-family: arial;font-size:13px;margin: 0px;font-weight: 400;min-width: 150px;">
                                             INVOICE # {{ $invoice_number }}
                                         </p>
 
