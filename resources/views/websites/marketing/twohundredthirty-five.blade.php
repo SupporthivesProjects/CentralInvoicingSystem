@@ -70,7 +70,13 @@
                                                 @endif
                                             @endforeach    
                                         <br>
-                                            {{ $company_mobile }}<br>{{ $company_email }}
+                                            @if(!empty($company_mobile))
+                                                {{ $company_mobile }}<br>
+                                            @endif
+
+                                            @if(!empty($company_email))
+                                                {{ $company_email }}
+                                            @endif
                                         </p>
                                         
                                     </td>
