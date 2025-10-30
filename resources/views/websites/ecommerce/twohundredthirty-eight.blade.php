@@ -23,7 +23,7 @@
         }
         .sub_tab tr td {
             border: 1px solid black;
-            padding: 5px;
+            padding: 5px 5px 5px 20px;
             text-align: right;
         }
     </style>
@@ -137,47 +137,47 @@
                                 @endforeach
                             </table>
                             <table class="sub_tab" cellspacing="0" cellpadding="0" border="0" width="100%"
-                                style="border-collapse: collapse;margin-top:40px;">
+                                style="border-collapse: collapse;margin-top:20px;">
                                 
                                 <tr >
-                                    <td style="text-align:center;border-bottom:1px solid grey ;">
+                                    <td style="border-bottom:1px solid grey ;">
                                         <p
-                                            style="font-size:9px;font-weight:700;font-family:Urbanist;margin: 0px;text-align:center;padding-left:10px;text-transform:capitalize;">
+                                            style="font-size:9px;font-weight:700;font-family:Urbanist;margin: 0px;padding-left:10px;text-transform:capitalize;">
                                             Sub total
                                         </p>
                                     </td>
-                                    <td style="text-align:center;border-bottom:1px solid grey ;">
+                                    <td style="border-bottom:1px solid grey ;">
                                         <p
-                                            style="font-size:9px;font-weight:500;font-family:Urbanist;margin: 0px;text-align:center;padding-right:10px;text-transform: uppercase;">
+                                            style="font-size:9px;font-weight:500;font-family:Urbanist;margin: 0px;padding-right:10px;text-transform: uppercase;">
                                             {{ site_currency() }} {{ number_format($product->unit_price ?? 0, 2) }}
                                         </p>
                                     </td>
                                 </tr>
                                 <tr >
-                                    <td style="text-align:center;border-bottom:1px solid grey ;">
+                                    <td style="border-bottom:1px solid grey ;">
                                         <p
-                                            style="font-size:9px;font-weight:700;font-family:Urbanist;margin: 0px;text-align:center;padding-left:10px;text-transform:capitalize;">
+                                            style="font-size:9px;font-weight:700;font-family:Urbanist;margin: 0px;padding-left:10px;text-transform:capitalize;">
                                             Discount
                                         </p>
                                     </td>
-                                    <td style="text-align:center;border-bottom:1px solid grey ;">
+                                    <td style="border-bottom:1px solid grey ;">
                                         <p
-                                            style="font-size:9px;font-weight:500;font-family:Urbanist;margin: 0px;text-align:center;padding-right:10px;text-transform: uppercase;color:rgb(137, 240, 133);">
+                                            style="font-size:9px;font-weight:500;font-family:Urbanist;margin: 0px;padding-right:10px;text-transform: uppercase;color:rgb(137, 240, 133);">
                                             {{ site_currency() . number_format($discount_amount, 2) }}
 
                                         </p>
                                     </td>
                                 </tr>
                                 <tr >
-                                    <td style="text-align:center;border-bottom:1px solid grey ;">
+                                    <td style="border-bottom:1px solid grey ;">
                                         <p
-                                            style="font-size:11px;font-weight:700;font-family:Urbanist;margin: 0px;text-align:center;padding-left:10px;text-transform:capitalize;">
+                                            style="font-size:11px;font-weight:700;font-family:Urbanist;margin: 0px;padding-left:10px;text-transform:capitalize;">
                                             Grand Total
                                         </p>
                                     </td>
-                                    <td style="text-align:center;border-bottom:1px solid grey ;">
+                                    <td style="border-bottom:1px solid grey ;">
                                         <p
-                                            style="font-size:11px;font-weight:500;font-family:Urbanist;margin: 0px;text-align:center;padding-right:10px;text-transform: uppercase;">
+                                            style="font-size:11px;font-weight:500;font-family:Urbanist;margin: 0px;padding-right:10px;text-transform: uppercase;">
                                             {{ site_currency() . number_format($invoice_amount, 2) }}
 
                                         </p>
