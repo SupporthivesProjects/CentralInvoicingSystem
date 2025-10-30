@@ -205,7 +205,16 @@
                                         <h4
                                             style="font-size:10px;font-weight:400;font-family:Urbanist;margin: 0px;line-height: 28px;text-align:left;padding-left:10px;text-transform:capitalize;">
                                             {{ $company_email }} <br>
-                                            {!! $company_address !!} </h4>
+                                            @php
+                                                $parts = explode(',', $company_address);
+                                            @endphp
+                                            @foreach($parts as $index => $part)
+                                                {{ trim($part) }}@if($index < count($parts) - 1),@endif
+                                                @if($index === 1 || $index === 5)
+                                                    <br>
+                                                @endif
+                                            @endforeach
+                                         </h4>
                                     </td>
                                 </tr>
                             </table>
