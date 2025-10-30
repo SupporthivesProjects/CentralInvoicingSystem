@@ -23,7 +23,7 @@
                             <table width="100%" style="border-collapse: collapse; table-layout: fixed; background: #ECECFF;">
                                 <tr >
                                     <td style="background: #ECECFF; height: 140px; width: 320px;padding-left: 20px; font-family: 'Nunito', sans-serif; border-bottom-right-radius: 20px;">
-                                        <p style="font-size: 24px;color: black">INVOICE <span style="font-size: 24px;color: #7B5CFF;">[{{ $invoice_number }}]</span></p>
+                                        <p style="font-size: 24px;color: black">INVOICEs <span style="font-size: 24px;color: #7B5CFF;">[{{ $invoice_number }}]</span></p>
                                         <p style="font-size: 10px;margin: 0px;color: #7B5CFF;">{{ $company_name }}</p>
                                         <p style="font-size: 9px;margin-top: 0px;">{!! $company_address !!}</p> 
                                     </td>
@@ -114,7 +114,9 @@
                             </table>
 
                             <br>
-                            <table style="border-collapse: collapse;border-bottom: 0px;border: 0px;">
+                            <div style="min-height: 520px; display: flex; align-items: flex-start;">
+                                <div style="display: inline-block;">
+                            <table style="border-collapse: collapse;border-bottom: 0px;border: 0px; ">
                                
                                 <tr style="border-collapse: collapse;height: 30px; background-color: #7B5CFF;color: white;">
                                     <td style="width: 200px;text-align: left;font-family: 'Nunito', sans-serif;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-left: 5px;">
@@ -190,6 +192,8 @@
                                     </td>
                                 </tr>
                             </table>
+                            </div>
+</div>
                             <!-- <table width="100%">
                             <tr style="width: 100%; ">
                                 <td style="width: 100%;text-align: center; color: #7B5CFF; font-size: 11px;font-family: 'Nunito', sans-serif;">

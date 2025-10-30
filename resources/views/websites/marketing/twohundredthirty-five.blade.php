@@ -55,13 +55,30 @@
                                             {{ $customer_mobile ? $customer_mobile : '' }}
                                         </p>
                                     </td>
-                                    <td style="padding-top: 10px; text-align: right;font-size: 11px; width: 100%;">
-                                        <p style="font-family: arial;font-size: 14px;font-weight: 400;  text-align: left; ">
+                                    <td style="padding-top: 10px; text-align: right;font-size: 11px; width: 100%;min-width: 375px;">
+                                        <p style="font-family: arial;font-size: 14px;font-weight: 400;  text-align: right; ">
                                             <b>Brandflaire.com</b>
                                         </p>
-                                        <p style="margin-top: 0px; text-align: left;">{{ $company_address }}<br>
-                                            {{ $company_mobile }}<br>{{ $company_email }}
+                                        <p style="margin-top: 0px; text-align: right;">
+                                            @php
+                                                $parts = explode(',', $company_address);
+                                            @endphp
+                                            @foreach($parts as $index => $part)
+                                                {{ trim($part) }}@if($index < count($parts) - 1),@endif
+                                                @if($index === 1)
+                                                    <br>
+                                                @endif
+                                            @endforeach    
+                                        <br>
+                                            @if(!empty($company_mobile))
+                                                {{ $company_mobile }}<br>
+                                            @endif
+
+                                            @if(!empty($company_email))
+                                                {{ $company_email }}
+                                            @endif
                                         </p>
+                                        
                                     </td>
                                 </tr>
                             </table>

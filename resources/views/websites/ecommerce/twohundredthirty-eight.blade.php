@@ -23,7 +23,7 @@
         }
         .sub_tab tr td {
             border: 1px solid black;
-            padding: 5px 20px;
+            padding: 5px 5px 5px 20px;
             text-align: right;
         }
     </style>
@@ -84,25 +84,25 @@
                                 <tr style="height:50px;border-bottom:1px solid black;">
                                     <td style="width:40%;">
                                         <p
-                                            style="font-size: 10px;font-weight:700;font-family:Urbanist;margin: 0px;line-height: 28px;text-align: left;padding-left:10px;text-transform:uppercase;">
+                                            style="font-size: 12px;font-weight:700;font-family:Urbanist;margin: 0px;line-height: 28px;text-align: left;padding-left:10px;text-transform:uppercase;">
                                             ITEM DESCRIPTION
                                         </p>
                                     </td>
                                     <td style="width:20%;">
                                         <p
-                                            style="font-size: 10px;font-weight:700;font-family:Urbanist;margin: 0px;line-height: 28px;text-align:center;padding-right:10px;text-transform:uppercase;">
+                                            style="font-size: 12px;font-weight:700;font-family:Urbanist;margin: 0px;line-height: 28px;text-align:center;padding-right:10px;text-transform:uppercase;">
                                             UNIT PRICE
                                         </p>
                                     </td>
                                     <td style="width:20%;">
                                         <p
-                                            style="font-size: 10px;font-weight:700;font-family:Urbanist;margin: 0px;line-height: 28px;text-align:center;padding-right:10px;text-transform:uppercase;">
+                                            style="font-size: 12px;font-weight:700;font-family:Urbanist;margin: 0px;line-height: 28px;text-align:center;padding-right:10px;text-transform:uppercase;">
                                             QTY
                                         </p>
                                     </td>
                                     <td style="width:20%;">
                                         <p
-                                            style="font-size: 10px;font-weight:700;font-family:Urbanist;margin: 0px;line-height: 28px;text-align:center;padding-right:10px;text-transform:uppercase;">
+                                            style="font-size: 12px;font-weight:700;font-family:Urbanist;margin: 0px;line-height: 28px;text-align:center;padding-right:10px;text-transform:uppercase;">
                                             Total
                                         </p>
                                     </td>
@@ -137,47 +137,47 @@
                                 @endforeach
                             </table>
                             <table class="sub_tab" cellspacing="0" cellpadding="0" border="0" width="100%"
-                                style="border-collapse: collapse;margin-top:40px;">
+                                style="border-collapse: collapse;margin-top:20px;">
                                 
-                                <tr style="height:50px;">
-                                    <td style="text-align:center;border-bottom:1px solid grey ;">
+                                <tr >
+                                    <td style="border-bottom:1px solid grey ;">
                                         <p
-                                            style="font-size:9px;font-weight:700;font-family:Urbanist;margin: 0px;line-height: 28px;text-align:center;padding-left:10px;text-transform:capitalize;">
-                                            Sub total
+                                            style="font-size:9px;font-weight:700;font-family:Urbanist;margin: 0px;padding-left:10px;text-transform:capitalize;">
+                                            Subtotal
                                         </p>
                                     </td>
-                                    <td style="text-align:center;border-bottom:1px solid grey ;">
+                                    <td style="border-bottom:1px solid grey ;">
                                         <p
-                                            style="font-size:9px;font-weight:500;font-family:Urbanist;margin: 0px;line-height: 28px;text-align:center;padding-right:10px;text-transform: uppercase;">
+                                            style="font-size:9px;font-weight:500;font-family:Urbanist;margin: 0px;text-transform: uppercase;">
                                             {{ site_currency() }} {{ number_format($product->unit_price ?? 0, 2) }}
                                         </p>
                                     </td>
                                 </tr>
-                                <tr style="height:50px;">
-                                    <td style="text-align:center;border-bottom:1px solid grey ;">
+                                <tr >
+                                    <td style="border-bottom:1px solid grey ;">
                                         <p
-                                            style="font-size:9px;font-weight:700;font-family:Urbanist;margin: 0px;line-height: 28px;text-align:center;padding-left:10px;text-transform:capitalize;">
+                                            style="font-size:9px;font-weight:700;font-family:Urbanist;margin: 0px;padding-left:10px;text-transform:capitalize;">
                                             Discount
                                         </p>
                                     </td>
-                                    <td style="text-align:center;border-bottom:1px solid grey ;">
+                                    <td style="border-bottom:1px solid grey ;">
                                         <p
-                                            style="font-size:9px;font-weight:500;font-family:Urbanist;margin: 0px;line-height: 28px;text-align:center;padding-right:10px;text-transform: uppercase;color:rgb(137, 240, 133);">
+                                            style="font-size:9px;font-weight:500;font-family:Urbanist;margin: 0px;text-transform: uppercase;color:#4EA72E;">
                                             {{ site_currency() . number_format($discount_amount, 2) }}
 
                                         </p>
                                     </td>
                                 </tr>
-                                <tr style="height:50px;">
-                                    <td style="text-align:center;border-bottom:1px solid grey ;">
+                                <tr >
+                                    <td style="border-bottom:1px solid grey ;">
                                         <p
-                                            style="font-size:11px;font-weight:700;font-family:Urbanist;margin: 0px;line-height: 28px;text-align:center;padding-left:10px;text-transform:capitalize;">
+                                            style="font-size:11px;font-weight:700;font-family:Urbanist;margin: 0px;padding-left:10px;text-transform:capitalize;">
                                             Grand Total
                                         </p>
                                     </td>
-                                    <td style="text-align:center;border-bottom:1px solid grey ;">
+                                    <td style="border-bottom:1px solid grey ;">
                                         <p
-                                            style="font-size:11px;font-weight:500;font-family:Urbanist;margin: 0px;line-height: 28px;text-align:center;padding-right:10px;text-transform: uppercase;">
+                                            style="font-size:11px;font-weight:500;font-family:Urbanist;margin: 0px;text-transform: uppercase;">
                                             {{ site_currency() . number_format($invoice_amount, 2) }}
 
                                         </p>
@@ -205,7 +205,30 @@
                                         <h4
                                             style="font-size:10px;font-weight:400;font-family:Urbanist;margin: 0px;line-height: 28px;text-align:left;padding-left:10px;text-transform:capitalize;">
                                             {{ $company_email }} <br>
-                                            {!! $company_address !!} </h4>
+                                            <!-- {!! $company_address !!}  -->
+                                            @php
+                                                $parts = explode(',', $company_address);
+
+                                                // Insert line breaks after specific commas
+                                                $formatted_address = '';
+                                                foreach ($parts as $index => $part) {
+                                                    $formatted_address .= trim($part);
+                                                    if ($index < count($parts) - 1) {
+                                                        $formatted_address .= ',';
+                                                    }
+
+                                                    // Add <br> after 1st and 4th commas
+                                                    if (in_array($index, [0, 3])) {
+                                                        $formatted_address .= '<br>';
+                                                    } else {
+                                                        $formatted_address .= ' ';
+                                                    }
+                                                }
+                                            @endphp
+
+                                            {!! $formatted_address !!}
+
+                                        </h4>
                                     </td>
                                 </tr>
                             </table>

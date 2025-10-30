@@ -35,12 +35,12 @@
 
                                     <td style="width: 300px;border:0px;height: 50px;text-align: right;margin: 0px;padding-right: 40px;font-size: 8px;font-family: 'Space Mono', monospace;;">
                                         <h5
-                                            style="margin-bottom: 5px;margin-top: 7px; color: darkgreen;font-size: 12px;">
+                                            style="margin-bottom: 5px;margin-top: 7px; color: darkgreen;font-size: 16px;">
                                             Invoice Number <img src="{{ $invoice_image2 }}" alt=""
-                                                style="height: 5px;"> </h5>{{ $invoice_number }}
-                                        <h5 style="margin-bottom: 0;margin-top: 5px; color: darkgreen;font-size: 12px;">
+                                                style="height: 5px;"> </h5><p style="font-size: 16px;">{{ $invoice_number }}</p>
+                                        <h5 style="margin-bottom: 0;margin-top: 5px; color: darkgreen;font-size: 16px;">
                                             Invoice Date <img src="{{ $invoice_image2 }}" alt=""
-                                                style="height: 5px;"></h5>{{ $invoice_date }}
+                                                style="height: 5px;"></h5><p style="font-size: 16px;">{{ $invoice_date }}</p>
                                     </td>
                                 </tr>
                             </table>
@@ -79,15 +79,15 @@
                                             {{ $company_name }}
                                         </p>-->
                                         <p style="font-family: arial;font-size: 14px;margin: 0;font-weight: 400;text-align: left;padding-bottom: 5px;color: darkgreen;">                               
-                                            <b> Address:</b> <span style=" color: black;margin-left: 1px">{{ $company_address }} </span>
+                                            <b> Address:</b> <span style=" color: black;margin-left: 0px">{{ $company_address }} </span>
                                         </p>
                                         <p
                                             style="font-family: arial;font-size: 14px;margin: 0px;font-weight: 400; text-align: left;padding-bottom: 5px;padding-right: 5px;color: darkgreen;">
-                                            <b> Website:</b> <span style="color: black;margin-left: 1px">{{ $site_name }}</span>
+                                            <b> Website:</b> <span style="color: black;margin-left:0px">{{ $site_name }}</span>
                                         </p>
                                         <p
                                             style="font-family: arial;font-size: 14px;margin: 0px;font-weight: 400; text-align: left;padding-bottom: 5px;padding-right: 5px;color: darkgreen;">
-                                            <b> Email:</b> <span style="color: black;margin-left: 1px">{{ $company_email }}</span>
+                                            <b> Email:</b> <span style="color: black;margin-left: 0px">{{ $company_email }}</span>
                                         </p>
                                     </td>
                                 </tr>

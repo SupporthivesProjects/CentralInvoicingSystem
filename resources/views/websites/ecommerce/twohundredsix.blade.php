@@ -50,7 +50,7 @@
 
                     <!-- Content -->
                         <tr> 
-                            <td style="padding:40px;padding-top:0px;background-position: center;background-size: cover;height:779px; font-family: 'arial'; font-size: 9px; vertical-align: top;">
+                            <td style="padding:40px;padding-top:0px;background-position: center;background-size: cover;height:760px; font-family: 'arial'; font-size: 9px; vertical-align: top;">
                                 <br>
                                 <table width="100%" border="1" cellspacing="0" cellpadding="8"
                                     style="border-collapse: collapse; text-align: center;">
