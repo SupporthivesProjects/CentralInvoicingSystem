@@ -23,7 +23,7 @@
                             <table width="100%" style="border-collapse: collapse; table-layout: fixed; background: #ECECFF;">
                                 <tr >
                                     <td style="background: #ECECFF; height: 140px; width: 320px;padding-left: 20px; font-family: 'Nunito', sans-serif; border-bottom-right-radius: 20px;">
-                                        <p style="font-size: 24px;color: black">INVOICEs <span style="font-size: 24px;color: #7B5CFF;">[{{ $invoice_number }}]</span></p>
+                                        <p style="font-size: 24px;color: black">INVOICE <span style="font-size: 24px;color: #7B5CFF;">[{{ $invoice_number }}]</span></p>
                                         <p style="font-size: 10px;margin: 0px;color: #7B5CFF;">{{ $company_name }}</p>
                                         <p style="font-size: 9px;margin-top: 0px;">{!! $company_address !!}</p> 
                                     </td>
@@ -89,25 +89,25 @@
                             </table> -->
                             <table width="100%" style="border-collapse: collapse; table-layout: fixed;">
                                 <tr style="border-top: 1px solid goldenrod; color: #7B5CFF;">
-                                    <td style="padding: 8px; text-align: left; width: 33.33%;">
+                                    <td style="padding: 8px;padding-bottom: 0px !important; text-align: left; width: 33.33%;">
                                     <p style="font-family: 'Nunito', sans-serif; font-size: 10px; margin: 0; font-weight: 400;">Date</p>
                                     </td>
-                                    <td style="padding: 8px; text-align: left; width: 33.33%;">
+                                    <td style="padding: 8px;padding-bottom: 0px !important; text-align: left; width: 33.33%;">
                                     <p style="font-family: 'Nunito', sans-serif; font-size: 10px; margin: 0; font-weight: 400;">To</p>
                                     </td>
-                                    <td style="padding: 8px; text-align: left; width: 33.33%;">
+                                    <td style="padding: 8px;padding-bottom: 0px !important; text-align: left; width: 33.33%;">
                                     <p style="font-family: 'Nunito', sans-serif; font-size: 10px; margin: 0; font-weight: 400;">Billed From</p>
                                     </td>
                                 </tr>
 
                                 <tr style="border-bottom: 1px solid goldenrod;">
-                                    <td style="padding: 8px; text-align: left; width: 33.33%;">
+                                    <td style="padding: 8px;padding-top: 2px !important; text-align: left; width: 33.33%;">
                                     <p style="font-family: 'Nunito', sans-serif; font-size: 10px; margin: 0; font-weight: 400;">{{ $invoice_date }}</p>
                                     </td>
-                                    <td style="padding: 8px; text-align: left; width: 33.33%;">
+                                    <td style="padding: 8px;padding-top: 2px !important; text-align: left; width: 33.33%;">
                                     <p style="font-family: 'Nunito', sans-serif; font-size: 10px; margin: 0; font-weight: 400;">{{ $customer_name }}</p>
                                     </td>
-                                    <td style="padding: 8px; text-align: left; width: 33.33%;">
+                                    <td style="padding: 8px;padding-top: 2px !important; text-align: left; width: 33.33%;">
                                     <p style="font-family: 'Nunito', sans-serif; font-size: 10px; margin: 0; font-weight: 400;">Haven of Wellbeing</p>
                                     </td>
                                 </tr>
