@@ -42,14 +42,14 @@
         </tr>
         <!-- Contact Info -->
         <tr>
-            <td colspan="2" style="padding:0 30px 0 270px; ">
+            <td colspan="2" style="padding:0 30px 0 260px; ">
                 <table align="top" valign="top" width="100%" cellpadding="0" cellspacing="0" style="margin-top:100px;position: relative; top: -60px;">
                     <tr>
-                        <td style="font-size:0.98em; padding-right:20px;width:30%;vertical-align: top;">
+                        <td style="font-size:0.98em; padding-right:20px;width:32%;vertical-align: top;">
                         <div style="display:flex; flex-direction:row; justify-content:flex-start; align-items:center; gap: 4px;"><img src="{{ $invoice_image3 }}" alt="Company Logo" width="25" height="25"><b>Phone:</b><br></div>
                             {{ $company_mobile }}
                         </td>
-                        <td style="font-size:0.98em; padding-right:20px;width:30%;vertical-align: top;">
+                        <td style="font-size:0.98em; padding-right:20px;width:28%;vertical-align: top;">
                         <div style="display:flex; flex-direction:row; justify-content:flex-start; align-items:center; gap: 4px;"><img src="{{ $invoice_image2 }}" alt="Company Logo" width="25" height="25"><b>Email:</b><br></div>
                             {{ $company_email }}
                         </td>
