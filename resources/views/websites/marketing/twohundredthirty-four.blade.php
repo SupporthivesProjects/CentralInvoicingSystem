@@ -53,7 +53,7 @@
                                     <td>
                                         <p style="font-size: 11px; font-family: 'Poppins', sans-serif;">Mindcraft Vision Media Applications<br> Development L.L.C</p>
                                     </td>
-                                    <td style="text-align: right; font-family: 'Poppins', sans-serif;">
+                                    <td style="text-align: right; font-family: 'Poppins', sans-serif;padding-right: 20px;">
                                         <p style="font-size: 11px;margin-top: 0px;"><b style="color: #F15A22;">Invoice No:</b> #{{ $invoice_number }}</p>
                                         <p style="font-size: 11px;"><b style="color: #F15A22;">Date:</b> {{ $invoice_date }}</p>
                                     </td>
@@ -74,7 +74,7 @@
                              <table style="border-collapse: collapse;">
                                 <tr style="border-collapse: collapse;height: 24px;border-bottom: 1px solid black; color: #F15A22; font-family: 'Poppins', sans-serif;">
                                     <td style="width: 400px;text-align: left;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;border-right: 1px solid black;">
-                                       <b>Descriptions</b> 
+                                       <b>Description</b> 
                                     </td>
                                     <td style="width: 100px;text-align: center;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;border-right: 1px solid black;">
                                         <b>Package</b>
@@ -107,8 +107,8 @@
                                     <td colspan="2" style="padding-right: 20px; width: 100px;text-align: right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;border-right: 1px solid black;">
                                         <b>Subtotal</b>
                                     </td>
-                                    <td style="width: 100px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
-                                       <b>{{ site_currency_code() }}{{ number_format($invoice_amount + $discount_amount, 2) }}</b>
+                                    <td style="width: 100px;text-align: right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
+                                       <b>{{ site_currency() }}{{ number_format($invoice_amount + $discount_amount, 2) }}</b>
                                     </td>
                                 </tr>
                                  <tr style="border-top: 1px solid black; height: 24px;font-family: 'Poppins', sans-serif;">
@@ -118,7 +118,7 @@
 
                                         </td>
                                     <td style="width: 100px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
-                                        <b>{{ site_currency_code() }}{{ number_format($invoice_amount, 2) }}</b>
+                                        <b>{{ site_currency() }}{{ number_format($invoice_amount, 2) }}</b>
                                         </td>
                                 </tr>
                             </table>
@@ -159,19 +159,19 @@
                                 <tr style="height: 100px; font-family: 'Poppins', sans-serif;">
 
                                     <!-- Column 1 -->
-                                    <td style="width: 33.33%; text-align: left; font-size: 10px; color: #5E5E5E; padding-left: 40px; padding-top: 10px;">
+                                    <td style="vertical-align: top;width: 33.33%; text-align: left; font-size: 10px; color: #5E5E5E; padding-left: 40px; padding-top: 10px;">
                                         <img src="{{ $invoice_image2 }}" alt="" style="height: 25px; vertical-align: middle;">
                                         <span style="margin-left: 5px; vertical-align: middle;">{{ $company_email }}</span>
                                     </td>
 
                                     <!-- Column 2 -->
-                                    <td style="width: 33.33%; text-align: left; font-size: 10px; color: #5E5E5E; padding-top: 10px;">
+                                    <td style="vertical-align: top;width: 33.33%; text-align: left; font-size: 10px; color: #5E5E5E; padding-top: 10px;">
                                         <img src="{{ $invoice_image3 }}" alt="" style="height: 25px; vertical-align: middle;">
                                         <span style="margin-left: 5px; vertical-align: middle;">{{ $company_mobile }}</span>
                                     </td>
 
                                     <!-- Column 3 -->
-                                    <td style="width: 33.33%; text-align: left; font-size: 10px; color: #5E5E5E; padding-top: 10px;">
+                                    <td style="vertical-align: top;width: 33.33%; text-align: left; font-size: 10px; color: #5E5E5E; padding-top: 10px;">
                                         <img src="{{ $invoice_image4 }}" alt="" style="height: 25px; vertical-align: middle;">
                                         <span style="margin-left: 5px; vertical-align: middle;">{{ $company_address }}</span>
                                     </td>
