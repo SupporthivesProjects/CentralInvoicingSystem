@@ -160,21 +160,29 @@
 
                                     <!-- Column 1 -->
                                     <td style="vertical-align: top;width: 33.33%; text-align: left; font-size: 10px; color: #5E5E5E; padding-left: 40px; padding-top: 10px;">
-                                        <img src="{{ $invoice_image2 }}" alt="" style="height: 25px; vertical-align: middle;">
-                                        <span style="margin-left: 5px; vertical-align: middle;">{{ $company_email }}</span>
+                                        @if(!empty($company_email))
+                                            <img src="{{ $invoice_image2 }}" alt="" style="height: 25px; vertical-align: middle;">
+                                            <span style="margin-left: 5px; vertical-align: middle;">{{ $company_email }}</span>
+                                        @endif
+                                        
                                     </td>
 
                                     <!-- Column 2 -->
                                     <td style="vertical-align: top;width: 33.33%; text-align: left; font-size: 10px; color: #5E5E5E; padding-top: 10px;">
-                                        <img src="{{ $invoice_image3 }}" alt="" style="height: 25px; vertical-align: middle;">
-                                        <span style="margin-left: 5px; vertical-align: middle;">{{ $company_mobile }}</span>
+                                        @if(!empty($company_mobile))
+                                            <img src="{{ $invoice_image3 }}" alt="" style="height: 25px; vertical-align: middle;">
+                                            <span style="margin-left: 5px; vertical-align: middle;">{{ $company_mobile }}</span>
+                                        @endif    
+                                        
                                     </td>
 
                                     <!-- Column 3 -->
                                     <td style="vertical-align: top;width: 33.33%; text-align: left; font-size: 10px; color: #5E5E5E; padding-top: 10px;">
-                                        <img src="{{ $invoice_image4 }}" alt="" style="height: 25px; vertical-align: middle;">
-                                        <span style="margin-left: 5px; vertical-align: middle;">{{ $company_address }}</span>
-                                    </td>
+                                        @if(!empty($company_address))
+                                            <img src="{{ $invoice_image4 }}" alt="" style="height: 25px; vertical-align: middle;">
+                                            <span style="margin-left: 5px; vertical-align: middle;">{{ $company_address }}</span>
+                                        @endif
+                                        </td>
 
                                 </tr>           
                             </table>
