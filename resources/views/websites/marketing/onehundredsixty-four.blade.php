@@ -93,7 +93,7 @@
                     <tr>
                         <th
                             style="background: transparent; font-weight:bold; letter-spacing:1px; border-bottom:1px solid #D8A34E; border-top:1px solid #D8A34E; padding:12px 8px; text-align:left;">
-                            PRODUCT DESCRIPTIONS</th>
+                            Product Descriptions</th>
                         <th
                             style="background: transparent; font-weight:bold; letter-spacing:1px; border-bottom:1px solid #D8A34E; border-top:1px solid #D8A34E; padding:12px 8px; text-align:left;">
                             Length</th>
@@ -102,7 +102,7 @@
                             Quantity</th>
                         <th
                             style="background: transparent; font-weight:bold; letter-spacing:1px; border-bottom:1px solid #D8A34E; border-top:1px solid #D8A34E; padding:12px 8px; text-align:right;">
-                            AMOUNT</th>
+                            Amount</th>
                     </tr>
                     @foreach($products as $product)
                     <tr>
