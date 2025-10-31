@@ -114,7 +114,7 @@
                                             <img src="{{ $invoice_image2 }}" alt="" style="width: 24px;">
                                             <div class="linement2">
                                                 <p style="color: #136476; font-weight: 700;">Website Address:</p>
-                                                    {{ $site->site_link }}
+                                                    <a href="{{ $site->site_link }}">www.kontikilab.com</a>
                                             </div>
                                         </div>
                                     </td>
