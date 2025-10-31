@@ -43,7 +43,7 @@
 
                                 <!-- ORDER INFO -->
                                 <tr>
-                                    <td style="padding-bottom:10px;">
+                                    <td style="padding-bottom:10px;position: absolute;">
                                         <p style="margin:0;font-size:12px;line-height:18px;">
                                             <b style="text-transform:uppercase;">Order Number:</b>
                                             #{{ $invoice_number }}
