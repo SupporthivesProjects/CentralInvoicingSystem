@@ -117,7 +117,7 @@
                                         <b>Total (With Discount Applied)</b>
 
                                         </td>
-                                    <td style="width: 100px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
+                                    <td style="width: 100px;text-align: right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
                                         <b>{{ site_currency() }}{{ number_format($invoice_amount, 2) }}</b>
                                         </td>
                                 </tr>
