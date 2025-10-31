@@ -140,7 +140,7 @@
                                         <p style="margin:0;font-size:12px;">{{ $site_name }}</p>
                                         <p style="margin:0;font-size:12px;"><b>Email:</b> {{ $company_email }}</p>
                                         <p style="margin:0;font-size:12px;"><b>Phone:</b> {{ $company_mobile }}</p>
-                                        <p style="margin:0;font-size:12px;"><b>Address:</b> {{ $company_address }}</p>
+                                        <p style="margin:0;font-size:12px;    max-width:270px;"><b>Address:</b> {{ $company_address }}</p>
                                     </td>
                                 </tr>
                             </table>
