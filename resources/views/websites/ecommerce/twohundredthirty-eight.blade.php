@@ -142,13 +142,13 @@
                                 <tr >
                                     <td style="border-bottom:1px solid grey ;">
                                         <p
-                                            style="font-size:9px;font-weight:700;font-family:Urbanist;margin: 0px;padding-left:10px;text-transform:capitalize;">
+                                            style="font-size:10px;font-weight:700;font-family:Urbanist;margin: 0px;padding-left:10px;text-transform:capitalize;">
                                             Subtotal
                                         </p>
                                     </td>
                                     <td style="border-bottom:1px solid grey ;">
                                         <p
-                                            style="font-size:9px;font-weight:500;font-family:Urbanist;margin: 0px;text-transform: uppercase;">
+                                            style="font-size:10px;font-weight:500;font-family:Urbanist;margin: 0px;text-transform: uppercase;">
                                             {{ site_currency() }} {{ number_format($product->unit_price ?? 0, 2) }}
                                         </p>
                                     </td>
@@ -156,13 +156,13 @@
                                 <tr >
                                     <td style="border-bottom:1px solid grey ;">
                                         <p
-                                            style="font-size:9px;font-weight:700;font-family:Urbanist;margin: 0px;padding-left:10px;text-transform:capitalize;">
+                                            style="font-size:10px;font-weight:700;font-family:Urbanist;margin: 0px;padding-left:10px;text-transform:capitalize;">
                                             Discount
                                         </p>
                                     </td>
                                     <td style="border-bottom:1px solid grey ;">
                                         <p
-                                            style="font-size:9px;font-weight:500;font-family:Urbanist;margin: 0px;text-transform: uppercase;color:#4EA72E;">
+                                            style="font-size:10px;font-weight:500;font-family:Urbanist;margin: 0px;text-transform: uppercase;color:#4EA72E;">
                                             {{ site_currency() . number_format($discount_amount, 2) }}
 
                                         </p>
@@ -171,13 +171,13 @@
                                 <tr >
                                     <td style="border-bottom:1px solid grey ;">
                                         <p
-                                            style="font-size:11px;font-weight:700;font-family:Urbanist;margin: 0px;padding-left:10px;text-transform:capitalize;">
+                                            style="font-size:12px;font-weight:700;font-family:Urbanist;margin: 0px;padding-left:10px; textpx;-transform:capitalize;">
                                             Grand Total
                                         </p>
                                     </td>
                                     <td style="border-bottom:1px solid grey ;">
                                         <p
-                                            style="font-size:11px;font-weight:500;font-family:Urbanist;margin: 0px;text-transform: uppercase;">
+                                            style="font-size:12px;font-weight:500;font-family:Urbanist;margin: 0px;padding-left:10px;text-transform: uppercase;">
                                             {{ site_currency() . number_format($invoice_amount, 2) }}
 
                                         </p>
