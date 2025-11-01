@@ -177,7 +177,7 @@
                                     </td>
                                     <td style="border-bottom:1px solid grey ;">
                                         <p
-                                            style="font-size:12px;font-weight:500;font-family:Urbanist;margin: 0px;padding-left:10px;text-transform: uppercase;">
+                                            style="font-size:12px;font-weight:500;font-family:Urbanist;margin: 0px;padding-left:15px;text-transform: uppercase;">
                                             {{ site_currency() . number_format($invoice_amount, 2) }}
 
                                         </p>
