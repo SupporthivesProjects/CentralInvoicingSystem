@@ -17,7 +17,7 @@
         }
 
         .sub_tab {
-        	width: fit-content;
+        	width: 30%;
             position: absolute;
             right: 20px;
         }
