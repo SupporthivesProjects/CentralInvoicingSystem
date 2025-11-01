@@ -172,7 +172,7 @@
                                     <!-- Column 2 -->
                                     <td style="vertical-align: top;width: 30%; text-align: center; font-size: 10px; color: #5E5E5E; padding-top: 10px;">
                                         @if(!empty($company_mobile))
-                                        <div style="display: flex; align-items: center;">
+                                        <div style="display: flex; align-items: center;justify-content: center;">
                                             <img src="{{ $invoice_image3 }}" alt="" style="height: 25px; vertical-align: middle;">
                                             <span style="margin-left: 5px; vertical-align: middle;">{{ $company_mobile }}</span>
                                             </div>
