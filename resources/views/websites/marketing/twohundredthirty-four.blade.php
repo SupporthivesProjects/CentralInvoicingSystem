@@ -161,7 +161,7 @@
                                     <!-- Column 1 -->
                                     <td style="vertical-align: top;width: 33.33%; text-align: left; font-size: 10px; color: #5E5E5E; padding-left: 40px; padding-top: 10px;">
                                         @if(!empty($company_email))
-                                        <div style="display: flex; align-items: flex-start;">
+                                        <div style="display: flex; align-items: center;">
                                             <img src="{{ $invoice_image2 }}" alt="" style="height: 25px; vertical-align: middle;">
                                             <span style="margin-left: 5px; vertical-align: middle;">{{ $company_email }}</span>
                                             </div>
@@ -172,7 +172,7 @@
                                     <!-- Column 2 -->
                                     <td style="vertical-align: top;width: 33.33%; text-align: left; font-size: 10px; color: #5E5E5E; padding-top: 10px;">
                                         @if(!empty($company_mobile))
-                                        <div style="display: flex; align-items: flex-start;">
+                                        <div style="display: flex; align-items: center;">
                                             <img src="{{ $invoice_image3 }}" alt="" style="height: 25px; vertical-align: middle;">
                                             <span style="margin-left: 5px; vertical-align: middle;">{{ $company_mobile }}</span>
                                             </div>
@@ -185,7 +185,7 @@
                                         @if(!empty($company_address))
                                             <!-- <img src="{{ $invoice_image4 }}" alt="" style="height: 25px; vertical-align: middle;">
                                             <span style="margin-left: 5px; vertical-align: middle;">{{ $company_address }}</span> -->
-                                            <div style="display: flex; align-items: flex-start;">
+                                            <div style="display: flex; align-items: center;">
                                                 <img src="{{ $invoice_image4 }}" alt="" style="height: 25px; margin-right: 5px; flex-shrink: 0;">
                                                 <span style="display: inline-block; line-height: 1.4;">
                                                     {{ $company_address }}
