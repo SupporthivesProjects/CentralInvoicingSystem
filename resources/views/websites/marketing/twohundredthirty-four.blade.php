@@ -53,7 +53,7 @@
                                     <td>
                                         <p style="font-size: 11px; font-family: 'Poppins', sans-serif;">Mindcraft Vision Media Applications<br> Development L.L.C</p>
                                     </td>
-                                    <td style="text-align: right; font-family: 'Poppins', sans-serif;">
+                                    <td style="text-align: right; font-family: 'Poppins', sans-serif;padding-right: 20px;">
                                         <p style="font-size: 11px;margin-top: 0px;"><b style="color: #F15A22;">Invoice No:</b> #{{ $invoice_number }}</p>
                                         <p style="font-size: 11px;"><b style="color: #F15A22;">Date:</b> {{ $invoice_date }}</p>
                                     </td>
@@ -74,7 +74,7 @@
                              <table style="border-collapse: collapse;">
                                 <tr style="border-collapse: collapse;height: 24px;border-bottom: 1px solid black; color: #F15A22; font-family: 'Poppins', sans-serif;">
                                     <td style="width: 400px;text-align: left;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;border-right: 1px solid black;">
-                                       <b>Descriptions</b> 
+                                       <b>Description</b> 
                                     </td>
                                     <td style="width: 100px;text-align: center;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;border-right: 1px solid black;">
                                         <b>Package</b>
@@ -107,8 +107,8 @@
                                     <td colspan="2" style="padding-right: 20px; width: 100px;text-align: right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;border-right: 1px solid black;">
                                         <b>Subtotal</b>
                                     </td>
-                                    <td style="width: 100px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
-                                       <b>{{ site_currency_code() }}{{ number_format($invoice_amount + $discount_amount, 2) }}</b>
+                                    <td style="width: 100px;text-align: right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
+                                       <b>{{ site_currency() }}{{ number_format($invoice_amount + $discount_amount, 2) }}</b>
                                     </td>
                                 </tr>
                                  <tr style="border-top: 1px solid black; height: 24px;font-family: 'Poppins', sans-serif;">
@@ -117,8 +117,8 @@
                                         <b>Total (With Discount Applied)</b>
 
                                         </td>
-                                    <td style="width: 100px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
-                                        <b>{{ site_currency_code() }}{{ number_format($invoice_amount, 2) }}</b>
+                                    <td style="width: 100px;text-align: right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
+                                        <b>{{ site_currency() }}{{ number_format($invoice_amount, 2) }}</b>
                                         </td>
                                 </tr>
                             </table>
@@ -159,22 +159,44 @@
                                 <tr style="height: 100px; font-family: 'Poppins', sans-serif;">
 
                                     <!-- Column 1 -->
-                                    <td style="width: 33.33%; text-align: left; font-size: 10px; color: #5E5E5E; padding-left: 40px; padding-top: 10px;">
-                                        <img src="{{ $invoice_image2 }}" alt="" style="height: 25px; vertical-align: middle;">
-                                        <span style="margin-left: 5px; vertical-align: middle;">{{ $company_email }}</span>
+                                    <td style="vertical-align: top;width: 20%; text-align: left; font-size: 10px; color: #5E5E5E; padding-left: 40px; padding-top: 10px;">
+                                        @if(!empty($company_email))
+                                        <div style="display: flex; align-items: center;">
+                                            <img src="{{ $invoice_image2 }}" alt="" style="height: 25px; vertical-align: middle;">
+                                            <span style="margin-left: 5px; vertical-align: middle;">{{ $company_email }}</span>
+                                            </div>
+                                        @endif
+                                        
                                     </td>
 
                                     <!-- Column 2 -->
-                                    <td style="width: 33.33%; text-align: left; font-size: 10px; color: #5E5E5E; padding-top: 10px;">
-                                        <img src="{{ $invoice_image3 }}" alt="" style="height: 25px; vertical-align: middle;">
-                                        <span style="margin-left: 5px; vertical-align: middle;">{{ $company_mobile }}</span>
+                                    <td style="vertical-align: top;width: 30%; text-align: center; font-size: 10px; color: #5E5E5E; padding-top: 10px;">
+                                        @if(!empty($company_mobile))
+                                        <div style="display: flex; align-items: center;justify-content: center;">
+                                            <img src="{{ $invoice_image3 }}" alt="" style="height: 25px; vertical-align: middle;">
+                                            <span style="margin-left: 5px; vertical-align: middle;">{{ $company_mobile }}</span>
+                                            </div>
+                                        @endif    
+                                        
                                     </td>
 
                                     <!-- Column 3 -->
-                                    <td style="width: 33.33%; text-align: left; font-size: 10px; color: #5E5E5E; padding-top: 10px;">
-                                        <img src="{{ $invoice_image4 }}" alt="" style="height: 25px; vertical-align: middle;">
-                                        <span style="margin-left: 5px; vertical-align: middle;">{{ $company_address }}</span>
-                                    </td>
+                                    <td style="vertical-align: top;width: 50%; text-align: left; font-size: 10px; color: #5E5E5E; padding-top: 10px;">
+                                        @if(!empty($company_address))
+                                            <!-- <img src="{{ $invoice_image4 }}" alt="" style="height: 25px; vertical-align: middle;">
+                                            <span style="margin-left: 5px; vertical-align: middle;">{{ $company_address }}</span> -->
+                                            <div style="display: flex; align-items: center;">
+                                                <img src="{{ $invoice_image4 }}" alt="" style="height: 25px; margin-right: 5px; flex-shrink: 0;">
+                                                <span style="display: inline-block; line-height: 1.4;">
+                                                    <!-- {{ $company_address }} -->
+                                                    @php
+                                                        $formatted_address = preg_replace('/\s*Office No\./', "<br>Office No.", $company_address);
+                                                    @endphp
+                                                    {!! $formatted_address !!}
+                                                </span>
+                                            </div>
+                                        @endif
+                                        </td>
 
                                 </tr>           
                             </table>

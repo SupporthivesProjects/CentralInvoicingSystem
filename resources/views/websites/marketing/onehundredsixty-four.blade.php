@@ -42,19 +42,19 @@
         </tr>
         <!-- Contact Info -->
         <tr>
-            <td colspan="2" style="padding:0 30px 0 270px; ">
+            <td colspan="2" style="padding:0 30px 0 260px; ">
                 <table align="top" valign="top" width="100%" cellpadding="0" cellspacing="0" style="margin-top:100px;position: relative; top: -60px;">
                     <tr>
-                        <td style="font-size:0.98em; padding-right:20px;width:30%;vertical-align: top;">
-                        <div style="display:flex; flex-direction:row; justify-content:flex-start; align-items:center; gap: 4px;"><img src="{{ $invoice_image3 }}" alt="Company Logo" width="25" height="25"><b>Phone:</b><br></div>
+                        <td style="font-size:0.98em; padding-right:17px;width:33%;vertical-align: top;">
+                        <div style="display:flex; flex-direction:row; justify-content:flex-start; align-items:center; gap: 4px;margin-bottom: 4px;"><img src="{{ $invoice_image3 }}" alt="Company Logo" width="25" height="25"><b>Phone:</b><br></div>
                             {{ $company_mobile }}
                         </td>
-                        <td style="font-size:0.98em; padding-right:20px;width:30%;vertical-align: top;">
-                        <div style="display:flex; flex-direction:row; justify-content:flex-start; align-items:center; gap: 4px;"><img src="{{ $invoice_image2 }}" alt="Company Logo" width="25" height="25"><b>Email:</b><br></div>
+                        <td style="font-size:0.98em; padding-right:20px;width:27%;vertical-align: top;">
+                        <div style="display:flex; flex-direction:row; justify-content:flex-start; align-items:center; gap: 4px;margin-bottom: 4px;"><img src="{{ $invoice_image2 }}" alt="Company Logo" width="25" height="25"><b>Email:</b><br></div>
                             {{ $company_email }}
                         </td>
                         <td style="font-size:0.98em;">
-                        <div style="display:flex; flex-direction:row; justify-content:flex-start; align-items:center; gap: 4px;"><img src="{{ $invoice_image1 }}" alt="Company Logo" width="25" height="25"><b>Address:</b><br></div>
+                        <div style="display:flex; flex-direction:row; justify-content:flex-start; align-items:center; gap: 4px;margin-bottom: 4px;"><img src="{{ $invoice_image1 }}" alt="Company Logo" width="25" height="25"><b>Address:</b><br></div>
                             {!! $company_address !!}
                         </td>
                     </tr>
@@ -93,7 +93,7 @@
                     <tr>
                         <th
                             style="background: transparent; font-weight:bold; letter-spacing:1px; border-bottom:1px solid #D8A34E; border-top:1px solid #D8A34E; padding:12px 8px; text-align:left;">
-                            PRODUCT DESCRIPTIONS</th>
+                            Product Descriptions</th>
                         <th
                             style="background: transparent; font-weight:bold; letter-spacing:1px; border-bottom:1px solid #D8A34E; border-top:1px solid #D8A34E; padding:12px 8px; text-align:left;">
                             Length</th>
@@ -102,7 +102,7 @@
                             Quantity</th>
                         <th
                             style="background: transparent; font-weight:bold; letter-spacing:1px; border-bottom:1px solid #D8A34E; border-top:1px solid #D8A34E; padding:12px 8px; text-align:right;">
-                            AMOUNT</th>
+                            Amount</th>
                     </tr>
                     @foreach($products as $product)
                     <tr>
