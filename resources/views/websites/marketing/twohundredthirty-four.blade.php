@@ -188,7 +188,11 @@
                                             <div style="display: flex; align-items: center;">
                                                 <img src="{{ $invoice_image4 }}" alt="" style="height: 25px; margin-right: 5px; flex-shrink: 0;">
                                                 <span style="display: inline-block; line-height: 1.4;">
-                                                    {{ $company_address }}
+                                                    <!-- {{ $company_address }} -->
+                                                    @php
+                                                        $formatted_address = preg_replace('/\s*Office No\./', "<br>Office No.", $company_address);
+                                                    @endphp
+                                                    {!! $formatted_address !!}
                                                 </span>
                                             </div>
                                         @endif
