@@ -179,8 +179,14 @@
                                     <!-- Column 3 -->
                                     <td style="vertical-align: top;width: 33.33%; text-align: left; font-size: 10px; color: #5E5E5E; padding-top: 10px;">
                                         @if(!empty($company_address))
-                                            <img src="{{ $invoice_image4 }}" alt="" style="height: 25px; vertical-align: middle;">
-                                            <span style="margin-left: 5px; vertical-align: middle;">{{ $company_address }}</span>
+                                            <!-- <img src="{{ $invoice_image4 }}" alt="" style="height: 25px; vertical-align: middle;">
+                                            <span style="margin-left: 5px; vertical-align: middle;">{{ $company_address }}</span> -->
+                                            <div style="display: flex; align-items: flex-start;">
+                                                <img src="{{ $invoice_image4 }}" alt="" style="height: 25px; margin-right: 5px; flex-shrink: 0;">
+                                                <span style="display: inline-block; line-height: 1.4;">
+                                                    {{ $company_address }}
+                                                </span>
+                                            </div>
                                         @endif
                                         </td>
 
