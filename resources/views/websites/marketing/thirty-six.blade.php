@@ -3,6 +3,12 @@
 
 <head>
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
+    <style>
+        * {
+            margin:0px;
+            padding:0px;
+        }
+    </style>
 </head>
 
 <body style="border-collapse: collapse;">
@@ -12,14 +18,9 @@
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
                     style="border-collapse: collapse;">
                     <tr>
-                        <td style="padding: 0px;max-height: 130px;">
-                            <table width="100%">
-                                <tr>
-                                    <td
-                                        style="height: 60px; background: url('{{ $invoice_header_image }}') no-repeat;background-position: 100% 100%;background-size:cover;width: 100%;">
-                                    </td>
-                                </tr>
-                            </table>
+                        
+                        <td
+                            style="height: 60px; background: url('{{ $invoice_header_image }}') no-repeat;background-position: center;background-size:cover;width: 100%;">
                         </td>
                     </tr>
                     <tr>
@@ -78,7 +79,7 @@
                             <div style="min-height: 650px !important;">
                                 <table style="border-collapse: collapse;border-bottom: 0px;border: 0px;">
                                     <tr
-                                        style="border-collapse: collapse;height: 30px;background-color: black; color: white;border-bottom: 0px;border: 0px;">
+                                        style="border-collapse: collapse;height: 30px;background-color: #09192A; color: white;border-bottom: 0px;border: 0px;">
                                         <td
                                             style="padding-left: 16px;width: 600px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
                                             <b>Product Description</b>
