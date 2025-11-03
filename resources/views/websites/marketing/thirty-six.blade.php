@@ -8,6 +8,13 @@
             margin:0px;
             padding:0px;
         }
+        .footer_bottom {
+            position: fixed;
+            bottom: 0px;
+            left: 0px;
+            right: 0px;
+            width: 100%;
+        }
     </style>
 </head>
 
@@ -24,7 +31,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td style="padding:24px;padding-top:0px;">
+                        <td style="padding:24px;">
                             <table width="100%">
                                 <tr>
                                     <td>
@@ -151,7 +158,43 @@
                     </tr>
                     <tr>
                         <td>
-                            <table width="100%" cellspacing="0" cellpadding="" border="0px"
+
+                            <div class="footer_bottom" style="
+                                display: flex;
+                                align-items: center;
+                                justify-content: space-between;
+                                background: url('{{ $invoice_footer_image }}') no-repeat center center;
+                                background-size: cover;
+                                height: 141px;
+                                width: 100%;
+                                padding: 0 40px;
+                                box-sizing: border-box;
+                                color: white;
+                            ">
+
+                                <!-- Company Logo -->
+                                <div style="flex: 1;">
+                                    <img src="{{ $company_logo }}" alt="Company Logo" style="height: 85px; display: block;">
+                                </div>
+
+                                <!-- Company Address -->
+                                <div style="flex: 1; text-align: left;">
+                                    <p style="font-size: 10px; margin: 0;"><b>ADDRESS</b></p>
+                                    <p style="font-size: 10px; margin: 0;">{!! $company_address ?? 'N/A' !!}</p>
+                                </div>
+
+                                <!-- Company Contact -->
+                                <div style="flex: 1; text-align: left;">
+                                    <p style="font-size: 10px; margin: 0;"><b>CONTACTS</b></p>
+                                    <p style="font-size: 10px; margin: 0;">
+                                        {{ $company_email ?? 'support@bluemoonmarketeers.com' }}
+                                    </p>
+                                </div>
+
+                            </div>
+
+
+                            <!-- <table width="100%" cellspacing="0" cellpadding="" border="0px"
                                 style="border-collapse: collapse;">
                                 <tr
                                     style="background: url('{{ $invoice_footer_image }}') no-repeat;background-position: center;background-size: cover;height:141px;padding:50px;background-size:cover;width: 100%;">
@@ -169,7 +212,7 @@
                                             {{ $company_email ?? 'support@bluemoonmarketeers.com' }}</p>
                                     </td>
                                 </tr>
-                            </table>
+                            </table> -->
                         </td>
                     </tr>
                 </table>
