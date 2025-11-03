@@ -14,6 +14,18 @@
             left: 0px;
             right: 0px;
             width: calc(100% + 5px);
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: url('{{ $invoice_footer_image }}');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+            height: 141px;
+            padding: 0 40px;
+            color: white;
+
         }
         .trans {
             background: #FFFFFF;
@@ -165,18 +177,7 @@
                     <tr>
                         <td>
 
-                            <div class="footer_bottom" style="
-                                display: flex;
-                                align-items: center;
-                                justify-content: space-between;
-                                background: url('{{ $invoice_footer_image }}') no-repeat center center;
-                                background-size: cover;
-                                height: 141px;
-                                width: 100%;
-                                padding: 0 40px;
-                                box-sizing: border-box;
-                                color: white;
-                            ">
+                            <div class="footer_bottom">
 
                                 <!-- Company Logo -->
                                 <div style="flex: 1;">
