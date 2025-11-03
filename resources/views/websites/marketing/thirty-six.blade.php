@@ -10,10 +10,10 @@
         }
         .footer_bottom {
             position: fixed;
-            bottom: 0px;
+            bottom: -1px;
             left: 0px;
             right: 0px;
-            width: 100%;
+            width: calc(100% + 5px);
         }
     </style>
 </head>
