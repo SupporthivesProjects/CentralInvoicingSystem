@@ -101,7 +101,7 @@
                     </tr>
                     <tr>
                         <td style="padding:40px;width: 100%;padding-top:20px;" colspan="2">
-                            <div style="min-height: 495px;">
+                            <!-- <div style="min-height: 495px;"> -->
                                 <table cellspacing="0" cellpadding="0" border="0" width="100%"
                                     style="border-collapse: collapse;">
                                     <tr style="width:520px;height:40px;background: #000000;">
@@ -215,7 +215,7 @@
                                         </td>
                                     </tr>
                                 </table>
-                            </div>
+                            <!-- </div> -->
                         </td>
                     </tr>
                     <tr>
