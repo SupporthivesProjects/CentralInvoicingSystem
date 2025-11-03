@@ -15,6 +15,12 @@
             right: 0px;
             width: calc(100% + 5px);
         }
+        .trans {
+            background: #FFFFFF;
+        }
+        .dark {
+            background: #E6E7E8;
+        }
     </style>
 </head>
 
@@ -102,7 +108,7 @@
 
                                     </tr>
                                     @foreach ($products as $product)
-                                        <tr style="border-collapse: collapse;height: 50px;">
+                                        <tr class="{{ $loop->even ? 'trans' : 'dark' }}"  style="border-collapse: collapse;height: 50px;">
                                             <td
                                                 style="padding-left: 16px;width: 100px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;border-bottom: 0px; ">
                                                 {{ $product->name ?? '-' }}
