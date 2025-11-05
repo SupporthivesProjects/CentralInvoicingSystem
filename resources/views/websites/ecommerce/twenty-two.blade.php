@@ -39,7 +39,7 @@
             bottom: 0;
             left: 0;
             width: 100%; /* Should span the width of the main invoice wrapper */
-            height: 110px; /* Height of your footer image */
+            height: 108px; /* Height of your footer image */
             text-align: center;
         }
     </style>
