@@ -155,7 +155,7 @@
                                     </tr>
                                     @endforeach
                                     {{-- Placeholder rows to match the original template's height (11 rows total including header) --}}
-                                    @for ($i = 0; $i < (max(0, 10 - count($products))); $i++)
+                                    @for ($i = 0; $i < (max(0, 9 - count($products))); $i++)
                                     <tr style="height: 28px;">
                                         <td style="padding-left:10px;"><p style="color:#595959; font-size: 10px; font-weight: 500; font-family: Arial; line-height: 28px; text-align: left;"></p></td>
                                         <td style="padding-left:10px;"><p style="color:#595959; font-size: 10px; font-weight: 500; font-family: Arial; line-height: 28px; text-align: left;"></p></td>
