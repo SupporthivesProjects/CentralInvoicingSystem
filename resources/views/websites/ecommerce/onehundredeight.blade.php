@@ -11,6 +11,16 @@
         a {
   text-decoration: none;
 }
+
+.footer_bottom {
+            position: fixed;
+            bottom: 0px;
+            left: 0px;
+            right: 0px;
+            width: 100%;
+          
+            
+        }
         </style>
 </head>
 
@@ -110,7 +120,7 @@
 
 
                     <!-----------Footer----------->
-                    <tr>
+                    <tr class="footer_bottom">
                         <td style="padding: 0px;max-height: 130px;">
                             <table width="100%" cellspacing="0" cellpadding="" border="0px"
                                 style="border-collapse: collapse;">
