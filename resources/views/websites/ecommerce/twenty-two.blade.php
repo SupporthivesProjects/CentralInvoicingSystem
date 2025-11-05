@@ -25,7 +25,7 @@
         }
         .main-invoice-wrapper {
             position: relative; /* Establish positioning context for absolutely positioned footer */
-            min-height: 800px; /* Adjust this value based on your typical PDF page height to push footer down */
+            height: 100vh; /* Adjust this value based on your typical PDF page height to push footer down */ 
             /* This min-height will push content up and footer down. It's an approximation. */
             /* You might need to experiment with this value for your specific PDF page size (e.g., A4) */
             /* A4 height is approx 842px, considering margins, 800px is a good start. */
