@@ -126,7 +126,7 @@
                                     <td style="width:20px;">
 
                                     </td>
-                                    <td style="display: flex;">
+                                    <td style="display: flex;justify-content: flex-start;">
                                     <table border="1" style="border-collapse: collapse; margin-bottom: 20px; width: 100%;min-height: 560px !important;border: 1px solid #ccc !important;">
                                         <tr style="height: 50px;">
                                             <td style="width: 200px; padding-left: 10px;border-bottom: 1px solid #ccc !important;">
