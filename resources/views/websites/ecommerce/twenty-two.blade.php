@@ -25,7 +25,7 @@
         }
         .main-invoice-wrapper {
             position: relative; /* Establish positioning context for absolutely positioned footer */
-            height: 99.8vh; /* Adjust this value based on your typical PDF page height to push footer down */ 
+            height: 99.6vh; /* Adjust this value based on your typical PDF page height to push footer down */ 
             /* This min-height will push content up and footer down. It's an approximation. */
             /* You might need to experiment with this value for your specific PDF page size (e.g., A4) */
             /* A4 height is approx 842px, considering margins, 800px is a good start. */
@@ -66,7 +66,7 @@
                                     <tr style="background: rgb(57, 57, 86);">
                                         <td style="width:50%; height: 28px; padding-left:10px;">
                                             <p style="color: #ffff; font-size: 14px; font-weight: 500; font-family: Arial; line-height: 28px; text-align: left;">
-                                                INVOICE No. {{ $invoice_number }}
+                                                INVOICEs No. {{ $invoice_number }}
                                             </p>
                                         </td>
                                         <td style="width:50%; height: 28px; padding-right:10px;">
