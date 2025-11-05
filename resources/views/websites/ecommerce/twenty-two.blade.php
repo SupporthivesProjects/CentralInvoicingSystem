@@ -36,7 +36,7 @@
         }
         .footer-absolute {
             position: absolute;
-            bottom: -4px;
+            bottom: -2px;
             left: 0;
             width: 100%; /* Should span the width of the main invoice wrapper */
             height: 110px; /* Height of your footer image */
@@ -66,7 +66,7 @@
                                     <tr style="background: rgb(57, 57, 86);">
                                         <td style="width:50%; height: 28px; padding-left:10px;">
                                             <p style="color: #ffff; font-size: 14px; font-weight: 500; font-family: Arial; line-height: 28px; text-align: left;">
-                                                INVOICE No. {{ $invoice_number }}
+                                                INVOICEs No. {{ $invoice_number }}
                                             </p>
                                         </td>
                                         <td style="width:50%; height: 28px; padding-right:10px;">
