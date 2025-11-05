@@ -29,7 +29,7 @@
             /* This min-height will push content up and footer down. It's an approximation. */
             /* You might need to experiment with this value for your specific PDF page size (e.g., A4) */
             /* A4 height is approx 842px, considering margins, 800px is a good start. */
-            width: 600px; /* Ensure this matches your inner table width */
+            width: 100%; /* Ensure this matches your inner table width */
             margin: 0 auto; /* Center the wrapper */
             background-color: #ffffff; /* Same as the inner table */
            
@@ -53,7 +53,7 @@
                     <table width="100%" cellspacing="0" cellpadding="0" border="0">
                         <tr style="width:100%">
                             <td style="padding: 0px; height: 112px; text-align: center;width:100%">
-                                <img src="{{ $invoice_header_image }}" alt="Header Image" style="display: inline-block; width: 600px; height: 112px;">
+                                <img src="{{ $invoice_header_image }}" alt="Header Image" style="display: inline-block; width: 100%; height: 112px;">
                             </td>
                         </tr>
                     </table>
@@ -205,7 +205,7 @@
                     </table>
 
                     <div class="footer-absolute">
-                        <img src="{{ $invoice_footer_image }}" alt="Footer Image" style="display: inline-block; width: 600px; height: 110px;">
+                        <img src="{{ $invoice_footer_image }}" alt="Footer Image" style="display: inline-block; width: 100%; height: 110px;">
                     </div>
                 </div> </td>
         </tr>
