@@ -66,7 +66,7 @@
                             <tr>
                                 <td style="width: 50%; vertical-align: middle;">
                                     <h1 style="color: #2e74b1; font-size: 36px; font-family: Calibri; font-weight: 700; margin: 0px; text-transform: uppercase; letter-spacing: 1px;">
-                                        Invoices
+                                        Invoice
                                     </h1>
                                 </td>
                                 <td style="width: 50%; text-align: right; vertical-align: middle;">
@@ -127,45 +127,45 @@
 
                                     </td>
                                     <td style="display: flex;justify-content: flex-start;">
-                                    <div style="width: 100%; min-height: 560px; border: 1px solid #ccc; margin-bottom: 20px;">
+                                    <div style="width: 100%; min-height: 560px;  margin-bottom: 20px;">
                                     <table border="1" style="border-collapse: collapse; width: 100%; border: 1px solid #ccc;">
                                         <tr style="height: 50px;">
                                             <td style="width: 200px; padding-left: 10px;border-bottom: 1px solid #ccc !important;">
-                                                <p style="color: rgb(128, 128, 128); font-size: 11px; font-weight: 600; font-family: Calibri; margin: 0px;">
+                                                <p style="color: rgb(128, 128, 128); font-size: 14px; font-weight: 600; font-family: Calibri; margin: 0px;">
                                                     DESCRIPTIONS
                                                 </p>
                                             </td>
                                             <td style="width: 70px; text-align: center; border-bottom: 3px solid #2e74b1;">
-                                                <p style="color: grey; font-size: 11px; font-weight: 600; font-family: Calibri; margin: 0; line-height: 50px;">
+                                                <p style="color: grey; font-size: 14px; font-weight: 600; font-family: Calibri; margin: 0; line-height: 50px;">
                                                     QTY
                                                 </p>
                                             </td>
                                             <td style="width: 100px; text-align: center; border-bottom: 3px solid #2e74b1;">
-                                                <p style="color: grey; font-size: 11px; font-weight: 600; font-family: Calibri; margin: 0; line-height: 50px;">
+                                                <p style="color: grey; font-size: 14px; font-weight: 600; font-family: Calibri; margin: 0; line-height: 50px;">
                                                     PRICE
                                                 </p>
                                             </td>
                                         </tr>
                                         @foreach($products as $product)
                                         <tr>
-                                            <td style="width: 200px; padding: 10px;border-bottom: 1px solid #ccc !important;">
-                                                <p style="color: black; font-size: 10px; font-weight: 600; font-family: Calibri; margin: 0px;">
+                                            <td style="width: 200px; padding: 10px;padding-top: 20px;padding-bottom:20px;border-bottom: 1px solid #ccc !important;">
+                                                <p style="color: black; font-size: 14px; font-weight: 600; font-family: Calibri; margin: 0px;">
                                                     {{ $product->name }}
                                                 </p>
                                                 <!-- <span style="color: grey; font-size: 8px; font-weight: 600; font-family: Calibri; margin: 0px;">
                                                 {{ $product->name }}...
                                                 </span> -->
-                                                <p style="color: black; font-size: 10px; font-weight: 400; font-family: Calibri; margin: 0px;">
+                                                <p style="color: black; font-size: 14px; font-weight: 400; font-family: Calibri; margin: 0px;">
                                                 {{ $product->category_name }}
                                                 </p>
                                             </td>
-                                            <td style="border-bottom: 1px solid #ccc !important;width: 70px; background-color: #e3e3fe !important; padding: 10px; text-align: center;">
-                                                <p style="color: grey; font-size: 9px; font-weight: 400; font-family: Calibri; margin: 0px;">
+                                            <td style="border-bottom: 1px solid #ccc !important;width: 70px; background-color: #e3e3fe !important; padding: 10px;padding-top: 20px;padding-bottom:20px; text-align: center;">
+                                                <p style="color: grey; font-size: 12px; font-weight: 400; font-family: Calibri; margin: 0px;">
                                                    {{ $product->quantity ?? 1 }}
                                                 </p>
                                             </td>
-                                            <td style="border-bottom: 1px solid #ccc !important;width: 100px; background-color: #e3e3fe !important; padding: 10px; text-align: center;">
-                                                <p style="color: grey; font-size: 12px; font-weight: 400; font-family: Roboto Light; margin: 0px;">
+                                            <td style="border-bottom: 1px solid #ccc !important;width: 100px; background-color: #e3e3fe !important; padding: 10px;padding-top: 20px;padding-bottom:20px; text-align: center;">
+                                                <p style="color: grey; font-size: 14px; font-weight: 400; font-family: Roboto Light; margin: 0px;">
                                                 {{ site_currency() }} {{ number_format(($product->quantity ?? 1) * $product->unit_price, 2) }}
                                                 </p>
                                             </td>
