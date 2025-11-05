@@ -66,7 +66,7 @@
                             <tr>
                                 <td style="width: 50%; vertical-align: middle;">
                                     <h1 style="color: #2e74b1; font-size: 36px; font-family: Calibri; font-weight: 700; margin: 0px; text-transform: uppercase; letter-spacing: 1px;">
-                                        Invoice
+                                        Invoices
                                     </h1>
                                 </td>
                                 <td style="width: 50%; text-align: right; vertical-align: middle;">
@@ -127,7 +127,8 @@
 
                                     </td>
                                     <td style="display: flex;justify-content: flex-start;">
-                                    <table border="1" style="border-collapse: collapse; margin-bottom: 20px; width: 100%;min-height: 560px !important;border: 1px solid #ccc !important;">
+                                    <div style="width: 100%; min-height: 560px; border: 1px solid #ccc; margin-bottom: 20px;">
+                                    <table border="1" style="border-collapse: collapse; width: 100%; border: 1px solid #ccc;">
                                         <tr style="height: 50px;">
                                             <td style="width: 200px; padding-left: 10px;border-bottom: 1px solid #ccc !important;">
                                                 <p style="color: rgb(128, 128, 128); font-size: 11px; font-weight: 600; font-family: Calibri; margin: 0px;">
@@ -195,7 +196,7 @@
                                             </td>
                                         </tr>
                                     </table>
-
+                                    </div>
 
                                     </td>
                                 </tr>
