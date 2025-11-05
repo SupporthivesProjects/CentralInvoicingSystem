@@ -32,7 +32,7 @@
             width: 600px; /* Ensure this matches your inner table width */
             margin: 0 auto; /* Center the wrapper */
             background-color: #ffffff; /* Same as the inner table */
-            box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1); /* Same as the inner table */
+           
         }
         .footer-absolute {
             position: absolute;
@@ -47,7 +47,7 @@
 <body>
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
-            <td align="center" bgcolor="#f2f2f2" style="padding: 20px 0;">
+            <td align="center" bgcolor="#f2f2f2" style="">
                 <div class="main-invoice-wrapper">
 
                     <table width="100%" cellspacing="0" cellpadding="0" border="0">
@@ -79,12 +79,12 @@
 
                                 <table width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-top: 40px; border-collapse: collapse;">
                                     <tr>
-                                        <td style="width: 50%; border-bottom: 1px solid black; padding-bottom: 5px; text-align: center;">
+                                        <td style="width: 50%; border-bottom: 1px solid black; padding-bottom: 5px; text-align: left;">
                                             <p style="color: #577188; font-size: 10px; font-family: Arial; font-weight: 400; text-transform: uppercase;">
                                                 Billed To
                                             </p>
                                         </td>
-                                        <td style="width: 50%; border-bottom: 1px solid black; padding-bottom: 5px; text-align: center;">
+                                        <td style="width: 50%; border-bottom: 1px solid black; padding-bottom: 5px; text-align: left;">
                                             <p style="color: #577188; font-size: 10px; font-family: Arial; font-weight: 400; text-transform: uppercase;">
                                                 Billed FROM
                                             </p>

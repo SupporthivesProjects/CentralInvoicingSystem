@@ -3,6 +3,15 @@
 
 <head>
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
+    <style>
+        *{
+            margin:0px;
+            padding:0px;
+        }
+        a {
+  text-decoration: none;
+}
+        </style>
 </head>
 
 <body>
@@ -10,7 +19,7 @@
         <tr>
             <td align="center" bgcolor="#f2f2f2" style="padding: 0px 0;">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
-                    style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
+                    style="border-collapse: collapse; {{ $site->site_link }}">
                     <!-- Header -->
                     <tr>
                         <td style="padding: 0px;max-height: 130px;">
