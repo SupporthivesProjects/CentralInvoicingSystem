@@ -47,12 +47,12 @@
 <body>
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
-            <td align="center" bgcolor="#f2f2f2" style="">
+            <td bgcolor="#f2f2f2" style="">
                 <div class="main-invoice-wrapper">
 
                     <table width="100%" cellspacing="0" cellpadding="0" border="0">
-                        <tr>
-                            <td style="padding: 0px; height: 112px; text-align: center;">
+                        <tr style="width:100%">
+                            <td style="padding: 0px; height: 112px; text-align: center;width:100%">
                                 <img src="{{ $invoice_header_image }}" alt="Header Image" style="display: inline-block; width: 600px; height: 112px;">
                             </td>
                         </tr>

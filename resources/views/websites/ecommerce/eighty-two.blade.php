@@ -15,6 +15,7 @@
         }
         a {
   text-decoration: none;
+  color: #58595B;
 }
         </style>
 </head>
@@ -45,7 +46,7 @@
                                                         Website</h2>
                                                     <p
                                                         style="margin: 0px;color: #58595B;font-family: Arial;font-size:8px;">
-                                                        <a href="https://thewebdesigncrowd.com/">thewebdesigncrowd.com/</a>
+                                                        <a href="https://thewebdesigncrowd.com/">thewebdesigncrowd.com</a>
                                                         </p>
                                                         <!-- {{ $site->site_link }} -->
                                                 </td>
