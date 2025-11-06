@@ -158,7 +158,7 @@
                                                 <td>
                                                     <p
                                                         style="margin: 0px;color: #58595B;font-family: Arial;font-size:12px;font-weight:700;">
-                                                        Product Name
+                                                        Product Names
                                                     </p>
                                                 </td>
                                                 <td>
