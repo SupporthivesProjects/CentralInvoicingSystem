@@ -132,16 +132,16 @@
                                         </td>
                                     </tr>
                                     <tr style="border-collapse: collapse;height: 30px;border-bottom: 0px;border: 0px;">
-                                        <td style="width: 100px;text-align: left;font-family: Courier Newl;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;">
+                                        <td style="width: 100px;text-align: left;font-family: Courier Newl;font-size: 10px;margin: 0px;font-weight: 700; border-collapse: collapse;">
                                         
                                         </td>
-                                        <td style="width: 300px;text-align:left;padding-left:10px;font-family: arial;font-size:10px;margin: 0px;font-weight: 400; border-collapse: collapse;background-color: #FF4500; color: white;">
+                                        <td style="width: 300px;text-align:left;padding-left:10px;font-family: arial;font-size:10px;margin: 0px;font-weight: 700; border-collapse: collapse;background-color: #FF4500; color: white;">
                                             GRAND TOTAL
                                         </td>
-                                        <td style="width:100px;text-align:left;padding-right:10px;font-family: Courier New;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;background-color: #FF4500;">
+                                        <td style="width:100px;text-align:left;padding-right:10px;font-family: Courier New;font-size: 10px;margin: 0px;font-weight: 700; border-collapse: collapse;background-color: #FF4500;">
                                         
                                         </td>
-                                        <td style="width:100px;text-align:left;padding-right:10px;font-family: Courier New;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;background-color: #FF4500; color: white;">
+                                        <td style="width:100px;text-align:left;padding-right:10px;font-family: Courier New;font-size: 10px;margin: 0px;font-weight: 700; border-collapse: collapse;background-color: #FF4500; color: white;">
                                             {{ site_currency() . number_format($invoice_amount, 2) }}
                                         </td>
                                     </tr><br><br>
