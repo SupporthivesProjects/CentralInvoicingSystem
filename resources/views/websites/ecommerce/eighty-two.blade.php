@@ -110,10 +110,10 @@
                     <!---header End---->
                     <!-- Content -->
                     <tr style="background:#ffff ;">
-                        <td style="padding: 40px 20px;padding-bottom: 0px;min-height: 925px;">
-                            <table border="0" style="border-collapse: collapse;width: 100%;min-height: 925px;">
+                        <td style="padding: 40px 20px;padding-bottom: 0px;min-height: 935px;">
+                            <table border="0" style="border-collapse: collapse;width: 100%;min-height: 935px;">
                                 <tr>
-                                    <td style="min-height: 925px;width: 30%;background: url('{{ $invoice_image3 }}');background-repeat:no-repeat;background-size: cover;padding: 20px 20px 20px 10px;vertical-align: top;"
+                                    <td style="min-height: 935px;width: 30%;background: url('{{ $invoice_image3 }}');background-repeat:no-repeat;background-size: cover;padding: 20px 20px 20px 10px;vertical-align: top;"
                                         align="center">
                                         <img src="{{ $company_logo }}" alt="" style="width:40px">
                                         <br>
@@ -148,7 +148,7 @@
                                                 </td>
                                             </tr>
                                         </table>
-                                        <img src="{{ $invoice_footer_image }}" alt="" style="height:30px;position: fixed; bottom: 30px;left: 150px;">
+                                        <img src="{{ $invoice_footer_image }}" alt="" style="height:30px;position: fixed; bottom: 30px;left: 75px;">
                                     </td>
                                     <td style="padding-left: 20px;vertical-align: top;">
                                         <table border="0"
