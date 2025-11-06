@@ -148,7 +148,7 @@
                                                 </td>
                                             </tr>
                                         </table>
-                                        <img src="{{ $invoice_footer_image }}" alt="" style="height:30px;position: relative; bottom: 0px;">
+                                        <img src="{{ $invoice_footer_image }}" alt="" style="height:30px;position: fixed; bottom: 0px;">
                                     </td>
                                     <td style="padding-left: 20px;vertical-align: top;">
                                         <table border="0"
