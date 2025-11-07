@@ -21,7 +21,7 @@
         }
         /* Invoice container */
         .invoice-container {
-            width: 600px;
+            width: 100%;
             margin: 0 auto;
             background-color: #ffffff; /* This is the main white area */
             border-collapse: collapse;
@@ -44,7 +44,7 @@
         }
         .header-image {
             width: 100%;
-            height: 120px;
+            height: 150px;
             display: block;
             margin: 0 auto;
         }
@@ -152,13 +152,19 @@
 
         /* Footer styling */
         .footer-cell {
+            position:absolute;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            bottom:0px;
             text-align: center;
-            padding: 0;
+            padding:0 45%;
         }
         .footer-image {
-            height: 50px;
+            height: 70px;
             display: block;
-            margin: 0 auto;
+            margin: 10px;
+            
         }
 
         /* Spacer to push footer down (important for DOMPDF) */
@@ -247,7 +253,7 @@
                                             <tr>
                                                 <td>
                                                     <p class="text-black font-size-10 font-weight-500 font-arial margin-0 text-left">
-                                                        <b>Website: </b><a href="{{ $site->site_link ?? '#' }}" class="link-color">{{ $site->site_link ?? 'www.thebrandmonkey.com' }}</a>
+                                                        <b>Website: </b><a href="https://thebrandmonkey.com" class="link-color">thebrandmonkey.com</a>
                                                     </p>
                                                 </td>
                                             </tr>
@@ -297,12 +303,12 @@
                                             </td>
                                             <td class="col-unit-price">
                                                 <p class="font-size-8 font-weight-500 font-arial text-black text-right">
-                                                    {{ site_currency_code() }}{{ number_format($product->unit_price ?? 0, 2) }}
+                                                    {{ site_currency() }} {{ number_format($product->unit_price ?? 0, 2) }}
                                                 </p>
                                             </td>
                                             <td class="col-total">
                                                 <p class="font-size-8 font-weight-500 font-arial text-black text-right">
-                                                    {{ site_currency_code() }}{{ number_format(($product->quantity ?? 1) * ($product->unit_price ?? 0), 2) }}
+                                                    {{ site_currency() }} {{ number_format(($product->quantity ?? 1) * ($product->unit_price ?? 0), 2) }}
                                                 </p>
                                             </td>
                                         </tr>
@@ -319,7 +325,7 @@
                                         </td>
                                         <td colspan="2" class="col-total" style="padding-left: 0;">
                                             <p class="font-size-9 font-weight-500 font-arial text-black text-right text-uppercase">
-                                                {{ site_currency_code() }}{{ number_format(($invoice_amount + $discount_amount) ?? 0, 2) }}
+                                                {{ site_currency() }} {{ number_format(($invoice_amount + $discount_amount) ?? 0, 2) }}
                                             </p>
                                         </td>
                                     </tr>
@@ -329,7 +335,7 @@
                                         </td>
                                         <td colspan="2" class="col-total" style="padding-left: 0;">
                                             <p class="font-size-9 font-weight-500 font-arial text-black text-right text-uppercase">
-                                                {{ site_currency_code() }}{{ number_format($discount_amount ?? 0, 2) }}
+                                                {{ site_currency() }} {{ number_format($discount_amount ?? 0, 2) }}
                                             </p>
                                         </td>
                                     </tr>
@@ -339,7 +345,7 @@
                                         </td>
                                         <td colspan="2" class="col-total" style="padding-left: 0;">
                                             <p class="font-size-9 font-weight-500 font-arial text-black text-right text-uppercase">
-                                                {{ site_currency_code() }}{{ number_format($invoice_amount ?? 0, 2) }}
+                                                {{ site_currency() }} {{ number_format($invoice_amount ?? 0, 2) }}
                                             </p>
                                         </td>
                                     </tr>
