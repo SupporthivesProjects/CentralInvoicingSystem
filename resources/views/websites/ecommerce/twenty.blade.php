@@ -140,8 +140,8 @@
                                                     QTY
                                                 </p>
                                             </td>
-                                            <td style="width: 100px; text-align: center; border-bottom: 3px solid #2e74b1;text-align: right;">
-                                                <p style="color: grey; font-size: 14px; font-weight: 600; font-family: Calibri; margin: 0; line-height: 50px;">
+                                            <td style="width: 100px; text-align: center; border-bottom: 3px solid #2e74b1;text-align: right; padding-right: 10px;">
+                                                <p style="color: grey; font-size: 14px; font-weight: 600; font-family: Calibri; margin: 0; line-height: 50px;padding-right: 10px;">
                                                     PRICE
                                                 </p>
                                             </td>
@@ -165,7 +165,7 @@
                                                 </p>
                                             </td>
                                             <td style="border-bottom: 1px solid #ccc !important;width: 100px; background-color: #e3e3fe !important; padding: 10px;padding-top: 20px;padding-bottom:20px; text-align: right;">
-                                                <p style="color: grey; font-size: 14px; font-weight: 400; font-family: Roboto Light; margin: 0px;">
+                                                <p style="color: grey; font-size: 14px; font-weight: 400; font-family: Roboto Light; margin: 0px;padding-right: 10px;">
                                                 {{ site_currency() }} {{ number_format(($product->quantity ?? 1) * $product->unit_price, 2) }}
                                                 </p>
                                             </td>
