@@ -10,7 +10,7 @@
             <td align="center" bgcolor="#f2f2f2" style="padding:0px;">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse;">
                     <!-- Header -->
-                   <tr>
+                   <tr style="padding:0px;">
                         <td style="background: url('{{ $invoice_image1 }}') no-repeat;background-position:center;background-size:100% 100%;padding:0px;">
                             <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;border-collapse: collapse;"> 
                                 <tr>
@@ -39,22 +39,23 @@
                             </table>
                             <table>
                                 <tr style="color: white;font-family:  'Roboto', sans-serif;">
-                                    <td style="width: 300px;padding-left: 40px;font-size: 12px;padding-top: 15px;">
+                                    <td style="width:50%;padding-left: 40px;font-size: 12px;padding-top: 15px;">
                                         Billed Form:
                                     </td>
-                                    <td style="width: 300px;text-align: right;padding-right: 40px;font-size: 12px;padding-top: 15px;" align="right">Invoice To:</td>
+                                    <td style="width:50%;text-align: right;padding-right: 40px;font-size: 12px;padding-top: 15px;" align="right">Invoice To:</td>
                                 </tr>
                                 <tr style="color: white;font-family:  'Roboto', sans-serif;">
-                                    <td style="padding-left: 40px;"></td>
-                                    <td style="width: 300px;text-align: right;padding-right: 40px;font-size: 20px;" align="right">{{ $customer_name }}<br>
+                                    <td style="padding-left: 40px;width:50%;"></td>
+                                    <td style="width:50%;text-align: right;padding-right: 40px;font-size: 20px;" align="right">{{ $customer_name }}<br>
                                         {{ $customer_email }}<br></td>
                                 </tr>
                                 <tr style="color: white;font-family:  'Roboto', sans-serif;">
-                                    <td style="padding-left: 40px;vertical-align:center;">
+                                    <td style="padding-left: 40px;vertical-align:center;width:50%;">
                                         <p style="font-size: 10px;margin: 0px;">
                                             <img src="{{ $invoice_image2 }}" style="height: 20px;padding-right: 5px;">
                                             {!! $company_address !!}<br>{{ $company_mobile }}</p>
                                     </td>
+                                    <td style="width:50%;"></td>
                                 </tr>
                                 <tr style="color: white;font-family:  'Roboto', sans-serif;">
                                      <td style="padding-left: 40px;vertical-align:center;">
@@ -62,6 +63,7 @@
                                             <img src="{{ $invoice_image3 }}" style="height: 20px;padding-right: 5px;">
                                             {{ $company_email }}</p>
                                     </td>
+                                    <td style="width:50%;"></td>
                                 </tr>
                             </table>
                         </td>
@@ -69,7 +71,7 @@
                     <!-- Header End -->
 
                      <!-- Content -->
-                    <tr >
+                    <tr>
                         <td style="padding:40px;padding-top:0px;">
                             
                             <table style="border-collapse: collapse;border-bottom: 0px;border: 0px;">
