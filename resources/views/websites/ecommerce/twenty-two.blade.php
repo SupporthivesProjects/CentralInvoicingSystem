@@ -36,7 +36,7 @@
         }
         .footer-absolute {
             position: fixed;
-            bottom: 0px;
+            bottom: -1px;
             left: 0;
             width: 100%; /* Should span the width of the main invoice wrapper */
             height: 110px; /* Height of your footer image */
