@@ -44,7 +44,7 @@
         }
         .header-image {
             width: 100%;
-            height: 120px;
+            height: 150px;
             display: block;
             margin: 0 auto;
         }
