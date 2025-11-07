@@ -88,7 +88,7 @@
                                        <div style="display: flex;flex-direction: column;gap:30px;">
                                           <div style="display: flex;flex-direction: column;">
                                              <span style="color: grey;font-size:11px;font-weight:600;font-family: Calibri;">
-                                                TOTAL DUES:
+                                                TOTAL DUE:
                                              </span>
                                              <p style="color:#2e74b1;font-size:24px;font-weight:400;font-family: Calibri;margin: 0px;">
                                                 {{ site_currency() }} {{  number_format($invoice_amount, 2) }}
@@ -132,7 +132,7 @@
                                         <tr style="height: 50px;">
                                             <td style="width: 200px; padding-left: 10px;border-bottom: 1px solid #ccc !important;">
                                                 <p style="color: rgb(128, 128, 128); font-size: 14px; font-weight: 600; font-family: Calibri; margin: 0px;">
-                                                    DESCRIPTIONS
+                                                    PRODUCT NAME
                                                 </p>
                                             </td>
                                             <td style="width: 70px; text-align: center; border-bottom: 3px solid #2e74b1;">
