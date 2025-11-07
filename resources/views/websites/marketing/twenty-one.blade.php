@@ -161,9 +161,10 @@
             padding: 0;
         }
         .footer-image {
-            height: 50px;
+            height: 70px;
             display: block;
-            margin: 0 auto;
+            margin: 10 auto;
+            margin-left:45%;
         }
 
         /* Spacer to push footer down (important for DOMPDF) */
