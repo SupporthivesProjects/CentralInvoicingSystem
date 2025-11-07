@@ -46,7 +46,7 @@
                                                     {{ $customer_email ? $customer_email : '' }}<br>
                                                     {{ $customer_mobile ? $customer_mobile : '' }}</p>
                                             </div>
-                                            <p style="font-family: Helvetica;color: #FFFFFF; font-size: 10px;margin: 0px; text-align: end; font-weight: 400; line-height: 12px;">
+                                            <p style="font-family: Helvetica;color: #FFFFFF; font-size: 12px;margin: 0px; text-align: end; font-weight: 400; line-height: 12px;">
                                                 {{ $company_name }}<br>
                                                 {!! $company_address !!}<br><br>
                                                 {{ $company_email }}<br><br>
@@ -101,20 +101,20 @@
                                     </tr>
                                     @foreach ($products as $product)
                                     <tr style="border-collapse: collapse;height: 24px;">
-                                        <td style="width: 80px; color:#000000; text-align: center; padding: 16px 10px;font-family:  Helvetica;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
+                                        <td style="width: 80px; color:#000000; text-align: center; padding: 16px 10px;font-family:  Helvetica;font-size: 12px;margin: 0px;font-weight: 400;border-collapse: collapse;">
                                         <b>{{ $loop->iteration }}</b>
                                         </td>
-                                        <td style="width: 300px; color:#000000; text-align:start;padding: 16px 10px;font-family:  Helvetica;font-size:10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
+                                        <td style="width: 300px; color:#000000; text-align:start;padding: 16px 10px;font-family:  Helvetica;font-size:12px;margin: 0px;font-weight: 400;border-collapse: collapse;">
                                             <b>{{ $product->name }}</b><br><br>
                                             {{--!! \Illuminate\Support\Str::limit(strip_tags($product->description), 150) !!--}}
                                         </td>
-                                        <td style="width:100px; color:#000000; text-align:center;padding: 16px 10px;font-family:  Helvetica;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
+                                        <td style="width:100px; color:#000000; text-align:center;padding: 16px 10px;font-family:  Helvetica;font-size: 12px;margin: 0px;font-weight: 400;border-collapse: collapse;">
                                             1
                                         </td>
                                         <td style="width:120px; color:#000000; text-align:center;padding: 16px 10px;font-family:  Helvetica;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
                                             {{ site_currency() ." ". number_format($product->unit_price ?? 0, 2) }}
                                         </td>
-                                        <td style="width:100px; color:#000000; text-align:center;padding: 16px 10px;font-family:  Helvetica;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
+                                        <td style="width:100px; color:#000000; text-align:center;padding: 16px 10px;font-family:  Helvetica;font-size: 12px;margin: 0px;font-weight: 400;border-collapse: collapse;">
                                             {{ site_currency() ." ". number_format($product->unit_price ?? 0, 2) }}
                                         </td>
                                     </tr>
@@ -122,36 +122,36 @@
                                     <!-- <tr style="border-top: 24px solid #161a1c;"> -->
                                     <tr>
 
-                                        <td style="width: 100px;text-align: right;font-family: Helvetica;font-size: 11px;margin: 0px;font-weight: 400;padding-right: 10px; border: 0px;background-color: #161A1C;" colspan="3">
+                                        <td style="width: 100px;text-align: right;font-family: Helvetica;font-size: 13px;margin: 0px;font-weight: 400;padding-right: 10px; border: 0px;background-color: #161A1C;" colspan="3">
                                         </td>
-                                        <td style="width: 100px;color: #FFFFFF;text-align: start;font-family: Helvetica;font-size: 11px;margin: 0px;font-weight: 400;padding: 0px 12px; background-color: #24292e;" colspan="1">
+                                        <td style="width: 100px;color: #FFFFFF;text-align: start;font-family: Helvetica;font-size: 13px;margin: 0px;font-weight: 400;padding: 0px 12px; background-color: #24292e;" colspan="1">
                                         <p>Sub Total</p>
                                         </td>
-                                        <td style="width:100px;color: #FFFFFF;text-align:end;padding-right:10px;font-family: Helvetica;font-size: 11px;margin: 0px;font-weight: 400;border-collapse: collapse; background-color: #24292e;">
+                                        <td style="width:100px;color: #FFFFFF;text-align:end;padding-right:10px;font-family: Helvetica;font-size: 13px;margin: 0px;font-weight: 400;border-collapse: collapse; background-color: #24292e;">
                                             <p>{{ site_currency() ." ". number_format($invoice_amount + $discount_amount ?? 0, 2) }}</p>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td style="width: 100px;text-align: right;font-family: Helvetica;font-size: 9px;margin: 0px;font-weight: 400;padding-right: 10px; background-color: #161a1c;border: 0px;background-color: #161A1C;" colspan="3">
+                                        <td style="width: 100px;text-align: right;font-family: Helvetica;font-size: 11px;margin: 0px;font-weight: 400;padding-right: 10px; background-color: #161a1c;border: 0px;background-color: #161A1C;" colspan="3">
                                         </td>
-                                        <td style="width: 100px;color: #FFFFFF;text-align: start;font-family: Helvetica;font-size: 11px;margin: 0px;font-weight: 400;padding: 0px 12px; background-color: #24292e;"  colspan="1">
+                                        <td style="width: 100px;color: #FFFFFF;text-align: start;font-family: Helvetica;font-size: 13px;margin: 0px;font-weight: 400;padding: 0px 12px; background-color: #24292e;"  colspan="1">
                                         <p>
                                             Discount
                                         </p>
                                         </td>
-                                        <td style="width:100px;color: #FFFFFF;text-align:end;padding:0px 12px; font-family: Helvetica;font-size: 11px;margin: 0px;font-weight: 400;border-collapse: collapse; background-color: #24292e;">
+                                        <td style="width:100px;color: #FFFFFF;text-align:end;padding:0px 12px; font-family: Helvetica;font-size: 13px;margin: 0px;font-weight: 400;border-collapse: collapse; background-color: #24292e;">
                                             <p>{{ site_currency() ." ". number_format($discount_amount ?? 0, 2) }}</p>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td style="width: 100px;text-align: right;font-family: Helvetica;font-size: 10px;margin: 0px;font-weight: 400;padding-right: 10px; background-color: #161a1c;border: 0px;background-color: #161A1C;" colspan="3">
+                                        <td style="width: 100px;text-align: right;font-family: Helvetica;font-size: 12px;margin: 0px;font-weight: 400;padding-right: 10px; background-color: #161a1c;border: 0px;background-color: #161A1C;" colspan="3">
                                         </td>
-                                        <td style="width: 100px;color: #FFFFFF;text-align: start;font-family: Kanit;font-size: 16px;margin: 0px;font-weight: 700; padding: 0px 12px 14px 12px; background-color: #24292e;" colspan="1">
+                                        <td style="width: 100px;color: #FFFFFF;text-align: start;font-family: Kanit;font-size: 18px;margin: 0px;font-weight: 700; padding: 0px 12px 14px 12px; background-color: #24292e;" colspan="1">
                                         <p>
                                             <b>Total</b>
                                         </p>
                                         </td>
-                                        <td style="width:100px;color: #d3f64a;text-align:end;padding:0px 12px 14px 12px;font-family: Kanit;font-size: 14px;margin: 0px;font-weight: 700; border-collapse: collapse; background-color: #24292e;">
+                                        <td style="width:100px;color: #d3f64a;text-align:end;padding:0px 12px 14px 12px;font-family: Kanit;font-size: 16px;margin: 0px;font-weight: 700; border-collapse: collapse; background-color: #24292e;">
                                             <p>{{ site_currency() ." ". number_format($invoice_amount ?? 0, 2) }}</p>
                                         </td>
                                     </tr>
