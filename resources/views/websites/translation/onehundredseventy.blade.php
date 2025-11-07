@@ -11,9 +11,9 @@
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse;">
                     <!-- Header -->
                    <tr>
-                        <td style="background: url('{{ $invoice_image1 }}') no-repeat;background-position:center;background-size:100% 100%;">
+                        <td style="background: url('{{ $invoice_image1 }}') no-repeat;background-position:center;background-size:cover;">
                             <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;border-collapse: collapse;"> 
-                                <tr >
+                                <tr>
                                     <td style="width:50%;border:0px;padding-top: 40px;" > 
                                         <img src="{{ $company_logo }}" alt="" style="height: 60px; justify-content: left;padding-left: 20px;">
                                         </td>
@@ -26,7 +26,7 @@
                                 </tr>
                             </table>
                             <table>
-                                <tr >
+                                <tr>
                                     <td style="width: 400px;"></td>
                                     <td  style="width: 300px; text-align: right;font-family:  'Roboto', sans-serif;font-size: 9px;">Invoice No. :</td>
                                     <td style="padding-right: 40px;width: 300px;text-align: right;font-family:  'Roboto', sans-serif;font-size: 9px;">Invoice Date :</td>
@@ -42,22 +42,22 @@
                                     <td style="width: 300px;padding-left: 40px;font-size: 12px;padding-top: 15px;">
                                         Billed Form:
                                     </td>
-                                    <td style="width: 300px;text-align: right;padding-right: 40px;font-size: 12px;padding-top: 15px;">Invoice To:</td>
+                                    <td style="width: 300px;text-align: right;padding-right: 40px;font-size: 12px;padding-top: 15px;" align="right">Invoice To:</td>
                                 </tr>
                                 <tr style="color: white;font-family:  'Roboto', sans-serif;">
                                     <td style="padding-left: 40px;"></td>
-                                    <td style="width: 300px;text-align: right;padding-right: 40px;font-size: 20px;">{{ $customer_name }}<br>
+                                    <td style="width: 300px;text-align: right;padding-right: 40px;font-size: 20px;" align="right">{{ $customer_name }}<br>
                                         {{ $customer_email }}<br></td>
                                 </tr>
                                 <tr style="color: white;font-family:  'Roboto', sans-serif;">
-                                    <td style="padding-left: 40px;">
+                                    <td style="padding-left: 40px;vertical-align:center;">
                                         <p style="font-size: 10px;margin: 0px;">
                                             <img src="{{ $invoice_image2 }}" style="height: 20px;padding-right: 5px;">
                                             {!! $company_address !!}<br>{{ $company_mobile }}</p>
                                     </td>
                                 </tr>
                                 <tr style="color: white;font-family:  'Roboto', sans-serif;">
-                                     <td style="padding-left: 40px;">
+                                     <td style="padding-left: 40px;vertical-align:center;">
                                         <p style="font-size: 10px;">
                                             <img src="{{ $invoice_image3 }}" style="height: 20px;padding-right: 5px;">
                                             {{ $company_email }}</p>
