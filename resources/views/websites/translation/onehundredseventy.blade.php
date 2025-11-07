@@ -12,14 +12,16 @@
                     <!-- Header -->
                    <tr>
                         <td style="background: url('{{ $invoice_image1 }}') no-repeat;background-position:center;background-size:100% 100%;">
-                            <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse; width: 600px; border-collapse: collapse;"> 
+                            <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;border-collapse: collapse;"> 
                                 <tr >
                                     <td style="width:50%;border:0px;padding-top: 40px;" > 
                                         <img src="{{ $company_logo }}" alt="" style="height: 60px; justify-content: left;padding-left: 20px;">
                                         </td>
-                                        <td></td>
+                                       
                                         <td style="width:50%;border:0px;padding-top: 30px;">
-                                            <h1 style=" text-align: right;padding-right: 40px;font-family: 'Roboto', sans-serif;font-size: 58px;margin: 0px;">INVOICE</h1>
+                                            <h1 style=" text-align: right;padding-right: 40px;font-family: 'Roboto', sans-serif;font-size: 58px;margin: 0px;">
+                                                INVOICE
+                                            </h1>
                                         </td>
                                 </tr>
                             </table>
