@@ -91,7 +91,7 @@
                                 @foreach($products as $product)
                                 <tr style="border-collapse: collapse;height: 50px;border-bottom: 0px;border: 0px;border-bottom: 1px solid black;background-color: #F4F4F4;border: 1px solid white;font-family:  'Roboto', sans-serif;">
                                     <td style=" padding-left: 2px; width: 100px;text-align: center;font-size: 11px;margin: 0px; border-collapse: collapse;padding-left: 4px;border: 1px solid white;">
-                                     <b >01.</b>
+                                     <b >{{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}</b>
                                     </td>
                                     <td style="width: 300px;text-align:left;font-size:8px;margin: 0px; border-collapse: collapse;border: 1px solid white;padding-left: 10px;">
                                         <b style="font-size: 10px;">{{ $product->name }}</b><br>{{ $product->is_urgent ? 'Yes (+' . site_currency() . number_format($product->urgent_amount, 2) . ')' : 'No' }}<br>
