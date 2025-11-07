@@ -103,6 +103,9 @@
                                             <span style="color:#0070c0; font-size: 10px; font-weight: 400; font-family: Arial; line-height: 16px;">
                                                  {{ $company_email }}
                                             </span>
+                                            <p style="color: #595959; font-size: 10px; font-weight: 400; font-family: Arial; text-transform:capitalize; line-height: 16px;">
+                                            GLOBAL E-COMMERCE SOLUTIONS KOREA Co. Ltd
+                                            </p>
                                         </td>
                                     </tr>
                                 </table>
