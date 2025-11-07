@@ -247,7 +247,7 @@
                                             <tr>
                                                 <td>
                                                     <p class="text-black font-size-10 font-weight-500 font-arial margin-0 text-left">
-                                                        <b>Website: </b><a href="{{ $site->site_link }}" class="link-color">{{ $site->site_link }}</a>
+                                                        <b>Website: </b><a href="https://thebrandmonkey.com" class="link-color">https://thebrandmonkey.com</a>
                                                     </p>
                                                 </td>
                                             </tr>
