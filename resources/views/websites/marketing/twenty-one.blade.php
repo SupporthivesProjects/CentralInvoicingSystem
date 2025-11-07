@@ -152,6 +152,8 @@
 
         /* Footer styling */
         .footer-cell {
+            position:absolute;
+            bottom:0px;
             text-align: center;
             padding: 0;
         }
