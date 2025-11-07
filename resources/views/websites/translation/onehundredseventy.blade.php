@@ -94,7 +94,7 @@
                                      <b >{{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}</b>
                                     </td>
                                     <td style="width: 300px;text-align:left;font-size:8px;margin: 0px; border-collapse: collapse;border: 1px solid white;padding-left: 10px;">
-                                        <b style="font-size: 10px;">{{ $product->name }}</b><br>{{ $product->is_urgent ? 'Yes (+' . site_currency() . number_format($product->urgent_amount, 2) . ')' : 'No' }}<br>
+                                        <b style="font-size: 10px;">{{ $product->name }}</b><br>
                                         from {{ $product->from_language }} to {{ $product->to_language }}.
                                     </td>
                                     <td style="width:200px;text-align:center;font-size: 10px;margin: 0px; border-collapse: collapse;padding-left: 5px;border: 1px solid white;">
