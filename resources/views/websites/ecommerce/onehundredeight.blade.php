@@ -55,7 +55,7 @@
                             <table style="width: 100%; border: 1px solid red; border-collapse: collapse;">
                                 <tr style="background-color: #f9dede;">
                                     <td style="border: 1px solid red; padding: 8px; width: 50%; font-family: arial; font-size: 9px;">
-                                        <strong>Bill to</strong>
+                                        <strong>Billed to</strong>
                                     </td>
                                     <td style="border: 1px solid red; padding: 8px; width: 50%; font-family: arial; font-size: 9px;">
                                         <strong>Billed from</strong>
