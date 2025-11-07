@@ -158,13 +158,13 @@
             align-items:center;
             bottom:0px;
             text-align: center;
-            padding: 0;
+            padding:0 45%;
         }
         .footer-image {
             height: 70px;
             display: block;
             margin: 10px;
-            margin-left:45%;
+            
         }
 
         /* Spacer to push footer down (important for DOMPDF) */
