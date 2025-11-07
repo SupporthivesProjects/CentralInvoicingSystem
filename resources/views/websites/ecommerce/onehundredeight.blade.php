@@ -51,13 +51,14 @@
                         <td style="padding:40px;padding-top:0px;background: url(img/body_bg.png) no-repeat;background-position: center;background-size: cover;height:444px;">
                             <h2 style="color: #901918; font-family: arial; font-size: 14px;">INVOICE #{{ $invoice_number }}</h2>
                             <h2 style="color: #901918; font-family: arial; font-size: 14px;">DATE {{ $invoice_date }}</h2>
+                            <br>
                             <table style="width: 100%; border: 1px solid red; border-collapse: collapse;">
                                 <tr style="background-color: #f9dede;">
                                     <td style="border: 1px solid red; padding: 8px; width: 50%; font-family: arial; font-size: 9px;">
-                                        <strong>Billto</strong>
+                                        <strong>Bill to</strong>
                                     </td>
                                     <td style="border: 1px solid red; padding: 8px; width: 50%; font-family: arial; font-size: 9px;">
-                                        <strong>Bill from</strong>
+                                        <strong>Billed from</strong>
                                     </td>
                                 </tr>
                                 <tr>
@@ -113,7 +114,7 @@
                             </table>
                             </div>
 
-                            <p style="margin-top: 20px; font-family: arial; font-size: 9px;"><strong>Many Thanks for Your Custom.</strong></p>
+                           <!-- <p style="margin-top: 20px; font-family: arial; font-size: 9px;"><strong>Many Thanks for Your Custom.</strong></p>-->
                         </td>
                     </tr>
                     <!-- Content End-->
