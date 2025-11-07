@@ -153,6 +153,7 @@
         /* Footer styling */
         .footer-cell {
             position:absolute;
+            display:flex;
             justify-content:center;
             align-items:center;
             bottom:0px;
