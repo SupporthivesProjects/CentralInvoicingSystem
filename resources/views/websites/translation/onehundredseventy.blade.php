@@ -32,7 +32,7 @@
                                 <tr >
                                     <td style="width: 400px;"></td>
                                     <td  style="width: 300px; text-align: right;font-family:  'Roboto', sans-serif;font-size: 9px;">#{{ $invoice_number }}</td>
-                                    <td style="padding-right: 40px;width: 300px;text-align: right;font-family:  'Roboto', sans-serif;font-size: 9px;">{{ \Carbon\Carbon::parse($order->invoice_date)->format('l, jS F, Y') }}</td>
+                                    <td style="padding-right: 40px;width: 300px;text-align: right;font-family:  'Roboto', sans-serif;font-size: 9px;">{{ $invoice_date }}</td>
                                 </tr>
                             </table>
                             <table>
