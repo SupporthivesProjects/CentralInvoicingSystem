@@ -35,7 +35,7 @@
            
         }
         .footer-absolute {
-            position: absolute;
+            position: fixed;
             bottom: 0px;
             left: 0;
             width: 100%; /* Should span the width of the main invoice wrapper */
@@ -50,7 +50,7 @@
             <td  style="">
                 <!-- <div class="main-invoice-wrapper"> -->
 
-                    <table width="100%" cellspacing="0" cellpadding="0" border="0">
+                    <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse; ">
                         <tr style="width:100%">
                             <td style="padding: 0px; height: 112px; text-align: center;width:100%">
                                 <img src="{{ $invoice_header_image }}" alt="Header Image" style="display: inline-block; width: 100%; height: 112px;">
@@ -58,7 +58,7 @@
                         </tr>
                     </table>
 
-                    <table width="100%" cellspacing="0" cellpadding="0" border="0">
+                    <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse; ">
                         <tr>
                             <td style="padding:40px;">
 
