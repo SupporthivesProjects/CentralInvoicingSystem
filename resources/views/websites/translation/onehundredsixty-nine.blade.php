@@ -55,7 +55,7 @@
                                     </td>
                                 </tr>
                             </table>
-                            <div style="min-height: 470px !important">
+                            <div style="min-height: 467px !important">
                             <table style="width: 100%; margin-top: 20px;" cellspacing="0" cellpadding="10" border="0" style="border-collapse: collapse; font-family: Arial, sans-serif;">
                                 
 
@@ -136,7 +136,7 @@
                                  <img src="{{ $invoice_image4 }}" alt="" style="position: absolute; width: 24px; height: 24px; left: 53px;
                                  top: -85px;">
                                 <img src="{{ $invoice_image5 }}" alt="" style="display: block; width: 24px; height: 24px;">
-                                <p style="font-family: arial;font-size: 10px;font-weight: 400; margin: 0px; margin-top: 3px; margin-left: 4px;">{{ $company_email }}</p>
+                                <p style="font-family: arial;font-size: 10px;font-weight: 400; margin: 0px; margin-top: 5px; margin-left: 4px;">{{ $company_email }}</p>
                             </td>
 
                       </tr>
