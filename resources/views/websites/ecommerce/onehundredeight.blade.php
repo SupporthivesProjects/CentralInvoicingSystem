@@ -25,9 +25,9 @@
 </head>
 
 <body>
-    <table width="100%" cellspacing="0" cellpadding="0" border="0">
+    <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse; ">
         <tr>
-            <td align="center" bgcolor="#f2f2f2" style="padding: 0px 0;">
+            <td align="center" bgcolor="#ffffff" style="padding: 0px; margin: 0px ">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
                     style="border-collapse: collapse; {{ $site->site_link }}">
                     <!-- Header -->
