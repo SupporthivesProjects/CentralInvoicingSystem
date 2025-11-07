@@ -33,14 +33,9 @@
                     <!-- Header -->
                     <tr>
                         <td style="padding: 0px;max-height: 130px;">
-                            <table>
-                            <tr>
-                                <td>
+                            
                                     <img src="{{ $invoice_header_image }}" alt="" style="max-width: 100%; display: block;">
-                                </td>
-                            </tr>
-
-                            </table>
+                                
                         </td>
                     </tr>
                     <!-- Header End -->
