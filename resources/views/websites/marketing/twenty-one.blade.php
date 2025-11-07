@@ -21,7 +21,7 @@
         }
         /* Invoice container */
         .invoice-container {
-            width: 600px;
+            width: 100%;
             margin: 0 auto;
             background-color: #ffffff; /* This is the main white area */
             border-collapse: collapse;
