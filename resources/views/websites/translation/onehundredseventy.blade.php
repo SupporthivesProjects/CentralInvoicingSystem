@@ -88,7 +88,7 @@
                                         <b>TOTAL</b>
                                     </td>
                                 </tr>
-                                @foreach($products as $product)
+                                @foreach($products as $index => $product)
                                 <tr style="border-collapse: collapse;height: 50px;border-bottom: 0px;border: 0px;border-bottom: 1px solid black;background-color: #F4F4F4;border: 1px solid white;font-family:  'Roboto', sans-serif;">
                                     <td style=" padding-left: 2px; width: 100px;text-align: center;font-size: 11px;margin: 0px; border-collapse: collapse;padding-left: 4px;border: 1px solid white;">
                                      <b >{{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}</b>
