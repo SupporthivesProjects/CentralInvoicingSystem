@@ -45,10 +45,10 @@
     </style>
 </head>
 <body>
-    <table width="100%" cellspacing="0" cellpadding="0" border="0">
+    <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse; ">
         <tr>
-            <td bgcolor="#f2f2f2" style="">
-                <div class="main-invoice-wrapper">
+            <td  style="">
+                <!-- <div class="main-invoice-wrapper"> -->
 
                     <table width="100%" cellspacing="0" cellpadding="0" border="0">
                         <tr style="width:100%">
@@ -210,7 +210,8 @@
                     <div class="footer-absolute">
                         <img src="{{ $invoice_footer_image }}" alt="Footer Image" style="display: inline-block; width: 100%; height: 110px;">
                     </div>
-                </div> </td>
+                <!-- </div>  -->
+            </td>
         </tr>
     </table>
 </body>
