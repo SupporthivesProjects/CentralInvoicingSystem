@@ -163,7 +163,7 @@
         .footer-image {
             height: 70px;
             display: block;
-            margin: 10 auto;
+            margin: 10px;
             margin-left:45%;
         }
 
