@@ -253,7 +253,7 @@
                                             <tr>
                                                 <td>
                                                     <p class="text-black font-size-10 font-weight-500 font-arial margin-0 text-left">
-                                                        <b>Website: </b><a href="https://thebrandmonkey.com" class="link-color">https://thebrandmonkey.com</a>
+                                                        <b>Website: </b><a href="https://thebrandmonkey.com" class="link-color">thebrandmonkey.com</a>
                                                     </p>
                                                 </td>
                                             </tr>
