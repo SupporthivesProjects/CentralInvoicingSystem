@@ -40,8 +40,8 @@
                                 <div class="column" style="padding-right: 10px;">
                                     <table >
                                         <tr >
-                                            <td style="width: 225px;text-align: center;"><img src="{{ $invoice_image1 }}" style="height: 100px;"></td>
-                                            <td style="width: 225px;text-align: right;font-family: 'Roboto', sans-serif;">
+                                            <td style="width:100%;text-align: center;"><img src="{{ $invoice_image1 }}" style="height: 100px;"></td>
+                                            <td style="width:100%;text-align: right;font-family: 'Roboto', sans-serif;">
                                                 <h1 style="font-size: 42px;margin: 0px;">INVOICE</h1>
                                                 <p style="font-size: 10px;margin: 0px;">Invoice No :  {{ $invoice_number }}</p>
                                             </td>
