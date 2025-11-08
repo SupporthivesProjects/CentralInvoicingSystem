@@ -75,7 +75,7 @@
                                     </table>
                                     <br>
                                     
-                                    <table style="padding: 20px;border-collapse: collapse;font-family: 'Roboto', sans-serif;width:100%;">
+                                    <table style="padding: 20px;border-collapse: collapse;font-family: 'Roboto', sans-serif;">
                                         <tr style="border-collapse: collapse;height: 30px;border-bottom: 0px;border: 0px;background-color: #4B8EC6;color: white;">
                                             <td style="width: 200px;text-align: left;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 10px;">
                                      <b> ITEM DESCRIPTION</b>
