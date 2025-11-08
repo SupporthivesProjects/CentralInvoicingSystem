@@ -34,13 +34,13 @@
                             <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;"> 
                                 <tr>
                                 <td align="center" style="width:30%;vertical-align: top;">
-                                   <img src="{{ $invoice_image1 }}" alt="" style="height: 100px;">
+                                   <img src="{{ $company_logo }}" alt="" style="height: 100px;">
                                 </td>
                                 <td align="center" style="width:70%;background:#8cc4de;vertical-align: top;">
                                    <table>
                                     <tr>
                                         <td align="center">
-                                            <img src="{{ $invoice_image2 }}" alt="" style="width: 150px;">
+                                            <img src="{{ $invoice_image1 }}" alt="" style="width: 150px;">
                                         </td>
                                         <td align="right" style="padding: 20px;">
                                             <h1 style="color: #ffffff;margin: 0px;font-size: 42px;font-family: Roboto;line-height: 50px;">
@@ -80,7 +80,7 @@
                             <table width="100%" height="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;"> 
                                 <tr>
                                 <td align="left" style="width:30%;vertical-align:top;">
-                                    <img src="{{ $invoice_image3 }}" alt="" style="height:250px;">
+                                    <img src="{{ $invoice_image2 }}" alt="" style="height:250px;">
                                 </td>
                                 <td align="center" style="width:70%;background:#8cc4de;vertical-align:top;padding: 0px 30px;height: 100%;">
                                    <table style="width:100%;border-collapse: collapse;">
@@ -221,7 +221,7 @@
                             
                             <!-- Site Name -->
                             <div style="display:flex; align-items:center; gap:10px;">
-                            <img src="{{ $invoice_image4 }}" alt="" style="height:20px;">
+                            <img src="{{ $invoice_image3 }}" alt="" style="height:20px;">
                             <p style="color:#ffffff; margin:0; font-size:9px; font-family:Roboto;">
                                 {{ $site_name }}
                             </p>
@@ -229,7 +229,7 @@
                             
                             <!-- Company Email -->
                             <div style="display:flex; align-items:center; gap:10px;">
-                            <img src="{{ $invoice_image5 }}" alt="" style="height:20px;">
+                            <img src="{{ $invoice_image4 }}" alt="" style="height:20px;">
                             <p style="color:#ffffff; margin:0; font-size:9px; font-family:Roboto; line-height:24px;">
                                 {{ $company_email }}
                             </p>
