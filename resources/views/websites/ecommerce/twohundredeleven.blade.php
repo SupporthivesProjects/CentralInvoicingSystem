@@ -4,7 +4,7 @@
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
 </head>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@900&display=swap" rel="stylesheet">
-<body>
+<body style="padding:0px;">
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
             <td align="center" bgcolor="#f2f2f2" style="padding:0px;">
