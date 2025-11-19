@@ -33,7 +33,7 @@
                                 <tr >
                                     <td style="padding-top: 10px;width: 600px;">
                                         <p style="font-family: 'Sen', sans-serif;font-size: 24px;margin: 0px; text-align: center;padding-bottom: 10px;">
-                                            <b>Invoice #. [0000]</b>
+                                            <b>Invoice #. {{ $invoice_number }}</b>
                                         </p>
                                     </td>
                                 </tr>
@@ -50,10 +50,10 @@
                                 </tr>
                                 <tr>
                                    <td style="font-family: 'Sen', sans-serif;text-align: center;font-size: 11px;">
-                                        01/01/2025
+                                        {{ $invoice_date }}
                                     </td>
                                     <td style="font-family: 'Sen', sans-serif;text-align: center;font-size: 11px;">
-                                        (Name Here)
+                                        {{ $customer_name ? $customer_name : '' }}
                                     </td>
                                 </tr>
                             </table>
@@ -82,167 +82,32 @@
                                         <b>Total</b>
                                     </td>
                                 </tr>
+                                @foreach ($products as $product)
                                 <tr style="border-collapse: collapse;height: 30px;font-family: 'Sen', sans-serif; color: gray;border-bottom: 1px solid black;">
                                     <td style="width: 50px;text-align: left;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-left: 5px;">
-                                       1
+                                       {{ $loop->iteration }}
                                     </td>
                                     <td style="width: 200px;text-align: left;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
-                                        Creative Writing / E-Book Writing
+                                        {{ $product->name }}
                                     </td>
                                     <td style="width: 100px;text-align: center;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;">
-                                        Premium
+                                        {{ $product->quality }}
                                     </td>
                                     <td style="width:100px;text-align: center;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
-                                        5 Days
+                                        {{ $product->delivery }}
                                     </td>
                                     <td style="width:100px;text-align: center;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 10px;">
-                                        0
+                                        {{ $product->imagecount }}
                                     </td>
                                     <td style="width:580px;text-align: right;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 10px;">
-                                        $10.00
+                                        {{  site_currency() }} {{ number_format($product->unit_price, 2) }}
                                     </td>
                                     <td style="width:100px;text-align: right;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 10px;">
-                                        $10.00
+                                        {{  site_currency() }} {{ number_format($product->unit_price, 2) }}
                                     </td>
+                                    @endforeach
                                 </tr>
-                              <tr style="border-collapse: collapse;height: 30px;font-family: 'Sen', sans-serif; color: gray;background-color: lightgrey;border-bottom: 1px solid black;">
-                                    <td style="width: 50px;text-align: left;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-left: 5px;">
-                                       1
-                                    </td>
-                                    <td style="width: 200px;text-align: left;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
-                                        Creative Writing / E-Book Writing
-                                    </td>
-                                    <td style="width: 100px;text-align: center;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;">
-                                        Premium
-                                    </td>
-                                    <td style="width:100px;text-align: center;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
-                                        5 Days
-                                    </td>
-                                    <td style="width:100px;text-align: center;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 10px;">
-                                        0
-                                    </td>
-                                    <td style="width:580px;text-align: right;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 10px;">
-                                        $10.00
-                                    </td>
-                                    <td style="width:100px;text-align: right;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 10px;">
-                                        $10.00
-                                    </td>
-                                </tr>
-                               <tr style="border-collapse: collapse;height: 30px;font-family: 'Sen', sans-serif; color: gray;border-bottom: 1px solid black;">
-                                    <td style="width: 50px;text-align: left;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-left: 5px;">
-                                       1
-                                    </td>
-                                    <td style="width: 200px;text-align: left;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
-                                        Creative Writing / E-Book Writing
-                                    </td>
-                                    <td style="width: 100px;text-align: center;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;">
-                                        Premium
-                                    </td>
-                                    <td style="width:100px;text-align: center;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
-                                        5 Days
-                                    </td>
-                                    <td style="width:100px;text-align: center;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 10px;">
-                                        0
-                                    </td>
-                                    <td style="width:580px;text-align: right;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 10px;">
-                                        $10.00
-                                    </td>
-                                    <td style="width:100px;text-align: right;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 10px;">
-                                        $10.00
-                                    </td>
-                                </tr>
-                               <tr style="border-collapse: collapse;height: 30px;font-family: 'Sen', sans-serif; color: gray;background-color: lightgrey;border-bottom: 1px solid black;">
-                                    <td style="width: 50px;text-align: left;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-left: 5px;">
-                                       1
-                                    </td>
-                                    <td style="width: 200px;text-align: left;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
-                                        Creative Writing / E-Book Writing
-                                    </td>
-                                    <td style="width: 100px;text-align: center;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;">
-                                        Premium
-                                    </td>
-                                    <td style="width:100px;text-align: center;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
-                                        5 Days
-                                    </td>
-                                    <td style="width:100px;text-align: center;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 10px;">
-                                        0
-                                    </td>
-                                    <td style="width:580px;text-align: right;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 10px;">
-                                        $10.00
-                                    </td>
-                                    <td style="width:100px;text-align: right;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 10px;">
-                                        $10.00
-                                    </td>
-                                </tr>
-                                <tr style="border-collapse: collapse;height: 30px;font-family: 'Sen', sans-serif; color: gray;border-bottom: 1px solid black;">
-                                    <td style="width: 50px;text-align: left;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-left: 5px;">
-                                       1
-                                    </td>
-                                    <td style="width: 200px;text-align: left;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
-                                        Creative Writing / E-Book Writing
-                                    </td>
-                                    <td style="width: 100px;text-align: center;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;">
-                                        Premium
-                                    </td>
-                                    <td style="width:100px;text-align: center;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
-                                        5 Days
-                                    </td>
-                                    <td style="width:100px;text-align: center;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 10px;">
-                                        0
-                                    </td>
-                                    <td style="width:580px;text-align: right;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 10px;">
-                                        $10.00
-                                    </td>
-                                    <td style="width:100px;text-align: right;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 10px;">
-                                        $10.00
-                                    </td>
-                                </tr>
-                               <tr style="border-collapse: collapse;height: 30px;font-family: 'Sen', sans-serif; color: gray;background-color: lightgrey;border-bottom: 1px solid black;">
-                                    <td style="width: 50px;text-align: left;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-left: 5px;">
-                                       1
-                                    </td>
-                                    <td style="width: 200px;text-align: left;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
-                                        Creative Writing / E-Book Writing
-                                    </td>
-                                    <td style="width: 100px;text-align: center;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;">
-                                        Premium
-                                    </td>
-                                    <td style="width:100px;text-align: center;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
-                                        5 Days
-                                    </td>
-                                    <td style="width:100px;text-align: center;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 10px;">
-                                        0
-                                    </td>
-                                    <td style="width:580px;text-align: right;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 10px;">
-                                        $10.00
-                                    </td>
-                                    <td style="width:100px;text-align: right;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 10px;">
-                                        $10.00
-                                    </td>
-                                </tr>
-                                <tr style="border-collapse: collapse;height: 30px;font-family: 'Sen', sans-serif; color: gray;border-bottom: 1px solid black;">
-                                    <td style="width: 50px;text-align: left;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-left: 5px;">
-                                       1
-                                    </td>
-                                    <td style="width: 200px;text-align: left;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
-                                        Creative Writing / E-Book Writing
-                                    </td>
-                                    <td style="width: 100px;text-align: center;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;">
-                                        Premium
-                                    </td>
-                                    <td style="width:100px;text-align: center;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
-                                        5 Days
-                                    </td>
-                                    <td style="width:100px;text-align: center;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 10px;">
-                                        0
-                                    </td>
-                                    <td style="width:580px;text-align: right;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 10px;">
-                                        $10.00
-                                    </td>
-                                    <td style="width:100px;text-align: right;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 10px;">
-                                        $10.00
-                                    </td>
-                                </tr>
+                              
                                 <tr style="border-collapse: collapse;height: 30px;font-family: 'Sen', sans-serif; color: gray;">
                                     <td style="width: 50px;text-align: left;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-left: 5px;">
                                     
@@ -263,7 +128,7 @@
                                         Item total
                                     </td>
                                     <td style="width:100px;text-align: right;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 10px;background-color: lightgrey;">
-                                        $10.00
+                                        {{ site_currency() . number_format($invoice_amount + $discount_amount ?? 0, 2) }}
                                     </td>
                                 </tr>
                                 <tr style="border-collapse: collapse;height: 30px;font-family: 'Sen', sans-serif; color: gray;">
@@ -286,7 +151,7 @@
                                         Coupon Used
                                     </td>
                                     <td style="width:100px;text-align: right;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 10px;">
-                                        $10.00
+                                        {{ site_currency() . number_format($discount_amount ?? 0, 2) }}
                                     </td>
                                 </tr>
                                 <tr style="border-collapse: collapse;height: 30px;font-family: 'Sen', sans-serif; color: gray;">
@@ -309,7 +174,7 @@
                                         TOTAL
                                     </td>
                                     <td style="width:100px;text-align: right;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 10px;background-color: lightgrey;color: #172355;">
-                                        $10.00
+                                        {{ site_currency() . number_format($invoice_amount ?? 0, 2) }}
                                     </td>
                                 </tr>
                                
@@ -324,9 +189,9 @@
                                      <img src="{{ $invoice_image1 }}" style="height: 130px;">
                                     </td>
                                     <td style="text-align: center;width: 220px;font-size: 10px;display: flow-root;font-family: 'Sen', sans-serif;">
-                                        <p><b style="color: #172355;">TEL:</b> +44 123 456 789</p>
-                                        <p><b style="color: #172355;">EMAIL:</b> Contact@scriptera.com</p>
-                                        <p><b style="color: #172355;">ADDRESS:</b> Insert Full Address Detail<br>Here City, State, Zip Code</p>
+                                        <p><b style="color: #172355;">TEL:</b> {{ $company_mobile }}</p>
+                                        <p><b style="color: #172355;">EMAIL:</b> {{ $company_email }}</p>
+                                        <p><b style="color: #172355;">ADDRESS:</b> {!! $company_address !!}</p>
                                     </td > 
                                        <td style="text-align: right;width: 200px;">
                                         <img src="{{ $invoice_image2 }}" style="height: 130px;">
