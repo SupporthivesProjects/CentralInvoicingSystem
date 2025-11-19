@@ -63,7 +63,7 @@
                             </table>
 
                             <!-- TOTALS SECTION -->
-                            <table width="30%" align="left" cellspacing="0" cellpadding="0" border="0"
+                            {{-- <table width="30%" align="left" cellspacing="0" cellpadding="0" border="0"
                                 style="font-family:'Poppins',Arial,sans-serif;border-collapse:collapse;color:#000;
                                           margin:20px 0;padding:10px;border-radius:6px;">
 
@@ -126,7 +126,7 @@
                                         </table>
                                     </td>
                                 </tr>
-                            </table>
+                            </table> --}}
 
                             <!-- BILLED FROM INFO -->
                             <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
