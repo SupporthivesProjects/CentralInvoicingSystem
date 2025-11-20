@@ -246,7 +246,7 @@
                           <table class="table-list" style="width: 100%;"> 
                             <tbody>
                                 <tr>
-                                    <th>PRODUCT</th>
+                                    <th style="text-align:left;">PRODUCT</th>
                                     <th>TYPE</th>
                                     <th>BILLING TYPE</th>
                                     <th>QTY</th>
@@ -255,7 +255,7 @@
 
                                 @foreach ($products as $product)
                                 <tr>
-                                    <td>
+                                    <td style="text-align:left;">
                                         <h6>{{ $product->name }}</h6>
                                     </td>
                                     <td>
