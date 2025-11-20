@@ -34,63 +34,67 @@
                     <!-- Content -->
                     <tr>
                         <td style="padding:40px;padding-top:0px;">
-                            <table style="border-collapse: collapse;;">
-                                <tr style="border-collapse: collapse;height: 35px;">
+                            <table style="border-collapse: collapse;">
+                                <tr style="border-collapse: collapse;">
                                     <td
-                                        style="width: 100px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
-                                        <b style="color: #5E5E5E;">INVOICE NUMBER</b> <br>{{ $invoice_number }}
+                                        style="width: 100px;text-align: left;font-family: arial;font-size: 12px;margin: 0px;font-weight: 400;border-collapse: collapse;">
+                                        <b style="color: #5E5E5E;">INVOICE NUMBER</b>
                                     </td>
                                     <td
-                                        style="width: 100px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
-                                        <b style="color: #5E5E5E;">INVOICE DATE</b><br>{{ $invoice_date }}
+                                        style="width: 100px;text-align: left;font-family: arial;font-size: 12px;margin: 0px;font-weight: 400;border-collapse: collapse;">
+                                        <b style="color: #5E5E5E;">INVOICE DATE</b>
                                     </td>
                                 </tr>
-                                <tr style="border-collapse: collapse;height: 20px;">
+                                <tr style="border-collapse: collapse;">
                                     <td
                                         style="width: 100px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
+                                        {{ $invoice_number }}
+                                    </td>
+                                    <td
+                                        style="width: 100px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
+                                        {{ $invoice_date }}
+                                    </td>
+                                </tr>
+                            </table>
+                            <table style="border-collapse: collapse;">
+                                <tr style="border-collapse: collapse;">
+                                    <td
+                                        style="width: 100px;text-align: left;font-family: arial;font-size: 12px;margin: 0px;font-weight: 400;border-collapse: collapse;">
                                         <b style="color: #5E5E5E;">BILLED TO</b>
                                     </td>
                                     <td
-                                        style="width: 100px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
+                                        style="width: 100px;text-align: left;font-family: arial;font-size: 12px;margin: 0px;font-weight: 400;border-collapse: collapse;">
                                         <b style="color: #5E5E5E;">BILLED FROM</b>
                                     </td>
                                 </tr>
-                                <tr style="border-collapse: collapse;height: 20px;">
+                                <tr style="border-collapse: collapse;">
+                                    <td style="...">
+                                        {!! $customer_name ? $customer_name.'<br>' : '' !!}
+                                        {!! $customer_email ? $customer_email.'<br>' : '' !!}
+                                        {!! $company_address ? $company_address.'<br>' : '' !!}
+                                    </td>
+
+                                    <td style="...">
+                                        {!! $customer_mobile ? $customer_mobile.'<br>' : '' !!}
+                                        {!! $site->site_link ? $site->site_link.'<br>' : '' !!}
+                                        {!! $company_mobile ? $company_mobile.'<br>' : '' !!}
+                                    </td>
+                                </tr>
+
+                                <!-- <tr style="border-collapse: collapse;">
                                     <td
                                         style="width: 100px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
                                         {{ $customer_name }}
-                                    </td>
-                                    <td
-                                        style="width: 100px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
-                                        {{ $customer_mobile }}
-                                    </td>
-                                </tr>
-                                <tr style="border-collapse: collapse;height: 20px;">
-                                    <td
-                                        style="width: 100px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
                                         {{ $customer_email }}
-                                    </td>
-                                </tr>
-                                <tr style="border-collapse: collapse;height: 20px;">
-                                    <td
-                                        style="width: 100px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
                                         {{ $company_address }}
                                     </td>
                                     <td
                                         style="width: 100px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
+                                        {{ $customer_mobile }}
                                         {{ $site->site_link }}
-                                    </td>
-                                </tr>
-                                <tr style="border-collapse: collapse;height: 20px;">
-                                    <td
-                                        style="width: 100px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
-                                        Phone
-                                    </td>
-                                    <td
-                                        style="width: 100px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
                                         {{ $company_mobile }}
                                     </td>
-                                </tr>
+                                </tr> -->
                             </table>
                             <br>
                             <br>
