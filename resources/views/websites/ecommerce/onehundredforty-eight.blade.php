@@ -246,7 +246,7 @@
                           <table class="table-list" style="width: 100%;"> 
                             <tbody>
                                 <tr>
-                                    <th style="text-align:left;">PRODUCT</th>
+                                    <th style="text-align:left;padding-left:10px;">PRODUCT</th>
                                     <th>TYPE</th>
                                     <th>BILLING TYPE</th>
                                     <th>QTY</th>
@@ -255,8 +255,8 @@
 
                                 @foreach ($products as $product)
                                 <tr>
-                                    <td style="text-align:left;">
-                                        <h6>{{ $product->name }}</h6>
+                                    <td style="text-align:left;padding-left:10px;">
+                                        <h6 style="text-align:left;">{{ $product->name }}</h6>
                                     </td>
                                     <td>
                                         <p>{{ $product->category_name }}</p>
