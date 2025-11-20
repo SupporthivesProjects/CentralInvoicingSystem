@@ -124,11 +124,14 @@
         }
         .linement .box {
             background: #4A5261;
-            padding: 16px;
+            padding: 8px;
         }
         .linement .box svg {
-            height: 48px;
-            width: 48px;
+            height: 16px;
+            width: 16px;
+            color: #D2B76A;
+        }
+        .linement .box svg path {
             color: #D2B76A;
         }
         .srom {
