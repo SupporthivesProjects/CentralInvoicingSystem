@@ -8,7 +8,7 @@
 <body>
     <table width="100%" style="border-collapse: collapse;" cellspacing="0" cellpadding="0" border="0">
         <tr>
-            <td align="center" bgcolor="#ffffff" style="padding: 20px 0;">
+            <td align="center" bgcolor="#ffffff" style="padding: 0px 0;">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
                     style="border-collapse: collapse;">
                     <!-- Header -->
