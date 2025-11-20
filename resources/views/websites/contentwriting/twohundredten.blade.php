@@ -123,7 +123,7 @@
                                         Discount :
                                     </p>
                                     </td>
-                                    <td style="width:100px;color: #000000;text-align:center;padding-right:10px;font-family: Arial;font-size: 12px;margin: 0px;font-weight: 400;border-collapse: collapse; border-bottom: 1px solid #000000;">
+                                    <td style="width:100px;color: #000000;text-align:right;padding-right:10px;font-family: Arial;font-size: 12px;margin: 0px;font-weight: 400;border-collapse: collapse; border-bottom: 1px solid #000000;">
                                         <p style="margin-top: 6px;">{{ site_currency() . number_format($discount_amount, 2) }}</p>
                                     </td>
                                 </tr>
