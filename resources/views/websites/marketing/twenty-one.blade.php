@@ -218,8 +218,8 @@
                             <table class="billed-info-table" width="100%" cellspacing="0" cellpadding="0" border="0">
                                 <tr>
                                     <td>
-                                        <p class="text-black font-size-12 font-arial font-weight-400 margin-0 text-uppercase">
-                                            Billed FROM :
+                                        <p class="text-black font-size-12 font-arial font-weight-400 margin-0">
+                                            Billed From :
                                         </p>
                                     </td>
                                     <td>
@@ -273,19 +273,19 @@
                                 <thead>
                                     <tr>
                                         <td class="col-item">
-                                            <p class="font-size-9 font-weight-700 font-arial text-black text-left">Item</p>
+                                            <p class="font-size-11 font-weight-700 font-arial text-black text-left">Item</p>
                                         </td>
                                         <td class="col-desc">
-                                            <p class="font-size-9 font-weight-700 font-arial text-black text-left">Description</p>
+                                            <p class="font-size-11 font-weight-700 font-arial text-black text-left">Description</p>
                                         </td>
                                         <td class="col-qty">
-                                            <p class="font-size-9 font-weight-700 font-arial text-black text-left">Quantity</p>
+                                            <p class="font-size-11 font-weight-700 font-arial text-black text-left">Quantity</p>
                                         </td>
                                         <td class="col-unit-price">
-                                            <p class="font-size-9 font-weight-700 font-arial text-black text-right">Unit Price</p>
+                                            <p class="font-size-11 font-weight-700 font-arial text-black text-right">Unit Price</p>
                                         </td>
                                         <td class="col-total">
-                                            <p class="font-size-9 font-weight-700 font-arial text-black text-right">Total</p>
+                                            <p class="font-size-11 font-weight-700 font-arial text-black text-right">Total</p>
                                         </td>
                                     </tr>
                                 </thead>
@@ -293,16 +293,16 @@
                                     @forelse ($products as $product)
                                         <tr>
                                             <td class="col-item">
-                                                <p class="font-size-8 font-weight-500 font-arial text-black text-left">{{ $product->name ?? '-' }}</p>
+                                                <p class="font-size-10 font-weight-500 font-arial text-black text-left">{{ $product->name ?? '-' }}</p>
                                             </td>
                                             <td class="col-desc">
-                                                <p class="font-size-8 font-weight-500 font-arial text-black text-left">{{ $product->description ?? $product->subscription ?? '-' }}</p>
+                                                <p class="font-size-10 font-weight-500 font-arial text-black text-left">{{ $product->description ?? $product->subscription ?? '-' }}</p>
                                             </td>
                                             <td class="col-qty">
-                                                <p class="font-size-8 font-weight-500 font-arial text-black text-left">{{ $product->quantity ?? 1 }}</p>
+                                                <p class="font-size-10 font-weight-500 font-arial text-black text-left">{{ $product->quantity ?? 1 }}</p>
                                             </td>
                                             <td class="col-unit-price">
-                                                <p class="font-size-8 font-weight-500 font-arial text-black text-right">
+                                                <p class="font-size-10 font-weight-500 font-arial text-black text-right">
                                                     {{ site_currency() }} {{ number_format($product->unit_price ?? 0, 2) }}
                                                 </p>
                                             </td>
