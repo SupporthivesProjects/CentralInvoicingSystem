@@ -140,10 +140,10 @@
                                         
                                         </div>
                                          <div class="add-h6" style="width: 100px;">
-                                           <h6 style="margin: 0px;" >{{ $company_mobile }}</h6>
-                                           <h6>{{ $company_email }}</h6>
-                                           <h6>{{ $site->site_link }}</h6>
-                                           <h6>{!! $company_address !!}</h6>
+                                           <h6 style="margin-bottom: 0px;" >{{ $company_mobile }}</h6>
+                                           <h6 style="margin-bottom: 0px;">{{ $company_email }}</h6>
+                                           <h6 style="margin-bottom: 0px;">{{ $site->site_link }}</h6>
+                                           <h6 style="margin-bottom: 0px;">{!! $company_address !!}</h6>
                                          </div>
                                      </div>
                                     </td>
