@@ -8,6 +8,13 @@
             margin: 0;
             padding: 0;
         }
+        .footer-fixed {
+            position: fixed;
+            bottom: 0px;
+            left: 0;
+            right: 0;
+            width: 100%;
+        }
     </style>
 </head>
 
@@ -210,29 +217,23 @@
                     <!-- Content End-->
 
                     <!-----------Footer----------->
-                    <tr>
-                        <td>
-                            <table width="100%" cellspacing="0" cellpadding="" border="0px"
-                                style="border-collapse: collapse;">
-                                <tr
-                                    style="background: url({{ $invoice_footer_image }}) no-repeat;background-position: center;background-size: cover;height:61px;padding:50px;background-size:cover;width: 100%;">
-                                    <td style="text-align:center;">
-                                        <p
-                                            style="text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight:700;color:whitesmoke;">
-
-                                        </p>
-                                    </td>
-                                </tr>
-                                <tr>
-                            </table>
-                        </td>
-                    </tr>
+                    
                     <!-----------Footer End----------->
 
                 </table>
             </td>
         </tr>
     </table>
+    <div class="footer-fixed" style="
+        background: url({{ $invoice_footer_image }}) no-repeat;
+        background-position: center;
+        background-size: cover;
+        padding: 50px;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    "></div>
 </body>
 
 </html>
