@@ -68,13 +68,13 @@
                                     </td>
                                 </tr>
                                 <tr style="border-collapse: collapse;">
-                                    <td style="width: 100px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
+                                    <td style="width: 200px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
                                         {!! $customer_name ? $customer_name.'<br>' : '' !!}
                                         {!! $customer_email ? $customer_email.'<br>' : '' !!}
                                         {!! $company_address ? $company_address.'<br>' : '' !!}
                                     </td>
 
-                                    <td style="width: 100px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
+                                    <td style="width: 200px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
                                         {!! $customer_mobile ? $customer_mobile.'<br>' : '' !!}
                                         {!! $site->site_link ? $site->site_link.'<br>' : '' !!}
                                         {!! $company_mobile ? $company_mobile.'<br>' : '' !!}
