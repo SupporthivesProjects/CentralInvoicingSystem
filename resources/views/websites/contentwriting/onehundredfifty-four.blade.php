@@ -141,23 +141,23 @@
                                 <tr>
                                     <td style="width: 100px;text-align: right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;padding-right: 10px;"
                                         colspan="3">
-                                        <p style="color: #5E5E5E;"><b>
+                                        <p style="color: #5E5E5E;margin-bottom:0px;"><b>
                                                 SUBTOTAL
                                             </b></p>
                                     </td>
-                                    <td style="width:100px;text-align:right;padding-right:10px;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;color: #6949E2"
+                                    <td style="width:100px;text-align:right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;color: #6949E2"
                                         colspan="3">
-                                        <p>{{ site_currency() }} {{  number_format(($invoice_amount + $discount_amount), 2) }}</p>
+                                        <p style="margin-bottom:0px;">{{ site_currency() }} {{  number_format(($invoice_amount + $discount_amount), 2) }}</p>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td style="width: 100px;padding-right: 10px;text-align: right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;"
                                         colspan="3">
-                                        <p style="color: #5E5E5E;"><b>DISCOUNT</b></p>
+                                        <p style="color: #5E5E5E;margin-bottom:0px;"><b>DISCOUNT</b></p>
                                     </td>
                                     <td
-                                        style="width:100px;text-align:right;padding-right:10px;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;color: #6949E2"colspan="3">
-                                        <p> -{{ site_currency() }} {{ number_format($discount_amount, 2) }}</p>
+                                        style="width:100px;text-align:right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;color: #6949E2"colspan="3">
+                                        <p style="margin-bottom:0px;"> -{{ site_currency() }} {{ number_format($discount_amount, 2) }}</p>
                                     </td>
                                 </tr>
                                 <tr style="border-collapse: collapse;height: 24px;padding-bottom: 10px;">
