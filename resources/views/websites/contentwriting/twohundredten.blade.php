@@ -111,7 +111,7 @@
                                     <td style="width: 100px;color: #000000;text-align: end;font-family: Arial;font-size: 12px;margin: 0px;font-weight: 400;padding-right: 10px; padding-left: 10px;" colspan="1">
                                      <p style="margin-bottom: 0px; margin-top: 24px;">Sub Total :</p>
                                     </td>
-                                    <td style="width:100px;color: #000000;text-align:center;padding-right:10px;font-family: Arial;font-size: 12px;margin: 0px;font-weight: 400;border-collapse: collapse;">
+                                    <td style="width:100px;color: #000000;text-align:right;padding-right:10px;font-family: Arial;font-size: 12px;margin: 0px;font-weight: 400;border-collapse: collapse;">
                                         <p style="margin-bottom: 0px; margin-top: 24px;">{{ site_currency() . number_format($invoice_amount + $discount_amount, 2) }}</p>
                                     </td>
                                 </tr>
