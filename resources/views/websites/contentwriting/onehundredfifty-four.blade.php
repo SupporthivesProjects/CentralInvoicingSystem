@@ -14,9 +14,9 @@
                     <!-- Header -->
                     <tr>
                         <td style="padding: 0px;max-height: 130px;">
-                            <table>
+                            <table style="border-collapse: collapse;width:100%;">
                                 <tr>
-                                    <td style="padding: 40px;padding-bottom: 0px;">
+                                    <td style="padding: 40px;padding-bottom: 0px;width:100%;">
                                         <p style="font-family: arial;font-size:28px;margin: 0px;font-weight: 400;">
                                             <b style="color: #6949E2;">INVOICE</b>
                                         </p>
