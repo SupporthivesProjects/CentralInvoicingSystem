@@ -61,6 +61,7 @@
         .font-size-8 { font-size: 8px; }
         .font-size-9 { font-size: 9px; }
         .font-size-10 { font-size: 10px; }
+        .font-size-1 { font-size: 11px; }
         .font-size-12 { font-size: 12px; }
         .font-size-28 { font-size: 28px; }
         .font-weight-400 { font-weight: 400; }
