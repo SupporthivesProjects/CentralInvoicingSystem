@@ -164,9 +164,7 @@
                                     </td>
                                     <td>
                                      <div style="display: flex; justify-content: center; align-items: center;">
-                                        <div style="background: url({{ $invoice_image2 }}) no-repeat; background-position: center center; background-size: contain; width: 47px; height: 127px;">
                                         
-                                        </div>
                                          <div class="add-h6 srom" style="width: 100px;">
                                             <div class="linement">
                                                 <div class="box">
