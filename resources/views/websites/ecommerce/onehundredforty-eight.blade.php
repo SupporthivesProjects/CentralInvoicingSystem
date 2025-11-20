@@ -119,7 +119,7 @@
             display: flex;
             flex-direction: row;
             justify-content: flex-start;
-            align-items: center;
+            align-items: flex-start;
             gap: 8px;
         }
         .linement .box {
