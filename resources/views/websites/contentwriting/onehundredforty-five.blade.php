@@ -137,12 +137,12 @@
                                         <p>{{ $site_name }}</p>
                                         <p>{!! $company_address !!}</p>
                                         <p><strong>Email</strong> {{ $company_email }}</p>
-                                        <p><strong>Phone</strong>: {{ $company_mobile }}</p>
+                                        <!-- <p><strong>Phone</strong>: {{ $company_mobile }}</p> -->
                                     </td>
                                     <td class="addrss">
                                         <h4>BILLED TO:</h4>
-                                        <p><strong>Name</strong>{{ $customer_name }}</p>
-                                        <p><strong>Email</strong> {{ $customer_name }}</p>
+                                        <p><strong>Name: </strong>{{ $customer_name }}</p>
+                                        <!-- <p><strong>Email</strong> {{ $customer_name }}</p> -->
                                     </td>
                                  </tr>
                                </tbody>
@@ -151,73 +151,75 @@
                     </tr>
                     <tr>
                         <td style="padding:0px 56px 50px">
-                          <table class="table-list" style="width: 100%;"> 
-                            <tbody>
-                                <tr>
-                                    <th>ITEM NO.</th>
-                                    <th style="text-align: left;">DESCRIPTION</th>
-                                    <th>QTY</th>
-                                    <th>UNIT PRICE</th>
-                                    <th>TOTAL</th>
-                                </tr>
-                                @foreach($products as $index => $product)
-                                <tr>
-                                    <td>{{ $index + 1 }}</td>
-                                    <td> {{ $product->name }}<br>
-                                        @if($product->quality)<span class="me-2 badge bg-light text-dark"><strong>Quality:</strong> {{ $product->quality }}</span>@endif
-                                        @if($product->quantity)<span class="me-2 badge bg-light text-dark"><strong>Quantity:</strong> {{ $product->quantity }}</span>@endif
-                                        @if($product->turnaround)<span class="me-2 badge bg-light text-dark"><strong>Turnaround Time:</strong> {{ $product->turnaround }}</span>@endif
-                                        @if($product->delivery)<span class="me-2 badge bg-light text-dark"><strong>Delivery In:</strong> {{ $product->delivery }}</span>@endif<br>
-                                        @if($product->project_title)<span class="me-2 badge bg-light text-dark"><strong>Project Title:</strong> {{ $product->project_title }}</span>@endif
-                                        @if($product->subject)<span class="me-2 badge bg-light text-dark"><strong>Subject:</strong> {{ $product->subject }}</span>@endif
-                                        @if($product->preferred_voice)<span class="me-2 badge bg-light text-dark"><strong>Preferred Voice:</strong> {{ $product->preferred_voice }}</span>@endif
-                                        @if($product->preferred_writing_style)<span class="me-2 badge bg-light text-dark"><strong>Preferred Writing Style:</strong> {{ $product->preferred_writing_style }}</span>@endif
-                                        @if($product->brand_name)<span class="me-2 badge bg-light text-dark"><strong>Brand Name:</strong> {{ $product->brand_name }}</span>@endif
-                                        @if($product->audience)<span class="me-2 badge bg-light text-dark"><strong>Audience:</strong> {{ $product->audience }}</span>@endif
-                                        @if($product->reference_link)
-                                        <span class="me-2 badge bg-light text-dark"><strong>Reference link:</strong> 
-                                        <a href="{{ $product->reference_link }}" target="_blank" class="text-primary text-decoration-underline">{{ $product->reference_link }}</a>
-                                        </span>
-                                        @endif
-                                        @if($product->note)<span class="badge bg-light text-dark"><strong>Additional Note:</strong> {{ $product->note }}</span>@endif
+                            <div style="height: 700px;">
+                                <table class="table-list" style="width: 100%;"> 
+                                    <tbody>
+                                        <tr>
+                                            <th>ITEM NO.</th>
+                                            <th style="text-align: left;">DESCRIPTION</th>
+                                            <th>QTY</th>
+                                            <th>UNIT&nbsp;PRICE</th>
+                                            <th>TOTAL</th>
+                                        </tr>
+                                        @foreach($products as $index => $product)
+                                        <tr>
+                                            <td>{{ $index + 1 }}</td>
+                                            <td> {{ $product->name }}<br>
+                                                @if($product->quality)<span class="me-2 badge bg-light text-dark"><strong>Quality:</strong> {{ $product->quality }}</span>@endif
+                                                @if($product->quantity)<span class="me-2 badge bg-light text-dark"><strong>Quantity:</strong> {{ $product->quantity }}</span>@endif
+                                                @if($product->turnaround)<span class="me-2 badge bg-light text-dark"><strong>Turnaround Time:</strong> {{ $product->turnaround }}</span>@endif
+                                                @if($product->delivery)<span class="me-2 badge bg-light text-dark"><strong>Delivery In:</strong> {{ $product->delivery }}</span>@endif<br>
+                                                @if($product->project_title)<span class="me-2 badge bg-light text-dark"><strong>Project Title:</strong> {{ $product->project_title }}</span>@endif
+                                                @if($product->subject)<span class="me-2 badge bg-light text-dark"><strong>Subject:</strong> {{ $product->subject }}</span>@endif
+                                                @if($product->preferred_voice)<span class="me-2 badge bg-light text-dark"><strong>Preferred Voice:</strong> {{ $product->preferred_voice }}</span>@endif
+                                                @if($product->preferred_writing_style)<span class="me-2 badge bg-light text-dark"><strong>Preferred Writing Style:</strong> {{ $product->preferred_writing_style }}</span>@endif
+                                                @if($product->brand_name)<span class="me-2 badge bg-light text-dark"><strong>Brand Name:</strong> {{ $product->brand_name }}</span>@endif
+                                                @if($product->audience)<span class="me-2 badge bg-light text-dark"><strong>Audience:</strong> {{ $product->audience }}</span>@endif
+                                                @if($product->reference_link)
+                                                <span class="me-2 badge bg-light text-dark"><strong>Reference link:</strong> 
+                                                <a href="{{ $product->reference_link }}" target="_blank" class="text-primary text-decoration-underline">{{ $product->reference_link }}</a>
+                                                </span>
+                                                @endif
+                                                @if($product->note)<span class="badge bg-light text-dark"><strong>Additional Note:</strong> {{ $product->note }}</span>@endif
 
-                                    </td>
-                                    <td>1</td>
-                                    <td>{{ site_currency() }} {{ number_format($product->unit_price, 2) }}</td>
-                                    <td>{{ site_currency() }} {{ number_format($product->unit_price, 2) }}</td>
-                                </tr>
-                                @endforeach
-                                 @for ($i = 0; $i < $padRows; $i++)
-                                    <tr>
-                                        <td  style="height: 40px;"></td>
-                                        <td style="height: 40px;"></td>
-                                        <td  style="height: 40px;"></td>
-                                        <td style="height: 40px;"></td>
-                                        <td style="height: 40px;"></td>
-                                    </tr>
-                                    @endfor
-                                <tr>
-                                    <td colspan="3" style="border: 0px;"></td>
+                                            </td>
+                                            <td>1</td>
+                                            <td>{{ site_currency() }} {{ number_format($product->unit_price, 2) }}</td>
+                                            <td>{{ site_currency() }} {{ number_format($product->unit_price, 2) }}</td>
+                                        </tr>
+                                        @endforeach
+                                        @for ($i = 0; $i < $padRows; $i++)
+                                            <tr>
+                                                <td  style="height: 40px;"></td>
+                                                <td style="height: 40px;"></td>
+                                                <td  style="height: 40px;"></td>
+                                                <td style="height: 40px;"></td>
+                                                <td style="height: 40px;"></td>
+                                            </tr>
+                                            @endfor
+                                        <tr>
+                                            <td colspan="3" style="border: 0px;"></td>
+                                            
+                                            <td style="border: 0px; text-align: right;">SUBTOTAL</td>
+                                            <td >{{ site_currency() }} {{ number_format(($invoice_amount + $discount_amount), 2) }}</td>
+                                        </tr>
                                     
-                                    <td style="border: 0px; text-align: right;">SUBTOTAL</td>
-                                    <td >{{ site_currency() }} {{ number_format(($invoice_amount + $discount_amount), 2) }}</td>
-                                </tr>
-                              
-                                <tr>
-                                    <td colspan="3" style="border: 0px;"></td>
-                                    <td style="border: 0px; text-align: right;">DISCOUNT</td>
-                                    <td >{{ site_currency() }} {{ number_format($discount_amount, 2) }}</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="3" style="border: 0px;"></td>
-                                    <td style="border: 0px; text-align: right;"><strong>TOTAL DUE</strong></td>
-                                    <td ><strong>{{ site_currency() }} {{ number_format($invoice_amount, 2) }}</strong></td>
-                                </tr>
+                                        <tr>
+                                            <td colspan="3" style="border: 0px;"></td>
+                                            <td style="border: 0px; text-align: right;">DISCOUNT</td>
+                                            <td >{{ site_currency() }} {{ number_format($discount_amount, 2) }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="3" style="border: 0px;"></td>
+                                            <td style="border: 0px; text-align: right;"><strong>TOTAL DUE</strong></td>
+                                            <td ><strong>{{ site_currency() }} {{ number_format($invoice_amount, 2) }}</strong></td>
+                                        </tr>
 
 
-                            </tbody>
-                            
-                          </table>
+                                    </tbody>
+                                    
+                                </table>
+                            </div>
                         </td>
                     </tr>
                     
