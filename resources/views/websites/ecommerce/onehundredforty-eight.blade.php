@@ -158,7 +158,7 @@
                                     <td>
                                         <img src="{{ $invoice_header_image }}" alt="" style="height: 135px;">
                                     </td>
-                                    <td style="width:27%;">
+                                    <td style="width:25%;">
             
                                     </td>
                                     <td>
