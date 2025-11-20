@@ -36,7 +36,7 @@
             padding: 4px 0px;
             color: #000000a1;
         }
-        .invies-content{
+        .invies-content {
             padding: 30px 40px;
         }
         .invies-content span{
@@ -156,7 +156,7 @@
                             <table style="border-bottom: 0px solid #0000004d;">
                                 <tbody>
                                     <tr>
-                                        <td style="width: 30%;">
+                                        <td style="width: 30%;vertical-align: top;">
                                             <div class="invies-content">
                                               <h3>INVOICE TO</h3>
                                               <table>
@@ -187,7 +187,7 @@
                                               </table>
                                             </div>  
                                           </td>
-                                          <td style="width: 30%;">
+                                          <td style="width: 30%;vertical-align: bottom;">
                                               <div class="invies-content invies-content-two">
                                                   <h3>INVOICE FROM</h3>
                                                   <table>
@@ -229,7 +229,7 @@
                                                   </table>
                                               </div>
                                           </td>
-                                          <td style="width: 30%;">
+                                          <td style="width: 30%;vertical-align: bottom;">
                                               <div class="invies-content">
                                                   <h2>INVOICE</h2>
                                                   <h6>Invoice No: #{{ $invoice_number }}</h6>
