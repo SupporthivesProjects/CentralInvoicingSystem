@@ -10,7 +10,14 @@
             box-sizing: border-box;
         }
        
-       
+        
+        .footer-fixed {
+            position: fixed;
+            bottom: 0px;
+            left: 0;
+            right: 0;
+            width: 100%;
+        }
         table, th, td {
             border-collapse: collapse;
         } 
@@ -351,16 +358,15 @@
                         </td>
                     </tr>
                    </tbody>
-                   <tfoot>
-                        <tr>
-                            <td style="width: 100%; background: url('{{ $invoice_footer_image }}') no-repeat; background-size:cover;padding: 50px 0px;border-right: 20px solid #D29F53;">
-                                
-                            </td>
-                        </tr>
-                   </tfoot>
+                    
                 </table>
             </td>
         </tr>
     </table>
+    <div class="footer-fixed" style="
+                        width: 100%; 
+                        background: url('{{ $invoice_footer_image }}') no-repeat; 
+                        background-size: cover;
+                        padding: 50px 0px;"></div>
 </body>
 </html>
