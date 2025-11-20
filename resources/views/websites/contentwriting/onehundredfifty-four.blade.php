@@ -99,41 +99,41 @@
                             <br>
                             <br>
                             <div style="min-height: 650px !important;">
-                            <table style="border-collapse: collapse;">
+                            <table style="border-collapse: collapse;width:100%;">
                                 <tr style="border-collapse: collapse;height: 24px;">
                                     <td
-                                        style="width: 250px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
+                                        style="min-width: 250px;width:100%;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
                                         <b>SERVICE</b>
                                     </td>
                                     <td
-                                        style="width: 100px;text-align: right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
+                                        style="min-width: 100px;width:100%;text-align: right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
                                         <b>IMAGES</b>
                                     </td>
                                     <td
-                                        style="width: 100px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
+                                        style="min-width: 100px;width:100%;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
                                         <b>WORDS</b>
                                     </td>
                                     <td
-                                        style="width: 100px;text-align: right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
+                                        style="min-width: 100px;width:100%;text-align: right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
                                         <b>AMOUNT</b>
                                     </td>
                                 </tr>
                                 @foreach($products as $product)
                                 <tr style="border-collapse: collapse;height: 24px;">
                                     <td
-                                        style="width: 250px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;color: #6949E2;">
+                                        style="min-width: 250px;width:100%;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;color: #6949E2;">
                                         {{ $product->name }}
                                     </td>
                                     <td
-                                        style="width: 100px;text-align: right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;color: #6949E2;">
+                                        style="min-width: 100px;width:100%;text-align: right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;color: #6949E2;">
                                         {{ $product->imagecount }}
                                     </td>
                                     <td
-                                        style="width: 100px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;color: #6949E2;">
+                                        style="min-width: 100px;width:100%;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;color: #6949E2;">
                                         {{ $product->wordcount }}
                                     </td>
                                     <td
-                                        style="width: 100px;text-align: right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;color: #6949E2;">
+                                        style="min-width: 100px;width:100%;text-align: right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;color: #6949E2;">
                                        {{ site_currency() }} {{ number_format($product->unit_price, 2) }}
                                     </td>
                                 </tr>
