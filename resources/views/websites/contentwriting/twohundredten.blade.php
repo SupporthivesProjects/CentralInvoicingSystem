@@ -54,7 +54,7 @@
                             <table style="width: 280px; border-spacing: 0px;">
                                 <tr>
                                     <td style="padding: 0px;">
-                                        <p style="padding: 6px; background-color: #669bb9; margin: 0px; color: #FFFFFF; text-align: center;font-family:  Arial;font-size: 11px; border-right: 1px solid white;">Invoice Details </p>
+                                        <p style="padding: 6px; background-color: #669bb9; margin: 0px; color: #FFFFFF; text-align: center;font-family:  Arial;font-size: 11px; border-right: 1px solid white;"><b>Invoice Details</b></p>
                                         <p style="padding: 6px; padding-left: 24px; margin: 0px; color: #000000; text-align: start;font-family:  Arial;font-size: 11px;">
                                             Invoice To :<br>
                                             <b>{{ $customer_name }}</b>
@@ -82,7 +82,7 @@
                                     <td style="width: 30px; color: #FFFFFF; text-align: center; padding: 0px 10px; font-family:  Arial;font-size: 11px;margin: 0px;font-weight: 400;border-collapse: collapse;">
                                         <b>Qty.</b>
                                     </td>
-                                    <td style="width:100px; color: #FFFFFF; text-align: center; padding: 0px 10px;font-family:  Arial;font-size: 11px;margin: 0px;font-weight: 400;border-collapse: collapse;">
+                                    <td style="width:100px; color: #FFFFFF; text-align: right; padding: 0px 10px;font-family:  Arial;font-size: 11px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right:10px;">
                                         <b>Total</b>
                                     </td>
                                 </tr>
@@ -93,7 +93,6 @@
                                     </td>
                                     <td style="width: 350px; color:#000000; text-align:start;padding:10px;font-family:  Arial;font-size:8px;margin: 0px;font-weight: 400;border-bottom: 1px solid #000000;border-collapse: collapse;">
                                         <b>{{ $product->name }}</b><br>
-                                        Lorem ipsum dolor sit amet consectetur. Nec id adipiscing ut id. Consequat mauris maecenas
                                     </td>
                                     <td style="width:150px; color:#000000; text-align:center;padding-right:10px;font-family:  Arial;font-size: 10px;margin: 0px;font-weight: 400;border-bottom: 1px solid #000000;border-collapse: collapse; background-color: #e8f0f3;">
                                         One Time
@@ -101,7 +100,7 @@
                                     <td style="width:30px; color:#000000; text-align:center;padding-right:10px;font-family:  Arial;font-size: 10px;margin: 0px;font-weight: 400;border-bottom: 1px solid #000000;border-collapse: collapse;">
                                         1
                                     </td>
-                                    <td style="width:100px; color:#000000; text-align:center;padding-right:10px;font-family:  Arial;font-size: 10px;margin: 0px;font-weight: 400;border-bottom: 1px solid #000000;border-collapse: collapse; background-color: #e8f0f3;">
+                                    <td style="width:100px; color:#000000; text-align:right;padding-right:10px;font-family:  Arial;font-size: 10px;margin: 0px;font-weight: 400;border-bottom: 1px solid #000000;border-collapse: collapse; background-color: #e8f0f3;">
                                         {{ site_currency() . number_format($product->unit_price, 2) }}
                                     </td>
                                 </tr>
@@ -131,7 +130,7 @@
                                 <tr>
                                     <td style="width: 100px;text-align: right;font-family: Arial;font-size: 10px;margin: 0px;font-weight: 400;padding-right: 10px;" colspan="3">
                                        </td>
-                                    <td style="width: 100px;color: #000000;text-align: start;font-family: Arial;font-size: 16px;margin: 0px;font-weight: 400;  padding-right: 10px; padding-left: 24px;" colspan="1">
+                                    <td style="width: 100px;color: #000000;text-align: end;font-family: Arial;font-size: 16px;margin: 0px;font-weight: 400;  padding-right: 10px; padding-left: 24px;" colspan="1">
                                      <p>
                                         <b>Total :</b>
                                     </p>
@@ -145,7 +144,7 @@
                     </tr>
                     <!-- Content End-->
                     <div class="footer-fixed" style="padding: 40px 0px 0px 0px;">
-                        <div style="display: flex; gap: 24px; align-items: flex-start;padding-bottom: 20px;">
+                        <div style="display: flex; gap: 24px; align-items: center;padding-bottom: 20px;">
 
                             <!-- Address -->
                             <div style="padding: 0px; display: flex; flex-direction: column; gap: 12px; width: 100%;">
