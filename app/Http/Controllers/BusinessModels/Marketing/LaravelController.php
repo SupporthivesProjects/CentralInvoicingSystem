@@ -377,12 +377,27 @@ class LaravelController extends Controller
         DynamicDatabaseService::connect($site);
 
         $readyProducts = session()->get('ready_products', []);
-
         $readyProducts = array_filter($readyProducts, function ($product) use ($productId) {
             return $product['id'] != $productId;
         });
 
-        $newProduct = DB::connection($this->connectionType)->table($this->productTable)->where('subscription', $subscription)->where('category_id', $category_id) ->first();
+        $currentProduct = DB::connection($this->connectionType)
+            ->table($this->productTable)
+            ->where('id', $productId)
+            ->first();
+
+        if (!$currentProduct) {
+            return response()->json(['error' => 'Product not found.']);
+        }
+
+        $productName = $currentProduct->name;
+
+        $newProduct = DB::connection($this->connectionType)
+            ->table($this->productTable)
+            ->where('subscription', $subscription)
+            ->where('category_id', $category_id)
+            ->where('name', 'like', "%{$productName}%")
+            ->first();
 
         if (!$newProduct) {
             return response()->json(['error' => "The duration '{$subscription}' was not found in the same package."]);
