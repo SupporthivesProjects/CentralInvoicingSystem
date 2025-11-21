@@ -8,9 +8,9 @@
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
             <td align="center" bgcolor="#f2f2f2" style="padding:0px;">
-                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse;height:100vh;">  
+                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse;height:100vh;padding:0px;">  
                     <tr>
-                        <td style="background-color: #8BB9DC;">
+                        <td style="background-color: #8BB9DC;padding:0px;">
                                 <div class="row" >
                                 <div class="column" style="float: left;">
 
@@ -32,7 +32,7 @@
                                 </div>
                                 <div class="row">
                                 <div class="column" style="padding-right: 10px;">
-                                    <table >
+                                    <table>
                                         <tr >
                                             <td style="width: 225px;text-align: center;"><img src="{{ $invoice_image1 }}" style="height: 100px;"></td>
                                             <td style="width: 225px;text-align: right;font-family: 'Roboto', sans-serif;color: white;">
