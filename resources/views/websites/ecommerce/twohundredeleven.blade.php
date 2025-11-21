@@ -37,7 +37,7 @@
                                 </div>
                                 </div>
                                 <div class="row">
-                                <div class="column" style="padding-right: 10px;">
+                                <div class="column" style="padding:0px 10px;">
                                     <table>
                                         <tr>
                                             <td style="width:100%;text-align: center;"><img src="{{ $invoice_image1 }}" style="height: 100px;"></td>
@@ -132,11 +132,11 @@
                                     <td style="width: 100px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 4px;">
                                       
                                     </td>
-                                    <td style="width: 100px;text-align: center;font-family: 'Roboto', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 4px;">
+                                    <td style="width: 100px;text-align: center;font-family: 'Roboto', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 4px;color:white;">
                                      <b>DISCOUNT</b>
                                     </td>
                                     
-                                    <td style="width:100px;text-align:center;font-family: 'Roboto', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;">
+                                    <td style="width:100px;text-align:center;font-family: 'Roboto', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;color:white;">
                                        <b>{{ site_currency() . number_format($discount_amount ?? 0, 2) }}</b>
                                     </td>
                                 </tr>
@@ -161,12 +161,12 @@
                                     </table>
                                     <table>
                                         <tr>
-                                             <td style="width: 200px;text-align: left;font-family: 'Roboto', sans-serif;font-size: 16px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 10px;">
+                                             <td style="width: 200px;text-align: left;font-family: 'Roboto', sans-serif;font-size: 16px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 10px;color:white;">
                                       TOTAL
                                     </td>
                                         </tr>
                                         <tr>
-                                            <td style="width: 200px;text-align: left;font-family: 'Roboto', sans-serif;font-size: 30px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 10px;display: flex;">
+                                            <td style="width: 200px;text-align: left;font-family: 'Roboto', sans-serif;font-size: 30px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 10px;display: flex;color:white;">
                                                 {{ site_currency() . number_format($invoice_amount ?? 0, 2) }}
                                     </td>
                                         </tr>
