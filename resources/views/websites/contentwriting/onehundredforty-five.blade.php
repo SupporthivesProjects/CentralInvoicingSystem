@@ -234,7 +234,7 @@
                    </tbody>
                    <tfoot>
                         <tr class="footer-fixed">
-                            <td style="width: 100%; background: url('{{ $invoice_footer_image }}') no-repeat; background-size:cover;padding: 50px 0px 90px;" class="footer-fixed">
+                            <td style="width: 100%; background: url('{{ $invoice_footer_image }}') no-repeat; background-size:contain;padding: 52px 0px 90px;" class="footer-fixed">
                                 <p style="text-align: center;">THANK YOU FOR YOUR BUSINESS!</p>
                             </td>
                         </tr>
