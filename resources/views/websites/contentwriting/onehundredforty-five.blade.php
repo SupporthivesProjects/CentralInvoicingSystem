@@ -33,7 +33,7 @@
         td div {
             width: 100%;
             padding: 0px 0px;
-            background: #E9FCF7;
+            /* background: #E9FCF7; */
             border: 1px solid #9de4d1;
             padding: 3px 0px;
             text-align: center;
@@ -69,7 +69,7 @@
             /* border: 1px solid #9de4d1; */
         }
         .table-list td{
-            border: 1px solid #9de4d1;
+            /* border: 1px solid #9de4d1; */
             padding: 10px 10px;
             font-size: 11px;
             font-family: Avenir;
@@ -120,7 +120,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td style="padding:30px 70px">
+                        <td style="padding:30px 0px 0px 0px">
                             <div>
                                 <h5><span>INVOICE </span> #: {{ $invoice_number }}	<span>DATE</span>: {{ $invoice_date }}</h5>
                             </div>
