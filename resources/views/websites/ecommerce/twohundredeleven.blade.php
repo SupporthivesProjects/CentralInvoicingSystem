@@ -16,8 +16,8 @@
             <td align="center" bgcolor="#f2f2f2" style="padding:0px;vertical-align:top">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse;height:100vh;">      
                     <tr>
-                        <td style="background-color: rgb(60, 118, 154);">
-                                <div class="row" >
+                        <td style="background-color:#8cbade;">
+                                <div class="row">
                                 <div class="column" style="float: left;">
 
                             <table style="width:250px;min-height:100vh;background-color: white;">
@@ -38,8 +38,8 @@
                                 </div>
                                 <div class="row">
                                 <div class="column" style="padding-right: 10px;">
-                                    <table >
-                                        <tr >
+                                    <table>
+                                        <tr>
                                             <td style="width:100%;text-align: center;"><img src="{{ $invoice_image1 }}" style="height: 100px;"></td>
                                             <td style="width:100%;text-align: right;font-family: 'Roboto', sans-serif;color:#ffffff;">
                                                 <h1 style="font-size: 42px;margin: 0px;color:#ffffff;">INVOICE</h1>
@@ -59,15 +59,15 @@
                                             </td>
                                         </tr>
                                     </table>
-                                    <table>
-                                        <tr >
-                                            <td style="font-size: 8px;font-family: 'Roboto', sans-serif;padding-left: 20px;display: flex;align-items: center;color:#ffffff;">
+                                    <table style="width:100%;">
+                                        <tr>
+                                            <td style="font-size: 8px;font-family: 'Roboto', sans-serif;padding-left: 20px;display: flex;align-items: center;color:#ffffff;width:30%;">
                                                 <img src="{{ $invoice_image3 }}" style="height: 20px;padding-right: 10px;">{{ $company_email }}
                                             </td>
-                                             <td style="font-size: 8px;font-family: 'Roboto', sans-serif;padding-left: 10px;width: 150px;color:#ffffff;display:flex;justify-content:space-between;">
+                                             <td style="font-size: 8px;font-family: 'Roboto', sans-serif;padding-left: 10px;color:#ffffff;display:flex;justify-content:space-between;width:40%;">
                                                 <img src="{{ $invoice_image4 }}" style="height: 20px;padding-right: 10px;">{!! $company_address !!}
                                             </td>
-                                            <td style="font-size: 8px;font-family: 'Roboto', sans-serif;padding-left: 10px;color:#ffffff;">
+                                            <td style="font-size: 8px;font-family: 'Roboto', sans-serif;padding-left: 10px;color:#ffffff;width:30%;">
                                                 <b style="font-size: 10px;">Date :</b><br>
                                                 {{ $invoice_date }}
                                             </td>
@@ -76,7 +76,7 @@
                                     <br>
                                     
                                     <table style="padding: 20px;border-collapse: collapse;font-family: 'Roboto', sans-serif;">
-                                        <tr style="border-collapse: collapse;height: 30px;border-bottom: 0px;border: 0px;background-color: #4B8EC6;color: white;">
+                                        <tr style="border-collapse: collapse;height: 30px;border-bottom: 0px;border: 0px;background-color:#428bc2;color: white;">
                                             <td style="width: 200px;text-align: left;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 10px;">
                                      <b> ITEM DESCRIPTION</b>
                                     </td>
