@@ -64,7 +64,7 @@
                                             <td style="font-size: 8px;font-family: 'Roboto', sans-serif;padding-left: 20px;display: flex;align-items: center;color:#ffffff;width:30%;">
                                                 <img src="{{ $invoice_image3 }}" style="height: 20px;padding-right: 10px;">{{ $company_email }}
                                             </td>
-                                             <td style="font-size: 8px;font-family: 'Roboto', sans-serif;padding-left: 10px;color:#ffffff;display:flex;justify-content:space-between;width:40%;">
+                                             <td style="font-size: 8px;font-family: 'Roboto', sans-serif;padding-left: 10px;color:#ffffff;width:40%;">
                                                 <img src="{{ $invoice_image4 }}" style="height: 20px;padding-right: 10px;">{!! $company_address !!}
                                             </td>
                                             <td style="font-size: 8px;font-family: 'Roboto', sans-serif;padding-left: 10px;color:#ffffff;width:30%;">
