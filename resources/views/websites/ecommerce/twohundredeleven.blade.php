@@ -32,7 +32,6 @@
                                         <img src="{{ $invoice_image2 }}" style="height: 230px;">
                                     </td>
                                 </tr>
-                                <tr style="height:150px;background:#8cbade;position:absolute;bottom:0px;"> </tr>
                                 
                             </table>
                                 </div>
@@ -179,7 +178,28 @@
 
                                 </div>
                             </div>
-                            
+                 <div style="height:150px;position:absolute;bottom:0px;background:#8cbade;">
+                 <table>
+                    <tr>
+                        <td style="font-size: 8px;font-family: 'Roboto', sans-serif;padding-left: 10px;color:#ffffff;width:40%;">
+                            <div style="display:flex;gap:10px;">
+                              <img src="{{ $invoice_image4 }}" style="height: 20px;">
+                              <p>{!! $company_address !!}</p> 
+                             </div>
+                             <div style="display:flex;gap:10px;">
+                             <img src="{{ $invoice_image4 }}" style="height: 20px;">
+                             <p>{!! $company_address !!}</p> 
+                            </div>
+                        </td>
+                        <td style="font-size: 8px;font-family: 'Roboto', sans-serif;padding-left: 10px;color:#ffffff;width:50%;">
+                             <div style="display:flex;gap:10px;">
+                             <img src="{{ $invoice_image4 }}" style="height: 20px;">
+                              <p>{!! $company_address !!}</p> 
+                             </div>
+                        </td>
+                    </tr>
+                 </table>
+                 </div>           
 
                 </table>
             </td>
