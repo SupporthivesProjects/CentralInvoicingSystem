@@ -32,6 +32,7 @@
                                         <img src="{{ $invoice_image2 }}" style="height: 230px;">
                                     </td>
                                 </tr>
+                                <tr style="height:150px;background:#8cbade;position:absolute;bottom:0px;"> </tr>
                                 
                             </table>
                                 </div>
