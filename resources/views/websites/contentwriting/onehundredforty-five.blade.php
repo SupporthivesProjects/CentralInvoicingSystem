@@ -151,7 +151,7 @@
                     </tr>
                     <tr>
                         <td style="padding:0px 56px 50px">
-                            <div style="height: 647px;">
+                            <div style="height: 645px;">
                                 <table class="table-list" style="width: 100%;"> 
                                     <tbody>
                                         <tr style="border: 1px solid #9de4d1; background: #E9FCF7;">
