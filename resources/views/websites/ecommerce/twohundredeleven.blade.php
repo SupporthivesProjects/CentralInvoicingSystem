@@ -183,7 +183,7 @@
 
                     <!-----------Footer-->
                     <tr>
-                        <td style="height: 50px;">
+                        <td style="height:20vh;">
                             <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;"> 
                                 <tr style="height: 100px;width: 600px; border-collapse: collapse;background-color: #8BB9DC;font-family: 'Roboto', sans-serif;font-size: 9px; color: white;">
                                     <td style="border:0px;padding: 10px;" > 
