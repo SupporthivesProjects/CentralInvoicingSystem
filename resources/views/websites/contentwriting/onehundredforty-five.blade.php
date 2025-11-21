@@ -112,7 +112,7 @@
     <table width="100%" cellspacing="0" cellpadding="0" border="0" style="margin: auto;">
         <tr>
             <td style="background-size: cover; height: 100%;">
-                <table width="100%" cellspacing="0" cellpadding="0" border="0"  style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
+                <table width="100%" cellspacing="0" cellpadding="0" border="0"  style="border-collapse: collapse; ">
                    <tbody>
                     <tr>
                         <td style="background: url('{{ $invoice_header_image }}') no-repeat; background-size:cover;padding: 66px 0px;">
@@ -151,7 +151,7 @@
                     </tr>
                     <tr>
                         <td style="padding:0px 56px 50px">
-                            <div style="height: 645px;">
+                            <div style="height: 642px;">
                                 <table class="table-list" style="width: 100%;"> 
                                     <tbody>
                                         <tr style="border: 1px solid #9de4d1; background: #E9FCF7;">
