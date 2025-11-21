@@ -41,9 +41,9 @@
                                     <table >
                                         <tr >
                                             <td style="width:100%;text-align: center;"><img src="{{ $invoice_image1 }}" style="height: 100px;"></td>
-                                            <td style="width:100%;text-align: right;font-family: 'Roboto', sans-serif;">
-                                                <h1 style="font-size: 42px;margin: 0px;">INVOICE</h1>
-                                                <p style="font-size: 10px;margin: 0px;">Invoice No :  {{ $invoice_number }}</p>
+                                            <td style="width:100%;text-align: right;font-family: 'Roboto', sans-serif;color:#ffffff;">
+                                                <h1 style="font-size: 42px;margin: 0px;color:#ffffff;">INVOICE</h1>
+                                                <p style="font-size: 10px;margin: 0px;color:#ffffff;">Invoice No :  {{ $invoice_number }}</p>
                                             </td>
                                         </tr>
                                         <tr style="height: 30px;">
@@ -51,8 +51,8 @@
                                         </tr>
                                         <tr>
                                             <td style="font-family: 'Roboto', sans-serif;padding-left: 20px;width: 260px;">
-                                                <h4 style="margin: 0px;font-size: 14px"> Invoice To</h4>
-                                                <h2 style="margin: 0px;font-size: 26px">  {{ $customer_name ? $customer_name : '' }}<br>
+                                                <h4 style="margin: 0px;font-size: 14px;color:#ffffff;"> Invoice To</h4>
+                                                <h2 style="margin: 0px;font-size: 26px;color:#ffffff;">  {{ $customer_name ? $customer_name : '' }}<br>
                                                     {{ $customer_email ? $customer_email : '' }}<br>
                                                     {{ $customer_mobile ? $customer_mobile : '' }}
                                                 </h2>
@@ -61,13 +61,13 @@
                                     </table>
                                     <table>
                                         <tr >
-                                            <td style="font-size: 8px;font-family: 'Roboto', sans-serif;padding-left: 20px;display: flex;align-items: center;">
+                                            <td style="font-size: 8px;font-family: 'Roboto', sans-serif;padding-left: 20px;display: flex;align-items: center;color:#ffffff;">
                                                 <img src="{{ $invoice_image3 }}" style="height: 20px;padding-right: 10px;">{{ $company_email }}
                                             </td>
-                                             <td style="font-size: 8px;font-family: 'Roboto', sans-serif;padding-left: 10px;width: 150px;">
+                                             <td style="font-size: 8px;font-family: 'Roboto', sans-serif;padding-left: 10px;width: 150px;color:#ffffff;display:flex;justify-content:space-between;">
                                                 <img src="{{ $invoice_image4 }}" style="height: 20px;padding-right: 10px;">{!! $company_address !!}
                                             </td>
-                                            <td style="font-size: 8px;font-family: 'Roboto', sans-serif;padding-left: 10px;">
+                                            <td style="font-size: 8px;font-family: 'Roboto', sans-serif;padding-left: 10px;color:#ffffff;">
                                                 <b style="font-size: 10px;">Date :</b><br>
                                                 {{ $invoice_date }}
                                             </td>
@@ -92,7 +92,7 @@
                                     </tr>
 
                                     @foreach ($products as $product)
-                                    <tr style="border-collapse: collapse;height: 30px;border-bottom: 0px;border: 0px;background-color:black;color: white;">
+                                    <tr style="border-collapse: collapse;height: 30px;border-bottom: 0px;border: 0px;background-color:white;color: black;">
                                         <td style="width: 200px;text-align: left;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 10px;">
                                         <b>  {{ $product->name }}</b>
                                         </td>
@@ -116,11 +116,11 @@
                                     <td style="width: 100px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 4px;">
                                       
                                     </td>
-                                    <td style="width: 100px;text-align: center;font-family: 'Roboto', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 4px;">
+                                    <td style="width: 100px;text-align: center;font-family: 'Roboto', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 4px;color:#ffffff;">
                                      <b>SUBTOTAL</b>
                                     </td>
                                     
-                                    <td style="width:100px;text-align:center;font-family: 'Roboto', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;">
+                                    <td style="width:100px;text-align:center;font-family: 'Roboto', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;color:#ffffff;">
                                        <b>{{ site_currency() . number_format($invoice_amount + $discount_amount ?? 0, 2) }}</b>
                                     </td>
                                 </tr>
