@@ -59,7 +59,7 @@
                                             </td>
                                         </tr>
                                     </table>
-                                    <table style="width:100%;">
+                                    <table>
                                         <tr>
                                             <td style="font-size: 8px;font-family: 'Roboto', sans-serif;padding-left: 20px;display: flex;align-items: center;color:#ffffff;width:30%;">
                                                 <img src="{{ $invoice_image3 }}" style="height: 20px;padding-right: 10px;">{{ $company_email }}
