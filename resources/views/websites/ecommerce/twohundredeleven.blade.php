@@ -4,17 +4,17 @@
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
 </head>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@900&display=swap" rel="stylesheet">
-<body>
+<body style="padding:0px;">
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
-            <td align="center" bgcolor="#f2f2f2" style="padding: 20px 0;">
+            <td align="center" bgcolor="#f2f2f2" style="padding:0px;">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse;height:100vh;">  
                     <tr>
                         <td style="background-color: #8BB9DC;">
                                 <div class="row" >
                                 <div class="column" style="float: left;">
 
-                            <table style="width: 150px;min-height: 600px;background-color: white;">
+                            <table style="width: 150px;min-height:80vh;background-color: white;">
                                 <tr style="width: 150px;">
                                     <td style="text-align: center;display: flex;justify-content: center;">
                                         <img src="{{ $company_logo }}" style="height: 110px;">
