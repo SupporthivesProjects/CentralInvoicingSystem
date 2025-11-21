@@ -130,7 +130,7 @@
                     <tr>
                         <td style="padding:30px 70px 0px 70px;">
                             <div style=" border: 1px solid #9de4d1; background: #E9FCF7;">
-                                <h5><span>INVOICE </span> #: {{ $invoice_number }}	<span>DATE</span>: {{ $invoice_date }}</h5>
+                                <h5><span>INVOICEs </span> #: {{ $invoice_number }}	<span>DATE</span>: {{ $invoice_date }}</h5>
                             </div>
                         </td>
                      </tr>
@@ -234,7 +234,7 @@
                    </tbody>
                    <tfoot>
                         <tr class="footer-fixed">
-                            <td style="width: 100%; background: url('{{ $invoice_footer_image }}') no-repeat; background-size:contain;padding: 50px 0px 90px;" class="footer-fixed">
+                            <td style="width: 100%; background: url('{{ $invoice_footer_image }}') no-repeat; background-size:contain;padding: 50px 0px 92px;" class="footer-fixed">
                                 <p style="text-align: center;">THANK YOU FOR YOUR BUSINESS!</p>
                             </td>
                         </tr>
