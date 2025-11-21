@@ -65,7 +65,10 @@
                                                 <img src="{{ $invoice_image3 }}" style="height: 20px;padding-right: 10px;">{{ $company_email }}
                                             </td>
                                              <td style="font-size: 8px;font-family: 'Roboto', sans-serif;padding-left: 10px;color:#ffffff;width:40%;">
-                                                <img src="{{ $invoice_image4 }}" style="height: 20px;padding-right: 10px;"><p>{!! $company_address !!}</p> 
+                                                <div style="display:flex;gap:10px;">
+                                                 <img src="{{ $invoice_image4 }}" style="height: 20px;">
+                                                 <p>{!! $company_address !!}</p> 
+                                                </div>
                                             </td>
                                             <td style="font-size: 8px;font-family: 'Roboto', sans-serif;padding-left: 10px;color:#ffffff;width:30%;">
                                                 <b style="font-size: 10px;">Date :</b><br>
