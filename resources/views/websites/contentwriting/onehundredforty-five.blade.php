@@ -106,7 +106,7 @@
             left: 0;
             right: 0;
             width: 100%;
-            background-color: 'red';
+            background-color: #1A584D;
         }
         
     </style>
