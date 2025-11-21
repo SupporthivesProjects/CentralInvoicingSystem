@@ -61,12 +61,12 @@
             text-align: center;
         } 
         .table-list th{
-            background:#E9FCF7;
+            /* background:#E9FCF7; */
         }
         .table-list th {
-            background: #E9FCF7;
+            /* background: #E9FCF7; */
             padding: 10px 10px;
-            border: 1px solid #9de4d1;
+            /* border: 1px solid #9de4d1; */
         }
         .table-list td{
             border: 1px solid #9de4d1;
@@ -132,14 +132,14 @@
                                <tbody>
                                  
                                  <tr>
-                                    <td class="addrss">
+                                    <td class="addrss" style="vertical-align: top;">
                                         <h4>BILLED FROM:</h4>
                                         <p>{{ $site_name }}</p>
                                         <p>{!! $company_address !!}</p>
                                         <p><strong>Email</strong> {{ $company_email }}</p>
                                         <!-- <p><strong>Phone</strong>: {{ $company_mobile }}</p> -->
                                     </td>
-                                    <td class="addrss">
+                                    <td class="addrss" style="vertical-align: top;">
                                         <h4>BILLED TO:</h4>
                                         <p><strong>Name: </strong>{{ $customer_name }}</p>
                                         <!-- <p><strong>Email</strong> {{ $customer_name }}</p> -->
@@ -164,7 +164,7 @@
                                         @foreach($products as $index => $product)
                                         <tr>
                                             <td>{{ $index + 1 }}</td>
-                                            <td> {{ $product->name }}<br>
+                                            <td style="text-align: left;"> {{ $product->name }}<br>
                                                 @if($product->quality)<span class="me-2 badge bg-light text-dark"><strong>Quality:</strong> {{ $product->quality }}</span>@endif
                                                 @if($product->quantity)<span class="me-2 badge bg-light text-dark"><strong>Quantity:</strong> {{ $product->quantity }}</span>@endif
                                                 @if($product->turnaround)<span class="me-2 badge bg-light text-dark"><strong>Turnaround Time:</strong> {{ $product->turnaround }}</span>@endif
