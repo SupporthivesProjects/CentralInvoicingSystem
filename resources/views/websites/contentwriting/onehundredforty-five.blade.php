@@ -100,6 +100,13 @@
             color: #fff ;
             text-align: center;
         }
+        .footer-fixed {
+            position: fixed;
+            bottom: 0px;
+            left: 0;
+            right: 0;
+            width: 100%;
+        }
         
     </style>
 </head>
@@ -225,8 +232,8 @@
                     
                    </tbody>
                    <tfoot>
-                        <tr>
-                            <td style="width: 100%; background: url('{{ $invoice_footer_image }}') no-repeat; background-size:contain;padding: 50px 0px 90px;">
+                        <tr class="footer-fixed">
+                            <td style="width: 100%; background: url('{{ $invoice_footer_image }}') no-repeat; background-size:contain;padding: 50px 0px 90px;" class="footer-fixed">
                                 <p style="text-align: center;">THANK YOU FOR YOUR BUSINESS!</p>
                             </td>
                         </tr>
