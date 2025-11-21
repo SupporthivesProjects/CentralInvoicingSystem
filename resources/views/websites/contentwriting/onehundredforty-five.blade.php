@@ -120,7 +120,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td style="padding:30px 70px 0px 70px">
+                        <td style="padding:30px 70px 0px 70px; border: 1px solid #9de4d1; background: #E9FCF7;">
                             <div>
                                 <h5><span>INVOICE </span> #: {{ $invoice_number }}	<span>DATE</span>: {{ $invoice_date }}</h5>
                             </div>
@@ -201,18 +201,18 @@
                                             <td colspan="3" style="border: 0px;"></td>
                                             
                                             <td style="border: 0px; text-align: right;">SUBTOTAL</td>
-                                            <td >{{ site_currency() }} {{ number_format(($invoice_amount + $discount_amount), 2) }}</td>
+                                            <td style="border: 1px solid #9de4d1;">{{ site_currency() }} {{ number_format(($invoice_amount + $discount_amount), 2) }}</td>
                                         </tr>
                                     
                                         <tr>
                                             <td colspan="3" style="border: 0px;"></td>
                                             <td style="border: 0px; text-align: right;">DISCOUNT</td>
-                                            <td >{{ site_currency() }} {{ number_format($discount_amount, 2) }}</td>
+                                            <td style="border: 1px solid #9de4d1;">{{ site_currency() }} {{ number_format($discount_amount, 2) }}</td>
                                         </tr>
                                         <tr>
                                             <td colspan="3" style="border: 0px;"></td>
                                             <td style="border: 0px; text-align: right;"><strong>TOTAL DUE</strong></td>
-                                            <td ><strong>{{ site_currency() }} {{ number_format($invoice_amount, 2) }}</strong></td>
+                                            <td style="border: 1px solid #9de4d1;"><strong>{{ site_currency() }} {{ number_format($invoice_amount, 2) }}</strong></td>
                                         </tr>
 
 
