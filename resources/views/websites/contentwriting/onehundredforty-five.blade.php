@@ -120,8 +120,8 @@
                         </td>
                     </tr>
                     <tr>
-                        <td style="padding:30px 70px 0px 70px; border: 1px solid #9de4d1; background: #E9FCF7;">
-                            <div>
+                        <td style="padding:30px 70px 0px 70px;">
+                            <div style=" border: 1px solid #9de4d1; background: #E9FCF7;">
                                 <h5><span>INVOICE </span> #: {{ $invoice_number }}	<span>DATE</span>: {{ $invoice_date }}</h5>
                             </div>
                         </td>
@@ -151,7 +151,7 @@
                     </tr>
                     <tr>
                         <td style="padding:0px 56px 50px">
-                            <div style="height: 642px;">
+                            <div style="height: 647px;">
                                 <table class="table-list" style="width: 100%;"> 
                                     <tbody>
                                         <tr style="border: 1px solid #9de4d1; background: #E9FCF7;">
