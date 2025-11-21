@@ -15,14 +15,14 @@
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
             <td align="center" bgcolor="#f2f2f2" style="padding:0px;">
-                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse;padding:0px;">  
+                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse;padding:0px;height:100vh;">  
                     <tr>
                         <td style="background-color: #8BB9DC;padding:0px;">
                                 <div class="row" >
                                 <div class="column" style="float: left;">
 
-                            <table style="width: 150px;min-height:80vh;background-color: white;">
-                                <tr style="width: 150px;">
+                            <table style="width: 250px;min-height:80vh;background-color: white;">
+                                <tr style="width: 250px;">
                                     <td style="text-align: center;display: flex;justify-content: center;">
                                         <img src="{{ $company_logo }}" style="height: 110px;">
                                         
@@ -192,7 +192,7 @@
                     <tr>
                         <td style="height:20vh;">
                             <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;"> 
-                                <tr style="height: 100px;width: 600px; border-collapse: collapse;background-color: #8BB9DC;font-family: 'Roboto', sans-serif;font-size: 9px; color: white;">
+                                <tr style="border-collapse: collapse;background-color: #8BB9DC;font-family: 'Roboto', sans-serif;font-size: 9px; color: white;">
                                     <td style="border:0px;padding: 10px;" > 
                                       <p style="display: flex; align-items: center;"> <img src="{{ $invoice_image5 }}" style="height: 20px;padding-right: 10px;"> www.yourhealthfromhome.com</p>
                                        <p style="display: flex; align-items: center;"><img src="{{ $invoice_image3 }}" style="height: 20px;padding-right: 10px;"> {{ $company_email }}</p>
