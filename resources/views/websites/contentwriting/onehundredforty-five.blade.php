@@ -163,8 +163,8 @@
                                         </tr>
                                         @foreach($products as $index => $product)
                                         <tr style="border: 1px solid #9de4d1; ">
-                                            <td>{{ $index + 1 }}</td>
-                                            <td style="text-align: left;"> {{ $product->name }}<br>
+                                            <td style="border: 1px solid #9de4d1;">{{ $index + 1 }}</td>
+                                            <td style="text-align: left; border: 1px solid #9de4d1;"> {{ $product->name }}<br>
                                                 @if($product->quality)<span class="me-2 badge bg-light text-dark"><strong>Quality:</strong> {{ $product->quality }}</span>@endif
                                                 @if($product->quantity)<span class="me-2 badge bg-light text-dark"><strong>Quantity:</strong> {{ $product->quantity }}</span>@endif
                                                 @if($product->turnaround)<span class="me-2 badge bg-light text-dark"><strong>Turnaround Time:</strong> {{ $product->turnaround }}</span>@endif
@@ -183,18 +183,18 @@
                                                 @if($product->note)<span class="badge bg-light text-dark"><strong>Additional Note:</strong> {{ $product->note }}</span>@endif
 
                                             </td>
-                                            <td>1</td>
-                                            <td>{{ site_currency() }} {{ number_format($product->unit_price, 2) }}</td>
-                                            <td>{{ site_currency() }} {{ number_format($product->unit_price, 2) }}</td>
+                                            <td style="border: 1px solid #9de4d1;">1</td>
+                                            <td style="border: 1px solid #9de4d1;">{{ site_currency() }} {{ number_format($product->unit_price, 2) }}</td>
+                                            <td style="border: 1px solid #9de4d1;">{{ site_currency() }} {{ number_format($product->unit_price, 2) }}</td>
                                         </tr>
                                         @endforeach
                                         @for ($i = 0; $i < $padRows; $i++)
-                                            <tr  style="border: 1px solid #9de4d1; background: #E9FCF7;">
-                                                <td  style="height: 40px;"></td>
-                                                <td style="height: 40px;"></td>
-                                                <td  style="height: 40px;"></td>
-                                                <td style="height: 40px;"></td>
-                                                <td style="height: 40px;"></td>
+                                            <tr  style="border: 1px solid #9de4d1; ">
+                                                <td  style="height: 40px;border: 1px solid #9de4d1;"></td>
+                                                <td style="height: 40px;border: 1px solid #9de4d1;"></td>
+                                                <td  style="height: 40px;border: 1px solid #9de4d1;"></td>
+                                                <td style="height: 40px;border: 1px solid #9de4d1;"></td>
+                                                <td style="height: 40px;border: 1px solid #9de4d1;"></td>
                                             </tr>
                                             @endfor
                                         <tr>
