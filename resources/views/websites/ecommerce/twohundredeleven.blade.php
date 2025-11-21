@@ -21,7 +21,7 @@
                                 <div class="row" >
                                 <div class="column" style="float: left;">
 
-                            <table style="width: 250px;min-height:80vh;background-color: white;">
+                            <table style="width: 250px;min-height:90vh;background-color: white;">
                                 <tr style="width: 250px;">
                                     <td style="text-align: center;display: flex;justify-content: center;">
                                         <img src="{{ $company_logo }}" style="height: 110px;">
@@ -190,9 +190,9 @@
 
                     <!-----------Footer-->
                     <tr>
-                        <td style="height:20vh;">
+                        <td style="height:10vh;background-color: #8BB9DC;">
                             <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;"> 
-                                <tr style="border-collapse: collapse;background-color: #8BB9DC;font-family: 'Roboto', sans-serif;font-size: 9px; color: white;">
+                                <tr style="border-collapse: collapse;font-family: 'Roboto', sans-serif;font-size: 9px; color: white;">
                                     <td style="border:0px;padding: 10px;" > 
                                       <p style="display: flex; align-items: center;"> <img src="{{ $invoice_image5 }}" style="height: 20px;padding-right: 10px;"> www.yourhealthfromhome.com</p>
                                        <p style="display: flex; align-items: center;"><img src="{{ $invoice_image3 }}" style="height: 20px;padding-right: 10px;"> {{ $company_email }}</p>
