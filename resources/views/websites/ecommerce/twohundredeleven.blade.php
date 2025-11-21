@@ -2,13 +2,20 @@
 <html>
 <head>
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
+    <style>
+        *{
+            margin:0px;
+            padding:0px;
+        }
+    </style>
 </head>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@900&display=swap" rel="stylesheet">
-<body style="padding:0px;">
+
+<body style="padding:0px;height:100vh;">
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
             <td align="center" bgcolor="#f2f2f2" style="padding:0px;">
-                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse;height:100vh;padding:0px;">  
+                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse;padding:0px;">  
                     <tr>
                         <td style="background-color: #8BB9DC;padding:0px;">
                                 <div class="row" >
