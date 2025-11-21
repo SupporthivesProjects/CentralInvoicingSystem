@@ -20,7 +20,7 @@
                                 <div class="row">
                                 <div class="column" style="float: left;">
 
-                            <table style="width:250px;min-height:100vh;background-color: white;">
+                            <table style="width:250px;background-color: white;">
                                 <tr style="width:100%;">
                                     <td style="text-align: center;display: flex;justify-content: center;">
                                         <img src="{{ $company_logo }}" style="height: 110px;">
