@@ -34,7 +34,7 @@
             width: 100%;
             padding: 0px 0px;
             /* background: #E9FCF7; */
-            border: 1px solid #9de4d1;
+            /* border: 1px solid #9de4d1; */
             padding: 3px 0px;
             text-align: center;
         } 
@@ -120,7 +120,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td style="padding:30px 0px 0px 0px">
+                        <td style="padding:30px 70px 0px 70px">
                             <div>
                                 <h5><span>INVOICE </span> #: {{ $invoice_number }}	<span>DATE</span>: {{ $invoice_date }}</h5>
                             </div>
@@ -151,10 +151,10 @@
                     </tr>
                     <tr>
                         <td style="padding:0px 56px 50px">
-                            <div style="height: 612px;">
+                            <div style="height: 642px;">
                                 <table class="table-list" style="width: 100%;"> 
                                     <tbody>
-                                        <tr>
+                                        <tr style="border: 1px solid #9de4d1; background: #E9FCF7;">
                                             <th>ITEM NO.</th>
                                             <th style="text-align: left;">DESCRIPTION</th>
                                             <th>QTY</th>
@@ -162,7 +162,7 @@
                                             <th>TOTAL</th>
                                         </tr>
                                         @foreach($products as $index => $product)
-                                        <tr>
+                                        <tr style="border: 1px solid #9de4d1; background: #E9FCF7;">
                                             <td>{{ $index + 1 }}</td>
                                             <td style="text-align: left;"> {{ $product->name }}<br>
                                                 @if($product->quality)<span class="me-2 badge bg-light text-dark"><strong>Quality:</strong> {{ $product->quality }}</span>@endif
