@@ -155,14 +155,14 @@
                                 <table class="table-list" style="width: 100%;"> 
                                     <tbody>
                                         <tr style="border: 1px solid #9de4d1; background: #E9FCF7;">
-                                            <th>ITEM NO.</th>
-                                            <th style="text-align: left;">DESCRIPTION</th>
-                                            <th>QTY</th>
-                                            <th>UNIT&nbsp;PRICE</th>
-                                            <th>TOTAL</th>
+                                            <th style="border: 1px solid #9de4d1;">ITEM NO.</th>
+                                            <th style="text-align: left; border: 1px solid #9de4d1;">DESCRIPTION</th>
+                                            <th style="border: 1px solid #9de4d1;">QTY</th>
+                                            <th style="border: 1px solid #9de4d1;">UNIT&nbsp;PRICE</th>
+                                            <th style="border: 1px solid #9de4d1;">TOTAL</th>
                                         </tr>
                                         @foreach($products as $index => $product)
-                                        <tr style="border: 1px solid #9de4d1; background: #E9FCF7;">
+                                        <tr style="border: 1px solid #9de4d1; ">
                                             <td>{{ $index + 1 }}</td>
                                             <td style="text-align: left;"> {{ $product->name }}<br>
                                                 @if($product->quality)<span class="me-2 badge bg-light text-dark"><strong>Quality:</strong> {{ $product->quality }}</span>@endif
@@ -189,7 +189,7 @@
                                         </tr>
                                         @endforeach
                                         @for ($i = 0; $i < $padRows; $i++)
-                                            <tr>
+                                            <tr  style="border: 1px solid #9de4d1; background: #E9FCF7;">
                                                 <td  style="height: 40px;"></td>
                                                 <td style="height: 40px;"></td>
                                                 <td  style="height: 40px;"></td>
