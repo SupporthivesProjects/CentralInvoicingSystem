@@ -219,12 +219,17 @@
                             <table class="billed-info-table" width="100%" cellspacing="0" cellpadding="0" border="0">
                                 <tr>
                                     <td>
+<<<<<<< HEAD
                                         <p class="text-black font-size-12 font-arial font-weight-400 margin-0">
                                             Billed From :
+=======
+                                        <p class="text-black font-size-12 font-arial font-weight-400 margin-0 ">
+                                            Billed FROM :
+>>>>>>> pratibha
                                         </p>
                                     </td>
                                     <td>
-                                        <p class="text-black font-size-12 font-arial font-weight-400 margin-0 text-uppercase text-right">
+                                        <p class="text-black font-size-12 font-arial font-weight-400 margin-0 text-right">
                                             Billed To :
                                         </p>
                                     </td>
