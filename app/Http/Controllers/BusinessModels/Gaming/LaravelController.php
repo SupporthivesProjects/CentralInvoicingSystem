@@ -48,9 +48,6 @@ class LaravelController extends Controller
     }
     public function randomProducts(Request $request)
     {
-
-        dd($request);
-
         Session::forget('selected_products');
 
         $site_id = $request->get('site_id');
