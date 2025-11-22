@@ -51,6 +51,7 @@ class LaravelController extends Controller
         Session::forget('selected_products');
 
         $site_id = $request->get('site_id');
+        dd($site_id);
         $invoiceAmount = floatval($request->get('invoice_amount'));
         $priceFrom = $request->get('price_from');
         $priceTo = $request->get('price_to');
