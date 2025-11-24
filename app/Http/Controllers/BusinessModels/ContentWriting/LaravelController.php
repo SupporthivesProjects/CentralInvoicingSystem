@@ -91,7 +91,6 @@ class LaravelController extends Controller
             return $product;
         });
     
-        // Smart filtering - only apply if we have enough products after filtering
         $filteredProducts = $allProducts;
         if ($priceFrom && $priceTo) {
             $tempFiltered = $allProducts->filter(function ($product) use ($priceFrom, $priceTo) {
@@ -103,7 +102,6 @@ class LaravelController extends Controller
             }
         }
     
-        // Dynamic settings based on invoice amount
         $tolerance = max(0.05, min(0.15, 50 / $invoiceAmount));
         $minTotal = $invoiceAmount * (1 - $tolerance);
         $maxTotal = $invoiceAmount * (1 + $tolerance);
@@ -350,209 +348,270 @@ class LaravelController extends Controller
     public function randomProduct(Request $request)
     {
         set_time_limit(270);
-        $productId = $request->input('product_id');
         $invoiceAmount = floatval(session('invoice.invoice_amount'));
         $site_id = session('customer.site_id');
         $site = Website::findOrFail($site_id);
         DynamicDatabaseService::connect($site);
     
-        $product = DB::connection($this->connectionType)
+        $readyProducts = session('ready_products', []);
+        
+        if (empty($readyProducts)) {
+            return response()->json(['status' => false, 'message' => 'No products found'], 404);
+        }
+    
+        $productIds = collect($readyProducts)->pluck('id')->toArray();
+        
+        $productsFromDb = DB::connection($this->connectionType)
             ->table($this->productTable)
             ->select('id', 'name', 'slug', 'default_wc', 'default_price', 'extra_word', 'ta_standard', 'ta_express', 'q_standard', 'q_premium', 'q_expert', 'img_price')
             ->where('published', 1)
-            ->where('id', $productId)
-            ->first();
-    
-        if (!$product) {
-            return response()->json(['status' => false, 'message' => 'Product not found'], 404);
-        }
-    
-        $readyProducts = session('ready_products', []);
-        $targetProduct = collect($readyProducts)->firstWhere('id', $productId);
-        $turnaround = $targetProduct['turnaround'] ?? 'ta_standard';
-        $quality = $targetProduct['quality'] ?? 'q_standard';
-        $otherProducts = collect($readyProducts)->filter(fn($p) => $p['id'] != $product->id)->values();
-    
-        $imageCount = rand(7, 15);
-        $wordCount = $product->default_wc;
-    
-        $qlty_factor = match ($quality) {
-            'q_premium' => 0.1,
-            'q_expert' => 0.25,
-            default => 0,
-        };
-    
-        $remainingAmount = $invoiceAmount;
-        foreach ($otherProducts as $item) {
-            $remainingAmount -= $item['unit_price'];
-        }
-    
-        $maxWordCount = 300000;
-        $minWordCount = $product->default_wc;
-        $maxImageCount = 15;
-        $minImageCount = 1;
-    
-        $maxIterations = 700;
-        $iterations = 0;
-        $bestMatch = null;
-        $smallestDiff = PHP_INT_MAX;
-    
-        while ($iterations++ < $maxIterations) {
-            $wc_price = max(0, ($wordCount - $product->default_wc) * ($product->extra_word / 25));
-            $img_total = max(0, ($imageCount - 1) * $product->img_price);
-            $ta_total = $turnaround === 'ta_express' ? 25 : 0;
-    
-            $base_total = $product->default_price + $wc_price + $img_total + $ta_total;
-            $unit_price = $base_total + ($base_total * $qlty_factor);
-            $diff = $remainingAmount - $unit_price;
-    
-            if (abs($diff) < $smallestDiff) {
-                $smallestDiff = abs($diff);
-                $bestMatch = [
-                    'wordCount' => $wordCount,
-                    'imageCount' => $imageCount,
-                    'quality' => $quality,
-                    'turnaround' => $turnaround,
-                    'unit_price' => $unit_price,
-                ];
-            }
-    
-            if (round($unit_price, 2) === round($remainingAmount, 2)) {
-                break;
-            }
-    
-            if (abs($diff) < 0.01) {
-                if ($diff > 0 && $wordCount < $maxWordCount) {
-                    $wordCount++;
-                    continue;
-                } elseif ($diff < 0 && $wordCount > $minWordCount) {
-                    $wordCount--;
-                    continue;
-                } else {
-                    break;
-                }
-            }
-    
-            if ($diff > 0) {
-                $turnaroundOptions = ['ta_standard', 'ta_express'];
-                $qualityOptions = ['q_standard', 'q_premium', 'q_expert'];
-                $turnaround = $turnaroundOptions[array_rand($turnaroundOptions)];
-                $quality = $qualityOptions[array_rand($qualityOptions)];
-                $qlty_factor = match ($quality) {
-                    'q_premium' => 0.1,
-                    'q_expert' => 0.25,
-                    default => 0,
-                };
-    
-                if ($diff > 1000) {
-                    $wordCount += 500;
-                } elseif ($diff > 750) {
-                    $wordCount += 300;
-                } elseif ($diff > 500) {
-                    $wordCount += 200;
-                } elseif ($diff > 300) {
-                    $wordCount += 150;
-                } elseif ($diff > 200) {
-                    $wordCount += 100;
-                } elseif ($diff > 100) {
-                    $wordCount += 50;
-                } elseif ($diff > 25) {
-                    $wordCount += 10;
-                } else {
-                    $wordCount += 1;
-                }
-    
-                if ($wordCount > $maxWordCount) {
-                    break;
-                }
-            } else {
-                if ($wordCount > $minWordCount) {
-                    if ($diff < -25) {
-                        $wordCount -= 10;
-                    } else {
-                        $wordCount -= 1;
-                    }
-                } elseif ($imageCount > $minImageCount) {
-                    $imageCount--;
-                } elseif ($quality === 'q_expert') {
-                    $quality = 'q_premium';
-                    $qlty_factor = 0.10;
-                } elseif ($quality === 'q_premium') {
-                    $quality = 'q_standard';
-                    $qlty_factor = 0.00;
-                } elseif ($turnaround === 'ta_express') {
-                    $turnaround = 'ta_standard';
-                } else {
-                    break;
-                }
-            }
-        }
-    
-        if ($bestMatch) {
-            $wordCount = $bestMatch['wordCount'];
-            $imageCount = $bestMatch['imageCount'];
-            $quality = $bestMatch['quality'];
-            $turnaround = $bestMatch['turnaround'];
-            $unit_price = $bestMatch['unit_price'];
-        } else {
-            return response()->json(['status' => false, 'message' => 'Unable to match invoice amount.']);
-        }
-    
-        $updatedProduct = [
-            'id' => $product->id,
-            'wordcount' => $wordCount,
-            'imagecount' => $imageCount,
-            'quantity' => 1,
-            'turnaround' => $turnaround,
-            'quality' => $quality,
-            'unit_price' => $unit_price,
-            'project_title' => $targetProduct['project_title'] ?? null,
-            'reference_link' => $targetProduct['reference_link'] ?? null,
-            'subject' => $targetProduct['subject'] ?? null,
-            'preferred_voice' => $targetProduct['preferred_voice'] ?? null,
-            'preferred_writing_style' => $targetProduct['preferred_writing_style'] ?? null,
-            'brand_name' => $targetProduct['brand_name'] ?? null,
-            'audience' => $targetProduct['audience'] ?? null,
-            'note' => $targetProduct['note'] ?? null
-        ];
-    
-        $foundIndex = collect($readyProducts)->search(fn($p) => $p['id'] == $productId);
-        if ($foundIndex !== false) {
-            $readyProducts[$foundIndex] = $updatedProduct;
-        } else {
-            $readyProducts[] = $updatedProduct;
-        }
-    
-        session()->put('ready_products', $readyProducts);
-        $productIds = collect($readyProducts)->pluck('id')->toArray();
-    
-        $productsFromDb = DB::connection($this->connectionType)->table($this->productTable)
-            ->select('id', 'name', 'slug', 'default_wc', 'default_price', 'extra_word', 'ta_standard', 'ta_express', 'q_standard', 'q_premium', 'q_expert', 'img_price')
             ->whereIn('id', $productIds)
             ->get()
             ->keyBy('id');
     
-        $recalculatedProducts = collect($readyProducts)->map(function ($sessionProduct) use ($productsFromDb) {
+        $totalProducts = count($readyProducts);
+        $baseAmountPerProduct = $invoiceAmount / $totalProducts;
+        $remainingAmount = $invoiceAmount;
+        
+        $updatedProducts = [];
+        
+        foreach ($readyProducts as $index => $sessionProduct) {
+            $product = $productsFromDb->get($sessionProduct['id']);
+            
+            if (!$product) {
+                continue;
+            }
+    
+            $isLastProduct = ($index === $totalProducts - 1);
+            $targetAmount = $isLastProduct ? $remainingAmount : ($baseAmountPerProduct * rand(60, 140) / 100);
+            
+            $turnaroundOptions = ['ta_standard', 'ta_express'];
+            $qualityOptions = ['q_standard', 'q_premium', 'q_expert'];
+            
+            $turnaround = $turnaroundOptions[array_rand($turnaroundOptions)];
+            $quality = $qualityOptions[array_rand($qualityOptions)];
+            $imageCount = rand(7, 15);
+            $wordCount = $product->default_wc;
+    
+            $qlty_factor = match ($quality) {
+                'q_premium' => 0.1,
+                'q_expert' => 0.25,
+                default => 0,
+            };
+    
+            $maxWordCount = 300000;
+            $minWordCount = $product->default_wc;
+            $maxImageCount = 15;
+            $minImageCount = 1;
+    
+            $maxIterations = 1000;
+            $iterations = 0;
+            $bestMatch = null;
+            $smallestDiff = PHP_INT_MAX;
+    
+            while ($iterations++ < $maxIterations) {
+                $wc_price = max(0, ($wordCount - $product->default_wc) * ($product->extra_word / 25));
+                $img_total = max(0, ($imageCount - 1) * $product->img_price);
+                $ta_total = $turnaround === 'ta_express' ? 25 : 0;
+    
+                $base_total = $product->default_price + $wc_price + $img_total + $ta_total;
+                $unit_price = $base_total + ($base_total * $qlty_factor);
+                $diff = $targetAmount - $unit_price;
+    
+                if (abs($diff) < $smallestDiff) {
+                    $smallestDiff = abs($diff);
+                    $bestMatch = [
+                        'wordCount' => $wordCount,
+                        'imageCount' => $imageCount,
+                        'quality' => $quality,
+                        'turnaround' => $turnaround,
+                        'unit_price' => $unit_price,
+                    ];
+                }
+    
+                if (round($unit_price, 2) === round($targetAmount, 2)) {
+                    break;
+                }
+    
+                if (abs($diff) < 0.5) {
+                    $wordPerPrice = ($product->extra_word / 25) * (1 + $qlty_factor);
+                    
+                    if ($wordPerPrice > 0) {
+                        $wordsNeeded = round($diff / $wordPerPrice);
+                        
+                        if ($wordsNeeded > 0 && $wordCount + $wordsNeeded <= $maxWordCount) {
+                            $wordCount += $wordsNeeded;
+                            continue;
+                        } elseif ($wordsNeeded < 0 && $wordCount + $wordsNeeded >= $minWordCount) {
+                            $wordCount += $wordsNeeded;
+                            continue;
+                        }
+                    }
+                    
+                    if ($diff > 0 && $wordCount < $maxWordCount) {
+                        $wordCount++;
+                        continue;
+                    } elseif ($diff < 0 && $wordCount > $minWordCount) {
+                        $wordCount--;
+                        continue;
+                    } else {
+                        break;
+                    }
+                }
+    
+                if ($diff > 0) {
+                    $wordPerPrice = ($product->extra_word / 25) * (1 + $qlty_factor);
+                    
+                    if ($wordPerPrice > 0 && $wordCount < $maxWordCount) {
+                        $estimatedWords = floor($diff / $wordPerPrice);
+                        
+                        if ($estimatedWords > 0) {
+                            $increment = min($estimatedWords, $maxWordCount - $wordCount);
+                            
+                            if ($diff > 1000) {
+                                $increment = min(500, $increment);
+                            } elseif ($diff > 500) {
+                                $increment = min(200, $increment);
+                            } elseif ($diff > 200) {
+                                $increment = min(100, $increment);
+                            } elseif ($diff > 100) {
+                                $increment = min(50, $increment);
+                            } elseif ($diff > 25) {
+                                $increment = min(10, $increment);
+                            }
+                            
+                            $wordCount += max(1, $increment);
+                            continue;
+                        }
+                    }
+    
+                    if ($wordCount >= $maxWordCount) {
+                        if ($turnaround === 'ta_standard' && $diff >= 25) {
+                            $turnaround = 'ta_express';
+                        } elseif ($quality === 'q_standard' && $diff >= ($base_total * 0.1)) {
+                            $quality = 'q_premium';
+                            $qlty_factor = 0.10;
+                        } elseif ($quality === 'q_premium' && $diff >= ($base_total * 0.15)) {
+                            $quality = 'q_expert';
+                            $qlty_factor = 0.25;
+                        } elseif ($imageCount < $maxImageCount && $product->img_price > 0) {
+                            $imageCount++;
+                        } else {
+                            break;
+                        }
+                    }
+                } else {
+                    $absDiff = abs($diff);
+                    
+                    if ($imageCount > $minImageCount && $product->img_price > 0 && $absDiff >= $product->img_price) {
+                        $imageCount--;
+                    } elseif ($quality === 'q_expert') {
+                        $qualityReduction = $base_total * 0.15;
+                        if ($absDiff >= $qualityReduction) {
+                            $quality = 'q_premium';
+                            $qlty_factor = 0.10;
+                        } else {
+                            if ($wordCount > $minWordCount) {
+                                $wordCount = max($minWordCount, $wordCount - min(10, $wordCount - $minWordCount));
+                            } else {
+                                break;
+                            }
+                        }
+                    } elseif ($quality === 'q_premium') {
+                        $qualityReduction = $base_total * 0.10;
+                        if ($absDiff >= $qualityReduction) {
+                            $quality = 'q_standard';
+                            $qlty_factor = 0.00;
+                        } else {
+                            if ($wordCount > $minWordCount) {
+                                $wordCount = max($minWordCount, $wordCount - min(10, $wordCount - $minWordCount));
+                            } else {
+                                break;
+                            }
+                        }
+                    } elseif ($turnaround === 'ta_express' && $absDiff >= 25) {
+                        $turnaround = 'ta_standard';
+                    } else {
+                        if ($wordCount > $minWordCount) {
+                            $wordPerPrice = ($product->extra_word / 25) * (1 + $qlty_factor);
+                            
+                            if ($wordPerPrice > 0) {
+                                $wordsToRemove = ceil($absDiff / $wordPerPrice);
+                                $wordsToRemove = min($wordsToRemove, $wordCount - $minWordCount);
+                                
+                                if ($absDiff > 50) {
+                                    $wordsToRemove = min(20, $wordsToRemove);
+                                } elseif ($absDiff > 25) {
+                                    $wordsToRemove = min(10, $wordsToRemove);
+                                } else {
+                                    $wordsToRemove = min(5, $wordsToRemove);
+                                }
+                                
+                                $wordCount = max($minWordCount, $wordCount - max(1, $wordsToRemove));
+                            } else {
+                                $wordCount--;
+                            }
+                        } else {
+                            break;
+                        }
+                    }
+                }
+            }
+    
+            if ($bestMatch) {
+                $wordCount = $bestMatch['wordCount'];
+                $imageCount = $bestMatch['imageCount'];
+                $quality = $bestMatch['quality'];
+                $turnaround = $bestMatch['turnaround'];
+                $unit_price = $bestMatch['unit_price'];
+            } else {
+                $unit_price = $product->default_price;
+            }
+    
+            $updatedProducts[] = [
+                'id' => $product->id,
+                'wordcount' => $wordCount,
+                'imagecount' => $imageCount,
+                'quantity' => 1,
+                'turnaround' => $turnaround,
+                'quality' => $quality,
+                'unit_price' => $unit_price,
+                'project_title' => $sessionProduct['project_title'] ?? null,
+                'reference_link' => $sessionProduct['reference_link'] ?? null,
+                'subject' => $sessionProduct['subject'] ?? null,
+                'preferred_voice' => $sessionProduct['preferred_voice'] ?? null,
+                'preferred_writing_style' => $sessionProduct['preferred_writing_style'] ?? null,
+                'brand_name' => $sessionProduct['brand_name'] ?? null,
+                'audience' => $sessionProduct['audience'] ?? null,
+                'note' => $sessionProduct['note'] ?? null
+            ];
+            
+            $remainingAmount -= $unit_price;
+        }
+    
+        session()->put('ready_products', $updatedProducts);
+    
+        $recalculatedProducts = collect($updatedProducts)->map(function ($sessionProduct) use ($productsFromDb) {
             $product = $productsFromDb->get($sessionProduct['id']);
             if (!$product) return null;
     
-            $product->turnaround = $sessionProduct['turnaround'] ?? 'ta_standard';
-            $product->quality = $sessionProduct['quality'] ?? 'q_standard';
-            $product->unit_price = $sessionProduct['unit_price'] ?? 0.00;
-            $product->wordcount = $sessionProduct['wordcount'] ?? 1;
-            $product->imagecount = $sessionProduct['imagecount'] ?? $sessionProduct['image_count'] ?? 1;
-            $product->quantity = $sessionProduct['quantity'] ?? 1;
+            $product->turnaround = $sessionProduct['turnaround'];
+            $product->quality = $sessionProduct['quality'];
+            $product->unit_price = $sessionProduct['unit_price'];
+            $product->wordcount = $sessionProduct['wordcount'];
+            $product->imagecount = $sessionProduct['imagecount'];
+            $product->quantity = $sessionProduct['quantity'];
     
             $product->can_edit_price = 1;
             $product->remaining_days = 0;
-            $product->project_title = $sessionProduct['project_title'] ?? null;
-            $product->reference_link = $sessionProduct['reference_link'] ?? null;
-            $product->subject = $sessionProduct['subject'] ?? null;
-            $product->preferred_voice = $sessionProduct['preferred_voice'] ?? null;
-            $product->preferred_writing_style = $sessionProduct['preferred_writing_style'] ?? null;
-            $product->brand_name = $sessionProduct['brand_name'] ?? null;
-            $product->audience = $sessionProduct['audience'] ?? null;
-            $product->note = $sessionProduct['note'] ?? null;
+            $product->project_title = $sessionProduct['project_title'];
+            $product->reference_link = $sessionProduct['reference_link'];
+            $product->subject = $sessionProduct['subject'];
+            $product->preferred_voice = $sessionProduct['preferred_voice'];
+            $product->preferred_writing_style = $sessionProduct['preferred_writing_style'];
+            $product->brand_name = $sessionProduct['brand_name'];
+            $product->audience = $sessionProduct['audience'];
+            $product->note = $sessionProduct['note'];
     
             $product->param_status = !empty($product->project_title) && !empty($product->note) && !empty($product->subject);
             return $product;
@@ -573,7 +632,6 @@ class LaravelController extends Controller
             'total' => $totalAmount
         ]);
     }
-    
 
     public function addProducts(Request $request)
     {
