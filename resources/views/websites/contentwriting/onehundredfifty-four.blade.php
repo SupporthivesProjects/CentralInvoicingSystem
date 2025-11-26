@@ -73,14 +73,14 @@
                                 <tr style="border-collapse: collapse;">
                                     <td
                                         style="width: 200px;text-align: left;font-family: arial;font-size: 12px;margin: 0px;font-weight: 400;border-collapse: collapse;">
-                                        <b style="color: #5E5E5E;">BILLED TO</b>
+                                        <b style="color: #5E5E5E;">BILLED TO</b><br>
                                         {!! $customer_name ? $customer_name.'<br>' : '' !!}
                                         {!! $customer_email ? $customer_email.'<br>' : '' !!}
                                         {!! $customer_mobile ? $customer_mobile.'<br>' : '' !!}
                                     </td>
                                     <td
                                         style="width: 200px;text-align: left;font-family: arial;font-size: 12px;margin: 0px;font-weight: 400;border-collapse: collapse;">
-                                        <b style="color: #5E5E5E;">BILLED FROM</b>
+                                        <b style="color: #5E5E5E;">BILLED FROM</b><br>
                                         {!! $company_address ? $company_address.'<br>' : '' !!}
                                         {!! $company_mobile ? $company_mobile.'<br>' : '' !!}
                                     </td>
