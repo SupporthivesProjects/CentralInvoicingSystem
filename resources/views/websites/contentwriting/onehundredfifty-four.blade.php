@@ -74,13 +74,18 @@
                                     <td
                                         style="width: 200px;text-align: left;font-family: arial;font-size: 12px;margin: 0px;font-weight: 400;border-collapse: collapse;">
                                         <b style="color: #5E5E5E;">BILLED TO</b>
+                                        {!! $customer_name ? $customer_name.'<br>' : '' !!}
+                                        {!! $customer_email ? $customer_email.'<br>' : '' !!}
+                                        {!! $customer_mobile ? $customer_mobile.'<br>' : '' !!}
                                     </td>
                                     <td
                                         style="width: 200px;text-align: left;font-family: arial;font-size: 12px;margin: 0px;font-weight: 400;border-collapse: collapse;">
                                         <b style="color: #5E5E5E;">BILLED FROM</b>
+                                        {!! $company_address ? $company_address.'<br>' : '' !!}
+                                        {!! $company_mobile ? $company_mobile.'<br>' : '' !!}
                                     </td>
                                 </tr>
-                                <tr style="border-collapse: collapse;">
+                                <!-- <tr style="border-collapse: collapse;">
                                     <td style="width: 200px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
                                         {!! $customer_name ? $customer_name.'<br>' : '' !!}
                                         {!! $customer_email ? $customer_email.'<br>' : '' !!}
@@ -92,7 +97,7 @@
                                         <a href="{!! $site->site_link ? $site->site_link.'<br>' : '' !!}" style="text-decoration: none; color: black;"> www.thecontentpeeps.com </a>
                                         {!! $company_mobile ? $company_mobile.'<br>' : '' !!}
                                     </td>
-                                </tr>
+                                </tr> -->
 
                                 <!-- <tr style="border-collapse: collapse;">
                                     <td
