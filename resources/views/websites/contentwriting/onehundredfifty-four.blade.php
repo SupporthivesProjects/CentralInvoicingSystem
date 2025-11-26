@@ -87,9 +87,9 @@
                                         {!! $company_address ? $company_address.'<br>' : '' !!}
                                     </td>
 
-                                    <td style="width: 200px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
+                                    <td style="width: 200px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse; vertical-align: top;">
                                         {!! $customer_mobile ? $customer_mobile.'<br>' : '' !!}
-                                        {!! $site->site_link ? $site->site_link.'<br>' : '' !!}
+                                        <a href="{!! $site->site_link ? $site->site_link.'<br>' : '' !!}" style="text-decoration: none"> www.thecontentpeeps.com </a>
                                         {!! $company_mobile ? $company_mobile.'<br>' : '' !!}
                                     </td>
                                 </tr>
@@ -174,10 +174,10 @@
                                     </td>
                                 </tr>
                                 <tr style="border-collapse: collapse;height: 24px;padding-bottom: 10px;">
-                                    <td
+                                    <!--<td
                                         style="width: 250px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
                                         <b style="color: #5E5E5E;">Notes</b>
-                                    </td>
+                                    </td>-->
                                     <td
                                         style="width: 100px;text-align: right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
 
@@ -192,10 +192,10 @@
                                     </td>
                                 </tr>
                                 <tr style="border-collapse: collapse;height: 24px;padding-bottom: 10px;">
-                                    <td
+                                    <!--<td
                                         style="width: 250px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
                                         {{ $product->note ?? 'No notes provided' }}
-                                    </td>
+                                    </td>-->
                                     <td
                                         style="width: 100px;text-align: right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
 
