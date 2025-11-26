@@ -89,7 +89,7 @@
 
                                     <td style="width: 200px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse; vertical-align: top;">
                                         {!! $customer_mobile ? $customer_mobile.'<br>' : '' !!}
-                                        <a href="{!! $site->site_link ? $site->site_link.'<br>' : '' !!}" style="text-decoration: none"> www.thecontentpeeps.com </a>
+                                        <a href="{!! $site->site_link ? $site->site_link.'<br>' : '' !!}" style="text-decoration: none; color: black;"> www.thecontentpeeps.com </a>
                                         {!! $company_mobile ? $company_mobile.'<br>' : '' !!}
                                     </td>
                                 </tr>
