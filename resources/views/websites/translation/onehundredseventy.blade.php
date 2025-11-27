@@ -52,15 +52,15 @@
                                 <tr style="color: white;font-family:  'Roboto', sans-serif;">
                                     <td style="padding-left: 40px;vertical-align:center;width:50%;">
                                         <p style="font-size: 10px;margin: 0px;">
-                                            <img src="{{ $invoice_image2 }}" style="height: 20px;padding-right: 5px;">
+                                            <img src="{{ $invoice_image2 }}" style="height: 20px;padding-right: 5px;vertical-align: middle;">
                                             {!! $company_address !!}<br>{{ $company_mobile }}</p>
                                     </td>
                                     <td style="width:50%;"></td>
                                 </tr>
                                 <tr style="color: white;font-family:  'Roboto', sans-serif;">
-                                     <td style="padding-left: 40px;vertical-align:center;">
-                                        <p style="font-size: 10px;">
-                                            <img src="{{ $invoice_image3 }}" style="height: 20px;padding-right: 5px;">
+                                    <td style="padding-left: 40px;vertical-align:center;">
+                                        <p style="font-size: 10px;margin: 0px;">
+                                            <img src="{{ $invoice_image3 }}" style="height: 20px;padding-right: 5px;vertical-align: middle;">
                                             {{ $company_email }}</p>
                                     </td>
                                     <td style="width:50%;"></td>
