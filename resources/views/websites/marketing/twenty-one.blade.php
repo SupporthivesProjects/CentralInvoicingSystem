@@ -308,7 +308,7 @@
                                                 </p>
                                             </td>
                                             <td class="col-total">
-                                                <p class="font-size-8 font-weight-500 font-arial text-black text-right">
+                                                <p class="font-size-10 font-weight-500 font-arial text-black text-right">
                                                     {{ site_currency() }} {{ number_format(($product->quantity ?? 1) * ($product->unit_price ?? 0), 2) }}
                                                 </p>
                                             </td>
