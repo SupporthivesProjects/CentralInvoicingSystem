@@ -11,14 +11,14 @@
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse;">
                     <!-- Header -->
                    <tr style="padding:0px;">
-                        <td style="background: url('{{ $invoice_image1 }}') no-repeat;background-position:center;background-size:100% 100%;padding:0px;">
+                        <td style="background: url('{{ $invoice_image1 }}') no-repeat;background-position:center;background-size:100% 100%;padding:0px;height: 410px;">
                             <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;border-collapse: collapse;"> 
                                 <tr>
-                                    <td style="width:50%;border:0px;padding-top: 40px;" > 
+                                    <td style="width:50%;border:0px;padding-top: -10px;" > 
                                         <img src="{{ $company_logo }}" alt="" style="height: 60px; justify-content: left;padding-left: 20px;">
                                         </td>
                                        
-                                        <td style="width:50%;border:0px;padding-top: 30px;">
+                                        <td style="width:50%;border:0px;padding-top: -40px;">
                                             <h1 style=" text-align: right;padding-right: 40px;font-family: 'Roboto', sans-serif;font-size: 58px;margin: 0px;">
                                                 INVOICE
                                             </h1>
