@@ -45,25 +45,21 @@
                                     <td style="width:50%;text-align: right;padding-right: 40px;font-size: 12px;padding-top: 15px;" align="right">Invoice To:</td>
                                 </tr>
                                 <tr style="color: white;font-family:  'Roboto', sans-serif;">
-                                    <td style="padding-left: 40px;width:50%;"></td>
-                                    <td style="width:50%;text-align: right;padding-right: 40px;font-size: 20px;" align="right">{{ $customer_name }}<br>
-                                        {{ $customer_email }}<br></td>
-                                </tr>
-                                <tr style="color: white;font-family:  'Roboto', sans-serif;">
-                                    <td style="padding-left: 40px;vertical-align:center;width:50%;">
+                                    <td style="padding-left: 40px;width:50%;vertical-align: middle;padding-top: 10px;">
                                         <p style="font-size: 10px;margin: 0px;">
                                             <img src="{{ $invoice_image2 }}" style="height: 20px;padding-right: 5px;vertical-align: middle;">
                                             {!! $company_address !!}<br>{{ $company_mobile }}</p>
                                     </td>
-                                    <td style="width:50%;"></td>
+                                    <td style="width:50%;text-align: right;padding-right: 40px;font-size: 20px;vertical-align: middle;padding-top: 10px;" align="right">{{ $customer_name }}<br>
+                                        {{ $customer_email }}<br></td>
                                 </tr>
                                 <tr style="color: white;font-family:  'Roboto', sans-serif;">
-                                    <td style="padding-left: 40px;vertical-align:center;">
+                                    <td style="padding-left: 40px;vertical-align: middle;padding-top: 5px;">
                                         <p style="font-size: 10px;margin: 0px;">
                                             <img src="{{ $invoice_image3 }}" style="height: 20px;padding-right: 5px;vertical-align: middle;">
                                             {{ $company_email }}</p>
                                     </td>
-                                    <td style="width:50%;"></td>
+                                    <td style="width:50%;vertical-align: middle;"></td>
                                 </tr>
                             </table>
                         </td>
