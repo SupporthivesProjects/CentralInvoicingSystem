@@ -104,8 +104,8 @@
 
                                     <div style="
                                         position: absolute;
-                                        bottom: 0;
-                                        right: 0;
+                                        bottom: 200;
+                                        right: 60;
                                         font-family: 'Montserrat', sans-serif;
                                         text-align: right;
                                     ">
@@ -135,6 +135,32 @@
                                         </div>
 
                                     </div>
+
+                                    <div style="
+                                        position: absolute;
+                                        bottom: 100;
+                                        left: 80;
+                                        font-family: 'Montserrat', sans-serif;
+                                    ">
+
+                                        <!-- COMPANY NAME -->
+                                        <div style="margin-bottom: 12px;">
+                                            <div style="color: #f24c1e; font-size: 12px; font-weight: 400;">COMPANY NAME</div>
+                                            <div style="font-size: 10px; font-weight: 400; margin-top: 2px;">
+                                                {{ $customer_name }}
+                                            </div>
+                                        </div>
+
+                                        <!-- ADDRESS -->
+                                        <div>
+                                            <div style="color: #f24c1e; font-size: 12px; font-weight: 400;">ADDRESS</div>
+                                            <div style="font-size: 10px; font-weight: 400; margin-top: 2px;">
+                                                {{ $company_address }}
+                                            </div>
+                                        </div>
+
+                                    </div>
+
 
 
                                     <!-- <tr style="border-collapse: collapse;height: 30px;">
