@@ -68,7 +68,7 @@
                                                     </div>
                                                 </td>
                                                 <td style="font-size: 8px;font-family: 'Roboto', sans-serif;padding-left: 10px;">
-                                                <p> <b style="font-size: 10px;">Date :</b><br>{{ $invoice_date }}</p>
+                                                <p> <b style="font-size: 10px;">Date :</b>{{ $invoice_date }}</p>
                                                 </td>
                                             </tr>
                                         </table>
