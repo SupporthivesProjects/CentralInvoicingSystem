@@ -104,8 +104,8 @@
 
                                     <div style="
                                         position: absolute;
-                                        bottom: 200;
-                                        right: 60;
+                                        bottom: 200px;
+                                        right: 60px;
                                         font-family: 'Montserrat', sans-serif;
                                         text-align: right;
                                     ">
@@ -138,26 +138,21 @@
 
                                     <div style="
                                         position: absolute;
-                                        bottom: 100;
-                                        left: 80;
+                                        bottom: 100px;
+                                        left: 80px;
                                         font-family: 'Montserrat', sans-serif;
                                     ">
 
-                                        <!-- COMPANY NAME -->
-                                        <div style="margin-bottom: 12px;">
-                                            <div style="color: #f24c1e; font-size: 12px; font-weight: 400;">COMPANY NAME</div>
-                                            <div style="font-size: 10px; font-weight: 400; margin-top: 2px;">
-                                                {{ $customer_name }}
+                                        <div style="margin-bottom: 8px; display: flex; gap: 10px; align-items: center;">
+                                                <span style="color: #f24c1e; font-weight: 400;">COMPANY NAME</span>
+                                                <span style="font-weight: 400;">{{ $customer_name }}</span>
                                             </div>
-                                        </div>
 
-                                        <!-- ADDRESS -->
-                                        <div>
-                                            <div style="color: #f24c1e; font-size: 12px; font-weight: 400;">ADDRESS</div>
-                                            <div style="font-size: 10px; font-weight: 400; margin-top: 2px;">
-                                                {{ $company_address }}
+                                            <!-- ADDRESS -->
+                                            <div style="display: flex; gap: 10px; align-items: center;">
+                                                <span style="color: #f24c1e; font-weight: 400;">ADDRESS</span>
+                                                <span style="font-weight: 400;">{{ $company_address }}</span>
                                             </div>
-                                        </div>
 
                                     </div>
 
