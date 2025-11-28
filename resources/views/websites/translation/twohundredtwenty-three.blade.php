@@ -128,12 +128,12 @@
                                         <p style="font-size: 10px;">{{ $company_email }}</p>
                                     </td>
                                     <td align="right">
-                                        @if(!empty($company_name))
-                                            <p style="font-size: 13px; font-weight: bold; margin-bottom: 0px;">{{ $company_name }}</p>
+                                        @if(trim($company_name ?? '') !== '')
+                                            <p style="font-size: 13px; font-weight: bold; margin: 0;">{{ $company_name }}</p>
                                         @endif
 
-                                        @if(!empty($company_address))
-                                            <p style="font-size: 9px;">{!! $company_address !!}</p>
+                                        @if(trim(strip_tags($company_address ?? '')) !== '')
+                                            <p style="font-size: 9px; margin: 0;">{!! $company_address !!}</p>
                                         @endif
                                     </td>
                                 </tr>
