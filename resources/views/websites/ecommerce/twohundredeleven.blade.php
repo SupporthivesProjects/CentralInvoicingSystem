@@ -23,7 +23,7 @@
                     <tr><td colspan="2" style="height: 15px;"></td></tr>
                     <tr>
                         <td style="vertical-align: bottom; ">
-                            <table style="width: 150px;min-height: 645px;background-color: white;margin-left: -1px;">
+                            <table style="width: 150px;min-height: 800px;background-color: white;margin-left: -1px;">
                                 <tr style="width: 150px;">
                                     <td style="text-align: center;display: flex;justify-content: center;margin-top: -3px;">
                                         <img src="{{ $company_logo }}" style="height: 110px;">
@@ -193,9 +193,7 @@
                                 </tr>
                                 <tr>
                                     <td colspan="2">
-                                        <div style="width: 100%;height: 3px;background-color: #4B8EC6;margin-top: 20px;">
-
-                                        </div>
+                                        <div style="width: 100%;height: 3px;background-color: #4B8EC6;margin-top: 20px;"></div>
                                     </td>
                                 </tr>
                             </table>
