@@ -2,8 +2,19 @@
 <html>
 <head>
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@900&display=swap" rel="stylesheet">
+    <style>
+        .footer-fixed {
+            position: fixed;
+            bottom: 0px;
+            left: 0;
+            right: 0;
+            width: 100%;
+            /* background: url('{{ $invoice_footer_image }}') center center no-repeat; */
+            /* background-size: cover; */
+        }
+    </style>
 </head>
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@900&display=swap" rel="stylesheet">
 <body style="margin: 0px; padding: 0px;">
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
@@ -194,7 +205,7 @@
                     
                     <tr>
                         <td colspan="2">
-                            <table width="100%" cellspacing="0" cellpadding="0px" border="0px" style="border-collapse: collapse;"> 
+                            <table class="footer-fixed" width="100%" cellspacing="0" cellpadding="0px" border="0px" style="border-collapse: collapse;"> 
                                 <tr style="height: 100px;width: 600px; border-collapse: collapse;background-color: #8BB9DC;font-family: 'Roboto', sans-serif;font-size: 9px; color: white;">
                                     <td style="border:0px;padding: 10px;" > 
                                         <div class="" style="display:flex;flex-direction:row;justify-content:flex-start;align-items:center;">
