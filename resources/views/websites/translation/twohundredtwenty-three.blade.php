@@ -5,8 +5,8 @@
     <title>{{ $site_name }}</title>
 </head>
 
-<body style="margin: 0px; padding: 0px; background-color: #FFFFFF;">
-    <table width="100%" cellspacing="0" cellpadding="0" border="0">
+<body style="margin: 0px; padding: 0px; background-color: #FFFFFF; max-height: 100vh;">
+    <table width="100%" cellspacing="0" cellpadding="0" border="0" style="max-height: 100vh;">
         <tr>
             <td align="center">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
@@ -56,7 +56,7 @@
                                     style="width: 100%; max-width: 1000px; margin: auto; border-collapse: collapse; font-family: 'Inter' ; font-size: 11px;">
                                     <!-- Table Header Row -->
                                     <tr
-                                        style="background-image: url('{{ $invoice_image3 }}'); background-size: cover; background-repeat: no-repeat; color: black; font-size: 12px;">
+                                        style="background-image: url('{{ $invoice_image3 }}'); background-size: cover; background-repeat: no-repeat; color: black; font-size: 13px;">
                                         <th style=" text-align: left; padding-left: 40px;">NO</th>
                                         <th style="padding: 12px; text-align: left;">ITEM DESCRIPTION</th>
                                         <th style="padding: 12px; text-align: center;">UNIT PRICE</th>
