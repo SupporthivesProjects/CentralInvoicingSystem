@@ -19,7 +19,7 @@
                     <!---header--->
                     <tr>
                         <td align="center" style="padding: 20px 20px;border-bottom: 2px solid black;" colspan="2">
-                            <img src="{{ $company_logo }}" alt="" style="height:200px;width: 100%;">
+                            <img src="{{ $company_logo }}" alt="" style="height:190px;width: 100%;">
                         </td>
                     </tr>
                     <!---header End--->
@@ -29,7 +29,7 @@
                         <td
                             style="padding:40px 20px 40px 40px;border-right: 2px solid black;vertical-align: top;width: 30%;">
                             <p style="margin: 0px;font-size: 9px;font-weight: 700;font-family:Arial;line-height: 12px;">
-                                Invoice Number:
+                                Invoice Numbers:
                             </p>
                             <p style="margin: 0px;font-size: 9px;font-family:Arial;line-height: 12px;">
                                 #{{ $invoice_number }}
