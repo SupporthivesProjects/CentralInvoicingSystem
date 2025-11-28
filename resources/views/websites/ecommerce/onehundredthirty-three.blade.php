@@ -19,7 +19,7 @@
                     <!---header--->
                     <tr>
                         <td align="center" style="padding: 20px 20px;border-bottom: 2px solid black;" colspan="2">
-                            <img src="{{ $company_logo }}" alt="" style="height:220px;width: 100%;">
+                            <img src="{{ $company_logo }}" alt="" style="height:200px;width: 100%;">
                         </td>
                     </tr>
                     <!---header End--->
@@ -73,7 +73,7 @@
                             </p>
                         </td>
                         <td style="padding: 20px;vertical-align: top;">
-                            <div style="min-height: 820px !important;">
+                            <div style="min-height: 840px !important;">
                             <table cellspacing="0" cellpadding="0" border="0"
                                 style="border-collapse: collapse;margin-bottom: 150px;" width="100%">
                                 <tr style="border-top: 1px solid black;border-bottom: 2px solid black;">
