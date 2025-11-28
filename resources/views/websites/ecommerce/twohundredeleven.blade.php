@@ -216,7 +216,7 @@
                                         </div>
                                     </td>
                                     <td style="text-align: right;padding: 10px;">
-                                        <div class="" style="display:flex;flex-direction:row;justify-content:flex-start;align-items:center;">
+                                        <div class="" style="display:flex;flex-direction:row;justify-content:flex-end;align-items:center; width:100%;">
                                             <p style="display: flex; align-items: center;">
                                                 {!! $company_address !!}
                                             </p>
