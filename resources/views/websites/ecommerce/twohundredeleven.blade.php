@@ -55,11 +55,11 @@
                                         <table style="border-collapse: collapse;width: 100%;">
                                         <tr style="color: white;">
                                             <td style="font-size: 8px;font-family: 'Roboto', sans-serif;">
-                                               <p style="display: flex;align-items: center;margin-top: 0px;"> <img src="{{ $invoice_image3 }}" style="height: 15px;padding-right: 10px;">+44 7402769574</p>
-                                               <p style="display: flex;align-items: center;margin: 0px;"> <img src="{{ $invoice_image3 }}" style="height: 15px;padding-right: 10px;">brandleythomshon@gmail.com</p>
+                                               <p style="display: flex;align-items: center;margin-top: 0px;"> <img src="{{ $invoice_image3 }}" style="height: 15px;padding-right: 10px;">{{ $company_mobile }}</p>
+                                               <p style="display: flex;align-items: center;margin: 0px;"> <img src="{{ $invoice_image3 }}" style="height: 15px;padding-right: 10px;">{{ $company_email }}</p>
                                             </td>
                                              <td style="font-size: 8px;font-family: 'Roboto', sans-serif;padding-left: 10px;">
-                                               <p style="display: flex;align-items: baseline;margin-top: 0px;"> <img src="{{ $invoice_image4 }}" style="height: 15px;padding-right: 10px;">12 Greyfriars Road,<br>CAPEL PARC, LL68 1XJ</p>
+                                               <p style="display: flex;align-items: baseline;margin-top: 0px;"> <img src="{{ $invoice_image4 }}" style="height: 15px;padding-right: 10px;">{!! $company_address !!}</p>
                                             </td>
                                             <td style="font-size: 8px;font-family: 'Roboto', sans-serif;padding-left: 10px;">
                                                <p> <b style="font-size: 10px;">Date :</b><br>{{ $invoice_date }}</p>
