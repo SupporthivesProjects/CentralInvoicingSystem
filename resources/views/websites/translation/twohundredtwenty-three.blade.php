@@ -5,12 +5,12 @@
     <title>{{ $site_name }}</title>
 </head>
 
-<body style="margin: 0px; padding: 0px; background-color: #FFFFFF; max-height: 100vh;">
-    <table width="100%" cellspacing="0" cellpadding="0" border="0" style="max-height: 100vh;">
+<body style="margin: 0px; padding: 0px; background-color: #FFFFFF;">
+    <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
             <td align="center">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
-                    style="border-collapse: collapse; background-image: url(./img/bg.png); background-position: center; background-repeat: no-repeat; background-size: cover; height: 860px;">
+                    style="border-collapse: collapse; background-image: url(./img/bg.png); background-position: center; background-repeat: no-repeat; background-size: cover; max-height: 100vh;">
                     <!-- Header -->
                     <tr>
                         <td style="height: 30px;">
