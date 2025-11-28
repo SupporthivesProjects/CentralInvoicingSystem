@@ -104,8 +104,8 @@
 
                                     <div style="
                                         position: absolute;
-                                        bottom: 300px;
-                                        right: 60px;
+                                        bottom: 250px;
+                                        right: 80px;
                                         font-family: 'Montserrat', sans-serif;
                                         text-align: right;
                                     ">
@@ -127,7 +127,7 @@
                                         </div>
 
                                         <!-- TOTAL -->
-                                        <div style="display: flex; justify-content: space-between; width: 200px;border-top: 1px solid #fff;">
+                                        <div style="display: flex; justify-content: space-between; width: 200px;border-top: 1px solid #fff; padding-top: 10px;">
                                             <span style="font-size: 16px; font-weight: 500;">Total</span>
                                             <span style="font-size: 20px; font-weight: 700;">
                                                 {{ site_currency() }} {{ number_format($invoice_amount, 2) }}
@@ -144,13 +144,13 @@
                                     ">
 
                                         <div style="margin-bottom: 8px; display: flex; gap: 10px; align-items: center;">
-                                                <span style="color: #f24c1e; font-weight: 400;">COMPANY NAME</span>
+                                                <span style="color: #f24c1e; font-weight: 400;">COMPANY NAME:</span>
                                                 <span style="font-weight: 400;">{{ $customer_name }}</span>
                                             </div>
 
                                             <!-- ADDRESS -->
                                             <div style="display: flex; gap: 10px; align-items: center;">
-                                                <span style="color: #f24c1e; font-weight: 400;">ADDRESS</span>
+                                                <span style="color: #f24c1e; font-weight: 400;">ADDRESS:</span>
                                                 <span style="font-weight: 400;">{{ $company_address }}</span>
                                             </div>
 
