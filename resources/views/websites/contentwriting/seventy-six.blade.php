@@ -50,7 +50,7 @@
                                         <br>
 
                                         <p style="font-size: 12px; margin: 0;">Billed From:</p>
-                                        <p style="margin: 0;"><a href="{{ $site_name }}" style="color: black  text-decoration: underline; font-size: 12px;">{{ $company_name }}</a>
+                                        <p style="margin: 0;"><a href="{{ $site_name }}" style="color: black; text-decoration: underline; font-size: 12px;">{{ $company_name }}</a>
                                         </p>
                                         <p style="margin: 0; font-size: 10px;"><strong>Email:</strong> {{ $company_email }}</p>
                                         <p style="margin: 0; font-size: 10px;"><strong>Website:</strong> {{ $site_name }}
