@@ -41,13 +41,13 @@
                                     </td>
                                 </tr>
                             </table>
-                            <div style="padding-right: 20px;width: 100%;">
+                            <div style="padding-right: 20px;width: 100%; box-sizing: border-box;">
                                 <table style="width: 100%;border-collapse: collapse;padding-right: 20px; ">
                                     <tr
                                         style="border-collapse: collapse;height: 30px;border-bottom: 1px solid #f24c1e;border-top: 1px solid #f24c1e;color: #168B91;">
                                         <td
                                             style="width: 200px;text-align: left;font-family: 'Montserrat', sans-serif; font-size: 11px;margin: 0px;font-weight: 800;border-collapse: collapse;padding: 20px;padding-left: 100px;">
-                                            <b>ITEM DESCRIPTION</b>
+                                            <b>ITEM DESCRIPTIONs</b>
                                         </td>
                                         <td
                                             style="width: 150px;text-align: center;font-family: 'Montserrat', sans-serif; font-size: 11px;margin: 0px;font-weight: 800; border-collapse: collapse;padding-left: 5px;">
