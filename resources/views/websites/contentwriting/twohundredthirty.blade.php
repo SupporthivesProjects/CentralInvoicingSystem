@@ -42,7 +42,7 @@
                                 </tr>
                             </table>
 
-                            <table style="border-collapse: collapse;padding-right: 40px;">
+                            <table style="border-collapse: collapse;padding-right: 20px;">
                                 <tr
                                     style="border-collapse: collapse;height: 30px;border-bottom: 1px solid #f24c1e;border-top: 1px solid #f24c1e;color: #168B91;">
                                     <td
