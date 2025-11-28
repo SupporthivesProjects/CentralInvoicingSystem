@@ -30,7 +30,7 @@
                         </td>
                         
 
-                        <td style="vertical-align: top;background-color: #8BB9DC;padding-left: 40px;padding-right: 40px;">
+                        <td style="vertical-align: top;background-color: #8BB9DC;padding-left: 20px;padding-right: 40px;">
                             <table width="100%" style="border-collapse: collapse;">
                                 <tr>
                                     <td style="width: 225px;text-align: center;">
@@ -52,19 +52,19 @@
 
                                 <tr>
                                     <td colspan="2" style="padding-top: 20px;">
-                                        <table width="100%" style="border-collapse: collapse;width: 100%;">
+                                        <table width="100%" style="border-collapse: collapse;">
                                             <tr style="color: white;">
                                                 <td style="font-size: 8px;font-family: 'Roboto', sans-serif;">
                                                 <!-- <p style="display: flex;align-items: center;margin-top: 0px;"> <img src="{{ $invoice_image3 }}" style="height: 15px;padding-right: 10px;">{{ $company_mobile }}</p> -->
                                                     <div class="" style="display:flex;flex-direction:row;justify-content:flex-start;align-items:center;">
                                                         <img src="{{ $invoice_image3 }}" style="height: 15px;padding-right: 10px;">
-                                                        <p style="display: flex;align-items: center;margin: 0px;"> {{ $company_email }}</p>
+                                                        <p style="margin: 0px;"> {{ $company_email }}</p>
                                                     </div>
                                                 </td>
                                                 <td style="font-size: 8px;font-family: 'Roboto', sans-serif;padding-left: 10px;">
                                                     <div class="" style="display:flex;flex-direction:row;justify-content:flex-start;align-items:center;">
                                                         <img src="{{ $invoice_image4 }}" style="height: 15px;padding-right: 10px;">
-                                                        <p style="display: flex;align-items: baseline;margin-top: 0px;"> {!! $company_address !!}</p>
+                                                        <p style="margin-top: 0px;"> {!! $company_address !!}</p>
                                                     </div>
                                                 </td>
                                                 <td style="font-size: 8px;font-family: 'Roboto', sans-serif;padding-left: 10px;">
