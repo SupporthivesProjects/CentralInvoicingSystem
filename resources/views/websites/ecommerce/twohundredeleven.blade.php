@@ -197,12 +197,23 @@
                             <table width="100%" cellspacing="0" cellpadding="0px" border="0px" style="border-collapse: collapse;"> 
                                 <tr style="height: 100px;width: 600px; border-collapse: collapse;background-color: #8BB9DC;font-family: 'Roboto', sans-serif;font-size: 9px; color: white;">
                                     <td style="border:0px;padding: 10px;" > 
-                                      <p style="display: flex; align-items: center;"> <img src="{{ $invoice_image5 }}" style="height: 20px;padding-right: 10px;"> www.yourhealthfromhome.com</p>
-                                       <p style="display: flex; align-items: center;"><img src="{{ $invoice_image3 }}" style="height: 20px;padding-right: 10px;"> {{ $company_email }}</p>
-                                        </td>
-                                        <td style="text-align: right;padding: 10px;">
-                                            {!! $company_address !!}<img src="{{ $invoice_image4 }}" style="height: 15px;padding-left: 5px;"><br> 
-                                        </td>          
+                                        <div class="" style="display:flex;flex-direction:row;justify-content:flex-start;align-items:center;">
+                                            <img src="{{ $invoice_image5 }}" style="height: 20px;padding-right: 10px;">
+                                            <p style="display: flex; align-items: center;">www.yourhealthfromhome.com</p>
+                                        </div>
+                                        <div class="" style="display:flex;flex-direction:row;justify-content:flex-start;align-items:center;">
+                                            <img src="{{ $invoice_image3 }}" style="height: 20px;padding-right: 10px;"> 
+                                            <p style="display: flex; align-items: center;">{{ $company_email }}</p>
+                                        </div>
+                                    </td>
+                                    <td style="text-align: right;padding: 10px;">
+                                        <div class="" style="display:flex;flex-direction:row;justify-content:flex-start;align-items:center;">
+                                            <p style="display: flex; align-items: center;">
+                                                {!! $company_address !!}
+                                            </p>
+                                            <img src="{{ $invoice_image4 }}" style="height: 15px;padding-left: 5px;">
+                                        </div>
+                                    </td>          
                                 </tr>
                                               
                             </table>
