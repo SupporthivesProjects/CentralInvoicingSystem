@@ -39,7 +39,7 @@
         }
         .invies-content p {
             font-family: Arial;
-            font-size: 8px;
+            font-size: 10px;
             padding: 4px 0px;
             color: #000000a1;
         }
@@ -182,7 +182,7 @@
                                                 <div class="box">
                                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path fill="#D2B76A" d="M290.5 287.7L491.4 86.9 359 456.3 290.5 287.7zM457.4 53L256.6 253.8 88 185.3 457.4 53zM38.1 216.8l205.8 83.6 83.6 205.8c5.3 13.1 18.1 21.7 32.3 21.7 14.7 0 27.8-9.2 32.8-23.1L570.6 8c3.5-9.8 1-20.6-6.3-28s-18.2-9.8-28-6.3L39.4 151.7c-13.9 5-23.1 18.1-23.1 32.8 0 14.2 8.6 27 21.7 32.3z"/></svg>
                                                 </div>
-                                                <h6 style="margin-bottom: 0px;margin-top:5px;">{{ $company_email }}</h6>
+                                                <a href="{{ $company_email }}" style="margin-bottom: 0px;margin-top:5px; text-decoration: none;"></a>
                                             </div>
                                            <div class="linement">
                                                 <div class="box">
