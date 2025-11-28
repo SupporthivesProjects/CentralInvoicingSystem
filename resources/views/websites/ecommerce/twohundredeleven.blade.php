@@ -69,13 +69,13 @@
                                                 <!-- <p style="display: flex;align-items: center;margin-top: 0px;"> <img src="{{ $invoice_image3 }}" style="height: 15px;padding-right: 10px;">{{ $company_mobile }}</p> -->
                                                     <div class="" style="display:flex;flex-direction:row;justify-content:flex-start;align-items:center;">
                                                         <img src="{{ $invoice_image3 }}" style="height: 15px;padding-right: 10px;">
-                                                        <p style="margin: 0px;"> {{ $company_email }}</p>
+                                                        <p style="margin: 0px;">{{ $company_email }}</p>
                                                     </div>
                                                 </td>
                                                 <td style="font-size: 8px;font-family: 'Roboto', sans-serif;padding-left: 10px;">
                                                     <div class="" style="display:flex;flex-direction:row;justify-content:flex-start;align-items:center;">
                                                         <img src="{{ $invoice_image4 }}" style="height: 15px;padding-right: 10px;">
-                                                        <p style="margin-top: 0px;"> {!! $company_address !!}</p>
+                                                        <p style="margin-top: 0px;">{{ $company_address }}</p>
                                                     </div>
                                                 </td>
                                                 <td style="font-size: 8px;font-family: 'Roboto', sans-serif;padding-left: 10px;">
