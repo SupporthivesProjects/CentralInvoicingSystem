@@ -35,7 +35,7 @@
                        <td colspan="2">
                         <table width="100%" style="border-collapse: collapse;">
                             <tr>
-                                <td style="background:#172f32;width:46.4%;vertical-align:top;padding:0px 50px">
+                                <td style="background:#172f32;width:46.4%;vertical-align:top;padding:0px 50px 20px 50px;">
                                     <p style="font-family: Soleil Bk;font-size:13px;color:#ffffff;margin:0px;line-height:24px">
                                     Invoice To : 
                                     </p>
@@ -43,7 +43,7 @@
                                         {{ $customer_name }}
                                     </p>
                                 </td>
-                                <td style="padding:0px 50px;">
+                                <td style="padding:0px 50px 20px 50px;">
                                     <p style="font-family: Soleil Bk;font-size:13px;color:#000000;margin:0px;line-height:24px;font-weight:700;">
                                     Invoice Information : 
                                     </p>
