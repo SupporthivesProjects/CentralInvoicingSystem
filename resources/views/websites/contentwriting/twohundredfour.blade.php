@@ -43,7 +43,7 @@
                                         {{ $customer_name }}
                                     </p>
                                 </td>
-                                <td style="padding:10px 50px;">
+                                <td style="padding:0px 50px;">
                                     <p style="font-family: Soleil Bk;font-size:13px;color:#000000;margin:0px;line-height:24px;font-weight:700;">
                                     Invoice Information : 
                                     </p>
