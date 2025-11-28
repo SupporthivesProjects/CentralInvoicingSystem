@@ -19,7 +19,7 @@
                                         </td>
                                        
                                         <td style="width:50%;border:0px;padding-top: -40px;">
-                                            <h1 style=" text-align: right;padding-right: 40px;font-family: 'Roboto', sans-serif;font-size: 58px;margin: 0px;">
+                                            <h1 style=" text-align: right;padding-right: 70px;font-family: 'Roboto', sans-serif;font-size: 58px;margin: 0px;">
                                                 INVOICE
                                             </h1>
                                         </td>
@@ -42,7 +42,7 @@
                                     <td style="width:50%;padding-left: 40px;font-size: 12px;padding-top: 15px;">
                                         Billed Form:
                                     </td>
-                                    <td style="width:50%;text-align: right;padding-right: 40px;font-size: 12px;padding-top: 15px;" align="right">Invoice To:</td>
+                                    <td style="width:50%;text-align: right;padding-right: 40px;font-size: 12px;padding-top: 40px;" align="right">Invoice To:</td>
                                 </tr>
                                 <tr style="color: white;font-family:  'Roboto', sans-serif;">
                                     <td style="padding-left: 40px;width:50%;vertical-align: middle;padding-top: 10px;">
