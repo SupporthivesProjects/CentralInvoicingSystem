@@ -124,17 +124,12 @@
                         <td>
                             <table class="footer-fixed" width="100%" style="padding: 0px 40px 0px 40px; font-family: 'Inter'; margin-top: -10px; background-color: #FFFFFF; box-shadow: none; height: 85px;">
                                 <tr>
-                                    <td width="50%" style="vertical-align: bottom;">
+                                    <td width="50%" style="vertical-align: top;">
                                         <p style="font-size: 10px;">{{ $company_email }}</p>
                                     </td>
-                                    <td align="right">
-                                        @if(!empty($company_name))
-                                            <p style="font-size: 13px; font-weight: bold; margin-bottom: 0px;">{{ $company_name }}</p>
-                                        @endif
+                                    <td align="right" style="vertical-align: top;">
+                                            <p style="font-size: 13px; font-weight: bold; margin: 0;">{{ $company_name }}</p>
 
-                                        @if(!empty($company_address))
-                                            <p style="font-size: 9px;">{!! $company_address !!}</p>
-                                        @endif
                                     </td>
                                 </tr>
                             </table>
