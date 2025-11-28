@@ -41,12 +41,12 @@
                                     </td>
                                 </tr>
                             </table>
-
+                            <div style="padding-right: 20px;width: 100%;">
                             <table width="100%" style="border-collapse: collapse;padding-right: 20px; ">
                                 <tr
                                     style="border-collapse: collapse;height: 30px;border-bottom: 1px solid #f24c1e;border-top: 1px solid #f24c1e;color: #168B91;">
                                     <td
-                                        style="width: 200px;text-align: left;font-family: 'Montserrat', sans-serif; font-size: 11px;margin: 0px;font-weight: 800;border-collapse: collapse;padding: 20px;">
+                                        style="width: 200px;text-align: left;font-family: 'Montserrat', sans-serif; font-size: 11px;margin: 0px;font-weight: 800;border-collapse: collapse;padding: 20px;padding-left: 40px;">
                                         <b>ITEM DESCRIPTIONs</b>
                                     </td>
                                     <td
@@ -65,7 +65,7 @@
                                 @foreach($products as $product)
                                     <tr style="border-collapse: collapse;height: 30px;">
                                         <td
-                                            style="width: 200px;text-align:left;font-family: 'Montserrat', sans-serif;font-size:8px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 20px;">
+                                            style="width: 200px;text-align:left;font-family: 'Montserrat', sans-serif;font-size:8px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 20px;padding-left: 40px;">
                                             {{ $product->name }}
                                         </td>
                                         <td
@@ -158,6 +158,7 @@
                                 </tr>
                                 <br><br>
                             </table>
+                            </div>
                         </td>
                     </tr>
                     <!-- Content End-->
