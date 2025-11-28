@@ -21,7 +21,7 @@
         table, th, td {
             border-collapse: collapse;
         } 
-        .add-h6 h6{
+        .add-h6 h6, .add-h6 a {
             font-family: Arial;
             font-size: 8px;
             color: #000000cf;
