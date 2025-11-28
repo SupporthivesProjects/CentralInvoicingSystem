@@ -19,7 +19,7 @@
                     <!---header--->
                     <tr>
                         <td align="center" style="padding: 20px 20px;border-bottom: 2px solid black;" colspan="2">
-                            <img src="{{ $company_logo }}" alt="" style="height:195px;width: 100%;">
+                            <img src="{{ $company_logo }}" alt="" style="height:197px;width: 100%;">
                         </td>
                     </tr>
                     <!---header End--->
