@@ -41,7 +41,7 @@
                                     </td>
                                 </tr>
                             </table>
-                            <table style="padding-left: 40px; font-size: 13px; margin-top: -30px;">
+                            <table style="padding-left: 40px; font-size: 12px; margin-top: -30px;">
                                 <tr>
                                     <td>
                                         <p style="margin: 0%; margin-bottom: 5px;"><strong>Invoice No</strong> :{{ $invoice_number }}
