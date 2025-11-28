@@ -102,7 +102,42 @@
                                         </td>
                                     </tr>
 
-                                    <tr style="border-collapse: collapse;height: 30px;">
+                                    <div style="
+                                        position: absolute;
+                                        bottom: 0;
+                                        right: 0;
+                                        font-family: 'Montserrat', sans-serif;
+                                        text-align: right;
+                                    ">
+
+                                        <!-- SUBTOTAL -->
+                                        <div style="display: flex; justify-content: space-between; width: 250px; margin-bottom: 12px;">
+                                            <span style="font-size: 12px; font-weight: 400;">SUBTOTAL</span>
+                                            <span style="font-size: 12px; font-weight: 400;">
+                                                {{ site_currency() }} {{ number_format($invoice_amount + $discount_amount, 2) }}
+                                            </span>
+                                        </div>
+
+                                        <!-- DISCOUNT -->
+                                        <div style="display: flex; justify-content: space-between; width: 250px; margin-bottom: 20px;">
+                                            <span style="font-size: 12px; font-weight: 400;">DISCOUNT</span>
+                                            <span style="font-size: 12px; font-weight: 400;">
+                                                {{ site_currency() }} {{ number_format($discount_amount, 2) }}
+                                            </span>
+                                        </div>
+
+                                        <!-- TOTAL -->
+                                        <div style="display: flex; justify-content: space-between; width: 250px;">
+                                            <span style="font-size: 16px; font-weight: 500;">Total</span>
+                                            <span style="font-size: 20px; font-weight: 700;">
+                                                {{ site_currency() }} {{ number_format($invoice_amount, 2) }}
+                                            </span>
+                                        </div>
+
+                                    </div>
+
+
+                                    <!-- <tr style="border-collapse: collapse;height: 30px;">
                                         <td
                                             style="text-align: left;font-size: 12px;font-family: 'Montserrat', sans-serif;color: #f24c1e;padding-left: 40px;font-weight: 400;">
                                             <p style="margin: 0px;">COMPANY NAME</p>
@@ -155,7 +190,7 @@
                                             style="width:100px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 16px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-right: 2px;color:black;">
                                             {{ site_currency() }} {{ number_format($invoice_amount, 2) }}
                                         </td>
-                                    </tr>
+                                    </tr> -->
                                     <br><br>
                                 </table>
                             </div>
