@@ -24,7 +24,7 @@
 
                         </td>
                         <td style="width: 50%;padding-right:50px;">
-                          <h1 style="font-family: Soleil Bk;font-size:39px;color:#bfc543;text-align:right;margin:0px;">INVOICE</h1>
+                          <h1 style="font-family: Soleil Bk;font-size:41px;color:#bfc543;text-align:right;margin:0px;">INVOICE</h1>
                         </td>
                     </tr>
                     <!-- Header End -->
@@ -35,19 +35,19 @@
                        <td colspan="2">
                         <table width="100%" style="border-collapse: collapse;">
                             <tr>
-                                <td style="background:#172f32;width:46.4%;vertical-align:top;padding:10px 50px">
-                                    <p style="font-family: Soleil Bk;font-size:11px;color:#ffffff;margin:0px;line-height:24px">
+                                <td style="background:#172f32;width:46.4%;vertical-align:top;padding:0px 50px">
+                                    <p style="font-family: Soleil Bk;font-size:13px;color:#ffffff;margin:0px;line-height:24px">
                                     Invoice To : 
                                     </p>
-                                    <p style="font-family: Soleil Bk;font-size:12px;color:#bfc543;margin:0px;line-height:24px">
+                                    <p style="font-family: Soleil Bk;font-size:14px;color:#bfc543;margin:0px;line-height:24px">
                                         {{ $customer_name }}
                                     </p>
                                 </td>
                                 <td style="padding:10px 50px;">
-                                    <p style="font-family: Soleil Bk;font-size:11px;color:#000000;margin:0px;line-height:24px;font-weight:700;">
+                                    <p style="font-family: Soleil Bk;font-size:13px;color:#000000;margin:0px;line-height:24px;font-weight:700;">
                                     Invoice Information : 
                                     </p>
-                                    <p style="font-family: Soleil Bk;font-size:9px;color:#000000;margin:0px;line-height:14px;">
+                                    <p style="font-family: Soleil Bk;font-size:11px;color:#000000;margin:0px;line-height:14px;">
                                     Invoice Number <br>
                                     {{ $invoice_number }} <br> <br>
                                     Invoice Date  <br>
@@ -59,22 +59,22 @@
                         <table style="width: 100%;border-collapse:collapse;height:600px;">
                             <tr style="background:#111f21;height:60px;">
                                 <td style="padding:10px;width:46.4%;padding-left:50px;">
-                                <p style="font-family: Soleil Bk;font-size:10px;color:#bfc543;margin:0px;line-height:16px">
+                                <p style="font-family: Soleil Bk;font-weight: bold; font-size:12px;color:#bfc543;margin:0px;line-height:16px">
                                     DESCRIPTION
                                 </p>
                                 </td>
                                 <td style="padding:10px;" align="center">
-                                 <p style="font-family: Soleil Bk;font-size:10px;color:#bfc543;margin:0px;line-height:16px">
+                                 <p style="font-family: Soleil Bk;font-weight: bold;font-size:12px;color:#bfc543;margin:0px;line-height:16px">
                                     UNIT PRICE
                                 </p>
                                 </td>
                                 <td style="padding:10px;" align="center">
-                                 <p style="font-family: Soleil Bk;font-size:10px;color:#bfc543;margin:0px;line-height:16px">
+                                 <p style="font-family: Soleil Bk;font-weight: bold;font-size:12x;color:#bfc543;margin:0px;line-height:16px">
                                     QTY
                                 </p>
                                 </td>
                                 <td style="padding:10px;" align="center">
-                                 <p style="font-family: Soleil Bk;font-size:10px;color:#bfc543;margin:0px;line-height:16px">
+                                 <p style="font-family: Soleil Bk;font-weight: bold;font-size:12px;color:#bfc543;margin:0px;line-height:16px">
                                     TOTAL
                                 </p>
                                 </td>
@@ -82,28 +82,28 @@
                             @foreach($products as $index => $product)
                             <tr style="max-height:60px;">
                                 <td style="padding:10px;width:46.4%;padding-left:50px;background:#172f32;border-bottom:1px solid #ffffff;">
-                                <p style="font-family: Soleil Lt;font-size:9px;color:#ffffff;margin:0px;line-height:12px;font-weight:600">
+                                <p style="font-family: Soleil Lt;font-size:11px;color:#ffffff;margin:0px;line-height:12px;font-weight:600">
                                     {{ $product->name }}
                                 </p>
-                                <p style="font-family: Soleil Lt;font-size:7px;color:#ffffff;margin:0px;line-height:10px;">
+                                <p style="font-family: Soleil Lt;font-size:9px;color:#ffffff;margin:0px;line-height:10px;">
                                     IMAGES : {{ $product->imagecount }}
                                 </p>
-                                <p style="font-family: Soleil Lt;font-size:7px;color:#ffffff;margin:0px;line-height:10px;">
+                                <p style="font-family: Soleil Lt;font-size:9px;color:#ffffff;margin:0px;line-height:10px;">
                                   WORDS :  {{ $product->wordcount }}
                                 </p>
                                 </td>
                                 <td style="padding:10px;" align="center">
-                                 <p style="font-family: Soleil Lt;font-size:9px;color:#000000;margin:0px;line-height:16px">
+                                 <p style="font-family: Soleil Lt;font-size:11px;color:#000000;margin:0px;line-height:16px">
                                     {{ site_currency() . number_format($product->unit_price, 2) }}
                                 </p>
                                 </td>
                                 <td style="padding:10px;" align="center">
-                                 <p style="font-family: Soleil Lt;font-size:9px;color:#000000;margin:0px;line-height:16px">
+                                 <p style="font-family: Soleil Lt;font-size:11px;color:#000000;margin:0px;line-height:16px">
                                    1
                                 </p>
                                 </td>
                                 <td style="padding:10px;" align="center">
-                                 <p style="font-family: Soleil Lt;font-size:9px;color:#000000;margin:0px;line-height:16px">
+                                 <p style="font-family: Soleil Lt;font-size:11px;color:#000000;margin:0px;line-height:16px">
                                     {{ site_currency() . number_format($product->unit_price, 2) }}
                                 </p>
                                 </td>
@@ -116,36 +116,36 @@
                                     <table style="width: 50%;border-collapse:collapse;">
                                         <tr>
                                             <td align="center">
-                                            <p style="font-family: Soleil Bk;font-size:9px;color:#ffffff;margin:0px;line-height:24px">
+                                            <p style="font-family: Soleil Bk;font-weight: bold;font-size:11px;color:#ffffff;margin:0px;line-height:24px">
                                             Sub Total
                                             </p>
                                             </td>
                                             <td align="center">
-                                            <p style="font-family: Soleil Bk;font-size:9px;color:#ffffff;margin:0px;line-height:24px">
+                                            <p style="font-family: Soleil Bk;font-weight: bold;font-size:11px;color:#ffffff;margin:0px;line-height:24px">
                                                 {{ site_currency() . number_format($invoice_amount + $discount_amount, 2) }}
                                             </p>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td align="center">
-                                            <p style="font-family: Soleil Bk;font-size:9px;color:#ffffff;margin:0px;line-height:24px">
+                                            <p style="font-family: Soleil Bk;font-weight: bold;font-size:11px;color:#ffffff;margin:0px;line-height:24px">
                                            Discount
                                             </p>
                                             </td>
                                             <td align="center">
-                                            <p style="font-family: Soleil Bk;font-size:9px;color:#ffffff;margin:0px;line-height:24px">
+                                            <p style="font-family: Soleil Bk;font-weight: bold;font-size:11px;color:#ffffff;margin:0px;line-height:24px">
                                                 {{ site_currency() . number_format($discount_amount, 2) }}
                                             </p>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td align="center" style="border-top:1px solid #bfc543;">
-                                            <p style="font-family: Soleil Bk;font-size:9px;color:#bfc543;margin:0px;line-height:24px">
+                                            <p style="font-family: Soleil Bk;font-weight: bold;font-size:11px;color:#bfc543;margin:0px;line-height:24px">
                                            TOTAL
                                             </p>
                                             </td>
                                             <td align="center" style="border-top:1px solid #bfc543;">
-                                            <p style="font-family: Soleil Bk;font-size:9px;color:#bfc543;margin:0px;line-height:24px">
+                                            <p style="font-family: Soleil Bk;font-weight: bold;font-size:11px;color:#bfc543;margin:0px;line-height:24px">
                                                 {{ site_currency() . number_format($invoice_amount, 2) }}
                                             </p>
                                             </td>
@@ -169,11 +169,11 @@
                             <table style="border-collapse:collapse;width:100%;">
                                 <tr>
                                    <td style="background:#172f32;padding:20px 50px;height:98px;width:46.4%">
-                            <p style="font-family: Soleil Bk;font-size:9px;color:#bfc543;margin:0px;line-height:12px">
+                            <p style="font-family: Soleil Bk;font-size:11px;color:#bfc543;margin:0px;line-height:12px">
                             CONTACT US <br>
                             SISISERVICES OI
                             </p>
-                            <p style="font-family: Soleil Bk;font-size:7px;color:#ffffff;margin:0px;line-height:12px">
+                            <p style="font-family: Soleil Bk;font-size:9px;color:#ffffff;margin:0px;line-height:12px">
                                 {{ $company_name }}<br>
                                 {!! $company_address !!} <br>
                                 {{ $company_mobile }}</br>
@@ -181,7 +181,7 @@
                             </p>
                         </td>
                         <td style="padding:20px;width:53.6" align="right"> 
-                            <p style="font-family: Soleil Bk;font-size:28px;color:#000000;margin:0px;line-height:32px">
+                            <p style="font-family: Soleil Bk;font-size:30px;color:#000000;margin:0px;line-height:32px">
                                 Thank You!
                             </p>
                         </td>
