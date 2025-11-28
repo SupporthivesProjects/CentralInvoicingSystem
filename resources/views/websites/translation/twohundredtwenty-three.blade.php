@@ -130,7 +130,6 @@
                                     <td align="right" style="vertical-align: top;">
                                             <p style="font-size: 13px; font-weight: bold; margin: 0;">{{ $company_name }}</p>
 
-                                            <p style="font-size: 9px; margin: 0;">{!! $company_address !!}</p>
                                     </td>
                                 </tr>
                             </table>
