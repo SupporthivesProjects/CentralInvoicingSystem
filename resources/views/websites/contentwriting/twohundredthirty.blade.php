@@ -104,14 +104,14 @@
 
                                     <div style="
                                         position: absolute;
-                                        bottom: 200px;
+                                        bottom: 300px;
                                         right: 60px;
                                         font-family: 'Montserrat', sans-serif;
                                         text-align: right;
                                     ">
 
                                         <!-- SUBTOTAL -->
-                                        <div style="display: flex; justify-content: space-between; width: 250px; margin-bottom: 12px;">
+                                        <div style="display: flex; justify-content: space-between; width: 200px; margin-bottom: 12px;">
                                             <span style="font-size: 12px; font-weight: 400;">SUBTOTAL</span>
                                             <span style="font-size: 12px; font-weight: 400;">
                                                 {{ site_currency() }} {{ number_format($invoice_amount + $discount_amount, 2) }}
@@ -119,7 +119,7 @@
                                         </div>
 
                                         <!-- DISCOUNT -->
-                                        <div style="display: flex; justify-content: space-between; width: 250px; margin-bottom: 20px;">
+                                        <div style="display: flex; justify-content: space-between; width: 200px; margin-bottom: 20px;">
                                             <span style="font-size: 12px; font-weight: 400;">DISCOUNT</span>
                                             <span style="font-size: 12px; font-weight: 400;">
                                                 {{ site_currency() }} {{ number_format($discount_amount, 2) }}
@@ -127,7 +127,7 @@
                                         </div>
 
                                         <!-- TOTAL -->
-                                        <div style="display: flex; justify-content: space-between; width: 250px;">
+                                        <div style="display: flex; justify-content: space-between; width: 200px;border-top: 1px solid #fff;">
                                             <span style="font-size: 16px; font-weight: 500;">Total</span>
                                             <span style="font-size: 20px; font-weight: 700;">
                                                 {{ site_currency() }} {{ number_format($invoice_amount, 2) }}
@@ -138,7 +138,7 @@
 
                                     <div style="
                                         position: absolute;
-                                        bottom: 100px;
+                                        bottom: 200px;
                                         left: 80px;
                                         font-family: 'Montserrat', sans-serif;
                                     ">
