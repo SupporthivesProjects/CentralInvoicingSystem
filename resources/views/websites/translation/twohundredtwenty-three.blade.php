@@ -134,7 +134,7 @@
                                 </tr>
                             </table> -->
 
-                            <div style="width: 100%; padding: 0px 40px; font-family: 'Inter'; background-color: #FFFFFF; box-shadow: none; display: flex; justify-content: space-between; align-items: flex-start;">
+                            <div class="footer-fixed" style="width: 100%; padding: 0px 40px; font-family: 'Inter'; background-color: #FFFFFF; box-shadow: none; display: flex; justify-content: space-between; align-items: flex-start;">
                                 
                                 <!-- Left Side -->
                                 <div style="">
