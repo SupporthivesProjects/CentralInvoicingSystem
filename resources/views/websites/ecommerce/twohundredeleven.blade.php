@@ -56,10 +56,16 @@
                                             <tr style="color: white;">
                                                 <td style="font-size: 8px;font-family: 'Roboto', sans-serif;">
                                                 <!-- <p style="display: flex;align-items: center;margin-top: 0px;"> <img src="{{ $invoice_image3 }}" style="height: 15px;padding-right: 10px;">{{ $company_mobile }}</p> -->
-                                                <p style="display: flex;align-items: center;margin: 0px;"> <img src="{{ $invoice_image3 }}" style="height: 15px;padding-right: 10px;">{{ $company_email }}</p>
+                                                    <div class="" style="display:flex;flex-direction:row;justify-content:flex-start;align-items:center;">
+                                                        <img src="{{ $invoice_image3 }}" style="height: 15px;padding-right: 10px;">
+                                                        <p style="display: flex;align-items: center;margin: 0px;"> {{ $company_email }}</p>
+                                                    </div>
                                                 </td>
                                                 <td style="font-size: 8px;font-family: 'Roboto', sans-serif;padding-left: 10px;">
-                                                <p style="display: flex;align-items: baseline;margin-top: 0px;"> <img src="{{ $invoice_image4 }}" style="height: 15px;padding-right: 10px;">{!! $company_address !!}</p>
+                                                    <div class="" style="display:flex;flex-direction:row;justify-content:flex-start;align-items:center;">
+                                                        <img src="{{ $invoice_image4 }}" style="height: 15px;padding-right: 10px;">
+                                                        <p style="display: flex;align-items: baseline;margin-top: 0px;"> {!! $company_address !!}</p>
+                                                    </div>
                                                 </td>
                                                 <td style="font-size: 8px;font-family: 'Roboto', sans-serif;padding-left: 10px;">
                                                 <p> <b style="font-size: 10px;">Date :</b><br>{{ $invoice_date }}</p>
