@@ -122,7 +122,7 @@
                     <!-----------Footer----------->
                     <tr>
                         <td>
-                            <!-- <table width="100%" style="padding: 0px 40px 0px 40px; font-family: 'Inter'; margin-top: -10px; background-color: #FFFFFF; box-shadow: none; height: 85px;">
+                            <table class="footer-fixed" width="100%" style="padding: 0px 40px 0px 40px; font-family: 'Inter'; margin-top: -10px; background-color: #FFFFFF; box-shadow: none; height: 85px;">
                                 <tr>
                                     <td width="50%" style="vertical-align: bottom;">
                                         <p style="font-size: 10px;">{{ $company_email }}</p>
@@ -132,22 +132,8 @@
                                         <p style="font-size: 9px;">{!! $company_address !!}</p>
                                     </td>
                                 </tr>
-                            </table> -->
+                            </table>
 
-                            <div class="footer-fixed" style="width: 100%; padding: 40px; font-family: 'Inter'; background-color: #FFFFFF; box-shadow: none; display: flex; justify-content: space-between; align-items: flex-start;">
-                                
-                                <!-- Left Side -->
-                                <div style="width: 48%">
-                                    <p style="font-size: 10px; margin: 0;">{{ $company_email }}</p>
-                                </div>
-
-                                <!-- Right Side -->
-                                <div style="width: 48%">
-                                    <p style="font-size: 13px; font-weight: bold; margin: 0;text-align: right;">{{ $company_name }}</p>
-                                    <p style="font-size: 9px; margin: 0;text-align: right;">{!! $company_address !!}</p>
-                                </div>
-
-                            </div>
 
                         </td>
                     </tr>
