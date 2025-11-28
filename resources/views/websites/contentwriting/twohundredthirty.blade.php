@@ -41,8 +41,8 @@
                                     </td>
                                 </tr>
                             </table>
-                            <div style="padding-right: 20px;width: 100%; box-sizing: border-box;">
-                                <table style="width: 100%;border-collapse: collapse;padding-right: 20px; ">
+                            <div style="padding-right: 45px;width: 100%; box-sizing: border-box;">
+                                <table style="width: 100%;border-collapse: collapse;padding-right: 45px; ">
                                     <tr
                                         style="border-collapse: collapse;height: 30px;border-bottom: 1px solid #f24c1e;border-top: 1px solid #f24c1e;color: #168B91;">
                                         <td
