@@ -23,7 +23,7 @@
                     <tr><td colspan="2" style="height: 15px;"></td></tr>
                     <tr>
                         <td style="vertical-align: bottom; ">
-                            <table style="width: 150px;min-height: 1000px;background-color: white;margin-left: -1px;">
+                            <table style="width: 150px;min-height: 1001px;background-color: white;margin-left: -1px;">
                                 <tr style="width: 150px;">
                                     <td style="text-align: center;display: flex;justify-content: center;margin-top: -3px;">
                                         <img src="{{ $company_logo }}" style="height: 110px;">
