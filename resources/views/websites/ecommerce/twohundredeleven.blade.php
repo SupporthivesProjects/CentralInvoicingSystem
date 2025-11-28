@@ -9,7 +9,7 @@
         <tr>
             <td align="center" bgcolor="#ffffff" style="padding: 0px 0;">
                 <table width="100%" style="border-collapse: collapse;border: 0px; background-color: #8BB9DC;">
-                    <tr><td colspan="2" style="height: 20px;"></td></tr>
+                    <tr><td colspan="2" style="height: 15px;"></td></tr>
                     <tr>
                         <td style="vertical-align: bottom; ">
                             <table style="width: 150px;min-height: 645px;background-color: white;margin-left: -1px;">
