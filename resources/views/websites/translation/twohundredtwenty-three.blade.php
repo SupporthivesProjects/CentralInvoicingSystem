@@ -10,7 +10,7 @@
         <tr>
             <td align="center">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
-                    style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1); background-image: url(./img/bg.png); background-position: center; background-repeat: no-repeat; background-size: cover; height: 860px;">
+                    style="border-collapse: collapse; background-image: url(./img/bg.png); background-position: center; background-repeat: no-repeat; background-size: cover; height: 860px;">
                     <!-- Header -->
                     <tr>
                         <td style="height: 30px;">
