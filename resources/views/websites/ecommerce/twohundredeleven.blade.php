@@ -211,7 +211,7 @@
                                             <p style="display: flex; align-items: center;">
                                                 {!! $company_address !!}
                                             </p>
-                                            <img src="{{ $invoice_image4 }}" style="height: 15px;padding-left: 5px;">
+                                            <img src="{{ $invoice_image4 }}" style="height: 15px;padding-left: 10px;">
                                         </div>
                                     </td>          
                                 </tr>
