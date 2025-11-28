@@ -41,7 +41,7 @@
                                     </td>
                                 </tr>
                             </table>
-                            <table style="padding-left: 40px; font-size: 12px; margin-top: -30px;">
+                            <table style="padding-left: 40px; font-size: 13px; margin-top: -30px;">
                                 <tr>
                                     <td>
                                         <p style="margin: 0%; margin-bottom: 5px;"><strong>Invoice No</strong> :{{ $invoice_number }}
@@ -56,7 +56,7 @@
                                     style="width: 100%; max-width: 1000px; margin: auto; border-collapse: collapse; font-family: 'Inter' ; font-size: 11px;">
                                     <!-- Table Header Row -->
                                     <tr
-                                        style="background-image: url('{{ $invoice_image3 }}'); background-size: cover; background-repeat: no-repeat; color: black; font-size: 13px;">
+                                        style="background-image: url('{{ $invoice_image3 }}'); background-size: cover; background-repeat: no-repeat; color: black; font-size: 12px;">
                                         <th style=" text-align: left; padding-left: 40px;">NO</th>
                                         <th style="padding: 12px; text-align: left;">ITEM DESCRIPTION</th>
                                         <th style="padding: 12px; text-align: center;">UNIT PRICE</th>
