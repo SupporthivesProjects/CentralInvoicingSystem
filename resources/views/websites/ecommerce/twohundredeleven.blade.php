@@ -4,10 +4,10 @@
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
 </head>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@900&display=swap" rel="stylesheet">
-<body>
+<body style="margin: 0px; padding: 0px;">
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
-            <td align="center" bgcolor="#f2f2f2" style="padding: 20px 0;">
+            <td align="center" bgcolor="#ffffff" style="padding: 0px 0;">
                 <table style="border-collapse: collapse;border: 0px; background-color: #8BB9DC;">
                     <tr><td colspan="2" style="height: 20px;"></td></tr>
                     <tr>
@@ -201,7 +201,6 @@
                         </td>
                     </tr>
                     
-<!-----------Footer-->
                     <tr>
                         <td colspan="2">
                             <table width="100%" cellspacing="0" cellpadding="0px" border="0px" style="border-collapse: collapse;"> 
