@@ -31,7 +31,7 @@
                         
 
                         <td style="vertical-align: top;background-color: #8BB9DC;padding-left: 20px;padding-right: 20px;">
-                            <table style="border-collapse: collapse;">
+                            <table width="100%" style="border-collapse: collapse;">
                                 <tr>
                                     <td style="width: 225px;text-align: center;">
                                         <img src="{{ $invoice_image1 }}" style="height: 120px;">
@@ -55,7 +55,7 @@
                                         <table style="border-collapse: collapse;width: 100%;">
                                         <tr style="color: white;">
                                             <td style="font-size: 8px;font-family: 'Roboto', sans-serif;">
-                                               <p style="display: flex;align-items: center;margin-top: 0px;"> <img src="{{ $invoice_image3 }}" style="height: 15px;padding-right: 10px;">{{ $company_mobile }}</p>
+                                               <!-- <p style="display: flex;align-items: center;margin-top: 0px;"> <img src="{{ $invoice_image3 }}" style="height: 15px;padding-right: 10px;">{{ $company_mobile }}</p> -->
                                                <p style="display: flex;align-items: center;margin: 0px;"> <img src="{{ $invoice_image3 }}" style="height: 15px;padding-right: 10px;">{{ $company_email }}</p>
                                             </td>
                                              <td style="font-size: 8px;font-family: 'Roboto', sans-serif;padding-left: 10px;">
