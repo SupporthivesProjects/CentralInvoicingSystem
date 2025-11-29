@@ -153,10 +153,10 @@
                                     </table>
                                 </td>
                             </tr>
-                            <tr height="100%">
+                            <!--<tr height="100%">
                             <td style="background:#172f32;"></td>
                             <td></td>
-                            </tr>
+                            </tr>-->
                         </table>
                        </td> 
                     </tr>
