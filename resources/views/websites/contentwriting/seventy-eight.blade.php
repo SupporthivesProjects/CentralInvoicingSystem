@@ -3,15 +3,15 @@
 <head>
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
 </head>
-<body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #F2F3F3;">
+<body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #F2F3F3;padding-top: 30px">
   <table width="100%" cellpadding="0" cellspacing="0" border="0"
-    style="max-width: 90%; margin: 0 auto; border: 1px solid #ccc;">
+    style="max-width: 90%; margin: 0 auto; border: 1px solid #ccc;background-color: #ffffff;">
     <!-- Header with Logo -->
     <tr>
       <td style="padding: 20px;">
         <table width="100%" cellpadding="10" cellspacing="0">
             <tr>
-              <td>
+              <td style="border-top-left-radius: 20px; border-top-right-radius: 20px;">
                 <img src="{{ $company_logo }}" width="200" alt=""><br><br>
                 <p style="margin: 0; font-size: 12px;">{{ $company_name }}</p>
               </td>
