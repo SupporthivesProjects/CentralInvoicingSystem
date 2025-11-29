@@ -14,11 +14,11 @@
                         <td style="background: url('{{ $invoice_image1 }}') no-repeat;background-position:center;background-size:100% 100%;padding:0px;height: 410px;">
                             <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;border-collapse: collapse;"> 
                                 <tr>
-                                    <td style="width:50%;border:0px;padding-top: -10px;" > 
+                                    <td style="width:50%;border:0px;padding-top: -30px;" > 
                                         <img src="{{ $company_logo }}" alt="" style="height: 60px; justify-content: left;padding-left: 20px;">
                                         </td>
                                        
-                                        <td style="width:50%;border:0px;padding-top: -40px;">
+                                        <td style="width:50%;border:0px;padding-top: -70px;">
                                             <h1 style=" text-align: right;padding-right: 70px;font-family: 'Roboto', sans-serif;font-size: 58px;margin: 0px;">
                                                 INVOICE
                                             </h1>
@@ -40,7 +40,7 @@
                             <table>
                                 <tr style="color: white;font-family:  'Roboto', sans-serif;">
                                     <td style="width:50%;padding-left: 40px;font-size: 12px;padding-top: 15px;">
-                                        Billed Form:
+                                        Billed From:
                                     </td>
                                     <td style="width:50%;text-align: right;padding-right: 40px;font-size: 12px;padding-top: 40px;" align="right">Invoice To:</td>
                                 </tr>
@@ -104,7 +104,7 @@
                                         {{ $product->pages }} {{ $product->unit_type }}
                                     </td>
                                     <td style="padding-right: 10px; width:100px;text-align:center;font-size: 10px;margin: 0px; border-collapse: collapse;border: 1px solid white;">
-                                        {{ site_currency() . number_format($product->line_total) }}
+                                        {{ site_currency() . number_format($product->line_total,2) }}
                                     </td>
                                 </tr>
                                 @endforeach
