@@ -50,10 +50,10 @@
                             </table>
                             <table>
                                 <tr style="color: white;font-family:  'Roboto', sans-serif;">
-                                    <td style="width:50%;padding-left: 40px;font-size: 12px;padding-top: 15px;">
+                                    <td style="width:50%;padding-left: 40px;font-size: 12px;padding-top: 45px;">
                                         Billed From:
                                     </td>
-                                    <td style="width:50%;text-align: right;padding-right: 40px;font-size: 12px;padding-top: 40px;" align="right">Invoice To:</td>
+                                    <td style="width:50%;text-align: right;padding-right: 40px;font-size: 12px;padding-top: 70px;" align="right">Invoice To:</td>
                                 </tr>
                                 <tr style="color: white;font-family:  'Roboto', sans-serif;">
                                     <td style="padding-left: 40px;width:50%;vertical-align: middle;padding-top: 10px;">
