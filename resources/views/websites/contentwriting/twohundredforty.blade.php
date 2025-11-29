@@ -17,7 +17,7 @@
                         <td style="padding: 0px;max-height: 130px;">
                             <table style="border-spacing: 0px; width: 100%;">
                                 <tr>
-                                    <td style="height: 140px; background: url({{ $invoice_header_image }}) no-repeat;background-position:center;background-size:cover;width: 865px;text-align: center;">
+                                    <td style="height: 122px; background: url({{ $invoice_header_image }}) no-repeat;background-position:center;background-size:cover;width: 865px;text-align: center;">
                                          <img src="{{ $company_logo }}" style=" height: 60px;">
                                     </td>
                                     
@@ -59,7 +59,7 @@
                                 </tr>
                             </table>
                             <br>
-                            <div style="height: 825px;">
+                            <div style="height: 850px;">
                             <table style="border-collapse: collapse;border-bottom: 0px;border: 0px;">
                                 <tr style="border-collapse: collapse;height: 30px;background-color: darkblue;font-family: 'Sen', sans-serif; color: white;border-bottom: 1px solid black;">
                                     <td style="width: 50px;text-align: left;font-size: 14px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-left: 5px;">
@@ -191,8 +191,8 @@
                                             <td style="width: 35%"> 
                                             <img src="{{ $invoice_image1 }}" style="height: 200px;">
                                             </td>
-                                            <td style="text-align: center;font-size: 14px;display: flow-root; font-family: 'Sen', sans-serif; width: 70%; ">
-                                                <p><b style="color: #172355;">TEL:</b> {{ $company_mobile }}</p>
+                                            <td style="text-align: center;font-size: 14px;display: flow-root; font-family: 'Sen', sans-serif; width: 80%; ">
+                                                <p><b style="color: #172355;">TELs:</b> {{ $company_mobile }}</p>
                                                 <p><b style="color: #172355;">EMAIL:</b> {{ $company_email }}</p>
                                                 <p><b style="color: #172355;">ADDRESS:</b> {!! $company_address !!}</p>
                                             </td > 
