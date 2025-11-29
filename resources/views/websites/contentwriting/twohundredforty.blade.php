@@ -196,7 +196,7 @@
                                                 <p><b style="color: #172355;">EMAIL:</b> {{ $company_email }}</p>
                                                 <p><b style="color: #172355;">ADDRESS:</b> {!! $company_address !!}</p>
                                             </td > 
-                                            <td style="width: 33%">
+                                            <td style="width: 35%">
                                                 <img src="{{ $invoice_image2 }}" style="height: 200px;">
                                             </td>   
                                         </tr>
