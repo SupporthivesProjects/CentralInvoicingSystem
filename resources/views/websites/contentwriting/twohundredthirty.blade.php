@@ -41,123 +41,180 @@
                                     </td>
                                 </tr>
                             </table>
-
-                            <table style="border-collapse: collapse;padding-right: 40px;">
-                                <tr
-                                    style="border-collapse: collapse;height: 30px;border-bottom: 1px solid #f24c1e;border-top: 1px solid #f24c1e;color: #168B91;">
-                                    <td
-                                        style="width: 200px;text-align: left;font-family: 'Montserrat', sans-serif; font-size: 11px;margin: 0px;font-weight: 800;border-collapse: collapse;padding: 20px;">
-                                        <b>ITEM DESCRIPTION</b>
-                                    </td>
-                                    <td
-                                        style="width: 150px;text-align: center;font-family: 'Montserrat', sans-serif; font-size: 11px;margin: 0px;font-weight: 800; border-collapse: collapse;padding-left: 5px;">
-                                        <b>UNIT PRICE</b>
-                                    </td>
-                                    <td
-                                        style="width: 100px;text-align:center;font-family: 'Montserrat', sans-serif; font-size: 11px;margin: 0px;font-weight: 800;border-collapse: collapse;">
-                                        <b>QTY</b>
-                                    </td>
-                                    <td
-                                        style="width:100px;text-align: center;font-family: 'Montserrat', sans-serif; font-size: 11px;margin: 0px;font-weight: 800;border-collapse: collapse;padding-right: 2px;">
-                                        <b>Total</b>
-                                    </td>
-                                </tr>
-                                @foreach($products as $product)
-                                    <tr style="border-collapse: collapse;height: 30px;">
+                            <div style="padding-right: 47px;width: 100%; box-sizing: border-box;">
+                                <table style="width: 100%;border-collapse: collapse;padding-right: 47px; ">
+                                    <tr
+                                        style="border-collapse: collapse;height: 30px;border-bottom: 1px solid #f24c1e;border-top: 1px solid #f24c1e;color: #168B91;">
                                         <td
-                                            style="width: 200px;text-align:left;font-family: 'Montserrat', sans-serif;font-size:8px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 20px;">
-                                            {{ $product->name }}
+                                            style="width: 200px;text-align: left;font-family: 'Montserrat', sans-serif; font-size: 11px;margin: 0px;font-weight: 800;border-collapse: collapse;padding: 20px;padding-left: 100px;">
+                                            <b>ITEM DESCRIPTIONs</b>
+                                        </td>
+                                        <td
+                                            style="width: 150px;text-align: center;font-family: 'Montserrat', sans-serif; font-size: 11px;margin: 0px;font-weight: 800; border-collapse: collapse;padding-left: 5px;">
+                                            <b>UNIT PRICE</b>
+                                        </td>
+                                        <td
+                                            style="width: 100px;text-align:center;font-family: 'Montserrat', sans-serif; font-size: 11px;margin: 0px;font-weight: 800;border-collapse: collapse;">
+                                            <b>QTY</b>
+                                        </td>
+                                        <td
+                                            style="width:100px;text-align: center;font-family: 'Montserrat', sans-serif; font-size: 11px;margin: 0px;font-weight: 800;border-collapse: collapse;padding-right: 2px;">
+                                            <b>Total</b>
+                                        </td>
+                                    </tr>
+                                    @foreach($products as $product)
+                                        <tr style="border-collapse: collapse;height: 30px;border-bottom: 1px solid #000000;">
+                                            <td
+                                                style="width: 200px;text-align:left;font-family: 'Montserrat', sans-serif;font-size:8px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 20px;padding-left: 100px;">
+                                                {{ $product->name }}
+                                            </td>
+                                            <td
+                                                style="width:150px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 8px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;">
+                                                {{ site_currency() }} {{ number_format($product->unit_price, 2) }}
+                                            </td>
+                                            <td
+                                                style="width:100px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 8px;margin: 0px;font-weight: 400; border-collapse: collapse;">
+                                                1
+                                            </td>
+                                            <td
+                                                style="width:100px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 8px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-right: 2px;">
+                                                {{ site_currency() }} {{ number_format($product->unit_price, 2) }}
+                                            </td>
+                                        </tr>
+                                    @endforeach
+
+                                    <tr style="border-collapse: collapse;height: 15px;">
+                                        <td
+                                            style="width: 200px;text-align:left;font-family: 'Montserrat', sans-serif;font-size:8px;margin: 0px;font-weight: 400; border-collapse: collapse;">
+
                                         </td>
                                         <td
                                             style="width:150px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 8px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;">
-                                            {{ site_currency() }} {{ number_format($product->unit_price, 2) }}
+
                                         </td>
                                         <td
                                             style="width:100px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 8px;margin: 0px;font-weight: 400; border-collapse: collapse;">
-                                            1
+
                                         </td>
                                         <td
                                             style="width:100px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 8px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-right: 2px;">
-                                            {{ site_currency() }} {{ number_format($product->unit_price, 2) }}
+
                                         </td>
                                     </tr>
-                                @endforeach
 
-                                <tr style="border-collapse: collapse;height: 15px;">
-                                    <td
-                                        style="width: 200px;text-align:left;font-family: 'Montserrat', sans-serif;font-size:8px;margin: 0px;font-weight: 400; border-collapse: collapse;">
+                                    <div style="
+                                        position: absolute;
+                                        bottom: 250px;
+                                        right: 80px;
+                                        font-family: 'Montserrat', sans-serif;
+                                        text-align: right;
+                                    ">
 
-                                    </td>
-                                    <td
-                                        style="width:150px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 8px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;">
+                                        <!-- SUBTOTAL -->
+                                        <div style="display: flex; justify-content: space-between; width: 200px; margin-bottom: 12px;">
+                                            <span style="font-size: 12px; font-weight: 400;">SUBTOTAL</span>
+                                            <span style="font-size: 12px; font-weight: 400;">
+                                                {{ site_currency() }} {{ number_format($invoice_amount + $discount_amount, 2) }}
+                                            </span>
+                                        </div>
 
-                                    </td>
-                                    <td
-                                        style="width:100px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 8px;margin: 0px;font-weight: 400; border-collapse: collapse;">
+                                        <!-- DISCOUNT -->
+                                        <div style="display: flex; justify-content: space-between; width: 200px; margin-bottom: 20px;">
+                                            <span style="font-size: 12px; font-weight: 400;">DISCOUNT</span>
+                                            <span style="font-size: 12px; font-weight: 400;">
+                                                {{ site_currency() }} {{ number_format($discount_amount, 2) }}
+                                            </span>
+                                        </div>
 
-                                    </td>
-                                    <td
-                                        style="width:100px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 8px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-right: 2px;">
+                                        <!-- TOTAL -->
+                                        <div style="display: flex; justify-content: space-between; width: 200px;border-top: 1px solid #fff; padding-top: 10px;">
+                                            <span style="font-size: 16px; font-weight: 500;">Total</span>
+                                            <span style="font-size: 20px; font-weight: 700;">
+                                                {{ site_currency() }} {{ number_format($invoice_amount, 2) }}
+                                            </span>
+                                        </div>
 
-                                    </td>
-                                </tr>
+                                    </div>
 
-                                <tr style="border-collapse: collapse;height: 30px;">
-                                    <td
-                                        style="text-align: left;font-size: 12px;font-family: 'Montserrat', sans-serif;color: #f24c1e;padding-left: 40px;font-weight: 400;">
-                                        <p style="margin: 0px;">COMPANY NAME</p>
-                                    </td>
-                                    <td
-                                        style="width:150px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;">
-                                        {{ $customer_name }}
-                                    </td>
-                                    <td
-                                        style="width:100px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;color:black;">
-                                        SUBTOTAL
-                                    </td>
-                                    <td
-                                        style="width:100px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-right: 2px;color:black;">
-                                        {{ site_currency() }} {{ number_format($invoice_amount + $discount_amount, 2) }}
-                                    </td>
-                                </tr>
-                                <tr style="border-collapse: collapse;height: 30px;">
-                                    <td
-                                        style="text-align: left;font-size: 12px;font-family: 'Montserrat', sans-serif;color: #f24c1e;padding-left: 40px;font-weight: 400;">
-                                        <p style="margin-top: 0px;"> ADDRESS</p>
-                                    </td>
-                                    <td
-                                        style="width:150px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;">
-                                        {{ $company_address }}
-                                    </td>
-                                    <td
-                                        style="width:100px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;border-bottom: 1px solid white;color: black;">
-                                        DISCOUNT
-                                    </td>
-                                    <td
-                                        style="width:100px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-right: 2px;border-bottom: 1px solid white;color:black;">
-                                        {{ site_currency() }} {{ number_format($discount_amount, 2) }}
-                                    </td>
-                                </tr>
-                                <tr style="border-collapse: collapse;height: 30px;">
-                                    <td
-                                        style="width: 200px;text-align:center;font-family: 'Montserrat', sans-serif;font-size:24px;margin: 0px;font-weight: 400; border-collapse: collapse;">
+                                    <div style="
+                                        position: absolute;
+                                        bottom: 200px;
+                                        left: 80px;
+                                        font-family: 'Montserrat', sans-serif;
+                                    ">
 
-                                    </td>
-                                    <td
-                                        style="width:150px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;">
+                                        <div style="margin-bottom: 8px; display: flex; gap: 10px; align-items: center;">
+                                                <span style="color: #f24c1e; font-weight: 400;">COMPANY NAME:</span>
+                                                <span style="font-weight: 400;">{{ $customer_name }}</span>
+                                            </div>
 
-                                    </td>
-                                    <td
-                                        style="width:100px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;color:black;">
-                                        Total
-                                    </td>
-                                    <td
-                                        style="width:100px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 16px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-right: 2px;color:black;">
-                                        {{ site_currency() }} {{ number_format($invoice_amount, 2) }}
-                                    </td>
-                                </tr>
-                                <br><br>
-                            </table>
+                                            <!-- ADDRESS -->
+                                            <div style="display: flex; gap: 10px; align-items: center;">
+                                                <span style="color: #f24c1e; font-weight: 400;">ADDRESS:</span>
+                                                <span style="font-weight: 400;">{{ $company_address }}</span>
+                                            </div>
+
+                                    </div>
+
+
+
+                                    <!-- <tr style="border-collapse: collapse;height: 30px;">
+                                        <td
+                                            style="text-align: left;font-size: 12px;font-family: 'Montserrat', sans-serif;color: #f24c1e;padding-left: 40px;font-weight: 400;">
+                                            <p style="margin: 0px;">COMPANY NAME</p>
+                                        </td>
+                                        <td
+                                            style="width:150px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;">
+                                            {{ $customer_name }}
+                                        </td>
+                                        <td
+                                            style="width:100px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;color:black;">
+                                            SUBTOTAL
+                                        </td>
+                                        <td
+                                            style="width:100px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-right: 2px;color:black;">
+                                            {{ site_currency() }} {{ number_format($invoice_amount + $discount_amount, 2) }}
+                                        </td>
+                                    </tr>
+                                    <tr style="border-collapse: collapse;height: 30px;">
+                                        <td
+                                            style="text-align: left;font-size: 12px;font-family: 'Montserrat', sans-serif;color: #f24c1e;padding-left: 40px;font-weight: 400;">
+                                            <p style="margin-top: 0px;"> ADDRESS</p>
+                                        </td>
+                                        <td
+                                            style="width:150px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;">
+                                            {{ $company_address }}
+                                        </td>
+                                        <td
+                                            style="width:100px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;border-bottom: 1px solid white;color: black;">
+                                            DISCOUNT
+                                        </td>
+                                        <td
+                                            style="width:100px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-right: 2px;border-bottom: 1px solid white;color:black;">
+                                            {{ site_currency() }} {{ number_format($discount_amount, 2) }}
+                                        </td>
+                                    </tr>
+                                    <tr style="border-collapse: collapse;height: 30px;">
+                                        <td
+                                            style="width: 200px;text-align:center;font-family: 'Montserrat', sans-serif;font-size:24px;margin: 0px;font-weight: 400; border-collapse: collapse;">
+
+                                        </td>
+                                        <td
+                                            style="width:150px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;">
+
+                                        </td>
+                                        <td
+                                            style="width:100px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;color:black;">
+                                            Total
+                                        </td>
+                                        <td
+                                            style="width:100px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 16px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-right: 2px;color:black;">
+                                            {{ site_currency() }} {{ number_format($invoice_amount, 2) }}
+                                        </td>
+                                    </tr> -->
+                                    <br><br>
+                                </table>
+                            </div>
                         </td>
                     </tr>
                     <!-- Content End-->

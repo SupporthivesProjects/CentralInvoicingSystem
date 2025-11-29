@@ -7,7 +7,7 @@
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
             <td align="center" bgcolor="#f2f2f2" style="padding:0px 0;">
-                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
+                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse;">
                       <!-- Header -->
                       <tr style=" background: url('{{ $invoice_header_image }}');background-repeat: no-repeat;background-size: cover;background-position: center;height: 130px;">
                         <td style="padding: 50px 50px 50px 50px;">
@@ -28,20 +28,20 @@
                                     justify-content: space-between;">
 
                                     <td>
-                                        <p style="font-family: arial;font-size: 12px;font-weight: 400; color: #4585FD; margin: 0;">Invoice To</p>
-                                        <p style="font-family: arial;font-size: 13px;margin: 0;"><b>{{ $customer_name }}</b></p>
+                                        <p style="font-family: arial;font-size: 14px;font-weight: 400; color: #4585FD; margin: 0;">Invoice To</p>
+                                        <p style="font-family: arial;font-size: 15px;margin: 0;"><b>{{ $customer_name }}</b></p>
                                     </td>
                                     <td>
-                                        <p style="font-family: arial;font-size: 12px;font-weight: 400; color: #4585FD;margin: 0;">Invoice From</p>
-                                        <p style="margin: 0; font-family: arial;font-size: 13px;margin: 0;"><b>{{ $site_name }}</b></p>
-                                        <p style="margin: 0; font-family: arial;font-size: 12px;margin: 0;">Powered By Eromnet Hong Kong</p>
+                                        <p style="font-family: arial;font-size: 14px;font-weight: 400; color: #4585FD;margin: 0;">Invoice From</p>
+                                        <p style="margin: 0; font-family: arial;font-size: 15px;margin: 0;"><b>{{ $site_name }}</b></p>
+                                        <p style="margin: 0; font-family: arial;font-size: 14px;margin: 0;">Powered By Eromnet Hong Kong</p>
                                         <br>
                                         <br>
-                                        <p style="margin: 0; font-family: arial;font-size: 12px;margin: 0;">{{ $company_email }}</p>
+                                        <p style="margin: 0; font-family: arial;font-size: 14px;margin: 0;">{{ $company_email }}</p>
                                     </td>
                                     <td>
-                                        <p style="margin: 0;font-family: arial;font-size: 12px;margin: 0;">Invoice Date:</p>
-                                        <p style="margin: 0;font-family: arial;font-size: 12px;margin: 0;">Invoice  no.</p>
+                                        <p style="margin: 0;font-family: arial;font-size: 14px;margin: 0;">Invoice Date:</p>
+                                        <p style="margin: 0;font-family: arial;font-size: 14px;margin: 0;">Invoice  no.</p>
                                     </td>
                                     <td>
                                         <img src="{{ $invoice_image1 }}" alt="" style="position: absolute; width: 24px; height: 24px; right: 26px;
@@ -49,13 +49,13 @@
                                          <img src="{{ $invoice_image2 }}" alt="" style="position: absolute; width: 24px; height: 24px; right: 141px;
                                          top: 93px;">
 
-                                        <p style="margin: 0; font-family: arial;font-size: 12px;margin: 0;">{{ $invoice_date }}</p>
+                                        <p style="margin: 0; font-family: arial;font-size: 14px;margin: 0;">{{ $invoice_date }}</p>
                                        
-                                        <p style="margin: 0;font-family: arial;font-size: 12px;margin: 0;">#{{ $invoice_number }}</p>
+                                        <p style="margin: 0;font-family: arial;font-size: 14px;margin: 0;">#{{ $invoice_number }}</p>
                                     </td>
                                 </tr>
                             </table>
-                            <div style="min-height: 470px !important">
+                            <div style="min-height: 465px !important">
                             <table style="width: 100%; margin-top: 20px;" cellspacing="0" cellpadding="10" border="0" style="border-collapse: collapse; font-family: Arial, sans-serif;">
                                 
 
@@ -70,17 +70,17 @@
                                 <tr style=" background-color: #ffffff; vertical-align: top;">
                                     <td style="padding: 0px; padding-top: 20px;">
                                         <span style="font-weight: bold;font-family: arial;
-                                        font-size: 12px; "> {{ $product->name }}</span><br><br>
+                                        font-size: 14px; "> {{ $product->name }}</span><br><br>
                                         <ul style="margin: 0; padding-left: 20px;">
                                             <li>
                                                 <span style="font-weight: bold;font-family: arial;
-                                                font-size: 12px; ">From:</span><br>
+                                                font-size: 14px; ">From:</span><br>
                                                 <span style="font-family: arial;
                                                 font-size: 10px;">{{ $product->from_language }}</span>
                                             </li><br>
                                             <li>
                                                 <span style="font-weight: bold;font-family: arial;
-                                                font-size: 12px; ">To:</span><br>
+                                                font-size: 14px; ">To:</span><br>
                                                 <span style="font-family: arial;
                                                 font-size: 10px;">{{ $product->to_language }}</span>
                                             </li>
@@ -136,7 +136,7 @@
                                  <img src="{{ $invoice_image4 }}" alt="" style="position: absolute; width: 24px; height: 24px; left: 53px;
                                  top: -85px;">
                                 <img src="{{ $invoice_image5 }}" alt="" style="display: block; width: 24px; height: 24px;">
-                                <p style="font-family: arial;font-size: 10px;font-weight: 400; margin: 0px;">{{ $company_email }}</p>
+                                <p style="font-family: arial;font-size: 10px;font-weight: 400; margin: 0px; margin-top: 5px; margin-left: 4px;">{{ $company_email }}</p>
                             </td>
 
                       </tr>

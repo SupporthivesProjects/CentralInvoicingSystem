@@ -6,7 +6,7 @@
 </head>
 
 <body style=" margin:0px; padding: 0px 0;">
-  <table style=" margin:0px; padding: 0px 0;" width="100%" cellspacing="0" cellpadding="0" border="0">
+  <table style=" margin:0px; padding: 0px 0;" width="100%"height="100%" cellspacing="0" cellpadding="0" border="0">
     <tr>
       <td align="center" bgcolor="#f2f2f2" style="padding: 0px 0;">
         <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
@@ -37,7 +37,7 @@
 
 
                 <p style="width: fit-content; font-size: 8px; color: #FFFFFF;font-family: arial;">
-                  {{ $company_address }}<br>
+                  {!! $company_address !!}<br>
                   {{ $company_mobile }}
                 </p>
               </div>
@@ -52,7 +52,7 @@
 
           <tr style="background: url('{{ $invoice_image1 }}');
                      background-repeat: no-repeat;
-                     background-size: cover;
+                     background-size: 100vh;
                      background-position: center;">
 
 
@@ -91,7 +91,7 @@
                 </tr>
 
               </table>
-              <div style="min-height: 500px !important;">
+              <div style="min-height: 750px !important;">
                 <table
                   style="width: 100%; border: 2px solid #aaa; border-collapse: collapse; font-family: Arial, sans-serif; text-align: left; font-size: 9px; margin-top: 24px;">
                   <thead>
@@ -147,7 +147,7 @@
 
 
           <!-----------Footer----------->
-
+{{-- 
           <tr
             style=" background: url({{ $invoice_footer_image }});
                     background-repeat: no-repeat;
@@ -156,7 +156,7 @@
                     height: 124px; display: flex; justify-content: center; flex-direction: column; align-items: center;">
 
 
-          </tr>
+          </tr> --}}
           <!-----------Footer End----------->
         </table>
       </td>

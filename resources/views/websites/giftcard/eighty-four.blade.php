@@ -3,6 +3,24 @@
 
 <head>
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        .footer-fixed {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: url('{{ $invoice_footer_image }}');
+                    background-repeat: no-repeat;
+                    background-size: cover;
+                    background-position: center;
+                    height: 100px;
+            
+        }
+    </style>
 </head>
 
 <body style=" margin: 0 !important;padding: 0 !important;">
@@ -10,7 +28,7 @@
         <tr>
             <td align="center" bgcolor="#f2f2f2" style="padding: 0px 0;">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
-                    style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
+                    style="border-collapse: collapse; ">
                     <!-- Header -->
                     <tr style=" background: url('{{ $invoice_header_image }}');
                       background-repeat: no-repeat;
@@ -29,24 +47,26 @@
                             <table
                                 style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 12px;">
                                 <tr style="background-color: #0070C0; color: white;">
-                                    <th style="text-align: left; padding: 10px;">INVOICE No. {{$invoice_number}}</th>
+                                    <th style="text-align: left; padding: 10px; font-weight: bold;">INVOICE NO. {{$invoice_number}}</th>
                                     <th style="text-align: right; padding: 10px;"></th>
 
-                                    <th style="text-align: right; padding: 10px;">DATE  {{$invoice_date}}</th>
+                                    <th style="text-align: right; padding: 10px;">DATE  <!--{{$invoice_date}}--> {{ \Carbon\Carbon::parse($invoice_date)->format('d/m/Y') }}</th>
                                 </tr>
                             </table>
 
 
-                            <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 10px; color: #444; margin-top: 30px;">
+                            <table style="width: 100%; border-collapse: collapse; font-family: Mazzard H Medium; font-size: 10px; color: #444; margin-top: 30px;">
                                 <tr style="border-bottom: 1px solid #527ba0;">
                                   <th style="width: 50%; padding-bottom: 5px; font-variant: small-caps; color: #0070C0; text-align: center;font-size: 12px;">Billed To</th>
                                   <th style="width: 50%; padding-bottom: 5px; font-variant: small-caps; color: #0070C0; text-align: center;font-size: 12px;">Billed From</th>
                                 </tr>
                                 <tr>
-                                  <td style="text-align: center; padding-top: 8px; vertical-align: top;font-size: 12px;">{{ $customer_name }}</td>
-                                  <td style="text-align: center; padding-top: 8px;vertical-align: top;font-size: 12px;">
+                                  <td style="text-align: center; padding-top: 8px; vertical-align: top;font-size: 12px; line-height: 1.8;">{{ $customer_name }}</td>
+                                  <td style="text-align: center; padding-top: 8px;vertical-align: top;font-size: 12px;line-height: 1.8;">
                                     {{ $site_name }}<br>
-                                    {!! $company_address !!} &nbsp;&nbsp;
+                                    <div style="display: inline-block; width: 200px; text-align: center;">
+                                      {!! $company_address !!}
+                                    </div> &nbsp;&nbsp;<br />
                                     {{ $company_mobile }}<br />
                                     <a href="mailto:{{ $company_email }}" style="color: #0070C0; text-decoration: underline;font-size: 12px;">{{$company_email}}</a>
                                   </td>
@@ -85,8 +105,8 @@
                                 </td>
                               </tr>
                               <tr style="border-bottom: 1px solid #999;">
-                                <td style="padding: 10px; font-weight: bold; color: #0070C0; font-variant: small-caps; font-size: 12px;">Total</td>
-                                <td style="padding: 10px; text-align: right; color: #0070C0; font-size: 12px; font-weight: bold;">
+                                <td style="padding: 10px; font-weight: bold; color: #0070C0; font-variant: small-caps; font-size: 14px;">Total</td>
+                                <td style="padding: 10px; text-align: right; color: #0070C0; font-size: 14px; font-weight: bold;">
                                   {{ site_currency() . number_format($invoice_amount, 2) }}
                                 </td>
                               </tr>
@@ -99,7 +119,7 @@
 
 
                     <!-----------Footer----------->
-                    <tr style=" background: url('{{ $invoice_footer_image }}');
+                    <!-- <tr style=" background: url('{{ $invoice_footer_image }}');
                     background-repeat: no-repeat;
                     background-size: cover;
                     background-position: center;
@@ -109,6 +129,10 @@
 
                         </td>
 
+                    </tr> -->
+
+                    <tr class="footer-fixed">
+                        <td ></td>
                     </tr>
                     <!-----------Footer End----------->
                 </table>

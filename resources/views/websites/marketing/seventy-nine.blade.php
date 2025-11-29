@@ -5,7 +5,7 @@
 </head>
 <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #ffffff;">
   <table width="100%" cellpadding="0" cellspacing="0" border="0"
-    style="max-width: 90%; margin: 0 auto; border: 1px solid #ccc;">
+    style="max-width: 100%; margin: 0 auto; border: 1px solid #ccc;">
     <!-- Header with Logo -->
     <tr style="background: url('{{ $invoice_header_image }}');background-repeat: no-repeat;background-size: cover;background-position: center;height: 100px;">
       <td style="padding: 0px;">
@@ -22,7 +22,7 @@
                 <p style="margin: 0 0 4px 0;"><strong>Invoice Number:</strong> #{{ $invoice_number }}</p>
                 <p style="margin: 0 0 4px 0;"><strong>Billed From:</strong>{{ $site_name }}</p>
                 <p style="margin: 0 0 4px 0;"><strong>Email:</strong>{{ $company_email }}</p>
-                   <p style="margin: 0 0 4px 0;"><strong>Website:</strong> {{ $site->site_link }}</p>
+                   <p style="margin: 0 0 4px 0;"><strong>Website:</strong> www.pitchperfectsolutionz.com</p>
                    <p style="margin: 0 0 4px 0;"><strong>Phone:</strong> {{ $company_mobile }}</p>
                    <p style="margin: 0 0 4px 0;"><strong>Address:</strong> {!! $company_address !!}</p>
                 </p>
@@ -39,7 +39,7 @@
       <!-- Item Table -->
       <tr>
         <td style="padding: 0 20px 20px 20px;">
-          <div style="min-height: 500px !important;">
+          <div style="min-height: 674px !important;">
           <table width="100%" cellpadding="10" cellspacing="0" style="border-collapse: collapse;">
             <tr style="background-color: #001f4d; color: #ffffff;">
               <th align="left">Name</th>

@@ -50,7 +50,7 @@
                                         <br>
 
                                         <p style="font-size: 12px; margin: 0;">Billed From:</p>
-                                        <p style="margin: 0;"><a href="{{ $site_name }}" style="color: #0000EE; text-decoration: underline; font-size: 12px;">{{ $company_name }}</a>
+                                        <p style="margin: 0;"><a href="{{ $site_name }}" style="color: black; text-decoration: underline; font-size: 12px;">{{ $company_name }}</a>
                                         </p>
                                         <p style="margin: 0; font-size: 10px;"><strong>Email:</strong> {{ $company_email }}</p>
                                         <p style="margin: 0; font-size: 10px;"><strong>Website:</strong> {{ $site_name }}
@@ -94,7 +94,7 @@
                                     <th align="right">Total</th>
                                 </tr>
                                 @foreach($products as $product)
-                                <tr style="border-bottom: 1px solid #D0CECE; font-size: 8px;">
+                                <tr style="border-bottom: 1px solid #D0CECE; font-size: 10px;">
                                     <td>{{ $product->name }}</td>
                                     <td> <p style="width: 133px;">
                                         @if($product->wordcount)<span class="me-2 badge bg-light text-dark"><strong>Words Count:</strong> {{ $product->wordcount }}</span>@endif
@@ -124,15 +124,15 @@
                                     style="font-family: Arial; width: 250px; z-index: 1; position: relative;">
                                     <tr>
                                         <td align="left" style="font-size: 11px; border-bottom: 1px solid #D0CECE;">Subtotal</td>
-                                        <td align="right" style="font-size: 8px; border-bottom: 1px solid #D0CECE;">{{ site_currency() . number_format($invoice_amount + $discount_amount, 2) }}</td>
+                                        <td align="right" style="font-size: 10px; border-bottom: 1px solid #D0CECE;">{{ site_currency() . number_format($invoice_amount + $discount_amount, 2) }}</td>
                                     </tr>
                                     <tr>
                                         <td align="left" style="font-size: 11px;">Discount</td>
-                                        <td align="right" style="font-size: 8px;">{{ site_currency() . number_format($discount_amount, 2) }}</td>
+                                        <td align="right" style="font-size: 10px;">{{ site_currency() . number_format($discount_amount, 2) }}</td>
                                     </tr>
                                     <tr style="background-color: #E6DDD1;">
                                         <td align="left" style="font-size: 11px;">Grand<br>Total</td>
-                                        <td align="right" style="font-size: 8px;">{{ site_currency() . number_format($invoice_amount, 2) }}</td>
+                                        <td align="right" style="font-size: 10px;">{{ site_currency() . number_format($invoice_amount, 2) }}</td>
                                     </tr>
                                 </table>
                             </div>

@@ -30,7 +30,7 @@
                         <td style="width:180px; padding:0; ">
                             <!-- Logo image here -->
                             <img src="{{ $company_logo }}" alt="Brandexx Logo"
-                                style="display:block;width: 183px;height: 228px;margin:10px auto 10px auto;border-radius:8px;position: absolute;top: -156px;left: 54px;margin-top: 6px;">
+                                style="display:block;width: 183px;height: 288px;margin:10px auto 10px auto;border-radius:8px;position: absolute;top: -156px;left: 54px;margin-top: 6px;">
                         </td>
                         <td
                             style="text-align:right; vertical-align:middle; font-size:1.4em; letter-spacing:2px; color:#222; padding-right:40px;">
@@ -42,19 +42,19 @@
         </tr>
         <!-- Contact Info -->
         <tr>
-            <td colspan="2" style="padding:0 0px 0 100px;">
-                <table align="top" valign="top" width="100%" cellpadding="0" cellspacing="0" style="margin-top:100px;">
+            <td colspan="2" style="padding:0 30px 0 260px; ">
+                <table align="top" valign="top" width="100%" cellpadding="0" cellspacing="0" style="margin-top:100px;position: relative; top: -60px;">
                     <tr>
-                        <td style="font-size:0.98em; padding-right:20px;width:30%;vertical-align: top;">
-                            <b>📞&nbsp;Phone:</b><br>
+                        <td style="font-size:0.98em; padding-right:17px;width:33%;vertical-align: top;">
+                        <div style="display:flex; flex-direction:row; justify-content:flex-start; align-items:center; gap: 4px;margin-bottom: 4px;"><img src="{{ $invoice_image3 }}" alt="Company Logo" width="25" height="25"><b>Phone:</b><br></div>
                             {{ $company_mobile }}
                         </td>
-                        <td style="font-size:0.98em; padding-right:20px;width:30%;vertical-align: top;">
-                            <b>✉️&nbsp;Email:</b><br>
+                        <td style="font-size:0.98em; padding-right:20px;width:27%;vertical-align: top;">
+                        <div style="display:flex; flex-direction:row; justify-content:flex-start; align-items:center; gap: 4px;margin-bottom: 4px;"><img src="{{ $invoice_image2 }}" alt="Company Logo" width="25" height="25"><b>Email:</b><br></div>
                             {{ $company_email }}
                         </td>
                         <td style="font-size:0.98em;">
-                            <b>🏠&nbsp;Address:</b><br>
+                        <div style="display:flex; flex-direction:row; justify-content:flex-start; align-items:center; gap: 4px;margin-bottom: 4px;"><img src="{{ $invoice_image1 }}" alt="Company Logo" width="25" height="25"><b>Address:</b><br></div>
                             {!! $company_address !!}
                         </td>
                     </tr>
@@ -75,7 +75,7 @@
                             style="width:36%; font-size:0.97em; padding:10px 15px; vertical-align:top; border-left: 1px solid #282828">
                             <b>Invoice Details</b><br>
                             Invoice Date: {{ $invoice_date }}<br>
-                            Issue Date: {{ $invoice_date }}<br>
+                            <!-- Issue Date: {{ $invoice_date }}<br> -->
                             Total Due: {{ site_currency() }} {{ number_format(($invoice_amount) ?? 0, 2) }}
                         </td>
                         <td
@@ -93,7 +93,7 @@
                     <tr>
                         <th
                             style="background: transparent; font-weight:bold; letter-spacing:1px; border-bottom:1px solid #D8A34E; border-top:1px solid #D8A34E; padding:12px 8px; text-align:left;">
-                            PRODUCT DESCRIPTIONS</th>
+                            Product Descriptions</th>
                         <th
                             style="background: transparent; font-weight:bold; letter-spacing:1px; border-bottom:1px solid #D8A34E; border-top:1px solid #D8A34E; padding:12px 8px; text-align:left;">
                             Length</th>
@@ -102,7 +102,7 @@
                             Quantity</th>
                         <th
                             style="background: transparent; font-weight:bold; letter-spacing:1px; border-bottom:1px solid #D8A34E; border-top:1px solid #D8A34E; padding:12px 8px; text-align:right;">
-                            AMOUNT</th>
+                            Amount</th>
                     </tr>
                     @foreach($products as $product)
                     <tr>

@@ -657,7 +657,7 @@
         customizeSliderTimer = setTimeout(() => {
             const [min, max] = values.map(v => Math.round(parseFloat(v.replace(currency, ''))));
             updateHiddenInputs(min, max, 'customize');
-            customizeProducts('range', currentPageNumber);
+            customizeProducts('range', $('#current_page_number').val() || 1);
         }, 1500);
     });
 
@@ -682,6 +682,8 @@
 
     if (search_type === 'reset') {
         $('#customizeKeywordInput').val('');
+        customizePriceSlider.noUiSlider.set([minUnitPrice, maxUnitPrice]);
+        updateHiddenInputs(minUnitPrice, maxUnitPrice, 'customize');
     }
 
 
@@ -798,7 +800,11 @@
             customizeRequest = null;
         }
         
-
+        if (search_type === 'reset') {
+            $('#customizeKeywordInput').val('');
+            customizePriceSlider.noUiSlider.set([minUnitPrice, maxUnitPrice]);
+            updateHiddenInputs(minUnitPrice, maxUnitPrice, 'customize');
+        }
 
         let btn = $('#add-custom-products');
         btn.prop('disabled', false).html('Add Selected to Cart');

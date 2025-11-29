@@ -28,7 +28,6 @@
                         </td>
                     </tr>
                     <!-- Header End -->
-
                     <tr>
                         <td style="vertical-align: top;width: 190px;padding-top: 40px;">
                             <div class="" style="display: flex; flex-direction: row; justify-content: flex-start; align-items: flex-start; gap: 12px;margin-bottom: 8px;padding-left: 12px;">
@@ -38,13 +37,13 @@
                                     <p style="font-family: arial;font-size:10px;margin: 0px;font-weight: 400;">{{ $company_address }}</p>
                                 </div>
                             </div>
-                            <div class="" style="display: flex; flex-direction: row; justify-content: flex-start; align-items: flex-start; gap: 12px;margin-bottom: 8px;padding-left: 12px;">
+                            <!-- <div class="" style="display: flex; flex-direction: row; justify-content: flex-start; align-items: flex-start; gap: 12px;margin-bottom: 8px;padding-left: 12px;">
                                 <img src="{{ $invoice_image5 }}" alt="" style="height: 30px; width: 30px;">
                                 <div class="" style="display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-start;">
                                     <b style="font-size: 12px;">Phone</b> 
                                     <p style="font-family: arial;font-size:10px;margin: 0px;font-weight: 400;">{{ $company_mobile }}</p>
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="" style="display: flex; flex-direction: row; justify-content: flex-start; align-items: flex-start; gap: 12px;margin-bottom: 8px;padding-left: 12px;">
                                 <img src="{{ $invoice_image3 }}" alt="" style="height: 30px; width: 30px;">
                                 <div class="" style="display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-start;">
@@ -60,7 +59,7 @@
                                 </div>
                             </div>
                             <br>
-                            <div style="background-image: url({{ $invoice_image1 }});background-size: cover;background-repeat:no-repeat;background-position: top center; padding: 24px 16px; min-height: 830px;">
+                            <div style="background-image: url({{ $invoice_image1 }});background-size: cover;background-repeat:no-repeat;background-position: top center; padding: 24px 16px; min-height: 850px;">
 
                                 <!-- Billed From Section -->
                                 <div style="margin-bottom: 40px;">
@@ -139,13 +138,13 @@
                             <!-- Subtotal Section -->
                                 <tr>
                                     <td colspan="2"></td>
-                                    <td style="text-align: right; padding-right: 10px;">Sub Total:</td>
-                                    <td style="text-align: right;">{{ site_currency() . number_format($invoice_amount + $discount_amount ?? 0, 2) }}</td>
+                                    <td style="text-align: right;padding: 10px 0px; padding-right: 10px;">Sub Total:</td>
+                                    <td style="text-align: right;padding: 10px 0px;">{{ site_currency() . number_format($invoice_amount + $discount_amount ?? 0, 2) }}</td>
                                 </tr>
                                 <tr>
                                     <td colspan="2"></td>
-                                    <td style="text-align: right; padding-right: 10px;">Discount:</td>
-                                    <td style="text-align: right;">{{ site_currency() . number_format($discount_amount ?? 0, 2) }}</td>
+                                    <td style="text-align: right;padding: 10px 0px;padding-right: 10px;">Discount:</td>
+                                    <td style="text-align: right;padding: 10px 0px;">{{ site_currency() . number_format($discount_amount ?? 0, 2) }}</td>
                                 </tr>
                             </table>
 
@@ -153,7 +152,7 @@
                             <!-- Grand Total -->
                             <table style="width: 100%; border-collapse: collapse;">
                                 <tr>
-                                    <td style="text-align: right; font-weight: 700;">GRAND TOTAL</td>
+                                    <td style="text-align: right; font-weight: 700;padding-right: 10px;">GRAND TOTAL</td>
                                     <td style="width: 10%; text-align: right; font-weight: 700;">{{ site_currency() . number_format($invoice_amount ?? 0, 2) }}</td>
                                 </tr>
                             </table>

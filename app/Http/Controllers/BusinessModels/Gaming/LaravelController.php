@@ -54,6 +54,15 @@ class LaravelController extends Controller
         $invoiceAmount = floatval($request->get('invoice_amount'));
         $priceFrom = $request->get('price_from');
         $priceTo = $request->get('price_to');
+
+
+        if ($site_id == 233) 
+        {
+            $priceFrom = 10;   
+            $priceTo = 100;  
+        }
+
+
         $productCount = intval($request->get('product_count')); // Number of products input
         $searchQuery = $request->get('search_query'); // New parameter for search functionality
 
@@ -283,6 +292,7 @@ class LaravelController extends Controller
         //dd($updatedGames);
 
         if (empty($updatedGames)) {
+            session()->forget('current_amount');
             return response()->json([
                 'tableRows' => '',
                 'total'     => 0,

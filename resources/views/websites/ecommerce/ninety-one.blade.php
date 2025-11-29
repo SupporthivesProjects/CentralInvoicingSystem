@@ -10,6 +10,36 @@
             margin: 0px;
             padding: 0px;
         }
+        .footer_bg {
+            /* background: url('{{ $invoice_image1 }}');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover; */
+            /* height: 150px; */
+            /* vertical-align: bottom; */
+            position: absolute;
+            bottom: 50px;
+            left: 0;
+            /* display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: center; */
+        }
+        @page {
+            size: A4;
+            margin: 0;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+        }
+
+     
+
+
     </style>
 </head>
 <body>
@@ -22,7 +52,7 @@
                         <td align="center" style="height:140px;background:url('{{ $invoice_header_image }}');background-size: cover;background-repeat: no-repeat;background-position: center;">
                             <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;">
                                          <tr>
-                                            <td align="center" style="width: 50%;">
+                                            <td align="left" style="width: 50%;padding-left: 25px;">
                                                 <h1 style="margin: 0px;font-family:Source Sans Pro;font-size:21px;color: #000000;">
                                                    Invoice Details
                                                 </h1>
@@ -38,7 +68,7 @@
                     <!-- Content -->
                     <tr style="background:#ffff ;">
                         <td style="padding:0px;">
-                            <div style="min-height: 980px !important;">
+                            <!-- <div style="min-height: 950px !important;"> -->
                             <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;min-height: 980px !important;">
                                 <tr style="min-height: 980px !important;">
                                     <td style="width:20px;"></td>
@@ -62,7 +92,7 @@
                                             </td>
                                         </tr>
                                         @foreach($products as $product)
-                                        <tr style="border-top: 1px solid black;border-bottom: 1px solid black;height:50px;">
+                                        <tr style="border-top: 1px solid black;border-bottom: 1px solid black;height:30px;">
                                             <td style="width: 50%;padding-left: 10px;">
                                                  <p style="margin: 0px;font-family:Source Sans Pro;font-size:9px;color: #000000;">
                                                   {{ $product->name }}
@@ -120,8 +150,16 @@
                                             </td>
                                         </tr>
                                        </table>
+                                       <div class="footer_bg" width="100%" style="height: 100px;display:flex;flex-direction:row;justify-content:flex-start;align-items:center;gap:135px;">
+                                                <!-- <img src="{{ $invoice_image1 }}" alt="" style="width: 200px;rotate: 90deg;"> -->
+                                                <img src="{{ $invoice_image1 }}" alt=""
+     style="width: 100px; height: auto; transform: rotate(90deg); display: block; object-fit: contain; margin-top: -40px;">
 
-                                       <table width="100%" style="height: 100px;">
+                                                <img src="{{ $invoice_footer_image }}" alt="" style="width:100px;">
+                                        </div>
+
+
+                                       <!-- <table width="100%" style="height: 100px;">
                                         <tr>
                                             <td style="padding: 0px;" align="left">
                                                 <img src="{{ $invoice_image1 }}" alt="" style="width: 200px;rotate: 90deg;">
@@ -130,10 +168,10 @@
                                                 <img src="{{ $invoice_footer_image }}" alt="" style="width:100px;">
                                             </td>
                                         </tr>
-                                       </table>
+                                       </table> -->
                                     </td>
                                     <td style="width:20px;"></td>
-                                    <td align="center" style="min-height: 900px;vertical-align: top;width:200px;height:100%;background:url('{{ $invoice_image2 }}');background-size: cover;background-repeat: no-repeat;background-position: center;border-top: 1px solid black;padding: 20px 0px 0px 20px;">
+                                    <td align="center" style="min-height: 980px;vertical-align: top;width:200px;height:100%;background:url('{{ $invoice_image2 }}');background-size: cover;background-repeat: no-repeat;background-position: center;border-top: 1px solid black;padding: 20px 0px 0px 20px;">
                                         <table width="100%">
                                         <tr>
                                             <td>
@@ -184,7 +222,7 @@
                                         <tr>
                                             <td>
                                                 <p style="margin: 0px;font-family:Source Sans Pro;font-size:9px;color: #000000;line-height: 12px;">
-                                                  Company Address:
+                                                  Company Name:
                                                 </p>
                                                 <p style="margin: 0px;font-family:Source Sans Pro;font-size:9px;color:#808080;line-height: 12px;">
                                                  {{ $company_address }}<br />
@@ -207,7 +245,7 @@
                                     </td>
                                 </tr>
                             </table>
-                            </div>
+                            <!-- </div> -->
                         </td>
                     </tr>
                     <!-- Content End-->

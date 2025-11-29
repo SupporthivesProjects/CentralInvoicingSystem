@@ -15,11 +15,11 @@
         <tr>
             <td align="center">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0"
-                    style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);background: #bacbe4;">
+                    style="border-collapse: collapse; background: #bacbe4;">
                     <!---header--->
                     <tr>
                         <td align="center" style="padding: 20px 20px;border-bottom: 2px solid black;" colspan="2">
-                            <img src="{{ $company_logo }}" alt="" style="height:190px;width: 100%;">
+                            <img src="{{ $company_logo }}" alt="" style="height:197px;width: 100%;">
                         </td>
                     </tr>
                     <!---header End--->

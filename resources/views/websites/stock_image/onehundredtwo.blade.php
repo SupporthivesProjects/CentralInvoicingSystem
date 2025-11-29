@@ -3,10 +3,10 @@
 <head>
     <title>Lenzlibrary</title>
 </head>
-<body>
+<body style="margin: 0px;">
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
-            <td align="center" bgcolor="#f2f2f2" style="padding: 20px 0;">
+            <td align="center" bgcolor="#f2f2f2" style="padding: 0px;">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFDF0" style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
                       <!-- Header -->
 
@@ -74,7 +74,7 @@
                                     </td>
                                 </tr>
                             </table>
-                            <div style="min-height: 500px !important;">
+                            <div style="min-height: 750px !important;">
                             <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 10px; margin-top: 30px;">
                                 <tr style="background-color: #355C5B; color: white;">
                                   <th style="text-align: left; padding: 6px 12px;">PACK</th>
@@ -115,7 +115,7 @@
 
                     <!-----------Footer----------->
 
-                    <tr style=" background: url('{{ $invoice_footer_image }}');
+                    <!-- <tr style=" background: url('{{ $invoice_footer_image }}');
                     background-repeat: no-repeat;
                     background-size: cover;
                     background-position: center;
@@ -134,7 +134,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 
                             </td>
 
-                      </tr>
+                      </tr> -->
                     <!-----------Footer End----------->
                 </table>
             </td>

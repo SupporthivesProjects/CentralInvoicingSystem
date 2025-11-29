@@ -92,20 +92,24 @@ class LaravelController extends Controller
             ->inRandomOrder()
             ->get();
 
-        if ($categoryId || $noOfProducts) {
-            $minTotal = $invoiceAmount * 0.6;
-            $allProducts = $allProducts->sortByDesc('unit_price');
-        } else {
-            $minTotal = $invoiceAmount;
+        if ($invoiceAmount < 100) {
             $allProducts = $allProducts->sortBy('unit_price');
+            $minTotal = $invoiceAmount; 
+            $maxTotal = $invoiceAmount * 1.10; 
+        } elseif ($categoryId || $noOfProducts) {
+            $minTotal = $invoiceAmount; 
+            $maxTotal = $invoiceAmount * 1.10; 
+            $allProducts = $allProducts->sortByDesc('unit_price'); 
+        } else {
+            $minTotal = $invoiceAmount; 
+            $maxTotal = $invoiceAmount * 1.10;
+            $allProducts = $allProducts->sortBy('unit_price'); 
         }
-
-        $maxTotal = $invoiceAmount * 1.10;
 
         $bestMatch = null;
         $bestTotal = 0;
 
-        for ($i = 0; $i < 20; $i++) {
+        for ($i = 0; $i < 50; $i++) {
             $shuffled = $allProducts->shuffle();
             $selected = [];
             $currentTotal = 0;
@@ -298,6 +302,7 @@ class LaravelController extends Controller
 
         session()->put('ready_products', $updatedProducts);
         if (empty($updatedProducts)) {
+            session()->forget('current_amount');
             return response()->json([
                 'tableRows' => '',
                 'currency' => null,
@@ -372,12 +377,27 @@ class LaravelController extends Controller
         DynamicDatabaseService::connect($site);
 
         $readyProducts = session()->get('ready_products', []);
-
         $readyProducts = array_filter($readyProducts, function ($product) use ($productId) {
             return $product['id'] != $productId;
         });
 
-        $newProduct = DB::connection($this->connectionType)->table($this->productTable)->where('subscription', $subscription)->where('category_id', $category_id) ->first();
+        $currentProduct = DB::connection($this->connectionType)
+            ->table($this->productTable)
+            ->where('id', $productId)
+            ->first();
+
+        if (!$currentProduct) {
+            return response()->json(['error' => 'Product not found.']);
+        }
+
+        $productName = $currentProduct->name;
+
+        $newProduct = DB::connection($this->connectionType)
+            ->table($this->productTable)
+            ->where('subscription', $subscription)
+            ->where('category_id', $category_id)
+            ->where('name', 'like', "%{$productName}%")
+            ->first();
 
         if (!$newProduct) {
             return response()->json(['error' => "The duration '{$subscription}' was not found in the same package."]);
