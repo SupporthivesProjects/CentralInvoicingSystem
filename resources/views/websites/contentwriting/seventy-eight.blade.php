@@ -8,7 +8,7 @@
     style="max-width: 90%; margin: 0 auto; background-color: #ffffff;border-top-left-radius: 20px;border-bottom-left-radius: 20px;border-bottom-right-radius: 20px;">
     <!-- Header with Logo -->
     <tr>
-      <td style="padding: 0px 0px 0px 0px;">
+      <td style="padding: 0px 0px 0px 0px;background-color: #F2F3F3;">
         <table width="100%" cellpadding="10" cellspacing="0">
             <tr>
               <td style="border-top-left-radius: 20px; border-top-right-radius: 20px;padding-left:20px; padding-top:20px;border-left: 1px solid #ccc;border-top: 1px solid #ccc;">
@@ -27,7 +27,7 @@
 
     <!-- Invoice Number and Date -->
       <tr>
-        <td style="padding: 20px;border-left: 1px solid #ccc;">
+        <td style="padding: 20px;border-left: 1px solid #ccc;border-right: 1px solid #ccc;">
           <table width="100%" cellpadding="10" cellspacing="0" style="border: 1px solid #f28d40; border-collapse: collapse;">
             <tr style="background-color: #fff1e6;">
               <th style="border: 1px solid #f28d40; text-align: left;width: 40%;">Bill To</th>
@@ -53,7 +53,7 @@
 
       <!-- Table -->
       <tr>
-        <td style="padding: 20px;border-left: 1px solid #ccc;">
+        <td style="padding: 20px;border-left: 1px solid #ccc;border-right: 1px solid #ccc;">
         <div style="min-height:550px !important;">
           <table width="100%" cellpadding="10" cellspacing="0" style="border: 1px solid #f28d40; border-collapse: collapse;">
             <tr style="background-color: #fff1e6;">
@@ -115,7 +115,7 @@
 
 
     <tr style="height: 75px;">
-      <td style=" padding: 0px 75px 28px 75px; color: #ffffff; font-size: 12px;border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;border-right: 1px solid #ccc;" valign="bottom" >
+      <td style=" padding: 0px 75px 28px 75px; color: #ffffff; font-size: 12px;border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;border-right: 1px solid #ccc; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px;" valign="bottom" >
         <hr style="background: #7F8082;margin: 0;">
       </td>
     </tr>
