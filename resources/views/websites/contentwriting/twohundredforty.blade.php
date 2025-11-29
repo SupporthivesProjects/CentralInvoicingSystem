@@ -188,16 +188,16 @@
                                 <td style="height: 100px;">
                                     <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;"> 
                                         <tr style="height:200px;width: 100%;">
-                                            <td style="width: 35%"> 
+                                            <td style="width: 30%"> 
                                             <img src="{{ $invoice_image1 }}" style="height: 200px;">
                                             </td>
-                                            <td style="text-align: center;font-size: 14px;display: flow-root; font-family: 'Sen', sans-serif; width: 60%; ">
+                                            <td style="text-align: center;font-size: 14px;display: flow-root; font-family: 'Sen', sans-serif; width: 70%; ">
                                                 <p><b style="color: #172355;">TEL:</b> {{ $company_mobile }}</p>
                                                 <p><b style="color: #172355;">EMAIL:</b> {{ $company_email }}</p>
                                                 <p><b style="color: #172355;">ADDRESS:</b> {!! $company_address !!}</p>
                                             </td > 
                                           
-                                            <td style="width: 35%">
+                                            <td style="width: 30%">
                                                 <img src="{{ $invoice_image2 }}" style="height: 200px;">
                                             </td>   
                                         </tr>

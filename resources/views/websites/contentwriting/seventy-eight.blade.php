@@ -30,8 +30,8 @@
         <td style="padding: 20px;">
           <table width="100%" cellpadding="10" cellspacing="0" style="border: 1px solid #f28d40; border-collapse: collapse;">
             <tr style="background-color: #fff1e6;">
-              <th style="border: 1px solid #f28d40; text-align: left;width: 30%;">Bill To</th>
-              <th style="border: 1px solid #f28d40; text-align: left;width: 70%;">Bill From</th>
+              <th style="border: 1px solid #f28d40; text-align: left;width: 40%;">Bill To</th>
+              <th style="border: 1px solid #f28d40; text-align: left;width: 60%;">Bill From</th>
               
             </tr>
             <tr>
