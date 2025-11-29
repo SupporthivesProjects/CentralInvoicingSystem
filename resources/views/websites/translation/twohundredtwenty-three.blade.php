@@ -80,7 +80,7 @@
                                     <!-- Item Rows -->
                                     @foreach($products as $product)
                                     <tr style="background-color: {{ $loop->iteration % 2 == 0 ? '#f2f2f2' : '#ffffff' }}; font-size: 11px;" >
-                                        <td style="padding: 20px; padding-left: 40px;">1.</td>
+                                        <td style="padding: 20px; padding-left: 40px;">{{ $loop->iteration }}.</td>
                                         <td style="padding: 20px; font-weight: bold;">{{ $product->name }}</td>
                                         <td style="padding: 20px; text-align: center;"> {{ site_currency() . number_format($product->line_total, 2) }}</td>
                                         <td style="padding: 20px;text-align: center;">1</td>
