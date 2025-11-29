@@ -30,16 +30,16 @@
         <td style="padding: 20px;">
           <table width="100%" cellpadding="10" cellspacing="0" style="border: 1px solid #f28d40; border-collapse: collapse;">
             <tr style="background-color: #fff1e6;">
-              <th style="border: 1px solid #f28d40; text-align: left;">Bill To</th>
-              <th style="border: 1px solid #f28d40; text-align: left;">Bill From</th>
+              <th style="border: 1px solid #f28d40; text-align: left;width: 30%;">Bill To</th>
+              <th style="border: 1px solid #f28d40; text-align: left;width: 70%;">Bill From</th>
               
             </tr>
             <tr>
-              <td style="border: 1px solid #f28d40;">
+              <td style="border: 1px solid #f28d40;width: 30%;">
                 <strong>Name:</strong> {{ $customer_name }}<br />
-                <strong>Email:</strong> {{ $customer_mobile }}<br />
+                <!-- <strong>Email:</strong> {{ $customer_mobile }}<br /> -->
               </td>
-              <td style="border: 1px solid #f28d40;">
+              <td style="border: 1px solid #f28d40;width: 70%;">
                 <strong>Name:</strong> {{ $company_name }}<br />
                 <strong>Address:</strong> {!! $company_address !!}<br />
                 <strong>Email:</strong> {{ $company_email }}<br />
@@ -57,10 +57,10 @@
         <div style="min-height:550px !important;">
           <table width="100%" cellpadding="10" cellspacing="0" style="border: 1px solid #f28d40; border-collapse: collapse;">
             <tr style="background-color: #fff1e6;">
-              <th style="border: 1px solid #f28d40; text-align: left;">Qty.</th>
-              <th style="border: 1px solid #f28d40; text-align: left;">Description</th>
-              <th style="border: 1px solid #f28d40; text-align: right;">Unit price</th>
-              <th style="border: 1px solid #f28d40; text-align: right;">Total</th>
+              <th style="border: 1px solid #f28d40; text-align: left;width: 10%;">Qty.</th>
+              <th style="border: 1px solid #f28d40; text-align: left;width: 50%;">Description</th>
+              <th style="border: 1px solid #f28d40; text-align: right;width: 20%;">Unit price</th>
+              <th style="border: 1px solid #f28d40; text-align: right;width: 20%;">Total</th>
             </tr>
             @foreach($products as $index => $product)
             <tr>
