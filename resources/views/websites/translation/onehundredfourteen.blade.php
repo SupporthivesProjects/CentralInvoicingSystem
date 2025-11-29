@@ -87,7 +87,7 @@
       </td>
     </tr>
       <tr style="
-            height: 130px;
+            height: 110px;
             padding: 0;
             margin: 0;
             background: url('{{ $invoice_footer_image }}') no-repeat center;
