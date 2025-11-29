@@ -95,7 +95,7 @@
                             <table
                                 style="border-collapse: collapse;border-bottom: 0px;border: 0px; border-radius: 10px; background-image: linear-gradient(to bottom, #349651, #377548);">
                                 <tr
-                                    style="border-collapse: collapse;height: 50px; color: white;border-bottom: 0px;border: 0px;">
+                                    style="border-collapse: collapse;height: 40px; color: white;border-bottom: 0px;border: 0px;">
                                     <td
                                         style="width: 100px;text-align: center;font-family: arial;font-size: 11px;margin: 0px;font-weight: 800;border-collapse: collapse;padding-left: 5px;">
                                         <b>NO</b>
@@ -119,7 +119,7 @@
                                 </tr>
 
                                 @foreach($products as $product)
-                                <tr style="border-collapse: collapse;height: 50px;color: white;">
+                                <tr style="border-collapse: collapse;height: 30px;color: white;">
                                     <td
                                         style="width: 100px;text-align: center;font-family: 'Montserrat', sans-serif;font-size: 12px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 2px;">
                                         <b>{{ $loop->iteration }}</b>
