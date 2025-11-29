@@ -39,7 +39,7 @@
       <!-- Item Table -->
       <tr>
         <td style="padding: 0 20px 20px 20px;">
-          <div style="min-height: 670px !important;">
+          <div style="min-height: 676px !important;">
           <table width="100%" cellpadding="10" cellspacing="0" style="border-collapse: collapse;">
             <tr style="background-color: #001f4d; color: #ffffff;">
               <th align="left">Name</th>
