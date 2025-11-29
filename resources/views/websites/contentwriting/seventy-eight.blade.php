@@ -3,7 +3,7 @@
 <head>
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
 </head>
-<body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #ffffff;">
+<body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #F2F3F3;">
   <table width="100%" cellpadding="0" cellspacing="0" border="0"
     style="max-width: 90%; margin: 0 auto; border: 1px solid #ccc;">
     <!-- Header with Logo -->
@@ -15,7 +15,7 @@
                 <img src="{{ $company_logo }}" width="200" alt=""><br><br>
                 <p style="margin: 0; font-size: 12px;">{{ $company_name }}</p>
               </td>
-              <td valign="top" align="right">
+              <td valign="top" align="right" style="background-color: #F2F3F3; border-bottom-left-radius: 20px;">
                 <p style="margin: 0; font-size: 12px;">{{ $company_mobile }}</p>
                 <p style="margin: 0; font-size: 12px; color: #007BFF;">{{ $company_email }}</p>
                 <p style="margin: 0; font-size: 12px;">{!! $company_address !!}</p>
