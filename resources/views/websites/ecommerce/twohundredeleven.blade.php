@@ -107,22 +107,22 @@
                                             <table style="width: 100%;border-collapse: collapse;margin-top: 10px;"> 
                                                 <tr style="background: #428bc2;">
                                                     <td style="padding: 10px;width: 40%;">
-                                                    <p style="color: #ffffff;margin: 0px;font-size:6px;font-family: Roboto;line-height:12px;font-weight: 700;">
+                                                    <p style="color: #ffffff;margin: 0px;font-size:9px;font-family: Roboto;line-height:12px;font-weight: 700;">
                                                        ITEM DESCRIPTION
                                                     </p>
                                                     </td>
                                                     <td style="padding: 10px;width: 20%;" align="center">
-                                                    <p style="color: #ffffff;margin: 0px;font-size:6px;font-family: Roboto;line-height:12px;font-weight: 700;">
+                                                    <p style="color: #ffffff;margin: 0px;font-size:9px;font-family: Roboto;line-height:12px;font-weight: 700;">
                                                        UNIT PRICE
                                                     </p>
                                                     </td>
                                                     <td style="padding: 10px;width: 20%;" align="center">
-                                                    <p style="color: #ffffff;margin: 0px;font-size:6px;font-family: Roboto;line-height:12px;font-weight: 700;">
+                                                    <p style="color: #ffffff;margin: 0px;font-size:9px;font-family: Roboto;line-height:12px;font-weight: 700;">
                                                        QUANTITY
                                                     </p>
                                                     </td>
                                                     <td style="padding: 10px;width: 20%;" align="center">
-                                                    <p style="color: #ffffff;margin: 0px;font-size:6px;font-family: Roboto;line-height:12px;font-weight: 700;">
+                                                    <p style="color: #ffffff;margin: 0px;font-size:9px;font-family: Roboto;line-height:12px;font-weight: 700;">
                                                        TOTAL
                                                     </p>
                                                     </td>
@@ -130,22 +130,22 @@
                                                 @foreach($products as $product)
                                                 <tr style="background: #ffffff;">
                                                     <td style="padding: 10px;">
-                                                    <p style="color: #000000;margin: 0px;font-size:6px;font-family: Roboto;line-height:12px;">
+                                                    <p style="color: #000000;margin: 0px;font-size:9px;font-family: Roboto;line-height:12px;">
                                                        {{ $product->name }}
                                                     </p>
                                                     </td>
                                                     <td style="padding: 10px;" align="center">
-                                                    <p style="color: #000000;margin: 0px;font-size:6px;font-family: Roboto;line-height:12px;">
+                                                    <p style="color: #000000;margin: 0px;font-size:9px;font-family: Roboto;line-height:12px;">
                                                        {{ site_currency() . number_format($product->unit_price, 2) }}
                                                     </p>
                                                     </td>
                                                     <td style="padding: 10px;" align="center">
-                                                    <p style="color: #000000;margin: 0px;font-size:6px;font-family: Roboto;line-height:12px;">
+                                                    <p style="color: #000000;margin: 0px;font-size:9px;font-family: Roboto;line-height:12px;">
                                                        1
                                                     </p>
                                                     </td>
                                                     <td style="padding: 10px;" align="center">
-                                                    <p style="color: #000000;margin: 0px;font-size:6px;font-family: Roboto;line-height:12px;">
+                                                    <p style="color: #000000;margin: 0px;font-size:9px;font-family: Roboto;line-height:12px;">
                                                        {{ site_currency() . number_format($product->unit_price, 2) }}
                                                     </p>
                                                     </td>
@@ -161,19 +161,6 @@
                                                     <td align="center">
                                                       <p style="color: #ffffff;margin: 0px;font-size:10px;font-family: Roboto;line-height:14px;">
                                                      {{ site_currency() . number_format($invoice_amount + $discount_amount, 2) }}
-                                                    </p> 
-                                                    </td>
-                                                </tr>
-                                                <tr style="height: 24px;">
-                                                    <td colspan="2"></td>
-                                                    <td align="left">
-                                                      <p style="color: #ffffff;margin: 0px;font-size:10px;font-family: Roboto;line-height:14px;">
-                                                    Tax
-                                                    </p> 
-                                                    </td>
-                                                    <td align="center">
-                                                      <p style="color: #ffffff;margin: 0px;font-size:10px;font-family: Roboto;line-height:14px;">
-                                                     10%
                                                     </p> 
                                                     </td>
                                                 </tr>
