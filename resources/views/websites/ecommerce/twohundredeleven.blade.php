@@ -115,7 +115,7 @@
                                                     <p style="color: #ffffff;margin: 0px;font-size:9px;font-family: Roboto;line-height:12px;font-weight: 700;">
                                                        UNIT PRICE
                                                     </p>
-                                                    </td>
+                                                    </td
                                                     <td style="padding: 10px;width: 20%;" align="center">
                                                     <p style="color: #ffffff;margin: 0px;font-size:9px;font-family: Roboto;line-height:12px;font-weight: 700;">
                                                        QUANTITY
@@ -124,7 +124,7 @@
                                                     <td style="padding: 10px;width: 20%;" align="center">
                                                     <p style="color: #ffffff;margin: 0px;font-size:9px;font-family: Roboto;line-height:12px;font-weight: 700;">
                                                        TOTAL
-                                                    </p>
+                                                    </p> 
                                                     </td>
                                                 </tr>
                                                 @foreach($products as $product)
