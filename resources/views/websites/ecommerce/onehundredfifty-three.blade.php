@@ -59,7 +59,7 @@
                                         </p>
                                         <p
                                             style="font-family: arial;font-size: 10px;margin-bottom: 5px;font-weight: 400;">
-                                            <b>Website:</b> {{ $site->site_link }}
+                                            <b>Website:</b> www.thedevilzz.com
                                         </p>
                                         <p style="font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;">
                                             <b>Phone:</b> {{ $company_mobile }}
