@@ -15,8 +15,8 @@
                 <img src="{{ $company_logo }}" width="200" alt=""><br><br>
                 <p style="margin: 0; font-size: 12px;">{{ $company_name }}</p>
               </td>
-              <td valign="top" align="right" style=" background-color: #ffffff; ">
-              <div style = "background-color: #F2F3F3;border-bottom-left-radius: 20px;padding-top:20px;padding-right:20px;">
+              <td valign="top" align="right" style=" background-color: #ffffff; padding: 0px">
+              <div style = "background-color: #F2F3F3;border-bottom-left-radius: 20px;padding-top:20px;padding-right:20px;padding-bottom:20px;">
               <p style="margin: 0; font-size: 12px;">{{ $company_mobile }}</p>
                 <p style="margin: 0; font-size: 12px; color: #007BFF;">{{ $company_email }}</p>
                 <p style="margin: 0; font-size: 12px;">{!! $company_address !!}</p>
