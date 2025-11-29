@@ -8,10 +8,10 @@
     style="max-width: 90%; margin: 0 auto; background-color: #ffffff;border-top-left-radius: 20px;border-bottom-left-radius: 20px;border-bottom-right-radius: 20px;">
     <!-- Header with Logo -->
     <tr>
-      <td style="padding: 0px 0px 0px 20px;">
+      <td style="padding: 0px 0px 0px 0px;">
         <table width="100%" cellpadding="10" cellspacing="0">
             <tr>
-              <td style="border-top-left-radius: 20px; border-top-right-radius: 20px; padding-top:20px;border-left: 1px solid #ccc;border-top: 1px solid #ccc;">
+              <td style="border-top-left-radius: 20px; border-top-right-radius: 20px;padding-left:20px; padding-top:20px;border-left: 1px solid #ccc;border-top: 1px solid #ccc;">
                 <img src="{{ $company_logo }}" width="200" alt=""><br><br>
                 <p style="margin: 0; font-size: 12px;">{{ $company_name }}</p>
               </td>
@@ -115,7 +115,7 @@
 
 
     <tr style="height: 75px;">
-      <td style=" padding: 0px 75px 28px 75px; color: #ffffff; font-size: 12px;" valign="bottom" >
+      <td style=" padding: 0px 75px 28px 75px; color: #ffffff; font-size: 12px;border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;border-right: 1px solid #ccc;" valign="bottom" >
         <hr style="background: #7F8082;margin: 0;">
       </td>
     </tr>
