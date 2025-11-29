@@ -80,7 +80,7 @@
                                 </td>
                             </tr>
                             @foreach($products as $index => $product)
-                            <tr style="max-height:60px;">
+                            <tr style="">
                                 <td style="padding:10px;width:46.4%;padding-left:50px;background:#172f32;border-bottom:1px solid #ffffff;">
                                 <p style="font-family: Soleil Lt;font-size:11px;color:#ffffff;margin:0px;line-height:12px;font-weight:600">
                                     {{ $product->name }}
