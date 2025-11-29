@@ -11,13 +11,15 @@
       <td style="padding: 0px 0px 0px 0px;background-color: #F2F3F3;">
         <table width="100%" cellpadding="10" cellspacing="0">
             <tr>
-              <td style=" background-color: #ffffff;border-top-left-radius: 20px; border-top-right-radius: 20px;padding-left:20px; padding-top:20px;border-left: 1px solid #ccc;border-top: 1px solid #ccc;">
+              <td style=" background-color: #ffffff;border-top-left-radius: 20px; border-top-right-radius: 20px;padding-left:20px; padding-top:20px;">
                 <img src="{{ $company_logo }}" width="200" alt=""><br><br>
                 <p style="margin: 0; font-size: 12px;">{{ $company_name }}</p>
               </td>
               <td valign="top" align="right" style=" background-color: #ffffff; padding: 0px">
-              <div style = "background-color: #F2F3F3;border-bottom-left-radius: 20px;padding-top:20px;padding-right:20px;padding-bottom:20px;border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;">
-              <p style="margin: 0; font-size: 12px;">{{ $company_mobile }}</p>
+              <div style = "background-color: #F2F3F3;border-bottom-left-radius: 20px;padding-top:20px;padding-right:20px;padding-bottom:20px;">
+              <div style="border: 1px solid #f28d40; padding: 6px;">
+    <p style="margin: 0; font-size: 12px;">{{ $company_mobile }}</p>
+</div>
                 <p style="margin: 0; font-size: 12px; color: #007BFF;">{{ $company_email }}</p>
                 <p style="margin: 0; font-size: 12px;">{!! $company_address !!}</p>
               </div>
@@ -30,7 +32,7 @@
 
     <!-- Invoice Number and Date -->
       <tr>
-        <td style="padding: 20px;border-left: 1px solid #ccc;border-right: 1px solid #ccc;">
+        <td style="padding: 20px;">
           <table width="100%" cellpadding="10" cellspacing="0" style="border: 1px solid #f28d40; border-collapse: collapse;">
             <tr style="background-color: #fff1e6;">
               <th style="border: 1px solid #f28d40; text-align: left;width: 40%;">Bill To</th>
@@ -56,7 +58,7 @@
 
       <!-- Table -->
       <tr>
-        <td style="padding: 20px;border-left: 1px solid #ccc;border-right: 1px solid #ccc;">
+        <td style="padding: 20px;">
         <div style="min-height:550px !important;">
           <table width="100%" cellpadding="10" cellspacing="0" style="border: 1px solid #f28d40; border-collapse: collapse;">
             <tr style="background-color: #fff1e6;">
@@ -118,7 +120,7 @@
 
 
     <tr style="height: 75px;">
-      <td style=" padding: 0px 75px 28px 75px; color: #ffffff; font-size: 12px;border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;border-right: 1px solid #ccc; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px;" valign="bottom" >
+      <td style=" padding: 0px 75px 28px 75px; color: #ffffff; font-size: 12px; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px;" valign="bottom" >
         <hr style="background: #7F8082;margin: 0;">
       </td>
     </tr>
