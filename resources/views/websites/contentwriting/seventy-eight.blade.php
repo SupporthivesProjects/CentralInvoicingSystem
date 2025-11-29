@@ -17,7 +17,7 @@
               </td>
               <td valign="top" align="right" style=" background-color: #ffffff; padding: 0px">
               <div style = "background-color: #F2F3F3;border-bottom-left-radius: 20px;padding-top:20px;padding-right:20px;padding-bottom:20px;">
-              <div style="display:inline-block; border:1px solid #f28d40; padding:6px; border-radius:50%;">
+              <div style="display:inline-block; border:1px solid #f28d40; padding:6px; border-radius:50px;">
     <p style="margin:0; font-size:12px;">{{ $company_mobile }}</p>
 </div>
 
