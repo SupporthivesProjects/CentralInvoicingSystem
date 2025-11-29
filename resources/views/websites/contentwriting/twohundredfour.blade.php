@@ -80,7 +80,7 @@
                                 </td>
                             </tr>
                             @foreach($products as $index => $product)
-                            <tr style="max-height:60px;">
+                            <tr style="">
                                 <td style="padding:10px;width:46.4%;padding-left:50px;background:#172f32;border-bottom:1px solid #ffffff;">
                                 <p style="font-family: Soleil Lt;font-size:11px;color:#ffffff;margin:0px;line-height:12px;font-weight:600">
                                     {{ $product->name }}
@@ -110,7 +110,7 @@
                             </tr>
                             
                             @endforeach
-                            <tr style="height:240.5px;">
+                            <tr style="height:260.5px;">
                                 <td style="background:#172f32;"></td>
                                 <td colspan="3" style="background:url('{{ $invoice_image1 }}');background-repeat:no-repeat;background-size:cover;padding:20px;vertical-align:top;" align="right">
                                     <table style="width: 50%;border-collapse:collapse;">
