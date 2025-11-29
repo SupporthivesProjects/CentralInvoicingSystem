@@ -86,7 +86,17 @@
       </div>
       </td>
     </tr>
-      <tr style=" background: url('{{ $invoice_footer_image }}');background-repeat: no-repeat;background-size: cover;background-position: center;height: 115px; margin-bottom: -40px;">
+      <tr style="
+            height: 130px;
+            padding: 0;
+            margin: 0;
+            background: url('{{ $invoice_footer_image }}') no-repeat center;
+            background-size: cover;
+            color: #ffffff;
+            font-size: 12px;
+            text-align: center;
+            vertical-align: middle;
+        ">
         <td style="padding: 0px; color: #ffffff; font-size: 12px; text-align: center;">
          {{ $company_email}} |{{  $site_name }}| {{ $company_mobile }}<br/><br>
         {!! $company_address !!}
