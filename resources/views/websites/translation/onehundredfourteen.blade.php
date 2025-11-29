@@ -95,8 +95,7 @@
             color: #ffffff;
             font-size: 12px;
             text-align: center;
-            vertical-align: middle;
-        ">
+            vertical-align: middle;">
         <td style="padding: 0px; color: #ffffff; font-size: 12px; text-align: center;">
          {{ $company_email}} |{{  $site_name }}| {{ $company_mobile }}<br/><br>
         {!! $company_address !!}
