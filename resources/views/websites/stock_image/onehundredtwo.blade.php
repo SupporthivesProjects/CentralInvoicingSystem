@@ -74,7 +74,7 @@
                                     </td>
                                 </tr>
                             </table>
-                            <div style="min-height: 730px !important;">
+                            <div style="min-height: 740px !important;">
                             <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 10px; margin-top: 30px;">
                                 <tr style="background-color: #355C5B; color: white;">
                                   <th style="text-align: left; padding: 6px 12px;">PACK</th>
