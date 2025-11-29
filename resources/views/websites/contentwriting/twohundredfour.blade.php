@@ -58,7 +58,7 @@
                         </table>
                         <table style="width: 100%;border-collapse:collapse;">
                             <tr style="background:#111f21;height:60px;">
-                                <td style="padding:10px;width:46.4%;padding-left:50px;">
+                                <td style="padding:10px;width:46.4%;padding-left:50px; height:400px">
                                 <p style="font-family: Soleil Bk;font-weight: bold; font-size:12px;color:#bfc543;margin:0px;line-height:16px">
                                     DESCRIPTION
                                 </p>
