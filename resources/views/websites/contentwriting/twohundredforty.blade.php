@@ -196,7 +196,7 @@
                                                 <p><b style="color: #172355;">EMAIL:</b> {{ $company_email }}</p>
                                                 <p><b style="color: #172355;">ADDRESS:</b> {!! $company_address !!}</p>
                                             </td >  -->
-                                            <td style="text-align:center; font-size:14px; font-family:'Sen', sans-serif; width:80%;">
+                                            <td style="text-align:center; font-size:14px; font-family:'Sen', sans-serif; width:40%;">
                                                 <div style="margin-left:-20px;">
                                                     <p><b style="color:#172355;">TEL:</b> {{ $company_mobile }}</p>
                                                     <p><b style="color:#172355;">EMAIL:</b> {{ $company_email }}</p>
