@@ -47,7 +47,7 @@
           <tr style="background-color: #0D6966; color: #ffffff;">
             <th align="left">QUANTITY</th>
             <th align="left">DESCRIPTION</th>
-            <th align="right">NO OF PAGES/WORDS</th>
+            <th align="right">No of Pages/Words</th>
             <th align="right">TOTAL</th>
           </tr>
           @foreach($products as $product)
@@ -86,7 +86,7 @@
       </div>
       </td>
     </tr>
-      <tr style=" background: url('{{ $invoice_footer_image }}');background-repeat: no-repeat;background-size: cover;background-position: center;height: 100vh;">
+      <tr style=" background: url('{{ $invoice_footer_image }}');background-repeat: no-repeat;background-size: cover;background-position: center;height: 115px;">
         <td style="padding: 0px; color: #ffffff; font-size: 12px; text-align: center;">
          {{ $company_email}} |{{  $site_name }}| {{ $company_mobile }}<br/><br>
         {!! $company_address !!}
