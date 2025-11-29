@@ -24,13 +24,13 @@
                                             </h1>
                                         </td> -->
                                         <td style="width:50%; border:0px;">
-                                            <div style="margin-top:-40px;">
+                                            <div style="margin-top:-55px;">
                                                 <img src="{{ $company_logo }}" style="height:60px; padding-left:20px;">
                                             </div>
                                         </td>
 
                                         <td style="width:50%; border:0px;">
-                                            <div style="margin-top:-40px; text-align:right; padding-right:70px;">
+                                            <div style="margin-top:-55px; text-align:right; padding-right:70px;">
                                                 <h1 style="font-size:58px; margin:0;">INVOICE</h1>
                                             </div>
                                         </td>
