@@ -35,7 +35,7 @@
                        <td colspan="2">
                         <table width="100%" style="border-collapse: collapse;">
                             <tr>
-                                <td style="background:#172f32;width:46.4%;vertical-align:top;padding:0px 50px 50px 50px;">
+                                <td style="background:#172f32;width:46.4%;vertical-align:top;padding:0px 50px 50px 20px;">
                                     <p style="font-family: Soleil Bk;font-size:13px;color:#ffffff;margin:0px;line-height:24px">
                                     Invoice To : 
                                     </p>
@@ -43,7 +43,7 @@
                                         {{ $customer_name }}
                                     </p>
                                 </td>
-                                <td style="padding:0px 50px 50px 50px;">
+                                <td style="padding:0px 50px 50px 20px;">
                                     <p style="font-family: Soleil Bk;font-size:13px;color:#000000;margin:0px;line-height:24px;font-weight:700;">
                                     Invoice Information : 
                                     </p>
@@ -57,7 +57,7 @@
                             </tr>
                         </table>
                         <table style="width: 100%;border-collapse:collapse; height:600px;">
-                            <tr style="background:#111f21;height:60px;">
+                            <tr style="background:#111f21;">
                                 <td style="padding:10px;width:46.4%;padding-left:50px; ">
                                 <p style="font-family: Soleil Bk;font-weight: bold; font-size:12px;color:#bfc543;margin:0px;line-height:16px">
                                     DESCRIPTION
@@ -153,10 +153,10 @@
                                     </table>
                                 </td>
                             </tr>
-                            <!--<tr height="100%">
+                            <tr height="100%">
                             <td style="background:#172f32;"></td>
                             <td></td>
-                            </tr>-->
+                            </tr>
                         </table>
                        </td> 
                     </tr>
@@ -169,10 +169,10 @@
                             <table style="border-collapse:collapse;width:100%;">
                                 <tr>
                                    <td style="background:#172f32;padding:20px 50px;height:98px;width:46.4%">
-                            <p style="font-family: Soleil Bk;font-size:11px;color:#bfc543;margin:0px;line-height:12px">
-                            CONTACT US <br>
-                            SISISERVICES OI
-                            </p>
+                                        <p style="font-family: Soleil Bk;font-size:11px;color:#bfc543;margin:0px;line-height:12px">
+                                        CONTACT US <br>
+                                        SISISERVICES OI
+                                        </p>
                             <p style="font-family: Soleil Bk;font-size:9px;color:#ffffff;margin:0px;line-height:12px">
                                 {{ $company_name }}<br>
                                 {!! $company_address !!} <br>
