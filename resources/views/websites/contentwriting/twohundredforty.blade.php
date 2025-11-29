@@ -85,7 +85,7 @@
                                     </td>
                                 </tr>
                                 @foreach ($products as $product)
-                                <tr style="border-collapse: collapse;height: 30px;font-family: 'Sen', sans-serif; color: gray;border-bottom: 1px solid black;background-color: {{ $loop->iteration % 2 == 0 ? lightgrey : '#ffffff' }}; ">
+                                <tr style="border-collapse: collapse;height: 30px;font-family: 'Sen', sans-serif; color: gray;border-bottom: 1px solid black;background-color: {{ $loop->iteration % 2 == 0 ? 'lightgrey' : '#ffffff' }}; ">
                                     <td style="width: 50px;text-align: left;font-size: 14px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-left: 5px;">
                                        {{ $loop->iteration }}
                                     </td>
