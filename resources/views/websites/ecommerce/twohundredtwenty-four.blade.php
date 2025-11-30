@@ -41,6 +41,7 @@
                             </table>
                         </td>
                     </tr>
+
                     <!-- Invoice Date & Number -->
                     <tr style="position: relative;">
                         <td style="padding: 0 20px 10px 20px;">
@@ -66,10 +67,13 @@
                             </table>
                         </td>
                     </tr>
+
                     <tr style="height:100px"></tr>
+
                     <!-- Invoice To -->
                     <tr style="position: relative;">
-                        <td style="padding: 20px; padding-bottom: 10px;vertical-align:center;padding-left:80px;">
+                        <td style="padding: 20px; padding-bottom: 40px; vertical-align:center; padding-left:80px;">
+                            <!-- FIX: increased padding-bottom so orange box floats -->
                             <div>
                                 <p style="margin: 0; font-size: 18px; color: black; font-weight: 700;">Invoice To</p>
                                 <h2 style="margin: 5px 0 0 0; color: #333;">{{ $customer_name }}</h2>
@@ -94,22 +98,20 @@
                                             TOTAL</th>
                                     </tr>
                                 </thead>
-                                <!-- Repeating Item Rows -->
+
                                 @foreach ($products as $product)
-                                    <tr style="background-color: #fde7c8; font-size: 9px;height:40px;">
-                                        <td style="padding:0px 10px;">{{ $product->name }}</td>
-                                        <td align="center">{{ site_currency() }}
-                                            {{ number_format($product->unit_price, 2) }}</td>
-                                        <td align="center">1</td>
-                                        <td align="right" style="padding:0px 10px;">{{ site_currency() }}
-                                            {{ number_format($product->unit_price, 2) }}</td>
-                                    </tr>
+                                <tr style="background-color: #fde7c8; font-size: 9px;height:40px;">
+                                    <td style="padding:0px 10px;">{{ $product->name }}</td>
+                                    <td align="center">{{ site_currency() }} {{ number_format($product->unit_price, 2) }}</td>
+                                    <td align="center">1</td>
+                                    <td align="right" style="padding:0px 10px;">{{ site_currency() }} {{ number_format($product->unit_price, 2) }}</td>
+                                </tr>
                                 @endforeach
                             </table>
                         </td>
                     </tr>
 
-                    <!-- Totals Section -->
+                    <!-- Totals -->
                     <tr>
                         <td style="padding: 20px;">
                             <table align="right"
@@ -118,13 +120,11 @@
                                     <td colspan="2"
                                         style="background-color: #7ebbf3;border-radius: 30px;padding: 10px 16px;color: #000;font-weight: 600;display: flex;justify-content: space-between;">
                                         <span>Sub Total</span>
-                                        <span>{{ site_currency() }}
-                                            {{ number_format($invoice_amount + $discount_amount, 2) }}</span>
+                                        <span>{{ site_currency() }} {{ number_format($invoice_amount + $discount_amount, 2) }}</span>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td style="height: 10px;"></td>
-                                </tr> <!-- spacing -->
+
+                                <tr><td style="height: 10px;"></td></tr>
 
                                 <tr>
                                     <td colspan="2"
@@ -133,9 +133,8 @@
                                         <span>{{ site_currency() }} {{ number_format($discount_amount, 2) }}</span>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td style="height: 10px;"></td>
-                                </tr> <!-- spacing -->
+
+                                <tr><td style="height: 10px;"></td></tr>
 
                                 <tr>
                                     <td colspan="2"
@@ -147,7 +146,9 @@
                             </table>
                         </td>
                     </tr>
+
                 </table>
+
             </td>
         </tr>
     </table>
