@@ -145,7 +145,7 @@
 
                                         <div style="margin-bottom: 8px; display: flex; gap: 10px; align-items: center;">
                                                 <span style="color: #f24c1e; font-weight: 400;">COMPANY NAME:</span>
-                                                <span style="font-weight: 400;">{{ $customer_name }}</span>
+                                                <span style="font-weight: 400;">{{ $company_name }}</span>
                                             </div>
 
                                             <!-- ADDRESS -->
