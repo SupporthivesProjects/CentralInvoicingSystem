@@ -81,10 +81,9 @@
                                         <img src="{{ $company_logo }}" alt="logo" class="logo">
 
                                         <!-- FIX: Company details on 3 lines -->
-                                        <p class="company-details">
-                                            {{ $company_address_line1 }}<br>
-                                            {{ $company_address_line2 }}<br>
-                                            {{ $company_email }}
+                                         <p style="font-size: 8px; line-height: 1.4; margin-top: 15px;">
+                                            {{ $company_address }}<br>
+                                            {{ $company_email }}<br>
                                         </p>
                                     </td>
 
