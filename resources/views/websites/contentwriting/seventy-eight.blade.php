@@ -49,7 +49,9 @@
                 <strong>Name:</strong> {{ $company_name }}<br />
                 <strong>Address:</strong> {!! $company_address !!}<br />
                 <strong>Email:</strong> {{ $company_email }}<br />
-                <strong>Phone:</strong> {{ $company_mobile }}
+                @if(!empty($company_mobile))
+                    <strong>Phone:</strong> {{ $company_mobile }}
+                @endif
               </td>
               
             </tr>
