@@ -27,26 +27,32 @@
         .pills { text-align:right; font-weight:700; font-size:11px; }
         .pill { display:inline-block; padding:5px 14px; border-radius:15px; font-size:11px; margin-left:8px; }
 
-        /* Orange "Invoice To" box (floats above the items area) */
+        /* Orange "Invoice To" box */
         .invoice-to-wrap {
-            padding: 36px 20px 8px 80px; /* increased top/bottom padding */
+            padding: 36px 20px 8px 80px;
         }
         .invoice-to-box {
             background-color: #f79d7c; /* orange */
             border-radius: 28px;
-            padding: 30px 28px; /* larger box */
+            padding: 30px 28px;
             max-width: calc(100% - 160px);
             box-shadow: 0 6px 0 rgba(0,0,0,0.02);
             position: relative;
             z-index: 2;
-            margin-bottom: 24px; /* important: creates the float gap from blue bar */
+            margin-bottom: 24px;
         }
         .invoice-to-box h1 { margin:6px 0 0; font-size: 30px; color:#222; }
         .invoice-to-box .label { font-size:20px; font-weight:700; margin-bottom:6px; color:#111; }
 
-        /* Items table */
-        .items-wrap { padding: 0 20px 20px 20px; /* keep space below */ }
-        .items-table { width:100%; border-collapse:collapse; font-size:13px; } /* +2 from 11 -> 13 */
+        /* Items section (BLUE BAR FIX APPLIED HERE) */
+        .items-wrap { padding: 0 20px 20px 20px; }
+        .items-container {
+            position: relative;
+            z-index: 1;
+            padding-top: 40px; /* FIX: ADD SPACE ABOVE BLUE BAR */
+        }
+
+        .items-table { width:100%; border-collapse:collapse; font-size:13px; }
         .items-table thead tr { background-color:#7ebbf3; color:#000; font-weight:700; font-size:13px; }
         .items-table th, .items-table td { padding:12px 14px; vertical-align:middle; }
         .items-table tbody tr { background-color:#fde7c8; height:48px; font-size:13px; }
@@ -58,9 +64,6 @@
         /* Totals */
         .totals { padding: 20px; }
         .totals .pill-row { width:220px; margin-left:auto; font-size:12px; }
-
-        /* Make sure blue bar doesn't visually touch the page bottom shadow */
-        .items-container { position: relative; z-index:1; padding-top: 6px; }
     </style>
 </head>
 
@@ -69,19 +72,17 @@
     <table align="center" width="100%" cellpadding="0" cellspacing="0">
         <tr>
             <td style="background: url('{{ $invoice_image1 }}') no-repeat center/cover; vertical-align:top; min-height:100vh;">
-                <!-- Inner container -->
+
                 <table align="center" width="100%" cellpadding="0" cellspacing="0">
-                    <!-- Header -->
+                    
                     <tr>
                         <td class="header-row">
                             <table width="100%">
                                 <tr>
                                     <td style="width:70%; vertical-align:top;">
-                                        <!-- FIX: Bigger logo -->
                                         <img src="{{ $company_logo }}" alt="logo" class="logo">
 
-                                        <!-- FIX: Company details on 3 lines -->
-                                         <p style="font-size: 8px; line-height: 1.4; margin-top: 15px;">
+                                        <p style="font-size: 8px; line-height: 1.4; margin-top: 15px;">
                                             {{ $company_address }}<br>
                                             {{ $company_email }}<br>
                                         </p>
@@ -95,7 +96,6 @@
                         </td>
                     </tr>
 
-                    <!-- Invoice Date & Number -->
                     <tr>
                         <td style="padding: 0 20px 10px 20px;">
                             <table width="100%">
@@ -117,7 +117,6 @@
                         </td>
                     </tr>
 
-                    <!-- Invoice To (bigger, and floating orange graphic) -->
                     <tr>
                         <td class="invoice-to-wrap">
                             <div class="invoice-to-box">
@@ -127,11 +126,11 @@
                         </td>
                     </tr>
 
-                    <!-- Items table: note the gap between the orange box and the blue header -->
+                    <!-- BLUE BAR + ITEMS -->
                     <tr>
                         <td class="items-wrap">
                             <div class="items-container">
-                                <table class="items-table" cellpadding="0" cellspacing="0">
+                                <table class="items-table">
                                     <thead>
                                         <tr>
                                             <th style="text-align:left;">ITEM DESCRIPTION</th>
@@ -156,26 +155,25 @@
                         </td>
                     </tr>
 
-                    <!-- Totals -->
                     <tr>
                         <td class="totals">
                             <table class="pill-row" align="right">
                                 <tr>
-                                    <td colspan="2" style="background:#7ebbf3; border-radius:30px; padding:10px 16px; color:#000; font-weight:600; display:flex; justify-content:space-between;">
+                                    <td colspan="2" style="background:#7ebbf3; border-radius:30px; padding:10px 16px; font-weight:600; display:flex; justify-content:space-between;">
                                         <span>Sub Total</span>
                                         <span>{{ site_currency() }} {{ number_format($invoice_amount + $discount_amount, 2) }}</span>
                                     </td>
                                 </tr>
                                 <tr><td style="height:10px"></td></tr>
                                 <tr>
-                                    <td colspan="2" style="background:#f79d7c; border-radius:30px; padding:10px 16px; color:#000; font-weight:600; display:flex; justify-content:space-between;">
+                                    <td colspan="2" style="background:#f79d7c; border-radius:30px; padding:10px 16px; font-weight:600; display:flex; justify-content:space-between;">
                                         <span>Discount</span>
                                         <span>{{ site_currency() }} {{ number_format($discount_amount, 2) }}</span>
                                     </td>
                                 </tr>
                                 <tr><td style="height:10px"></td></tr>
                                 <tr>
-                                    <td colspan="2" style="background:#fff; border-radius:30px; padding:10px 16px; color:#000; font-weight:700; display:flex; justify-content:space-between;">
+                                    <td colspan="2" style="background:#fff; border-radius:30px; padding:10px 16px; font-weight:700; display:flex; justify-content:space-between;">
                                         <span>TOTAL</span>
                                         <span>{{ site_currency() }} {{ number_format($invoice_amount, 2) }}</span>
                                     </td>
