@@ -160,7 +160,7 @@
                                         </td>
                                         <td align="right" style="border-bottom: 1px solid black;">
                                             <p
-                                                style="margin: 0px;font-family: Arial;font-size:8px;line-height: 20px;padding: 5px;">
+                                                style="margin: 0px;font-family: Arial;font-size:10px;line-height: 20px;padding: 5px;">
                                                 {{ site_currency() . number_format($invoice_amount + $discount_amount, 2) }}
                                             </p>
                                         </td>
@@ -175,7 +175,7 @@
                                         </td>
                                         <td align="right" style="border-bottom: 1px solid black;">
                                             <p
-                                                style="margin: 0px;font-family: Arial;font-size:8px;line-height: 20px;padding: 5px;">
+                                                style="margin: 0px;font-family: Arial;font-size:10px;line-height: 20px;padding: 5px;">
                                                 {{ site_currency() . number_format($discount_amount, 2) }}
                                             </p>
                                         </td>
@@ -190,7 +190,7 @@
                                         </td>
                                         <td align="right" style="background: #D3E5F9;">
                                             <p
-                                                style="margin: 0px;font-family: Arial;font-size:8px;line-height: 20px;padding: 5px;">
+                                                style="margin: 0px;font-family: Arial;font-size:10px;line-height: 20px;padding: 5px;">
                                                 {{ site_currency() . number_format($invoice_amount, 2) }}
                                             </p>
                                         </td>
