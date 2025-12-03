@@ -75,7 +75,7 @@
                                             <b>Website : </b>{{ $site_name }}
                                         </p>
 
-                                        <p style="margin: 0px;font-family: Arial;font-size: 10px;width: 50px; line-height: 18px;">
+                                        <p style="margin: 0px;font-family: Arial;font-size: 10px;width: 150px; line-height: 18px;">
                                             <b>Address : </b>{!! $company_address !!}
                                         </p>
                                     </td>
