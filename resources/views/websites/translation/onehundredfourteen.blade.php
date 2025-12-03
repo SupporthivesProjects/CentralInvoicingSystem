@@ -42,7 +42,7 @@
     <!-- Items Table -->
     <tr>
       <td colspan="2" style="padding: 0 20px 20px;">
-      <div style="min-height: 680px !important">
+      <div style="min-height: 720px !important">
         <table width="100%" cellpadding="8" cellspacing="0" style="border-collapse: collapse; font-size: 14px;">
           <tr style="background-color: #0D6966; color: #ffffff;">
             <th align="left">QUANTITY</th>
