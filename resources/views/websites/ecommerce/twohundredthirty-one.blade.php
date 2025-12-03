@@ -169,10 +169,10 @@
         </td>
         <td style="width:100px;text-align:left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;background-color: #E54666;color: white;">
         </td>
-        <td style="width:100px;text-align:left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;background-color: #E54666;color: white;padding-left: 5px;">
+        <td style="width:100px;text-align:left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 800; border-collapse: collapse;background-color: #E54666;color: white;padding-left: 5px;">
             Grand Total
         </td>
-        <td style="width:100px;text-align:right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;background-color: #E54666;color: white;padding-right: 2px;border-left: 1px solid whitesmoke;">
+        <td style="width:100px;text-align:right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 800; border-collapse: collapse;background-color: #E54666;color: white;padding-right: 2px;border-left: 1px solid whitesmoke;">
             {{ site_currency() . number_format($invoice_amount, 2) }}
         </td>
     </tr>
