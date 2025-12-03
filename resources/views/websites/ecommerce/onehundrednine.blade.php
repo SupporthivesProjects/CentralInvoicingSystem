@@ -71,11 +71,11 @@
                                         <p style="margin: 0px;font-family: Arial;font-size: 10px;line-height: 18px;">
                                             <b>Email : </b>{{ $company_email }}
                                         </p>
-                                        <p style="margin: 0px;font-family: Arial;font-size: 10px;line-height: 18px;text-transform:lowercase;">
+                                        <p style="margin: 0px;font-family: Arial;font-size: 10px;line-height: 18px;text-transform: capitalize;">
                                             <b>Website : </b>{{ $site_name }}
                                         </p>
 
-                                        <p style="margin: 0px;font-family: Arial;font-size: 10px;line-height: 18px;">
+                                        <p style="margin: 0px;font-family: Arial;font-size: 10px;width: 100px line-height: 18px;">
                                             <b>Address : </b>{!! $company_address !!}
                                         </p>
                                     </td>
