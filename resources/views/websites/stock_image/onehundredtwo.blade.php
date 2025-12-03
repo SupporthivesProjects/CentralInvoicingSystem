@@ -3,8 +3,8 @@
 <head>
     <title>Lenzlibrary</title>
 </head>
-<body style="margin: 0px;">
-    <table width="100%" cellspacing="0" cellpadding="0" border="0">
+<body style="margin: 0px;background: #FFFDF0;">
+    <table style="background: #FFFDF0;" width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
             <td align="center" bgcolor="#FFFDF0" style="padding: 0px;">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFDF0" style="border-collapse: collapse;">
