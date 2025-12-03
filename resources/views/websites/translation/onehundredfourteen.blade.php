@@ -99,7 +99,7 @@
     </tr>
       <tr>
         <td>
-          <div class="footer-fixed" style="background: url('{{ $invoice_footer_image }}');background-repeat: no-repeat;background-size: cover;background-position: center;height: 115px;color: #ffffff; font-size: 12px; text-align: center;padding: 20px;">
+          <div class="footer-fixed" style="background: url('{{ $invoice_footer_image }}');background-repeat: no-repeat;background-size: cover;background-position: center;color: #ffffff; font-size: 12px; text-align: center;padding: 40px;">
             
             {{ $company_email}} |{{  $site_name }}| {{ $company_mobile }}<br/><br>
             {!! $company_address !!}
