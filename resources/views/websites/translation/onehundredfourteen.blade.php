@@ -42,7 +42,7 @@
     <!-- Items Table -->
     <tr>
       <td colspan="2" style="padding: 0 20px 20px;">
-      <div style="min-height: 700px !important">
+      <div style="min-height: 680px !important">
         <table width="100%" cellpadding="8" cellspacing="0" style="border-collapse: collapse; font-size: 14px;">
           <tr style="background-color: #0D6966; color: #ffffff;">
             <th align="left">QUANTITY</th>
@@ -87,7 +87,7 @@
       </td>
     </tr>
     <tr style=" background: url('{{ $invoice_footer_image }}');background-repeat: no-repeat;background-size: cover;background-position: center;height: 110px;"> 
-      <td style="padding: 0px; color: #ffffff; font-size: 12px; text-align: center;"> 
+      <td style="padding: 0px;padding-top:10px; color: #ffffff; font-size: 12px; text-align: center;"> 
       {{ $company_email}} |{{ $site_name }}| {{ $company_mobile }}<br/><br> {!! $company_address !!} 
       </td> 
     </tr>

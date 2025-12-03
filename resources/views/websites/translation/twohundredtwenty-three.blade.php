@@ -107,8 +107,8 @@
                                         <p style=" font-size: 21px; font-weight: bold; margin: 0%;"></p>
                                     </td>
                                     <td align="center">
-                                        <p style=" font-size: 22px; font-weight: bold; margin: 0px;padding-left: 80px;">Grand Total: </p>
-                                        <p style="font-size: 22px; font-weight: bold; margin: 0%; padding-left: 128px;">{{ site_currency() . number_format($invoice_amount ?? 0, 2) }}</p>
+                                        <p style=" font-size: 22px; font-weight: bold; margin: 0px;padding-left: 100px;">Grand Total: </p>
+                                        <p style="font-size: 22px; font-weight: bold; margin: 0%; padding-left: 148px;">{{ site_currency() . number_format($invoice_amount ?? 0, 2) }}</p>
                                     </td>
                                 </tr>
                             </table>
