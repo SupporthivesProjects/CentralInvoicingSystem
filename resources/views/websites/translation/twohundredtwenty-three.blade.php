@@ -101,14 +101,14 @@
                                 </table>
                             
                              <table width="100%"
-                                style="margin-top: -30px;margin-left: 70px; padding: 40px;padding-right:0px; color: White; background-image: url('{{ $invoice_image2}}'); height: 212px; width: 100%; background-position: center; background-repeat: no-repeat; background-size: cover; box-shadow: none;">
+                                style="margin-top: -60px; padding: 40px;padding-right:0px; color: White; background-image: url('{{ $invoice_image2}}'); height: 212px; width: 100%; background-position: center; background-repeat: no-repeat; background-size: cover; box-shadow: none;">
                                 <tr>
                                     <td width="50%">
                                         <p style=" font-size: 21px; font-weight: bold; margin: 0%;"></p>
                                     </td>
                                     <td align="center">
-                                        <p style=" font-size: 22px; font-weight: bold; margin: 0px;">Grand Total: </p>
-                                        <p style="font-size: 22px; font-weight: bold; margin: 0%; padding-left: 48px;">{{ site_currency() . number_format($invoice_amount ?? 0, 2) }}</p>
+                                        <p style=" font-size: 22px; font-weight: bold; margin: 0px;padding-left: 50px;">Grand Total: </p>
+                                        <p style="font-size: 22px; font-weight: bold; margin: 0%; padding-left: 98px;">{{ site_currency() . number_format($invoice_amount ?? 0, 2) }}</p>
                                     </td>
                                 </tr>
                             </table>
