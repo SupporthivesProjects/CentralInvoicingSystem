@@ -101,7 +101,7 @@
                                 </table>
                             
                              <table width="100%"
-                                style="margin-top: -30px; padding: 40px; color: White; background-image: url('{{ $invoice_image2}}'); height: 212px; width: 100%; background-position: center; background-repeat: no-repeat; background-size: cover; box-shadow: none;">
+                                style="margin-top: -30px; padding: 40px;padding-right:0px; color: White; background-image: url('{{ $invoice_image2}}'); height: 212px; width: 100%; background-position: center; background-repeat: no-repeat; background-size: cover; box-shadow: none;">
                                 <tr>
                                     <td width="50%">
                                         <p style=" font-size: 21px; font-weight: bold; margin: 0%;"></p>
