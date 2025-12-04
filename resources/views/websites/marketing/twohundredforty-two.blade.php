@@ -13,7 +13,7 @@
                     style="border: 15px solid #D95D27;background: #D95D27;">
                     <tr>
                         <td>
-                            <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse;border-radius: 18px;background-color: #ffffff; height: 1050px;">
+                            <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse;border-radius: 18px;background-color: #ffffff; height: 1090px;">
                                 <!-- Header -->
                                 <tr>
                                     <td style="height: 165px;">
