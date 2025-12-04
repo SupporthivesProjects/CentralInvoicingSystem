@@ -10,7 +10,7 @@
         <tr>
             <td align="center" bgcolor="#f2f2f2" style="padding: 0px 0;">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
-                    style="border: 15px solid #D95D27;background: #D95D27; height: 100%">
+                    style="border: 15px solid #D95D27;background: #D95D27; height: 900px;">
                     <tr>
                         <td>
                             <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse;border-radius: 18px;background-color: #ffffff;">
