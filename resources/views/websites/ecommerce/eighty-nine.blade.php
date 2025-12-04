@@ -63,7 +63,7 @@
                             </table>
                             <br>
                             <br>
-                            <div style="min-height: 750px !important;">
+                            <div style="min-height: 725px !important;">
                                 <table style="width: 100%; border-collapse: collapse;  font-size: 10px;">
                                     <!-- Table Header -->
                                     <tr>
@@ -141,7 +141,7 @@
                             <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;">
                                 <tr style="background: url('{{ $invoice_footer_image }}') no-repeat;background-position: center;background-size: cover;height:60px;padding:50px;background-size:cover;width: 100%;">
                                     <td>
-                                        <table cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse; padding-left: 40px;" align="start" >
+                                        <table cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse; padding-left: 40px; margin-left: 40px;" align="start">
                                                         <tr>
                                                             <td>
                                                                 <table>
