@@ -9,7 +9,7 @@
   <!-- OUTER WRAPPER TABLE -->
   <table width="100%" cellpadding="0" cellspacing="0" style="background:#FFFCF8;height:100vh">
     <tr>
-      <td align="center">
+      <td align="center" style="vertical-align:top;">
 
         <!-- MAIN CONTAINER -->
         <table width="100%" cellpadding="0" cellspacing="0"
@@ -161,7 +161,7 @@
           <tr>
             <td>
               <table width="100%" height="90" cellpadding="0" cellspacing="0"
-                style="background-image:url('{{ $invoice_image1 }}'); background-size:100%; background-position:center; background-repeat:no-repeat; margin-top:40px;">
+                style="background-image:url('{{ $invoice_image1 }}'); background-size:100%; background-position:center; background-repeat:no-repeat; margin-top:40px;position:absolute;bottom:0px">
                 <tr>
                   <td></td>
                 </tr>
