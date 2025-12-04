@@ -47,7 +47,7 @@
                                         <span style="color: #f36c6c; font-weight: bold; font-size: 14px;">INVOICE
                                             TO:</span><br>
                                         <span style="font-size: 20px; font-weight: bold; font-size: 16px;">{{ $customer_name  }}</span><br>
-                                        <span>Email: {{ $customer_email }}</span>
+                                        <!-- <span>Email: {{ $customer_email }}</span> -->
                                     </td>
 
                                     <!-- INVOICE FROM -->
@@ -110,7 +110,7 @@
                                     </tr>
                                 </table>
                             </div>
-                            <table width="100%" cellpadding="0" cellspacing="0"
+                            <!-- <table width="100%" cellpadding="0" cellspacing="0"
                                 style="font-size: 10px; color: #333;  width: 80%;">
                                 <tr>
                                     <td style="padding: 10px;">
@@ -121,7 +121,7 @@
                                         Thank you for your business.
                                     </td>
                                 </tr>
-                            </table>
+                            </table> -->
 
 
 
@@ -141,7 +141,7 @@
                             <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;">
                                 <tr style="background: url('{{ $invoice_footer_image }}') no-repeat;background-position: center;background-size: cover;height:60px;padding:50px;background-size:cover;width: 100%;">
                                     <td>
-                                        <table cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;" align="center">
+                                        <table cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;" align="start">
                                                         <tr>
                                                             <td>
                                                                 <table>
