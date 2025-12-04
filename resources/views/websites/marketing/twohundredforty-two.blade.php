@@ -13,7 +13,7 @@
                     style="border: 15px solid #D95D27;background: #D95D27;">
                     <tr>
                         <td>
-                            <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse;border-radius: 18px;background-color: #ffffff; height: 1000px;">
+                            <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse;border-radius: 18px;background-color: #ffffff; height: 1200px;">
                                 <!-- Header -->
                                 <tr>
                                     <td style="height: 165px;">
@@ -55,7 +55,7 @@
 
                                         style="color:white; padding:30px; vertical-align: top; height:90px">
 
-                                        <table width="100%" cellpadding="8" style="color:white; background: #3E3E48; border-top: 15px solid #3E3E48;border-left: 25px solid #3E3E48;border-right: 25px solid #3E3E48;border-bottom: 15px solid #3E3E48;border-radius: 15px;">
+                                        <table width="100%" cellpadding="0" style="color:white; background: #3E3E48; border-top: 15px solid #3E3E48;border-left: 25px solid #3E3E48;border-right: 25px solid #3E3E48;border-bottom: 15px solid #3E3E48;border-radius: 15px;">
                                             <tr>
                                                 <td style="padding: 0px;">
                                                     <table width="100%" cellpadding="8" style="color:white;border-collapse: collapse;padding: 0px;">
