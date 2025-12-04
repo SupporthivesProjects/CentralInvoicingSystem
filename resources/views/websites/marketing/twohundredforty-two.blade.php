@@ -13,7 +13,7 @@
                     style="border: 15px solid #D95D27;background: #D95D27;">
                     <tr>
                         <td>
-                            <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse;border-radius: 18px;background-color: #ffffff; height: 1100px;">
+                            <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse;border-radius: 18px;background-color: #ffffff; height: 1000px;">
                                 <!-- Header -->
                                 <tr>
                                     <td style="height: 165px;">
@@ -29,9 +29,9 @@
                                 <!-- Content -->
                                 <tr>
 
-                                    <td style="font-family: 'Montserrat'; font-size: 9px; vertical-align: top; height: 320px;">
+                                    <td style="font-family: 'Montserrat'; font-size: 9px; vertical-align: top; height: 320px; background-color:red; ">
 
-                                        <table width="100%" cellpadding="1" style="padding:40px 80px; padding-bottom: 0%; ">
+                                        <table width="100%" cellpadding="0" style="padding:40px 80px; padding-bottom: 0%; ">
                                             <tr>
                                                 <td style="width:20%; vertical-align:top; color:#000;">
                                                     <p style="margin:0;margin-top: 10px; font-size:14px; text-transform: capitalize;">Invoice To :</p>
