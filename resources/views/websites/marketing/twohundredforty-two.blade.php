@@ -29,17 +29,17 @@
                                 <!-- Content -->
                                 <tr>
 
-                                    <td style="font-family: 'Montserrat'; font-size: 9px; vertical-align: center; background-color: red;">
+                                    <td style="font-family: 'Montserrat'; font-size: 9px;">
 
-                                        <table width="100%" cellpadding="0" style="padding:40px 80px;  ">
+                                        <table width="100%" cellpadding="0" cellspacing="0" style="padding:0px 80px;  ">
                                             <tr>
-                                                <td style="width:20%; vertical-align:top; color:#000;">
+                                                <td style="width:20%;  color:#000;">
                                                     <p style="margin:0;margin-top: 10px; font-size:14px; text-transform: capitalize;">Invoice To :</p>
-                                                    <p style="margin:0; margin-top: 10px; font-size:12px; text-transform: capitalize;">Invoice Date <span style="padding-left: 12px;">:</span></p>
-                                                    <p style="margin:0; margin-top: 10px; font-size:12px; text-transform: capitalize;">Invoice No<span style="padding-left: 19px;">:</span></p>
+                                                    <p style="margin:0; margin-top: 10px; font-size:12px; text-transform: capitalize;">Invoice Date :</p>
+                                                    <p style="margin:0; margin-top: 10px; font-size:12px; text-transform: capitalize;">Invoice No :</p>
                                                 </td>
 
-                                                <td style="width:80%; vertical-align:top; color:#000;">
+                                                <td style="width:80%;  color:#000;">
                                                     <p style="margin: 0%;margin-top: 10px; font-size: 14px; font-weight:bold;">{{ $customer_name ? $customer_name : '' }}</p>
                                                     <p style="margin:0%; margin-top: 10px; font-size: 12px;">{{ $invoice_date }}</p>
                                                     <p style="margin:0; margin-top: 10px;font-size: 12px;">{{ $invoice_number }}</p>
