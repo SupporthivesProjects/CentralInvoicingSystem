@@ -12,7 +12,7 @@
       <td align="center">
 
         <!-- MAIN CONTAINER -->
-        <table width="600" cellpadding="0" cellspacing="0"
+        <table width="100%" cellpadding="0" cellspacing="0"
           style="background:#FFFCF8; border-radius:6px; overflow:hidden;">
 
           <!-- HEADER -->
