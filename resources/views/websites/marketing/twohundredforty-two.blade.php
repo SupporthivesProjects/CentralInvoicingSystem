@@ -9,7 +9,7 @@
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
             <td align="center" bgcolor="#f2f2f2" style="padding: 0px 0;">
-                <table width="650" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
+                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
                     style="border: 15px solid #D95D27;background: #D95D27; height: 100%">
                     <tr>
                         <td>
