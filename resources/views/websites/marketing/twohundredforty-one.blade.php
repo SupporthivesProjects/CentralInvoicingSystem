@@ -93,7 +93,7 @@
           <!-- INVOICE TABLE -->
           <tr>
             <td align="center">
-              <table cellpadding="0" cellspacing="0" width="500"
+              <table cellpadding="0" cellspacing="0" width="90%"
                 style="border-collapse:collapse; font-family:Arial, sans-serif; font-size:14px; color:#000; position: relative;">
 
                 <!-- HEADER ROW -->
