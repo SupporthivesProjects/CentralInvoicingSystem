@@ -29,7 +29,7 @@
                                 <!-- Content -->
                                 <tr>
 
-                                    <td style="font-family: 'Montserrat'; font-size: 9px; vertical-align: top; background-color: red;">
+                                    <td style="font-family: 'Montserrat'; font-size: 9px; vertical-align: center; background-color: red;">
 
                                         <table width="100%" cellpadding="0" style="padding:40px 80px;  ">
                                             <tr>
