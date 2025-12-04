@@ -13,7 +13,7 @@
                     style="border: 15px solid #D95D27;background: #D95D27;">
                     <tr>
                         <td>
-                            <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse;border-radius: 18px;background-color: #ffffff; height: 1000px;">
+                            <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse;border-radius: 18px;background-color: #ffffff; height: 1050px;">
                                 <!-- Header -->
                                 <tr>
                                     <td style="height: 165px;">
@@ -29,7 +29,7 @@
                                 <!-- Content -->
                                 <tr>
 
-                                    <td style="font-family: 'Montserrat'; font-size: 9px; vertical-align: top;">
+                                    <td style="font-family: 'Montserrat'; font-size: 9px; vertical-align: top; background-color: red;">
 
                                         <table width="100%" cellpadding="0" style="padding:40px 80px;  ">
                                             <tr>
