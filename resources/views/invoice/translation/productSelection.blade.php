@@ -1143,104 +1143,209 @@
 
         });
     </script>
-    <script>
-        $(document).ready(function() {
-            let sessionAmount = parseFloat("{{ session('invoice_amount') ?? 0 }}");
+<script>
+    $(document).ready(function() {
+        let sessionAmount = parseFloat("{{ session('invoice_amount') ?? 0 }}");
+        let isUpdating = false;
 
-            function setEditIcon() {
-                $('#update_invoice_amount')
-                    .removeClass('bg-warning bg-success')
-                    .addClass('bg-light')
-                    .html('<i data-feather="edit" id="icon" style="color: black;width:20px;"></i>');
-                feather.replace();
+        function setEditIcon() {
+            $('#update_invoice_amount')
+                .removeClass('bg-warning bg-success')
+                .addClass('bg-light')
+                .html('<i data-feather="edit" id="icon" style="color: black;width:20px;"></i>');
+            feather.replace();
+        }
+
+        function setUploadIcon() {
+            $('#update_invoice_amount')
+                .removeClass('bg-light bg-success')
+                .addClass('bg-warning')
+                .html('<i data-feather="upload-cloud" id="icon" style="color: black;width:20px;"></i>');
+            feather.replace();
+        }
+
+        function setLoader() {
+            $('#update_invoice_amount')
+                .removeClass('bg-warning bg-light bg-success')
+                .addClass('bg-warning')
+                .html(
+                    '<div class="d-flex align-items-center justify-content-center" style="width:20px;">' +
+                    '<div class="spinner-border text-dark" style="width: 18px; height: 18px;" role="status">' +
+                    '<span class="visually-hidden">Loading...</span>' +
+                    '</div>' +
+                    '</div>'
+                );
+        }
+
+        function setSuccessIcon() {
+            $('#update_invoice_amount')
+                .removeClass('bg-warning')
+                .addClass('bg-success')
+                .html('<i data-feather="check-circle" id="icon" style="color: white;width:20px;"></i>');
+            feather.replace();
+        }
+
+        $('#invoice_amount').on('input', function() {
+            if (isUpdating) return;
+            
+            let currentVal = parseFloat($(this).val());
+            if (!isNaN(currentVal) && currentVal !== sessionAmount) {
+                setUploadIcon();
+            } else {
+                setEditIcon();
+            }
+        });
+
+        $(document).on('click', '#update_invoice_amount', function() {
+            let currentVal = parseFloat($('#invoice_amount').val());
+            if (isNaN(currentVal) || currentVal === sessionAmount) {
+                return;
             }
 
-            function setUploadIcon() {
-                $('#update_invoice_amount')
-                    .removeClass('bg-light bg-success')
-                    .addClass('bg-warning')
-                    .html('<i data-feather="upload-cloud" id="icon" style="color: black;width:20px;"></i>');
-                feather.replace();
-            }
+            isUpdating = true;
+            setLoader();
 
-            function setLoader() {
-                $('#update_invoice_amount')
-                    .removeClass('bg-warning bg-light bg-success')
-                    .addClass('bg-warning')
-                    .html(
-                        '<div class="d-flex align-items-center justify-content-center" style="width:20px;">' +
-                        '<div class="spinner-border text-dark" style="width: 18px; height: 18px;" role="status">' +
-                        '<span class="visually-hidden">Loading...</span>' +
-                        '</div>' +
-                        '</div>'
-                    );
-            }
+            let invoice_amount = $('#invoice_amount').val();
+            let invoice_date = $('#invoice_date').val();
+            let customer_name = $('#customer_name').val();
+            let customer_email = $('#customer_email').val();
+            let customer_mobile = $('#customer_mobile').val();
 
-            function setSuccessIcon() {
-                $('#update_invoice_amount')
-                    .removeClass('bg-warning')
-                    .addClass('bg-success')
-                    .html('<i data-feather="check-circle" id="icon" style="color: white;width:20px;"></i>');
-                feather.replace();
-            }
+            $.ajax({
+                url: "{{ route('update.invoice.amount') }}",
+                type: 'POST',
+                data: {
+                    invoice_amount,
+                    invoice_date,
+                    customer_name,
+                    customer_email,
+                    customer_mobile,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    if (response.success) {
+                        sessionAmount = parseFloat(invoice_amount);
+                        setSuccessIcon();
 
-            $('#invoice_amount').on('input', function() {
-                let currentVal = parseFloat($(this).val());
-                if (!isNaN(currentVal) && currentVal !== sessionAmount) {
-                    setUploadIcon();
-                } else {
-                    setEditIcon();
-                }
-            });
-
-            $(document).on('click', '#update_invoice_amount', function() {
-                let currentVal = parseFloat($('#invoice_amount').val());
-                if (isNaN(currentVal) || currentVal === sessionAmount) {
-                    return;
-                }
-
-                setLoader();
-
-                let invoice_amount = $('#invoice_amount').val();
-                let invoice_date = $('#invoice_date').val();
-                let customer_name = $('#customer_name').val();
-                let customer_email = $('#customer_email').val();
-                let customer_mobile = $('#customer_mobile').val();
-
-                $.ajax({
-                    url: "{{ route('update.invoice.amount') }}",
-                    type: 'POST',
-                    data: {
-                        invoice_amount,
-                        invoice_date,
-                        customer_name,
-                        customer_email,
-                        customer_mobile,
-                        _token: '{{ csrf_token() }}'
-                    },
-                    success: function(response) {
-                        if (response.success) {
-                            sessionAmount = parseFloat(invoice_amount);
-                            setSuccessIcon();
-
-                            $('#invoice_amount').val(response.updated.invoice_amount);
-                            $('#invoice_date').val(response.updated.invoice_date);
-                            $('#customer_name').val(response.updated.customer_name);
-                            $('#customer_email').val(response.updated.customer_email);
-                            $('#customer_mobile').val(response.updated.customer_mobile);
-                            randomizeProducts();
-                            setTimeout(() => {
-                                setEditIcon();
-                            }, 4000);
+                        $('#invoice_date').val(response.updated.invoice_date);
+                        $('#customer_name').val(response.updated.customer_name);
+                        $('#customer_email').val(response.updated.customer_email);
+                        $('#customer_mobile').val(response.updated.customer_mobile);
+                        
+                        if (typeof calculateTotalPrice === 'function') {
+                            calculateTotalPrice();
                         }
-                    },
-                    error: function() {
-                        setEditIcon();
+                        
+                        setTimeout(() => {
+                            setEditIcon();
+                            isUpdating = false;
+                        }, 4000);
                     }
-                });
+                },
+                error: function() {
+                    setEditIcon();
+                    isUpdating = false;
+                },
+                complete: function() {
+                    setTimeout(function() {
+                        isUpdating = false;
+                    }, 100);
+                }
             });
         });
-    </script>
+    });
+</script>
+
+<script>
+    let discountManuallyChanged = false;
+
+    $(document).on('input', '.product-price, input[name="product_ids[]"]', function() {
+        discountManuallyChanged = true;
+        calculateTotalPrice();
+    });
+
+    $(document).on('input', '#discount_amount', function() {
+        discountManuallyChanged = true;
+        calculateTotalPrice();
+    });
+
+    $(document).on('blur', '#discount_amount', function() {
+        calculateTotalPrice();
+    });
+
+    function calculateTotalPrice() {
+        var total = 0;
+        var currency = "{{ site_currency() }}";
+
+        $('.product-row').each(function () {
+            var $row = $(this);
+
+            var unitPrice = parseFloat($row.find('.product-price').val()) || 0;
+            var pages = parseInt($row.find('.product-pages').val()) || 1;
+            var urgentAmount = 0;
+
+            var $urgentCheckbox = $row.find('.urgency-checkbox');
+            if ($urgentCheckbox.length && $urgentCheckbox.is(':checked')) {
+                urgentAmount = parseFloat($urgentCheckbox.data('urgent_amount')) || 0;
+            }
+
+            total += (unitPrice * pages) + urgentAmount;
+
+            var rowTotal = (unitPrice * pages + urgentAmount).toFixed(2);
+            $row.find('.product-total').text(currency + rowTotal);
+        });
+
+        $('#products-total').text(currency + total.toFixed(2));
+        $('#current_amount').val(total.toFixed(2));
+
+        var invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
+        var discountAmount = total - invoiceAmount;
+        if (discountAmount < 0) discountAmount = 0;
+
+        $('#discount_amount').val(discountAmount.toFixed(2));
+
+        var currentAmount = total;
+        var enteredDiscount = parseFloat($('#discount_amount').val()) || 0;
+        var sum = currentAmount - enteredDiscount;
+
+        var isMatching = Math.abs(sum - invoiceAmount) < 0.01;
+
+        if (isMatching) {
+            $('#current_amount, #discount_amount, #invoice_amount').removeClass('text-danger').addClass('text-success');
+        } else {
+            $('#current_amount, #discount_amount').removeClass('text-success').addClass('text-danger');
+
+            var difference = Math.abs(currentAmount - invoiceAmount);
+            var percentDiff = (difference / invoiceAmount) * 100;
+
+            if (percentDiff <= 5) {
+                $('#invoice_amount').removeClass('text-danger').addClass('text-success');
+            } else {
+                $('#invoice_amount').removeClass('text-success').addClass('text-danger');
+            }
+        }
+    }
+
+    $(document).ready(function() {
+        calculateTotalPrice();
+
+        $(document).on('input', 'input[type="text"]', function() {
+            calculateTotalPrice();
+        });
+
+        $(document).on('input', '.product-pages', function() {
+            calculateTotalPrice();
+        });
+
+        $(document).on('change', '.urgency-checkbox', function() {
+            calculateTotalPrice();
+        });
+
+        $(document).on('input', '.edit-price-field', function() {
+            calculateTotalPrice();
+        });
+    });
+</script>
     <script>
         $(document).ready(function() {
             $('.unit-price-header').click(function() {
