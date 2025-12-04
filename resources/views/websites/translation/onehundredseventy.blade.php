@@ -50,7 +50,7 @@
                             </table>
                             <table>
                                 <tr style="color: white;font-family:  'Roboto', sans-serif;">
-                                    <td style="width:50%;padding-left: 50px;font-size: 12px;padding-top: 45px;">
+                                    <td style="width:50%;padding-left: 50px;font-size: 12px;padding-top: 90px;">
                                         Billed From:
                                     </td>
                                     <td style="width:50%;text-align: right;padding-right: 40px;font-size: 12px;padding-top: 90px;" align="right">Invoice To:</td>
@@ -159,7 +159,7 @@
                                     <td ></td>
                                     <td ></td>
                                     <td ></td>
-                                    <td style="text-align: center;background-color: orange; ">TOTAL |</td>
+                                    <td style="text-align: center;background-color: orange; ">TOTAL :</td>
                                     <td style="text-align: center; background-color: orange;">{{ site_currency() . number_format($invoice_amount, 2) }}</td>
                                 </tr>
                                  
