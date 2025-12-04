@@ -7,12 +7,12 @@
 <body style="margin:0; padding:0; background:#f5f6f8; font-family:Arial, sans-serif;">
 
   <!-- OUTER WRAPPER TABLE -->
-  <table width="100%" cellpadding="0" cellspacing="0" style="background:#FFFCF8;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#FFFCF8;height:100vh">
     <tr>
       <td align="center">
 
         <!-- MAIN CONTAINER -->
-        <table width="600" cellpadding="0" cellspacing="0"
+        <table width="100%" cellpadding="0" cellspacing="0"
           style="background:#FFFCF8; border-radius:6px; overflow:hidden;">
 
           <!-- HEADER -->
@@ -160,7 +160,7 @@
           <!-- FOOTER (TABLE ONLY) -->
           <tr>
             <td>
-              <table width="600" height="90" cellpadding="0" cellspacing="0"
+              <table width="100%" height="90" cellpadding="0" cellspacing="0"
                 style="background-image:url('{{ $invoice_image1 }}'); background-size:100%; background-position:center; background-repeat:no-repeat; margin-top:40px;">
                 <tr>
                   <td></td>
