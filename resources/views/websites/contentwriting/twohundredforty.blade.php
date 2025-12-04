@@ -81,7 +81,7 @@
                                         <b>BILLING CYCLE</b>
                                     </td>
                                     <td style="width:100px;text-align: right;font-size: 14px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 10px;">
-                                        <b>Total</b>
+                                        <b>TOTAL</b>
                                     </td>
                                 </tr>
                                 @foreach ($products as $product)
@@ -192,7 +192,7 @@
                                             <img src="{{ $invoice_image1 }}" style="height: 200px;">
                                             </td>
                                             <td style="text-align: center;font-size: 14px;display: flow-root; font-family: 'Sen', sans-serif; width: 70%; ">
-                                                <p><b style="color: #172355;">TEL:</b> {{ $company_mobile }}</p>
+                                                <!-- <p><b style="color: #172355;">TEL:</b> {{ $company_mobile }}</p> -->
                                                 <p><b style="color: #172355;">EMAIL:</b> {{ $company_email }}</p>
                                                 <p><b style="color: #172355;">ADDRESS:</b> {!! $company_address !!}</p>
                                             </td > 
