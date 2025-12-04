@@ -160,7 +160,7 @@
           <!-- FOOTER (TABLE ONLY) -->
           <tr>
             <td>
-              <table width="100%" height="90" cellpadding="0" cellspacing="0"
+              <table width="100%" height="100" cellpadding="0" cellspacing="0"
                 style="background-image:url('{{ $invoice_image1 }}'); background-size:100%; background-position:center; background-repeat:no-repeat; margin-top:40px;position:absolute;bottom:0px">
                 <tr>
                   <td></td>
