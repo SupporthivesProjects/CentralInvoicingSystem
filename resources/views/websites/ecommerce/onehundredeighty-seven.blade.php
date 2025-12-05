@@ -68,7 +68,7 @@
                                        </p>
 
                             <table style="width:80%;border-collapse: collapse;margin-top:50px;margin-left:20px;">
-                                <tr>
+                                <tr style="border-radius:10px;border:none;background:white;">
                                     <td style="padding: 10px;width: 40%;">
                                         <p style="margin: 0px;font-size: 10px;font-family: Lato;color:#194fba;line-height: 16px;font-weight:600;">
                                             DESCRIPTION
@@ -118,7 +118,7 @@
                                </tr>
                                @endforeach
                                <tr style="height: 30px;"></tr>
-                               <tr style="height:30px;">
+                               <tr style="height:30px;border-radius:10px 0px 0px 10px;background:white;border:none;">
                                 <td></td>
                                 <td style="padding:0px 10px;width: 10%;" align="center" colspan="2">
                                     <p style="margin: 0px;font-size:9px;font-family: Lato;color:#194fba;line-height: 16px;">
@@ -131,7 +131,7 @@
                                     </p>
                                 </td>
                                </tr>
-                               <tr style="height:20px;">
+                               <tr style="height:20px;border-radius:0px 10px 10px 0px;background:white;border:none;">
                                 <td></td>
                                 <td style="padding:0px 10px;width: 10%;" align="center" colspan="2">
                                     <p style="margin: 0px;font-size:9px;font-family: Lato;color:#194fba;line-height: 16px;">
