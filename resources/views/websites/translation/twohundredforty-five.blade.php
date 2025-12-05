@@ -195,7 +195,7 @@
                     <!-- Content End-->
                      <!-- Footer -->
                      <tr>
-                        <td style="background-image: url({{$invoice_header_image}}); height: 135px; width: 100%; opacity: 1; background-size: contain; background-repeat: no-repeat;">
+                        <td style="background-image: url({{$invoice_footer_image}}); height: 135px; width: 100%; opacity: 1; background-size: contain; background-repeat: no-repeat;">
                         </td>
                      </tr>
                 </table>
