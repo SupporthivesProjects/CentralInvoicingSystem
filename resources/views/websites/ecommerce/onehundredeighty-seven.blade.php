@@ -20,7 +20,7 @@
                    <!-- header -->
                     <tr>
                         <td>
-                            <table border="0" style="border-collapse:collapse;height:200px;padding:0" width="100%">
+                            <table border="0" style="border-collapse:collapse;padding:0" width="100%">
                                 <tr style="background: url('{{ $invoice_image3 }}');background-position: center;background-repeat: no-repeat;background-size: cover;height:200px;">
                                     <td style="padding:0px 100px" align="right" style="vertical-align:ceter">
                                     <div style="width:40%;padding-left:50px;text-align: left;">
