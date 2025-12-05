@@ -76,7 +76,7 @@
                                         </p>
 
                                         <p style="margin: 0px;font-family: Arial;font-size: 10px;width: 250px; line-height: 18px;">
-                                            <b>Address : sahyiedj jcjdschd ksjadjid ccnvbdhhsn jcjdschd ksjadjid ccnvbdhhsn 123 vk mjdlxc kcslcjm skcjjc</b>{!! $company_address !!}
+                                            <b>Address : </b>{!! $company_address !!}
                                         </p>
                                     </td>
                                 </tr>
