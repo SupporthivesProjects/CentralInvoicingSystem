@@ -23,7 +23,7 @@
             <td align="center" style="padding:0px;">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse;max-height:100vh;">
                    <!-- header -->
-                    <tr style="height:30vh;">
+                    <tr style="height:20vh;">
                         <td>
                             <table border="0" style="border-collapse:collapse;padding:0;" width="100%">
                                 <tr style="background: url('{{ $invoice_image3 }}');background-position: center;background-repeat: no-repeat;background-size:cover;">
@@ -66,7 +66,7 @@
                     </tr> 
                     <!-- header -->
                       <!-- content -->
-                        <tr style="height:70vh;">
+                        <tr style="height:80vh;">
                             <td style="background: url('{{ $invoice_image2 }}');background-repeat: no-repeat;background-size:cover;height:600px;vertical-align: top;padding: 0px 50px;">
                              <p style="margin: 0px;font-size:24px;font-family: Lato;font-weight:700;color: #ffffff;text-align: right;padding-right: 100px;">
                                 {{ site_currency() . number_format($invoice_amount ?? 0, 2) }}
