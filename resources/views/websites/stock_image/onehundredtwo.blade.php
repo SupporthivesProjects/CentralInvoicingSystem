@@ -3,11 +3,11 @@
 <head>
     <title>Lenzlibrary</title>
 </head>
-<body style="margin: 0px;">
-    <table width="100%" cellspacing="0" cellpadding="0" border="0">
+<body style="margin: 0px;background: #FFFDF0;">
+    <table style="background: #FFFDF0;" width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
-            <td align="center" bgcolor="#f2f2f2" style="padding: 0px;">
-                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFDF0" style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
+            <td align="center" bgcolor="#FFFDF0" style="padding: 0px;">
+                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFDF0" style="border-collapse: collapse;">
                       <!-- Header -->
 
                       <tr style=" background: url('{{ $invoice_header_image }}');
@@ -74,7 +74,7 @@
                                     </td>
                                 </tr>
                             </table>
-                            <div style="min-height: 750px !important;">
+                            <!-- <div style="min-height: 750px !important;"> -->
                             <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 10px; margin-top: 30px;">
                                 <tr style="background-color: #355C5B; color: white;">
                                   <th style="text-align: left; padding: 6px 12px;">PACK</th>
@@ -107,7 +107,7 @@
                                   </td>
                                 </tr>
                               </table>
-                            </div>
+                            <!-- </div> -->
                         </td>
                     </tr>
                      <!-- Content End-->

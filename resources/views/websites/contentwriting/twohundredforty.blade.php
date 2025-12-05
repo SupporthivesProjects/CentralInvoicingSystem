@@ -81,11 +81,11 @@
                                         <b>BILLING CYCLE</b>
                                     </td>
                                     <td style="width:100px;text-align: right;font-size: 14px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 10px;">
-                                        <b>Total</b>
+                                        <b>TOTAL</b>
                                     </td>
                                 </tr>
                                 @foreach ($products as $product)
-                                <tr style="border-collapse: collapse;height: 30px;font-family: 'Sen', sans-serif; color: gray;border-bottom: 1px solid black;">
+                                <tr style="border-collapse: collapse;height: 30px;font-family: 'Sen', sans-serif; color: gray;border-bottom: 1px solid black;background-color: {{ $loop->iteration % 2 == 0 ? 'lightgrey' : '#ffffff' }}; ">
                                     <td style="width: 50px;text-align: left;font-size: 14px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-left: 5px;">
                                        {{ $loop->iteration }}
                                     </td>
@@ -188,15 +188,16 @@
                                 <td style="height: 100px;">
                                     <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;"> 
                                         <tr style="height:200px;width: 100%;">
-                                            <td style="width: 35%"> 
+                                            <td style="width: 30%"> 
                                             <img src="{{ $invoice_image1 }}" style="height: 200px;">
                                             </td>
-                                            <td style="text-align: center;font-size: 14px;display: flow-root; font-family: 'Sen', sans-serif; width: 40%; ">
-                                                <p><b style="color: #172355;">TEL:</b> {{ $company_mobile }}</p>
+                                            <td style="text-align: center;font-size: 14px;display: flow-root; font-family: 'Sen', sans-serif; width: 70%; ">
+                                                <!-- <p><b style="color: #172355;">TEL:</b> {{ $company_mobile }}</p> -->
                                                 <p><b style="color: #172355;">EMAIL:</b> {{ $company_email }}</p>
                                                 <p><b style="color: #172355;">ADDRESS:</b> {!! $company_address !!}</p>
                                             </td > 
-                                            <td style="width: 33%">
+                                          
+                                            <td style="width: 30%">
                                                 <img src="{{ $invoice_image2 }}" style="height: 200px;">
                                             </td>   
                                         </tr>

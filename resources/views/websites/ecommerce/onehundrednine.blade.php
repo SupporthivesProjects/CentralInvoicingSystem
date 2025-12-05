@@ -71,11 +71,11 @@
                                         <p style="margin: 0px;font-family: Arial;font-size: 10px;line-height: 18px;">
                                             <b>Email : </b>{{ $company_email }}
                                         </p>
-                                        <p style="margin: 0px;font-family: Arial;font-size: 10px;line-height: 18px;text-transform:lowercase;">
+                                        <p style="margin: 0px;font-family: Arial;font-size: 10px;line-height: 18px;text-transform: capitalize;">
                                             <b>Website : </b>{{ $site_name }}
                                         </p>
 
-                                        <p style="margin: 0px;font-family: Arial;font-size: 10px;line-height: 18px;">
+                                        <p style="margin: 0px;font-family: Arial;font-size: 10px;width: 200px; line-height: 18px;">
                                             <b>Address : </b>{!! $company_address !!}
                                         </p>
                                     </td>
@@ -83,7 +83,7 @@
                             </table>
                             <div style="min-height: 700px !important;">
                                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
-                                    style="border-collapse: collapse;margin-top: 40px;">
+                                    style="border-collapse: collapse;margin-top: 30px;">
                                     <tr style="background: #D3E5F9;">
                                         <td>
                                             <p
@@ -160,7 +160,7 @@
                                         </td>
                                         <td align="right" style="border-bottom: 1px solid black;">
                                             <p
-                                                style="margin: 0px;font-family: Arial;font-size:8px;line-height: 20px;padding: 5px;">
+                                                style="margin: 0px;font-family: Arial;font-size:10px;line-height: 20px;padding: 5px;">
                                                 {{ site_currency() . number_format($invoice_amount + $discount_amount, 2) }}
                                             </p>
                                         </td>
@@ -175,7 +175,7 @@
                                         </td>
                                         <td align="right" style="border-bottom: 1px solid black;">
                                             <p
-                                                style="margin: 0px;font-family: Arial;font-size:8px;line-height: 20px;padding: 5px;">
+                                                style="margin: 0px;font-family: Arial;font-size:10px;line-height: 20px;padding: 5px;">
                                                 {{ site_currency() . number_format($discount_amount, 2) }}
                                             </p>
                                         </td>
@@ -190,7 +190,7 @@
                                         </td>
                                         <td align="right" style="background: #D3E5F9;">
                                             <p
-                                                style="margin: 0px;font-family: Arial;font-size:8px;line-height: 20px;padding: 5px;">
+                                                style="margin: 0px;font-family: Arial;font-size:10px;line-height: 20px;padding: 5px;">
                                                 {{ site_currency() . number_format($invoice_amount, 2) }}
                                             </p>
                                         </td>

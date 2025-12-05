@@ -3,22 +3,28 @@
 <head>
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
 </head>
-<body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #ffffff;">
+<body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #F2F3F3;padding-top: 30px">
   <table width="100%" cellpadding="0" cellspacing="0" border="0"
-    style="max-width: 90%; margin: 0 auto; border: 1px solid #ccc;">
+    style="max-width: 90%; margin: 0 auto; background-color: #ffffff;border-top-left-radius: 20px;border-bottom-left-radius: 20px;border-bottom-right-radius: 20px;">
     <!-- Header with Logo -->
     <tr>
-      <td style="padding: 20px;">
+      <td style="padding: 0px 0px 0px 0px;background-color: #F2F3F3;">
         <table width="100%" cellpadding="10" cellspacing="0">
             <tr>
-              <td>
+              <td style=" background-color: #ffffff;border-top-left-radius: 20px; border-top-right-radius: 20px;padding-left:20px; padding-top:20px;">
                 <img src="{{ $company_logo }}" width="200" alt=""><br><br>
                 <p style="margin: 0; font-size: 12px;">{{ $company_name }}</p>
               </td>
-              <td valign="top" align="right">
-                <p style="margin: 0; font-size: 12px;">{{ $company_mobile }}</p>
+              <td valign="top" align="right" style=" background-color: #ffffff; padding: 0px">
+              <div style = "background-color: #F2F3F3;border-bottom-left-radius: 20px;padding-top:20px;padding-right:20px;padding-bottom:20px;">
+              <div style="display:inline-block; border:1px solid #f28d40; padding:6px; border-radius:50px;">
+    <p style="margin:0; font-size:12px;">{{ $company_mobile }}</p>
+</div>
+
                 <p style="margin: 0; font-size: 12px; color: #007BFF;">{{ $company_email }}</p>
                 <p style="margin: 0; font-size: 12px;">{!! $company_address !!}</p>
+              </div>
+                
               </td>
             </tr>
         </table>
@@ -30,20 +36,22 @@
         <td style="padding: 20px;">
           <table width="100%" cellpadding="10" cellspacing="0" style="border: 1px solid #f28d40; border-collapse: collapse;">
             <tr style="background-color: #fff1e6;">
-              <th style="border: 1px solid #f28d40; text-align: left;">Bill To</th>
-              <th style="border: 1px solid #f28d40; text-align: left;">Bill From</th>
+              <th style="border: 1px solid #f28d40; text-align: left;width: 40%;">Bill To</th>
+              <th style="border: 1px solid #f28d40; text-align: left;width: 60%;">Bill From</th>
               
             </tr>
             <tr>
-              <td style="border: 1px solid #f28d40;">
+              <td style="border: 1px solid #f28d40;width: 30%;">
                 <strong>Name:</strong> {{ $customer_name }}<br />
-                <strong>Email:</strong> {{ $customer_mobile }}<br />
+                <!-- <strong>Email:</strong> {{ $customer_mobile }}<br /> -->
               </td>
-              <td style="border: 1px solid #f28d40;">
+              <td style="border: 1px solid #f28d40;width: 70%;">
                 <strong>Name:</strong> {{ $company_name }}<br />
                 <strong>Address:</strong> {!! $company_address !!}<br />
                 <strong>Email:</strong> {{ $company_email }}<br />
-                <strong>Phone:</strong> {{ $company_mobile }}
+                @if(!empty($company_mobile))
+                    <strong>Phone:</strong> {{ $company_mobile }}
+                @endif
               </td>
               
             </tr>
@@ -57,10 +65,10 @@
         <div style="min-height:550px !important;">
           <table width="100%" cellpadding="10" cellspacing="0" style="border: 1px solid #f28d40; border-collapse: collapse;">
             <tr style="background-color: #fff1e6;">
-              <th style="border: 1px solid #f28d40; text-align: left;">Qty.</th>
-              <th style="border: 1px solid #f28d40; text-align: left;">Description</th>
-              <th style="border: 1px solid #f28d40; text-align: right;">Unit price</th>
-              <th style="border: 1px solid #f28d40; text-align: right;">Total</th>
+              <th style="border: 1px solid #f28d40; text-align: left;width: 10%;">Qty.</th>
+              <th style="border: 1px solid #f28d40; text-align: left;width: 50%;">Description</th>
+              <th style="border: 1px solid #f28d40; text-align: right;width: 20%;">Unit price</th>
+              <th style="border: 1px solid #f28d40; text-align: right;width: 20%;">Total</th>
             </tr>
             @foreach($products as $index => $product)
             <tr>
@@ -115,7 +123,7 @@
 
 
     <tr style="height: 75px;">
-      <td style=" padding: 0px 75px 28px 75px; color: #ffffff; font-size: 12px;" valign="bottom" >
+      <td style=" padding: 0px 75px 28px 75px; color: #ffffff; font-size: 12px; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px;" valign="bottom" >
         <hr style="background: #7F8082;margin: 0;">
       </td>
     </tr>

@@ -3,62 +3,112 @@
 
 <head>
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
+    <meta charset="utf-8" />
     <style>
-        * {
-            margin: 0px;
-            padding: 0px;
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { margin:0; padding:0; font-family: Arial, sans-serif; color:#000; }
+
+        /* Header */
+        .header-row { padding: 20px; }
+        .logo { width: 180px; display:block; margin-bottom:10px; } /* bigger logo */
+        .company-details { font-size: 11px; line-height:1.45; margin-top:6px; color:#222; } /* 3 lines */
+
+        /* Invoice badge */
+        .invoice-badge {
+            background-color: #ffc680;
+            padding: 10px 22px;
+            font-weight: 700;
+            font-size: 38px;
+            border-radius: 50px;
+            display: inline-block;
         }
+
+        /* Invoice date / number pills */
+        .pills { text-align:right; font-weight:700; font-size:11px; }
+        .pill { display:inline-block; padding:5px 14px; border-radius:15px; font-size:11px; margin-left:8px; }
+
+        /* Orange "Invoice To" box */
+        .invoice-to-wrap {
+            padding: 36px 20px 8px 80px;
+        }
+        .invoice-to-box {
+            background-color: #f79d7c; /* orange */
+            border-radius: 28px;
+            padding: 30px 28px;
+            max-width: calc(100% - 160px);
+            box-shadow: 0 6px 0 rgba(0,0,0,0.02);
+            position: relative;
+            z-index: 2;
+            margin-bottom: 24px;
+        }
+        .invoice-to-box h1 { margin:6px 0 0; font-size: 30px; color:#222; }
+        .invoice-to-box .label { font-size:20px; font-weight:700; margin-bottom:6px; color:#111; }
+
+        /* Items section (BLUE BAR FIX APPLIED HERE) */
+        .items-wrap { padding: 0 20px 20px 20px; }
+        .items-container {
+            position: relative;
+            z-index: 1;
+            padding-top: 40px; /* FIX: ADD SPACE ABOVE BLUE BAR */
+        }
+
+        .items-table { width:100%; border-collapse:collapse; font-size:13px; }
+        .items-table thead tr { background-color:#7ebbf3; color:#000; font-weight:700; font-size:13px; }
+        .items-table th, .items-table td { padding:12px 14px; vertical-align:middle; }
+        .items-table tbody tr { background-color:#fde7c8; height:48px; font-size:13px; }
+        .items-table th:first-child { border-top-left-radius:12px; border-bottom-left-radius:12px; text-align:left; }
+        .items-table th:last-child { border-top-right-radius:12px; border-bottom-right-radius:12px; text-align:right; }
+        .items-table td:first-child { padding-left:16px; }
+        .items-table td:last-child { text-align:right; padding-right:16px; }
+
+        /* Totals */
+        .totals { padding: 20px; }
+        .totals .pill-row { width:220px; margin-left:auto; font-size:12px; }
     </style>
 </head>
 
-<body style="margin:0;padding:0px;font-family: Arial, sans-serif;">
+<body>
 
-    <!-- Main White Invoice Table -->
     <table align="center" width="100%" cellpadding="0" cellspacing="0">
         <tr>
-            <td
-                style="color: #000;border-radius: 10px; overflow: hidden; background: url('{{ $invoice_image1 }}') no-repeat; background-size:cover;background-position:center;height:100vh;vertical-align:top;">
-                <table align="center" width="100%" cellpadding="0" cellspacing="0" width="100%">
-                    <!-- Header -->
+            <td style="background: url('{{ $invoice_image1 }}') no-repeat center/cover; vertical-align:top; min-height:100vh;">
+
+                <table align="center" width="100%" cellpadding="0" cellspacing="0">
+                    
                     <tr>
-                        <td style="padding: 20px;">
+                        <td class="header-row">
                             <table width="100%">
                                 <tr>
-                                    <td style="width: 70%;">
-                                        <img src="{{ $company_logo }}" alt="" width="100px">
+                                    <td style="width:70%; vertical-align:top;">
+                                        <img src="{{ $company_logo }}" alt="logo" class="logo">
+
                                         <p style="font-size: 8px; line-height: 1.4; margin-top: 15px;">
                                             {{ $company_address }}<br>
                                             {{ $company_email }}<br>
                                         </p>
                                     </td>
-                                    <td style="text-align: right; vertical-align: top;">
-                                        <div
-                                            style="background-color: #ffc680; padding: 10px 20px; font-weight: bold; font-size: 40px; border-radius: 50px;">
-                                            INVOICE</div>
-                                           
+
+                                    <td style="vertical-align: top; text-align:right;">
+                                        <div class="invoice-badge">INVOICE</div>
                                     </td>
                                 </tr>
                             </table>
                         </td>
                     </tr>
-                    <!-- Invoice Date & Number -->
-                    <tr style="position: relative;">
+
+                    <tr>
                         <td style="padding: 0 20px 10px 20px;">
                             <table width="100%">
                                 <tr>
                                     <td></td>
-                                    <td style="text-align: right; font-weight: bold; font-size: 11px;">
-                                        <span
-                                            style="background-color: #7ebbf3; padding: 5px 15px; border-radius: 15px; font-size: 11px; margin-right: 10px;">Invoice
-                                            Date</span>
-                                        <span
-                                            style="background-color: #ffb6a3; padding: 5px 15px; border-radius: 15px; font-size: 11px;">Invoice
-                                            No.</span>
+                                    <td class="pills">
+                                        <span class="pill" style="background:#7ebbf3;">Invoice Date</span>
+                                        <span class="pill" style="background:#ffb6a3;">Invoice No.</span>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td></td>
-                                    <td style="text-align:right; padding-top: 10px; font-size: 11px;">
+                                    <td style="text-align:right; padding-top:8px; font-size:11px;">
                                         <span style="margin-right:40px;">{{ $invoice_date }}</span>
                                         <span>{{ $invoice_number }}</span>
                                     </td>
@@ -66,80 +116,64 @@
                             </table>
                         </td>
                     </tr>
-                    <tr style="height:100px"></tr>
-                    <!-- Invoice To -->
-                    <tr style="position: relative;">
-                        <td style="padding: 20px; padding-bottom: 10px;vertical-align:center;padding-left:80px;">
-                            <div>
-                                <p style="margin: 0; font-size: 18px; color: black; font-weight: 700;">Invoice To</p>
-                                <h2 style="margin: 5px 0 0 0; color: #333;">{{ $customer_name }}</h2>
+
+                    <tr>
+                        <td class="invoice-to-wrap">
+                            <div class="invoice-to-box">
+                                <div class="label">Invoice To</div>
+                                <h1>{{ $customer_name }}</h1>
                             </div>
                         </td>
                     </tr>
 
-                    <!-- Invoice Items -->
+                    <!-- BLUE BAR + ITEMS -->
                     <tr>
-                        <td style="padding:20px;">
-                            <table width="100%" cellpadding="10" cellspacing="0" style="border-collapse: collapse;">
-                                <thead>
-                                    <tr
-                                        style="background-color: #7ebbf3; color: #000; font-size: 11px; font-weight: bold;">
-                                        <th align="left"
-                                            style="padding: 12px; border-top-left-radius: 12px; border-bottom-left-radius: 12px;">
-                                            ITEM DESCRIPTION</th>
-                                        <th align="center" style="padding: 12px;">UNIT PRICE</th>
-                                        <th align="center" style="padding: 12px;">QTY</th>
-                                        <th align="right"
-                                            style="padding: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px;">
-                                            TOTAL</th>
-                                    </tr>
-                                </thead>
-                                <!-- Repeating Item Rows -->
-                                @foreach ($products as $product)
-                                    <tr style="background-color: #fde7c8; font-size: 9px;height:40px;">
-                                        <td style="padding:0px 10px;">{{ $product->name }}</td>
-                                        <td align="center">{{ site_currency() }}
-                                            {{ number_format($product->unit_price, 2) }}</td>
-                                        <td align="center">1</td>
-                                        <td align="right" style="padding:0px 10px;">{{ site_currency() }}
-                                            {{ number_format($product->unit_price, 2) }}</td>
-                                    </tr>
-                                @endforeach
-                            </table>
+                        <td class="items-wrap">
+                            <div class="items-container">
+                                <table class="items-table">
+                                    <thead>
+                                        <tr>
+                                            <th style="text-align:left;">ITEM DESCRIPTION</th>
+                                            <th style="text-align:center;">UNIT PRICE</th>
+                                            <th style="text-align:center;">QTY</th>
+                                            <th style="text-align:right;">TOTAL</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        @foreach ($products as $product)
+                                        <tr>
+                                            <td>{{ $product->name }}</td>
+                                            <td align="center">{{ site_currency() }} {{ number_format($product->unit_price, 2) }}</td>
+                                            <td align="center">1</td>
+                                            <td align="right">{{ site_currency() }} {{ number_format($product->unit_price, 2) }}</td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
                         </td>
                     </tr>
 
-                    <!-- Totals Section -->
                     <tr>
-                        <td style="padding: 20px;">
-                            <table align="right"
-                                style="width: 200px; font-family: Arial, sans-serif; font-size: 10px;">
+                        <td class="totals">
+                            <table class="pill-row" align="right">
                                 <tr>
-                                    <td colspan="2"
-                                        style="background-color: #7ebbf3;border-radius: 30px;padding: 10px 16px;color: #000;font-weight: 600;display: flex;justify-content: space-between;">
+                                    <td colspan="2" style="background:#7ebbf3; border-radius:30px; padding:10px 16px; font-weight:600; display:flex; justify-content:space-between;">
                                         <span>Sub Total</span>
-                                        <span>{{ site_currency() }}
-                                            {{ number_format($invoice_amount + $discount_amount, 2) }}</span>
+                                        <span>{{ site_currency() }} {{ number_format($invoice_amount + $discount_amount, 2) }}</span>
                                     </td>
                                 </tr>
+                                <tr><td style="height:10px"></td></tr>
                                 <tr>
-                                    <td style="height: 10px;"></td>
-                                </tr> <!-- spacing -->
-
-                                <tr>
-                                    <td colspan="2"
-                                        style="background-color: #f79d7c;border-radius: 30px;padding: 10px 16px;color: #000;font-weight: 600;display: flex;justify-content: space-between;">
+                                    <td colspan="2" style="background:#f79d7c; border-radius:30px; padding:10px 16px; font-weight:600; display:flex; justify-content:space-between;">
                                         <span>Discount</span>
                                         <span>{{ site_currency() }} {{ number_format($discount_amount, 2) }}</span>
                                     </td>
                                 </tr>
+                                <tr><td style="height:10px"></td></tr>
                                 <tr>
-                                    <td style="height: 10px;"></td>
-                                </tr> <!-- spacing -->
-
-                                <tr>
-                                    <td colspan="2"
-                                        style="background-color: #ffffff;border-radius: 30px;padding: 10px 16px;color: #000;font-weight: 700;display: flex;justify-content: space-between;">
+                                    <td colspan="2" style="background:#fff; border-radius:30px; padding:10px 16px; font-weight:700; display:flex; justify-content:space-between;">
                                         <span>TOTAL</span>
                                         <span>{{ site_currency() }} {{ number_format($invoice_amount, 2) }}</span>
                                     </td>
@@ -147,11 +181,11 @@
                             </table>
                         </td>
                     </tr>
+
                 </table>
             </td>
         </tr>
     </table>
 
 </body>
-
 </html>

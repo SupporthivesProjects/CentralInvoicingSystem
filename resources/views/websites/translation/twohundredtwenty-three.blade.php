@@ -79,12 +79,12 @@
 
                                     <!-- Item Rows -->
                                     @foreach($products as $product)
-                                    <tr style="background-color: #ffffff; font-size: 11px;" >
-                                        <td style="padding: 10px; padding-left: 40px;">1.</td>
-                                        <td style="padding: 10px; font-weight: bold;">{{ $product->name }}</td>
-                                        <td style="padding: 10px; text-align: center;"> {{ site_currency() . number_format($product->line_total, 2) }}</td>
-                                        <td style="padding: 10px;text-align: center;">1</td>
-                                        <td style="padding: 10px; text-align: center;"> {{ site_currency() . number_format($product->line_total, 2) }}</td>
+                                    <tr style="background-color: {{ $loop->iteration % 2 == 0 ? '#f2f2f2' : '#ffffff' }}; font-size: 11px;" >
+                                        <td style="padding: 20px; padding-left: 40px;">{{ $loop->iteration }}.</td>
+                                        <td style="padding: 20px; font-weight: bold;">{{ $product->name }}</td>
+                                        <td style="padding: 20px; text-align: center;"> {{ site_currency() . number_format($product->line_total, 2) }}</td>
+                                        <td style="padding: 20px;text-align: center;">1</td>
+                                        <td style="padding: 20px; text-align: center;"> {{ site_currency() . number_format($product->line_total, 2) }}</td>
                                     </tr>
                                     @endforeach
                                     <!-- Totals -->
@@ -101,14 +101,14 @@
                                 </table>
                             
                              <table width="100%"
-                                style="margin-top: -30px; padding: 40px; color: White; background-image: url('{{ $invoice_image2}}'); height: 212px; width: 100%; background-position: center; background-repeat: no-repeat; background-size: cover; box-shadow: none;">
+                                style="margin-top: -1px; padding: 40px;padding-right:0px; color: White; background-image: url('{{ $invoice_image2}}'); height: 212px; width: 100%; background-position: center; background-repeat: no-repeat; background-size: cover; box-shadow: none;">
                                 <tr>
                                     <td width="50%">
                                         <p style=" font-size: 21px; font-weight: bold; margin: 0%;"></p>
                                     </td>
                                     <td align="center">
-                                        <p style=" font-size: 22px; font-weight: bold; margin: 0px;">Grand Total: </p>
-                                        <p style="font-size: 22px; font-weight: bold; margin: 0%; padding-left: 48px;">{{ site_currency() . number_format($invoice_amount ?? 0, 2) }}</p>
+                                        <p style=" font-size: 22px; font-weight: bold; margin: 0px;padding-left: 100px;">Grand Total: </p>
+                                        <p style="font-size: 22px; font-weight: bold; margin: 0%; padding-left: 148px;">{{ site_currency() . number_format($invoice_amount ?? 0, 2) }}</p>
                                     </td>
                                 </tr>
                             </table>

@@ -24,13 +24,13 @@
                                             </h1>
                                         </td> -->
                                         <td style="width:50%; border:0px;">
-                                            <div style="margin-top:-25px;">
+                                            <div style="">
                                                 <img src="{{ $company_logo }}" style="height:60px; padding-left:20px;">
                                             </div>
                                         </td>
 
                                         <td style="width:50%; border:0px;">
-                                            <div style="margin-top:-55px; text-align:right; padding-right:70px;">
+                                            <div style="margin-top:-45px; text-align:right; padding-right:70px;">
                                                 <h1 style="font-size:58px; margin:0;">INVOICE</h1>
                                             </div>
                                         </td>
@@ -50,7 +50,7 @@
                             </table>
                             <table>
                                 <tr style="color: white;font-family:  'Roboto', sans-serif;">
-                                    <td style="width:50%;padding-left: 50px;font-size: 12px;padding-top: 45px;">
+                                    <td style="width:50%;padding-left: 50px;font-size: 12px;padding-top: 90px;">
                                         Billed From:
                                     </td>
                                     <td style="width:50%;text-align: right;padding-right: 40px;font-size: 12px;padding-top: 90px;" align="right">Invoice To:</td>
@@ -159,7 +159,7 @@
                                     <td ></td>
                                     <td ></td>
                                     <td ></td>
-                                    <td style="text-align: center;background-color: orange; ">TOTAL |</td>
+                                    <td style="text-align: center;background-color: orange; ">TOTAL :</td>
                                     <td style="text-align: center; background-color: orange;">{{ site_currency() . number_format($invoice_amount, 2) }}</td>
                                 </tr>
                                  

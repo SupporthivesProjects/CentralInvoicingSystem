@@ -27,8 +27,8 @@
                                         <b style="color: #168B91;font-size: 20px;">{{ $customer_name }}</b>
                                     </td>
                                     <td style="width: 300px;text-align: right;font-family: 'Montserrat', sans-serif;">
-                                        <p style="color: #f24c1e;font-size: 9px;">Invoice Number :</p>
-                                        <p style="color: #168B91;font-size: 8px;">{{ $invoice_number }}</p>
+                                        <p style="color: #f24c1e;font-size: 12px;">Invoice Number :</p>
+                                        <p style="color: #168B91;font-size: 10px;">{{ $invoice_number }}</p>
                                     </td>
                                 </tr>
                                 <tr style="border-collapse: collapse;">
@@ -36,8 +36,8 @@
 
                                     </td>
                                     <td style="width: 300px;text-align: right;font-family: 'Montserrat', sans-serif;">
-                                        <p style="color: #f24c1e;font-size: 9px;">Invoice Date </p>
-                                        <p style="color: #168B91;font-size: 8px;">{{ $invoice_date }}</p>
+                                        <p style="color: #f24c1e;font-size: 12px;">Invoice Date </p>
+                                        <p style="color: #168B91;font-size: 10px;">{{ $invoice_date }}</p>
                                     </td>
                                 </tr>
                             </table>
@@ -47,7 +47,7 @@
                                         style="border-collapse: collapse;height: 30px;border-bottom: 1px solid #f24c1e;border-top: 1px solid #f24c1e;color: #168B91;">
                                         <td
                                             style="width: 200px;text-align: left;font-family: 'Montserrat', sans-serif; font-size: 11px;margin: 0px;font-weight: 800;border-collapse: collapse;padding: 20px;padding-left: 100px;">
-                                            <b>ITEM DESCRIPTIONs</b>
+                                            <b>ITEM DESCRIPTION</b>
                                         </td>
                                         <td
                                             style="width: 150px;text-align: center;font-family: 'Montserrat', sans-serif; font-size: 11px;margin: 0px;font-weight: 800; border-collapse: collapse;padding-left: 5px;">
@@ -59,25 +59,25 @@
                                         </td>
                                         <td
                                             style="width:100px;text-align: center;font-family: 'Montserrat', sans-serif; font-size: 11px;margin: 0px;font-weight: 800;border-collapse: collapse;padding-right: 2px;">
-                                            <b>Total</b>
+                                            <b>TOTAL</b>
                                         </td>
                                     </tr>
                                     @foreach($products as $product)
                                         <tr style="border-collapse: collapse;height: 30px;border-bottom: 1px solid #000000;">
                                             <td
-                                                style="width: 200px;text-align:left;font-family: 'Montserrat', sans-serif;font-size:8px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 20px;padding-left: 100px;">
+                                                style="width: 200px;text-align:left;font-family: 'Montserrat', sans-serif;font-size:10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 20px;padding-left: 100px;">
                                                 {{ $product->name }}
                                             </td>
                                             <td
-                                                style="width:150px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 8px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;">
+                                                style="width:150px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;">
                                                 {{ site_currency() }} {{ number_format($product->unit_price, 2) }}
                                             </td>
                                             <td
-                                                style="width:100px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 8px;margin: 0px;font-weight: 400; border-collapse: collapse;">
+                                                style="width:100px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;">
                                                 1
                                             </td>
                                             <td
-                                                style="width:100px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 8px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-right: 2px;">
+                                                style="width:100px;text-align:center;font-family: 'Montserrat', sans-serif;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-right: 2px;">
                                                 {{ site_currency() }} {{ number_format($product->unit_price, 2) }}
                                             </td>
                                         </tr>
@@ -138,14 +138,15 @@
 
                                     <div style="
                                         position: absolute;
-                                        bottom: 200px;
-                                        left: 80px;
+                                        bottom: 250px;
+                                        left: 40px;
                                         font-family: 'Montserrat', sans-serif;
+                                        width: 500px;
                                     ">
 
-                                        <div style="margin-bottom: 8px; display: flex; gap: 10px; align-items: center;">
+                                        <div style="margin-bottom: 8px; display: flex; gap: 10px; align-items: center; width: 500px">
                                                 <span style="color: #f24c1e; font-weight: 400;">COMPANY NAME:</span>
-                                                <span style="font-weight: 400;">{{ $customer_name }}</span>
+                                                <span style="font-weight: 400;">{{ $company_name }}</span>
                                             </div>
 
                                             <!-- ADDRESS -->
