@@ -66,7 +66,7 @@
                     </tr> 
                     <!-- header -->
                       <!-- content -->
-                        <tr style="height:80vh;">
+                        <tr style="height:70vh;">
                             <td style="background: url('{{ $invoice_image2 }}');background-repeat: no-repeat;background-size:cover;height:600px;vertical-align: top;padding: 0px 50px;">
                              <p style="margin: 0px;font-size:24px;font-family: Lato;font-weight:700;color: #ffffff;text-align: right;padding-right: 100px;">
                                 {{ site_currency() . number_format($invoice_amount ?? 0, 2) }}
