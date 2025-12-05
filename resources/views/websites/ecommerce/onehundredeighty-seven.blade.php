@@ -69,7 +69,7 @@
 
                             <table style="width:80%;border-collapse: collapse;margin-top:50px;margin-left:20px;border-radius:10px;border:none;background:white;" border="0">
                                 <tr>
-                                    <td style="padding: 10px;width: 40%;border-radius:20px 0px 0px 20px;background:white;">
+                                    <td style="padding: 10px;width: 40%;border-radius:40px 0px 0px 40px;background:white;">
                                         <p style="margin: 0px;font-size: 10px;font-family: Lato;color:#194fba;line-height: 16px;font-weight:600;">
                                             DESCRIPTION
                                         </p>
@@ -84,7 +84,7 @@
                                             QTY
                                         </p>
                                     </td>
-                                    <td style="padding: 10px;width: 20%;border-radius:0px 20px 20px 0px;background:white;" align="center">
+                                    <td style="padding: 10px;width: 20%;border-radius:0px 40px 40px 0px;background:white;" align="center">
                                         <p style="margin: 0px;font-size: 10px;font-family: Lato;color:#194fba;line-height: 16px;font-weight:600;">
                                             TOTAL
                                         </p>
