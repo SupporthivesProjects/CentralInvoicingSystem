@@ -131,7 +131,7 @@
                                     </p>
                                 </td>
                                </tr>
-                               <tr style="height:20px;">
+                               <tr style="height:30px;">
                                 <td></td>
                                 <td style="padding:0px 20px;width: 10%;border-radius:0px 0px 0px 40px;background:white;border:0;" align="center" colspan="2">
                                     <p style="margin: 0px;font-size:9px;font-family: Lato;color:#194fba;line-height: 16px;">
