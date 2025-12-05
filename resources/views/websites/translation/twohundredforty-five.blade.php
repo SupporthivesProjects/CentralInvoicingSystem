@@ -69,20 +69,22 @@
                                         <b>Total</b>
                                     </td>
                                 </tr>
-                                <tr style="border-collapse: collapse;height: 24px;">
-                                    <td style="width: 250px; color:#000000; text-align: start; padding: 10px 10px;font-family:  Arial;font-size: 12px;margin: 0px;font-weight: 400;border-bottom: 1px solid #000000;border-collapse: collapse;">
-                                        {{ $product->name }}
-                                    </td>
-                                    <td style="width: 100px; color:#000000; text-align:center;padding:10px;font-family:  Arial;font-size:12px;margin: 0px;font-weight: 400;border-bottom: 1px solid #000000;border-collapse: collapse;">
-                                        {{ $product->pages }}
-                                    </td>
-                                    <td style="width:100px; color:#000000; text-align:center;padding:10px;font-family:  Arial;font-size: 12px;margin: 0px;font-weight: 400;border-bottom: 1px solid #000000;border-collapse: collapse;">
-                                        {{ $product->unit_type }}
-                                    </td>
-                                    <td style="width:100px; color:#000000; text-align:right;padding:10px;font-family:  Arial;font-size: 12px;margin: 0px;font-weight: 400;border-bottom: 1px solid #000000;border-collapse: collapse;">
-                                        {{ site_currency() . number_format($product->line_total, 2) }}
-                                    </td>
-                                </tr>
+                                @foreach($products as $product)
+                                    <tr style="border-collapse: collapse;height: 24px;">
+                                        <td style="width: 250px; color:#000000; text-align: start; padding: 10px 10px;font-family:  Arial;font-size: 12px;margin: 0px;font-weight: 400;border-bottom: 1px solid #000000;border-collapse: collapse;">
+                                            {{ $product->name }}
+                                        </td>
+                                        <td style="width: 100px; color:#000000; text-align:center;padding:10px;font-family:  Arial;font-size:12px;margin: 0px;font-weight: 400;border-bottom: 1px solid #000000;border-collapse: collapse;">
+                                            {{ $product->pages }}
+                                        </td>
+                                        <td style="width:100px; color:#000000; text-align:center;padding:10px;font-family:  Arial;font-size: 12px;margin: 0px;font-weight: 400;border-bottom: 1px solid #000000;border-collapse: collapse;">
+                                            {{ $product->unit_type }}
+                                        </td>
+                                        <td style="width:100px; color:#000000; text-align:right;padding:10px;font-family:  Arial;font-size: 12px;margin: 0px;font-weight: 400;border-bottom: 1px solid #000000;border-collapse: collapse;">
+                                            {{ site_currency() . number_format($product->line_total, 2) }}
+                                        </td>
+                                    </tr>
+                                @endforeach
                                 {{-- <tr style="border-collapse: collapse;height: 24px;">
                                     <td style="width: 250px; color:#000000; text-align: start; padding: 10px 10px;font-family:  Arial;font-size: 12px;margin: 0px;font-weight: 400;border-bottom: 1px solid #000000;border-collapse: collapse;">
                                         Certified translation
