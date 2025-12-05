@@ -41,10 +41,10 @@
                                        </p>
                                     </div>
                                     <div style="margin-top:100px;display: flex;justify-content: space-between;padding-right: 100px;">
-                                       <p style="margin: 0px;font-size:12px;font-family: Lato;font-weight:700;color: #ffffff;padding-top: 15px;">
+                                       <p style="margin: 0px;font-size:12px;font-family: Lato;font-weight:800;color: #ffffff;padding-top: 15px;">
                                         Invoice To :
                                        </p>
-                                       <p style="margin: 0px;font-size:12px;font-family: Lato;font-weight:700;color: #ffffff;padding-top: 20px;">
+                                       <p style="margin: 0px;font-size:12px;font-family: Lato;font-weight:800;color: #ffffff;padding-top: 20px;">
                                         Total Due
                                        </p>
                                     </div>
@@ -67,7 +67,7 @@
                                 {{ site_currency() . number_format($invoice_amount ?? 0, 2) }}
                                        </p>
 
-                            <table style="width:80%;border-collapse: collapse;margin-top:50px;margin-left:50px;">
+                            <table style="width:80%;border-collapse: collapse;margin-top:50px;margin-left:0px;">
                                 <tr>
                                     <td style="padding: 10px;width: 40%;">
                                         <p style="margin: 0px;font-size: 10px;font-family: Lato;color:#194fba;line-height: 16px;font-weight:600;">
@@ -91,7 +91,7 @@
                                     </td>
                                </tr>
                             </table>
-                            <table style="width:80%;border-collapse: collapse;margin-top:23px;height:400px;margin-left:50px;">
+                            <table style="width:80%;border-collapse: collapse;margin-top:23px;height:400px;margin-left:0px;">
                                
                                @foreach ($products as $product)
                                <tr style="height:40px;">
@@ -117,15 +117,15 @@
                                     </td>
                                </tr>
                                @endforeach
-                               <tr style="height: 20px;"></tr>
-                               <tr style="height:20px;">
+                               <tr style="height: 30px;"></tr>
+                               <tr style="height:30px;">
                                 <td></td>
                                 <td style="padding:0px 10px;width: 10%;" align="center" colspan="2">
                                     <p style="margin: 0px;font-size:9px;font-family: Lato;color:#194fba;line-height: 16px;">
                                          SUBTOTAL
                                     </p>
                                 </td>
-                                <td style="padding:0px 20px;width: 20%;" align="right">
+                                <td style="padding:0px 20px;width: 20%;" align="center">
                                     <p style="margin: 0px;font-size:10px;font-family: Lato;line-height: 16px;font-weight: 700;">
                                         {{ site_currency() . number_format($invoice_amount + $discount_amount ?? 0, 2) }}
                                     </p>
