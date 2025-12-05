@@ -20,9 +20,9 @@
                    <!-- header -->
                     <tr>
                         <td>
-                            <table border="0" style="border-collapse:collapse;height:300px;padding:0" width="100%">
-                                <tr style="background: url('{{ $invoice_header_image }}');background-position: center;background-repeat: no-repeat;background-size: cover;height:300px;">
-                                    <td style="padding:0px" align="right" style="vertical-align:ceter">
+                            <table border="0" style="border-collapse:collapse;height:250px;padding:0" width="100%">
+                                <tr style="background: url('{{ $invoice_header_image }}');background-position: center;background-repeat: no-repeat;background-size: cover;height:250px;">
+                                    <td style="padding:0px 50px" align="right" style="vertical-align:ceter">
                                     <div style="width:40%;padding-left:50px;text-align: left;margin-top:100px">
                                         <p style="margin: 0px;font-size: 10px;font-family: Lato;color: #90b3eb;line-height: 16px;">
                                         Invoice Number
