@@ -21,8 +21,8 @@
                     <tr>
                         <td>
                             <table border="0" style="border-collapse:collapse;" width="100%">
-                                <tr style="background: url('{{ $invoice_header_image }}');background-position: center;background-repeat: no-repeat;background-size: cover;height: 200px;">
-                                    <td style="padding:0px 50px;" align="right">
+                                <tr style="background: url('{{ $invoice_header_image }}');background-position: center;background-repeat: no-repeat;background-size: cover;height:150px;">
+                                    <td style="padding:0px 50px;" align="right" style="vertical-align:ceter">
                                     <div style="width:40%;padding-left:50px;text-align: left;margin-top:100px;">
                                         <p style="margin: 0px;font-size: 10px;font-family: Lato;color: #90b3eb;line-height: 16px;">
                                         Invoice Number
@@ -40,7 +40,7 @@
                                         {{ $invoice_date }}
                                        </p>
                                     </div>
-                                    <div style="margin-top:70px;display: flex;justify-content: space-between;padding-right: 100px;">
+                                    <div style="margin-top:100px;display: flex;justify-content: space-between;padding-right: 100px;">
                                        <p style="margin: 0px;font-size:12px;font-family: Lato;font-weight:700;color: #ffffff;padding-top: 15px;">
                                         Invoice To :
                                        </p>
@@ -67,7 +67,7 @@
                                 {{ site_currency() . number_format($invoice_amount ?? 0, 2) }}
                                        </p>
 
-                            <table style="width:75%;border-collapse: collapse;margin-top:50px;">
+                            <table style="width:80%;border-collapse: collapse;margin-top:50px;margin-left:100px;">
                                 <tr>
                                     <td style="padding: 10px;width: 40%;">
                                         <p style="margin: 0px;font-size: 10px;font-family: Lato;color:#194fba;line-height: 16px;font-weight:600;">
@@ -96,22 +96,22 @@
                                @foreach ($products as $product)
                                <tr style="height:40px;">
                                     <td style="padding: 10px;width: 40%;">
-                                        <p style="margin: 0px;font-size:9px;font-family: Lato;color:#ffffff;line-height: 16px;">
+                                        <p style="margin: 0px;font-size:11px;font-family: Lato;color:#ffffff;line-height: 16px;font-weight:700;">
                                             {{ $product->name }}
                                         </p>
                                     </td>
                                     <td style="padding: 10px;width:30%;" align="center">
-                                        <p style="margin: 0px;font-size:9px;font-family: Lato;color:#ffffff;line-height: 16px;">
+                                        <p style="margin: 0px;font-size:11px;font-family: Lato;color:#ffffff;line-height: 16px;font-weight:700;">
                                             {{ site_currency() . number_format($product->unit_price ?? 0, 2) }}
                                         </p>
                                     </td>
                                     <td style="padding: 10px;width: 10%;" align="center">
-                                        <p style="margin: 0px;font-size:9px;font-family: Lato;color:#ffffff;line-height: 16px;">
+                                        <p style="margin: 0px;font-size:11px;font-family: Lato;color:#ffffff;line-height: 16px;font-weight:700;">
                                             1
                                         </p>
                                     </td>
                                     <td style="padding: 10px;width: 20%;" align="center">
-                                        <p style="margin: 0px;font-size:9px;font-family: Lato;color:#ffffff;line-height: 16px;">
+                                        <p style="margin: 0px;font-size:11px;font-family: Lato;color:#ffffff;line-height: 16px;font-weight:700;">
                                             {{ site_currency() . number_format($product->unit_price ?? 0, 2) }}
                                         </p>
                                     </td>
