@@ -67,8 +67,8 @@
                                 {{ site_currency() . number_format($invoice_amount ?? 0, 2) }}
                                        </p>
 
-                            <table style="width:80%;border-collapse: collapse;margin-top:50px;margin-left:20px;">
-                                <tr style="border-radius:10px;border:none;background:white;">
+                            <table style="width:80%;border-collapse: collapse;margin-top:50px;margin-left:20px;border-radius:10px;border:none;background:white;">
+                                <tr style="background:white;">
                                     <td style="padding: 10px;width: 40%;">
                                         <p style="margin: 0px;font-size: 10px;font-family: Lato;color:#194fba;line-height: 16px;font-weight:600;">
                                             DESCRIPTION
@@ -118,27 +118,27 @@
                                </tr>
                                @endforeach
                                <tr style="height: 30px;"></tr>
-                               <tr style="height:30px;border-radius:10px 0px 0px 10px;background:white;border:none;">
+                               <tr style="height:30px;">
                                 <td></td>
-                                <td style="padding:0px 10px;width: 10%;" align="center" colspan="2">
+                                <td style="padding:0px 10px;width: 10%;border-radius:0px 0px 0px 10px;background:white;border:none;" align="center" colspan="2">
                                     <p style="margin: 0px;font-size:9px;font-family: Lato;color:#194fba;line-height: 16px;">
                                          SUBTOTAL
                                     </p>
                                 </td>
-                                <td style="padding:0px 20px;width: 20%;" align="center">
+                                <td style="padding:0px 20px;width: 20%;border-radius:10px 0px 0px 0px;background:white;border:none;" align="center">
                                     <p style="margin: 0px;font-size:10px;font-family: Lato;line-height: 16px;font-weight: 700;">
                                         {{ site_currency() . number_format($invoice_amount + $discount_amount ?? 0, 2) }}
                                     </p>
                                 </td>
                                </tr>
-                               <tr style="height:20px;border-radius:0px 10px 10px 0px;background:white;border:none;">
+                               <tr style="height:20px;">
                                 <td></td>
-                                <td style="padding:0px 10px;width: 10%;" align="center" colspan="2">
+                                <td style="padding:0px 10px;width: 10%;border-radius:0px 10px 0px 0px;background:white;border:none;" align="center" colspan="2">
                                     <p style="margin: 0px;font-size:9px;font-family: Lato;color:#194fba;line-height: 16px;">
                                          DISCOUNT
                                     </p>
                                 </td>
-                                <td style="padding:0px 20px;width: 20%;" align="center">
+                                <td style="padding:0px 20px;width: 20%;border-radius:0px 0px 10px 0px;background:white;border:none;" align="center">
                                     <p style="margin: 0px;font-size:10px;font-family: Lato;line-height: 16px;font-weight: 700;">
                                         {{ site_currency() . number_format($discount_amount ?? 0, 2) }}
                                     </p>
