@@ -21,7 +21,7 @@
                     <tr>
                         <td>
                             <table border="0" style="border-collapse:collapse;max-height:100vh;" width="100%">
-                                <tr style="background: url('{{ $invoice_header_image }}');background-position: center;background-repeat: no-repeat;background-size: cover;height:150px;">
+                                <tr style="background: url('{{ $invoice_header_image }}');background-position: center;background-repeat: no-repeat;background-size: cover;height:200px;">
                                     <td style="padding:0px 50px;" align="right" style="vertical-align:ceter">
                                     <div style="width:40%;padding-left:50px;text-align: left;">
                                         <p style="margin: 0px;font-size: 10px;font-family: Lato;color: #90b3eb;line-height: 16px;">
@@ -61,7 +61,7 @@
                     </tr> 
                     <!-- header -->
                       <!-- content -->
-                        <tr style="height:700px;">
+                        <tr style="height:100%;">
                             <td style="background: url('{{ $invoice_image1 }}');background-repeat: no-repeat;background-size:cover;height:600px;vertical-align: top;padding: 0px 50px;">
                              <p style="margin: 0px;font-size:24px;font-family: Lato;font-weight:700;color: #ffffff;text-align: right;padding-right: 100px;">
                                 {{ site_currency() . number_format($invoice_amount ?? 0, 2) }}
