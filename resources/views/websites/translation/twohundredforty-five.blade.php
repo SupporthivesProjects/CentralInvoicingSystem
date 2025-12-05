@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
+    <title>{{ $site->site_name }} - Invoice #{{ $invoice_number }}</title>
 </head>
 <body style="padding: 0px; margin: 0px;">
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
@@ -37,13 +37,14 @@
                                         <div style="display: flex; justify-content: space-between; width: 100%;">
                                             <p style="line-height: 165%; width: 50%; font-family: Arial;font-size: 11px;margin: 0px;font-weight: 400;">
                                                 <span style="font-size: 12px;"><b>Billed To:</b></span><br> 
-                                                {{ $customer_name ? $customer_name : '' }}<br>
+                                                {{ $customer_name }}<br>
                                             </p>
                                             <p style="line-height: 165%; width: 50%; padding-left: 100px; font-family: Arial;font-size: 11px;margin: 0px;font-weight: 400;">
                                                 <span style="font-size: 12px;"><b>Billed From:</b></span><br>
                                                 {{ $company_name }}<br>
-                                                {{ $company_address }}<br> 
-                                                {{ $company_email }}
+                                                {{ $company_address }}<br>
+                                                {{ $company_email }}<br>
+                                                +123 44 555 6789
                                                 <br>
                                             </p>
                                         </div>
@@ -192,7 +193,7 @@
                     <!-- Content End-->
                      <!-- Footer -->
                      <tr>
-                        <td style="background-image: url({{$invoice_footer_image}}); height: 135px; width: 100%; opacity: 1; background-size: contain; background-repeat: no-repeat;">
+                        <td style="background-image: url({{$invoice_header_image}}); height: 135px; width: 100%; opacity: 1; background-size: contain; background-repeat: no-repeat;">
                         </td>
                      </tr>
                 </table>
