@@ -131,7 +131,11 @@ if (!function_exists('currentUserName')) {
 if (!function_exists('numberToWords')) {
     function numberToWords($number)
     {
+        if (!class_exists(\NumberFormatter::class)) {
+            return $number;
+        }
         $formatter = new \NumberFormatter('en', \NumberFormatter::SPELLOUT);
+        
         $words = $formatter->format($number);
         return strtolower(str_replace(' ', '', $words));
     }
