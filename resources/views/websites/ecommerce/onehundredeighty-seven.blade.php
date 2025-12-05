@@ -20,10 +20,10 @@
                    <!-- header -->
                     <tr>
                         <td>
-                            <table border="0" style="border-collapse:collapse;" width="100%">
+                            <table border="0" style="border-collapse:collapse;max-height:100vh;" width="100%">
                                 <tr style="background: url('{{ $invoice_header_image }}');background-position: center;background-repeat: no-repeat;background-size: cover;height:150px;">
                                     <td style="padding:0px 50px;" align="right" style="vertical-align:ceter">
-                                    <div style="width:40%;padding-left:50px;text-align: left;margin-top:100px;">
+                                    <div style="width:40%;padding-left:50px;text-align: left;margin-top:150px;">
                                         <p style="margin: 0px;font-size: 10px;font-family: Lato;color: #90b3eb;line-height: 16px;">
                                         Invoice Number
                                        </p>
@@ -67,7 +67,7 @@
                                 {{ site_currency() . number_format($invoice_amount ?? 0, 2) }}
                                        </p>
 
-                            <table style="width:80%;border-collapse: collapse;margin-top:50px;margin-left:100px;">
+                            <table style="width:80%;border-collapse: collapse;margin-top:50px;margin-left:50px;">
                                 <tr>
                                     <td style="padding: 10px;width: 40%;">
                                         <p style="margin: 0px;font-size: 10px;font-family: Lato;color:#194fba;line-height: 16px;font-weight:600;">
@@ -91,7 +91,7 @@
                                     </td>
                                </tr>
                             </table>
-                            <table style="width:75%;border-collapse: collapse;margin-top:23px;height:400px;">
+                            <table style="width:80%;border-collapse: collapse;margin-top:23px;height:400px;margin-left:50px;">
                                
                                @foreach ($products as $product)
                                <tr style="height:40px;">
