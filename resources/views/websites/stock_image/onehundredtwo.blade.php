@@ -62,7 +62,7 @@
                                             {{ $site_name }}
                                         </p>
 
-                                        <p style="text-align:right;">
+                                        <p style="text-align:right;font-family: Arial, Helvetica, sans-serif; font-size: 10px; margin: 0;margin-bottom: 12px;">
                                           @php
                                           $parts = explode(',', $company_address);
                                           @endphp
