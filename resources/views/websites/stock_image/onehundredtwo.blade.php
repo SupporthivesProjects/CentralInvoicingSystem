@@ -62,9 +62,8 @@
                                             {{ $site_name }}
                                         </p>
 
-                                        <p style="font-family: Arial, Helvetica, sans-serif; font-size: 10px; margin: 0;margin-bottom: 12px;text-align: right;">{{ $company_address }}<br>
-
-
+                                        <p style="font-family: Arial, Helvetica, sans-serif; font-size: 10px; margin: 0;margin-bottom: 12px;text-align: right; width: 150px;" >
+                                          {{ $company_address }}<br>
                                             </p>
 
                                         <p style="font-family: Arial, Helvetica, sans-serif; font-size: 10px; margin: 0;text-align: right;">
