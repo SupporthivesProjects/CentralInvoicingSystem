@@ -20,10 +20,10 @@
                    <!-- header -->
                     <tr>
                         <td>
-                            <table border="0" style="border-collapse:collapse;height:200px;padding:0" width="100%">
-                                <tr style="background: url('{{ $invoice_image3 }}');background-position: center;background-repeat: no-repeat;background-size: cover;height:200px;">
+                            <table border="0" style="border-collapse:collapse;height:150px;padding:0" width="100%">
+                                <tr style="background: url('{{ $invoice_image3 }}');background-position: center;background-repeat: no-repeat;background-size: cover;height:150px;">
                                     <td style="padding:0px 50px" align="right" style="vertical-align:ceter">
-                                    <div style="width:40%;padding-left:50px;text-align: left;margin-top:120px">
+                                    <div style="width:40%;padding-left:50px;text-align: left;">
                                         <p style="margin: 0px;font-size: 10px;font-family: Lato;color: #90b3eb;line-height: 16px;">
                                         Invoice Number
                                        </p>
@@ -67,31 +67,31 @@
                                 {{ site_currency() . number_format($invoice_amount ?? 0, 2) }}
                                        </p>
 
-                            <table style="width:80%;border-collapse: collapse;margin-top:50px;margin-left:20px;border-radius:10px;border:none;background:white;">
-                                <tr style="background:white;">
-                                    <td style="padding: 10px;width: 40%;">
+                            <table style="width:80%;border-collapse: collapse;margin-top:50px;margin-left:20px;border-radius:10px;border:none;background:white;" border="0">
+                                <tr>
+                                    <td style="padding: 10px;width: 40%;border-radius:10px 0px 0px 10px;background:white;">
                                         <p style="margin: 0px;font-size: 10px;font-family: Lato;color:#194fba;line-height: 16px;font-weight:600;">
                                             DESCRIPTION
                                         </p>
                                     </td>
-                                    <td style="padding: 10px;width:30%;" align="center">
+                                    <td style="padding: 10px;width:30%;background:white;" align="center">
                                         <p style="margin: 0px;font-size: 10px;font-family: Lato;color:#194fba;line-height: 16px;font-weight:600;">
                                             UNIT PRICE
                                         </p>
                                     </td>
-                                    <td style="padding: 10px;width: 10%;" align="center">
+                                    <td style="padding: 10px;width: 10%;background:white;" align="center">
                                         <p style="margin: 0px;font-size: 10px;font-family: Lato;color:#194fba;line-height: 16px;font-weight:600;">
                                             QTY
                                         </p>
                                     </td>
-                                    <td style="padding: 10px;width: 20%;" align="center">
+                                    <td style="padding: 10px;width: 20%;border-radius:0px 10px 10px 0px;background:white;" align="center">
                                         <p style="margin: 0px;font-size: 10px;font-family: Lato;color:#194fba;line-height: 16px;font-weight:600;">
                                             TOTAL
                                         </p>
                                     </td>
                                </tr>
                             </table>
-                            <table style="width:80%;border-collapse: collapse;margin-top:23px;height:400px;margin-left:20px;">
+                            <table style="width:80%;border-collapse:collapse;margin-top:23px;height:400px;margin-left:20px;" border="0">
                                
                                @foreach ($products as $product)
                                <tr style="height:40px;">
@@ -120,12 +120,12 @@
                                <tr style="height: 30px;"></tr>
                                <tr style="height:30px;">
                                 <td></td>
-                                <td style="padding:0px 10px;width: 10%;border-radius:0px 0px 0px 10px;background:white;border:none;" align="center" colspan="2">
+                                <td style="padding:0px 10px;width: 10%;border-radius:10px 0px 0px 0px;background:white;border:0;" align="center" colspan="2">
                                     <p style="margin: 0px;font-size:9px;font-family: Lato;color:#194fba;line-height: 16px;">
                                          SUBTOTAL
                                     </p>
                                 </td>
-                                <td style="padding:0px 20px;width: 20%;border-radius:10px 0px 0px 0px;background:white;border:none;" align="center">
+                                <td style="padding:0px 20px;width: 20%;border-radius:0px 10px 0px 0px;background:white;border:0;" align="center">
                                     <p style="margin: 0px;font-size:10px;font-family: Lato;line-height: 16px;font-weight: 700;">
                                         {{ site_currency() . number_format($invoice_amount + $discount_amount ?? 0, 2) }}
                                     </p>
@@ -133,12 +133,12 @@
                                </tr>
                                <tr style="height:20px;">
                                 <td></td>
-                                <td style="padding:0px 10px;width: 10%;border-radius:0px 10px 0px 0px;background:white;border:none;" align="center" colspan="2">
+                                <td style="padding:0px 10px;width: 10%;border-radius:0px 0px 10px 0px;background:white;border:0;" align="center" colspan="2">
                                     <p style="margin: 0px;font-size:9px;font-family: Lato;color:#194fba;line-height: 16px;">
                                          DISCOUNT
                                     </p>
                                 </td>
-                                <td style="padding:0px 20px;width: 20%;border-radius:0px 0px 10px 0px;background:white;border:none;" align="center">
+                                <td style="padding:0px 20px;width: 20%;border-radius:0px 0px 0px 10px;background:white;border:0;" align="center">
                                     <p style="margin: 0px;font-size:10px;font-family: Lato;line-height: 16px;font-weight: 700;">
                                         {{ site_currency() . number_format($discount_amount ?? 0, 2) }}
                                     </p>
