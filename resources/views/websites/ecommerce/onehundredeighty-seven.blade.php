@@ -20,9 +20,9 @@
                    <!-- header -->
                     <tr>
                         <td>
-                            <table border="0" style="border-collapse:collapse;height:150px;padding:0" width="100%">
-                                <tr style="background: url('{{ $invoice_image3 }}');background-position: center;background-repeat: no-repeat;background-size: cover;">
-                                    <td style="padding:0px 50px" align="right" style="vertical-align:ceter">
+                            <table border="0" style="border-collapse:collapse;height:200px;padding:0" width="100%">
+                                <tr style="background: url('{{ $invoice_image3 }}');background-position: center;background-repeat: no-repeat;background-size: cover;height:200px;">
+                                    <td style="padding:0px 100px" align="right" style="vertical-align:ceter">
                                     <div style="width:40%;padding-left:50px;text-align: left;">
                                         <p style="margin: 0px;font-size: 10px;font-family: Lato;color: #90b3eb;line-height: 16px;">
                                         Invoice Number
@@ -91,7 +91,7 @@
                                     </td>
                                </tr>
                             </table>
-                            <table style="width:80%;border-collapse:collapse;margin-top:23px;height:400px;margin-left:20px;" border="0">
+                            <table style="width:80%;border-collapse:collapse;margin-top:23px;height:400px;margin-left:20px;" border="0" cellspacing="0" cellpadding="0">
                                
                                @foreach ($products as $product)
                                <tr style="height:40px;">
@@ -120,7 +120,7 @@
                                <tr style="height: 30px;"></tr>
                                <tr style="height:30px;">
                                 <td></td>
-                                <td style="padding:0px 10px;width: 10%;border-radius:40px 0px 0px 0px;background:white;border:0;" align="center" colspan="2">
+                                <td style="padding:0px 20px;width: 10%;border-radius:40px 0px 0px 0px;background:white;border:0;" align="center" colspan="2">
                                     <p style="margin: 0px;font-size:9px;font-family: Lato;color:#194fba;line-height: 16px;">
                                          SUBTOTAL
                                     </p>
@@ -133,7 +133,7 @@
                                </tr>
                                <tr style="height:20px;">
                                 <td></td>
-                                <td style="padding:0px 10px;width: 10%;border-radius:0px 0px 0px 40px;background:white;border:0;" align="center" colspan="2">
+                                <td style="padding:0px 20px;width: 10%;border-radius:0px 0px 0px 40px;background:white;border:0;" align="center" colspan="2">
                                     <p style="margin: 0px;font-size:9px;font-family: Lato;color:#194fba;line-height: 16px;">
                                          DISCOUNT
                                     </p>
