@@ -9,15 +9,15 @@
   <!-- FULL WRAPPER -->
   <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0; padding:0; background:#000;">
     <tr>
-      <td align="center" style="padding:20px 0;">
+      <td align="center" style="padding:0px;">
 
         <!-- MAIN CONTAINER -->
-        <table width="600" cellpadding="0" cellspacing="0" border="0"
-          style="background:#1a1a1d; border:8px solid #ff29e4; border-radius:6px;">
+        <table width="100%" cellpadding="0" cellspacing="0" border="0"
+          style="background:#1a1a1d; ">
 
           <!-- BG SECTION -->
           <tr>
-            <td style="background:url('{{ $invoice_image1 }}') center center / cover no-repeat; padding:40px 30px 150px;">
+            <td style="background:url('{{ $invoice_image1 }}') center center / cover no-repeat; padding:40px 30px 500px;">
 
               <!-- HEADER SECTION -->
               <table width="100%" cellpadding="0" cellspacing="0" style="padding:0px 40px 20px;">
@@ -92,19 +92,19 @@
                 style="margin: 20px auto 0px; border-collapse:collapse;">
                 <tr>
                   <td width="40%" style="background:#ff29e4; color:#ffffff; font-family:Arial;
-                      font-size:9px; padding:10px; font-weight:bold;">
+                      font-size:9px; padding:10px 40px; font-weight:bold;">
                     DESCRIPTION
                   </td>
                   <td width="20%" style="background:#ff29e4; color:#ffffff; font-family:Arial;
-                      font-size:9px; padding:10px; font-weight:bold;">
+                      font-size:9px; padding:10px 40px; font-weight:bold;">
                     UNIT PRICE
                   </td>
                   <td width="10%" style="background:#ff29e4; color:#ffffff; font-family:Arial;
-                      font-size:9px; padding:10px; font-weight:bold;">
+                      font-size:9px; padding:10px 40px; font-weight:bold;">
                     QTY
                   </td>
                   <td width="20%" style="background:#ff29e4; color:#ffffff; font-family:Arial;
-                      font-size:9px; padding:10px; font-weight:bold;">
+                      font-size:9px; padding:10px 40px; font-weight:bold;">
                     TOTAL
                   </td>
                 </tr>
@@ -116,13 +116,13 @@
                     style="color:#ffffff; font-family:Arial; font-size:9px; padding:10px 40px; border-bottom:1px solid ;">
                     {{ $product['name'] }} 
                   </td>
-                  <td style="color:#ffffff; font-family:Arial; font-size:9px; border-bottom:1px solid ;">
+                  <td style="color:#ffffff; font-family:Arial; font-size:9px; border-bottom:1px solid ;padding:10px 40px;">
                     {{ site_currency() . number_format($product['unit_price'], 2) }}
                   </td>
-                  <td style="color:#ffffff; font-family:Arial; font-size:9px; border-bottom:1px solid ;">
+                  <td style="color:#ffffff; font-family:Arial; font-size:9px; border-bottom:1px solid ;padding:10px 40px;">
                     1
                   </td>
-                  <td style="color:#ffffff; font-family:Arial; font-size:9px; border-bottom:1px solid ;">
+                  <td style="color:#ffffff; font-family:Arial; font-size:9px; border-bottom:1px solid ;padding:10px 40px;">
                     {{ site_currency() . number_format($product['unit_price'], 2) }}
                   </td>
                 </tr>
