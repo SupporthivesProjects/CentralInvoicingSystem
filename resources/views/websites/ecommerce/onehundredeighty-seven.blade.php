@@ -77,7 +77,7 @@
                     <!-- some data -->
 
                       <!-- content -->
-                        <tr style="height:700px">
+                        <tr style="height:840px">
                             <td style="vertical-align: top;padding: 0px 50px;">
                              
 
@@ -158,9 +158,9 @@
                                     </tr>
                                 </table>
                              
-                                <table style="border-collapse: collapse;width:100%;margin-top: 50px;position:absolute;bottom:0px;margin:0px 40px 40p auto;">
+                                <table style="border-collapse: collapse;width:100%;position:absolute;bottom:0px;">
                                     <tr>
-                                        <td align="right">
+                                        <td align="right" style="padding-right:80px;padding-bottom:40px;">
                                         <p style="margin: 0px;font-size:12px;font-family: Lato;color:#ffffff;line-height: 16px;font-weight: 700;">
                                             {!! $company_address !!}
                                         </p><br>
