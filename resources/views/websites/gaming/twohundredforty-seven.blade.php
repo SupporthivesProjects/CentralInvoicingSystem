@@ -21,7 +21,7 @@
     </style>
 </head>
 
-<body style="margin:0; padding:0; background:#fff; font-family: Arial, Helvetica, sans-serif;">
+<body style="margin:0; padding:0; background:red; font-family: Arial, Helvetica, sans-serif;">
 
     <table width="100%" border="0" cellspacing="0" cellpadding="0" style="padding:0; margin:0;">
         <tr>
