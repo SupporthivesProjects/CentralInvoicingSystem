@@ -31,47 +31,55 @@
                                     <td style="width:50%;padding:0px 50px" align="right" style="vertical-align:ceter">
                                         <div style="width:40%;padding-left:50px;text-align: left;">
                                             <p style="margin: 0px;font-size: 10px;font-family: Lato;color: #90b3eb;line-height: 16px;">
-                                            Invoice Number
-                                        </p>
-                                        <p style="margin: 0px;font-size:10px;font-family: Lato;font-weight:800;">
-                                            {{ $invoice_number }}
-                                        </p>
+                                                Invoice Number
+                                            </p>
+                                            <p style="margin: 0px;font-size:10px;font-family: Lato;font-weight:800;">
+                                                {{ $invoice_number }}
+                                            </p>
                                         </div>
                                         <br>
                                         <div style="width:40%;padding-left:50px;text-align: left;">
                                             <p style="margin: 0px;font-size: 10px;font-family: Lato;color: #90b3eb;line-height: 16px;">
-                                            Invoice Date
-                                        </p>
-                                        <p style="margin: 0px;font-size:10px;font-family: Lato;font-weight:800;">
-                                            {{ $invoice_date }}
-                                        </p>
+                                                Invoice Date
+                                            </p>
+                                            <p style="margin: 0px;font-size:10px;font-family: Lato;font-weight:800;">
+                                                {{ $invoice_date }}
+                                            </p>
                                         </div>
-                                        <div style="margin-top:100px;display: flex;justify-content: space-between;padding-right: 100px;">
-                                        <p style="margin: 0px;font-size:12px;font-family: Lato;font-weight:800;color: #ffffff;padding-top: 15px;">
-                                            Invoice To :
-                                        </p>
-                                        <p style="margin: 0px;font-size:12px;font-family: Lato;font-weight:800;color: #ffffff;padding-top: 20px;">
-                                            Total Due
-                                        </p>
-                                        </div>
-                                        
-                                        <p style="margin: 0px;font-size:16px;font-family: Lato;font-weight:500;color: #ffffff;text-align: left;">
-                                            {{ $customer_name ? $customer_name : '' }}<br>
-                                            {{ $customer_email ? $customer_email : '' }}<br>
-                                            {{ $customer_mobile ? $customer_mobile : '' }}
-                                        </p>
                                     </td>
                                 </tr>
                             </table>
                         </td>
                     </tr> 
                     <!-- header -->
+
+                    <!-- some data -->
+                     <tr>
+                        <td>
+                            <p style="margin: 0px;font-size:12px;font-family: Lato;font-weight:800;color: #ffffff;padding-top: 15px;">
+                                Invoice To :
+                            </p>
+                            <p style="margin: 0px;font-size:16px;font-family: Lato;font-weight:500;color: #ffffff;text-align: left;">
+                                {{ $customer_name ? $customer_name : '' }}<br>
+                                {{ $customer_email ? $customer_email : '' }}<br>
+                                {{ $customer_mobile ? $customer_mobile : '' }}
+                            </p>
+                        </td>
+                        <td>
+                            <p style="margin: 0px;font-size:12px;font-family: Lato;font-weight:800;color: #ffffff;padding-top: 20px;">
+                                Total Due
+                            </p>
+                            <p style="margin: 0px;font-size:24px;font-family: Lato;font-weight:700;color: #ffffff;text-align: right;padding-right: 100px;">
+                                {{ site_currency() . number_format($invoice_amount ?? 0, 2) }}
+                            </p>
+                        </td>
+                     </tr>
+                    <!-- some data -->
+
                       <!-- content -->
                         <tr style="height:80vh;">
                             <td style="vertical-align: top;padding: 0px 50px;">
-                             <p style="margin: 0px;font-size:24px;font-family: Lato;font-weight:700;color: #ffffff;text-align: right;padding-right: 100px;">
-                                {{ site_currency() . number_format($invoice_amount ?? 0, 2) }}
-                                       </p>
+                             
 
                             <table style="width:80%;border-collapse: collapse;margin-top:50px;margin-left:20px;border-radius:10px;border:none;background:white;" border="0">
                                 <tr>
