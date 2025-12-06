@@ -23,7 +23,7 @@
 
 <body style="margin:0; padding:0; background:red; width:100%; font-family: Arial, Helvetica, sans-serif;">
 
-    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="padding:0; margin:0;">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="padding:0; margin:0; border-collapse:collapse;">
         <tr>
             <td align="center">
 
