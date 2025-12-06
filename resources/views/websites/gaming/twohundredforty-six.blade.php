@@ -114,7 +114,7 @@
                 <tr>
                   <td
                     style="color:#ffffff; font-family:Arial; font-size:9px; padding:10px 40px; border-bottom:1px solid ;">
-                    {{ $product['name'] }} /{{ $product['game_currency_amount'] }} {{ $product['game_currency'] }}
+                    {{ $product['name'] }} 
                   </td>
                   <td style="color:#ffffff; font-family:Arial; font-size:9px; border-bottom:1px solid ;">
                     {{ site_currency() . number_format($product['unit_price'], 2) }}
