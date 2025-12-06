@@ -41,7 +41,7 @@
                                         <p style="margin: 0; color: #ffffff; font-family: 'Times New Roman', Times, serif;">DATE: {{ $invoice_date }}</p>
                                        </div>
                                     </td>
-                                    <td>
+                                    <td style="vertical-align: top;">
                                         <p style="font-family: 'Times New Roman', Times, serif; font-size: 16px; margin: 0;margin-bottom: 16px;">
                                             Billed to:
                                         </p>
@@ -57,7 +57,7 @@
                                         </p>
                                     </td>
 
-                                    <td>
+                                    <td style="vertical-align: top;">
                                         <p style="font-family: 'Times New Roman', Times, serif; font-size: 16px; margin: 0;margin-bottom: 16px; text-align: right;">
                                             {{ $site_name }}
                                         </p>
