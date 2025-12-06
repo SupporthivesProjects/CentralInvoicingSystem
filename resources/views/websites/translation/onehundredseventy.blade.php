@@ -86,7 +86,7 @@
                                     <td style="padding-left: 2px; width: 100px;text-align: center;font-size: 10px;margin: 0px;font-weight: 600;border-collapse: collapse;padding-left: 5px;background-color: orange;color: black;border: 1px solid white;">
                                        <b>NO</b> 
                                     </td>
-                                    <td style="padding-left: 2px;text-transform:capitalize; width: 300px;text-align: left;font-size: 10px;margin: 0px;font-weight: 600;border-collapse: collapse;padding-left: 5px;border: 1px solid white;">
+                                    <td style="padding-left: 2px;text-transform:uppercase; width: 300px;text-align: left;font-size: 10px;margin: 0px;font-weight: 600;border-collapse: collapse;padding-left: 5px;border: 1px solid white;">
                                        <b>ITEM Descriptions</b> 
                                     </td>
                                     <td style="width: 200px;text-align: center;font-size: 10px;margin: 0px;font-weight: 600;border-collapse: collapse;border: 1px solid white;">
