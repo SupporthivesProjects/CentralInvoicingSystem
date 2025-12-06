@@ -143,17 +143,16 @@
                                         font-family: 'Montserrat', sans-serif;
                                         width: 350px;
                                     ">
+                                        <div style="margin-bottom: 8px; align-items: start; text-align: start; width: 350px">
+                                                <span style="color: #f24c1e; font-weight: 400;">COMPANY NAME:</span><br>
+                                                <span style="font-weight: 400; widht: 100px;">{{ $company_name }}</span>
+                                            </div>
 
-                                        <div style="margin-bottom: 8px; display: flex; gap: 10px; align-items: flex-start; width: 301px;">
-                                            <span style="color: #f24c1e; font-weight: 400; white-space: nowrap;">COMPANY NAME:</span>
-                                            <span style="font-weight: 400;">{{ $company_name }}</span>
-                                        </div>
-
-                                        <!-- ADDRESS (same width, aligned left, wraps properly) -->
-                                        <div style="display: flex; gap: 10px; align-items: flex-start; width: 300px; flex-wrap: wrap;text-align: right; justify-content: flex-start;">
-                                            <span style="color: #f24c1e; font-weight: 400; white-space: nowrap;">ADDRESS:</span>
-                                            <span style="font-weight: 400;word-break: break-word; text-align: left;">{{ $company_address }}</span>
-                                        </div>
+                                            <!-- ADDRESS -->
+                                            <div style="align-items: start; text-align: start; width: 350px;">
+                                                <span style="color: #f24c1e; font-weight: 400;">ADDRESS:</span><br>
+                                                <span style="font-weight: 400; widht: 100px;">{{ $company_address }}</span>
+                                            </div>
                                     </div>
 
 
