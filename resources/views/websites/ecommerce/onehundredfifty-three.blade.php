@@ -89,13 +89,13 @@
                                 </tr>
                             </table>
 
-                            <div style="min-height: 730px !important;">
+                            <div style="min-height: 740px !important;">
                             <table style="border-collapse: collapse;border-bottom: 0px;border: 0px;">
                                 <tr
                                     style="border-collapse: collapse;height: 30px;background-color:#F8F0E3; border-bottom: 0px;border: 0px;">
                                     <td
                                         style="width: 200px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-left: 5px;">
-                                        <b>Products</b>
+                                        <b>Product</b>
                                     </td>
                                     <td
                                         style="width: 300px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
