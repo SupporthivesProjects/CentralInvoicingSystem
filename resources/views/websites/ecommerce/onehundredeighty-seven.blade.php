@@ -81,8 +81,8 @@
                             <td colspan="2" style="vertical-align: top;padding: 0px 50px;">
                              
 
-                            <table style="width:80%;border-collapse: collapse;margin-top:50px;margin-left:20px;border-radius:10px;border:none;background:white;" border="0">
-                                <tr>
+                            <table style="width:80%;border-collapse: collapse;margin-top:50px;margin-left:20px;border-radius:10px;border:none;" border="0">
+                                <tr style="background:white;">
                                     <td style="padding: 10px;width: 40%;border-radius:40px 0px 0px 40px;background:white;">
                                         <p style="margin: 0px;font-size: 10px;font-family: Lato;color:#194fba;line-height: 16px;font-weight:600;">
                                             DESCRIPTION
