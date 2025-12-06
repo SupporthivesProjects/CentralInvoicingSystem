@@ -52,20 +52,22 @@
                                             <b>TOTAL</b>
                                         </td>
                                      </tr>
-                                     <tr style="border-collapse: collapse;height: 30px; ;font-family: sans-serif;font-size: 8px;">
-                                        <td style="width: 300px;text-align: left;padding-left: 20px;">
-                                        <p>{{ $product->name }}</p>
-                                        </td>
-                                        <td style="width: 200px;text-align: right;">
-                                            <p>{{ site_currency() }} {{ number_format($product->unit_price, 2) }}</p>
-                                        </td>
-                                        <td style="width: 200px;text-align: center;">
-                                            <p>{{ $product->quantity ?? 1 }}</p>
-                                        </td>
-                                        <td style="width:200px;text-align: center;">
-                                            <p>{{ site_currency() }}{{ number_format(($product->quantity ?? 1) * $product->unit_price, 2) }}</p>
-                                        </td>
-                                     </tr>
+                                    @foreach($products as $product)
+                                        <tr style="border-collapse: collapse;height: 30px; ;font-family: sans-serif;font-size: 8px;">
+                                            <td style="width: 300px;text-align: left;padding-left: 20px;">
+                                            <p>{{ $product->name }}</p>
+                                            </td>
+                                            <td style="width: 200px;text-align: right;">
+                                                <p>{{ site_currency() }} {{ number_format($product->unit_price, 2) }}</p>
+                                            </td>
+                                            <td style="width: 200px;text-align: center;">
+                                                <p>{{ $product->quantity ?? 1 }}</p>
+                                            </td>
+                                            <td style="width:200px;text-align: center;">
+                                                <p>{{ site_currency() }}{{ number_format(($product->quantity ?? 1) * $product->unit_price, 2) }}</p>
+                                            </td>
+                                        </tr>
+                                    @endforeach
                                      {{-- <tr style="border-collapse: collapse;height: 30px; ;font-family: sans-serif;font-size: 8px;">
                                         <td style="width: 300px;text-align: left;padding-left: 20px;">
                                         <p>Item Name</p>
