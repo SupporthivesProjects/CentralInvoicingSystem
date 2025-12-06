@@ -29,7 +29,7 @@
                             <table width="100%">
                                 <tr>
                                     <td width="50%">
-                                        <img src="{{$invoice_logo}}" width="200" style="display:block;">
+                                        <img src="{{ $invoice_header_image }}" width="200" style="display:block;">
                                     </td>
                                     <td width="50%" valign="top" style="">
                                         <h1 style="font-size:70px;">INVOICE</h1>
