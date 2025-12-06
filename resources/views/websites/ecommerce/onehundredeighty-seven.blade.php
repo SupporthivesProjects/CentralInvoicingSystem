@@ -55,7 +55,7 @@
 
                     <!-- some data -->
                      <tr>
-                        <td>
+                        <td style="padding-left:50px">
                             <p style="margin: 0px;font-size:12px;font-family: Lato;font-weight:800;color: #ffffff;padding-top: 15px;">
                                 Invoice To :
                             </p>
@@ -65,7 +65,7 @@
                                 {{ $customer_mobile ? $customer_mobile : '' }}
                             </p>
                         </td>
-                        <td>
+                        <td style="padding-right:50px">
                             <p style="margin: 0px;font-size:12px;font-family: Lato;font-weight:800;color: #ffffff;padding-top: 20px;">
                                 Total Due
                             </p>
