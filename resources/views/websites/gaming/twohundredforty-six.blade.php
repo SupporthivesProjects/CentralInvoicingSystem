@@ -3,6 +3,29 @@
   <head>
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
    </head> 
+   <style>
+  @page {
+      margin: 0;               
+      padding: 0;
+  }
+
+  body {
+      margin: 0 !important;    
+      padding: 0 !important;
+      background: #000000;
+  }
+
+  html, body, table {
+      width: 100%;
+      height: 100%;
+  }
+
+  table {
+      border-collapse: collapse;
+  }
+
+  
+</style>
 
 <body style="margin:0; padding:0; background:#000000 width:100%;">
 
