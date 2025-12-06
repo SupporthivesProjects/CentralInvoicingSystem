@@ -28,7 +28,7 @@
             <td align="center">
 
                 <!-- Main Wrapper -->
-                <table width="780" cellpadding="0" cellspacing="0"
+                <table width="100%" cellpadding="0" cellspacing="0"
                     style="color:#ffffff; border-collapse:collapse;background: linear-gradient(to right, #0D022C 50%, #1B0C57 50%);">
 
                     <!-- HEADER -->
