@@ -141,7 +141,7 @@
                                         bottom: 250px;
                                         left: 40px;
                                         font-family: 'Montserrat', sans-serif;
-                                        width: 500px;
+                                        width: 350px;
                                     ">
 
                                         <div style="margin-bottom: 8px; display: flex; gap: 10px; align-items: flex-start; width: 301px;">
@@ -154,7 +154,6 @@
                                             <span style="color: #f24c1e; font-weight: 400; white-space: nowrap;">ADDRESS:</span>
                                             <span style="font-weight: 400;word-break: break-word; text-align: left;">{{ $company_address }}</span>
                                         </div>
-
                                     </div>
 
 

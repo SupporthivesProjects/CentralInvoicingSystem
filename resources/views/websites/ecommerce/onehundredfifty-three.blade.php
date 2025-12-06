@@ -64,7 +64,7 @@
                                         <p style="font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;">
                                             <b>Phone:</b> {{ $company_mobile }}
                                         </p>
-                                        <p style="font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;">
+                                        <p style="font-family: arial;font-size: 10px;margin: 0px;font-weight: 400; min-height: 40px;">
                                             <b>Address:</b> {{ $company_address }}
                                         </p>
                                     </td>
@@ -89,7 +89,7 @@
                                 </tr>
                             </table>
 
-                            <div style="min-height: 775px !important;">
+                            <div style="min-height: 745px !important;">
                             <table style="border-collapse: collapse;border-bottom: 0px;border: 0px;">
                                 <tr
                                     style="border-collapse: collapse;height: 30px;background-color:#F8F0E3; border-bottom: 0px;border: 0px;">
