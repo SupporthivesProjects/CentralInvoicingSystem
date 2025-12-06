@@ -54,7 +54,7 @@
                     <!-- header -->
 
                     <!-- some data -->
-                     <tr>
+                     <tr style="height:100px;">
                         <td style="padding-left:50px">
                             <p style="margin: 0px;font-size:12px;font-family: Lato;font-weight:800;color: #ffffff;padding-top: 15px;">
                                 Invoice To :
@@ -77,7 +77,7 @@
                     <!-- some data -->
 
                       <!-- content -->
-                        <tr style="">
+                        <tr style="height:100%">
                             <td style="vertical-align: top;padding: 0px 50px;">
                              
 
@@ -158,7 +158,7 @@
                                     </tr>
                                 </table>
                              
-                                <table style="border-collapse: collapse;width:100%;margin-top: 50px;">
+                                <table style="border-collapse: collapse;width:100%;margin-top: 50px;position:absolute;bottom:0px;">
                                     <tr>
                                         <td align="right">
                                         <p style="margin: 0px;font-size:12px;font-family: Lato;color:#ffffff;line-height: 16px;font-weight: 700;">
