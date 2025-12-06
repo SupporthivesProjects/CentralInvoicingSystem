@@ -77,7 +77,7 @@
                     <!-- some data -->
 
                       <!-- content -->
-                        <tr style="height:80vh;">
+                        <tr style="">
                             <td colspan="2" style="vertical-align: top;padding: 0px 50px;">
                              
 
