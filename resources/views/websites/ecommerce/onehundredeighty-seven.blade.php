@@ -176,11 +176,13 @@
                             </td>
 
                             
-                                <h1 style="rotate: 90deg; color: #FFFFFF;font-size: 50px;position: absolute; top: 500px; right: 5px;">INVOICE</h1>
-                            
+                                
                         </tr>
                     <!-- content -->
                 </table>
+
+                <h1 style="rotate: 90deg; color: #FFFFFF;font-size: 50px;position: absolute; top: 500px; right: 5px;">INVOICE</h1>
+                            
             </td>
         </tr>
     </table>
