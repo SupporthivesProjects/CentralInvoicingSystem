@@ -69,7 +69,7 @@
                                         
                                           @foreach($parts as $index => $part)
                                               {{ trim($part) }}@if($index < count($parts) - 1),@endif
-                                              @if($index === 0 )
+                                              @if($index === 0 || $index === 2)
                                                   <br><br>
                                               @endif
                                           @endforeach
