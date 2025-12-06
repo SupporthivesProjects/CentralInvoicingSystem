@@ -69,7 +69,7 @@
                             <p style="margin: 0px;font-size:12px;font-family: Lato;font-weight:800;color: #ffffff;padding-top: 20px;">
                                 Total Due
                             </p>
-                            <p style="margin: 0px;font-size:24px;font-family: Lato;font-weight:700;color: #ffffff;text-align: right;padding-right: 100px;">
+                            <p style="margin: 0px;font-size:24px;font-family: Lato;font-weight:700;color: #ffffff;padding-right: 100px;">
                                 {{ site_currency() . number_format($invoice_amount ?? 0, 2) }}
                             </p>
                         </td>
