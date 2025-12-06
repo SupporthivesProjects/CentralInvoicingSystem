@@ -129,7 +129,7 @@
                                </tr>
                                @endforeach
                             </table>
-                            <table style="width:80%;border-collapse:collapse;margin-top:23px;margin-left:20px;" border="0" cellspacing="0" cellpadding="0">
+                            <table style="width:80%;border-collapse:collapse;margin-left:20px;" border="0" cellspacing="0" cellpadding="0">
                                
                                
                                <tr style="height:30px;">
