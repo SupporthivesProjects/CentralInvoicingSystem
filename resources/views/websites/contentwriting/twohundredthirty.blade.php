@@ -144,16 +144,16 @@
                                         width: 500px;
                                     ">
 
-                                        <div style="margin-bottom: 8px; display: flex; gap: 10px; align-items: center; width: 500px">
-                                                <span style="color: #f24c1e; font-weight: 400;">COMPANY NAME:</span>
-                                                <span style="font-weight: 400;">{{ $company_name }}</span>
-                                            </div>
+                                        <div style="margin-bottom: 8px; display: flex; gap: 10px; align-items: flex-start; width: 300px;">
+                                            <span style="color: #f24c1e; font-weight: 400; white-space: nowrap;">COMPANY NAME:</span>
+                                            <span style="font-weight: 400;">{{ $company_name }}</span>
+                                        </div>
 
-                                            <!-- ADDRESS -->
-                                            <div style="display: flex; gap: 10px; align-items: center;">
-                                                <span style="color: #f24c1e; font-weight: 400;">ADDRESS:</span>
-                                                <span style="font-weight: 400;">{{ $company_address }}</span>
-                                            </div>
+                                        <!-- ADDRESS (same width, aligned left, wraps properly) -->
+                                        <div style="display: flex; gap: 10px; align-items: flex-start; width: 300px; flex-wrap: wrap;text-align: right; justify-content: flex-start;">
+                                            <span style="color: #f24c1e; font-weight: 400; white-space: nowrap;">ADDRESS:</span>
+                                            <span style="font-weight: 400;word-break: break-word; text-align: left;">{{ $company_address }}</span>
+                                        </div>
 
                                     </div>
 
