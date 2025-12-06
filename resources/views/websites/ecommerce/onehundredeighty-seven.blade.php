@@ -104,11 +104,8 @@
                                         </p>
                                     </td>
                                </tr>
-                            </table>
-                            <table style="width:80%;border-collapse:collapse;margin-top:23px;height:400px;margin-left:20px;" border="0" cellspacing="0" cellpadding="0">
-                               
                                @foreach ($products as $product)
-                               <tr style="height:40px;">
+                               <tr style="">
                                     <td style="padding: 10px;width: 40%;">
                                         <p style="margin: 0px;font-size:11px;font-family: Lato;color:#ffffff;line-height: 16px;font-weight:700;">
                                             {{ $product->name }}
@@ -131,7 +128,10 @@
                                     </td>
                                </tr>
                                @endforeach
-                               <tr style="height: 30px;"></tr>
+                            </table>
+                            <table style="width:80%;border-collapse:collapse;margin-top:23px;height:400px;margin-left:20px;" border="0" cellspacing="0" cellpadding="0">
+                               
+                               
                                <tr style="height:30px;">
                                 <td></td>
                                 <td style="padding:0px 20px;width: 10%;border-radius:40px 0px 0px 0px;background:white;border:0;" align="center" colspan="2">
