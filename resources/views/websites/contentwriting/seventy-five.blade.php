@@ -91,7 +91,7 @@
 
 
     <!-- Table -->
-      <tr style=" height: 450px">
+      <tr style=" height: 430px">
         <td style="padding: 16px 24px;" align="center" >
           <table width="100%" cellpadding="" cellspacing="0">
           <tr>
