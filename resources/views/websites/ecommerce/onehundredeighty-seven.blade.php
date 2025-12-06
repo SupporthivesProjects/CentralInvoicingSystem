@@ -24,11 +24,11 @@
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse;background: url('{{ $invoice_image4 }}');background-position: top;background-repeat: no-repeat;background-size:cover;">
                    <!-- header -->
                     <tr style="height: 150px;">
-                        <td style="vertical-align:ceter">
+                        <td style="vertical-align:top;padding-top:140px;">
                             <table border="0" style="border-collapse:collapse;padding:0;" width="100%">
                                 <tr style="">
                                     <td style="width:50%;"></td>
-                                    <td style="width:50%;padding:0px 50px" align="right" style="vertical-align:ceter">
+                                    <td style="width:50%;" align="left" style="vertical-align:ceter">
                                         <div style="width:40%;padding-left:50px;text-align: left;">
                                             <p style="margin: 0px;font-size: 10px;font-family: Lato;color: #90b3eb;line-height: 16px;">
                                                 Invoice Number
