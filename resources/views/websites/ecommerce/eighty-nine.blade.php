@@ -60,7 +60,7 @@
                                             style="font-size: 20px; font-weight: bold; font-size: 16px;">{{ $site_name }}
                                         </span><br>
                                         <span>{!! $company_address !!}</span><br>
-                                        @if (!empty($company_mobile))
+                                        @if ($company_mobile)
                                             <span>Phone: {{ $company_mobile }}</span><br>
                                         @endif
                                         <span>Email: {{ $company_email }} </span>
@@ -165,17 +165,20 @@
                                             <tr>
                                                 <td>
                                                     <table>
-                                                        <tr>
-                                                            <td>
-                                                                <img src="{{ $invoice_image1 }}" alt=""
-                                                                    style="width:24px;">
-                                                            </td>
-                                                            <td>
-                                                                <p
-                                                                    style="font-size: 10px;font-family: Calibri;color: #ffffff;margin: 0px;">
-                                                                    {{ $company_mobile }}</p>
-                                                            </td>
-                                                        </tr>
+                                                        @if($company_mobile)
+                                                            <tr>
+                                                                <td>
+                                                                    <img src="{{ $invoice_image1 }}" alt=""
+                                                                        style="width:24px;">
+                                                                </td>
+                                                                <td>
+                                                                    <p
+                                                                        style="font-size: 10px;font-family: Calibri;color: #ffffff;margin: 0px;">
+                                                                        {{ $company_mobile }}</p>
+                                                                </td>
+                                                            </tr>
+                                                        @endif
+
                                                     </table>
                                                 </td>
                                                 <td>
