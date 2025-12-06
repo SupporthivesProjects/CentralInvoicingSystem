@@ -52,24 +52,10 @@
                         </td>
                     </tr> 
                     <!-- header -->
-
-                    <!-- some data -->
-                     <tr>
-                        <td style="padding-left:50px">
-                            <p style="margin: 0px;font-size:12px;font-family: Lato;font-weight:800;color: #ffffff;padding-top: 15px;">
-                                Invoice To :
-                            </p>
-                            <p style="margin: 0px;font-size:16px;font-family: Lato;font-weight:500;color: #ffffff;text-align: left;">
-                                {{ $customer_name ? $customer_name : '' }}<br>
-                                {{ $customer_email ? $customer_email : '' }}<br>
-                                {{ $customer_mobile ? $customer_mobile : '' }}
-                            </p>
-                        </td>
-                        <td style="padding-right:50px">
-                            <p style="margin: 0px;font-size:12px;font-family: Lato;font-weight:800;color: #ffffff;padding-top: 20px;">
-                                Total Due
-                            </p>
-                            <p style="margin: 0px;font-size:24px;font-family: Lato;font-weight:700;color: #ffffff;">
+                      <!-- content -->
+                        <tr style="height:80vh;">
+                            <td style="background: url('{{ $invoice_image2 }}');background-repeat: no-repeat;background-size:cover;height:600px;vertical-align: top;padding: 0px 50px;">
+                             <p style="margin: 0px;font-size:24px;font-family: Lato;font-weight:700;color: #ffffff;text-align: right;padding-right: 100px;">
                                 {{ site_currency() . number_format($invoice_amount ?? 0, 2) }}
                             </p>
                         </td>
@@ -158,12 +144,12 @@
                                     </tr>
                                 </table>
                              
-                                <table style="border-collapse: collapse;width:100%;margin-top: 50px;">
-                                    <tr>
-                                        <td align="right">
-                                        <p style="margin: 0px;font-size:12px;font-family: Lato;color:#ffffff;line-height: 16px;font-weight: 700;">
-                                            {!! $company_address !!}
-                                        </p><br>
+                             <table style="border-collapse: collapse;width:100%;margin-top: 50px;">
+                                <tr>
+                                    <td align="right">
+                                    <p style="margin: 0px;font-size:12px;font-family: Lato;color:#ffffff;line-height: 16px;font-weight: 700;">
+                                        {!! $company_address !!}
+                                    </p><br>
 
                                         <p style="margin: 0px;font-size:9px;font-family: Lato;color:#ffffff;line-height: 16px;">
                                             {{ $company_email }}<br>
