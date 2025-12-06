@@ -78,7 +78,7 @@
 
                       <!-- content -->
                         <tr style="">
-                            <td colspan="2" style="vertical-align: top;padding: 0px 50px;">
+                            <td style="vertical-align: top;padding: 0px 50px;">
                              
 
                                 <table style="width:80%;border-collapse: collapse;margin-top:50px;margin-left:20px;border-radius:10px;border:none;" border="0">
@@ -173,6 +173,10 @@
                                     </td>
                                     </tr>
                                 </table>
+                            </td>
+
+                            <td>
+                                <h1 style="rotate: 90deg; color: #FFFFFF;font-size: 50px;">INVOICE</h1>
                             </td>
                         </tr>
                     <!-- content -->
