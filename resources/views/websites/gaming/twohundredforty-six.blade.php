@@ -7,7 +7,7 @@
 <body style="margin:0; padding:0; background:#000000 width:100%;">
 
   <!-- FULL WRAPPER -->
-  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0; padding:0; background:#000;">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0; padding:0; background:#E944F4;">
     <tr>
       <td align="center" style="padding:0px;">
 
