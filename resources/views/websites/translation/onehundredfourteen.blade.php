@@ -97,12 +97,6 @@
       </div>
       </td>
     </tr>
-<<<<<<< HEAD
-      <tr style=" background: url('{{ $invoice_footer_image }}');background-repeat: no-repeat;background-size: cover;background-position: center;height: 100vh;">
-        <td style="padding: 0px; color: #ffffff; font-size: 12px; text-align: center;">
-         {{ $company_email}} |{{  $site_name }}| {{ $company_mobile }}<br/><br>
-        {!! $company_address !!}
-=======
       <tr>
         <td>
           <div class="footer-fixed" style="background: url('{{ $invoice_footer_image }}');background-repeat: no-repeat;background-size: cover;background-position: center;color: #ffffff; font-size: 12px; text-align: center;padding: 40px;">
@@ -111,7 +105,6 @@
             {!! $company_address !!}
             
           </div>
->>>>>>> devteam
         </td>
       </tr>
     </table>

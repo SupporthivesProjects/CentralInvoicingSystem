@@ -77,9 +77,9 @@
                                     <td style="width:100px;text-align: center;font-size: 14px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 10px;">
                                         <b>IMAGERY</b>
                                     </td>
-                                    <td style="width:580px;text-align: right;font-size: 14px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 10px;">
+                                    {{-- <td style="width:580px;text-align: right;font-size: 14px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 10px;">
                                         <b>BILLING CYCLE</b>
-                                    </td>
+                                    </td> --}}
                                     <td style="width:100px;text-align: right;font-size: 14px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 10px;">
                                         <b>TOTAL</b>
                                     </td>
@@ -101,9 +101,9 @@
                                     <td style="width:100px;text-align: center;font-size: 14px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 10px;">
                                         {{ $product->imagecount }}
                                     </td>
-                                    <td style="width:580px;text-align: right;font-size: 14px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 10px;">
+                                    {{-- <td style="width:580px;text-align: right;font-size: 14px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 10px;">
                                         {{  site_currency() }} {{ number_format($product->unit_price, 2) }}
-                                    </td>
+                                    </td> --}}
                                     <td style="width:100px;text-align: right;font-size: 14px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 10px;">
                                         {{  site_currency() }} {{ number_format($product->unit_price, 2) }}
                                     </td>
@@ -123,9 +123,9 @@
                                     <td style="width:100px;text-align: center;font-size: 14px;margin: 0px;font-weight: 400;border-collapse: collapse;">
                                         
                                     </td>
-                                    <td style="width:100px;text-align: center;font-size: 14px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 10px;">
+                                    {{-- <td style="width:100px;text-align: center;font-size: 14px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 10px;">
                                         
-                                    </td>
+                                    </td> --}}
                                     <td style="width:580px;text-align: right;font-size: 14px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 10px;background-color: lightgrey;">
                                         Item total
                                     </td>

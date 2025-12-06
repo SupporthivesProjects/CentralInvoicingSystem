@@ -50,7 +50,7 @@
                             </table>
                             <table>
                                 <tr style="color: white;font-family:  'Roboto', sans-serif;">
-                                    <td style="width:50%;padding-left: 50px;font-size: 12px;padding-top: 90px;">
+                                    <td style="width:50%;padding-left: 40px;font-size: 12px;padding-top: 90px;">
                                         Billed From:
                                     </td>
                                     <td style="width:50%;text-align: right;padding-right: 40px;font-size: 12px;padding-top: 90px;" align="right">Invoice To:</td>
@@ -86,7 +86,7 @@
                                     <td style="padding-left: 2px; width: 100px;text-align: center;font-size: 10px;margin: 0px;font-weight: 600;border-collapse: collapse;padding-left: 5px;background-color: orange;color: black;border: 1px solid white;">
                                        <b>NO</b> 
                                     </td>
-                                    <td style="padding-left: 2px; width: 300px;text-align: left;font-size: 10px;margin: 0px;font-weight: 600;border-collapse: collapse;padding-left: 5px;border: 1px solid white;">
+                                    <td style="padding-left: 2px;text-transform:uppercase; width: 300px;text-align: left;font-size: 10px;margin: 0px;font-weight: 600;border-collapse: collapse;padding-left: 5px;border: 1px solid white;">
                                        <b>ITEM Descriptions</b> 
                                     </td>
                                     <td style="width: 200px;text-align: center;font-size: 10px;margin: 0px;font-weight: 600;border-collapse: collapse;border: 1px solid white;">
