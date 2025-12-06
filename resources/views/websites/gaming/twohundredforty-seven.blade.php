@@ -28,7 +28,7 @@
             <td align="center">
 
                 <!-- Main Wrapper -->
-                <table width="650" cellpadding="0" cellspacing="0"
+                <table width="850" cellpadding="0" cellspacing="0"
                     style="color:#ffffff; border-collapse:collapse;background: linear-gradient(to right, #0D022C 50%, #1B0C57 50%);">
 
                     <!-- HEADER -->
@@ -37,7 +37,7 @@
                             <table width="100%">
                                 <tr>
                                     <td width="50%">
-                                        <div style="display: flex;flex-direction: column;justify-content: space-between;align-items: flex-start;gap: 40px;position: relative;height: 295px;">
+                                        <div style="display: flex;flex-direction: column;justify-content: space-between;align-items: flex-start;gap: 40px;position: relative;height: 900px;">
                                             
                                             <img src="{{ $company_logo }}" width="150" style="display:block;">
                                             <!-- <div style="display: flex;flex-direction: column;justify-content: flex-start;align-items: flex-start;gap: 30px;"> -->
@@ -62,16 +62,16 @@
                                         <div style="background: #0D022C;border-radius: 20px 0px 0px 20px;height: 295px;position: relative;">
                                             <img src="{{ $invoice_image2 }}" style="position: absolute;top: 20px; right: 20px;width: 50px;" alt="">
                                             <div style="width: 110px;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);">
-                                                <p style="color: #FFF;font-size: 12px;text-align: left;font-weight: bold;line-height: 15px;">Payment Method</p>
+                                                <p style="color: #FFF;font-size: 12px;text-align: left;font-weight: bold;line-height: 15px;">Invoice From:</p>
                                                 <div class="">
-                                                    <p style="font-size: 10px;letter-spacing: 1px;color: #D83E71;text-align: left;">Bank Transfer</p>
-                                                    <p style="color: #FFF;font-size: 8px;text-align: left;font-weight: 400;line-height: 10px;">Bank Name - Account Name</p>
+                                                    <p style="font-size: 10px;letter-spacing: 1px;color: #D83E71;text-align: left;">{{ $site_name }}</p>
+                                                    {{-- <p style="color: #FFF;font-size: 8px;text-align: left;font-weight: 400;line-height: 10px;">Bank Name - Account Name</p>
                                                     <p style="color: #FFF;font-size: 8px;text-align: left;font-weight: 400;line-height: 10px;">Account No.</p>
-                                                    <p style="color: #FFF;font-size: 8px;text-align: left;font-weight: 400;line-height: 10px;">SWIFT Code</p>
+                                                    <p style="color: #FFF;font-size: 8px;text-align: left;font-weight: 400;line-height: 10px;">SWIFT Code</p> --}}
                                                 </div>
                                                 <div class="">
-                                                    <p style="font-size: 10px;letter-spacing: 1px;color: #D83E71;text-align: left;">Online Payment</p>
-                                                    <p style="color: #FFF;font-size: 8px;text-align: left;font-weight: 400;line-height: 10px;">PayPal, Visa, Mastercard,</p>
+                                                    <p style="font-size: 10px;letter-spacing: 1px;color: #D83E71;text-align: left;">{{ $company_mobile }}</p>
+                                                    <p style="color: #FFF;font-size: 8px;text-align: left;font-weight: 400;line-height: 10px;">{{ $company_email }}</p>
                                                     <p style="color: #FFF;font-size: 8px;text-align: left;font-weight: 400;line-height: 10px;">Western Union</p>
                                                 </div>
                                             </div>
@@ -126,10 +126,10 @@
                                 </tr>
                                 @foreach($products as $product)
                                 <tr>
-                                    <td style="padding: 8px 10px 8px 20px;">{{ $product->name }}</td>
-                                    <td style="padding: 8px 10px 8px 10px;" align="center">{{ site_currency() . number_format($product->unit_price ?? 0, 2) }}</td>
-                                    <td style="padding: 8px 10px 8px 10px;" align="center">2</td>
-                                    <td style="padding: 8px 20px 8px 10px;" align="right">{{ site_currency() . number_format($invoice_amount ?? 0, 2) }}</td>
+                                    <td style="padding: 8px 10px 8px 20px;">{{ ucwords(strtolower($product['name'])) }}</td>
+                                    <td style="padding: 8px 10px 8px 10px;" align="center">{{ $currency . number_format($product['unit_price'], 2) }}</td>
+                                    <td style="padding: 8px 10px 8px 10px;" align="center">1</td>
+                                    <td style="padding: 8px 20px 8px 10px;" align="right">{{ $currency . number_format($product['unit_price'], 2) }}</td>
                                 </tr>
                                 @endforeach
                                
