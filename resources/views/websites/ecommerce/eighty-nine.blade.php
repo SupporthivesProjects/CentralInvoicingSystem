@@ -155,7 +155,7 @@
                                                                     </tr>
                                                                 </table>
                                                             </td>
-                                                            <td>
+                                                            <td style="padding-left: 10px;">
                                                                 <table>
                                                                     <tr>
                                                                         <td>
@@ -167,7 +167,7 @@
                                                                     </tr>
                                                                 </table>
                                                             </td>
-                                                            <td>
+                                                            <td style="padding-left: 10px;">
                                                                  <table>
                                                                     <tr>
                                                                         <td>
