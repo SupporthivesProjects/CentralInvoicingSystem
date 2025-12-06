@@ -123,9 +123,9 @@
                                     <td style="width:100px;text-align: center;font-size: 14px;margin: 0px;font-weight: 400;border-collapse: collapse;">
                                         
                                     </td>
-                                    <td style="width:100px;text-align: center;font-size: 14px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 10px;">
+                                    {{-- <td style="width:100px;text-align: center;font-size: 14px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 10px;">
                                         
-                                    </td>
+                                    </td> --}}
                                     <td style="width:580px;text-align: right;font-size: 14px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 10px;background-color: lightgrey;">
                                         Item total
                                     </td>
