@@ -77,7 +77,7 @@
                     <!-- some data -->
 
                       <!-- content -->
-                        <tr style="height:810px">
+                        <tr style="height:830px">
                             <td style="vertical-align: top;padding: 0px 50px;">
                              
 
@@ -158,7 +158,7 @@
                                     </tr>
                                 </table>
                              
-                                <table style="border-collapse: collapse;width:100%;margin-top: 50px;position:absolute;bottom:40px;left:40px;">
+                                <table style="border-collapse: collapse;width:100%;margin-top: 50px;position:absolute;bottom:40px;right:40px;">
                                     <tr>
                                         <td align="right">
                                         <p style="margin: 0px;font-size:12px;font-family: Lato;color:#ffffff;line-height: 16px;font-weight: 700;">
