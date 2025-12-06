@@ -144,7 +144,7 @@
                                         width: 500px;
                                     ">
 
-                                        <div style="margin-bottom: 8px; display: flex; gap: 10px; align-items: flex-start; width: 300px;">
+                                        <div style="margin-bottom: 8px; display: flex; gap: 10px; align-items: flex-start; width: 301px;">
                                             <span style="color: #f24c1e; font-weight: 400; white-space: nowrap;">COMPANY NAME:</span>
                                             <span style="font-weight: 400;">{{ $company_name }}</span>
                                         </div>
