@@ -23,7 +23,7 @@
             <td align="center" style="padding:0px;">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse;background: url('{{ $invoice_image4 }}');background-position: top;background-repeat: no-repeat;background-size:cover;">
                    <!-- header -->
-                    <tr style="">
+                    <tr style="height: 150px;">
                         <td style="vertical-align:ceter">
                             <table border="0" style="border-collapse:collapse;padding:0;" width="100%">
                                 <tr style="">
