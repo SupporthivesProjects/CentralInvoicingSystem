@@ -176,7 +176,7 @@
                             </td>
 
                             
-                                <h1 style="rotate: 90deg; color: #FFFFFF;font-size: 50px;position: absolute; top: 180px; right: 30px;">INVOICE</h1>
+                                <h1 style="rotate: 90deg; color: #FFFFFF;font-size: 50px;position: absolute; top: 500px; right: 30px;">INVOICE</h1>
                             
                         </tr>
                     <!-- content -->
