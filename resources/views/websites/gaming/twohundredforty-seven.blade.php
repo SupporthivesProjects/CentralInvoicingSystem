@@ -21,13 +21,13 @@
     </style>
 </head>
 
-<body style="margin:0; padding:0; background:red; width:100%; font-family: Arial, Helvetica, sans-serif;">
+<body style="margin:0; padding:0;border:0; background:#fff; width:100%; font-family: Arial, Helvetica, sans-serif;">
 
     <table width="100%" border="0" cellspacing="0" cellpadding="0" style="padding:0; margin:0;">
         <tr>
             <td align="center">
 
-                <!-- Main Wrapper -->
+                <!-- Main Wrapper --> 
                 <table width="100%" cellpadding="0" cellspacing="0"
                     style="color:#ffffff; border-collapse:collapse;background: linear-gradient(to right, #0D022C 50%, #1B0C57 50%);">
 
