@@ -141,20 +141,19 @@
                                         bottom: 250px;
                                         left: 40px;
                                         font-family: 'Montserrat', sans-serif;
-                                        width: 500px;
+                                        width: 350px;
                                     ">
 
-                                        <div style="margin-bottom: 8px; display: flex; gap: 10px; align-items: center; width: 500px">
-                                                <span style="color: #f24c1e; font-weight: 400;">COMPANY NAME:</span>
+                                        <div style="margin-bottom: 8px; align-items: start; width: 350px">
+                                                <span style="color: #f24c1e; font-weight: 400;">COMPANY NAME:</span><br>
                                                 <span style="font-weight: 400;">{{ $company_name }}</span>
                                             </div>
 
                                             <!-- ADDRESS -->
-                                            <div style="display: flex; gap: 10px; align-items: center;">
-                                                <span style="color: #f24c1e; font-weight: 400;">ADDRESS:</span>
+                                            <div style="align-items: start; width: 350px;">
+                                                <span style="color: #f24c1e; font-weight: 400;">ADDRESS:</span><br>
                                                 <span style="font-weight: 400;">{{ $company_address }}</span>
                                             </div>
-
                                     </div>
 
 

@@ -62,10 +62,21 @@
                                             {{ $site_name }}
                                         </p>
 
-                                        <p style="font-family: Arial, Helvetica, sans-serif; font-size: 10px; margin: 0;margin-bottom: 12px;text-align: right;">{{ $company_address }}<br>
-
-
-                                            </p>
+                                        <p style="text-align:right;font-family: Arial, Helvetica, sans-serif; font-size: 10px; margin: 0;margin-bottom: 12px;">
+                                          @php
+                                          $parts = explode(',', $company_address);
+                                          @endphp
+                                        
+                                          @foreach($parts as $index => $part)
+                                              {{ trim($part) }}@if($index < count($parts) - 1),@endif
+                                              @if($index === 0 )
+                                                  <br><br>
+                                              @endif
+                                          @endforeach
+                                        </p>
+                                        {{-- <p style="font-family: Arial, Helvetica, sans-serif; font-size: 10px; margin: 0;margin-bottom: 12px;text-align: right; width: 150px;" >
+                                          {{ $company_address }}<br>
+                                            </p> --}}
 
                                         <p style="font-family: Arial, Helvetica, sans-serif; font-size: 10px; margin: 0;text-align: right;">
                                             {{ $company_email }}<br>

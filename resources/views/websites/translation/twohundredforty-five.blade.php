@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
+    <title>{{ $site->site_name }} - Invoice #{{ $invoice_number }}</title>
 </head>
 <body style="padding: 0px; margin: 0px;">
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
@@ -37,13 +37,14 @@
                                         <div style="display: flex; justify-content: space-between; width: 100%;">
                                             <p style="line-height: 165%; width: 50%; font-family: Arial;font-size: 11px;margin: 0px;font-weight: 400;">
                                                 <span style="font-size: 12px;"><b>Billed To:</b></span><br> 
-                                                {{ $customer_name ? $customer_name : '' }}<br>
+                                                {{ $customer_name }}<br>
                                             </p>
                                             <p style="line-height: 165%; width: 50%; padding-left: 100px; font-family: Arial;font-size: 11px;margin: 0px;font-weight: 400;">
                                                 <span style="font-size: 12px;"><b>Billed From:</b></span><br>
                                                 {{ $company_name }}<br>
-                                                {{ $company_address }}<br> 
-                                                {{ $company_email }}
+                                                {{ $company_address }}<br>
+                                                {{ $company_email }}<br>
+                                                +123 44 555 6789
                                                 <br>
                                             </p>
                                         </div>
@@ -68,20 +69,22 @@
                                         <b>Total</b>
                                     </td>
                                 </tr>
-                                <tr style="border-collapse: collapse;height: 24px;">
-                                    <td style="width: 250px; color:#000000; text-align: start; padding: 10px 10px;font-family:  Arial;font-size: 12px;margin: 0px;font-weight: 400;border-bottom: 1px solid #000000;border-collapse: collapse;">
-                                        {{ $product->name }}
-                                    </td>
-                                    <td style="width: 100px; color:#000000; text-align:center;padding:10px;font-family:  Arial;font-size:12px;margin: 0px;font-weight: 400;border-bottom: 1px solid #000000;border-collapse: collapse;">
-                                        {{ $product->pages }}
-                                    </td>
-                                    <td style="width:100px; color:#000000; text-align:center;padding:10px;font-family:  Arial;font-size: 12px;margin: 0px;font-weight: 400;border-bottom: 1px solid #000000;border-collapse: collapse;">
-                                        {{ $product->unit_type }}
-                                    </td>
-                                    <td style="width:100px; color:#000000; text-align:right;padding:10px;font-family:  Arial;font-size: 12px;margin: 0px;font-weight: 400;border-bottom: 1px solid #000000;border-collapse: collapse;">
-                                        {{ site_currency() . number_format($product->line_total, 2) }}
-                                    </td>
-                                </tr>
+                                @foreach($products as $product)
+                                    <tr style="border-collapse: collapse;height: 24px;">
+                                        <td style="width: 250px; color:#000000; text-align: start; padding: 10px 10px;font-family:  Arial;font-size: 12px;margin: 0px;font-weight: 400;border-bottom: 1px solid #000000;border-collapse: collapse;">
+                                            {{ $product->name }}
+                                        </td>
+                                        <td style="width: 100px; color:#000000; text-align:center;padding:10px;font-family:  Arial;font-size:12px;margin: 0px;font-weight: 400;border-bottom: 1px solid #000000;border-collapse: collapse;">
+                                            {{ $product->pages }}
+                                        </td>
+                                        <td style="width:100px; color:#000000; text-align:center;padding:10px;font-family:  Arial;font-size: 12px;margin: 0px;font-weight: 400;border-bottom: 1px solid #000000;border-collapse: collapse;">
+                                            {{ $product->unit_type }}
+                                        </td>
+                                        <td style="width:100px; color:#000000; text-align:right;padding:10px;font-family:  Arial;font-size: 12px;margin: 0px;font-weight: 400;border-bottom: 1px solid #000000;border-collapse: collapse;">
+                                            {{ site_currency() . number_format($product->line_total, 2) }}
+                                        </td>
+                                    </tr>
+                                @endforeach
                                 {{-- <tr style="border-collapse: collapse;height: 24px;">
                                     <td style="width: 250px; color:#000000; text-align: start; padding: 10px 10px;font-family:  Arial;font-size: 12px;margin: 0px;font-weight: 400;border-bottom: 1px solid #000000;border-collapse: collapse;">
                                         Certified translation
