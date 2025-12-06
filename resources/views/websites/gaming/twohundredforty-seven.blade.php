@@ -28,7 +28,7 @@
             <td align="center">
 
                 <!-- Main Wrapper -->
-                <table width="850" cellpadding="0" cellspacing="0"
+                <table width="780" cellpadding="0" cellspacing="0"
                     style="color:#ffffff; border-collapse:collapse;background: linear-gradient(to right, #0D022C 50%, #1B0C57 50%);">
 
                     <!-- HEADER -->
@@ -37,7 +37,7 @@
                             <table width="100%">
                                 <tr>
                                     <td width="50%">
-                                        <div style="display: flex;flex-direction: column;justify-content: space-between;align-items: flex-start;gap: 40px;position: relative;height: 900px;">
+                                        <div style="display: flex;flex-direction: column;justify-content: space-between;align-items: flex-start;gap: 40px;position: relative;height: 295px;">
                                             
                                             <img src="{{ $company_logo }}" width="150" style="display:block;">
                                             <!-- <div style="display: flex;flex-direction: column;justify-content: flex-start;align-items: flex-start;gap: 30px;"> -->
