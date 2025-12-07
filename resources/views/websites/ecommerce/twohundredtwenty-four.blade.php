@@ -67,11 +67,11 @@
     </style>
 </head>
 
-<body>
+<body style="background: #feecd1;">
 
     <table align="center" width="100%" cellpadding="0" cellspacing="0">
         <tr>
-            <td style="background: url('{{ $invoice_image1 }}') no-repeat center/cover; vertical-align:top; min-height:100vh;">
+            <td style="background: url('{{ $invoice_image1 }}') no-repeat top/cover; vertical-align:top; min-height:100vh;">
 
                 <table align="center" width="100%" cellpadding="0" cellspacing="0">
                     
