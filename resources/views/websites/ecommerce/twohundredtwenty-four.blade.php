@@ -30,6 +30,7 @@
         /* Orange "Invoice To" box */
         .invoice-to-wrap {
             padding: 36px 20px 8px 80px;
+            margin-top: 40px;
         }
         .invoice-to-box {
             background-color: #f79d7c; /* orange */
