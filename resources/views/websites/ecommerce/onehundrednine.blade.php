@@ -75,18 +75,23 @@
                                             <b>Website : </b>{{ $site_name }}
                                         </p>
 
-                                        <p style="margin: 0px;font-family: Arial;font-size: 10px;width: 250px; line-height: 18px;">
-                                            <b>Address : </b>
-                                            @php
-                                                $parts = explode(',', $company_address);
-                                            @endphp
-                                            @foreach($parts as $index => $part)
-                                                {{ trim($part) }}@if($index < count($parts) - 1),@endif
-                                                @if($index === 0 || $index === 4)
-                                                    <br>
-                                                @endif
-                                            @endforeach
-                                        </p>
+                                        <div style="display:flex;flex-direction:row;justify-content:flex-start;align-items:flex-start;">
+                                            <p style="margin: 0px;font-family: Arial;font-size: 10px; line-height: 18px;">
+                                                <b>Address : </b>
+                                            </p>
+                                            <p style="margin: 0px;font-family: Arial;font-size: 10px; line-height: 18px;">
+                                                @php
+                                                    $parts = explode(',', $company_address);
+                                                @endphp
+                                                @foreach($parts as $index => $part)
+                                                    {{ trim($part) }}@if($index < count($parts) - 1),@endif
+                                                    @if($index === 0 || $index === 4)
+                                                        <br>
+                                                    @endif
+                                                @endforeach
+                                            </p>
+                                        </div>
+                                        
                                     </td>
                                 </tr>
                             </table>
