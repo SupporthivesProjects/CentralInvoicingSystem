@@ -5,8 +5,8 @@
 </head>
 <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #ffffff;">
   <table width="100%" cellpadding="0" cellspacing="0" border="0"
-    style="max-width: 90%; margin: 0 auto; background: url('{{ $invoice_image1 }}'); background-repeat: no-repeat;background-size: cover;background-position: center;">
-    <tr style="height: 155px;">
+    style="max-width: 100%; margin: 0 auto; background: url('{{ $invoice_image1 }}'); background-repeat: no-repeat;background-size: cover;background-position: center;">
+    <tr style="height: 200px;">
       <td style="padding: 16px 24px;" align="center">
         <img src="{{ $company_logo }}" width="50" alt=""><br>
         <h1 style="margin: 10px;color: #4A5E8C;font-size: 50px;font-weight: 400;">INVOICE</h1>
@@ -91,7 +91,7 @@
 
 
     <!-- Table -->
-      <tr style=" height: 430px">
+      <tr style=" height: 459px;">
         <td style="padding: 16px 24px;" align="center" >
           <table width="100%" cellpadding="" cellspacing="0">
           <tr>
