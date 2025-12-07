@@ -15,6 +15,15 @@
             /* background: url('{{ $invoice_footer_image }}') center center no-repeat; */
             /* background-size: cover; */
         }
+        .footer-fixed2 {
+            position: fixed;
+            bottom: 100px;
+            left: 0;
+            right: 0;
+            width: 100%;
+            /* background: url('{{ $invoice_footer_image }}') center center no-repeat; */
+            /* background-size: cover; */
+        }
     </style>
 </head>
 
@@ -100,7 +109,7 @@
                                     </tr>
                                 </table>
                             
-                             <table width="100%"
+                             <table class="footer-fixed2" width="100%"
                                 style="margin-top: -1px; padding: 40px;padding-right:0px; color: White; background-image: url('{{ $invoice_image2}}'); height: 212px; width: 100%; background-position: center; background-repeat: no-repeat; background-size: cover; box-shadow: none;">
                                 <tr>
                                     <td width="50%">
