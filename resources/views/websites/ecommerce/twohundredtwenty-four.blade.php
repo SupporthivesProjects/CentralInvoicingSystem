@@ -29,14 +29,13 @@
 
         /* Orange "Invoice To" box */
         .invoice-to-wrap {
-            padding: 36px 20px 8px 80px;
-            margin-top: 40px;
+            padding: 115px 50px 0px 50px;
         }
         .invoice-to-box {
             background-color: #f79d7c; /* orange */
-            border-radius: 28px;
+            border-radius: 0px 28px 28px 28px;
             padding: 30px 28px;
-            max-width: calc(100% - 160px);
+            max-width: 100%;
             box-shadow: 0 6px 0 rgba(0,0,0,0.02);
             position: relative;
             z-index: 2;
