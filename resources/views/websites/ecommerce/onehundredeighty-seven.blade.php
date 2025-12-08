@@ -158,7 +158,7 @@
                                     </tr>
                                 </table>
                              
-                                <table style="border-collapse: collapse;width:100%;position:absolute;bottom:0px;">
+                                <!-- <table style="border-collapse: collapse;width:100%;position:absolute;bottom:0px;">
                                     <tr>
                                         <td align="right" style="padding-right:80px;padding-bottom:40px;">
                                         <p style="margin: 0px;font-size:12px;font-family: Lato;color:#ffffff;line-height: 16px;font-weight: 700;">
@@ -172,7 +172,20 @@
                                         </p>
                                     </td>
                                     </tr>
-                                </table>
+                                </table> -->
+
+                                <div style="border-collapse: collapse;width:fit-content;position:absolute;bottom:0px;right:0px;">
+                                    <div style="padding-right:80px;padding-bottom:40px;">
+                                        <p style="margin: 0px;font-size:12px;font-family: Lato;color:#ffffff;line-height: 16px;font-weight: 700;">
+                                            {!! $company_address !!}
+                                        </p><br>
+
+                                        <p style="margin: 0px;font-size:9px;font-family: Lato;color:#ffffff;line-height: 16px;">
+                                            {{ $company_email }}<br>
+                                            {{ $company_mobile }} 
+                                        </p>
+                                    </div>
+                                </div>
                             </td>
 
                             
