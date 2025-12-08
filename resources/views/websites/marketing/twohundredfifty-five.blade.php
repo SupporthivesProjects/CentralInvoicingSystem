@@ -24,9 +24,9 @@
                         </td>
                     </tr>
 
-                    <tr style="background: url(Picture5.png);">
+                    <tr style="background: url({{ $invoice_image4 }});">
                         <td style="text-align: center;">
-                            <img src="Picture3.png" style="height: 60px;">
+                            <img src="{{ $invoice_image2 }}" style="height: 60px;">
                         </td>
                         <td style="padding-right: 75px;">
                             <h1
