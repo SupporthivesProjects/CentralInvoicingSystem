@@ -2,7 +2,12 @@
 <html>
 <head>
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
-   </head> 
+    <style>
+        @page {
+            margin: 0 !important; 
+        }
+    </style>
+</head> 
 
 <body style="margin:0; padding:0; background:#000000; width:100%;">
 
