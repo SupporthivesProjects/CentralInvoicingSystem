@@ -180,7 +180,7 @@
                         </tr>
                     <!-- content -->
                 </table>
-                <img src="{{ $invoice_image5 }}" style="width: 80px;position: fixed; right:50px; top: 300px;" alt="">
+                <img src="{{ $invoice_image5 }}" style="width: 80px;position: fixed; right:50px; top: 350px;" alt="">
             </td>
         </tr>
     </table>
