@@ -104,6 +104,16 @@ class WordPressController extends Controller
     
         $bestMatch = $this->findBestProductCombination($allProducts, $invoiceAmount, $noOfProducts);
     
+        if (empty($bestMatch)) {
+            session()->forget('ready_products');
+            session()->forget('current_amount');
+            return response()->json([
+                'tableRows' => '',
+                'total' => 0,
+                'message' => 'Could not find products matching the criteria. Total must be between invoice amount and 110% of invoice amount.'
+            ]);
+        }
+    
         $finalTotal = collect($bestMatch)->sum('unit_price');
     
         $productIds = collect($bestMatch)->pluck('id')->unique();
@@ -159,20 +169,24 @@ class WordPressController extends Controller
         $productCount = count($productArray);
     
         if ($requiredCount) {
-            $maxAllowed = $targetAmount * 1.10;
-            return $this->findExactCountOptimized($productArray, $targetAmount, $maxAllowed, $requiredCount, $productCount);
+            return $this->findExactCountOptimized($productArray, $targetAmount, $requiredCount, $productCount);
         } else {
             return $this->findFlexibleOptimized($productArray, $targetAmount, $productCount);
         }
     }
     
-    private function findExactCountOptimized($products, $target, $maxAllowed, $count, $totalProducts)
+    private function findExactCountOptimized($products, $target, $count, $totalProducts)
     {
+        $maxAllowed = $target * 1.10;
+        
         if ($totalProducts < $count) {
-            return $products;
+            $total = array_sum(array_column($products, 'unit_price'));
+            if ($total >= $target && $total <= $maxAllowed) {
+                return $products;
+            }
+            return [];
         }
     
-        $avgPrice = $target / $count;
         $priceMap = [];
         
         foreach ($products as $idx => $product) {
@@ -183,7 +197,13 @@ class WordPressController extends Controller
         asort($priceMap);
         $sortedIndices = array_keys($priceMap);
         
+        if (count($sortedIndices) < $count) {
+            return [];
+        }
+    
+        $avgPrice = $target / $count;
         $midPoint = 0;
+        
         foreach ($sortedIndices as $pos => $idx) {
             if ($priceMap[$idx] >= $avgPrice) {
                 $midPoint = max(0, $pos - intval($count / 2));
@@ -191,7 +211,8 @@ class WordPressController extends Controller
             }
         }
     
-        $searchWindow = array_slice($sortedIndices, $midPoint, min($count * 4, $totalProducts - $midPoint));
+        $windowSize = min($count * 4, count($sortedIndices) - $midPoint);
+        $searchWindow = array_slice($sortedIndices, $midPoint, $windowSize);
         
         if (count($searchWindow) < $count) {
             $searchWindow = $sortedIndices;
@@ -199,7 +220,7 @@ class WordPressController extends Controller
     
         $bestMatch = null;
         $bestTotal = PHP_INT_MAX;
-        $attempts = min(30, count($searchWindow));
+        $attempts = min(50, count($searchWindow));
     
         for ($i = 0; $i < $attempts; $i++) {
             shuffle($searchWindow);
@@ -236,8 +257,10 @@ class WordPressController extends Controller
                 foreach ($searchWindow as $idx) {
                     if (in_array($idx, $usedIndices)) continue;
                     
-                    $diff = abs($priceMap[$idx] - $idealPrice);
-                    if ($diff < $closestDiff && $priceMap[$idx] <= $remaining) {
+                    $price = $priceMap[$idx];
+                    
+                    $diff = abs($price - $idealPrice);
+                    if ($diff < $closestDiff) {
                         $closestDiff = $diff;
                         $closestIdx = $idx;
                     }
@@ -247,6 +270,8 @@ class WordPressController extends Controller
                     $selected[] = $closestIdx;
                     $usedIndices[] = $closestIdx;
                     $remaining -= $priceMap[$closestIdx];
+                } else {
+                    break;
                 }
             }
     
@@ -256,7 +281,7 @@ class WordPressController extends Controller
                     $total += $priceMap[$idx];
                 }
                 
-                if ($total <= $maxAllowed) {
+                if ($total >= $target && $total <= $maxAllowed) {
                     $bestMatch = $selected;
                     $bestTotal = $total;
                 }
@@ -266,11 +291,19 @@ class WordPressController extends Controller
         if (!$bestMatch) {
             $lowPriceIndices = array_slice($sortedIndices, 0, min($count * 2, $totalProducts));
             shuffle($lowPriceIndices);
-            $bestMatch = array_slice($lowPriceIndices, 0, $count);
-            $bestTotal = 0;
-            foreach ($bestMatch as $idx) {
-                $bestTotal += $priceMap[$idx];
+            $testIndices = array_slice($lowPriceIndices, 0, $count);
+            $total = 0;
+            foreach ($testIndices as $idx) {
+                $total += $priceMap[$idx];
             }
+            
+            if ($total >= $target && $total <= $maxAllowed) {
+                $bestMatch = $testIndices;
+            }
+        }
+    
+        if (!$bestMatch) {
+            return [];
         }
     
         $result = [];
@@ -283,6 +316,8 @@ class WordPressController extends Controller
     
     private function findFlexibleOptimized($products, $target, $totalProducts)
     {
+        $maxAllowed = $target * 1.10;
+        
         $priceMap = [];
         foreach ($products as $idx => $product) {
             $price = floatval($product->unit_price);
@@ -300,8 +335,8 @@ class WordPressController extends Controller
         $bestTotal = 0;
         $bestDiff = PHP_INT_MAX;
     
-        for ($attempt = 0; $attempt < 15; $attempt++) {
-            $startIdx = rand(0, max(0, $totalProducts - 20));
+        for ($attempt = 0; $attempt < 20; $attempt++) {
+            $startIdx = rand(0, max(0, count($sortedIndices) - 20));
             $subset = array_slice($sortedIndices, $startIdx, 20);
             shuffle($subset);
             
@@ -311,58 +346,23 @@ class WordPressController extends Controller
             foreach ($subset as $idx) {
                 $price = $priceMap[$idx];
                 
-                if ($total + $price > $target) continue;
+                if ($total + $price > $maxAllowed) continue;
     
                 $selected[] = $idx;
                 $total += $price;
     
-                if (abs($total - $target) < 0.01) {
-                    $result = [];
-                    foreach ($selected as $i) {
-                        $result[] = $products[$i];
+                if ($total >= $target && $total <= $maxAllowed) {
+                    if (abs($total - $target) < 0.01) {
+                        $result = [];
+                        foreach ($selected as $i) {
+                            $result[] = $products[$i];
+                        }
+                        return $result;
                     }
-                    return $result;
                 }
             }
     
-            if ($total > 0) {
-                $diff = abs($target - $total);
-                if ($diff < $bestDiff) {
-                    $bestMatch = $selected;
-                    $bestTotal = $total;
-                    $bestDiff = $diff;
-                }
-            }
-        }
-    
-        if ($bestMatch && $bestTotal >= $target * 0.95) {
-            $result = [];
-            foreach ($bestMatch as $idx) {
-                $result[] = $products[$idx];
-            }
-            return $result;
-        }
-    
-        $maxTotal = $target * 1.15;
-        
-        for ($attempt = 0; $attempt < 15; $attempt++) {
-            $startIdx = rand(0, max(0, $totalProducts - 25));
-            $subset = array_slice($sortedIndices, $startIdx, 25);
-            shuffle($subset);
-            
-            $selected = [];
-            $total = 0;
-    
-            foreach ($subset as $idx) {
-                $price = $priceMap[$idx];
-                
-                if ($total + $price > $maxTotal) continue;
-    
-                $selected[] = $idx;
-                $total += $price;
-            }
-    
-            if ($total >= $target && $total <= $maxTotal) {
+            if ($total >= $target && $total <= $maxAllowed) {
                 $diff = $total - $target;
                 if ($diff < $bestDiff) {
                     $bestMatch = $selected;
@@ -380,11 +380,8 @@ class WordPressController extends Controller
             return $result;
         }
     
-        $minTotal = $target * 0.8;
-        $maxTotal = $target * 1.2;
-    
-        for ($attempt = 0; $attempt < 10; $attempt++) {
-            $startIdx = rand(0, max(0, $totalProducts - 30));
+        for ($attempt = 0; $attempt < 20; $attempt++) {
+            $startIdx = rand(0, max(0, count($sortedIndices) - 30));
             $subset = array_slice($sortedIndices, $startIdx, 30);
             shuffle($subset);
             
@@ -394,28 +391,31 @@ class WordPressController extends Controller
             foreach ($subset as $idx) {
                 $price = $priceMap[$idx];
                 
-                if ($total + $price <= $maxTotal) {
-                    $selected[] = $idx;
-                    $total += $price;
+                if ($total + $price > $maxAllowed) continue;
+    
+                $selected[] = $idx;
+                $total += $price;
+            }
+    
+            if ($total >= $target && $total <= $maxAllowed) {
+                $diff = $total - $target;
+                if ($diff < $bestDiff) {
+                    $bestMatch = $selected;
+                    $bestTotal = $total;
+                    $bestDiff = $diff;
                 }
             }
+        }
     
-            if ($total >= $minTotal && $total <= $maxTotal && $total > $bestTotal) {
-                $bestMatch = $selected;
-                $bestTotal = $total;
+        if ($bestMatch) {
+            $result = [];
+            foreach ($bestMatch as $idx) {
+                $result[] = $products[$idx];
             }
+            return $result;
         }
     
-        if (!$bestMatch) {
-            $bestMatch = [$sortedIndices[0]];
-            $bestTotal = $priceMap[$sortedIndices[0]];
-        }
-    
-        $result = [];
-        foreach ($bestMatch as $idx) {
-            $result[] = $products[$idx];
-        }
-        return $result;
+        return [];
     }
     
 
