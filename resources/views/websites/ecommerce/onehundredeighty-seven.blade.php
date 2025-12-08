@@ -194,7 +194,7 @@
                         </tr>
                     <!-- content -->
                 </table>
-                <img src="{{ $invoice_image4 }}" style="width: 200px;" alt="">
+                <img src="{{ $invoice_image5 }}" style="width: 200px;" alt="">
             </td>
         </tr>
     </table>
