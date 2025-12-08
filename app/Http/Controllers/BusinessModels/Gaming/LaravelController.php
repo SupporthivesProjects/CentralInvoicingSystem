@@ -646,9 +646,24 @@ class LaravelController extends Controller
 
     protected function generateWithDompdf($site, $viewPath, $invoice_data, $filename)
     {
-        $pdf = \PDF::loadView($viewPath, $invoice_data)->setPaper('A4', 'portrait');
+        $pdf = \PDF::setPaper('A4', 'portrait')
+            ->setOptions([
+                'margin-top' => 0,
+                'margin-bottom' => 0,
+                'margin-left' => 0,
+                'margin-right' => 0,
+                'isRemoteEnabled' => true,
+            ])
+            ->loadView($viewPath, $invoice_data);
+
         return $pdf->download($filename);
     }
+
+    // protected function generateWithDompdf($site, $viewPath, $invoice_data, $filename)
+    // {
+    //     $pdf = \PDF::loadView($viewPath, $invoice_data)->setPaper('A4', 'portrait');
+    //     return $pdf->download($filename);
+    // }
 
     protected function generateWithApi2Pdf($site, $viewPath, $invoice_data, $filename)
     {
