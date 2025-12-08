@@ -163,9 +163,11 @@ class WordPressController extends Controller
             $bestDistance = PHP_FLOAT_MAX;
             
             $basePages = ceil($invoiceAmount / $standardPrice);
-            $pagesToTry = range(max(1, $basePages - 2), $basePages + 5);
+            $pagesToTry = range(max(250, $basePages - 50), $basePages + 500);
             
             foreach ($pagesToTry as $pages) {
+                if ($pages < 250) continue;
+                
                 $totalWithoutUrgency = $pages * $standardPrice;
                 $distanceWithoutUrgency = abs($totalWithoutUrgency - $invoiceAmount);
                 
@@ -218,22 +220,27 @@ class WordPressController extends Controller
                 ['cert_ratio' => 0.6, 'std_ratio' => 0.4],
             ];
     
-            foreach ($urgencyScenarios as $urgencyScenario) {
+            $results = collect($urgencyScenarios)->map(function($urgencyScenario) use ($ratios, $certifiedPrice, $standardPrice, $urgentAmount, $invoiceAmount, $certifiedProduct, $standardProduct, $urgencyChance) {
                 $certEffectivePrice = $certifiedPrice + ($urgencyScenario['cert_urgent'] ? $urgentAmount : 0);
                 $stdEffectivePrice = $standardPrice + ($urgencyScenario['std_urgent'] ? $urgentAmount : 0);
+                
+                $localBest = null;
+                $localDistance = PHP_FLOAT_MAX;
                 
                 foreach ($ratios as $ratio) {
                     $certAmount = $invoiceAmount * $ratio['cert_ratio'];
                     $stdAmount = $invoiceAmount * $ratio['std_ratio'];
     
                     $baseCertPages = ceil($certAmount / $certEffectivePrice);
-                    $baseStdPages = ceil($stdAmount / $stdEffectivePrice);
+                    $baseStdPages = max(250, ceil($stdAmount / $stdEffectivePrice));
                     
                     $certPagesToTry = range(max(1, $baseCertPages - 1), $baseCertPages + 2);
-                    $stdPagesToTry = range(max(1, $baseStdPages - 1), $baseStdPages + 2);
+                    $stdPagesToTry = range(max(250, $baseStdPages - 50), $baseStdPages + 100);
                     
                     foreach ($certPagesToTry as $certPages) {
                         foreach ($stdPagesToTry as $stdPages) {
+                            if ($stdPages < 250) continue;
+                            
                             $certTotal = $certPages * $certEffectivePrice;
                             $stdTotal = $stdPages * $stdEffectivePrice;
                             $total = $certTotal + $stdTotal;
@@ -242,29 +249,39 @@ class WordPressController extends Controller
                                 $distance = abs($total - $invoiceAmount);
                                 $balanceScore = abs(($certTotal / $total) - 0.5);
     
-                                if ($distance < $bestDistance || ($distance === $bestDistance && $balanceScore < 0.3)) {
-                                    $bestMatch = [
-                                        [
-                                            'product' => $certifiedProduct,
-                                            'pages' => $certPages,
-                                            'total' => $certTotal,
-                                            'is_urgent' => $urgencyScenario['cert_urgent'] && (rand(1, 100) <= $urgencyChance),
-                                            'base_price' => $certifiedPrice
+                                if ($distance < $localDistance || ($distance === $localDistance && $balanceScore < 0.3)) {
+                                    $localBest = [
+                                        'match' => [
+                                            [
+                                                'product' => $certifiedProduct,
+                                                'pages' => $certPages,
+                                                'total' => $certTotal,
+                                                'is_urgent' => $urgencyScenario['cert_urgent'] && (rand(1, 100) <= $urgencyChance),
+                                                'base_price' => $certifiedPrice
+                                            ],
+                                            [
+                                                'product' => $standardProduct,
+                                                'pages' => $stdPages,
+                                                'total' => $stdTotal,
+                                                'is_urgent' => $urgencyScenario['std_urgent'] && (rand(1, 100) <= $urgencyChance),
+                                                'base_price' => $standardPrice
+                                            ]
                                         ],
-                                        [
-                                            'product' => $standardProduct,
-                                            'pages' => $stdPages,
-                                            'total' => $stdTotal,
-                                            'is_urgent' => $urgencyScenario['std_urgent'] && (rand(1, 100) <= $urgencyChance),
-                                            'base_price' => $standardPrice
-                                        ]
+                                        'distance' => $distance
                                     ];
-                                    $bestDistance = $distance;
+                                    $localDistance = $distance;
                                 }
                             }
                         }
                     }
                 }
+                
+                return $localBest;
+            })->filter()->sortBy('distance')->first();
+    
+            if ($results) {
+                $bestMatch = $results['match'];
+                $bestDistance = $results['distance'];
             }
         }
     
@@ -315,10 +332,12 @@ class WordPressController extends Controller
                 $bestScenario = null;
                 $currentBestDistance = $bestMatch ? $bestDistance : PHP_FLOAT_MAX;
                 
-                $basePages = ceil($invoiceAmount / $standardPrice);
-                $pagesToTry = range(max(1, $basePages - 3), $basePages + 8);
+                $basePages = max(250, ceil($invoiceAmount / $standardPrice));
+                $pagesToTry = range(max(250, $basePages - 100), $basePages + 500);
                 
                 foreach ($pagesToTry as $pages) {
+                    if ($pages < 250) continue;
+                    
                     $totalWithoutUrgency = $pages * $standardPrice;
                     $distanceWithoutUrgency = abs($totalWithoutUrgency - $invoiceAmount);
                     
@@ -365,6 +384,13 @@ class WordPressController extends Controller
         $selectedProducts = [];
         foreach ($bestMatch as $item) {
             $product = (object) $item['product'];
+            
+            $productName = strtolower(trim($product->name));
+            $isWordBased = !($certifiedProduct && $productName === strtolower(trim($certifiedProduct['name'])));
+            
+            if ($isWordBased && $item['pages'] < 250) {
+                continue;
+            }
     
             $product->unit_price = floatval($item['base_price']);
             $product->urgent_amount = $urgentAmount;
@@ -392,7 +418,6 @@ class WordPressController extends Controller
                 $product->line_total += $product->urgent_amount * $product->pages;
             }
     
-            $productName = strtolower(trim($product->name));
             if ($certifiedProduct && $productName === strtolower(trim($certifiedProduct['name']))) {
                 $product->unit_type = 'pages';
             } else {

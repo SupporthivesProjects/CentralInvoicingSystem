@@ -139,103 +139,114 @@ class LaravelController extends Controller
                 $tolerance = $invoiceAmount * 0.10;
                 $maxCertPages = min(15, ceil($invoiceAmount / $certifiedPrice));
                 
-                for ($certPages = 1; $certPages <= $maxCertPages; $certPages++) {
-                    $certTotal = $certPages * $certifiedPrice;
-                    $remainingAmount = $invoiceAmount - $certTotal;
-                    
-                    if ($remainingAmount > 0) {
-                        $minRequiredWords = ceil($remainingAmount / $standardPrice);
+                $results = collect([
+                    'strategy1' => function() use ($certifiedTranslation, $standardTranslation, $certifiedPrice, $standardPrice, $invoiceAmount, $maxCertPages, $minWords, $wordIncrement, $tolerance) {
+                        $localBest = null;
+                        $localDistance = PHP_FLOAT_MAX;
                         
-                        if ($minRequiredWords < $minWords) {
-                            $minRequiredWords = $minWords;
-                        }
-                        
-                        $maxWords = ceil(($invoiceAmount + $tolerance - $certTotal) / $standardPrice);
-                        
-                        for ($words = $minRequiredWords; $words <= $maxWords; $words += $wordIncrement) {
-                            $stdTotal = $words * $standardPrice;
-                            $total = $certTotal + $stdTotal;
-                            
-                            if ($total >= $invoiceAmount) {
-                                $distance = abs($total - $invoiceAmount);
-                                
-                                if ($distance < $bestDistance) {
-                                    $bestDistance = $distance;
-                                    $bestTotal = $total;
-                                    $bestMatch = [
-                                        [
-                                            'product' => $certifiedTranslation,
-                                            'quantity' => $certPages,
-                                            'total' => $certTotal
-                                        ],
-                                        [
-                                            'product' => $standardTranslation,
-                                            'quantity' => $words,
-                                            'total' => $stdTotal
-                                        ]
-                                    ];
-                                }
-                                
-                                if ($distance <= ($invoiceAmount * 0.02)) {
-                                    break 2;
-                                }
-                                break;
-                            }
-                        }
-                    }
-                }
-                
-                if (!$bestMatch || $bestDistance > ($invoiceAmount * 0.15)) {
-                    for ($words = $minWords; $words <= ceil($invoiceAmount / $standardPrice) + 1000; $words += $wordIncrement) {
-                        $stdTotal = $words * $standardPrice;
-                        $remainingAmount = $invoiceAmount - $stdTotal;
-                        
-                        if ($remainingAmount > 0) {
-                            $certPages = max(1, ceil($remainingAmount / $certifiedPrice));
+                        for ($certPages = 1; $certPages <= $maxCertPages; $certPages++) {
                             $certTotal = $certPages * $certifiedPrice;
-                            $total = $stdTotal + $certTotal;
+                            $remainingAmount = $invoiceAmount - $certTotal;
                             
-                            if ($total >= $invoiceAmount) {
-                                $distance = abs($total - $invoiceAmount);
+                            if ($remainingAmount > ($minWords * $standardPrice)) {
+                                $calculatedWords = ceil($remainingAmount / $standardPrice);
+                                $minRequiredWords = max($minWords, $calculatedWords);
+                                $maxWords = ceil(($invoiceAmount + $tolerance - $certTotal) / $standardPrice);
                                 
-                                if ($distance < $bestDistance) {
-                                    $bestDistance = $distance;
-                                    $bestTotal = $total;
-                                    $bestMatch = [
-                                        [
-                                            'product' => $certifiedTranslation,
-                                            'quantity' => $certPages,
-                                            'total' => $certTotal
+                                for ($words = $minRequiredWords; $words <= $maxWords; $words += $wordIncrement) {
+                                    if ($words < $minWords) continue;
+                                    
+                                    $stdTotal = $words * $standardPrice;
+                                    $total = $certTotal + $stdTotal;
+                                    
+                                    if ($total >= $invoiceAmount) {
+                                        $distance = abs($total - $invoiceAmount);
+                                        
+                                        if ($distance < $localDistance) {
+                                            $localDistance = $distance;
+                                            $localBest = [
+                                                'match' => [
+                                                    ['product' => $certifiedTranslation, 'quantity' => $certPages, 'total' => $certTotal],
+                                                    ['product' => $standardTranslation, 'quantity' => $words, 'total' => $stdTotal]
+                                                ],
+                                                'distance' => $distance,
+                                                'total' => $total
+                                            ];
+                                        }
+                                        
+                                        if ($distance <= ($invoiceAmount * 0.02)) {
+                                            return $localBest;
+                                        }
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        
+                        return $localBest;
+                    },
+                    
+                    'strategy2' => function() use ($certifiedTranslation, $standardTranslation, $certifiedPrice, $standardPrice, $invoiceAmount, $minWords, $wordIncrement) {
+                        $localBest = null;
+                        $localDistance = PHP_FLOAT_MAX;
+                        
+                        for ($words = $minWords; $words <= ceil($invoiceAmount / $standardPrice) + 1000; $words += $wordIncrement) {
+                            if ($words < $minWords) continue;
+                            
+                            $stdTotal = $words * $standardPrice;
+                            $remainingAmount = $invoiceAmount - $stdTotal;
+                            
+                            if ($remainingAmount > 0 && $remainingAmount >= $certifiedPrice) {
+                                $certPages = max(1, ceil($remainingAmount / $certifiedPrice));
+                                $certTotal = $certPages * $certifiedPrice;
+                                $total = $stdTotal + $certTotal;
+                                
+                                if ($total >= $invoiceAmount) {
+                                    $distance = abs($total - $invoiceAmount);
+                                    
+                                    if ($distance < $localDistance) {
+                                        $localDistance = $distance;
+                                        $localBest = [
+                                            'match' => [
+                                                ['product' => $certifiedTranslation, 'quantity' => $certPages, 'total' => $certTotal],
+                                                ['product' => $standardTranslation, 'quantity' => $words, 'total' => $stdTotal]
+                                            ],
+                                            'distance' => $distance,
+                                            'total' => $total
+                                        ];
+                                    }
+                                    
+                                    if ($distance <= ($invoiceAmount * 0.02)) {
+                                        return $localBest;
+                                    }
+                                }
+                            } else if ($stdTotal >= $invoiceAmount) {
+                                $distance = abs($stdTotal - $invoiceAmount);
+                                
+                                if ($distance < $localDistance) {
+                                    $localDistance = $distance;
+                                    $localBest = [
+                                        'match' => [
+                                            ['product' => $standardTranslation, 'quantity' => $words, 'total' => $stdTotal]
                                         ],
-                                        [
-                                            'product' => $standardTranslation,
-                                            'quantity' => $words,
-                                            'total' => $stdTotal
-                                        ]
+                                        'distance' => $distance,
+                                        'total' => $stdTotal
                                     ];
                                 }
-                                
-                                if ($distance <= ($invoiceAmount * 0.02)) {
-                                    break;
-                                }
+                                return $localBest;
                             }
-                        } else if ($stdTotal >= $invoiceAmount) {
-                            $distance = abs($stdTotal - $invoiceAmount);
-                            
-                            if ($distance < $bestDistance) {
-                                $bestDistance = $distance;
-                                $bestTotal = $stdTotal;
-                                $bestMatch = [
-                                    [
-                                        'product' => $standardTranslation,
-                                        'quantity' => $words,
-                                        'total' => $stdTotal
-                                    ]
-                                ];
-                            }
-                            break;
                         }
+                        
+                        return $localBest;
                     }
+                ])->map(function($strategy) {
+                    return $strategy();
+                })->filter()->sortBy('distance')->first();
+                
+                if ($results) {
+                    $bestDistance = $results['distance'];
+                    $bestTotal = $results['total'];
+                    $bestMatch = $results['match'];
                 }
             }
     
@@ -282,12 +293,153 @@ class LaravelController extends Controller
             ]);
         }
     
+        $validatedMatch = [];
+        $recalculateNeeded = false;
+        
+        foreach ($bestMatch as $item) {
+            $productName = Str::lower($item['product']->name);
+            $isWordBased = !Str::contains($productName, 'certified');
+            
+            if ($isWordBased && $item['quantity'] < 250) {
+                $recalculateNeeded = true;
+                continue;
+            }
+            
+            $validatedMatch[] = $item;
+        }
+        
+        if ($recalculateNeeded || empty($validatedMatch)) {
+            $validatedMatch = [];
+            $newBestDistance = PHP_FLOAT_MAX;
+            $newBestTotal = 0;
+            
+            if ($certifiedTranslation && $standardTranslation && $certifiedPrice && $standardPrice) {
+                $minWords = 250;
+                $wordIncrement = 50;
+                
+                for ($certPages = 1; $certPages <= 10; $certPages++) {
+                    $certTotal = $certPages * $certifiedPrice;
+                    $remainingAmount = $invoiceAmount - $certTotal;
+                    
+                    if ($remainingAmount >= ($minWords * $standardPrice)) {
+                        for ($words = $minWords; $words <= 2000; $words += $wordIncrement) {
+                            $stdTotal = $words * $standardPrice;
+                            $total = $certTotal + $stdTotal;
+                            
+                            if ($total >= $invoiceAmount) {
+                                $distance = abs($total - $invoiceAmount);
+                                
+                                if ($distance < $newBestDistance) {
+                                    $newBestDistance = $distance;
+                                    $newBestTotal = $total;
+                                    $validatedMatch = [
+                                        [
+                                            'product' => $certifiedTranslation,
+                                            'quantity' => $certPages,
+                                            'total' => $certTotal
+                                        ],
+                                        [
+                                            'product' => $standardTranslation,
+                                            'quantity' => $words,
+                                            'total' => $stdTotal
+                                        ]
+                                    ];
+                                }
+                                break;
+                            }
+                        }
+                    }
+                }
+                
+                if (empty($validatedMatch)) {
+                    for ($words = $minWords; $words <= 3000; $words += $wordIncrement) {
+                        $stdTotal = $words * $standardPrice;
+                        $remainingAmount = $invoiceAmount - $stdTotal;
+                        
+                        if ($remainingAmount >= $certifiedPrice) {
+                            $certPages = ceil($remainingAmount / $certifiedPrice);
+                            $certTotal = $certPages * $certifiedPrice;
+                            $total = $stdTotal + $certTotal;
+                            
+                            if ($total >= $invoiceAmount) {
+                                $distance = abs($total - $invoiceAmount);
+                                
+                                if ($distance < $newBestDistance) {
+                                    $newBestDistance = $distance;
+                                    $newBestTotal = $total;
+                                    $validatedMatch = [
+                                        [
+                                            'product' => $certifiedTranslation,
+                                            'quantity' => $certPages,
+                                            'total' => $certTotal
+                                        ],
+                                        [
+                                            'product' => $standardTranslation,
+                                            'quantity' => $words,
+                                            'total' => $stdTotal
+                                        ]
+                                    ];
+                                }
+                                break;
+                            }
+                        } else if ($stdTotal >= $invoiceAmount) {
+                            $validatedMatch = [
+                                [
+                                    'product' => $standardTranslation,
+                                    'quantity' => $words,
+                                    'total' => $stdTotal
+                                ]
+                            ];
+                            break;
+                        }
+                    }
+                }
+            }
+            
+            if (empty($validatedMatch) && $certifiedTranslation && $certifiedPrice) {
+                $certPages = ceil($invoiceAmount / $certifiedPrice);
+                $validatedMatch = [
+                    [
+                        'product' => $certifiedTranslation,
+                        'quantity' => $certPages,
+                        'total' => $certPages * $certifiedPrice
+                    ]
+                ];
+            }
+            
+            if (empty($validatedMatch) && $standardTranslation && $standardPrice) {
+                $minWords = 250;
+                for ($words = $minWords; $words <= 3000; $words += 50) {
+                    $total = $words * $standardPrice;
+                    if ($total >= $invoiceAmount) {
+                        $validatedMatch = [
+                            [
+                                'product' => $standardTranslation,
+                                'quantity' => $words,
+                                'total' => $total
+                            ]
+                        ];
+                        break;
+                    }
+                }
+            }
+        }
+        
+        $bestMatch = $validatedMatch;
+    
         $selectedProducts = [];
         foreach ($bestMatch as $item) {
             $product = $item['product'];
             $quantity = $item['quantity'];
     
             if ($quantity <= 0) {
+                continue;
+            }
+    
+            $productName = Str::lower($product->name);
+            $isWordBased = !Str::contains($productName, 'certified');
+            
+            if ($isWordBased && $quantity < 250) {
                 continue;
             }
     
