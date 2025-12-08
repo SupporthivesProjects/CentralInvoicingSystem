@@ -194,9 +194,7 @@
                         </tr>
                     <!-- content -->
                 </table>
-                <div style="rotate: 90deg;position: fixed; top: 550px; left: 60%;">
-                    <h1 style="color: #FFFFFF;font-size: 70px;letter-spacing: 15px;font-family: Montserrat;">INVOICE</h1>
-                </div>
+                <img src="{{ $invoice_image4 }}" style="width: 200px;" alt="">
             </td>
         </tr>
     </table>
