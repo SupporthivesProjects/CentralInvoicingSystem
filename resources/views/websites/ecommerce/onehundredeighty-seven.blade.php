@@ -14,15 +14,14 @@
         }
     </style>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 </head>
-<body style="background: url('{{ $invoice_image4 }}');background-position: top;background-repeat: no-repeat;background-size:cover;height:900px;">
+<body>
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
             <td align="center" style="padding:0px;">
-                <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse;">
+                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse;background: url('{{ $invoice_image4 }}');background-position: top;background-repeat: no-repeat;background-size:cover;height:1120px;">
                    <!-- header -->
                     <tr style="height: 150px;">
                         <td colspan="2" style="vertical-align:top;padding-top:90px;padding-bottom:90px">
@@ -159,7 +158,7 @@
                                     </tr>
                                 </table>
                              
-                                <!-- <table style="border-collapse: collapse;width:100%;position:absolute;bottom:0px;">
+                                <table style="border-collapse: collapse;width:100%;position:absolute;bottom:0px;">
                                     <tr>
                                         <td align="right" style="padding-right:80px;padding-bottom:40px;">
                                         <p style="margin: 0px;font-size:12px;font-family: Lato;color:#ffffff;line-height: 16px;font-weight: 700;">
@@ -173,20 +172,7 @@
                                         </p>
                                     </td>
                                     </tr>
-                                </table> -->
-
-                                <div style="border-collapse: collapse;width:fit-content;position:fixed;bottom:0px;right:0px;">
-                                    <div style="padding-right:80px;padding-bottom:40px;">
-                                        <p style="margin: 0px;font-size:12px;font-family: Lato;color:#ffffff;line-height: 16px;font-weight: 700;">
-                                            {!! $company_address !!}
-                                        </p><br>
-
-                                        <p style="margin: 0px;font-size:9px;font-family: Lato;color:#ffffff;line-height: 16px;">
-                                            {{ $company_email }}<br>
-                                            {{ $company_mobile }} 
-                                        </p>
-                                    </div>
-                                </div>
+                                </table>
                             </td>
 
                             
@@ -194,7 +180,7 @@
                         </tr>
                     <!-- content -->
                 </table>
-                <img src="{{ $invoice_image5 }}" style="width: 80px;position: fixed; right:50px; top: 300px;" alt="">
+                             <!-- <img src="{{ $invoice_image5 }}" style="width: 80px;position: fixed; right:50px; top: 300px;" alt=""> -->
             </td>
         </tr>
     </table>
