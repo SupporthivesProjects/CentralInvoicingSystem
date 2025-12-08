@@ -193,8 +193,8 @@
                         </tr>
                     <!-- content -->
                 </table>
-                <div style="rotate: 90deg;position: absolute; top: 500px; right: 5px; border: 1px solid red;">
-                    <h1 style="color: #FFFFFF;font-size: 50px;">INVOICE</h1>
+                <div style="rotate: 90deg;position: absolute; top: 500px; right: 5px; border: 1px solid red;transform: translateY(-100%);">
+                    <h1 style="color: #FFFFFF;font-size: 50px;letter-spacing: 20px;">INVOICE</h1>
                 </div>
             </td>
         </tr>
