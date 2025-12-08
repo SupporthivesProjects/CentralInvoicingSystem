@@ -3,6 +3,9 @@
 <head>
     <title>Invoice</title>
     <style>
+        @page { margin: 0 !important; }
+        html, body { margin: 0 !important; padding: 0 !important; }
+
         h1,h2,h3,h4,h5,h6,p {
             margin: 0px;
         }
