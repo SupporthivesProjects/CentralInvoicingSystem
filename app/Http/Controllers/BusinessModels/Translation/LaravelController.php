@@ -42,7 +42,7 @@ class LaravelController extends Controller
         $site_id = $request->get('site_id');
         $invoiceAmount = floatval($request->get('invoice_amount'));
         $filterType = $request->get('filter_type');
-
+    
         if (!$invoiceAmount || $invoiceAmount <= 0) {
             return response()->json([
                 'tableRows' => '',
@@ -50,20 +50,23 @@ class LaravelController extends Controller
                 'message' => 'Please provide a valid invoice amount'
             ]);
         }
-
+    
         $site = Website::findOrFail($site_id);
         DynamicDatabaseService::connect($site);
-
+    
         $translationProducts = DB::connection($this->connectionType)
             ->table($this->productTable)
             ->select('id', 'category_id', 'name', 'unit_price', 'slug')
             ->where('published', 1)
             ->where(function ($query) {
-                $query->where('name', 'like', '%Standard%')
-                    ->orWhere('name', 'like', '%Certified%');
+                $query->where('name', 'like', '%translation%')
+                      ->where(function($q) {
+                          $q->where('name', 'like', '%Standard%')
+                            ->orWhere('name', 'like', '%Certified%');
+                      });
             })
             ->get();
-
+    
         if ($translationProducts->isEmpty()) {
             session()->forget('ready_products');
             session()->forget('current_amount');
@@ -73,24 +76,24 @@ class LaravelController extends Controller
                 'message' => 'Translation products not found in the database'
             ]);
         }
-
+    
         $certifiedTranslation = $translationProducts->first(function ($item) {
-            return Str::contains(Str::lower(trim($item->name)), 'certified translation');
+            $name = Str::lower(trim($item->name));
+            return Str::contains($name, 'certified') && Str::contains($name, 'translation');
         });
-
+    
         $standardTranslation = $translationProducts->first(function ($item) {
-            return Str::contains(Str::lower(trim($item->name)), 'standard professional translation');
-        }) ?? $translationProducts->first(function ($item) {
-            return Str::contains(Str::lower(trim($item->name)), 'standard translation');
+            $name = Str::lower(trim($item->name));
+            return Str::contains($name, 'standard') && Str::contains($name, 'translation');
         });
-
+    
         $certifiedPrice = $certifiedTranslation ? floatval($certifiedTranslation->unit_price) : null;
         $standardPrice = $standardTranslation ? floatval($standardTranslation->unit_price) : null;
-
+    
         $bestMatch = null;
         $bestTotal = PHP_FLOAT_MAX;
         $bestDistance = PHP_FLOAT_MAX;
-
+    
         if ($filterType === 'certified' && $certifiedTranslation && $certifiedPrice) {
             $certPages = ceil($invoiceAmount / $certifiedPrice);
             $total = $certPages * $certifiedPrice;
@@ -115,65 +118,24 @@ class LaravelController extends Controller
             ];
         } else {
             if ($certifiedTranslation && $standardTranslation && $certifiedPrice && $standardPrice) {
-                $ratios = [
-                    ['cert_ratio' => 0.3, 'std_ratio' => 0.7],
-                    ['cert_ratio' => 0.5, 'std_ratio' => 0.5],
-                    ['cert_ratio' => 0.7, 'std_ratio' => 0.3],
-                    ['cert_ratio' => 0.2, 'std_ratio' => 0.8],
-                    ['cert_ratio' => 0.8, 'std_ratio' => 0.2],
-                    ['cert_ratio' => 0.4, 'std_ratio' => 0.6],
-                    ['cert_ratio' => 0.6, 'std_ratio' => 0.4],
-                ];
-
-                foreach ($ratios as $ratio) {
-                    $certAmount = $invoiceAmount * $ratio['cert_ratio'];
-                    $stdAmount = $invoiceAmount * $ratio['std_ratio'];
-                    $certPages = max(1, ceil($certAmount / $certifiedPrice));
-                    $stdPages = max(1, ceil($stdAmount / $standardPrice));
-                    $total = ($certPages * $certifiedPrice) + ($stdPages * $standardPrice);
-
-                    if ($total >= $invoiceAmount) {
-                        $distance = $total - $invoiceAmount;
-                        $certValue = $certPages * $certifiedPrice;
-                        $stdValue = $stdPages * $standardPrice;
-                        $balanceScore = abs(($certValue / $total) - 0.5);
-
-                        if ($distance < $bestDistance || ($distance == $bestDistance && $balanceScore < 0.3)) {
-                            $bestDistance = $distance;
-                            $bestTotal = $total;
-                            $bestMatch = [
-                                [
-                                    'product' => $certifiedTranslation,
-                                    'pages' => $certPages,
-                                    'total' => $certPages * $certifiedPrice
-                                ],
-                                [
-                                    'product' => $standardTranslation,
-                                    'pages' => $stdPages,
-                                    'total' => $stdPages * $standardPrice
-                                ]
-                            ];
-                        }
-                    }
-                }
-
-                if (!$bestMatch) {
-                    $maxCertPages = min(20, ceil($invoiceAmount / ($certifiedPrice * 2)));
-
-                    for ($certPages = 2; $certPages <= $maxCertPages; $certPages++) {
-                        $certTotal = $certPages * $certifiedPrice;
-
-                        if ($certTotal < $invoiceAmount) {
-                            $remainingAmount = $invoiceAmount - $certTotal;
-                            $stdPages = ceil($remainingAmount / $standardPrice);
-                            $total = $certTotal + ($stdPages * $standardPrice);
-
-                            if ($total >= $invoiceAmount) {
-                                $distance = $total - $invoiceAmount;
-
-                                if ($distance < $bestDistance) {
-                                    $bestDistance = $distance;
-                                    $bestTotal = $total;
+                $tolerance = $invoiceAmount * 0.15;
+                
+                for ($certPages = 0; $certPages <= ceil($invoiceAmount / $certifiedPrice) + 5; $certPages++) {
+                    $certTotal = $certPages * $certifiedPrice;
+                    $remainingAmount = $invoiceAmount - $certTotal;
+                    
+                    if ($remainingAmount >= 0) {
+                        $stdPages = max(0, ceil($remainingAmount / $standardPrice));
+                        $total = $certTotal + ($stdPages * $standardPrice);
+                        
+                        if ($total >= $invoiceAmount && $total <= $invoiceAmount + $tolerance) {
+                            $distance = $total - $invoiceAmount;
+                            
+                            if ($distance < $bestDistance) {
+                                $bestDistance = $distance;
+                                $bestTotal = $total;
+                                
+                                if ($certPages > 0 && $stdPages > 0) {
                                     $bestMatch = [
                                         [
                                             'product' => $certifiedTranslation,
@@ -186,17 +148,85 @@ class LaravelController extends Controller
                                             'total' => $stdPages * $standardPrice
                                         ]
                                     ];
+                                } elseif ($certPages > 0) {
+                                    $bestMatch = [
+                                        [
+                                            'product' => $certifiedTranslation,
+                                            'pages' => $certPages,
+                                            'total' => $certTotal
+                                        ]
+                                    ];
+                                } else {
+                                    $bestMatch = [
+                                        [
+                                            'product' => $standardTranslation,
+                                            'pages' => $stdPages,
+                                            'total' => $stdPages * $standardPrice
+                                        ]
+                                    ];
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                if (!$bestMatch) {
+                    for ($stdPages = 0; $stdPages <= ceil($invoiceAmount / $standardPrice) + 5; $stdPages++) {
+                        $stdTotal = $stdPages * $standardPrice;
+                        $remainingAmount = $invoiceAmount - $stdTotal;
+                        
+                        if ($remainingAmount >= 0) {
+                            $certPages = max(0, ceil($remainingAmount / $certifiedPrice));
+                            $total = $stdTotal + ($certPages * $certifiedPrice);
+                            
+                            if ($total >= $invoiceAmount) {
+                                $distance = $total - $invoiceAmount;
+                                
+                                if ($distance < $bestDistance) {
+                                    $bestDistance = $distance;
+                                    $bestTotal = $total;
+                                    
+                                    if ($certPages > 0 && $stdPages > 0) {
+                                        $bestMatch = [
+                                            [
+                                                'product' => $certifiedTranslation,
+                                                'pages' => $certPages,
+                                                'total' => $certPages * $certifiedPrice
+                                            ],
+                                            [
+                                                'product' => $standardTranslation,
+                                                'pages' => $stdPages,
+                                                'total' => $stdTotal
+                                            ]
+                                        ];
+                                    } elseif ($stdPages > 0) {
+                                        $bestMatch = [
+                                            [
+                                                'product' => $standardTranslation,
+                                                'pages' => $stdPages,
+                                                'total' => $stdTotal
+                                            ]
+                                        ];
+                                    } else {
+                                        $bestMatch = [
+                                            [
+                                                'product' => $certifiedTranslation,
+                                                'pages' => $certPages,
+                                                'total' => $certPages * $certifiedPrice
+                                            ]
+                                        ];
+                                    }
                                 }
                             }
                         }
                     }
                 }
             }
-
+    
             if (!$bestMatch && $certifiedTranslation && $certifiedPrice) {
                 $certPages = ceil($invoiceAmount / $certifiedPrice);
                 $total = $certPages * $certifiedPrice;
-
+    
                 if ($total >= $invoiceAmount) {
                     $bestTotal = $total;
                     $bestMatch = [
@@ -208,7 +238,7 @@ class LaravelController extends Controller
                     ];
                 }
             }
-
+    
             if (!$bestMatch && $standardTranslation && $standardPrice) {
                 $stdPages = ceil($invoiceAmount / $standardPrice);
                 $total = $stdPages * $standardPrice;
@@ -222,9 +252,8 @@ class LaravelController extends Controller
                 ];
             }
         }
-
+    
         if (!$bestMatch) {
-
             session()->forget('ready_products');
             session()->forget('current_amount');
             
@@ -234,21 +263,21 @@ class LaravelController extends Controller
                 'message' => 'No matching combination found, try again please'
             ]);
         }
-
+    
         $selectedProducts = [];
         foreach ($bestMatch as $item) {
             $product = $item['product'];
             $pages = $item['pages'];
-
+    
             if ($pages <= 0) {
                 continue;
             }
-
+    
             $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
                 ->where('product_id', $product->id)
                 ->orderByDesc('last_price_changed')
                 ->first();
-
+    
             if ($lastUpdate) {
                 $lastPriceChanged = Carbon::parse($lastUpdate->last_price_changed);
                 $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
@@ -259,21 +288,21 @@ class LaravelController extends Controller
                 $product->can_edit_price = 1;
                 $product->remaining_days = 0;
             }
-
+    
             $product->pages = $pages;
             $product->line_total = $pages * floatval($product->unit_price);
             $product->urgent_amount = 24.24;
             $product->is_urgent = rand(1, 100) <= 30;
-
+    
             if ($product->is_urgent) {
                 $product->line_total += $product->urgent_amount;
             }
-
+    
             $product->unit_type = (Str::contains(Str::lower($product->name), 'certified translation')) ? 'pages' : 'words';
-
+    
             $selectedProducts[] = $product;
         }
-
+    
         $productList = collect($selectedProducts)->map(function ($product) {
             return [
                 'id' => $product->id,
@@ -284,20 +313,20 @@ class LaravelController extends Controller
                 'unit_type' => $product->unit_type,
             ];
         })->toArray();
-
+    
         $finalTotal = collect($selectedProducts)->sum('line_total');
-
+    
         session()->forget('ready_products');
         session()->put('ready_products', $productList);
         session(['current_amount' => $finalTotal]);
-
+    
         $modelType = $site->businessModel->model_type;
         $tableRows = view("invoice.{$modelType}.random_product_rows", [
             'products' => $selectedProducts,
             'site' => $site,
             'total' => $bestTotal
         ])->render();
-
+    
         return response()->json([
             'tableRows' => $tableRows,
             'total' => $finalTotal
