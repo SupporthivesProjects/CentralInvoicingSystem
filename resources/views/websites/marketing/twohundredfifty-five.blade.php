@@ -110,7 +110,8 @@
                                         style="border-collapse: collapse;height: 30px;font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;font-size: 10px;border-bottom: 1px solid black;">
                                         <td
                                             style="width: 50px;text-align: center;margin: 0px;border-left: 1px solid white;">
-                                            <p> {{ $index + 1 }}</p>
+                                            <p>{{ $loop->iteration }}</p>
+
                                         </td>
                                         <td
                                             style="width: 300px;text-align: left;margin: 0px;border-left: 1px solid white;padding-left: 10px;">

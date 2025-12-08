@@ -39,8 +39,7 @@
                                                 style="line-height: 165%; width: 50%; padding-left: 100px; font-family: Arial;font-size: 11px;margin: 0px;font-weight: 400; color: #FFFFFF;">
                                                 <span style="color: #ec4185;"><b>Invoice No.</b></span><br>
                                                 {{ $invoice_number }}<br>
-                                                <span style="color: #ec4185; margin-top: 16px;"><b>Invoice
-                                                        No.</b></span><br>
+                                                <span style="color: #ec4185; margin-top: 16px;"><b>Invoice Date</b></span><br>
                                                 {{ $invoice_date }}<br>
                                             </p>
                                         </div>
