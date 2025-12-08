@@ -175,7 +175,7 @@
                                     </tr>
                                 </table> -->
 
-                                <div style="border-collapse: collapse;width:fit-content;position:absolute;bottom:0px;right:0px;">
+                                <div style="border-collapse: collapse;width:fit-content;position:fixed;bottom:0px;right:0px;">
                                     <div style="padding-right:80px;padding-bottom:40px;">
                                         <p style="margin: 0px;font-size:12px;font-family: Lato;color:#ffffff;line-height: 16px;font-weight: 700;">
                                             {!! $company_address !!}
@@ -194,7 +194,7 @@
                         </tr>
                     <!-- content -->
                 </table>
-                <img src="{{ $invoice_image5 }}" style="width: 80px;position: fixed; right:50px; top: 200px;" alt="">
+                <img src="{{ $invoice_image5 }}" style="width: 80px;position: fixed; right:50px; top: 300px;" alt="">
             </td>
         </tr>
     </table>
