@@ -123,11 +123,11 @@
                                         </td>
                                         <td
                                             style="width:120px;text-align: center;margin: 0px;border-left: 1px solid white;background-color: lightgray;">
-                                            <p> {{ site_currency() . number_format($product['unit_price'], 2) }}</p>
+                                            <p> {{ site_currency() . number_format($product->unit_price ?? 0, 2) }}</p>
                                         </td>
                                         <td
                                             style="width:150px;text-align: center;margin: 0px;border-left: 1px solid white;background-color: lightgray;">
-                                            <p> {{ site_currency() . number_format($product['unit_price'], 2) }}</p>
+                                            <p> {{ site_currency() . number_format($product->unit_price ?? 0, 2) }}</p>
                                         </td>
                                     </tr>
                                 @endforeach
