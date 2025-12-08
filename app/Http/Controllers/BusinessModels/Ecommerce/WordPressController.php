@@ -180,11 +180,7 @@ class WordPressController extends Controller
         $maxAllowed = $target * 1.10;
         
         if ($totalProducts < $count) {
-            $total = array_sum(array_column($products, 'unit_price'));
-            if ($total >= $target && $total <= $maxAllowed) {
-                return $products;
-            }
-            return [];
+            return $products;
         }
     
         $priceMap = [];
@@ -198,7 +194,7 @@ class WordPressController extends Controller
         $sortedIndices = array_keys($priceMap);
         
         if (count($sortedIndices) < $count) {
-            return [];
+            return array_slice($products, 0, $count);
         }
     
         $avgPrice = $target / $count;
@@ -211,35 +207,61 @@ class WordPressController extends Controller
             }
         }
     
-        $windowSize = min($count * 4, count($sortedIndices) - $midPoint);
+        $windowSize = min($count * 6, count($sortedIndices) - $midPoint);
         $searchWindow = array_slice($sortedIndices, $midPoint, $windowSize);
         
         if (count($searchWindow) < $count) {
             $searchWindow = $sortedIndices;
         }
     
-        $bestMatch = null;
-        $bestTotal = PHP_INT_MAX;
-        $attempts = min(50, count($searchWindow));
+        $batches = 4;
+        $attemptsPerBatch = 25;
+        $results = [];
     
-        for ($i = 0; $i < $attempts; $i++) {
-            shuffle($searchWindow);
-            $selectedIndices = array_slice($searchWindow, 0, $count);
-            $total = 0;
-            
-            foreach ($selectedIndices as $idx) {
-                $total += $priceMap[$idx];
-            }
-    
-            if ($total >= $target && $total <= $maxAllowed) {
-                if ($total < $bestTotal) {
-                    $bestMatch = $selectedIndices;
-                    $bestTotal = $total;
+        $pool = Pool::create();
+        
+        for ($batch = 0; $batch < $batches; $batch++) {
+            $pool->add(function() use ($searchWindow, $count, $priceMap, $target, $maxAllowed, $attemptsPerBatch) {
+                $bestMatch = null;
+                $bestTotal = PHP_INT_MAX;
+                
+                for ($i = 0; $i < $attemptsPerBatch; $i++) {
+                    $tempWindow = $searchWindow;
+                    shuffle($tempWindow);
+                    $selectedIndices = array_slice($tempWindow, 0, $count);
+                    $total = 0;
                     
-                    if ($total <= $target * 1.02) {
-                        break;
+                    foreach ($selectedIndices as $idx) {
+                        $total += $priceMap[$idx];
+                    }
+    
+                    if ($total >= $target && $total <= $maxAllowed) {
+                        if ($total < $bestTotal) {
+                            $bestMatch = $selectedIndices;
+                            $bestTotal = $total;
+                            
+                            if ($total <= $target * 1.02) {
+                                break;
+                            }
+                        }
                     }
                 }
+                
+                return ['match' => $bestMatch, 'total' => $bestTotal];
+            })->then(function ($result) use (&$results) {
+                $results[] = $result;
+            });
+        }
+    
+        $pool->wait();
+    
+        $bestMatch = null;
+        $bestTotal = PHP_INT_MAX;
+        
+        foreach ($results as $result) {
+            if ($result['match'] && $result['total'] < $bestTotal) {
+                $bestMatch = $result['match'];
+                $bestTotal = $result['total'];
             }
         }
     
@@ -270,40 +292,33 @@ class WordPressController extends Controller
                     $selected[] = $closestIdx;
                     $usedIndices[] = $closestIdx;
                     $remaining -= $priceMap[$closestIdx];
-                } else {
-                    break;
                 }
             }
     
             if (count($selected) == $count) {
-                $total = 0;
-                foreach ($selected as $idx) {
-                    $total += $priceMap[$idx];
-                }
-                
-                if ($total >= $target && $total <= $maxAllowed) {
-                    $bestMatch = $selected;
-                    $bestTotal = $total;
-                }
+                $bestMatch = $selected;
             }
         }
     
         if (!$bestMatch) {
-            $lowPriceIndices = array_slice($sortedIndices, 0, min($count * 2, $totalProducts));
-            shuffle($lowPriceIndices);
-            $testIndices = array_slice($lowPriceIndices, 0, $count);
-            $total = 0;
-            foreach ($testIndices as $idx) {
-                $total += $priceMap[$idx];
-            }
+            $avgPerProduct = $target / $count;
+            $tolerance = $avgPerProduct * 0.5;
             
-            if ($total >= $target && $total <= $maxAllowed) {
-                $bestMatch = $testIndices;
+            $suitableIndices = array_filter($sortedIndices, function($idx) use ($priceMap, $avgPerProduct, $tolerance) {
+                $price = $priceMap[$idx];
+                return $price >= ($avgPerProduct - $tolerance) && $price <= ($avgPerProduct + $tolerance);
+            });
+            
+            if (count($suitableIndices) >= $count) {
+                $suitableIndices = array_values($suitableIndices);
+                shuffle($suitableIndices);
+                $bestMatch = array_slice($suitableIndices, 0, $count);
             }
         }
     
         if (!$bestMatch) {
-            return [];
+            shuffle($sortedIndices);
+            $bestMatch = array_slice($sortedIndices, 0, $count);
         }
     
         $result = [];
@@ -331,44 +346,68 @@ class WordPressController extends Controller
         asort($priceMap);
         $sortedIndices = array_keys($priceMap);
     
+        $batches = 3;
+        $attemptsPerBatch = 15;
+        $results = [];
+    
+        $pool = Pool::create();
+        
+        for ($batch = 0; $batch < $batches; $batch++) {
+            $pool->add(function() use ($sortedIndices, $priceMap, $target, $maxAllowed, $totalProducts, $products, $attemptsPerBatch) {
+                $bestMatch = null;
+                $bestTotal = 0;
+                $bestDiff = PHP_INT_MAX;
+                
+                for ($attempt = 0; $attempt < $attemptsPerBatch; $attempt++) {
+                    $startIdx = rand(0, max(0, count($sortedIndices) - 25));
+                    $subset = array_slice($sortedIndices, $startIdx, 25);
+                    shuffle($subset);
+                    
+                    $selected = [];
+                    $total = 0;
+    
+                    foreach ($subset as $idx) {
+                        $price = $priceMap[$idx];
+                        
+                        if ($total + $price > $maxAllowed) continue;
+    
+                        $selected[] = $idx;
+                        $total += $price;
+    
+                        if ($total >= $target && $total <= $maxAllowed) {
+                            if (abs($total - $target) < 0.01) {
+                                return ['match' => $selected, 'total' => $total, 'diff' => 0];
+                            }
+                        }
+                    }
+    
+                    if ($total >= $target && $total <= $maxAllowed) {
+                        $diff = $total - $target;
+                        if ($diff < $bestDiff) {
+                            $bestMatch = $selected;
+                            $bestTotal = $total;
+                            $bestDiff = $diff;
+                        }
+                    }
+                }
+                
+                return ['match' => $bestMatch, 'total' => $bestTotal, 'diff' => $bestDiff];
+            })->then(function ($result) use (&$results) {
+                $results[] = $result;
+            });
+        }
+    
+        $pool->wait();
+    
         $bestMatch = null;
         $bestTotal = 0;
         $bestDiff = PHP_INT_MAX;
-    
-        for ($attempt = 0; $attempt < 20; $attempt++) {
-            $startIdx = rand(0, max(0, count($sortedIndices) - 20));
-            $subset = array_slice($sortedIndices, $startIdx, 20);
-            shuffle($subset);
-            
-            $selected = [];
-            $total = 0;
-    
-            foreach ($subset as $idx) {
-                $price = $priceMap[$idx];
-                
-                if ($total + $price > $maxAllowed) continue;
-    
-                $selected[] = $idx;
-                $total += $price;
-    
-                if ($total >= $target && $total <= $maxAllowed) {
-                    if (abs($total - $target) < 0.01) {
-                        $result = [];
-                        foreach ($selected as $i) {
-                            $result[] = $products[$i];
-                        }
-                        return $result;
-                    }
-                }
-            }
-    
-            if ($total >= $target && $total <= $maxAllowed) {
-                $diff = $total - $target;
-                if ($diff < $bestDiff) {
-                    $bestMatch = $selected;
-                    $bestTotal = $total;
-                    $bestDiff = $diff;
-                }
+        
+        foreach ($results as $result) {
+            if ($result['match'] && $result['diff'] < $bestDiff) {
+                $bestMatch = $result['match'];
+                $bestTotal = $result['total'];
+                $bestDiff = $result['diff'];
             }
         }
     
@@ -380,9 +419,9 @@ class WordPressController extends Controller
             return $result;
         }
     
-        for ($attempt = 0; $attempt < 20; $attempt++) {
-            $startIdx = rand(0, max(0, count($sortedIndices) - 30));
-            $subset = array_slice($sortedIndices, $startIdx, 30);
+        for ($attempt = 0; $attempt < 30; $attempt++) {
+            $startIdx = rand(0, max(0, count($sortedIndices) - 40));
+            $subset = array_slice($sortedIndices, $startIdx, 40);
             shuffle($subset);
             
             $selected = [];
