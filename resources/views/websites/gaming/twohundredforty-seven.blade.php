@@ -17,7 +17,7 @@
         }
     </style>
 </head>
-<body style="margin:0; padding:0;border:0; background: linear-gradient(to right, #0D022C 50%, #1B0C57 50%); width:100%; font-family: Arial, Helvetica, sans-serif; border-collapse:collapse;">
+<body style="margin:0; padding:0;border:0; background: red; width:100%; font-family: Arial, Helvetica, sans-serif; border-collapse:collapse;">
 
     <table width="100%" border="0" cellspacing="0" cellpadding="0" style="padding:0; margin:0; border-collapse:collapse;">
         <tr>
@@ -33,11 +33,11 @@
                             <table width="100%">
                                 <tr>
                                     <td width="50%">
-                                        <div style="display: flex;flex-direction: column;justify-content: space-between;align-items: flex-start;gap: 40px;position: relative;height: 295px;">
+                                        <div style="display: flex;flex-direction: column;justify-content: space-between;align-items: flex-start;gap: 40px;position: fixed;height: 295px;">
                                             
                                             <img src="{{ $company_logo }}" width="150" style="display:block;">
                                             <!-- <div style="display: flex;flex-direction: column;justify-content: flex-start;align-items: flex-start;gap: 30px;"> -->
-                                                <div style="background:#D83E71;border-radius:20px;padding: 20px 20px;position: absolute;top: 85px;z-index: 1;">
+                                                <div style="background:#D83E71;border-radius:20px;padding: 20px 20px;position: fixed;top: 85px;z-index: 1;">
                                                     <h1 style="font-size: 70px;letter-spacing: 5px;">INVOICE</h1>
                                                 </div>
 
@@ -55,9 +55,9 @@
                                         </div>
                                     </td>
                                     <td width="50%" valign="top" align="right" style="font-size:14px; line-height:20px;padding-left: 10px;">
-                                        <div style="background: #0D022C;border-radius: 20px 0px 0px 20px;height: 295px;position: relative;">
-                                            <img src="{{ $invoice_image2 }}" style="position: absolute;top: 20px; right: 20px;width: 50px;" alt="">
-                                            <div style="width: 110px;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);">
+                                        <div style="background: #0D022C;border-radius: 20px 0px 0px 20px;height: 295px;position: fixed;">
+                                            <img src="{{ $invoice_image2 }}" style="position: fixed;top: 20px; right: 20px;width: 50px;" alt="">
+                                            <div style="width: 110px;position: fixed;top: 50%;left: 50%;transform: translate(-50%, -50%);">
                                                 <p style="color: #FFF;font-size: 12px;text-align: left;font-weight: bold;line-height: 15px;">Invoice From:</p>
                                                 <div class="">
                                                     <p style="font-size: 10px;letter-spacing: 1px;color: #D83E71;text-align: left;">{{ $site_name }}</p>
@@ -71,7 +71,7 @@
                                                     <p style="color: #FFF;font-size: 8px;text-align: left;font-weight: 400;line-height: 10px;">Western Union</p>
                                                 </div>
                                             </div>
-                                            <img src="{{ $invoice_image1 }}" style="position: absolute;bottom: 20px; left: 20px;width: 50px;" alt="">
+                                            <img src="{{ $invoice_image1 }}" style="position: fixed;bottom: 20px; left: 20px;width: 50px;" alt="">
                                         </div>
                                         
                                     </td>
