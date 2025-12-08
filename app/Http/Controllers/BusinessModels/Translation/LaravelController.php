@@ -118,6 +118,7 @@ class LaravelController extends Controller
             ];
         } else {
             if ($certifiedTranslation && $standardTranslation && $certifiedPrice && $standardPrice) {
+                $minStandardWords = 250;
                 $tolerance = $invoiceAmount * 0.15;
                 
                 for ($certPages = 0; $certPages <= ceil($invoiceAmount / $certifiedPrice) + 5; $certPages++) {
@@ -126,6 +127,11 @@ class LaravelController extends Controller
                     
                     if ($remainingAmount >= 0) {
                         $stdPages = max(0, ceil($remainingAmount / $standardPrice));
+                        
+                        if ($stdPages > 0 && $stdPages < $minStandardWords) {
+                            $stdPages = $minStandardWords;
+                        }
+                        
                         $total = $certTotal + ($stdPages * $standardPrice);
                         
                         if ($total >= $invoiceAmount && $total <= $invoiceAmount + $tolerance) {
@@ -171,7 +177,7 @@ class LaravelController extends Controller
                 }
                 
                 if (!$bestMatch) {
-                    for ($stdPages = 0; $stdPages <= ceil($invoiceAmount / $standardPrice) + 5; $stdPages++) {
+                    for ($stdPages = $minStandardWords; $stdPages <= ceil($invoiceAmount / $standardPrice) + 500; $stdPages += 50) {
                         $stdTotal = $stdPages * $standardPrice;
                         $remainingAmount = $invoiceAmount - $stdTotal;
                         
@@ -332,7 +338,6 @@ class LaravelController extends Controller
             'total' => $finalTotal
         ]);
     }
-
 
     public function updateProduct(Request $request)
     {
