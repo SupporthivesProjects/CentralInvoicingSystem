@@ -22,7 +22,7 @@
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
             <td align="center" style="padding:0px;">
-                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse;">
+                <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse;">
                    <!-- header -->
                     <tr style="height: 150px;">
                         <td colspan="2" style="vertical-align:top;padding-top:90px;padding-bottom:90px">
