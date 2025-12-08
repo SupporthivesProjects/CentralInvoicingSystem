@@ -193,9 +193,9 @@
                         </tr>
                     <!-- content -->
                 </table>
-<!-- 
-                <h1 style="rotate: 90deg; color: #FFFFFF;font-size: 50px;position: absolute; top: 500px; right: 5px;">INVOICE</h1>
-                             -->
+                <div style="rotate: 90deg;position: absolute; top: 500px; right: 5px; border: 1px solid red;">
+                    <h1 style="color: #FFFFFF;font-size: 50px;">INVOICE</h1>
+                </div>
             </td>
         </tr>
     </table>
