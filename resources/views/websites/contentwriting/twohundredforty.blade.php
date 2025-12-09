@@ -143,13 +143,13 @@
                                     <td style="width: 100px;text-align: center;font-size: 14px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;">
                                         
                                     </td>
-                                    <td style="width:100px;text-align: center;font-size: 14px;margin: 0px;font-weight: 400;border-collapse: collapse;">
+                                    <!-- <td style="width:100px;text-align: center;font-size: 14px;margin: 0px;font-weight: 400;border-collapse: collapse;">
                                         
-                                    </td>
+                                    </td> -->
                                     <!-- <td style="width:100px;text-align: center;font-size: 14px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 10px;">
                                         
                                     </td> -->
-                                    <td style="width:580px;text-align: right;font-size: 14px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 10px;">
+                                    <td style="width:580px;text-align: right;font-size: 14px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 10px;" colspan="2">
                                         Coupon Used
                                     </td>
                                     <td style="width:100px;text-align: right;font-size: 14px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 10px;">
@@ -166,13 +166,13 @@
                                     <td style="width: 100px;text-align: center;font-size: 14px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;">
                                         
                                     </td>
-                                    <td style="width:100px;text-align: center;font-size: 14px;margin: 0px;font-weight: 400;border-collapse: collapse;">
+                                    <!-- <td style="width:100px;text-align: center;font-size: 14px;margin: 0px;font-weight: 400;border-collapse: collapse;">
                                         
-                                    </td>
+                                    </td> -->
                                     <!-- <td style="width:100px;text-align: center;font-size: 14px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 10px;">
                                         
                                     </td> -->
-                                    <td style="width:580px;text-align: right;font-size: 14px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 10px;color: #172355;background-color: lightgrey;">
+                                    <td style="width:580px;text-align: right;font-size: 14px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 10px;color: #172355;background-color: lightgrey;" colspan="2">
                                         TOTAL
                                     </td>
                                     <td style="width:100px;text-align: right;font-size: 14px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 10px;background-color: lightgrey;color: #172355;">
