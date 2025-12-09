@@ -156,6 +156,13 @@ class LaravelController extends Controller
     
         asort($priceMap);
         $sortedIndices = array_keys($priceMap);
+
+        $low = array_slice($sortedIndices, 0, 10);
+        $mid = array_slice($sortedIndices, intval(count($sortedIndices)/2) - 5, 10);
+        $high = array_slice($sortedIndices, -10);
+
+        $mixPool = array_merge($low, $mid, $high);
+        shuffle($mixPool);
     
         $bestMatch = null;
         $bestTotal = PHP_INT_MAX;
@@ -258,39 +265,46 @@ class LaravelController extends Controller
         foreach ($products as $idx => $product) {
             $price = floatval($product->unit_price);
             $priceMap[$idx] = $price;
-            
+
             if ($price >= $target && abs($price - $target) < 0.01) {
                 return ['products' => [$product], 'total' => $price];
             }
         }
-    
+
         asort($priceMap);
         $sortedIndices = array_keys($priceMap);
-    
+
         $bestMatch = null;
         $bestTotal = 0;
         $bestDiff = PHP_INT_MAX;
-    
+
+        $low = array_slice($sortedIndices, 0, 10);
+        $mid = array_slice($sortedIndices, intval(count($sortedIndices)/2) - 5, 10);
+        $high = array_slice($sortedIndices, -10);
+
+        $mixPool = array_merge($low, $mid, $high);
+        shuffle($mixPool);
+
         for ($attempt = 0; $attempt < 50; $attempt++) {
             $startIdx = rand(0, max(0, $totalProducts - 20));
-            $subset = array_slice($sortedIndices, $startIdx, 20);
+            $subset = $mixPool;
             shuffle($subset);
-            
+
             $selected = [];
             $total = 0;
             $usedIndices = [];
-    
+
             foreach ($subset as $idx) {
                 if (in_array($idx, $usedIndices)) continue;
-                
+
                 $price = $priceMap[$idx];
-                
+
                 if ($total + $price > $target * 1.10) continue;
-    
+
                 $selected[] = $idx;
                 $usedIndices[] = $idx;
                 $total += $price;
-    
+
                 if ($total >= $target && abs($total - $target) < 0.01) {
                     $result = [];
                     foreach ($selected as $i) {
@@ -299,7 +313,7 @@ class LaravelController extends Controller
                     return ['products' => $result, 'total' => $total];
                 }
             }
-    
+
             if ($total >= $target) {
                 $diff = abs($target - $total);
                 if ($diff < $bestDiff) {
@@ -309,31 +323,31 @@ class LaravelController extends Controller
                 }
             }
         }
-    
+
         if (!$bestMatch || $bestTotal < $target) {
             $maxTotal = $target * 1.10;
-            
+
             for ($attempt = 0; $attempt < 50; $attempt++) {
                 $startIdx = rand(0, max(0, $totalProducts - 25));
                 $subset = array_slice($sortedIndices, $startIdx, 25);
                 shuffle($subset);
-                
+
                 $selected = [];
                 $total = 0;
                 $usedIndices = [];
-    
+
                 foreach ($subset as $idx) {
                     if (in_array($idx, $usedIndices)) continue;
-                    
+
                     $price = $priceMap[$idx];
-                    
+
                     if ($total + $price > $maxTotal) continue;
-    
+
                     $selected[] = $idx;
                     $usedIndices[] = $idx;
                     $total += $price;
                 }
-    
+
                 if ($total >= $target && $total <= $maxTotal) {
                     $diff = $total - $target;
                     if (!$bestMatch || $diff < $bestDiff) {
@@ -344,18 +358,18 @@ class LaravelController extends Controller
                 }
             }
         }
-    
+
         if (!$bestMatch || $bestTotal < $target) {
             arsort($priceMap);
             $highestPriceIndices = array_keys($priceMap);
-            
+
             $selected = [];
             $total = 0;
-            
+
             foreach ($highestPriceIndices as $idx) {
                 $selected[] = $idx;
                 $total += $priceMap[$idx];
-                
+
                 if ($total >= $target) {
                     $bestMatch = $selected;
                     $bestTotal = $total;
@@ -363,18 +377,19 @@ class LaravelController extends Controller
                 }
             }
         }
-    
+
         if (!$bestMatch) {
             $bestMatch = [$sortedIndices[count($sortedIndices) - 1]];
             $bestTotal = $priceMap[$sortedIndices[count($sortedIndices) - 1]];
         }
-    
+
         $result = [];
         foreach ($bestMatch as $idx) {
             $result[] = $products[$idx];
         }
         return ['products' => $result, 'total' => $bestTotal];
     }
+
     
 
     public function addProducts(Request $request)
