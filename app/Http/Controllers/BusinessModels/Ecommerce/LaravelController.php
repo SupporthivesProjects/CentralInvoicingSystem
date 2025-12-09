@@ -255,21 +255,22 @@ class LaravelController extends Controller
             if ($total < $target) {
                 $reverseIndices = array_reverse($sortedIndices);
                 
-                for ($i = 0; $i < $count; $i++) {
-                    $currentPrice = $priceMap[$selected[$i]];
+                foreach ($reverseIndices as $replaceIdx) {
+                    if (in_array($replaceIdx, $selected)) continue;
                     
-                    foreach ($reverseIndices as $idx) {
-                        if (in_array($idx, $selected)) continue;
+                    $replacePrice = $priceMap[$replaceIdx];
+                    if (isset($usedPrices[$replacePrice])) continue;
+                    
+                    for ($i = 0; $i < $count; $i++) {
+                        $currentIdx = $selected[$i];
+                        $currentPrice = $priceMap[$currentIdx];
                         
-                        $newPrice = $priceMap[$idx];
-                        if (isset($usedPrices[$newPrice]) && $newPrice != $currentPrice) continue;
-                        
-                        $newTotal = $total - $currentPrice + $newPrice;
+                        $newTotal = $total - $currentPrice + $replacePrice;
                         
                         if ($newTotal >= $target && $newTotal <= $maxTotal) {
-                            $selected[$i] = $idx;
+                            $selected[$i] = $replaceIdx;
                             unset($usedPrices[$currentPrice]);
-                            $usedPrices[$newPrice] = true;
+                            $usedPrices[$replacePrice] = true;
                             $total = $newTotal;
                             break 2;
                         }
