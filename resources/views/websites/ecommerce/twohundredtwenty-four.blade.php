@@ -83,7 +83,16 @@
                                         <img src="{{ $company_logo }}" alt="logo" class="logo">
 
                                         <p style="font-size: 8px; line-height: 1.4; margin-top: 15px;">
-                                            {{ $company_address }}<br>
+                                            <!-- {{ $company_address }}<br> -->
+                                            @php
+                                                $parts = array_map('trim', explode(',', $company_address));
+                                                $chunks = array_chunk($parts, ceil(count($parts) / 3));
+                                            @endphp
+
+                                            @foreach($chunks as $chunk)
+                                                {{ implode(', ', $chunk) }}<br>
+                                            @endforeach
+
                                             {{ $company_email }}<br>
                                         </p>
                                     </td>
