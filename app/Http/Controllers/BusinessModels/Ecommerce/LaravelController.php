@@ -285,7 +285,7 @@ class LaravelController extends Controller
                 
                 $price = $priceMap[$idx];
                 
-                if ($total + $price > $target * 1.15) continue;
+                if ($total + $price > $target * 1.10) continue;
     
                 $selected[] = $idx;
                 $usedIndices[] = $idx;
@@ -311,7 +311,7 @@ class LaravelController extends Controller
         }
     
         if (!$bestMatch || $bestTotal < $target) {
-            $maxTotal = $target * 1.15;
+            $maxTotal = $target * 1.10;
             
             for ($attempt = 0; $attempt < 50; $attempt++) {
                 $startIdx = rand(0, max(0, $totalProducts - 25));
