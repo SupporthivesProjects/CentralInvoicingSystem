@@ -21,7 +21,7 @@
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
             <td align="center" style="padding:0px;">
-                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse;background: url('{{ $invoice_image4 }}');background-position: top;background-repeat: no-repeat;background-size:cover;height:1100px;">
+                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse;background: url('{{ $invoice_image4 }}');background-position: top;background-repeat: no-repeat;background-size:cover;height:1050px;">
                    <!-- header -->
                     <tr style="height: 150px;">
                         <td colspan="2" style="vertical-align:top;padding-top:110px;padding-bottom:90px">
@@ -30,19 +30,19 @@
                                     <td style="width:50%;"></td>
                                     <td style="width:50%;" align="left" style="vertical-align:ceter">
                                         <div style="width:40%;padding-left:50px;text-align: left;">
-                                            <p style="margin: 0px;font-size: 10px;font-family: Lato;color: #90b3eb;line-height: 16px;">
+                                            <p style="margin: 0px;font-size: 13px;font-family: Lato;color: #90b3eb;line-height: 16px;">
                                                 Invoice Number
                                             </p>
-                                            <p style="margin: 0px;font-size:10px;font-family: Lato;font-weight:800;">
+                                            <p style="margin: 0px;font-size:13px;font-family: Lato;font-weight:800;">
                                                 {{ $invoice_number }}
                                             </p>
                                         </div>
                                         <br>
                                         <div style="width:40%;padding-left:50px;text-align: left;">
-                                            <p style="margin: 0px;font-size: 10px;font-family: Lato;color: #90b3eb;line-height: 16px;">
+                                            <p style="margin: 0px;font-size: 13px;font-family: Lato;color: #90b3eb;line-height: 16px;">
                                                 Invoice Date
                                             </p>
-                                            <p style="margin: 0px;font-size:10px;font-family: Lato;font-weight:800;">
+                                            <p style="margin: 0px;font-size:13px;font-family: Lato;font-weight:800;">
                                                 {{ $invoice_date }}
                                             </p>
                                         </div>
