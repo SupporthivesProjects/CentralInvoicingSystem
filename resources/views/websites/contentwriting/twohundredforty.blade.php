@@ -146,9 +146,9 @@
                                     <td style="width:100px;text-align: center;font-size: 14px;margin: 0px;font-weight: 400;border-collapse: collapse;">
                                         
                                     </td>
-                                    <td style="width:100px;text-align: center;font-size: 14px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 10px;">
+                                    <!-- <td style="width:100px;text-align: center;font-size: 14px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 10px;">
                                         
-                                    </td>
+                                    </td> -->
                                     <td style="width:580px;text-align: right;font-size: 14px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 10px;">
                                         Coupon Used
                                     </td>
@@ -169,9 +169,9 @@
                                     <td style="width:100px;text-align: center;font-size: 14px;margin: 0px;font-weight: 400;border-collapse: collapse;">
                                         
                                     </td>
-                                    <td style="width:100px;text-align: center;font-size: 14px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 10px;">
+                                    <!-- <td style="width:100px;text-align: center;font-size: 14px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 10px;">
                                         
-                                    </td>
+                                    </td> -->
                                     <td style="width:580px;text-align: right;font-size: 14px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 10px;color: #172355;background-color: lightgrey;">
                                         TOTAL
                                     </td>
