@@ -156,6 +156,69 @@ class LaravelController extends Controller
         asort($priceMap);
         $sortedIndices = array_keys($priceMap);
     
+        if ($count <= 2) {
+            $percentages = [0, 2, 5, 8, 10, 15, 20, 25, 30];
+            
+            foreach ($percentages as $percentage) {
+                $minTarget = $target;
+                $maxTarget = $target * (1 + $percentage / 100);
+                
+                if ($count == 1) {
+                    $bestIdx = null;
+                    $bestDiff = PHP_INT_MAX;
+                    
+                    foreach ($sortedIndices as $idx) {
+                        $price = $priceMap[$idx];
+                        if ($price >= $minTarget && $price <= $maxTarget) {
+                            $diff = abs($price - $target);
+                            if ($diff < $bestDiff) {
+                                $bestDiff = $diff;
+                                $bestIdx = $idx;
+                            }
+                        }
+                    }
+                    
+                    if ($bestIdx !== null) {
+                        return ['products' => [$products[$bestIdx]], 'total' => $priceMap[$bestIdx]];
+                    }
+                } else if ($count == 2) {
+                    $bestPair = null;
+                    $bestTotal = 0;
+                    $bestDiff = PHP_INT_MAX;
+                    
+                    for ($i = 0; $i < $totalProducts - 1; $i++) {
+                        for ($j = $i + 1; $j < $totalProducts; $j++) {
+                            $idx1 = $sortedIndices[$i];
+                            $idx2 = $sortedIndices[$j];
+                            
+                            $price1 = $priceMap[$idx1];
+                            $price2 = $priceMap[$idx2];
+                            
+                            if ($price1 == $price2) continue;
+                            
+                            $total = $price1 + $price2;
+                            
+                            if ($total >= $minTarget && $total <= $maxTarget) {
+                                $diff = abs($total - $target);
+                                if ($diff < $bestDiff) {
+                                    $bestDiff = $diff;
+                                    $bestPair = [$idx1, $idx2];
+                                    $bestTotal = $total;
+                                }
+                            }
+                        }
+                    }
+                    
+                    if ($bestPair !== null) {
+                        return [
+                            'products' => [$products[$bestPair[0]], $products[$bestPair[1]]], 
+                            'total' => $bestTotal
+                        ];
+                    }
+                }
+            }
+        }
+    
         $percentages = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30];
         
         foreach ($percentages as $percentage) {
