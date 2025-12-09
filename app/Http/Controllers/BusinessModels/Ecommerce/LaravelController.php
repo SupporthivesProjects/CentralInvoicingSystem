@@ -196,7 +196,7 @@ class LaravelController extends Controller
         asort($priceMap);
         $sortedIndices = array_keys($priceMap);
     
-        for ($percentage = 0; $percentage <= 10; $percentage++) {
+        for ($percentage = 0; $percentage <= 20; $percentage += 2) {
             $currentTarget = $target * (1 + $percentage / 100);
             $result = $this->tryFindExactCount($products, $priceMap, $sortedIndices, $target, $currentTarget, $count, $totalProducts);
             
