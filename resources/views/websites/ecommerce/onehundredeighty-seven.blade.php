@@ -24,7 +24,7 @@
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse;background: url('{{ $invoice_image4 }}');background-position: top;background-repeat: no-repeat;background-size:cover;max-height:100vh;">
                    <!-- header -->
                     <tr style="height:200px;">
-                        <td colspan="2" style="vertical-align:top;padding-top:90px;padding-bottom:70px">
+                        <td colspan="2" style="vertical-align:top;padding-top:100px;padding-bottom:60px">
                             <table border="0" style="border-collapse:collapse;padding:0;" width="100%">
                                 <tr style="">
                                     <td style="width:50%;"></td>
