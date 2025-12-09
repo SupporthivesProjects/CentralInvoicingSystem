@@ -21,10 +21,10 @@
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
             <td align="center" style="padding:0px;">
-                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse;background: url('{{ $invoice_image4 }}');background-position: top;background-repeat: no-repeat;background-size:cover;height:900px;">
+                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse;background: url('{{ $invoice_image4 }}');background-position: top;background-repeat: no-repeat;background-size:cover;height:100vh;">
                    <!-- header -->
                     <tr style="height: 150px;">
-                        <td colspan="2" style="vertical-align:top;padding-top:90px;padding-bottom:90px">
+                        <td colspan="2" style="vertical-align:top;padding-top:90px;padding-bottom:80px">
                             <table border="0" style="border-collapse:collapse;padding:0;" width="100%">
                                 <tr style="">
                                     <td style="width:50%;"></td>
