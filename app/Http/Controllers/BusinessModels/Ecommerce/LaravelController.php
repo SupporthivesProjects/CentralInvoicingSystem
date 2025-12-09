@@ -76,9 +76,29 @@ class LaravelController extends Controller
         }
     
         $bestMatch = $this->findBestProductCombination($products, $invoiceAmount, $noOfProducts);
-    
+
         $bestMatch = collect($bestMatch['products']);
         $bestTotal = $bestMatch->sum('unit_price');
+
+        if ($bestTotal < $invoiceAmount) {
+            $maxAllowed = $invoiceAmount * ($noOfProducts ? 1.20 : 1.10);
+            $additionalProducts = $products->whereNotIn('id', $bestMatch->pluck('id'))
+                ->filter(function($p) use ($bestMatch) {
+                    return !$bestMatch->contains(function($existing) use ($p) {
+                        return floatval($existing->unit_price) === floatval($p->unit_price);
+                    });
+                })
+                ->sortByDesc('unit_price');
+            
+            foreach ($additionalProducts as $product) {
+                $newTotal = $bestTotal + floatval($product->unit_price);
+                if ($newTotal >= $invoiceAmount && $newTotal <= $maxAllowed) {
+                    $bestMatch->push($product);
+                    $bestTotal = $newTotal;
+                    break;
+                }
+            }
+        }
     
         $categoryIds = $bestMatch->pluck('category_id')->unique();
         $categories = DB::connection($this->connectionType)
