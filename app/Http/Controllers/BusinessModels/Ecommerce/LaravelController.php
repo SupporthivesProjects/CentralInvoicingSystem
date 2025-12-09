@@ -149,8 +149,48 @@ class LaravelController extends Controller
         }
     
         $priceMap = [];
+        $uniquePrices = [];
         foreach ($products as $idx => $product) {
-            $priceMap[$idx] = floatval($product->unit_price);
+            $price = floatval($product->unit_price);
+            $priceMap[$idx] = $price;
+            $uniquePrices[$price] = ($uniquePrices[$price] ?? 0) + 1;
+        }
+    
+        $uniquePriceCount = 0;
+        foreach ($uniquePrices as $priceValue => $priceCount) {
+            $uniquePriceCount++;
+        }
+    
+        if ($uniquePriceCount < $count) {
+            asort($priceMap);
+            $sortedIndices = array_keys($priceMap);
+            $selected = [];
+            $usedPrices = [];
+            
+            foreach ($sortedIndices as $idx) {
+                $price = $priceMap[$idx];
+                if (!isset($usedPrices[$price])) {
+                    $selected[] = $idx;
+                    $usedPrices[$price] = true;
+                    if (count($selected) >= $count) break;
+                }
+            }
+    
+            if (count($selected) < $count) {
+                $needed = $count - count($selected);
+                foreach ($sortedIndices as $idx) {
+                    if (!in_array($idx, $selected)) {
+                        $selected[] = $idx;
+                        if (--$needed <= 0) break;
+                    }
+                }
+            }
+    
+            $result = [];
+            foreach ($selected as $idx) {
+                $result[] = $products[$idx];
+            }
+            return ['products' => $result, 'total' => array_sum(array_column($result, 'unit_price'))];
         }
     
         asort($priceMap);
@@ -180,8 +220,39 @@ class LaravelController extends Controller
             $searchWindow = $sortedIndices;
         }
     
+        $selected = [];
+        $usedPrices = [];
         shuffle($searchWindow);
-        $selected = array_slice($searchWindow, 0, $count);
+        
+        foreach ($searchWindow as $idx) {
+            $price = $priceMap[$idx];
+            if (!isset($usedPrices[$price])) {
+                $selected[] = $idx;
+                $usedPrices[$price] = true;
+                if (count($selected) >= $count) break;
+            }
+        }
+    
+        if (count($selected) < $count) {
+            foreach ($sortedIndices as $idx) {
+                $price = $priceMap[$idx];
+                if (!isset($usedPrices[$price]) && !in_array($idx, $selected)) {
+                    $selected[] = $idx;
+                    $usedPrices[$price] = true;
+                    if (count($selected) >= $count) break;
+                }
+            }
+        }
+    
+        if (count($selected) < $count) {
+            foreach ($sortedIndices as $idx) {
+                if (!in_array($idx, $selected)) {
+                    $selected[] = $idx;
+                    if (count($selected) >= $count) break;
+                }
+            }
+        }
+    
         $result = [];
         foreach ($selected as $idx) {
             $result[] = $products[$idx];
@@ -216,20 +287,22 @@ class LaravelController extends Controller
     
         for ($i = 0; $i < $attempts; $i++) {
             shuffle($searchWindow);
-            $selectedIndices = array_slice($searchWindow, 0, $count);
+            $candidatePool = array_slice($searchWindow, 0, min(count($searchWindow), $count * 3));
             
+            $selectedIndices = [];
             $seenPrices = [];
-            $hasDuplicate = false;
-            foreach ($selectedIndices as $idx) {
+            
+            foreach ($candidatePool as $idx) {
+                if (count($selectedIndices) >= $count) break;
+                
                 $price = $priceMap[$idx];
-                if (isset($seenPrices[$price])) {
-                    $hasDuplicate = true;
-                    break;
+                if (!isset($seenPrices[$price])) {
+                    $selectedIndices[] = $idx;
+                    $seenPrices[$price] = true;
                 }
-                $seenPrices[$price] = true;
             }
             
-            if ($hasDuplicate) {
+            if (count($selectedIndices) < $count) {
                 continue;
             }
     
@@ -267,6 +340,9 @@ class LaravelController extends Controller
     
     private function greedySelection($products, $priceMap, $sortedIndices, $minTarget, $maxTarget, $count, $searchWindow)
     {
+        $windowSize = min(count($searchWindow), $count * 5);
+        $expandedWindow = array_slice($sortedIndices, 0, max($windowSize, $count * 2));
+        
         $remaining = $minTarget;
         $selected = [];
         $usedIndices = [];
@@ -278,7 +354,7 @@ class LaravelController extends Controller
             $closestIdx = null;
             $closestDiff = PHP_INT_MAX;
     
-            foreach ($searchWindow as $idx) {
+            foreach ($expandedWindow as $idx) {
                 if (in_array($idx, $usedIndices)) continue;
                 
                 $price = $priceMap[$idx];
