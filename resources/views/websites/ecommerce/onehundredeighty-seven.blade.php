@@ -29,7 +29,7 @@
                                 <tr style="">
                                     <td style="width:50%;"></td>
                                     <td style="width:50%;" align="left" style="vertical-align:ceter">
-                                        <div style="width:40%;padding-left:50px;text-align: left;">
+                                        <div style="width:40%;padding-left:50px;text-align: left;margin-top:10px;">
                                             <p style="margin: 0px;font-size: 13px;font-family: Lato;color: #90b3eb;line-height: 16px;">
                                                 Invoice Number
                                             </p>
