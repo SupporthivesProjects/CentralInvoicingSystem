@@ -16,7 +16,8 @@
                         <td style="padding: 0; height: 130px;">
                             <table width="100%" cellspacing="0" cellpadding="0" style="border-collapse: collapse;">
                                 <tr>
-                                    <td style="
+                                    <td
+                                        style="
                                         background: url('{{ $invoice_header_image }}') no-repeat center;background-size: cover;height: 130px;">
                                         <table align="right">
                                             <tr>
@@ -46,7 +47,8 @@
                                     <td style="width: 50%; vertical-align: top; padding: 10px;">
                                         <span style="color: #f36c6c; font-weight: bold; font-size: 14px;">INVOICE
                                             TO:</span><br>
-                                        <span style="font-size: 20px; font-weight: bold; font-size: 16px;">{{ $customer_name  }}</span><br>
+                                        <span
+                                            style="font-size: 20px; font-weight: bold; font-size: 16px;">{{ $customer_name }}</span><br>
                                         <!-- <span>Email: {{ $customer_email }}</span> -->
                                     </td>
 
@@ -54,10 +56,13 @@
                                     <td style="width: 50%; vertical-align: top; padding: 10px;">
                                         <span style="color: #f36c6c; font-weight: bold; font-size: 14px;">INVOICE
                                             FROM:</span><br>
-                                        <span style="font-size: 20px; font-weight: bold; font-size: 16px;">{{ $site_name }} </span><br>
+                                        <span
+                                            style="font-size: 20px; font-weight: bold; font-size: 16px;">{{ $site_name }}
+                                        </span><br>
                                         <span>{!! $company_address !!}</span><br>
-                                        <span>Phone: {{ $company_mobile }}</span><br>
-                                        <span>Email: {{ $company_email }} </span>
+                                        @if (!empty($company_mobile))
+                                            <span>Phone: {{ $company_mobile }}</span><br>
+                                        @endif <span>Email: {{ $company_email }} </span>
                                     </td>
                                 </tr>
                             </table>
@@ -75,38 +80,48 @@
                                         <th style="background-color: #0c0032; color: white; padding: 10px;">Total</th>
                                     </tr>
 
-                                    @foreach($products as $product)
-                                    <tr style="background-color: #f9f9f9;">
-                                        <td style="padding: 10px;">
-                                            <strong>{{ $product->name }}</strong><br>
-                                            <span style="color: #666; font-weight: bold;">{{ $product->category_name }}</span>
-                                        </td>
-                                        <td style="text-align: center;">{{ site_currency() }} {{  number_format($product->unit_price, 2) }}</td>
-                                        <td style="text-align: center;">1</td>
-                                        <td style="text-align: center;">{{ site_currency() }} {{  number_format($product->unit_price, 2) }}</td>
-                                    </tr>
+                                    @foreach ($products as $product)
+                                        <tr style="background-color: #f9f9f9;">
+                                            <td style="padding: 10px;">
+                                                <strong>{{ $product->name }}</strong><br>
+                                                <span
+                                                    style="color: #666; font-weight: bold;">{{ $product->category_name }}</span>
+                                            </td>
+                                            <td style="text-align: center;">{{ site_currency() }}
+                                                {{ number_format($product->unit_price, 2) }}</td>
+                                            <td style="text-align: center;">1</td>
+                                            <td style="text-align: center;">{{ site_currency() }}
+                                                {{ number_format($product->unit_price, 2) }}</td>
+                                        </tr>
                                     @endforeach
                                     <tr>
                                         <td colspan="2" style="border: none;"></td>
                                         <td style="text-align: right; padding: 10px;"><strong>Subtotal:</strong></td>
-                                        <td style="text-align: center; font-weight: bold;">{{ site_currency() }} {{ number_format(($invoice_amount + $discount_amount), 2) }}</td>
+                                        <td style="text-align: center; font-weight: bold;">{{ site_currency() }}
+                                            {{ number_format($invoice_amount + $discount_amount, 2) }}</td>
                                     </tr>
                                     <tr>
                                         <td colspan="2" style="border: none;">
                                             <strong>Total Due</strong><br>
-                                            <span style="color: #EA7780; font-size: 14px;"><strong>{{ site_currency() }} {{ number_format($invoice_amount, 2) }} {{ site_currency_code() }}</strong></span>
+                                            <span style="color: #EA7780; font-size: 14px;"><strong>{{ site_currency() }}
+                                                    {{ number_format($invoice_amount, 2) }}
+                                                    {{ site_currency_code() }}</strong></span>
                                         </td>
                                         <td style="text-align: right; padding: 10px; font-weight: bold;">Discount:</td>
-                                        <td style="text-align: center; font-weight: bold;">{{ site_currency() }} {{ number_format($discount_amount, 2) }}</td>
+                                        <td style="text-align: center; font-weight: bold;">{{ site_currency() }}
+                                            {{ number_format($discount_amount, 2) }}</td>
                                     </tr>
 
                                     <!-- Final Total -->
                                     <tr>
                                         <td colspan="3"
                                             style="background-color: #EA7780; color: white; padding: 10px; text-align: left;">
-                                            <strong>Total:</strong></td>
+                                            <strong>Total:</strong>
+                                        </td>
                                         <td style="background-color: #EA7780; color: white; text-align: center;">
-                                            <strong>{{ site_currency() }} {{ number_format($invoice_amount, 2) }}</strong></td>
+                                            <strong>{{ site_currency() }}
+                                                {{ number_format($invoice_amount, 2) }}</strong>
+                                        </td>
                                     </tr>
                                 </table>
                             </div>
@@ -138,48 +153,65 @@
                     <!-----------Footer----------->
                     <tr>
                         <td>
-                            <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;">
-                                <tr style="background: url('{{ $invoice_footer_image }}') no-repeat;background-position: center;background-size: cover;height:60px;padding:50px;background-size:cover;width: 100%;">
+                            <table width="100%" cellspacing="0" cellpadding="" border="0px"
+                                style="border-collapse: collapse;">
+                                <tr
+                                    style="background: url('{{ $invoice_footer_image }}') no-repeat;background-position: center;background-size: cover;height:60px;padding:50px;background-size:cover;width: 100%;">
                                     <td>
-                                        <table cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse; padding-left: 40px; margin-left: 40px;" align="start">
+                                        <table cellspacing="0" cellpadding="" border="0px"
+                                            style="border-collapse: collapse; padding-left: 40px; margin-left: 40px;"
+                                            align="start">
+                                            <tr>
+                                                @if (!empty($company_mobile))
+                                                    <td style="padding-left: 10px;">
+                                                        <table>
+                                                            <tr>
+                                                                <td>
+                                                                    <img src="{{ $invoice_image1 }}" alt=""
+                                                                        style="width:24px;">
+                                                                </td>
+                                                                <td>
+                                                                    <p
+                                                                        style="font-size: 10px;font-family: Calibri;color: #ffffff;margin: 0px;">
+                                                                        {{ $company_mobile }}
+                                                                    </p>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                @endif
+
+                                                <td style="padding-left: 10px;">
+                                                    <table>
                                                         <tr>
-                                                            <td style="padding-left: 10px;">
-                                                                <table>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <img src="{{ $invoice_image1 }}" alt="" style="width:24px;">
-                                                                        </td>
-                                                                         <td>
-                                                                            <p style="font-size: 10px;font-family: Calibri;color: #ffffff;margin: 0px;"> {{ $company_mobile }}</p>
-                                                                        </td>
-                                                                    </tr>
-                                                                </table>
+                                                            <td>
+                                                                <img src="{{ $invoice_image2 }}" alt=""
+                                                                    style="width:24px;">
                                                             </td>
-                                                            <td style="padding-left: 10px;">
-                                                                <table>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <img src="{{ $invoice_image2 }}" alt="" style="width:24px;">
-                                                                        </td>
-                                                                         <td>
-                                                                            <p style="font-size: 10px;font-family: Calibri;color: #ffffff;margin: 0px;text-decoration: underline;"> {{ $company_email }} </p>
-                                                                        </td>
-                                                                    </tr>
-                                                                </table>
-                                                            </td>
-                                                            <td style="padding-left: 10px;">
-                                                                 <table>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <img src="{{ $invoice_image3 }}" alt="" style="width:24px;">
-                                                                        </td>
-                                                                         <td>
-                                                                            <p style="font-size: 10px;font-family: Calibri;color: #ffffff;margin: 0px;">{!! $company_address !!}</p>
-                                                                        </td>
-                                                                    </tr>
-                                                                </table>
+                                                            <td>
+                                                                <p
+                                                                    style="font-size: 10px;font-family: Calibri;color: #ffffff;margin: 0px;text-decoration: underline;">
+                                                                    {{ $company_email }} </p>
                                                             </td>
                                                         </tr>
+                                                    </table>
+                                                </td>
+                                                <td style="padding-left: 10px;">
+                                                    <table>
+                                                        <tr>
+                                                            <td>
+                                                                <img src="{{ $invoice_image3 }}" alt=""
+                                                                    style="width:24px;">
+                                                            </td>
+                                                            <td>
+                                                                <p
+                                                                    style="font-size: 10px;font-family: Calibri;color: #ffffff;margin: 0px;">
+                                                                    {!! $company_address !!}</p>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
                                         </table>
                                     </td>
                                     <td style="vertical-align: top;">
