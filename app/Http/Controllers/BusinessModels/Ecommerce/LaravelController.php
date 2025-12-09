@@ -156,7 +156,7 @@ class LaravelController extends Controller
         asort($priceMap);
         $sortedIndices = array_keys($priceMap);
     
-        $percentages = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20];
+        $percentages = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30];
         
         foreach ($percentages as $percentage) {
             $minTarget = $target;
