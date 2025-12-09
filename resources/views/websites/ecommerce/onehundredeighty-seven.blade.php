@@ -21,15 +21,15 @@
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
             <td align="center" style="padding:0px;">
-                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse;background: url('{{ $invoice_image4 }}');background-position: top;background-repeat: no-repeat;background-size:cover;height:1050px;">
+                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse;background: url('{{ $invoice_image4 }}');background-position: top;background-repeat: no-repeat;background-size:cover;height:1150px;">
                    <!-- header -->
                     <tr style="height: 150px;">
-                        <td colspan="2" style="vertical-align:top;padding-top:110px;padding-bottom:90px">
+                        <td colspan="2" style="vertical-align:top;padding-top:90px;padding-bottom:90px">
                             <table border="0" style="border-collapse:collapse;padding:0;" width="100%">
                                 <tr style="">
                                     <td style="width:50%;"></td>
                                     <td style="width:50%;" align="left" style="vertical-align:ceter">
-                                        <div style="width:40%;padding-left:50px;text-align: left;">
+                                        <div style="width:40%;padding-left:50px;text-align: left;margin-top:50px;">
                                             <p style="margin: 0px;font-size: 13px;font-family: Lato;color: #90b3eb;line-height: 16px;">
                                                 Invoice Number
                                             </p>
