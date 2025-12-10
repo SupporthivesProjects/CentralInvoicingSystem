@@ -144,6 +144,8 @@ class LaravelController extends Controller
     
     private function findExactCountOptimized($products, $target, $count, $totalProducts)
     {
+        shuffle($products);
+
         if ($totalProducts < $count) {
             return ['products' => $products, 'total' => array_sum(array_column($products, 'unit_price'))];
         }
@@ -158,6 +160,7 @@ class LaravelController extends Controller
     
         if ($count <= 2) {
             $percentages = [0, 2, 5, 8, 10, 15, 20, 25, 30, 35, 40, 50];
+            shuffle($percentages);
             
             foreach ($percentages as $percentage) {
                 $minTarget = $target;
@@ -182,6 +185,9 @@ class LaravelController extends Controller
                         return ['products' => [$products[$bestIdx]], 'total' => $priceMap[$bestIdx]];
                     }
                 } else if ($count == 2) {
+                    if ($percentage > 0 && rand(0, 1) == 1) {
+                        continue;
+                    }
                     $bestPair = null;
                     $bestTotal = 0;
                     $bestDiff = PHP_INT_MAX;
