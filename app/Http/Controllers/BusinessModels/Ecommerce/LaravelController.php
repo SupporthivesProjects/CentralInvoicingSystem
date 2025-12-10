@@ -132,7 +132,7 @@ class LaravelController extends Controller
     
     private function findBestProductCombination($products, $targetAmount, $requiredCount = null)
     {
-        $productArray = $products->values()->all();
+        $productArray = $products->shuffle()->values()->all();
         $productCount = count($productArray);
     
         if ($requiredCount) {
@@ -238,6 +238,7 @@ class LaravelController extends Controller
         $bestDiff = PHP_INT_MAX;
     
         for ($attempt = 0; $attempt < 200; $attempt++) {
+            $shuffledIndices = $sortedIndices;
             shuffle($sortedIndices);
             
             $selected = [];
@@ -245,7 +246,7 @@ class LaravelController extends Controller
             $total = 0;
             
             $startIdx = rand(0, max(0, $totalProducts - $count * 3));
-            $searchWindow = array_slice($sortedIndices, $startIdx, min($count * 5, $totalProducts));
+            $searchWindow = array_slice($shuffledIndices, $startIdx, min($count * 5, $totalProducts));
             
             foreach ($searchWindow as $idx) {
                 if (count($selected) >= $count) break;
@@ -375,6 +376,7 @@ class LaravelController extends Controller
         $bestDiff = PHP_INT_MAX;
     
         for ($i = 0; $i < $attempts; $i++) {
+            $windowCopy = $searchWindow;
             shuffle($searchWindow);
             $candidatePool = array_slice($searchWindow, 0, min(count($searchWindow), $count * 3));
             
@@ -512,6 +514,8 @@ class LaravelController extends Controller
         $bestTotal = 0;
     
         for ($attempt = 0; $attempt < 20; $attempt++) {
+            $shuffledIndices = $sortedIndices; 
+            shuffle($shuffledIndices); 
             $startIdx = rand(0, max(0, $totalProducts - 30));
             $subset = array_slice($sortedIndices, $startIdx, 30);
             shuffle($subset);
