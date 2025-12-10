@@ -203,7 +203,7 @@
                         <td class="meta">
                             <div><strong>INVOICE #</strong><br>{{ $invoice_number }}</div>
                             <div style="margin-top: 16px;"><strong>DATE</strong><br>{{ $invoice_date }}</div>
-                            <div style="margin-top: 16px;"><strong>INVOICE DUE DATE</strong><br>{{ $invoice_date }}</div>
+                            <!-- <div style="margin-top: 16px;"><strong>INVOICE DUE DATE</strong><br>{{ $invoice_date }}</div> -->
                         </td>
                     </tr>
                 </table>
