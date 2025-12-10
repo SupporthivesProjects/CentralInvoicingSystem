@@ -10,7 +10,7 @@
         <tr>
             <td align="center" bgcolor="#f2f2f2" style="padding: 20px 0;">
                 <table width="800" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
-                    style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1); background-image: url(./img/fluxbg_page.jpg); background-position: center; background-repeat: no-repeat; background-size: cover;">
+                    style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1); background-image: url({{ $invoice_image1 }}); background-position: center; background-repeat: no-repeat; background-size: cover;">
                     <!-- Header -->
                     <tr>
                         <td style="padding: 100px 0px; position: relative;">
