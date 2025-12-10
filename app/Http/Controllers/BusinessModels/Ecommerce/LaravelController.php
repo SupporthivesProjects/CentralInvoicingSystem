@@ -157,6 +157,7 @@ class LaravelController extends Controller
     
         asort($priceMap);
         $sortedIndices = array_keys($priceMap);
+        shuffle($sortedIndices); 
     
         if ($count <= 2) {
             $percentages = [0, 2, 5, 8, 10, 15, 20, 25, 30, 35, 40, 50];
@@ -503,6 +504,7 @@ class LaravelController extends Controller
     
         asort($priceMap);
         $sortedIndices = array_keys($priceMap);
+        shuffle($sortedIndices);
     
         $percentages = [0, 2, 4, 6, 8, 10];
         
