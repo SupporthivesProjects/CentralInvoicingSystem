@@ -67,6 +67,7 @@ class LaravelController extends Controller
         if ($products->isEmpty()) {
             session()->forget('ready_products');
             session()->forget('current_amount');
+            session()->forget('last_used_combination');
     
             return response()->json([
                 'tableRows' => '',
@@ -74,11 +75,15 @@ class LaravelController extends Controller
                 'message' => 'No products found in this range or category.'
             ]);
         }
-    
-        $bestMatch = $this->findBestProductCombination($products, $invoiceAmount, $noOfProducts);
+        $lastUsedCombination = session()->get('last_used_combination', null);
+
+        $bestMatch = $this->findBestProductCombination($products, $invoiceAmount, $noOfProducts, $lastUsedCombination);
     
         $bestMatch = collect($bestMatch['products']);
         $bestTotal = $bestMatch->sum('unit_price');
+
+        $combinationKey = $bestMatch->pluck('id')->sort()->join('-');
+        session()->put('last_used_combination', $combinationKey);
     
         $categoryIds = $bestMatch->pluck('category_id')->unique();
         $categories = DB::connection($this->connectionType)
@@ -217,6 +222,16 @@ class LaravelController extends Controller
                     }
                     
                     if ($bestPair !== null) {
+
+                        if ($lastUsedCombination) {
+                            $comboIds = array_map(fn($i) => $products[$i]->id, $bestPair);
+                            sort($comboIds);
+                            $currentCombo = implode('-', $comboIds);
+                            if ($currentCombo === $lastUsedCombination) {
+                                continue; 
+                            }
+                        }
+                        
                         return [
                             'products' => [$products[$bestPair[0]], $products[$bestPair[1]]], 
                             'total' => $bestTotal
@@ -490,7 +505,7 @@ class LaravelController extends Controller
         return null;
     }
     
-    private function findFlexibleOptimized($products, $target, $totalProducts)
+    private function findFlexibleOptimized($products, $target, $totalProducts, $lastUsedCombination = null)
     {
         $priceMap = [];
         foreach ($products as $idx => $product) {
@@ -513,6 +528,16 @@ class LaravelController extends Controller
             $result = $this->tryFindFlexible($products, $priceMap, $sortedIndices, $target, $currentMax, $totalProducts);
             
             if ($result !== null && $result['total'] >= $target) {
+
+                if ($lastUsedCombination) {
+                    $resultIds = array_map(fn($p) => $p->id, $result['products']);
+                    sort($resultIds);
+                    $currentCombo = implode('-', $resultIds);
+                    if ($currentCombo === $lastUsedCombination) {
+                        continue; // Try next percentage
+                    }
+                }
+                
                 return $result;
             }
         }
