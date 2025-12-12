@@ -67,7 +67,7 @@ class LaravelController extends Controller
         if ($products->isEmpty()) {
             session()->forget('ready_products');
             session()->forget('current_amount');
-            session()->forget('last_used_combination');
+            session()->forget('last_used_combinations');
     
             return response()->json([
                 'tableRows' => '',
@@ -75,15 +75,17 @@ class LaravelController extends Controller
                 'message' => 'No products found in this range or category.'
             ]);
         }
-        $lastUsedCombination = session()->get('last_used_combination', null);
+        $lastUsedCombinations = session()->get('last_used_combinations', []);
 
-        $bestMatch = $this->findBestProductCombination($products, $invoiceAmount, $noOfProducts, $lastUsedCombination);
+        $bestMatch = $this->findBestProductCombination($products, $invoiceAmount, $noOfProducts, $lastUsedCombinations);
     
         $bestMatch = collect($bestMatch['products']);
         $bestTotal = $bestMatch->sum('unit_price');
 
         $combinationKey = $bestMatch->pluck('id')->sort()->join('-');
-        session()->put('last_used_combination', $combinationKey);
+        $lastUsedCombinations[] = $combinationKey;
+        $lastUsedCombinations = array_slice($lastUsedCombinations, -2); // Keep only last 2
+        session()->put('last_used_combinations', $lastUsedCombinations);
     
         $categoryIds = $bestMatch->pluck('category_id')->unique();
         $categories = DB::connection($this->connectionType)
@@ -135,7 +137,7 @@ class LaravelController extends Controller
         ]);
     }
     
-    private function findBestProductCombination($products, $targetAmount, $requiredCount = null, $lastUsedCombination = null)
+    private function findBestProductCombination($products, $targetAmount, $requiredCount = null, $lastUsedCombinations = [])
     {
         $productArray = $products->shuffle()->values()->all();
         $productCount = count($productArray);
@@ -147,7 +149,7 @@ class LaravelController extends Controller
         }
     }
     
-    private function findExactCountOptimized($products, $target, $count, $totalProducts, $lastUsedCombination = null)
+    private function findExactCountOptimized($products, $target, $count, $totalProducts, $lastUsedCombinations = [])
     {
         shuffle($products);
 
@@ -189,9 +191,9 @@ class LaravelController extends Controller
                     
                     if ($bestIdx !== null) {
                         
-                        if ($lastUsedCombination) {
+                        if (!empty($lastUsedCombinations)) {
                             $currentCombo = (string)$products[$bestIdx]->id;
-                            if ($currentCombo === $lastUsedCombination) {
+                            if (in_array($currentCombo, $lastUsedCombinations)) {
                                 continue; // Try next percentage
                             }
                         }
@@ -231,11 +233,11 @@ class LaravelController extends Controller
                     
                     if ($bestPair !== null) {
 
-                        if ($lastUsedCombination) {
+                        if (!empty($lastUsedCombinations)) {
                             $comboIds = array_map(fn($i) => $products[$i]->id, $bestPair);
                             sort($comboIds);
                             $currentCombo = implode('-', $comboIds);
-                            if ($currentCombo === $lastUsedCombination) {
+                            if (in_array($currentCombo, $lastUsedCombinations)) {
                                 continue; 
                             }
                         }
@@ -513,7 +515,7 @@ class LaravelController extends Controller
         return null;
     }
     
-    private function findFlexibleOptimized($products, $target, $totalProducts, $lastUsedCombination = null)
+    private function findFlexibleOptimized($products, $target, $totalProducts, $lastUsedCombinations = [])
     {
         $priceMap = [];
         foreach ($products as $idx => $product) {
@@ -537,11 +539,11 @@ class LaravelController extends Controller
             
             if ($result !== null && $result['total'] >= $target) {
 
-                if ($lastUsedCombination) {
+                if (!empty($lastUsedCombinations)) {
                     $resultIds = array_map(fn($p) => $p->id, $result['products']);
                     sort($resultIds);
                     $currentCombo = implode('-', $resultIds);
-                    if ($currentCombo === $lastUsedCombination) {
+                    if (in_array($currentCombo, $lastUsedCombinations)) {
                         continue; // Try next percentage
                     }
                 }
