@@ -135,19 +135,19 @@ class LaravelController extends Controller
         ]);
     }
     
-    private function findBestProductCombination($products, $targetAmount, $requiredCount = null)
+    private function findBestProductCombination($products, $targetAmount, $requiredCount = null, $lastUsedCombination = null)
     {
         $productArray = $products->shuffle()->values()->all();
         $productCount = count($productArray);
     
         if ($requiredCount) {
-            return $this->findExactCountOptimized($productArray, $targetAmount, $requiredCount, $productCount);
+            return $this->findExactCountOptimized($productArray, $targetAmount, $requiredCount, $productCount, $lastUsedCombination);
         } else {
-            return $this->findFlexibleOptimized($productArray, $targetAmount, $productCount);
+            return $this->findFlexibleOptimized($productArray, $targetAmount, $productCount, $lastUsedCombination);
         }
     }
     
-    private function findExactCountOptimized($products, $target, $count, $totalProducts)
+    private function findExactCountOptimized($products, $target, $count, $totalProducts, $lastUsedCombination = null)
     {
         shuffle($products);
 
@@ -188,6 +188,14 @@ class LaravelController extends Controller
                     }
                     
                     if ($bestIdx !== null) {
+                        
+                        if ($lastUsedCombination) {
+                            $currentCombo = (string)$products[$bestIdx]->id;
+                            if ($currentCombo === $lastUsedCombination) {
+                                continue; // Try next percentage
+                            }
+                        }
+
                         return ['products' => [$products[$bestIdx]], 'total' => $priceMap[$bestIdx]];
                     }
                 } else if ($count == 2) {
@@ -537,7 +545,7 @@ class LaravelController extends Controller
                         continue; // Try next percentage
                     }
                 }
-                
+
                 return $result;
             }
         }
