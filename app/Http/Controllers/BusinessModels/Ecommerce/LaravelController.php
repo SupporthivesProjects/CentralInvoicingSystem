@@ -143,9 +143,9 @@ class LaravelController extends Controller
         $productCount = count($productArray);
     
         if ($requiredCount) {
-            return $this->findExactCountOptimized($productArray, $targetAmount, $requiredCount, $productCount, $lastUsedCombination);
+            return $this->findExactCountOptimized($productArray, $targetAmount, $requiredCount, $productCount, $lastUsedCombinations);
         } else {
-            return $this->findFlexibleOptimized($productArray, $targetAmount, $productCount, $lastUsedCombination);
+            return $this->findFlexibleOptimized($productArray, $targetAmount, $productCount, $lastUsedCombinations);
         }
     }
     
