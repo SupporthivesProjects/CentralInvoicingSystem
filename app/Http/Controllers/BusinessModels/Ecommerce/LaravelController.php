@@ -84,7 +84,7 @@ class LaravelController extends Controller
 
         $combinationKey = $bestMatch->pluck('id')->sort()->join('-');
         $lastUsedCombinations[] = $combinationKey;
-        $lastUsedCombinations = array_slice($lastUsedCombinations, -2); // Keep only last 2
+        $lastUsedCombinations = array_slice($lastUsedCombinations, -5); // Keep only last 5
         session()->put('last_used_combinations', $lastUsedCombinations);
     
         $categoryIds = $bestMatch->pluck('category_id')->unique();
