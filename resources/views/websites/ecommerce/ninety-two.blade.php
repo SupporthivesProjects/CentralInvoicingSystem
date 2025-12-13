@@ -60,7 +60,7 @@
                                   </td>
                                 </tr>
                               </table>
-                          <div style="min-height: 540px !important;">
+                          <div style="min-height: 542px !important;">
                             <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 8px;">
                                 <tr style="background-color: #A9BF2B;">
                                   <th style="text-align: left; padding: 8px 20px; font-size: 12px;">DESCRIPTION</th>
