@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
+
 </head>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@900&display=swap" rel="stylesheet">
 <body>
@@ -68,62 +69,6 @@
                                             </td>
                                         </tr>
                                     @endforeach
-                                     {{-- <tr style="border-collapse: collapse;height: 30px; ;font-family: sans-serif;font-size: 8px;">
-                                        <td style="width: 300px;text-align: left;padding-left: 20px;">
-                                        <p>Item Name</p>
-                                        </td>
-                                        <td style="width: 200px;text-align: right;">
-                                            <p>$100.00</p>
-                                        </td>
-                                        <td style="width: 200px;text-align: center;">
-                                            <p>2</p>
-                                        </td>
-                                        <td style="width:200px;text-align: center;">
-                                            <p>$200.00</p>
-                                        </td>
-                                     </tr>
-                                     <tr style="border-collapse: collapse;height: 30px; ;font-family: sans-serif;font-size: 8px;">
-                                        <td style="width: 300px;text-align: left;padding-left: 20px;">
-                                        <p>Item Name</p>
-                                        </td>
-                                        <td style="width: 200px;text-align: right;">
-                                            <p>$100.00</p>
-                                        </td>
-                                        <td style="width: 200px;text-align: center;">
-                                            <p>2</p>
-                                        </td>
-                                        <td style="width:200px;text-align: center;">
-                                            <p>$200.00</p>
-                                        </td>
-                                     </tr>
-                                     <tr style="border-collapse: collapse;height: 30px; ;font-family: sans-serif;font-size: 8px;">
-                                        <td style="width: 300px;text-align: left;padding-left: 20px;">
-                                        <p>Item Name</p>
-                                        </td>
-                                        <td style="width: 200px;text-align: right;">
-                                            <p>$100.00</p>
-                                        </td>
-                                        <td style="width: 200px;text-align: center;">
-                                            <p>2</p>
-                                        </td>
-                                        <td style="width:200px;text-align: center;">
-                                            <p>$200.00</p>
-                                        </td>
-                                     </tr>
-                                     <tr style="border-collapse: collapse;height: 30px; ;font-family: sans-serif;font-size: 8px;border-bottom: 1px solid goldenrod;">
-                                        <td style="width: 300px;text-align: left;padding-left: 20px;">
-                                        <p>Item Name</p>
-                                        </td>
-                                        <td style="width: 200px;text-align: right;">
-                                            <p>$100.00</p>
-                                        </td>
-                                        <td style="width: 200px;text-align: center;">
-                                            <p>2</p>
-                                        </td>
-                                        <td style="width:200px;text-align: center;">
-                                            <p>$200.00</p>
-                                        </td>
-                                     </tr> --}}
                                 </table>
                         </td>
                     <tr>
