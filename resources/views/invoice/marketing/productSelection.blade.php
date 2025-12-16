@@ -378,17 +378,18 @@
                         <table class="table table-bordered table-hover align-middle mb-0">
                             <thead class="">
                             <tr>
-                                <th class="w-10 text-center">PID</th>
-                                <th class="w-35">Package Name</th>
-                                <th class="w-20 text-center">Subscription</th>
-                                <th class="text-center unit-price-header" data-column="3" data-order="desc">
+                                <th style="width:10%; text-align:center;">PID</th>
+                                <th style="width:35%;">Package Name</th>
+                                <th style="width:20%; text-align:center;">Subscription</th>
+                                <th style="width:15%; text-align:center;" class="unit-price-header" data-column="3" data-order="desc">
                                     <span class="d-inline-flex align-items-center justify-content-center gap-1">
                                         Unit Price <i class="bi bi-caret-down-fill"></i>
                                     </span>
                                 </th>
-                                <th class="w-20 text-center">Editable Price</th>
-                                <th class="w-10 text-center">Remove</th>
+                                <th style="width:20%; text-align:center;">Editable Price</th>
+                                <th style="width:10%; text-align:center;">Remove</th>
                             </tr>
+
                             </thead>
                             <tbody id="randomize-product-table-body">
                                 
