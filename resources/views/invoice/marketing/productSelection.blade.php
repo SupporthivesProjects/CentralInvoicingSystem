@@ -477,17 +477,18 @@
                         <table id="customize-products-table" class="table table-bordered table-hover align-middle mb-0 table-responsive" style="width:100% !important;">
                                 <thead class="text-center">
                                 <tr>
-                                    <th class="text-center" style="width: 10%;">PID</th>
-                                    <th class="text-center" style="width: 35%;">Package Name</th>
-                                    <th class="text-center" style="width: 20%;">Subscription</th>
-                                    <th class="text-center unit-price-header" style="width: 20%;"  data-column="3" data-order="desc">
-                                    <span class="d-inline-flex align-items-center justify-content-center gap-1">
-                                        Unit Price <i class="bi bi-caret-down-fill"></i>
-                                    </span>
-                                </th>
-                                    <th class="text-center" style="width: 20%;">Editable Price</th>
-                                    <th class="text-center" style="width: 10%;">Select</th>
+                                    <th class="text-center" style="width:10%;">PID</th>
+                                    <th style="width:35%;">Package Name</th>
+                                    <th class="text-center" style="width:20%;">Subscription</th>
+                                    <th class="text-center unit-price-header" style="width:15%;" data-column="3" data-order="desc">
+                                        <span class="d-inline-flex align-items-center justify-content-center gap-1">
+                                            Unit Price <i class="bi bi-caret-down-fill"></i>
+                                        </span>
+                                    </th>
+                                    <th class="text-center" style="width:20%;">Editable Price</th>
+                                    <th class="text-center" style="width:10%;">Select</th>
                                 </tr>
+
                                 </thead>
                                 <tbody id="customize-product-table-body">
                                 
