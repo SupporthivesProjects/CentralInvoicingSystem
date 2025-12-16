@@ -47,8 +47,8 @@
                                   <td style="padding: 8px;">{{ $site_name }}</td>
                                 </tr>
                                 <tr>
-                                  <td style="font-weight: bold; padding: 8px;">Email</td>
-                                  <td style="padding: 8px;border-right: 1px solid #000;">{{ $customer_email }}</td>
+                                  <!-- <td style="font-weight: bold; padding: 8px;">Email</td>
+                                  <td style="padding: 8px;border-right: 1px solid #000;">{{ $customer_email }}</td> -->
                                   <td style="font-weight: bold; padding: 8px;">Email</td>
                                   <td style="padding: 8px;">{{ $company_email }}</td>
                                 </tr>
@@ -58,12 +58,14 @@
                                   <td style="font-weight: bold; padding: 8px;">Address</td>
                                   <td style="padding: 8px;">{!! $company_address !!}</td>
                                 </tr>
+                                @if(isset($company_mobile) && trim($company_mobile) !== '')
                                 <tr>
                                   <td style="font-weight: bold; padding: 8px;"></td>
                                   <td style="padding: 8px;border-right: 1px solid #000;"></td>
                                   <td style="font-weight: bold; padding: 8px;">Phone</td>
                                   <td style="padding: 8px;">{{ $company_mobile }}</td>
                                 </tr>
+                                @endif
                               </table>
                               <div style="min-height: 400px !important;">
                                 <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif;font-size: 10px; margin-top: 20px;">
@@ -71,7 +73,7 @@
                                     <tr style="background-color: #0f0b27; color: #ff4000;font-size: 12px;">
                                       <th style="border: 1px solid #000; padding: 8px;">Qty.</th>
                                       <th style="border: 1px solid #000; padding: 8px; text-align: left; width: 42%;">Description</th>
-                                      <th style="border: 1px solid #000; padding: 8px;text-align: left;">Quality</th>
+                                      <!-- <th style="border: 1px solid #000; padding: 8px;text-align: left;">Quality</th> -->
                                       <th style="border: 1px solid #000; padding: 8px;text-align: right;">Duration</th>
                                       <th style="border: 1px solid #000; padding: 8px;text-align: right;">Unit Price</th>
                                     </tr>
@@ -81,7 +83,7 @@
                                     <tr>
                                       <td style="border: 1px solid #000; padding: 8px; text-align: center;">1</td>
                                       <td style="border: 1px solid #000; padding: 8px;text-align: left;">{{ $product->name }}</td>
-                                      <td style="border: 1px solid #000; padding: 8px;text-align: left;">Premium</td>
+                                      <!-- <td style="border: 1px solid #000; padding: 8px;text-align: left;">Premium</td> -->
                                       <td style="border: 1px solid #000; padding: 8px;text-align: right;">{{ $product->subscription ?? '-' }}</td>
                                       <td style="border: 1px solid #000; padding: 8px; text-align: right;">{{ site_currency() }} {{ number_format($product->unit_price ?? 0, 2) }}</td>
                                     </tr>
