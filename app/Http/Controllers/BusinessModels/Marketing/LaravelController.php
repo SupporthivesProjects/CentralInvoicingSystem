@@ -387,7 +387,8 @@ class LaravelController extends Controller
             
             DB::connection($this->connectionType)
                 ->table($this->productTable)
-                ->where('id', $productId)
+                ->where('name', $currentName)
+                ->orWhere('id', $productId)
                 ->update($updateData);
         }
     
