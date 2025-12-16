@@ -367,50 +367,116 @@ class LaravelController extends Controller
         $category_id = $request->get('category_id');
         $productId = $request->get('product_id');
         $subscription = $request->get('subscription');
+        $productName = $request->get('product_name');
         $site_id = session('customer.site_id');
-
+    
         if (!$site_id) {
             return response()->json(['error' => 'Site ID not found in session.']);
         }
-
+    
         $site = Website::findOrFail($site_id);
         DynamicDatabaseService::connect($site);
-
+    
+        if ($productName !== null && trim($productName) !== '') {
+            DB::connection($this->connectionType)
+                ->table($this->productTable)
+                ->where('id', $productId)
+                ->update(['name' => trim($productName)]);
+        }
+    
+        if (!$subscription && !$category_id) {
+            $readyProducts = session()->get('ready_products', []);
+            $productIds = collect($readyProducts)->pluck('id')->reverse()->values()->toArray();
+            
+            $products = DB::connection($this->connectionType)->table($this->productTable)
+                ->select('id', 'subscription', 'category_id', 'name', 'unit_price', 'slug')
+                ->whereIn('id', $productIds)
+                ->orderByRaw('FIELD(id, ' . implode(',', $productIds) . ')')
+                ->get()
+                ->keyBy('id');
+    
+            $products = collect($productIds)->map(function ($id) use ($products) {
+                return $products[$id];
+            });
+    
+            $products = $products->map(function ($product) use ($readyProducts, $site_id) {
+                $sessionProduct = collect($readyProducts)->firstWhere('id', $product->id);
+                $product->subscription = $sessionProduct['subscription'] ?? $product->subscription;
+            
+                $data = $this->generateSlug($product->category_id);
+                $product->category_name = $data['category_name'];
+                $product->slug = $data['slug'];
+            
+                $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
+                    ->where('product_id', $product->id)
+                    ->orderByDesc('last_price_changed')
+                    ->first();
+            
+                if ($lastUpdate) {
+                    $lastPriceChanged = Carbon::parse($lastUpdate->last_price_changed);
+                    $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
+                    $remainingDays = now()->diffInDays($nextPriceChangeDate, false);
+                    $product->remaining_days = round(max($remainingDays, 0));
+                    $product->can_edit_price = now()->greaterThanOrEqualTo($nextPriceChangeDate) ? 1 : 0;
+                } else {
+                    $product->can_edit_price = 1;
+                    $product->remaining_days = 0;
+                }
+            
+                return $product;
+            });
+    
+            $totalAmount = collect($readyProducts)->sum('unit_price');
+            session(['current_amount' => $totalAmount]);
+    
+            $modelType = $site->businessModel->model_type;
+            $tableRows = view("invoice.{$modelType}.random_product_rows", [
+                'products' => $products,
+                'site' => $site,
+                'total' => $totalAmount
+            ])->render();
+    
+            return response()->json([
+                'tableRows' => $tableRows,
+                'total' => $totalAmount
+            ]);
+        }
+    
         $readyProducts = session()->get('ready_products', []);
         $readyProducts = array_filter($readyProducts, function ($product) use ($productId) {
             return $product['id'] != $productId;
         });
-
+    
         $currentProduct = DB::connection($this->connectionType)
             ->table($this->productTable)
             ->where('id', $productId)
             ->first();
-
+    
         if (!$currentProduct) {
             return response()->json(['error' => 'Product not found.']);
         }
-
-        $productName = $currentProduct->name;
-
+    
+        $currentProductName = $currentProduct->name;
+    
         $newProduct = DB::connection($this->connectionType)
             ->table($this->productTable)
             ->where('subscription', $subscription)
             ->where('category_id', $category_id)
-            ->where('name', 'like', "%{$productName}%")
+            ->where('name', 'like', "%{$currentProductName}%")
             ->first();
-
+    
         if (!$newProduct) {
             return response()->json(['error' => "The duration '{$subscription}' was not found in the same package."]);
         }
-
+    
         $readyProducts[] = [
             'id' => $newProduct->id,
             'subscription' => $newProduct->subscription,
             'unit_price' => $newProduct->unit_price,
         ];
-
+    
         session()->put('ready_products', array_values($readyProducts));
-
+    
         $productIds = collect($readyProducts)->pluck('id')->reverse()->values()->toArray();
         $products = DB::connection($this->connectionType)->table($this->productTable)
             ->select('id', 'subscription', 'category_id', 'name', 'unit_price', 'slug')
@@ -418,12 +484,11 @@ class LaravelController extends Controller
             ->orderByRaw('FIELD(id, ' . implode(',', $productIds) . ')')
             ->get()
             ->keyBy('id');
-
-
+    
         $products = collect($productIds)->map(function ($id) use ($products) {
             return $products[$id];
         });
-
+    
         $products = $products->map(function ($product) use ($readyProducts, $site_id) {
             $sessionProduct = collect($readyProducts)->firstWhere('id', $product->id);
             $product->subscription = $sessionProduct['subscription'] ?? $product->subscription;
@@ -450,18 +515,17 @@ class LaravelController extends Controller
         
             return $product;
         });
-        
-
+    
         $totalAmount = collect($readyProducts)->sum('unit_price');
         session(['current_amount' => $totalAmount]);
-
+    
         $modelType = $site->businessModel->model_type;
         $tableRows = view("invoice.{$modelType}.random_product_rows", [
             'products' => $products,
             'site' => $site,
             'total' => $totalAmount
         ])->render();
-
+    
         return response()->json([
             'tableRows' => $tableRows,
             'total' => $totalAmount
