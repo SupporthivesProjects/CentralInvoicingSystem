@@ -149,7 +149,7 @@ $(document).ready(function() {
         const currentPublished = $(this).data('product-published') || 1;
         
         Swal.fire({
-            title: '<div style="display: flex; align-items: center; justify-content: center; gap: 10px;"><div style="width: 50px; height: 50px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center;"><i class="fas fa-edit" style="color: white; font-size: 22px;"></i></div></div><div style="margin-top: 15px; font-size: 24px; font-weight: 700; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Edit Product Name</div>',
+            title: '<div style="display: flex; align-items: center; justify-content: center; gap: 10px;"><div style="width: 50px; height: 50px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center;"><i class="fas fa-edit" style="color: white; font-size: 22px;"></i></div></div><div style="margin-top: 15px; font-size: 24px; font-weight: 700; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Edit Product Name & Status<small class="text-muted">Changes apply to all products with the same names </small></div>',
             html: `
                 <style>
                     .modern-edit-container {
@@ -241,7 +241,7 @@ $(document).ready(function() {
                 </div>
             `,
             showCancelButton: true,
-            confirmButtonText: '<i class="fas fa-check me-2"></i>Update Name',
+            confirmButtonText: '<i class="fas fa-check me-2"></i>Update',
             cancelButtonText: '<i class="fas fa-times me-2"></i>Cancel',
             customClass: {
                 popup: 'swal-modern-popup',
