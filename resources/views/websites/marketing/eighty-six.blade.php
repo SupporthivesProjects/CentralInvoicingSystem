@@ -67,7 +67,7 @@
                                 </tr>
                                 @endif
                               </table>
-                              <div style="min-height: 400px !important;">
+                              <div style="min-height: 500px !important;">
                                 <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif;font-size: 10px; margin-top: 20px;">
                                   <thead>
                                     <tr style="background-color: #0f0b27; color: #ff4000;font-size: 12px;">
@@ -92,21 +92,21 @@
                                     <tr>
                                       <td style=" padding: 8px; text-align: center;"></td>
                                       <td style=" padding: 8px; text-align: center;"></td>
-                                      <td style=" padding: 8px; text-align: center;"></td>
+                                      <!-- <td style=" padding: 8px; text-align: center;"></td> -->
                                       <td  style="border: 1px solid #000; padding: 8px; text-align: right;">Subtotal</td>
                                       <td style="border: 1px solid #000; padding: 8px; text-align: right;">{{ site_currency() }} {{ number_format(($invoice_amount + $discount_amount) ?? 0, 2) }}</td>
                                     </tr>
                                     <tr>
                                       <td style=" padding: 8px; text-align: center;"></td>
                                       <td style=" padding: 8px; text-align: center;"></td>
-                                      <td style=" padding: 8px; text-align: center;"></td>
+                                      <!-- <td style=" padding: 8px; text-align: center;"></td> -->
                                       <td  style="border: 1px solid #000; padding: 8px; text-align: right;">Discount</td>
                                       <td style="border: 1px solid #000; padding: 8px; text-align: right;">{{ site_currency() }} {{ number_format($discount_amount ?? 0, 2) }}</td>
                                     </tr>
                                     <tr >
                                       <td style=" padding: 8px; text-align: center;"></td>
                                       <td style=" padding: 8px; text-align: center;"></td>
-                                      <td style=" padding: 8px; text-align: center;"></td>
+                                      <!-- <td style=" padding: 8px; text-align: center;"></td> -->
                                       <td  style="border: 1px solid #000;background-color: #0f0b27; padding: 8px; text-align: right; color: #ff4000; font-weight: bold;">Total</td>
                                       <td style="border: 1px solid #000;background-color: #0f0b27; padding: 8px; text-align: right; color: #ff4000; font-weight: bold;">{{ site_currency() }} {{ number_format($invoice_amount ?? 0, 2) }}</td>
                                     </tr>
