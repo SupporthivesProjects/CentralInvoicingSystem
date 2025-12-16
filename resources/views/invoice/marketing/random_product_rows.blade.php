@@ -8,7 +8,6 @@
                style="cursor: pointer; font-size: 14px;" 
                data-product-id="{{ $product->id }}"
                data-product-name="{{ $product->name }}"
-               data-bs-toggle="tooltip" 
                title="Edit Name"></i>
             @if($site->site_link && $product->slug)
                 <a href="{{ $site->site_link }}{{ $product->slug }}" target="_blank">🔗</a>
@@ -84,75 +83,7 @@
 </tr>
 @endforelse
 
-<div class="modal fade" id="editProductNameModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-sm">
-        <div class="modal-content">
-            <div class="modal-header py-2">
-                <h6 class="modal-title">Edit Product Name</h6>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="mb-2">
-                    <label class="form-label small mb-1">Current Name</label>
-                    <input type="text" class="form-control form-control-sm" id="currentProductName" readonly>
-                </div>
-                <div class="mb-2">
-                    <label class="form-label small mb-1">New Name</label>
-                    <input type="text" class="form-control form-control-sm" id="newProductName" placeholder="Enter new name">
-                </div>
-                <input type="hidden" id="editProductId">
-            </div>
-            <div class="modal-footer py-2">
-                <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-sm btn-primary" onclick="updateProductName()">
-                    <i class="fas fa-check me-1"></i>Update
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
 <script>
-$(document).ready(function() {
-    $(document).off('click', '.edit-name-icon').on('click', '.edit-name-icon', function() {
-        var productId = $(this).data('product-id');
-        var currentName = $(this).data('product-name');
-        
-        $('#currentProductName').val(currentName);
-        $('#newProductName').val('');
-        $('#editProductId').val(productId);
-        $('#editProductNameModal').modal('show');
-        setTimeout(() => $('#newProductName').focus(), 300);
-    });
-
-    $('#newProductName').off('keypress').on('keypress', function(e) {
-        if (e.which === 13) {
-            e.preventDefault();
-            updateProductName();
-        }
-    });
-});
-
-function updateProductName() {
-    const productId = $('#editProductId').val();
-    const newName = $('#newProductName').val().trim();
-    const currentName = $('#currentProductName').val();
-
-    if (!newName) {
-        toastr.error('Please enter a new name', 'Validation Error');
-        return;
-    }
-
-    if (newName === currentName) {
-        toastr.info('No changes made', 'Info');
-        $('#editProductNameModal').modal('hide');
-        return;
-    }
-
-    $('#editProductNameModal').modal('hide');
-    randomizeProductUpdate(null, productId, null, newName);
-}
-
 function randomizeProductUpdate(categoryID, productId, subscription, productName = null) {
     const iconId = productName !== null ? `name-icon-${productId}` : `dropdown-icon-${productId}`;
     const icon = document.getElementById(iconId);
@@ -208,7 +139,194 @@ function randomizeProductUpdate(categoryID, productId, subscription, productName
 }
 
 $(document).ready(function() {
-    $(document).off('click', '.remove-product').on('click', '.remove-product', function() {
+    $(document).on('click', '.edit-name-icon', function() {
+        const productId = $(this).data('product-id');
+        const currentName = $(this).data('product-name');
+        
+        Swal.fire({
+            title: '<div style="display: flex; align-items: center; justify-content: center; gap: 10px;"><div style="width: 50px; height: 50px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center;"><i class="fas fa-edit" style="color: white; font-size: 22px;"></i></div></div><div style="margin-top: 15px; font-size: 24px; font-weight: 700; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Edit Product Name</div>',
+            html: `
+                <style>
+                    .modern-edit-container {
+                        padding: 10px 0;
+                    }
+                    .modern-input-group {
+                        margin-bottom: 0;
+                        text-align: left;
+                    }
+                    .modern-label {
+                        display: block;
+                        font-size: 13px;
+                        font-weight: 600;
+                        color: #4a5568;
+                        margin-bottom: 8px;
+                        letter-spacing: 0.3px;
+                        text-transform: uppercase;
+                    }
+                    .modern-input {
+                        width: 100%;
+                        padding: 14px 16px;
+                        border: 2px solid #e2e8f0;
+                        border-radius: 12px;
+                        font-size: 15px;
+                        transition: all 0.3s ease;
+                        background: white;
+                        font-family: inherit;
+                    }
+                    .modern-input:focus {
+                        outline: none;
+                        border-color: #667eea;
+                        box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+                        transform: translateY(-1px);
+                    }
+                    .modern-input::placeholder {
+                        color: #cbd5e0;
+                    }
+                    .input-icon {
+                        position: relative;
+                    }
+                    .input-icon i {
+                        position: absolute;
+                        right: 16px;
+                        top: 50%;
+                        transform: translateY(-50%);
+                        color: #a0aec0;
+                        font-size: 16px;
+                    }
+                </style>
+                <div class="modern-edit-container">
+                    <div class="modern-input-group">
+                        <label class="modern-label">
+                            <i class="fas fa-sparkles me-1"></i> Product Name
+                        </label>
+                        <div class="input-icon">
+                            <input type="text" id="swal-product-name" class="modern-input" value="${currentName}" autocomplete="off">
+                            <i class="fas fa-pen"></i>
+                        </div>
+                    </div>
+                </div>
+            `,
+            showCancelButton: true,
+            confirmButtonText: '<i class="fas fa-check me-2"></i>Update Name',
+            cancelButtonText: '<i class="fas fa-times me-2"></i>Cancel',
+            customClass: {
+                popup: 'swal-modern-popup',
+                title: 'swal-modern-title',
+                htmlContainer: 'swal-modern-content',
+                confirmButton: 'swal-modern-confirm',
+                cancelButton: 'swal-modern-cancel',
+                actions: 'swal-modern-actions'
+            },
+            width: '500px',
+            padding: '30px',
+            background: '#ffffff',
+            backdrop: 'rgba(0, 0, 0, 0.6)',
+            showClass: {
+                popup: 'animate__animated animate__fadeInDown animate__faster'
+            },
+            hideClass: {
+                popup: 'animate__animated animate__fadeOutUp animate__faster'
+            },
+            focusConfirm: false,
+            didOpen: () => {
+                const style = document.createElement('style');
+                style.textContent = `
+                    .swal-modern-popup {
+                        border-radius: 20px !important;
+                        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3) !important;
+                    }
+                    .swal-modern-title {
+                        padding: 0 !important;
+                        margin-bottom: 20px !important;
+                    }
+                    .swal-modern-content {
+                        margin: 0 !important;
+                        padding: 0 !important;
+                    }
+                    .swal-modern-actions {
+                        margin-top: 30px !important;
+                        gap: 12px !important;
+                    }
+                    .swal-modern-confirm {
+                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+                        border: none !important;
+                        border-radius: 10px !important;
+                        padding: 12px 30px !important;
+                        font-weight: 600 !important;
+                        font-size: 15px !important;
+                        transition: all 0.3s ease !important;
+                        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4) !important;
+                    }
+                    .swal-modern-confirm:hover {
+                        transform: translateY(-2px) !important;
+                        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6) !important;
+                    }
+                    .swal-modern-cancel {
+                        background: #f7fafc !important;
+                        color: #4a5568 !important;
+                        border: 2px solid #e2e8f0 !important;
+                        border-radius: 10px !important;
+                        padding: 12px 30px !important;
+                        font-weight: 600 !important;
+                        font-size: 15px !important;
+                        transition: all 0.3s ease !important;
+                    }
+                    .swal-modern-cancel:hover {
+                        background: #edf2f7 !important;
+                        border-color: #cbd5e0 !important;
+                        transform: translateY(-1px) !important;
+                    }
+                    .swal2-validation-message {
+                        background: #fff5f5 !important;
+                        border: 2px solid #fc8181 !important;
+                        color: #c53030 !important;
+                        border-radius: 10px !important;
+                        padding: 12px 16px !important;
+                        margin-top: 15px !important;
+                        font-weight: 500 !important;
+                    }
+                    .swal2-validation-message::before {
+                        display: none !important;
+                    }
+                `;
+                document.head.appendChild(style);
+                
+                const inputField = document.getElementById('swal-product-name');
+                setTimeout(() => {
+                    inputField.focus();
+                    inputField.select();
+                }, 100);
+                
+                inputField.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        Swal.clickConfirm();
+                    }
+                });
+            },
+            preConfirm: () => {
+                const newName = document.getElementById('swal-product-name').value.trim();
+                
+                if (!newName) {
+                    Swal.showValidationMessage('<i class="fas fa-exclamation-circle me-2"></i>Please enter a product name');
+                    return false;
+                }
+                
+                if (newName === currentName) {
+                    Swal.showValidationMessage('<i class="fas fa-info-circle me-2"></i>New name must be different from current name');
+                    return false;
+                }
+                
+                return newName;
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                randomizeProductUpdate(null, productId, null, result.value);
+            }
+        });
+    });
+
+    $(document).on('click', '.remove-product', function() {
         var $button = $(this);
         var productId = $button.data('product-id');
         var productName = $button.data('product-name');
@@ -223,8 +341,8 @@ $(document).ready(function() {
             customClass: {
                 popup: 'p-2 text-sm',
                 title: 'text-base',
-                confirmButtonClass: 'btn btn-sm btn-success',
-                cancelButtonClass: 'btn btn-sm btn-danger'
+                confirmButton: 'btn btn-sm btn-success',
+                cancelButton: 'btn btn-sm btn-danger'
             },
             width: '350px',
             padding: '1em'
