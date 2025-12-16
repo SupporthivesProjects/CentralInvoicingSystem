@@ -379,14 +379,14 @@
                             <thead class="">
                             <tr>
                                 <th class="w-10 text-center">PID</th>
-                                <th class="w-30">Package Name</th>
+                                <th class="w-35">Package Name</th>
                                 <th class="w-20 text-center">Subscription</th>
                                 <th class="text-center unit-price-header" data-column="3" data-order="desc">
                                     <span class="d-inline-flex align-items-center justify-content-center gap-1">
                                         Unit Price <i class="bi bi-caret-down-fill"></i>
                                     </span>
                                 </th>
-                                <th class="w-25 text-center">Editable Price</th>
+                                <th class="w-20 text-center">Editable Price</th>
                                 <th class="w-10 text-center">Remove</th>
                             </tr>
                             </thead>
@@ -477,14 +477,14 @@
                                 <thead class="text-center">
                                 <tr>
                                     <th class="text-center" style="width: 10%;">PID</th>
-                                    <th class="text-center" style="width: 30%;">Package Name</th>
+                                    <th class="text-center" style="width: 35%;">Package Name</th>
                                     <th class="text-center" style="width: 20%;">Subscription</th>
                                     <th class="text-center unit-price-header" style="width: 20%;"  data-column="3" data-order="desc">
                                     <span class="d-inline-flex align-items-center justify-content-center gap-1">
                                         Unit Price <i class="bi bi-caret-down-fill"></i>
                                     </span>
                                 </th>
-                                    <th class="text-center" style="width: 25%;">Editable Price</th>
+                                    <th class="text-center" style="width: 20%;">Editable Price</th>
                                     <th class="text-center" style="width: 10%;">Select</th>
                                 </tr>
                                 </thead>
