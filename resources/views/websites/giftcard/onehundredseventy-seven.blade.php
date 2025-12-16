@@ -7,7 +7,7 @@
 
 <body style="margin: 0; padding: 0;">
     <table width="600" cellspacing="0" cellpadding="0" style="
-    background-image: url('./img/image6.png');
+    background-image: url('{{$invoice_header_image}}');
     background-size: 100% 100%;
     background-repeat: no-repeat;
     font-family: Arial, sans-serif;
