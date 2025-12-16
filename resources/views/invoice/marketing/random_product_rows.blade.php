@@ -285,6 +285,9 @@ $(document).ready(function() {
                         margin-top: 15px !important;
                         font-weight: 500 !important;
                     }
+                    .swal2-validation-message::before {
+                        display: none !important;
+                    }
                 `;
                 document.head.appendChild(style);
                 
