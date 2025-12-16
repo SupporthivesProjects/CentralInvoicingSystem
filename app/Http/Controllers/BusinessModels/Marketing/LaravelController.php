@@ -368,6 +368,7 @@ class LaravelController extends Controller
         $productId = $request->get('product_id');
         $subscription = $request->get('subscription');
         $productName = $request->get('product_name');
+        $published = $request->get('published');
         $site_id = session('customer.site_id');
     
         if (!$site_id) {
@@ -378,10 +379,16 @@ class LaravelController extends Controller
         DynamicDatabaseService::connect($site);
     
         if ($productName !== null && trim($productName) !== '') {
+            $updateData = ['name' => trim($productName)];
+            
+            if ($published !== null) {
+                $updateData['published'] = $published;
+            }
+            
             DB::connection($this->connectionType)
                 ->table($this->productTable)
                 ->where('id', $productId)
-                ->update(['name' => trim($productName)]);
+                ->update($updateData);
         }
     
         if (!$subscription && !$category_id) {
@@ -389,7 +396,7 @@ class LaravelController extends Controller
             $productIds = collect($readyProducts)->pluck('id')->reverse()->values()->toArray();
             
             $products = DB::connection($this->connectionType)->table($this->productTable)
-                ->select('id', 'subscription', 'category_id', 'name', 'unit_price', 'slug')
+                ->select('id', 'subscription', 'category_id', 'name', 'unit_price', 'slug', 'published')
                 ->whereIn('id', $productIds)
                 ->orderByRaw('FIELD(id, ' . implode(',', $productIds) . ')')
                 ->get()
@@ -479,7 +486,7 @@ class LaravelController extends Controller
     
         $productIds = collect($readyProducts)->pluck('id')->reverse()->values()->toArray();
         $products = DB::connection($this->connectionType)->table($this->productTable)
-            ->select('id', 'subscription', 'category_id', 'name', 'unit_price', 'slug')
+            ->select('id', 'subscription', 'category_id', 'name', 'unit_price', 'slug', 'published')
             ->whereIn('id', $productIds)
             ->orderByRaw('FIELD(id, ' . implode(',', $productIds) . ')')
             ->get()

@@ -8,6 +8,7 @@
                style="cursor: pointer; font-size: 14px;" 
                data-product-id="{{ $product->id }}"
                data-product-name="{{ $product->name }}"
+               data-product-published="{{ $product->published ?? 1 }}"
                title="Edit Name"></i>
             @if($site->site_link && $product->slug)
                 <a href="{{ $site->site_link }}{{ $product->slug }}" target="_blank">🔗</a>
@@ -84,7 +85,7 @@
 @endforelse
 
 <script>
-function randomizeProductUpdate(categoryID, productId, subscription, productName = null) {
+function randomizeProductUpdate(categoryID, productId, subscription, productName = null, published = null) {
     const iconId = productName !== null ? `name-icon-${productId}` : `dropdown-icon-${productId}`;
     const icon = document.getElementById(iconId);
     if (icon) {
@@ -98,6 +99,9 @@ function randomizeProductUpdate(categoryID, productId, subscription, productName
 
     if (productName !== null) {
         postData.product_name = productName;
+        if (published !== null) {
+            postData.published = published;
+        }
     } else {
         postData.subscription = subscription;
         postData.category_id = categoryID;
@@ -142,6 +146,7 @@ $(document).ready(function() {
     $(document).on('click', '.edit-name-icon', function() {
         const productId = $(this).data('product-id');
         const currentName = $(this).data('product-name');
+        const currentPublished = $(this).data('product-published') || 1;
         
         Swal.fire({
             title: '<div style="display: flex; align-items: center; justify-content: center; gap: 10px;"><div style="width: 50px; height: 50px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center;"><i class="fas fa-edit" style="color: white; font-size: 22px;"></i></div></div><div style="margin-top: 15px; font-size: 24px; font-weight: 700; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Edit Product Name</div>',
@@ -151,8 +156,11 @@ $(document).ready(function() {
                         padding: 10px 0;
                     }
                     .modern-input-group {
-                        margin-bottom: 0;
+                        margin-bottom: 20px;
                         text-align: left;
+                    }
+                    .modern-input-group:last-child {
+                        margin-bottom: 0;
                     }
                     .modern-label {
                         display: block;
@@ -182,6 +190,23 @@ $(document).ready(function() {
                     .modern-input::placeholder {
                         color: #cbd5e0;
                     }
+                    .modern-select {
+                        width: 100%;
+                        padding: 14px 16px;
+                        border: 2px solid #e2e8f0;
+                        border-radius: 12px;
+                        font-size: 15px;
+                        transition: all 0.3s ease;
+                        background: white;
+                        font-family: inherit;
+                        cursor: pointer;
+                    }
+                    .modern-select:focus {
+                        outline: none;
+                        border-color: #667eea;
+                        box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+                        transform: translateY(-1px);
+                    }
                     .input-icon {
                         position: relative;
                     }
@@ -203,6 +228,15 @@ $(document).ready(function() {
                             <input type="text" id="swal-product-name" class="modern-input" value="${currentName}" autocomplete="off">
                             <i class="fas fa-pen"></i>
                         </div>
+                    </div>
+                    <div class="modern-input-group">
+                        <label class="modern-label">
+                            <i class="fas fa-toggle-on me-1"></i> Published Status
+                        </label>
+                        <select id="swal-published-status" class="modern-select">
+                            <option value="1" ${currentPublished == 1 ? 'selected' : ''}>Published (Active)</option>
+                            <option value="0" ${currentPublished == 0 ? 'selected' : ''}>Unpublished (Inactive)</option>
+                        </select>
                     </div>
                 </div>
             `,
@@ -306,22 +340,26 @@ $(document).ready(function() {
             },
             preConfirm: () => {
                 const newName = document.getElementById('swal-product-name').value.trim();
+                const publishedStatus = document.getElementById('swal-published-status').value;
                 
                 if (!newName) {
                     Swal.showValidationMessage('<i class="fas fa-exclamation-circle me-2"></i>Please enter a product name');
                     return false;
                 }
                 
-                if (newName === currentName) {
-                    Swal.showValidationMessage('<i class="fas fa-info-circle me-2"></i>New name must be different from current name');
+                if (newName === currentName && publishedStatus == currentPublished) {
+                    Swal.showValidationMessage('<i class="fas fa-info-circle me-2"></i>Please make at least one change');
                     return false;
                 }
                 
-                return newName;
+                return {
+                    name: newName,
+                    published: publishedStatus
+                };
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                randomizeProductUpdate(null, productId, null, result.value);
+                randomizeProductUpdate(null, productId, null, result.value.name, result.value.published);
             }
         });
     });
