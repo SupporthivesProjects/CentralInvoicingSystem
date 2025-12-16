@@ -149,7 +149,7 @@ $(document).ready(function() {
         const currentPublished = $(this).data('product-published') || 1;
         
         Swal.fire({
-            title: '<div style="display: flex; align-items: center; justify-content: center; gap: 10px;"><div style="width: 50px; height: 50px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center;"><i class="fas fa-edit" style="color: white; font-size: 22px;"></i></div></div><div style="margin-top: 15px; font-size: 24px; font-weight: 700; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Edit Product</div><div style="margin-top: 8px; font-size: 13px; color: #6c757d; font-weight: normal;">Name updates all durations. Status updates this item only.</div>',
+            title: '<div style="display: flex; align-items: center; justify-content: center; gap: 10px;"><div style="width: 50px; height: 50px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center;"><i class="fas fa-edit" style="color: white; font-size: 22px;"></i></div></div><div style="margin-top: 15px; font-size: 24px; font-weight: 700; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Edit Product</div><div style="margin-top: 8px; font-size: 13px; color: #6c757d; font-weight: normal;">Name updates all durations of this package. Status updates this item only.</div>',
             html: `
                 <style>
                     .modern-edit-container {
