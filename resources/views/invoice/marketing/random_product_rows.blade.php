@@ -4,9 +4,10 @@
     <td>
         <div class="d-flex align-items-center gap-2">
             <span>{{ $product->name }}</span>
-            <i class="fas fa-edit text-primary" 
+            <i class="fas fa-edit text-primary edit-name-icon" 
                style="cursor: pointer; font-size: 14px;" 
-               onclick="openEditNameModal({{ $product->id }}, '{{ addslashes($product->name) }}')"
+               data-product-id="{{ $product->id }}"
+               data-product-name="{{ $product->name }}"
                data-bs-toggle="tooltip" 
                title="Edit Name"></i>
             @if($site->site_link && $product->slug)
@@ -112,13 +113,25 @@
 </div>
 
 <script>
-function openEditNameModal(productId, currentName) {
-    $('#currentProductName').val(currentName);
-    $('#newProductName').val('');
-    $('#editProductId').val(productId);
-    $('#editProductNameModal').modal('show');
-    setTimeout(() => $('#newProductName').focus(), 300);
-}
+$(document).ready(function() {
+    $(document).off('click', '.edit-name-icon').on('click', '.edit-name-icon', function() {
+        var productId = $(this).data('product-id');
+        var currentName = $(this).data('product-name');
+        
+        $('#currentProductName').val(currentName);
+        $('#newProductName').val('');
+        $('#editProductId').val(productId);
+        $('#editProductNameModal').modal('show');
+        setTimeout(() => $('#newProductName').focus(), 300);
+    });
+
+    $('#newProductName').off('keypress').on('keypress', function(e) {
+        if (e.which === 13) {
+            e.preventDefault();
+            updateProductName();
+        }
+    });
+});
 
 function updateProductName() {
     const productId = $('#editProductId').val();
@@ -139,13 +152,6 @@ function updateProductName() {
     $('#editProductNameModal').modal('hide');
     randomizeProductUpdate(null, productId, null, newName);
 }
-
-$('#newProductName').on('keypress', function(e) {
-    if (e.which === 13) {
-        e.preventDefault();
-        updateProductName();
-    }
-});
 
 function randomizeProductUpdate(categoryID, productId, subscription, productName = null) {
     const iconId = productName !== null ? `name-icon-${productId}` : `dropdown-icon-${productId}`;
@@ -274,82 +280,3 @@ $(document).ready(function() {
     });
 });
 </script>
-<script>    
-
-    $(document).ready(function() {
-        $(document).off('click', '.remove-product').on('click', '.remove-product', function() {
-            var $button = $(this);
-            var productId = $button.data('product-id');
-            var productName = $button.data('product-name');
-        
-            Swal.fire({
-                title: 'Remove Product?',
-                text: `Are you sure you want to remove '${productName}' product?`,
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonText: 'Yes, Remove',
-                cancelButtonText: 'Cancel',
-                customClass: {
-                    popup: 'p-2 text-sm',
-                    title: 'text-base',
-                    confirmButtonClass: 'btn btn-sm btn-success',
-                    cancelButtonClass: 'btn btn-sm btn-danger'
-                },
-                width: '350px',
-                padding: '1em'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $('.remove-product').prop('disabled', true);
-                    $button.html('<i class="fas fa-spinner fa-spin"></i>');
-                    $('#current_amount').val('Recalculating...');
-                    $('#discount_amount').prop('type', 'text').val('Recalculating...').prop('readonly', true);
-                    $('#current_amount').removeClass('text-danger text-success');
-                    $('#discount_amount').removeClass('text-danger text-success');
-                    $('#invoice_amount').removeClass('text-danger text-success');
-            
-                    $.ajax({
-                        url: "{{ route('remove.product') }}",
-                        method: 'POST',
-                        data: {
-                            product_id: productId,
-                            site_id: "{{ session('customer.site_id') }}",
-                            _token: '{{ csrf_token() }}'
-                        },
-                        success: function(response) {
-                            $('.remove-product').prop('disabled', false);
-                            $button.html('<i class="fas fa-check-square"></i>');
-                            $button.removeClass('btn-danger').addClass('btn-success');
-                            $('#randomize-product-table-body').html(response.tableRows);
-                            toastr.success('Product has been removed successfully.','Product Removed');
-                            $('#discount_amount').prop('readonly', false).prop('type', 'number');
-                            calculateTotalPrice();
-
-                            setTimeout(() => {
-                                $button.html('<i class="fas fa-trash-alt"></i>');
-                                $button.removeClass('btn-success').addClass('btn-danger');
-                            }, 2000);
-                        },
-                        error: function() {
-                            $('.remove-product').prop('disabled', false);
-                            $button.html('<i class="fas fa-trash-alt"></i>');
-                            $button.removeClass('btn-success').addClass('btn-danger');
-                            calculateTotalPrice();
-                            toastr.error('Error removing product. Please try again.');
-                        },
-                        complete: function() {
-                        
-                            $('.remove-product').prop('disabled', false);
-                            setTimeout(() => {
-                                $button.html('<i class="fas fa-trash-alt"></i>');
-                                $button.removeClass('btn-success').addClass('btn-danger');
-                            }, 1000);
-                        }
-                    });
-                }
-            });
-        });
-    });
-
-</script>
-
-
