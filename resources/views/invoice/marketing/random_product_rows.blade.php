@@ -2,21 +2,17 @@
 <tr class="product-row">
     <td class="text-center">{{ $product->id }}</td>
     <td>
-        <div class="input-group">
-            <input 
-                type="text" 
-                class="form-control product-name-input" 
-                value="{{ $product->name }}" 
-                data-product-id="{{ $product->id }}"
-                data-original-name="{{ $product->name }}"
-            >
-            <span class="input-group-text" style="cursor: pointer;">
-                <i class="fas fa-edit text-muted" id="name-icon-{{ $product->id }}"></i>
-            </span>
+        <div class="d-flex align-items-center gap-2">
+            <span>{{ $product->name }}</span>
+            <i class="fas fa-edit text-primary" 
+               style="cursor: pointer; font-size: 14px;" 
+               onclick="openEditNameModal({{ $product->id }}, '{{ addslashes($product->name) }}')"
+               data-bs-toggle="tooltip" 
+               title="Edit Name"></i>
+            @if($site->site_link && $product->slug)
+                <a href="{{ $site->site_link }}{{ $product->slug }}" target="_blank">🔗</a>
+            @endif
         </div>
-        @if($site->site_link && $product->slug)
-            <a href="{{ $site->site_link }}{{ $product->slug }}" target="_blank" class="small">🔗</a>
-        @endif
     </td>
     <td>
         <div class="input-group">
@@ -86,11 +82,77 @@
     </td>
 </tr>
 @endforelse
+
+<div class="modal fade" id="editProductNameModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+            <div class="modal-header py-2">
+                <h6 class="modal-title">Edit Product Name</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-2">
+                    <label class="form-label small mb-1">Current Name</label>
+                    <input type="text" class="form-control form-control-sm" id="currentProductName" readonly>
+                </div>
+                <div class="mb-2">
+                    <label class="form-label small mb-1">New Name</label>
+                    <input type="text" class="form-control form-control-sm" id="newProductName" placeholder="Enter new name">
+                </div>
+                <input type="hidden" id="editProductId">
+            </div>
+            <div class="modal-footer py-2">
+                <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-sm btn-primary" onclick="updateProductName()">
+                    <i class="fas fa-check me-1"></i>Update
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
+function openEditNameModal(productId, currentName) {
+    $('#currentProductName').val(currentName);
+    $('#newProductName').val('');
+    $('#editProductId').val(productId);
+    $('#editProductNameModal').modal('show');
+    setTimeout(() => $('#newProductName').focus(), 300);
+}
+
+function updateProductName() {
+    const productId = $('#editProductId').val();
+    const newName = $('#newProductName').val().trim();
+    const currentName = $('#currentProductName').val();
+
+    if (!newName) {
+        toastr.error('Please enter a new name', 'Validation Error');
+        return;
+    }
+
+    if (newName === currentName) {
+        toastr.info('No changes made', 'Info');
+        $('#editProductNameModal').modal('hide');
+        return;
+    }
+
+    $('#editProductNameModal').modal('hide');
+    randomizeProductUpdate(null, productId, null, newName);
+}
+
+$('#newProductName').on('keypress', function(e) {
+    if (e.which === 13) {
+        e.preventDefault();
+        updateProductName();
+    }
+});
+
 function randomizeProductUpdate(categoryID, productId, subscription, productName = null) {
     const iconId = productName !== null ? `name-icon-${productId}` : `dropdown-icon-${productId}`;
     const icon = document.getElementById(iconId);
-    icon.className = 'fas fa-spinner fa-spin text-primary';
+    if (icon) {
+        icon.className = 'fas fa-spinner fa-spin text-primary';
+    }
 
     const postData = {
         _token: '{{ csrf_token() }}',
@@ -110,7 +172,9 @@ function randomizeProductUpdate(categoryID, productId, subscription, productName
         data: postData,
         success: function(response) {
             if (response.error) {
-                icon.className = productName !== null ? 'fas fa-edit text-muted' : 'fas fa-sync-alt text-muted';
+                if (icon) {
+                    icon.className = productName !== null ? 'fas fa-edit text-muted' : 'fas fa-sync-alt text-muted';
+                }
                 toastr.error(response.error, 'Update Error');
             } else {
                 $('#randomize-product-table-body').html(response.tableRows);
@@ -121,11 +185,16 @@ function randomizeProductUpdate(categoryID, productId, subscription, productName
                         newIcon.className = productName !== null ? 'fas fa-edit text-muted' : 'fas fa-sync-alt text-muted';
                     }, 1000);
                 }
+                if (productName !== null) {
+                    toastr.success('Product name updated successfully', 'Updated');
+                }
                 calculateTotalPrice();
             }
         },
         error: function(xhr) {
-            icon.className = productName !== null ? 'fas fa-edit text-muted' : 'fas fa-sync-alt text-muted';
+            if (icon) {
+                icon.className = productName !== null ? 'fas fa-edit text-muted' : 'fas fa-sync-alt text-muted';
+            }
             console.error(xhr.responseText);
             toastr.error('Something went wrong');
         }
@@ -133,24 +202,6 @@ function randomizeProductUpdate(categoryID, productId, subscription, productName
 }
 
 $(document).ready(function() {
-    $(document).off('blur change', '.product-name-input').on('blur change', '.product-name-input', function() {
-        const $input = $(this);
-        const productId = $input.data('product-id');
-        const newName = $input.val().trim();
-        const originalName = $input.data('original-name');
-        
-        if (newName && newName !== originalName) {
-            randomizeProductUpdate(null, productId, null, newName);
-        }
-    });
-
-    $(document).off('keypress', '.product-name-input').on('keypress', '.product-name-input', function(e) {
-        if (e.which === 13) {
-            e.preventDefault();
-            $(this).blur();
-        }
-    });
-
     $(document).off('click', '.remove-product').on('click', '.remove-product', function() {
         var $button = $(this);
         var productId = $button.data('product-id');
