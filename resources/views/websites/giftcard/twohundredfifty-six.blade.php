@@ -2,7 +2,6 @@
 <html>
 <head>
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
-
 </head>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@900&display=swap" rel="stylesheet">
 <body>
@@ -72,6 +71,7 @@
                                 </table>
                         </td>
                     <tr>
+
                         <td colspan="2" style="padding: 10px 30px 20px 30px;">
                                 <table style="border-collapse: collapse;">
                                     <tr style="border-collapse: collapse;height: 30px; ;font-family: sans-serif;font-size: 10px;">
@@ -101,6 +101,7 @@
                                 </table>
                         </td>
                     </tr>
+                    
                     <!--Footer-->
                     <tr style="height: 100px;background-color: black;color: white;">
                         <td colspan="2" style="text-align: end;padding-right: 40px;font-size: 8px;">
