@@ -18,7 +18,6 @@
                         </td>
                     </tr>
                     <tr>
-
                    
                         <td style="padding:40px;">
 
@@ -67,7 +66,7 @@
                                 </tr>
                                 @endif
                               </table>
-                              <div style="min-height: 480px !important;">
+                              <div style="min-height: 520px !important;">
                                 <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif;font-size: 10px; margin-top: 20px;">
                                   <thead>
                                     <tr style="background-color: #0f0b27; color: #ff4000;font-size: 12px;">
