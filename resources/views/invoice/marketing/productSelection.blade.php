@@ -680,11 +680,11 @@
         }
     });
 
-    if (search_type === 'reset') {
-        $('#customizeKeywordInput').val('');
-        customizePriceSlider.noUiSlider.set([minUnitPrice, maxUnitPrice]);
-        updateHiddenInputs(minUnitPrice, maxUnitPrice, 'customize');
-    }
+    // if (search_type === 'reset') {
+    //     $('#customizeKeywordInput').val('');
+    //     customizePriceSlider.noUiSlider.set([minUnitPrice, maxUnitPrice]);
+    //     updateHiddenInputs(minUnitPrice, maxUnitPrice, 'customize');
+    // }
 
 
     randomizePriceSlider.noUiSlider.on('change', function (values) {
