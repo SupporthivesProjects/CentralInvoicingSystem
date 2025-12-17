@@ -34,7 +34,7 @@
                                 
                             </table>
 
-                            <table style="height: 157px; width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; border: 1px solid #000; font-size: 10px; margin-top: 20px;">
+                            <table style="height: 170px; width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; border: 1px solid #000; font-size: 10px; margin-top: 20px;">
                                 <tr>
                                   <th colspan="2" style="background-color: #0F0C25; color: #FF4700; text-align: left; padding: 10px; font-size: 12px;border-right: 1px solid #000;">Billed To</th>
                                   <th colspan="2" style="background-color: #0F0C25; color: #FF4700; text-align: left; padding: 10px; font-size: 12px;">Billed From</th>
@@ -54,8 +54,10 @@
                                 <tr>
                                   <td style="font-weight: bold; padding: 8px;"></td>
                                   <td style="padding: 8px;border-right: 1px solid #000;"></td>
-                                  <td style="font-weight: bold; padding: 8px;">Address</td>
-                                  <td style="padding: 8px;">{!! $company_address !!}</td>
+                                  @if(trim(strip_tags($company_address ?? '')) !== '')
+                                    <td style="font-weight: bold; padding: 8px;">Address</td>
+                                    <td style="padding: 8px;">{!! $company_address !!}</td>
+                                  @endif
                                 </tr>
                                 @if(isset($company_mobile) && trim($company_mobile) !== '')
                                 <tr>
