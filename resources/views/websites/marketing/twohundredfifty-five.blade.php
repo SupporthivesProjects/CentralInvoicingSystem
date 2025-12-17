@@ -15,7 +15,7 @@
                     <!-- Header -->
                     <tr>
                         <td style="padding: 100px 0px; position: relative;">
-                            <div style="position: absolute; top: 80px; right: 175px;">
+                            <div style="position: absolute; top: 80px; right: 175px; width: 400px;">
                                 <p
                                     style="color: #000000; font-family: Arial;font-size: 18px;margin: 0px;font-weight: 600;">
                                     <b>FLUX DIGITALS</b>
@@ -66,14 +66,14 @@
                                                 </div>
                                                 <div class="l_top" style="display: flex;flex-direction: row;">
                                                     <div
-                                                        style="padding: 10px; background-color: #FFFFFF; width: 130px; border: 1px solid grey; border-top: none;">
+                                                        style="padding: 10px; height: 80px; background-color: #FFFFFF; width: 130px; border: 1px solid grey; border-top: none;">
                                                         <p
                                                             style="color:#000000; text-align:start;padding:10px;font-family:  Arial;font-size:10px;margin: 0px;font-weight: 400;">
                                                             Invoice Date.
                                                         </p>
                                                     </div>
                                                     <div
-                                                        style="padding: 10px; background-color: #FFFFFF; width: 130px; border: 1px solid grey; border-left: none; border-top: none;">
+                                                        style="padding: 10px; height: 80px; background-color: #FFFFFF; width: 130px; border: 1px solid grey; border-left: none; border-top: none;">
                                                         <p
                                                             style="color:#000000; text-align:start;padding:10px;font-family:  Arial;font-size:10px;margin: 0px;font-weight: 400;">
                                                             {{ $invoice_date }}
@@ -82,7 +82,7 @@
                                                 </div>
                                             </div>
                                             <div class="info_right"
-                                                style="width: 300px; border: 1px solid grey; padding: 5px; display: flex; flex-direction: column; gap: 8px;">
+                                                style="width: 300px; height: 160px; border: 1px solid grey; padding: 5px; display: flex; flex-direction: column; gap: 8px;">
                                                 <p
                                                     style="color:#000000; text-align:start;padding:8px 10px;font-family:  Arial;font-size:10px;margin: 0px;font-weight: 400; width: 93%; background-color: #F2F2F2;">
                                                     Invoice To
