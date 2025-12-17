@@ -46,8 +46,8 @@
                                   <td style="padding: 8px;">{{ $site_name }}</td>
                                 </tr>
                                 <tr>
-                                  <!-- <td style="font-weight: bold; padding: 8px;">Email</td>
-                                  <td style="padding: 8px;border-right: 1px solid #000;">{{ $customer_email }}</td> -->
+                                  <td style="font-weight: bold; padding: 8px;"></td>
+                                  <td style="padding: 8px;border-right: 1px solid #000;"></td>
                                   <td style="font-weight: bold; padding: 8px;">Email</td>
                                   <td style="padding: 8px;">{{ $company_email }}</td>
                                 </tr>
@@ -66,7 +66,7 @@
                                 </tr>
                                 @endif
                               </table>
-                              <div style="min-height: 495px !important;">
+                              <div style="min-height: 497px !important;">
                                 <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif;font-size: 10px; margin-top: 20px;">
                                   <thead>
                                     <tr style="background-color: #0f0b27; color: #ff4000;font-size: 12px;">
