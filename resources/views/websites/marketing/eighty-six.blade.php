@@ -48,7 +48,7 @@
                                 <tr>
                                   <td style="font-weight: bold; padding: 8px;"></td>
                                   <td style="padding: 8px;border-right: 1px solid #000;"></td>
-                                  @if(trim(strip_tags($company_address ?? '')) !== '')
+                                  @if(trim(strip_tags($company_email ?? '')) !== '')
                                     <td style="font-weight: bold; padding: 8px;">Email</td>
                                     <td style="padding: 8px;">{{ $company_email }}</td>
                                   @endif
