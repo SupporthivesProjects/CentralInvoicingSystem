@@ -43,16 +43,16 @@
                                   <td style="font-weight: bold; padding: 8px;">Customer</td>
                                   <td style="padding: 8px;border-right: 1px solid #000;">{{ $customer_name }}</td>
                                   <td style="font-weight: bold; padding: 8px;">Website</td>
-                                  <td style="padding: 8px;">{{ $site_name }}</td>
+                                  <td style="padding: 8px;">webstrategix.co</td>
                                 </tr>
+                                @if(trim(strip_tags($company_email ?? '')) !== '')
                                 <tr>
                                   <td style="font-weight: bold; padding: 8px;"></td>
                                   <td style="padding: 8px;border-right: 1px solid #000;"></td>
-                                  @if(trim(strip_tags($company_email ?? '')) !== '')
-                                    <td style="font-weight: bold; padding: 8px;">Email</td>
-                                    <td style="padding: 8px;">{{ $company_email }}</td>
-                                  @endif
+                                  <td style="font-weight: bold; padding: 8px;">Email</td>
+                                  <td style="padding: 8px;">{{ $company_email }}</td>
                                 </tr>
+                                @endif
                                 <tr>
                                   <td style="font-weight: bold; padding: 8px;"></td>
                                   <td style="padding: 8px;border-right: 1px solid #000;"></td>
