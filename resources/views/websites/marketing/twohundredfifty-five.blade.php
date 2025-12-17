@@ -102,7 +102,7 @@
                                 </tr>
                             </table>
                             <br>
-                            <div style="min-height: 480px;">
+                            <div style="min-height: 460px;">
                                 <table style="border-collapse: collapse;">
                                     <tr style="border-collapse: collapse;height: 24px;background-color: #1c2939;">
                                         <td
