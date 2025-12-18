@@ -8,16 +8,17 @@
             margin: 0;
             padding: 0;
             font-size: 12px;
+            background: #f3f3f3;
         }
 
         .main-container {
             width: 100%;
-            background-color: #f2f2f2;
+            background: #f3f3f3;
             padding: 20px 0;
         }
 
         .invoice-wrapper {
-            width: 600px;
+            width: 100%;
             margin: 0 auto;
             background: #f3f3f3;
         }
@@ -227,7 +228,7 @@
                             <td class="billing-from">
                                 <span class="billing-label">BILLED FROM:</span>
                                 <div class="billing-info">{{ $site->site_name }}</div>
-                                <div class="billing-info">Website: {{ $site->site_link ?? 'N/A' }}</div>
+                                <div class="billing-info">Website: <a href="{{ $site->site_link ?? 'N/A' }}" style="text-decoration: none; color: #000000;">www.goldforgamers.com</a></div>
                                 <div class="billing-info">Email: {{ $company_email }}</div>
                             </td>
                             <td class="billing-to">
