@@ -76,7 +76,7 @@
                                             style="background-color: #EA7780; color: white; text-align: left; padding: 10px;">
                                             Product Description</th>
                                         <th style="background-color: #0c0032; color: white; padding: 10px;">Price</th>
-                                        <th style="background-color: #0c0032; color: white; padding: 10px;">QTY.</th>
+                                        <th style="background-color: #0c0032; color: white; padding: 10px;">Qty.</th>
                                         <th style="background-color: #0c0032; color: white; padding: 10px;">Total</th>
                                     </tr>
 
@@ -102,10 +102,10 @@
                                     </tr>
                                     <tr>
                                         <td colspan="2" style="border: none;">
-                                            <strong>Total Due</strong><br>
-                                            <span style="color: #EA7780; font-size: 14px;"><strong>{{ site_currency() }}
+                                            <!-- <strong>Total Due</strong><br> -->
+                                            <!-- <span style="color: #EA7780; font-size: 14px;"><strong>{{ site_currency() }}
                                                     {{ number_format($invoice_amount, 2) }}
-                                                    {{ site_currency_code() }}</strong></span>
+                                                    {{ site_currency_code() }}</strong></span> -->
                                         </td>
                                         <td style="text-align: right; padding: 10px; font-weight: bold;">Discount:</td>
                                         <td style="text-align: center; font-weight: bold;">{{ site_currency() }}

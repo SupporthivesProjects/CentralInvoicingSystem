@@ -32,7 +32,7 @@
                 <p style="margin: 0 0 8px 0;"><strong>To:</strong></p>
               </td>
               <td style="width: 40%; vertical-align: top;border-left: 1px solid #FFEEEE;">
-                <p style="margin: 0 0 8px 0;">{{ $customer_name }},<br/>{{ $customer_email }}</p>
+                <p style="margin: 0 0 8px 0;">{{ $customer_name }}<br/>{{ $customer_email }}</p>
               </td>
             </tr>
           </table>
@@ -87,7 +87,7 @@
       <!-- Footer Message -->
       <tr>
         <td style="padding: 20px 20px 0 20px; text-align: center; font-size: 14px;">
-          <p><strong>MAKE ALL CHECKS PAYABLE TO THEDEVKREW.COM</strong><br/>Thank you for your business!</p>
+          <p>Thank you for your business!</p>
         </td>
       </tr>
 

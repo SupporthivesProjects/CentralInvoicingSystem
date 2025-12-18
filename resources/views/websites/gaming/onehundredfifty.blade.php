@@ -12,7 +12,7 @@
 </head>
 <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #ffffff;">
   <table width="100%" cellpadding="0" cellspacing="0" border="0"
-    style="max-width: 100%; margin: 0 auto; border: 1px solid #ccc;">
+    style="max-width: 100%; margin: 0 auto; ">
     <!-- Header with Logo -->
     <tr style=" background: url('{{ $invoice_header_image }}'); background-repeat: no-repeat; background-size: cover;background-position: center;height: 83px;">
       <td style="padding: 0px;">
@@ -40,7 +40,7 @@
             <td style="color: #1a1a1a;">
              {!! $company_address !!}
               {{ $company_mobile  }}<br>
-              <a href="mailto:{{ $company_email }}" style="color: #0044cc;">{{ $company_email }}</a> | <a href="{{ $site->site_link }}" style="color: #0044cc;">{{ $site->site_link }}</a>
+              <a href="mailto:{{ $company_email }}" style="color: #0044cc;">{{ $company_email }}</a> <br> <a href="http://www.combatcove.co/" style="color: #0044cc;">www.combatcove.co</a>
             </td>
             <td align="right" valign="top">
               <p style="margin: 0px 0px 5px 0;"><strong style="color: #f39c12;">INVOICE #</strong> {{ $invoice_number }} </p>
@@ -108,16 +108,10 @@
     </tr>
 
     <!-- Footer -->
-    <tr>
-      <td colspan="2" style="padding: 30px 20px 10px; text-align: center; font-size: 13px;">
-        Make all checks payable to <strong>{{ $site_name }}</strong><br>
-        Payment is due within 30 days.<br>
-        If you have any questions concerning this invoice, contact at {{ $company_email }}
-      </td>
-    </tr>
+   
 
     <tr>
-      <td colspan="2" style="color: #f39c12; padding: 20px; text-align: center; font-weight: bold;">
+      <td colspan="2" style="color: #f39c12; padding: 100px; text-align: center; font-weight: bold;">
         THANK YOU FOR YOUR BUSINESS!
       </td>
     </tr>
