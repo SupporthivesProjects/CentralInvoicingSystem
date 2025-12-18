@@ -14,7 +14,7 @@
         .main-container {
             width: 100%;
             background: #f3f3f3;
-            padding: 20px 0;
+            padding: 0px 0;
         }
 
         .invoice-wrapper {
@@ -193,6 +193,11 @@
             padding: 20px;
             text-align: center;
             color: white;
+            position: fixed;
+            bottom: 0px;
+            left: 0;
+            right: 0;
+            width: 100%;
         }
 
         .footer-text {
