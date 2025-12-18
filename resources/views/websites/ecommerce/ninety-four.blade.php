@@ -5,7 +5,7 @@
 </head>
 <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #ffffff;">
   <table width="100%" cellpadding="0" cellspacing="0" border="0"
-    style="max-width: 90%; margin: 0 auto; border: 1px solid #ccc;">
+    style="max-width: 100%; margin: 0 auto; ">
     <!-- Header with Logo -->
     <tr style=" background: url('{{ $invoice_header_image }}');background-repeat: no-repeat;background-size: cover;background-position: center;height: 83px;">
       <td style="padding: 0px;">
