@@ -139,7 +139,7 @@
                                     <td colspan="1"
                                         style="text-align: right; padding: 8px;  border: 1px solid black;">
                                         Discount Total</td>
-                                    <td style="padding: 8px;   text-align: right; border: 1px solid black;">278.00</td>
+                                    <td style="padding: 8px;   text-align: right; border: 1px solid black;">{{ site_currency() . number_format($discount_amount ?? 0, 2) }}</td>
                                 </tr>
                                 <tr style="font-size: 11px; border: none;height:40px">
                                     <td colspan="1" style="text-align: right; padding: 8px;"></td>
