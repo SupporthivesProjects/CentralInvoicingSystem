@@ -260,7 +260,7 @@
                         @php $counter = 1; @endphp
                         @foreach($products as $product)
                         <tr>
-                            <td class="qty-col">{{ $counter++ }}</td>
+                            <td class="qty-col">1</td>
                             <td class="desc-col">
                                 <div class="product-name">{{ $product['name'] }}</div>
                                 @if(isset($product['platform_fields']) && isset($product['selected_platform']))
