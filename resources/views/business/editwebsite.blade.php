@@ -117,69 +117,120 @@
                                 <input type="text" name="site_link" class="form-control" placeholder="Enter Website link"
                                     value="{{ old('site_link', $website->site_link) }}" required>
                             </div>
-                              <!-- Translation URLs Section - Only for Translation Business Model -->
-                        <div class="col-12" id="translation-urls-section" >
-                            <div class="card border-info">
-                                <div class="card-header bg-info bg-opacity-10">
-                                    <h6 class="mb-0 text-info">
-                                        <i class="bi bi-translate"></i> Translation Services URLs
-                                    </h6>
-                                </div>
-                                <div class="card-body">
-                                    <div class="row g-3">
-                                        <div class="col-md-6">
-                                            <label class="form-label fw-semibold">
-                                                Standard Translation URL Path
-                                                <i class="bi bi-info-circle text-muted" data-bs-toggle="tooltip" 
-                                                title="Enter the URL path for standard translation (e.g., 'request-translation')"></i>
-                                            </label>
-                                            <div class="input-group">
-                                                <span class="input-group-text bg-light">
-                                                    <i class="bi bi-link-45deg"></i>
-                                                </span>
-                                                <input type="text" 
-                                                    name="std_trans_url" 
-                                                    class="form-control" 
-                                                    placeholder="e.g., request-translation"
-                                                    value="{{ old('std_trans_url') }}">
+                            <!-- Translation URLs Section - Only for Translation Business Model -->
+                            <div class="col-12" id="translation-urls-section" style="display: none;">
+                                <div class="card border-info">
+                                    <div class="card-header bg-info bg-opacity-10">
+                                        <h6 class="mb-0 text-info">
+                                            <i class="bi bi-translate"></i> Translation Services URLs
+                                        </h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row g-3">
+                                            <div class="col-md-6">
+                                                <label class="form-label fw-semibold">
+                                                    Standard Translation URL Path
+                                                    <i class="bi bi-info-circle text-muted" data-bs-toggle="tooltip" 
+                                                    title="Enter the URL path for standard translation (e.g., 'request-translation')"></i>
+                                                </label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text bg-light">
+                                                        <i class="bi bi-link-45deg"></i>
+                                                    </span>
+                                                    <input type="text" 
+                                                        name="std_trans_url" 
+                                                        class="form-control" 
+                                                        placeholder="e.g., request-translation"
+                                                        value="{{ old('std_trans_url', $website->std_trans_url) }}">
+                                                </div>
+                                                <small class="text-muted d-block mt-1">
+                                                    <strong>Preview:</strong> <span class="text-primary" id="std-url-preview">yoursite.com/request-translation?ref=standard</span>
+                                                </small>
+                                                @if($website->std_trans_url)
+                                                    <small class="text-success d-block mt-1">
+                                                        <i class="bi bi-check-circle-fill"></i> Current: {{ $website->std_trans_url }}
+                                                    </small>
+                                                @endif
                                             </div>
-                                            <small class="text-muted d-block mt-1">
-                                                <strong>Preview:</strong> <span class="text-primary" id="std-url-preview">yoursite.com/request-translation?ref=standard</span>
-                                            </small>
-                                        </div>
 
-                                        <div class="col-md-6">
-                                            <label class="form-label fw-semibold">
-                                                Certified Translation URL Path
-                                                <i class="bi bi-info-circle text-muted" data-bs-toggle="tooltip" 
-                                                title="Enter the URL path for certified translation (e.g., 'request-translation')"></i>
-                                            </label>
-                                            <div class="input-group">
-                                                <span class="input-group-text bg-light">
-                                                    <i class="bi bi-link-45deg"></i>
-                                                </span>
-                                                <input type="text" 
-                                                    name="cert_trans_url" 
-                                                    class="form-control" 
-                                                    placeholder="e.g., request-translation"
-                                                    value="{{ old('cert_trans_url') }}">
+                                            <div class="col-md-6">
+                                                <label class="form-label fw-semibold">
+                                                    Certified Translation URL Path
+                                                    <i class="bi bi-info-circle text-muted" data-bs-toggle="tooltip" 
+                                                    title="Enter the URL path for certified translation (e.g., 'request-translation')"></i>
+                                                </label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text bg-light">
+                                                        <i class="bi bi-link-45deg"></i>
+                                                    </span>
+                                                    <input type="text" 
+                                                        name="cert_trans_url" 
+                                                        class="form-control" 
+                                                        placeholder="e.g., request-translation"
+                                                        value="{{ old('cert_trans_url', $website->cert_trans_url) }}">
+                                                </div>
+                                                <small class="text-muted d-block mt-1">
+                                                    <strong>Preview:</strong> <span class="text-primary" id="cert-url-preview">yoursite.com/request-translation?ref=certified</span>
+                                                </small>
+                                                @if($website->cert_trans_url)
+                                                    <small class="text-success d-block mt-1">
+                                                        <i class="bi bi-check-circle-fill"></i> Current: {{ $website->cert_trans_url }}
+                                                    </small>
+                                                @endif
                                             </div>
-                                            <small class="text-muted d-block mt-1">
-                                                <strong>Preview:</strong> <span class="text-primary" id="cert-url-preview">yoursite.com/request-translation?ref=certified</span>
-                                            </small>
-                                        </div>
 
-                                        <div class="col-12">
-                                            <div class="alert alert-info alert-dismissible fade show mb-0" role="alert">
-                                                <i class="bi bi-lightbulb"></i>
-                                                <strong>Tip:</strong> Both URLs can use the same path (e.g., "request-translation"). The system will differentiate them using the <code>?ref=</code> parameter.
-                                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                            <div class="col-12">
+                                                <div class="alert alert-info alert-dismissible fade show mb-0" role="alert">
+                                                    <i class="bi bi-lightbulb"></i>
+                                                    <strong>Tip:</strong> Both URLs can use the same path (e.g., "request-translation"). The system will differentiate them using the <code>?ref=</code> parameter.
+                                                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                                </div>
                                             </div>
+
+                                            @if($website->standard_translation_url || $website->certified_translation_url)
+                                            <div class="col-12">
+                                                <div class="card bg-light">
+                                                    <div class="card-body">
+                                                        <h6 class="card-title text-muted mb-3">
+                                                            <i class="bi bi-link"></i> Current Full URLs
+                                                        </h6>
+                                                        <div class="row g-2">
+                                                            @if($website->standard_translation_url)
+                                                            <div class="col-md-6">
+                                                                <label class="form-label text-muted small">Standard Translation:</label>
+                                                                <div class="d-flex align-items-center gap-2">
+                                                                    <a href="{{ $website->standard_translation_url }}" target="_blank" class="text-truncate small" style="max-width: 400px;">
+                                                                        {{ $website->standard_translation_url }}
+                                                                    </a>
+                                                                    <button type="button" class="btn btn-sm btn-outline-secondary copy-url-btn" data-url="{{ $website->standard_translation_url }}">
+                                                                        <i class="bi bi-clipboard"></i>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                            @endif
+                                                            
+                                                            @if($website->certified_translation_url)
+                                                            <div class="col-md-6">
+                                                                <label class="form-label text-muted small">Certified Translation:</label>
+                                                                <div class="d-flex align-items-center gap-2">
+                                                                    <a href="{{ $website->certified_translation_url }}" target="_blank" class="text-truncate small" style="max-width: 400px;">
+                                                                        {{ $website->certified_translation_url }}
+                                                                    </a>
+                                                                    <button type="button" class="btn btn-sm btn-outline-secondary copy-url-btn" data-url="{{ $website->certified_translation_url }}">
+                                                                        <i class="bi bi-clipboard"></i>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
                             <div class="col-md-6 mx-auto">
                                 <label class="form-label">Site Name <span style="color:red">*</span></label>
                                 <input type="text" name="site_name" class="form-control" required placeholder="Enter Site Name"
