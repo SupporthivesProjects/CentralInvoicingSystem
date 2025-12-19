@@ -472,6 +472,12 @@ class LaravelController extends Controller
             }
     
             $product->unit_type = $isCertified ? 'pages' : 'words';
+
+            if ($isCertified) {
+                $product->product_url = $site->certified_translation_url ?? $site->site_link;
+            } else {
+                $product->product_url = $site->standard_translation_url ?? $site->site_link;
+            }
     
             $selectedProducts[] = $product;
         }
@@ -484,6 +490,7 @@ class LaravelController extends Controller
                 'is_urgent' => $product->is_urgent,
                 'urgent_amount' => $product->urgent_amount,
                 'unit_type' => $product->unit_type,
+                'product_url' => $product->product_url,
             ];
         })->toArray();
     

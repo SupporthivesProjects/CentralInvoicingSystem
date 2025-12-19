@@ -7,8 +7,8 @@
         <td class="text-center">{{ $product->id }}</td>
         <td>
             {{ $product->name }}
-            @if ($site->site_link && $product->slug)
-                <a href="{{ $site->site_link }}" target="_blank">🔗</a>
+            @if (!empty($product->product_url))
+                <a href="{{ $product->product_url }}" target="_blank" title="View Product">🔗</a>
             @endif
             <input form="generate-invoice-form" type="hidden" name="products[{{ $product->id }}][id]"
                 value="{{ $product->id }}">
