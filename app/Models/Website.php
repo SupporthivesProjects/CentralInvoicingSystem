@@ -31,6 +31,8 @@ class Website extends Model
         'consumer_key',
         'consumer_secret',
         'site_link',
+        'std_trans_url',   
+        'cert_trans_url', 
         'remark',
         'company_name',
         'company_email',
@@ -66,6 +68,16 @@ class Website extends Model
     public function businessModel()
     {
         return $this->belongsTo(BusinessModel::class, 'business_model_id');
+    }
+
+    public function getStandardTranslationUrlAttribute()
+    {
+        return rtrim($this->site_link, '/') . '/' . $this->std_trans_url . '?ref=standard';
+    }
+
+    public function getCertifiedTranslationUrlAttribute()
+    {
+        return rtrim($this->site_link, '/') . '/' . $this->cert_trans_url . '?ref=certified';
     }
 
 }
