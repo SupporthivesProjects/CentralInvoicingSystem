@@ -122,21 +122,15 @@
                                 <div class="card border-info">
                                     <div class="card-header bg-info bg-opacity-10">
                                         <h6 class="mb-0 text-info">
-                                            <i class="bi bi-translate"></i> <strong>Translation Services URLs</strong>
+                                            <i class="bi bi-translate"></i> <strong>Note:</strong> This section is only for Translation Business Model sites.
                                         </h6>
                                     </div>
                                     <div class="card-body">
-                                        <div class="alert alert-warning mb-3" role="alert">
-                                            <i class="bi bi-exclamation-triangle-fill"></i>
-                                            <strong>Note:</strong> This section is only for Translation Business Model sites.
-                                        </div>
-                                        
+                                       
                                         <div class="row g-3">
                                             <div class="col-md-6">
                                                 <label class="form-label fw-semibold">
                                                     Standard Translation URL Path
-                                                    <i class="bi bi-info-circle text-muted" data-bs-toggle="tooltip" 
-                                                    title="Enter the URL path for standard translation (e.g., 'request-translation')"></i>
                                                 </label>
                                                 <div class="input-group">
                                                     <span class="input-group-text bg-light text-muted small" style="min-width: 120px;">
@@ -154,8 +148,6 @@
                                             <div class="col-md-6">
                                                 <label class="form-label fw-semibold">
                                                     Certified Translation URL Path
-                                                    <i class="bi bi-info-circle text-muted" data-bs-toggle="tooltip" 
-                                                    title="Enter the URL path for certified translation (e.g., 'request-translation?ref=certified')"></i>
                                                 </label>
                                                 <div class="input-group">
                                                     <span class="input-group-text bg-light text-muted small" style="min-width: 120px;">
