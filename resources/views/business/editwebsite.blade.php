@@ -155,7 +155,7 @@
                                                 <label class="form-label fw-semibold">
                                                     Certified Translation URL Path
                                                     <i class="bi bi-info-circle text-muted" data-bs-toggle="tooltip" 
-                                                    title="Enter the URL path for certified translation (e.g., 'request-translation')"></i>
+                                                    title="Enter the URL path for certified translation (e.g., 'request-translation?ref=certified')"></i>
                                                 </label>
                                                 <div class="input-group">
                                                     <span class="input-group-text bg-light text-muted small" style="min-width: 120px;">
@@ -164,7 +164,7 @@
                                                     <input type="text" 
                                                         name="cert_trans_url" 
                                                         class="form-control" 
-                                                        placeholder="request-translation"
+                                                        placeholder="request-translation?ref=certified"
                                                         value="{{ old('cert_trans_url', $website->cert_trans_url ?? '') }}">
                                                 </div>
                                               
