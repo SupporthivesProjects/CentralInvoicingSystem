@@ -117,54 +117,64 @@
                                 <input type="text" name="site_link" class="form-control" placeholder="Enter Website link"
                                     value="{{ old('site_link', $website->site_link) }}" required>
                             </div>
-                            <div class="col-12" id="translation-urls-section">
-                            <div class="card border-info">
-                                <div class="card-header bg-info bg-opacity-10">
-                                    <h6 class="mb-0 text-info">
-                                        <i class="bi bi-translate"></i> <strong>Note:</strong> This section is only for Translation Business Model sites.
-                                    </h6>
-                                </div>
-                                <div class="card-body">
-                                    <div class="row g-3">
-                                        <div class="col-md-6">
-                                            <label class="form-label fw-semibold">
-                                                Standard Translation URL Path
-                                                <i class="bi bi-info-circle text-muted" data-bs-toggle="tooltip" 
-                                                title="Enter the URL path for standard translation (e.g., 'request-translation')"></i>
-                                            </label>
-                                            <div class="input-group">
-                                                <span class="input-group-text bg-light text-muted small" style="min-width: 120px;">
-                                                    {{ rtrim($website->site_link ?? 'yoursite.com', '/') }}/
-                                                </span>
-                                                <input type="text" 
-                                                    name="std_trans_url" 
-                                                    class="form-control" 
-                                                    placeholder="request-translation"
-                                                    value="{{ old('std_trans_url', $website->std_trans_url ?? '') }}">
-                                            </div>
+                            @if(isset($website->businessModel) && strtolower($website->businessModel->model_type) == 'translation')
+                            <div class="col-12">
+                                <div class="card border-info">
+                                    <div class="card-header bg-info bg-opacity-10">
+                                        <h6 class="mb-0 text-info">
+                                            <i class="bi bi-translate"></i> <strong>Translation Services URLs</strong>
+                                        </h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="alert alert-warning mb-3" role="alert">
+                                            <i class="bi bi-exclamation-triangle-fill"></i>
+                                            <strong>Note:</strong> This section is only for Translation Business Model sites.
                                         </div>
-
-                                        <div class="col-md-6">
-                                            <label class="form-label fw-semibold">
-                                                Certified Translation URL Path
-                                                <i class="bi bi-info-circle text-muted" data-bs-toggle="tooltip" 
-                                                title="Enter the URL path for certified translation (e.g., 'request-translation')"></i>
-                                            </label>
-                                            <div class="input-group">
-                                                <span class="input-group-text bg-light text-muted small" style="min-width: 120px;">
-                                                    {{ rtrim($website->site_link ?? 'yoursite.com', '/') }}/
-                                                </span>
-                                                <input type="text" 
-                                                    name="cert_trans_url" 
-                                                    class="form-control" 
-                                                    placeholder="request-translation"
-                                                    value="{{ old('cert_trans_url', $website->cert_trans_url ?? '') }}">
+                                        
+                                        <div class="row g-3">
+                                            <div class="col-md-6">
+                                                <label class="form-label fw-semibold">
+                                                    Standard Translation URL Path
+                                                    <i class="bi bi-info-circle text-muted" data-bs-toggle="tooltip" 
+                                                    title="Enter the URL path for standard translation (e.g., 'request-translation')"></i>
+                                                </label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text bg-light text-muted small" style="min-width: 120px;">
+                                                        {{ rtrim($website->site_link ?? 'yoursite.com', '/') }}/
+                                                    </span>
+                                                    <input type="text" 
+                                                        name="std_trans_url" 
+                                                        class="form-control" 
+                                                        placeholder="request-translation"
+                                                        value="{{ old('std_trans_url', $website->std_trans_url ?? '') }}">
+                                                </div>
+                                               
                                             </div>
+
+                                            <div class="col-md-6">
+                                                <label class="form-label fw-semibold">
+                                                    Certified Translation URL Path
+                                                    <i class="bi bi-info-circle text-muted" data-bs-toggle="tooltip" 
+                                                    title="Enter the URL path for certified translation (e.g., 'request-translation')"></i>
+                                                </label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text bg-light text-muted small" style="min-width: 120px;">
+                                                        {{ rtrim($website->site_link ?? 'yoursite.com', '/') }}/
+                                                    </span>
+                                                    <input type="text" 
+                                                        name="cert_trans_url" 
+                                                        class="form-control" 
+                                                        placeholder="request-translation"
+                                                        value="{{ old('cert_trans_url', $website->cert_trans_url ?? '') }}">
+                                                </div>
+                                              
+                                            </div>
+
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        @endif
                             <div class="col-md-6 mx-auto">
                                 <label class="form-label">Site Name <span style="color:red">*</span></label>
                                 <input type="text" name="site_name" class="form-control" required placeholder="Enter Site Name"
