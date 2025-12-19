@@ -117,7 +117,7 @@
                                 <input type="text" name="site_link" class="form-control" placeholder="Enter Website link"
                                     value="{{ old('site_link', $website->site_link) }}" required>
                             </div>
-                            <div class="col-12" id="translation-urls-section" style="display: none;">
+                            <div class="col-12" id="translation-urls-section">
                             <div class="card border-info">
                                 <div class="card-header bg-info bg-opacity-10">
                                     <h6 class="mb-0 text-info">
