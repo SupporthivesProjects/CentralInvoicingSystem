@@ -121,15 +121,10 @@
                             <div class="card border-info">
                                 <div class="card-header bg-info bg-opacity-10">
                                     <h6 class="mb-0 text-info">
-                                        <i class="bi bi-translate"></i> Translation Services URLs
+                                        <i class="bi bi-translate"></i> <strong>Note:</strong> This section is only for Translation Business Model sites.
                                     </h6>
                                 </div>
                                 <div class="card-body">
-                                    <div class="alert alert-warning mb-3" role="alert">
-                                        <i class="bi bi-exclamation-triangle-fill"></i>
-                                        <strong>Note:</strong> This section is only for Translation Business Model sites.
-                                    </div>
-                                    
                                     <div class="row g-3">
                                         <div class="col-md-6">
                                             <label class="form-label fw-semibold">
@@ -147,14 +142,6 @@
                                                     placeholder="request-translation"
                                                     value="{{ old('std_trans_url', $website->std_trans_url ?? '') }}">
                                             </div>
-                                            <small class="text-muted d-block mt-1">
-                                                <strong>Full URL:</strong> <span class="text-primary fw-semibold" id="std-url-preview">yoursite.com/request-translation?ref=standard</span>
-                                            </small>
-                                            @if(isset($website->std_trans_url) && $website->std_trans_url)
-                                                <small class="text-success d-block mt-1">
-                                                    <i class="bi bi-check-circle-fill"></i> Currently set to: <strong>{{ $website->std_trans_url }}</strong>
-                                                </small>
-                                            @endif
                                         </div>
 
                                         <div class="col-md-6">
@@ -172,21 +159,6 @@
                                                     class="form-control" 
                                                     placeholder="request-translation"
                                                     value="{{ old('cert_trans_url', $website->cert_trans_url ?? '') }}">
-                                            </div>
-                                            <small class="text-muted d-block mt-1">
-                                                <strong>Full URL:</strong> <span class="text-primary fw-semibold" id="cert-url-preview">yoursite.com/request-translation?ref=certified</span>
-                                            </small>
-                                            @if(isset($website->cert_trans_url) && $website->cert_trans_url)
-                                                <small class="text-success d-block mt-1">
-                                                    <i class="bi bi-check-circle-fill"></i> Currently set to: <strong>{{ $website->cert_trans_url }}</strong>
-                                                </small>
-                                            @endif
-                                        </div>
-
-                                        <div class="col-12">
-                                            <div class="alert alert-info mb-0" role="alert">
-                                                <i class="bi bi-lightbulb-fill"></i>
-                                                <strong>Tip:</strong> Both fields can use the same path (e.g., "request-translation"). The system differentiates between standard and certified translations using the <code>?ref=standard</code> and <code>?ref=certified</code> parameters.
                                             </div>
                                         </div>
                                     </div>
