@@ -526,7 +526,7 @@ class LaravelController extends Controller
                 $lastPriceChanged = Carbon::parse($lastUpdate->last_price_changed);
                 $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
                 $remainingDays = now()->diffInDays($nextPriceChangeDate, false);
-                $product->remaining_days = max(round($daysLeft), 0);
+                $product->remaining_days = max(round($remainingDays), 0);
                 $product->can_edit_price = now()->greaterThanOrEqualTo($nextPriceChangeDate) ? 1 : 0;
             } else {
                 $product->can_edit_price = 1;
@@ -626,7 +626,7 @@ class LaravelController extends Controller
                     $lastPriceChanged = Carbon::parse($lastUpdate->last_price_changed);
                     $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
                     $remainingDays = now()->diffInDays($nextPriceChangeDate, false);
-                    $product->remaining_days = max(round($daysLeft), 0);
+                    $product->remaining_days = max(round($remainingDays), 0);
                     $product->can_edit_price = now()->greaterThanOrEqualTo($nextPriceChangeDate) ? 1 : 0;
                 } else {
                     $product->can_edit_price = 1;
@@ -722,7 +722,7 @@ class LaravelController extends Controller
                     $lastPriceChanged = Carbon::parse($lastUpdate->last_price_changed);
                     $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
                     $remainingDays = now()->diffInDays($nextPriceChangeDate, false);
-                    $product->remaining_days = max(round($daysLeft), 0);
+                    $product->remaining_days = max(round($remainingDays), 0);
                     $product->can_edit_price = now()->greaterThanOrEqualTo($nextPriceChangeDate) ? 1 : 0;
                 } else {
                     $product->can_edit_price = 1;
