@@ -52,7 +52,6 @@ class LaravelController extends Controller
         $site = Website::findOrFail($site_id);
         DynamicDatabaseService::connect($site);
     
-        // Fetch products
         $query = DB::connection($this->connectionType)->table($this->productTable)
             ->select('id', 'name', 'slug', 'default_wc', 'default_price', 'extra_word', 'ta_standard', 'ta_express', 'q_standard', 'q_premium', 'q_expert', 'img_price')
             ->where('published', 1);
@@ -68,14 +67,12 @@ class LaravelController extends Controller
         $turnaroundOptions = ['ta_standard', 'ta_express'];
         $qualityOptions = ['q_standard', 'q_premium', 'q_expert'];
     
-        // Calculate initial prices for all products
         $allProducts = collect($allProducts)->map(function ($product) use ($turnaroundOptions, $qualityOptions) {
             $product->turnaround = $turnaroundOptions[array_rand($turnaroundOptions)];
             $product->quality = $qualityOptions[array_rand($qualityOptions)];
             $product->imagecount = rand(1, 15);
             $product->quantity = 1;
     
-            // Calculate price
             $qlty_factor = match ($product->quality) {
                 'q_premium' => 0.1,
                 'q_expert' => 0.25,
@@ -111,14 +108,12 @@ class LaravelController extends Controller
         $bestTotal = 0;
         $bestDistance = null;
     
-        // Main matching algorithm
         for ($i = 0; $i < $maxAttempts; $i++) {
             $shuffled = $filteredProducts->shuffle();
             $finalProducts = [];
             $currentTotal = 0;
     
             if ($noOfProducts) {
-                // Fixed number of products requested
                 $selected = $shuffled->take($noOfProducts);
                 foreach ($selected as $product) {
                     $clone = clone $product;
@@ -127,7 +122,6 @@ class LaravelController extends Controller
                     $clone->quality = $qualityOptions[array_rand($qualityOptions)];
                     $clone->quantity = 1;
     
-                    // Recalculate price
                     $qlty_factor = match ($clone->quality) {
                         'q_premium' => 0.1,
                         'q_expert' => 0.25,
@@ -144,7 +138,6 @@ class LaravelController extends Controller
                     $currentTotal += $clone->unit_price;
                 }
             } else {
-                // Build combination dynamically
                 $targetPerProduct = $invoiceAmount / max(3, min(8, ceil($invoiceAmount / 50)));
                 
                 foreach ($shuffled as $product) {
@@ -160,70 +153,96 @@ class LaravelController extends Controller
                 }
             }
     
-            // Adjust with word count to reach target
-            $remaining = $invoiceAmount - $currentTotal;
-            $remaining = max(0, $remaining);
-            $maxIterations = 10;
-            $iteration = 0;
-    
-            while ($remaining > 0.1 && $iteration < $maxIterations && !empty($finalProducts)) {
-                $iteration++;
-                $adjusted = false;
+            $tolerancePercentages = [2, 4, 6, 8, 10, 12];
+            
+            foreach ($tolerancePercentages as $tolerancePercent) {
+                $targetAmount = $invoiceAmount * (1 + ($tolerancePercent / 100));
+                $remaining = $targetAmount - $currentTotal;
                 
-                foreach ($finalProducts as $product) {
-                    if ($remaining <= 0.1) break;
+                if ($remaining > -0.1 && $remaining <= 0.1) {
+                    $currentTotal = array_sum(array_map(fn($p) => $p->unit_price, $finalProducts));
+                    $distance = abs($invoiceAmount - $currentTotal);
+                    $withinTolerance = $currentTotal >= $minTotal && $currentTotal <= $maxTotal;
     
-                    $qlty_factor = match ($product->quality) {
-                        'q_premium' => 0.1,
-                        'q_expert' => 0.25,
-                        default => 0,
-                    };
-    
-                    $effectiveWordPrice = $product->extra_word * (1 + $qlty_factor);
-                    if ($effectiveWordPrice <= 0) continue;
-    
-                    // Dynamic increment
-                    $increment = match (true) {
-                        $remaining >= 500 => 250,
-                        $remaining >= 100 => 50,
-                        $remaining >= 20 => 25,
-                        default => 10
-                    };
-    
-                    $cost = ($increment / 25) * $effectiveWordPrice;
-    
-                    if ($remaining >= $cost) {
-                        $product->wordcount += $increment;
-                        $product->unit_price += $cost;
-                        $remaining -= $cost;
-                        $adjusted = true;
+                    if ($bestMatch === null || 
+                        ($withinTolerance && ($bestTotal < $minTotal || $bestTotal > $maxTotal)) ||
+                        ($withinTolerance && $distance < $bestDistance) ||
+                        (($bestTotal < $minTotal || $bestTotal > $maxTotal) && $distance < $bestDistance)) {
+                        
+                        $bestMatch = $finalProducts;
+                        $bestTotal = $currentTotal;
+                        $bestDistance = $distance;
+                        
+                        if ($withinTolerance && $distance < ($invoiceAmount * 0.02)) {
+                            break 2;
+                        }
                     }
+                    continue 2;
                 }
                 
-                if (!$adjusted) break;
-            }
+                if ($remaining <= 0) continue;
     
-            $currentTotal = array_sum(array_map(fn($p) => $p->unit_price, $finalProducts));
-            $distance = abs($invoiceAmount - $currentTotal);
-            $withinTolerance = $currentTotal >= $minTotal && $currentTotal <= $maxTotal;
+                $remaining = max(0, $remaining);
+                $maxIterations = 10;
+                $iteration = 0;
+                $currentTotal = array_sum(array_map(fn($p) => $p->unit_price, $finalProducts));
     
-            // Check if this is the best match so far
-            if ($bestMatch === null || 
-                ($withinTolerance && ($bestTotal < $minTotal || $bestTotal > $maxTotal)) ||
-                ($withinTolerance && $distance < $bestDistance) ||
-                (($bestTotal < $minTotal || $bestTotal > $maxTotal) && $distance < $bestDistance)) {
-                
-                $bestMatch = $finalProducts;
-                $bestTotal = $currentTotal;
-                $bestDistance = $distance;
-                
-                if ($withinTolerance && $distance < ($invoiceAmount * 0.02)) {
-                    break; // Good enough match found
+                while ($remaining > 0.1 && $iteration < $maxIterations && !empty($finalProducts)) {
+                    $iteration++;
+                    $adjusted = false;
+                    
+                    foreach ($finalProducts as $product) {
+                        if ($remaining <= 0.1) break;
+    
+                        $qlty_factor = match ($product->quality) {
+                            'q_premium' => 0.1,
+                            'q_expert' => 0.25,
+                            default => 0,
+                        };
+    
+                        $effectiveWordPrice = $product->extra_word * (1 + $qlty_factor);
+                        if ($effectiveWordPrice <= 0) continue;
+    
+                        $wordIncrements = [25, 50, 75, 100, 125, 150, 175, 200];
+                        
+                        foreach ($wordIncrements as $increment) {
+                            $cost = ($increment / 25) * $effectiveWordPrice;
+                            
+                            if ($remaining >= $cost) {
+                                $product->wordcount += $increment;
+                                $product->unit_price += $cost;
+                                $remaining -= $cost;
+                                $adjusted = true;
+                                break;
+                            }
+                        }
+    
+                        if ($remaining <= 0.1) break;
+                    }
+                    
+                    if (!$adjusted) break;
+                }
+    
+                $currentTotal = array_sum(array_map(fn($p) => $p->unit_price, $finalProducts));
+                $distance = abs($invoiceAmount - $currentTotal);
+                $withinTolerance = $currentTotal >= $minTotal && $currentTotal <= $maxTotal;
+    
+                if ($bestMatch === null || 
+                    ($withinTolerance && ($bestTotal < $minTotal || $bestTotal > $maxTotal)) ||
+                    ($withinTolerance && $distance < $bestDistance) ||
+                    (($bestTotal < $minTotal || $bestTotal > $maxTotal) && $distance < $bestDistance)) {
+                    
+                    $bestMatch = $finalProducts;
+                    $bestTotal = $currentTotal;
+                    $bestDistance = $distance;
+                    
+                    if ($withinTolerance && $distance < ($invoiceAmount * 0.02)) {
+                        break 2;
+                    }
                 }
             }
         }
     
-        // Fallback: try with cheapest products if no good match found
         if (!$bestMatch || ($bestTotal < $minTotal || $bestTotal > $maxTotal)) {
             $cheapestProducts = $allProducts->sortBy('unit_price');
             $productCount = $noOfProducts ?: max(1, min(5, ceil($invoiceAmount / 30)));
@@ -232,12 +251,11 @@ class LaravelController extends Controller
             $fallbackProducts = [];
             foreach ($selected as $product) {
                 $clone = clone $product;
-                $clone->imagecount = 1; // Minimal config
+                $clone->imagecount = 1;
                 $clone->turnaround = 'ta_standard';
                 $clone->quality = 'q_standard';
                 $clone->quantity = 1;
                 
-                // Recalculate with minimal config
                 $img_total = max(0, ($clone->imagecount - 1) * $clone->img_price);
                 $base_total = $clone->default_price + $img_total;
                 $clone->unit_price = $base_total;
@@ -246,7 +264,6 @@ class LaravelController extends Controller
                 $fallbackProducts[] = $clone;
             }
             
-            // Adjust fallback products to target
             $fallbackTotal = array_sum(array_map(fn($p) => $p->unit_price, $fallbackProducts));
             $remaining = $invoiceAmount - $fallbackTotal;
             $remaining = max(0, $remaining);
@@ -257,14 +274,18 @@ class LaravelController extends Controller
                     if ($remaining <= 0.1) break;
                     
                     if ($product->extra_word > 0) {
-                        $increment = $remaining >= 100 ? 50 : 25;
-                        $cost = ($increment / 25) * $product->extra_word;
+                        $wordIncrements = [25, 50, 75, 100, 125, 150, 175, 200];
                         
-                        if ($remaining >= $cost) {
-                            $product->wordcount += $increment;
-                            $product->unit_price += $cost;
-                            $remaining -= $cost;
-                            $adjusted = true;
+                        foreach ($wordIncrements as $increment) {
+                            $cost = ($increment / 25) * $product->extra_word;
+                            
+                            if ($remaining >= $cost) {
+                                $product->wordcount += $increment;
+                                $product->unit_price += $cost;
+                                $remaining -= $cost;
+                                $adjusted = true;
+                                break;
+                            }
                         }
                     }
                 }
@@ -279,7 +300,6 @@ class LaravelController extends Controller
             }
         }
     
-        // Return error if still no match
         if (!$bestMatch) {
             session()->forget('ready_products');
             session()->forget('current_amount');
@@ -291,7 +311,6 @@ class LaravelController extends Controller
             ]);
         }
     
-        // Format final response
         $bestMatch = collect($bestMatch);
         $bestMatch->each(function ($product) {
             $product->can_edit_price = 1;
