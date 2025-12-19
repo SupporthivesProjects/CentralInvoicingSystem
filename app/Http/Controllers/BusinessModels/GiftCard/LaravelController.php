@@ -1036,9 +1036,16 @@ class LaravelController extends Controller
     
                 $rate = $rate ?: 1;
                 $new_name     = $data['product_name'];
-                $new_price = round($data['unit_price'] * $rate, 2);
-                $new_rrp   = round($data['unit_rrp'] * $rate, 2);
                 $new_discount = isset($data['unit_discount']) ? floatval($data['unit_discount']) : null;
+                $new_rrp   = round($data['unit_rrp'] * $rate, 2);
+                
+                // Calculate price based on RRP and discount, then convert
+                if ($new_discount !== null && $new_rrp > 0) {
+                    $calculated_price = $new_rrp - ($new_rrp * ($new_discount / 100));
+                    $new_price = round($calculated_price, 2);
+                } else {
+                    $new_price = round($data['unit_price'] * $rate, 2);
+                }
     
                 if (! $product) {
                     Log::info('Product not found', ['product_id' => $product_id]);
@@ -1052,6 +1059,7 @@ class LaravelController extends Controller
     
                 $priceChanged = ($current_price !== $new_price);
                 $discountChanged = ($current_discount !== $new_discount);
+                $rrpChanged = ($current_rrp !== $new_rrp);
     
                 $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
                     ->where('product_id', $product_id)
@@ -1081,11 +1089,11 @@ class LaravelController extends Controller
                         $updateData['unit_price'] = $new_price;
                     }
     
-                    if ($priceChanged && $new_rrp !== null && $current_rrp !== $new_rrp) {
+                    if ($rrpChanged) {
                         $updateData['rrp'] = $new_rrp;
                     }
     
-                    if ($discountChanged && $new_discount !== null) {
+                    if ($discountChanged) {
                         $updateData['discount'] = $new_discount;
                     }
     
@@ -1107,8 +1115,14 @@ class LaravelController extends Controller
                 } else {
                     $updateData = [];
     
-                    if ($discountChanged && $new_discount !== null) {
+                    if ($discountChanged) {
                         $updateData['discount'] = $new_discount;
+                        
+                        // Recalculate price when discount changes
+                        if ($new_discount !== null && $current_rrp > 0) {
+                            $calculated_price = $current_rrp - ($current_rrp * ($new_discount / 100));
+                            $updateData['unit_price'] = round($calculated_price, 2);
+                        }
                     }
     
                     if (!empty($updateData)) {
