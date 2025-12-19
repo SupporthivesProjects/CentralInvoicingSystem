@@ -402,7 +402,7 @@ class LaravelController extends Controller
             }
     
             $isLastProduct = ($index === $totalProducts - 1);
-            $targetAmount = $isLastProduct ? $remainingAmount : ($baseAmountPerProduct * rand(60, 140) / 100);
+            $targetAmount = $isLastProduct ? $remainingAmount : ($baseAmountPerProduct * rand(80, 120) / 100);
             
             $turnaroundOptions = ['ta_standard', 'ta_express'];
             $qualityOptions = ['q_standard', 'q_premium', 'q_expert'];
@@ -423,10 +423,11 @@ class LaravelController extends Controller
             $maxImageCount = 15;
             $minImageCount = 1;
     
-            $maxIterations = 1000;
+            $maxIterations = 2000;
             $iterations = 0;
             $bestMatch = null;
             $smallestDiff = PHP_INT_MAX;
+            $noProgressCount = 0;
     
             while ($iterations++ < $maxIterations) {
                 $wc_price = max(0, ($wordCount - $product->default_wc) * ($product->extra_word / 25));
@@ -437,8 +438,9 @@ class LaravelController extends Controller
                 $unit_price = $base_total + ($base_total * $qlty_factor);
                 $diff = $targetAmount - $unit_price;
     
-                if (abs($diff) < $smallestDiff) {
-                    $smallestDiff = abs($diff);
+                $currentDiff = abs($diff);
+                if ($currentDiff < $smallestDiff) {
+                    $smallestDiff = $currentDiff;
                     $bestMatch = [
                         'wordCount' => $wordCount,
                         'imageCount' => $imageCount,
@@ -446,13 +448,24 @@ class LaravelController extends Controller
                         'turnaround' => $turnaround,
                         'unit_price' => $unit_price,
                     ];
+                    $noProgressCount = 0;
+                } else {
+                    $noProgressCount++;
                 }
     
                 if (round($unit_price, 2) === round($targetAmount, 2)) {
                     break;
                 }
     
-                if (abs($diff) < 0.5) {
+                if ($noProgressCount > 50) {
+                    break;
+                }
+    
+                if (abs($diff) < 0.01) {
+                    break;
+                }
+    
+                if (abs($diff) < 1.0) {
                     $wordPerPrice = ($product->extra_word / 25) * (1 + $qlty_factor);
                     
                     if ($wordPerPrice > 0) {
@@ -467,10 +480,10 @@ class LaravelController extends Controller
                         }
                     }
                     
-                    if ($diff > 0 && $wordCount < $maxWordCount) {
+                    if ($diff > 0.01 && $wordCount < $maxWordCount) {
                         $wordCount++;
                         continue;
-                    } elseif ($diff < 0 && $wordCount > $minWordCount) {
+                    } elseif ($diff < -0.01 && $wordCount > $minWordCount) {
                         $wordCount--;
                         continue;
                     } else {
@@ -488,15 +501,17 @@ class LaravelController extends Controller
                             $increment = min($estimatedWords, $maxWordCount - $wordCount);
                             
                             if ($diff > 1000) {
-                                $increment = min(500, $increment);
+                                $increment = min(250, $increment);
                             } elseif ($diff > 500) {
-                                $increment = min(200, $increment);
-                            } elseif ($diff > 200) {
                                 $increment = min(100, $increment);
-                            } elseif ($diff > 100) {
+                            } elseif ($diff > 200) {
                                 $increment = min(50, $increment);
+                            } elseif ($diff > 100) {
+                                $increment = min(25, $increment);
+                            } elseif ($diff > 50) {
+                                $increment = min(15, $increment);
                             } elseif ($diff > 25) {
-                                $increment = min(10, $increment);
+                                $increment = min(5, $increment);
                             }
                             
                             $wordCount += max(1, $increment);
@@ -531,7 +546,7 @@ class LaravelController extends Controller
                             $qlty_factor = 0.10;
                         } else {
                             if ($wordCount > $minWordCount) {
-                                $wordCount = max($minWordCount, $wordCount - min(10, $wordCount - $minWordCount));
+                                $wordCount = max($minWordCount, $wordCount - 1);
                             } else {
                                 break;
                             }
@@ -543,7 +558,7 @@ class LaravelController extends Controller
                             $qlty_factor = 0.00;
                         } else {
                             if ($wordCount > $minWordCount) {
-                                $wordCount = max($minWordCount, $wordCount - min(10, $wordCount - $minWordCount));
+                                $wordCount = max($minWordCount, $wordCount - 1);
                             } else {
                                 break;
                             }
@@ -558,17 +573,21 @@ class LaravelController extends Controller
                                 $wordsToRemove = ceil($absDiff / $wordPerPrice);
                                 $wordsToRemove = min($wordsToRemove, $wordCount - $minWordCount);
                                 
-                                if ($absDiff > 50) {
-                                    $wordsToRemove = min(20, $wordsToRemove);
+                                if ($absDiff > 100) {
+                                    $wordsToRemove = min(50, $wordsToRemove);
+                                } elseif ($absDiff > 50) {
+                                    $wordsToRemove = min(25, $wordsToRemove);
                                 } elseif ($absDiff > 25) {
                                     $wordsToRemove = min(10, $wordsToRemove);
-                                } else {
+                                } elseif ($absDiff > 10) {
                                     $wordsToRemove = min(5, $wordsToRemove);
+                                } else {
+                                    $wordsToRemove = 1;
                                 }
                                 
                                 $wordCount = max($minWordCount, $wordCount - max(1, $wordsToRemove));
                             } else {
-                                $wordCount--;
+                                $wordCount = max($minWordCount, $wordCount - 1);
                             }
                         } else {
                             break;
