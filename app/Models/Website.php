@@ -72,12 +72,13 @@ class Website extends Model
 
     public function getStandardTranslationUrlAttribute()
     {
-        return rtrim($this->site_link, '/') . '/' . $this->std_trans_url . '?ref=standard';
+        return rtrim($this->site_link, '/') . '/' . ltrim($this->std_trans_url, '/');
     }
-
+    
     public function getCertifiedTranslationUrlAttribute()
     {
-        return rtrim($this->site_link, '/') . '/' . $this->cert_trans_url . '?ref=certified';
+        return rtrim($this->site_link, '/') . '/' . ltrim($this->cert_trans_url, '/');
     }
+    
 
 }
