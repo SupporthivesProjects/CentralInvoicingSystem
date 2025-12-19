@@ -99,69 +99,7 @@
                             <label class="form-label">Website Link <span style="color:red">*</span></label>
                             <input type="text" name="site_link" class="form-control" placeholder="Enter Website link" required>
                         </div>
-                        <!-- Translation URLs Section - Only for Translation Business Model -->
-                        <div class="col-12" id="translation-urls-section" >
-                            <div class="card border-info">
-                                <div class="card-header bg-info bg-opacity-10">
-                                    <h6 class="mb-0 text-info">
-                                        <i class="bi bi-translate"></i> Translation Services URLs
-                                    </h6>
-                                </div>
-                                <div class="card-body">
-                                    <div class="row g-3">
-                                        <div class="col-md-6">
-                                            <label class="form-label fw-semibold">
-                                                Standard Translation URL Path
-                                                <i class="bi bi-info-circle text-muted" data-bs-toggle="tooltip" 
-                                                title="Enter the URL path for standard translation (e.g., 'request-translation')"></i>
-                                            </label>
-                                            <div class="input-group">
-                                                <span class="input-group-text bg-light">
-                                                    <i class="bi bi-link-45deg"></i>
-                                                </span>
-                                                <input type="text" 
-                                                    name="std_trans_url" 
-                                                    class="form-control" 
-                                                    placeholder="e.g., request-translation"
-                                                    value="{{ old('std_trans_url') }}">
-                                            </div>
-                                            <small class="text-muted d-block mt-1">
-                                                <strong>Preview:</strong> <span class="text-primary" id="std-url-preview">yoursite.com/request-translation?ref=standard</span>
-                                            </small>
-                                        </div>
-
-                                        <div class="col-md-6">
-                                            <label class="form-label fw-semibold">
-                                                Certified Translation URL Path
-                                                <i class="bi bi-info-circle text-muted" data-bs-toggle="tooltip" 
-                                                title="Enter the URL path for certified translation (e.g., 'request-translation')"></i>
-                                            </label>
-                                            <div class="input-group">
-                                                <span class="input-group-text bg-light">
-                                                    <i class="bi bi-link-45deg"></i>
-                                                </span>
-                                                <input type="text" 
-                                                    name="cert_trans_url" 
-                                                    class="form-control" 
-                                                    placeholder="e.g., request-translation"
-                                                    value="{{ old('cert_trans_url') }}">
-                                            </div>
-                                            <small class="text-muted d-block mt-1">
-                                                <strong>Preview:</strong> <span class="text-primary" id="cert-url-preview">yoursite.com/request-translation?ref=certified</span>
-                                            </small>
-                                        </div>
-
-                                        <div class="col-12">
-                                            <div class="alert alert-info alert-dismissible fade show mb-0" role="alert">
-                                                <i class="bi bi-lightbulb"></i>
-                                                <strong>Tip:</strong> Both URLs can use the same path (e.g., "request-translation"). The system will differentiate them using the <code>?ref=</code> parameter.
-                                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                      
                         <div class="col-md-6 mx-auto">
                             <label class="form-label">Site Name <span style="color:red">*</span></label>
                             <input type="text" name="site_name" class="form-control" placeholder="Enter Site Name" required>
