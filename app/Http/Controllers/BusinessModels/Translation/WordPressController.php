@@ -420,8 +420,10 @@ class WordPressController extends Controller
     
             if ($certifiedProduct && $productName === strtolower(trim($certifiedProduct['name']))) {
                 $product->unit_type = 'pages';
+                $product->product_url = $site->certified_translation_url ?? $site->site_link;
             } else {
                 $product->unit_type = 'words';
+                $product->product_url = $site->standard_translation_url ?? $site->site_link;
             }
     
             $selectedProducts[] = $product;
@@ -435,6 +437,8 @@ class WordPressController extends Controller
                 'pages' => $product->pages,
                 'is_urgent' => $product->is_urgent,
                 'urgent_amount' => $product->urgent_amount,
+                'unit_type' => $product->unit_type,
+                'product_url' => $product->product_url,
             ];
         })->toArray());
     

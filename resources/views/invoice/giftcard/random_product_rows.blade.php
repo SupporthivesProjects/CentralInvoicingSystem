@@ -53,10 +53,13 @@
             <span class="input-group-text"  data-bs-toggle="tooltip" title="{{ site_currency_code() }}">{{ site_currency() }}</span>
             <input type="text" 
                    class="form-control text-center product-rrp" 
-                   value="{{ number_format($product->rrp, 2, '.', '') }}" 
+                   value="{{ number_format($product->rrp, 0, '.', '') }}" 
                    data-reverse-rate="{{ $product->reverse_rate ?? 1 }}"
                    data-product-id="{{ $product->id }}"
                    aria-label="RRP"
+                   oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                   pattern="[0-9]*"
+                   inputmode="numeric"
                    {{ $product->can_edit_price == 0 ? 'readonly' : '' }}>
             <span class="input-group-text d-flex align-items-center"
                   data-bs-toggle="tooltip"
@@ -76,9 +79,12 @@
         <span class="input-group-text"><i class="fas fa-percent text-success"></i></span>
             <input type="text" 
                    class="form-control text-center text-success fw-bold product-discount" 
-                   value="{{ $product->discount }}" 
+                   value="{{ number_format($product->discount, 0, '.', '') }}" 
                    data-product-id="{{ $product->id }}" 
-                   aria-label="Discount" 
+                   aria-label="Discount"
+                   oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                   pattern="[0-9]*"
+                   inputmode="numeric"
                    {{ $product->can_edit_price == 0 ? 'readonly' : '' }}>
             <span class="input-group-text d-flex align-items-center" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $product->can_edit_price == 0 ? 'Discount update allowed after ' . $product->remaining_days . ' days.' : 'Editable' }}">
                   @if($product->can_edit_price == 0)
