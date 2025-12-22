@@ -49,36 +49,31 @@ class LaravelController extends Controller
     public function randomProducts(Request $request)
     {
         Session::forget('selected_products');
-
+    
         $site_id = $request->get('site_id');
         $invoiceAmount = floatval($request->get('invoice_amount'));
         $priceFrom = $request->get('price_from');
         $priceTo = $request->get('price_to');
-
-
-        if ($site_id == 233) 
-        {
-            $priceFrom = 10;   
-            $priceTo = 100;  
+    
+        if ($site_id == 233) {
+            $priceFrom = 10;
+            $priceTo = 100;
         }
-
-
-        $productCount = intval($request->get('product_count')); // Number of products input
-        $searchQuery = $request->get('search_query'); // New parameter for search functionality
-
+    
+        $productCount = intval($request->get('product_count'));
+        $searchQuery = $request->get('search_query');
+    
         $minTotal = $invoiceAmount;
         $maxTotal = $invoiceAmount * 1.05;
-
+    
         $site = Website::findOrFail($site_id);
         DynamicDatabaseService::connect($site);
-
-        // Start base query
+    
         $productsQuery = DB::connection($this->connectionType)
             ->table('products as p')
             ->join('game_sever_based_cost as c', 'p.id', '=', 'c.game_id')
             ->where('p.published', 1);
-
-        // Apply search if provided
+    
         if ($searchQuery) {
             $productsQuery->where(function($query) use ($searchQuery) {
                 $query->where('p.name', 'like', '%' . $searchQuery . '%')
@@ -87,129 +82,120 @@ class LaravelController extends Controller
                     ->orWhere('p.game_server_region', 'like', '%' . $searchQuery . '%');
             });
         }
-
-            $products = $productsQuery->select(
-                    'p.id',
-                    'p.name',
-                    'p.slug',
-                    'p.game_currency',
-                    'p.game_platform',
-                    'p.game_server_region',
-                    'p.game_need_to_capture',
-                    'c.id as bundle_id',
-                    'c.game_id',
-                    'c.costs',
-                )
-                ->get();
-
-            $allProducts = collect();
-            $alreadyAdded = [];
-
-            foreach ($products as $product) {
-                $costs = json_decode($product->costs, true);
-
-                if (isset($costs['bundles']) && is_array($costs['bundles'])) {
-                    foreach ($costs['bundles'] as $bundleAmount => $unitPrice) {
-                        $unitPrice = floatval($unitPrice);
-
-                        $uniqueKey = $product->id . '-' . $bundleAmount;
-
-                        if (isset($alreadyAdded[$uniqueKey])) {
+    
+        $products = $productsQuery->select(
+            'p.id',
+            'p.name',
+            'p.slug',
+            'p.game_currency',
+            'p.game_platform',
+            'p.game_server_region',
+            'p.game_need_to_capture',
+            'c.id as bundle_id',
+            'c.game_id',
+            'c.costs',
+        )->get();
+    
+        $allProducts = collect();
+        $alreadyAdded = [];
+    
+        foreach ($products as $product) {
+            $costs = json_decode($product->costs, true);
+    
+            if (isset($costs['bundles']) && is_array($costs['bundles'])) {
+                foreach ($costs['bundles'] as $bundleAmount => $unitPrice) {
+                    $unitPrice = floatval($unitPrice);
+    
+                    $uniqueKey = $product->id . '-' . $bundleAmount;
+    
+                    if (isset($alreadyAdded[$uniqueKey])) {
+                        continue;
+                    }
+    
+                    if ($priceFrom && $priceTo) {
+                        if ($unitPrice < $priceFrom || $unitPrice > $priceTo) {
                             continue;
                         }
-
-                        if ($priceFrom && $priceTo) {
-                            if ($unitPrice < $priceFrom || $unitPrice > $priceTo) {
-                                continue;
-                            }
-                        }
-
-                        $alreadyAdded[$uniqueKey] = true;
-
-                        $allProducts->push((object)[
-                            'id'                    => $product->id,
-                            'bundle_id'             => $product->bundle_id,
-                            'name'                  => $product->name,
-                            'unit_price'             => $unitPrice,
-                            'slug'                  => Str::slug($product->name),
-                            'source'                 => 'Random',
-                            'can_edit_price'         => 0,
-                            'remaining_days'         => 0,
-                            'game_currency'          => $product->game_currency,
-                            'game_currency_amount'   => $bundleAmount,
-                            'game_platform'          => $product->game_platform,
-                            'game_region'            => $product->game_server_region,
-                            'game_need_to_capture'   => $product->game_need_to_capture
-                        ]);
                     }
+    
+                    $alreadyAdded[$uniqueKey] = true;
+    
+                    $allProducts->push((object)[
+                        'id' => $product->id,
+                        'bundle_id' => $product->bundle_id,
+                        'name' => $product->name,
+                        'unit_price' => $unitPrice,
+                        'slug' => Str::slug($product->name),
+                        'source' => 'Random',
+                        'can_edit_price' => 0,
+                        'remaining_days' => 0,
+                        'game_currency' => $product->game_currency,
+                        'game_currency_amount' => $bundleAmount,
+                        'game_platform' => $product->game_platform,
+                        'game_region' => $product->game_server_region,
+                        'game_need_to_capture' => $product->game_need_to_capture
+                    ]);
                 }
             }
-
-        // If we're in search mode and not randomizing, return the search results directly
+        }
+    
         if ($searchQuery && !$request->has('randomize')) {
             $results = $allProducts->sortBy('unit_price');
-
-            // Limit by product count if specified
+    
             if ($productCount > 0) {
                 $results = $results->take($productCount);
             } else {
-                $results = $results->take(60); // Default limit
+                $results = $results->take(60);
             }
-
-            // Get the total price
+    
             $totalPrice = $results->sum('unit_price');
-            //dd($totalPrice);
             session(['current_amount' => $totalPrice]);
-
-            // Return the search results
+    
             $currency = DB::connection($this->connectionType)
                 ->table('currencies')
                 ->where('status', 1)
                 ->first();
-
+    
             $modelType = $site->businessModel->model_type;
-
+    
             $tableRows = view("invoice.{$modelType}.random_product_rows", [
                 'products' => $results,
                 'currency' => $currency,
-                'site'     => $site
+                'site' => $site
             ])->render();
-
+    
             return response()->json([
                 'tableRows' => $tableRows,
-                'total'     => $totalPrice,
-                'currency'  => $currency,
+                'total' => $totalPrice,
+                'currency' => $currency,
                 'is_random' => false
             ]);
         }
-
-        // For random mode or randomize button
+    
         $allProducts = $allProducts->sortByDesc('unit_price')->shuffle()->take(60);
-
+    
         $bestMatch = null;
         $bestTotal = 0;
-
+    
         for ($i = 0; $i < 10; $i++) {
             $shuffled = $allProducts->shuffle();
             $selected = [];
             $currentTotal = 0;
-
+    
             foreach ($shuffled as $product) {
                 $price = floatval($product->unit_price);
-
+    
                 if (($currentTotal + $price) <= $maxTotal) {
                     $selected[] = $product;
                     $currentTotal += $price;
-
-                    // If product_count is provided, check both conditions
+    
                     if ($productCount > 0) {
                         if (count($selected) == $productCount && $currentTotal >= $minTotal) {
                             $bestMatch = $selected;
                             $bestTotal = $currentTotal;
-                            break 2; // break foreach + for loop both
+                            break 2;
                         }
                     } else {
-                        // if no product_count, run as usual
                         if ($currentTotal >= $minTotal && $currentTotal <= $maxTotal) {
                             $bestMatch = $selected;
                             $bestTotal = $currentTotal;
@@ -219,23 +205,21 @@ class LaravelController extends Controller
                 }
             }
         }
-        //dd($bestMatch);
-
+    
         if (!$bestMatch) {
             session()->forget('selected_games');
             session()->forget('current_amount');
-
+    
             return response()->json([
                 'tableRows' => '',
-                'total'     => 0,
-                'message'   => 'No matching combination found, try again please'
+                'total' => 0,
+                'message' => 'No matching combination found, try again please'
             ]);
         }
-
+    
         session()->forget('selected_games');
         $selected_games = [];
-        //dd($bestMatch);
-
+    
         foreach ($bestMatch as $game) {
             $selected_games[] = [
                 'id' => $game->id,
@@ -245,28 +229,27 @@ class LaravelController extends Controller
                 'bundle' => 'Random',
             ];
         }
-
+    
         session(['selected_games' => $selected_games]);
-        //dd($in_session);
-
+    
         $currency = DB::connection($this->connectionType)
             ->table('currencies')
             ->where('status', 1)
             ->first();
-
+    
         $modelType = $site->businessModel->model_type;
         session(['current_amount' => $bestTotal]);
-
+    
         $tableRows = view("invoice.{$modelType}.random_product_rows", [
             'products' => $bestMatch,
             'currency' => $currency,
-            'site'     => $site
+            'site' => $site
         ])->render();
-
+    
         return response()->json([
             'tableRows' => $tableRows,
-            'total'     => $bestTotal,
-            'currency'  => $currency,
+            'total' => $bestTotal,
+            'currency' => $currency,
             'is_random' => true
         ]);
     }
