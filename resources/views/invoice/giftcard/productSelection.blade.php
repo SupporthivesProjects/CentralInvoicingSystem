@@ -990,9 +990,10 @@ function clearRandomizedFilter(button) {
             const $rrpInput = $(`input.product-rrp[data-product-id="${productId}"]`);
             const siteRRP = parseFloat($rrpInput.val()) || 0;
             const reverseRate = parseFloat($rrpInput.data('reverse-rate')) || 1;
+            const originalCardRRP = parseFloat($rrpInput.data('card-rrp')) || 0;
             const productDiscount = parseFloat($(`input.product-discount[data-product-id="${productId}"]`).val()) || 0;
             
-            const cardRRP = siteRRP * reverseRate;
+            const cardRRP = originalCardRRP || (siteRRP * reverseRate);
             const match = productName.match(/([A-Z]{3})\s*(\d+)/i);
             
             if (match) {
