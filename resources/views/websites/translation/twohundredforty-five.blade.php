@@ -92,7 +92,7 @@
                                             {{ $product->pages }}
                                         </td>
                                         <td style="width:100px; color:#000000; text-align:center;padding:10px;font-family:  Arial;font-size: 12px;margin: 0px;font-weight: 400;border-bottom: 1px solid #000000;border-collapse: collapse;">
-                                            {{ $product->unit_type }}
+                                            {{ ucfirst($product->unit_type) }}
                                         </td>
                                         <td style="width:100px; color:#000000; text-align:right;padding:10px;font-family:  Arial;font-size: 12px;margin: 0px;font-weight: 400;border-bottom: 1px solid #000000;border-collapse: collapse;">
                                             {{ site_currency() . number_format($product->line_total, 2) }}
