@@ -1011,118 +1011,130 @@ class LaravelController extends Controller
     }
 
     protected function updateProductPrice(array $productDataArray)
-    {
-        $site_id = session('customer.site_id');
-    
-        foreach ($productDataArray as $item) {
-            $data = json_decode($item, true);
-    
-            if (empty($data['product_id']) || !isset($data['unit_price'])) {
-                Log::info('Invalid item data', ['item' => $item]);
-                continue;
+{
+    $site_id = session('customer.site_id');
+
+    foreach ($productDataArray as $item) {
+        $data = json_decode($item, true);
+
+        if (empty($data['product_id']) || !isset($data['unit_price'])) {
+            Log::info('Invalid item data', ['item' => $item]);
+            continue;
+        }
+
+        $product_id = $data['product_id'];
+        $product = DB::connection($this->connectionType)
+            ->table($this->productTable)
+            ->where('id', $product_id)
+            ->first();
+
+        if (!$product) {
+            Log::info('Product not found', ['product_id' => $product_id]);
+            continue;
+        }
+
+        $siteCurrency = site_currency_code();
+        $rate = DB::connection($this->connectionType)
+            ->table('conversion_rates')
+            ->where('from_currency', $siteCurrency)
+            ->where('to_currency', $product->card_currency)
+            ->value('rate') ?: 1;
+
+        $current_name = $product->name;
+        $current_price = floatval($product->unit_price);
+        $current_rrp = floatval($product->rrp ?? 0);
+        $current_discount = floatval($product->discount ?? 0);
+
+        $new_discount = floatval($data['unit_discount'] ?? 0);
+        $rounded_site_rrp = round($data['unit_rrp']);
+        $new_rrp = round($rounded_site_rrp * $rate, 2);
+
+        $discountChanged = abs($current_discount - $new_discount) > 0.01;
+        $rrpChanged = abs($current_rrp - $new_rrp) > 0.01;
+
+        if (!$rrpChanged && !$discountChanged) {
+            continue;
+        }
+
+        $new_price = $current_price;
+
+        // Scenario 1: Only RRP changed
+        if ($rrpChanged && !$discountChanged) {
+            $new_price = $current_discount > 0 && $new_rrp > 0
+                ? round($new_rrp * (1 - $current_discount / 100), 2)
+                : $new_rrp;
+        } 
+        // Scenario 2: Only discount changed
+        elseif ($discountChanged && !$rrpChanged) {
+            $new_price = $new_discount > 0 && $current_rrp > 0
+                ? round($current_rrp * (1 - $new_discount / 100), 2)
+                : $current_rrp;
+        } 
+        // Scenario 3: Both RRP and discount changed
+        elseif ($rrpChanged && $discountChanged) {
+            $new_price = $new_discount > 0 && $new_rrp > 0
+                ? round($new_rrp * (1 - $new_discount / 100), 2)
+                : $new_rrp;
+        }
+
+        $priceChanged = abs($current_price - $new_price) > 0.01;
+
+        $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
+            ->where('product_id', $product_id)
+            ->orderByDesc('last_price_changed')
+            ->first();
+
+        $canUpdate = !$lastUpdate || Carbon::parse($lastUpdate->last_price_changed)->diffInMonths(now()) >= 3;
+
+        if ($canUpdate) {
+            $updateData = [];
+            
+            // Only update RRP if it changed
+            if ($rrpChanged) {
+                $updateData['rrp'] = $new_rrp;
             }
-    
-            $product_id = $data['product_id'];
-            $product = DB::connection($this->connectionType)
-                ->table($this->productTable)
-                ->where('id', $product_id)
-                ->first();
-    
-            if (!$product) {
-                Log::info('Product not found', ['product_id' => $product_id]);
-                continue;
+            
+            // Update discount if it changed
+            if ($discountChanged) {
+                $updateData['discount'] = $new_discount;
             }
-    
-            $siteCurrency = site_currency_code();
-            $rate = DB::connection($this->connectionType)
-                ->table('conversion_rates')
-                ->where('from_currency', $siteCurrency)
-                ->where('to_currency', $product->card_currency)
-                ->value('rate') ?: 1;
-    
-            $current_name = $product->name;
-            $current_price = floatval($product->unit_price);
-            $current_rrp = floatval($product->rrp ?? 0);
-            $current_discount = floatval($product->discount ?? 0);
-    
-            $new_name = $data['product_name'];
-            $new_discount = floatval($data['unit_discount'] ?? 0);
-            $rounded_site_rrp = round($data['unit_rrp']);
-            $new_rrp = round($rounded_site_rrp * $rate, 2);
-    
-            $discountChanged = abs($current_discount - $new_discount) > 0.01;
-            $rrpChanged = abs($current_rrp - $new_rrp) > 0.01;
-    
-            if (!$rrpChanged && !$discountChanged) {
-                continue;
+            
+            // Update price if it changed
+            if ($priceChanged) {
+                $updateData['unit_price'] = $new_price;
             }
-    
-            $new_price = $current_price;
-    
-            if ($rrpChanged && !$discountChanged) {
-                $new_price = $current_discount > 0 && $new_rrp > 0
-                    ? round($new_rrp * (1 - $current_discount / 100), 2)
-                    : $new_rrp;
-            } elseif ($discountChanged && !$rrpChanged) {
-                $new_price = $new_discount > 0 && $current_rrp > 0
-                    ? round($current_rrp * (1 - $new_discount / 100), 2)
-                    : $current_rrp;
-            } elseif ($rrpChanged && $discountChanged) {
-                $new_price = $new_discount > 0 && $new_rrp > 0
-                    ? round($new_rrp * (1 - $new_discount / 100), 2)
-                    : $new_rrp;
+
+            if (!empty($updateData)) {
+                DB::connection($this->connectionType)
+                    ->table($this->productTable)
+                    ->where('id', $product_id)
+                    ->update($updateData);
             }
-    
-            $priceChanged = abs($current_price - $new_price) > 0.01;
-    
-            $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
-                ->where('product_id', $product_id)
-                ->orderByDesc('last_price_changed')
-                ->first();
-    
-            $canUpdate = !$lastUpdate || Carbon::parse($lastUpdate->last_price_changed)->diffInMonths(now()) >= 3;
-    
-            if ($canUpdate) {
-                $updateData = [];
+
+            if ($priceChanged) {
+                ProductPriceHistory::create([
+                    'site_id' => $site_id,
+                    'product_id' => $product_id,
+                    'unit_price' => $new_price,
+                    'last_price_changed' => now(),
+                ]);
+            }
+        } else {
+            // Can't update RRP/price yet, but can update discount
+            if ($discountChanged) {
+                $updateData = ['discount' => $new_discount];
                 
-                if ($rrpChanged) {
-                    $updateData['name'] = $new_name;
-                    $updateData['rrp'] = $new_rrp;
+                // Recalculate price based on current RRP and new discount
+                if ($new_discount > 0 && $current_rrp > 0) {
+                    $updateData['unit_price'] = round($current_rrp * (1 - $new_discount / 100), 2);
                 }
-                
-                if ($priceChanged) $updateData['unit_price'] = $new_price;
-                if ($discountChanged && !$rrpChanged) $updateData['discount'] = $new_discount;
-                if ($rrpChanged && $discountChanged) $updateData['discount'] = $new_discount;
-    
-                if (!empty($updateData)) {
-                    DB::connection($this->connectionType)
-                        ->table($this->productTable)
-                        ->where('id', $product_id)
-                        ->update($updateData);
-                }
-    
-                if ($priceChanged) {
-                    ProductPriceHistory::create([
-                        'site_id' => $site_id,
-                        'product_id' => $product_id,
-                        'unit_price' => $new_price,
-                        'last_price_changed' => now(),
-                    ]);
-                }
-            } else {
-                if ($discountChanged) {
-                    $updateData = ['discount' => $new_discount];
-                    
-                    if ($new_discount > 0 && $current_rrp > 0) {
-                        $updateData['unit_price'] = round($current_rrp * (1 - $new_discount / 100), 2);
-                    }
-    
-                    DB::connection($this->connectionType)
-                        ->table($this->productTable)
-                        ->where('id', $product_id)
-                        ->update($updateData);
-                }
+
+                DB::connection($this->connectionType)
+                    ->table($this->productTable)
+                    ->where('id', $product_id)
+                    ->update($updateData);
             }
         }
     }
+}
 }

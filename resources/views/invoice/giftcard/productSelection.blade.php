@@ -980,7 +980,6 @@ function clearRandomizedFilter(button) {
         }
 
         $('#generate-invoice-form').find('input[name="product_data[]"]').remove();
-        let hasMismatch = false;
 
         selectedProducts.each(function () {
             const $checkbox = $(this);
@@ -1003,23 +1002,6 @@ function clearRandomizedFilter(button) {
                 return true;
             }
 
-            const cardRRP = siteRRP * reverseRate;
-            const match = productName.match(/([A-Z]{3})\s*(\d+)/i);
-            
-            if (match) {
-                const nameRRP = parseInt(match[2]);
-                const difference = Math.abs(nameRRP - cardRRP);
-                
-                if (difference > 0.5) {
-                    const expectedRRP = Math.round(cardRRP);
-                    toastr.warning(`PID ${productId}: Name should end with "${expectedRRP}" but found "${nameRRP}"`);
-                    productNameInput.css('border', '2px solid red');
-                    setTimeout(() => productNameInput.css('border', ''), 3000);
-                    hasMismatch = true;
-                    return false;
-                }
-            }
-
             $('#generate-invoice-form').append($('<input>', {
                 type: 'hidden',
                 name: 'product_data[]',
@@ -1032,8 +1014,6 @@ function clearRandomizedFilter(button) {
                 })
             }));
         });
-
-        if (hasMismatch) return false;
 
         let blinkCount = 0;
         $('#discount_amount, #current_amount, #invoice_amount').css('transition', 'border-color 0.3s ease');
