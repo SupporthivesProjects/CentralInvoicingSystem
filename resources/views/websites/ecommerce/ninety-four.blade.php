@@ -10,8 +10,8 @@
         }
 
         .footer-fixed {
-            position: fixed;
-            bottom: 0px;
+            position: absolute;
+            bottom: -1px;
             left: 0;
             right: 0;
             width: 100%;
