@@ -379,16 +379,27 @@ class LaravelController extends Controller
         DynamicDatabaseService::connect($site);
     
         if ($productName !== null && trim($productName) !== '') {
+            // Get the current product to find its original name
+            $currentProduct = DB::connection($this->connectionType)
+                ->table($this->productTable)
+                ->where('id', $productId)
+                ->first();
+    
+            if (!$currentProduct) {
+                return response()->json(['error' => 'Product not found.']);
+            }
+    
+            $currentName = $currentProduct->name;
             $updateData = ['name' => trim($productName)];
             
             if ($published !== null) {
                 $updateData['published'] = $published;
             }
             
+            // Update all products with the same name (all durations)
             DB::connection($this->connectionType)
                 ->table($this->productTable)
                 ->where('name', $currentName)
-                ->orWhere('id', $productId)
                 ->update($updateData);
         }
     
