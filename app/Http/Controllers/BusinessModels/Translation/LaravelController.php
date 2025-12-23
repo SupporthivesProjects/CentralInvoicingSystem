@@ -464,7 +464,7 @@ class LaravelController extends Controller
             
             $product->pages = $quantity;
             $product->line_total = $quantity * floatval($product->unit_price);
-            $product->urgent_amount = 24.24;
+            $product->urgent_amount = 25;
             $product->is_urgent = rand(1, 100) <= 30;
     
             if ($product->is_urgent) {
@@ -678,7 +678,7 @@ class LaravelController extends Controller
             $product->unit_price = $unit_price;
             $product->pages = $pages;
             $product->line_total = $unit_price * $pages;
-            $product->urgent_amount = 24.24;
+            $product->urgent_amount = 25;
 
             $product->category_name = DB::connection($this->connectionType)->table('categories')
                 ->where('id', $product->category_id)
