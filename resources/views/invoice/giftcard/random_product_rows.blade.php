@@ -53,7 +53,7 @@
             <span class="input-group-text"  data-bs-toggle="tooltip" title="{{ site_currency_code() }}">{{ site_currency() }}</span>
             <input type="text" 
                    class="form-control text-center product-rrp" 
-                   value="{{ number_format($product->rrp, 0, '.', '') }}" 
+                   value="{{ number_format($product->rrp, 2) }}" 
                    data-reverse-rate="{{ $product->reverse_rate ?? 1 }}"
                    data-product-id="{{ $product->id }}"
                    aria-label="RRP"
