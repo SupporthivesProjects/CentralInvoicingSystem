@@ -983,7 +983,11 @@ function clearRandomizedFilter(button) {
         let hasMismatch = false;
 
         selectedProducts.each(function () {
-            const productId = $(this).val();
+            const $checkbox = $(this);
+            const productId = $checkbox.val();
+            const originalRRP = parseFloat($checkbox.data('original-rrp')) || 0;
+            const originalDiscount = parseFloat($checkbox.data('original-discount')) || 0;
+            
             const productNameInput = $(`input.product-name[data-product-id="${productId}"]`);
             const productName = productNameInput.val() || '';
             const unitPrice = parseFloat($(`input.product-price[data-product-id="${productId}"]`).val()) || 0;
@@ -992,6 +996,13 @@ function clearRandomizedFilter(button) {
             const reverseRate = parseFloat($rrpInput.data('reverse-rate')) || 1;
             const productDiscount = parseFloat($(`input.product-discount[data-product-id="${productId}"]`).val()) || 0;
             
+            const rrpChanged = Math.abs(siteRRP - originalRRP) > 0.01;
+            const discountChanged = Math.abs(productDiscount - originalDiscount) > 0.01;
+
+            if (!rrpChanged && !discountChanged) {
+                return true;
+            }
+
             const cardRRP = siteRRP * reverseRate;
             const match = productName.match(/([A-Z]{3})\s*(\d+)/i);
             
