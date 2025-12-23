@@ -980,6 +980,7 @@ function clearRandomizedFilter(button) {
         }
 
         $('#generate-invoice-form').find('input[name="product_data[]"]').remove();
+        let hasMismatch = false;
 
         selectedProducts.each(function () {
             const $checkbox = $(this);
@@ -1036,6 +1037,8 @@ function clearRandomizedFilter(button) {
                 })
             }));
         });
+
+        if (hasMismatch) return false;
 
         let blinkCount = 0;
         $('#discount_amount, #current_amount, #invoice_amount').css('transition', 'border-color 0.3s ease');
