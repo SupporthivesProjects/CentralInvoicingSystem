@@ -1044,14 +1044,10 @@ class LaravelController extends Controller
             $current_rrp = floatval($product->rrp ?? 0);
             $current_discount = floatval($product->discount ?? 0);
     
-            // Data from frontend - siteRRP is in site currency
             $siteRRP = floatval($data['unit_rrp'] ?? 0);
             $new_discount = floatval($data['unit_discount'] ?? 0);
-            $sitePrice = floatval($data['unit_price'] ?? 0);
             
-            // Convert site RRP and price to card currency
             $new_rrp = round($siteRRP * $rate, 2);
-            $new_price_card = round($sitePrice * $rate, 2);
     
             $discountChanged = abs($current_discount - $new_discount) > 0.01;
             $rrpChanged = abs($current_rrp - $new_rrp) > 0.01;
@@ -1060,27 +1056,6 @@ class LaravelController extends Controller
                 continue;
             }
     
-            $new_price = $current_price;
-    
-            if ($rrpChanged && !$discountChanged) {
-                $new_price = $current_discount > 0 && $new_rrp > 0
-                    ? round($new_rrp * (1 - $current_discount / 100), 2)
-                    : $new_rrp;
-            } 
-            elseif ($discountChanged && !$rrpChanged) {
-                $discountedPrice = $new_discount > 0 && $current_rrp > 0
-                    ? round($current_rrp * (1 - $new_discount / 100), 2)
-                    : $current_rrp;
-                $new_price = $discountedPrice;
-            } 
-            elseif ($rrpChanged && $discountChanged) {
-                $new_price = $new_discount > 0 && $new_rrp > 0
-                    ? round($new_rrp * (1 - $new_discount / 100), 2)
-                    : $new_rrp;
-            }
-    
-            $priceChanged = abs($current_price - $new_price) > 0.01;
-    
             $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
                 ->where('product_id', $product_id)
                 ->orderByDesc('last_price_changed')
@@ -1088,29 +1063,22 @@ class LaravelController extends Controller
     
             $canUpdate = !$lastUpdate || Carbon::parse($lastUpdate->last_price_changed)->diffInMonths(now()) >= 3;
     
-            if ($canUpdate) {
-                $updateData = [];
-                
-                if ($rrpChanged) {
-                    $updateData['rrp'] = $new_rrp;
-                }
-                
-                if ($discountChanged) {
-                    $updateData['discount'] = $new_discount;
-                }
-                
-                if ($priceChanged) {
-                    $updateData['unit_price'] = $new_price;
-                }
+            if ($rrpChanged && !$discountChanged) {
+                if ($canUpdate) {
+                    $new_price = $current_discount > 0 && $new_rrp > 0
+                        ? round($new_rrp * (1 - $current_discount / 100), 2)
+                        : $new_rrp;
     
-                if (!empty($updateData)) {
+                    $updateData = [
+                        'rrp' => $new_rrp,
+                        'unit_price' => $new_price
+                    ];
+    
                     DB::connection($this->connectionType)
                         ->table($this->productTable)
                         ->where('id', $product_id)
                         ->update($updateData);
-                }
     
-                if ($priceChanged) {
                     ProductPriceHistory::create([
                         'site_id' => $site_id,
                         'product_id' => $product_id,
@@ -1118,14 +1086,54 @@ class LaravelController extends Controller
                         'last_price_changed' => now(),
                     ]);
                 }
-            } else {
-                // Can't update RRP yet, but can update discount
-                if ($discountChanged) {
-                    $updateData = ['discount' => $new_discount];
-                    
-                    if ($new_discount > 0 && $current_rrp > 0) {
-                        $updateData['unit_price'] = round($current_rrp * (1 - $new_discount / 100), 2);
-                    }
+            }
+            elseif ($discountChanged && !$rrpChanged) {
+                $discountedPrice = $new_discount > 0 && $current_rrp > 0
+                    ? round($current_rrp * (1 - $new_discount / 100), 2)
+                    : $current_rrp;
+    
+                $updateData = [
+                    'discount' => $new_discount,
+                    'unit_price' => $discountedPrice
+                ];
+    
+                DB::connection($this->connectionType)
+                    ->table($this->productTable)
+                    ->where('id', $product_id)
+                    ->update($updateData);
+            }
+            elseif ($rrpChanged && $discountChanged) {
+                if ($canUpdate) {
+                    $new_price = $new_discount > 0 && $new_rrp > 0
+                        ? round($new_rrp * (1 - $new_discount / 100), 2)
+                        : $new_rrp;
+    
+                    $updateData = [
+                        'rrp' => $new_rrp,
+                        'discount' => $new_discount,
+                        'unit_price' => $new_price
+                    ];
+    
+                    DB::connection($this->connectionType)
+                        ->table($this->productTable)
+                        ->where('id', $product_id)
+                        ->update($updateData);
+    
+                    ProductPriceHistory::create([
+                        'site_id' => $site_id,
+                        'product_id' => $product_id,
+                        'unit_price' => $new_price,
+                        'last_price_changed' => now(),
+                    ]);
+                } else {
+                    $discountedPrice = $new_discount > 0 && $current_rrp > 0
+                        ? round($current_rrp * (1 - $new_discount / 100), 2)
+                        : $current_rrp;
+    
+                    $updateData = [
+                        'discount' => $new_discount,
+                        'unit_price' => $discountedPrice
+                    ];
     
                     DB::connection($this->connectionType)
                         ->table($this->productTable)
