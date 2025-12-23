@@ -1004,6 +1004,24 @@ function clearRandomizedFilter(button) {
 
             // Convert site RRP back to card currency
             const cardRRP = reverseRate > 0 ? siteRRP / reverseRate : siteRRP;
+            
+            /* COMMENTED: Product name validation - no longer needed
+            const match = productName.match(/([A-Z]{3})\s*(\d+)/i);
+            
+            if (match) {
+                const nameRRP = parseInt(match[2]);
+                const difference = Math.abs(nameRRP - cardRRP);
+                
+                if (difference > 0.5) {
+                    const expectedRRP = Math.round(cardRRP);
+                    toastr.warning(`PID ${productId}: Name should end with "${expectedRRP}" but found "${nameRRP}"`);
+                    productNameInput.css('border', '2px solid red');
+                    setTimeout(() => productNameInput.css('border', ''), 3000);
+                    hasMismatch = true;
+                    return false;
+                }
+            }
+            */
 
             $('#generate-invoice-form').append($('<input>', {
                 type: 'hidden',
