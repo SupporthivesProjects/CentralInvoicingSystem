@@ -106,7 +106,10 @@
         <button class="remove-product btn btn-danger btn-sm" data-product-name="{{ $product->name }}" data-product-id="{{ $product->id }}">
             <i class="fa fa-trash"></i>
         </button>
-        <input style="display: none;"  class="form-check-input border narayan-checkbox border-1 border-primary"  type="checkbox" name="product_ids[]"  data-unit_price="{{ number_format($product->unit_price, 2, '.', '') }}" value="{{ $product->id }}" 
+        <input style="display: none;"  class="form-check-input border narayan-checkbox border-1 border-primary"  type="checkbox" name="product_ids[]"  
+            data-unit_price="{{ number_format($product->unit_price, 2, '.', '') }}" 
+            data-reverse-rate="{{ $product->reverse_rate ?? 1 }}"
+            value="{{ $product->id }}" 
             data-original-rrp="{{ number_format($product->rrp, 0, '.', '') }}"
             data-original-discount="{{ number_format($product->discount, 0, '.', '') }}"
             checked >
