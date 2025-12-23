@@ -13,7 +13,7 @@
             bottom: -1px;
             left: 0;
             right: 0;
-            width: 100%;
+            /* width: 100%; */
         }
     </style>
 </head>
