@@ -213,7 +213,7 @@
                         </td>
                      </tr> -->
 
-                    <div class="footer-fixed" style="background-image: url({{$invoice_footer_image}}); height: 135px; width: 900px; opacity: 1; background-size: contain; background-repeat: no-repeat;">
+                    <div class="footer-fixed" style="background-image: url({{$invoice_footer_image}}); height: 135px; width: 1100px; opacity: 1; background-size: contain; background-repeat: no-repeat;">
                     </div>
                 </table>
             </td>
