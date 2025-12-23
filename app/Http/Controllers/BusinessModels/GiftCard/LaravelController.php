@@ -1063,83 +1063,71 @@ class LaravelController extends Controller
     
             $canUpdate = !$lastUpdate || Carbon::parse($lastUpdate->last_price_changed)->diffInMonths(now()) >= 3;
     
-            if ($rrpChanged && !$discountChanged) {
-                if ($canUpdate) {
-                    $new_price = $current_discount > 0 && $new_rrp > 0
-                        ? round($new_rrp * (1 - $current_discount / 100), 2)
-                        : $new_rrp;
-    
-                    $updateData = [
-                        'rrp' => $new_rrp,
-                        'unit_price' => $new_price
-                    ];
-    
-                    DB::connection($this->connectionType)
-                        ->table($this->productTable)
-                        ->where('id', $product_id)
-                        ->update($updateData);
-    
-                    ProductPriceHistory::create([
-                        'site_id' => $site_id,
-                        'product_id' => $product_id,
-                        'unit_price' => $new_price,
-                        'last_price_changed' => now(),
-                    ]);
-                }
+            if (!$canUpdate) {
+                continue;
             }
-            elseif ($discountChanged && !$rrpChanged) {
-                $discountedPrice = $new_discount > 0 && $current_rrp > 0
-                    ? round($current_rrp * (1 - $new_discount / 100), 2)
-                    : $current_rrp;
+    
+            if ($rrpChanged && !$discountChanged) {
+                $new_price = $current_discount > 0 && $new_rrp > 0
+                    ? round($new_rrp * (1 - $current_discount / 100), 2)
+                    : $new_rrp;
     
                 $updateData = [
-                    'discount' => $new_discount,
-                    'unit_price' => $discountedPrice
+                    'rrp' => $new_rrp,
+                    'unit_price' => $new_price
                 ];
     
                 DB::connection($this->connectionType)
                     ->table($this->productTable)
                     ->where('id', $product_id)
                     ->update($updateData);
+    
+                ProductPriceHistory::create([
+                    'site_id' => $site_id,
+                    'product_id' => $product_id,
+                    'unit_price' => $new_price,
+                    'last_price_changed' => now(),
+                ]);
+            }
+            elseif ($discountChanged && !$rrpChanged) {
+                $updateData = [
+                    'discount' => $new_discount
+                ];
+    
+                DB::connection($this->connectionType)
+                    ->table($this->productTable)
+                    ->where('id', $product_id)
+                    ->update($updateData);
+    
+                ProductPriceHistory::create([
+                    'site_id' => $site_id,
+                    'product_id' => $product_id,
+                    'unit_price' => $current_price,
+                    'last_price_changed' => now(),
+                ]);
             }
             elseif ($rrpChanged && $discountChanged) {
-                if ($canUpdate) {
-                    $new_price = $new_discount > 0 && $new_rrp > 0
-                        ? round($new_rrp * (1 - $new_discount / 100), 2)
-                        : $new_rrp;
+                $new_price = $new_discount > 0 && $new_rrp > 0
+                    ? round($new_rrp * (1 - $new_discount / 100), 2)
+                    : $new_rrp;
     
-                    $updateData = [
-                        'rrp' => $new_rrp,
-                        'discount' => $new_discount,
-                        'unit_price' => $new_price
-                    ];
+                $updateData = [
+                    'rrp' => $new_rrp,
+                    'discount' => $new_discount,
+                    'unit_price' => $new_price
+                ];
     
-                    DB::connection($this->connectionType)
-                        ->table($this->productTable)
-                        ->where('id', $product_id)
-                        ->update($updateData);
+                DB::connection($this->connectionType)
+                    ->table($this->productTable)
+                    ->where('id', $product_id)
+                    ->update($updateData);
     
-                    ProductPriceHistory::create([
-                        'site_id' => $site_id,
-                        'product_id' => $product_id,
-                        'unit_price' => $new_price,
-                        'last_price_changed' => now(),
-                    ]);
-                } else {
-                    $discountedPrice = $new_discount > 0 && $current_rrp > 0
-                        ? round($current_rrp * (1 - $new_discount / 100), 2)
-                        : $current_rrp;
-    
-                    $updateData = [
-                        'discount' => $new_discount,
-                        'unit_price' => $discountedPrice
-                    ];
-    
-                    DB::connection($this->connectionType)
-                        ->table($this->productTable)
-                        ->where('id', $product_id)
-                        ->update($updateData);
-                }
+                ProductPriceHistory::create([
+                    'site_id' => $site_id,
+                    'product_id' => $product_id,
+                    'unit_price' => $new_price,
+                    'last_price_changed' => now(),
+                ]);
             }
         }
     }
