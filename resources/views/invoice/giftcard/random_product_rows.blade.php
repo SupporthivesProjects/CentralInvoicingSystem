@@ -57,7 +57,6 @@
                    data-reverse-rate="{{ $product->reverse_rate ?? 1 }}"
                    data-product-id="{{ $product->id }}"
                    aria-label="RRP"
-                   oninput="this.value = this.value.replace(/[^0-9]/g, '')"
                    pattern="[0-9]*"
                    inputmode="numeric"
                    {{ $product->can_edit_price == 0 ? 'readonly' : '' }}>
@@ -82,7 +81,6 @@
                    value="{{ number_format($product->discount, 0, '.', '') }}" 
                    data-product-id="{{ $product->id }}" 
                    aria-label="Discount"
-                   oninput="this.value = this.value.replace(/[^0-9]/g, '')"
                    pattern="[0-9]*"
                    inputmode="numeric"
                    {{ $product->can_edit_price == 0 ? 'readonly' : '' }}>
