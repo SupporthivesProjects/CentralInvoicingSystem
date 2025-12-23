@@ -2,12 +2,26 @@
 <html>
 <head>
     <title>{{ $site->site_name }} - Invoice #{{ $invoice_number }}</title>
+    <style>
+        body {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        .footer-fixed {
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            width: 100%;
+        }
+    </style>
 </head>
 <body style="padding: 0px; margin: 0px;">
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
             <td align="center"  style="padding: 0px;">
-                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-collapse: collapse; ">
+                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#e9f3fd" style="border-collapse: collapse; ">
                     <!-- Header -->
                     <tr>
                         <td style="padding: 0px; position: relative;">
@@ -194,10 +208,13 @@
                     </tr>
                     <!-- Content End-->
                      <!-- Footer -->
-                     <tr>
+                     <!-- <tr>
                         <td style="background-image: url({{$invoice_footer_image}}); height: 135px; width: 100%; opacity: 1; background-size: contain; background-repeat: no-repeat;">
                         </td>
-                     </tr>
+                     </tr> -->
+
+                    <div class="footer-fixed" style="background-image: url({{$invoice_footer_image}}); height: 135px; width: 100%; opacity: 1; background-size: contain; background-repeat: no-repeat;">
+                    </div>
                 </table>
             </td>
         </tr>
