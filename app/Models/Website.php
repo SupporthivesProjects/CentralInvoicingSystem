@@ -30,6 +30,7 @@ class Website extends Model
         'term_taxonomy_table',
         'consumer_key',
         'consumer_secret',
+        'site_name',
         'site_link',
         'std_trans_url',   
         'cert_trans_url', 
