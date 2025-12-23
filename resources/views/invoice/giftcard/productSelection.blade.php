@@ -1002,6 +1002,9 @@ function clearRandomizedFilter(button) {
                 return true;
             }
 
+            // Convert site RRP back to card currency
+            const cardRRP = reverseRate > 0 ? siteRRP / reverseRate : siteRRP;
+
             $('#generate-invoice-form').append($('<input>', {
                 type: 'hidden',
                 name: 'product_data[]',
@@ -1009,8 +1012,9 @@ function clearRandomizedFilter(button) {
                     product_id: productId,
                     product_name: productName,
                     unit_price: unitPrice,
-                    unit_rrp: siteRRP,
-                    unit_discount: productDiscount
+                    unit_rrp: Math.round(cardRRP),
+                    unit_discount: productDiscount,
+                    reverse_rate: reverseRate
                 })
             }));
         });
