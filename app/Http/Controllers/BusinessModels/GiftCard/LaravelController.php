@@ -1047,33 +1047,32 @@ class LaravelController extends Controller
             // Data from frontend - siteRRP is in site currency
             $siteRRP = floatval($data['unit_rrp'] ?? 0);
             $new_discount = floatval($data['unit_discount'] ?? 0);
+            $sitePrice = floatval($data['unit_price'] ?? 0);
             
-            // Convert site RRP to card currency
+            // Convert site RRP and price to card currency
             $new_rrp = round($siteRRP * $rate, 2);
+            $new_price_card = round($sitePrice * $rate, 2);
     
             $discountChanged = abs($current_discount - $new_discount) > 0.01;
             $rrpChanged = abs($current_rrp - $new_rrp) > 0.01;
     
-            // Only proceed if something actually changed
             if (!$rrpChanged && !$discountChanged) {
                 continue;
             }
     
             $new_price = $current_price;
     
-            // Scenario 1: Only RRP changed
             if ($rrpChanged && !$discountChanged) {
                 $new_price = $current_discount > 0 && $new_rrp > 0
                     ? round($new_rrp * (1 - $current_discount / 100), 2)
                     : $new_rrp;
             } 
-            // Scenario 2: Only discount changed
             elseif ($discountChanged && !$rrpChanged) {
-                $new_price = $new_discount > 0 && $current_rrp > 0
+                $discountedPrice = $new_discount > 0 && $current_rrp > 0
                     ? round($current_rrp * (1 - $new_discount / 100), 2)
                     : $current_rrp;
+                $new_price = $discountedPrice;
             } 
-            // Scenario 3: Both RRP and discount changed
             elseif ($rrpChanged && $discountChanged) {
                 $new_price = $new_discount > 0 && $new_rrp > 0
                     ? round($new_rrp * (1 - $new_discount / 100), 2)
