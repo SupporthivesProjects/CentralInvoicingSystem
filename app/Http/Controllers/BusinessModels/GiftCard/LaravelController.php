@@ -1047,7 +1047,8 @@ class LaravelController extends Controller
     
             $new_name = $data['product_name'];
             $new_discount = floatval($data['unit_discount'] ?? 0);
-            $new_rrp = round($data['unit_rrp'] * $rate, 2);
+            $rounded_site_rrp = round($data['unit_rrp']);
+            $new_rrp = round($rounded_site_rrp * $rate, 2);
     
             $discountChanged = abs($current_discount - $new_discount) > 0.01;
             $rrpChanged = abs($current_rrp - $new_rrp) > 0.01;
