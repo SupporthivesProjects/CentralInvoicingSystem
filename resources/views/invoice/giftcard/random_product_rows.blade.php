@@ -76,7 +76,7 @@
     <td class="text-center">
         <div class="input-group d-flex justify-content-center">
         <span class="input-group-text"><i class="fas fa-percent text-success"></i></span>
-            <input type="text" 
+            <input type="number" 
                    class="form-control text-center text-success fw-bold product-discount" 
                    value="{{ number_format($product->discount, 0, '.', '') }}" 
                    data-product-id="{{ $product->id }}" 
