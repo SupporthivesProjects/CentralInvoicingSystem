@@ -17,7 +17,7 @@
         }
     </style>
 </head>
-<body style="padding: 0px; margin: 0px;">
+<body style="padding: 0px; margin: 0px;background: #e9f3fd;">
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
             <td align="center"  style="padding: 0px;">
@@ -213,7 +213,7 @@
                         </td>
                      </tr> -->
 
-                    <div class="footer-fixed" style="background-image: url({{$invoice_footer_image}}); height: 135px; width: 100%; opacity: 1; background-size: contain; background-repeat: no-repeat;">
+                    <div class="footer-fixed" style="background-image: url({{$invoice_footer_image}}); height: 135px; width: 800px; opacity: 1; background-size: contain; background-repeat: no-repeat;">
                     </div>
                 </table>
             </td>
