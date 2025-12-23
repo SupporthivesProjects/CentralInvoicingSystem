@@ -57,7 +57,6 @@
                    data-reverse-rate="{{ $product->reverse_rate ?? 1 }}"
                    data-product-id="{{ $product->id }}"
                    aria-label="RRP"
-                   pattern="[0-9]*"
                    inputmode="numeric"
                    {{ $product->can_edit_price == 0 ? 'readonly' : '' }}>
             <span class="input-group-text d-flex align-items-center"
@@ -81,7 +80,6 @@
                    value="{{ number_format($product->discount, 0, '.', '') }}" 
                    data-product-id="{{ $product->id }}" 
                    aria-label="Discount"
-                   pattern="[0-9]*"
                    inputmode="numeric"
                    {{ $product->can_edit_price == 0 ? 'readonly' : '' }}>
             <span class="input-group-text d-flex align-items-center" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $product->can_edit_price == 0 ? 'Discount update allowed after ' . $product->remaining_days . ' days.' : 'Editable' }}">
