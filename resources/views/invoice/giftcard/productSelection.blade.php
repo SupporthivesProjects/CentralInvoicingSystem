@@ -921,6 +921,7 @@ function clearRandomizedFilter(button) {
     });
 }
 </script>
+
 <script>
     function generateInvoice(event) {
         event.preventDefault();

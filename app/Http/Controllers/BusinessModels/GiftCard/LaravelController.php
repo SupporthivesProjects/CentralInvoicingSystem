@@ -1033,41 +1033,51 @@ class LaravelController extends Controller
                 continue;
             }
     
-            $current_name = $product->name;
+            $siteCurrency = site_currency_code();
+            $rate = DB::connection($this->connectionType)
+                ->table('conversion_rates')
+                ->where('from_currency', $siteCurrency)
+                ->where('to_currency', $product->card_currency)
+                ->value('rate') ?: 1;
+    
             $current_price = floatval($product->unit_price);
             $current_rrp = floatval($product->rrp ?? 0);
             $current_discount = floatval($product->discount ?? 0);
     
-            // Data from frontend is already in card currency
-            $new_card_rrp = floatval($data['unit_rrp'] ?? 0);
+            // Data from frontend - siteRRP is in site currency
+            $siteRRP = floatval($data['unit_rrp'] ?? 0);
             $new_discount = floatval($data['unit_discount'] ?? 0);
+            
+            // Convert site RRP to card currency
+            $new_rrp = round($siteRRP * $rate, 2);
     
             $discountChanged = abs($current_discount - $new_discount) > 0.01;
-            $rrpChanged = abs($current_rrp - $new_card_rrp) > 0.01;
+            $rrpChanged = abs($current_rrp - $new_rrp) > 0.01;
     
+            // Only proceed if something actually changed
             if (!$rrpChanged && !$discountChanged) {
                 continue;
             }
     
             $new_price = $current_price;
     
-            // Scenario 1: Only RRP changed (already in card currency)
+            // Scenario 1: Only RRP changed
             if ($rrpChanged && !$discountChanged) {
-                $new_price = $current_discount > 0 && $new_card_rrp > 0
-                    ? round($new_card_rrp * (1 - $current_discount / 100), 2)
-                    : $new_card_rrp;
+                $new_price = $current_discount > 0 && $new_rrp > 0
+                    ? round($new_rrp * (1 - $current_discount / 100), 2)
+                    : $new_rrp;
             } 
-            // Scenario 2: Only discount changed (no RRP conversion needed)
+            // Scenario 2: Only discount changed
             elseif ($discountChanged && !$rrpChanged) {
                 $new_price = $new_discount > 0 && $current_rrp > 0
                     ? round($current_rrp * (1 - $new_discount / 100), 2)
                     : $current_rrp;
             } 
-            // Scenario 3: Both RRP and discount changed (RRP already in card currency)
+            // Scenario 3: Both RRP and discount changed
             elseif ($rrpChanged && $discountChanged) {
-                $new_price = $new_discount > 0 && $new_card_rrp > 0
-                    ? round($new_card_rrp * (1 - $new_discount / 100), 2)
-                    : $new_card_rrp;
+                $new_price = $new_discount > 0 && $new_rrp > 0
+                    ? round($new_rrp * (1 - $new_discount / 100), 2)
+                    : $new_rrp;
             }
     
             $priceChanged = abs($current_price - $new_price) > 0.01;
@@ -1082,17 +1092,14 @@ class LaravelController extends Controller
             if ($canUpdate) {
                 $updateData = [];
                 
-                // Only update RRP if it changed (already in card currency)
                 if ($rrpChanged) {
-                    $updateData['rrp'] = $new_card_rrp;
+                    $updateData['rrp'] = $new_rrp;
                 }
                 
-                // Update discount if it changed
                 if ($discountChanged) {
                     $updateData['discount'] = $new_discount;
                 }
                 
-                // Update price if it changed
                 if ($priceChanged) {
                     $updateData['unit_price'] = $new_price;
                 }
@@ -1113,11 +1120,10 @@ class LaravelController extends Controller
                     ]);
                 }
             } else {
-                // Can't update RRP/price yet, but can update discount
+                // Can't update RRP yet, but can update discount
                 if ($discountChanged) {
                     $updateData = ['discount' => $new_discount];
                     
-                    // Recalculate price based on current RRP and new discount
                     if ($new_discount > 0 && $current_rrp > 0) {
                         $updateData['unit_price'] = round($current_rrp * (1 - $new_discount / 100), 2);
                     }
