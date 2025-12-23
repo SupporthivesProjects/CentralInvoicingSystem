@@ -983,38 +983,24 @@ function clearRandomizedFilter(button) {
         let hasMismatch = false;
 
         selectedProducts.each(function () {
-            const $checkbox = $(this);
-            const productId = $checkbox.val();
-            const originalRRP = parseFloat($checkbox.data('original-rrp')) || 0;
-            const originalDiscount = parseFloat($checkbox.data('original-discount')) || 0;
-            
+            const productId = $(this).val();
             const productNameInput = $(`input.product-name[data-product-id="${productId}"]`);
             const productName = productNameInput.val() || '';
             const unitPrice = parseFloat($(`input.product-price[data-product-id="${productId}"]`).val()) || 0;
             const $rrpInput = $(`input.product-rrp[data-product-id="${productId}"]`);
             const siteRRP = parseFloat($rrpInput.val()) || 0;
             const reverseRate = parseFloat($rrpInput.data('reverse-rate')) || 1;
+            const originalCardRRP = parseFloat($rrpInput.data('card-rrp')) || 0;
             const productDiscount = parseFloat($(`input.product-discount[data-product-id="${productId}"]`).val()) || 0;
             
-            const rrpChanged = Math.abs(siteRRP - originalRRP) > 0.01;
-            const discountChanged = Math.abs(productDiscount - originalDiscount) > 0.01;
-
-            if (!rrpChanged && !discountChanged) {
-                return true;
-            }
-
-            // Convert site RRP back to card currency
-            const cardRRP = reverseRate > 0 ? siteRRP / reverseRate : siteRRP;
-            
-            /* COMMENTED: Product name validation - no longer needed
+            const cardRRP = originalCardRRP || (siteRRP * reverseRate);
             const match = productName.match(/([A-Z]{3})\s*(\d+)/i);
             
             if (match) {
                 const nameRRP = parseInt(match[2]);
-                const difference = Math.abs(nameRRP - cardRRP);
+                const expectedRRP = Math.round(cardRRP);
                 
-                if (difference > 0.5) {
-                    const expectedRRP = Math.round(cardRRP);
+                if (Math.abs(nameRRP - expectedRRP) > 1) {
                     toastr.warning(`PID ${productId}: Name should end with "${expectedRRP}" but found "${nameRRP}"`);
                     productNameInput.css('border', '2px solid red');
                     setTimeout(() => productNameInput.css('border', ''), 3000);
@@ -1022,7 +1008,6 @@ function clearRandomizedFilter(button) {
                     return false;
                 }
             }
-            */
 
             $('#generate-invoice-form').append($('<input>', {
                 type: 'hidden',
@@ -1031,9 +1016,8 @@ function clearRandomizedFilter(button) {
                     product_id: productId,
                     product_name: productName,
                     unit_price: unitPrice,
-                    unit_rrp: Math.round(cardRRP),
-                    unit_discount: productDiscount,
-                    reverse_rate: reverseRate
+                    unit_rrp: siteRRP,
+                    unit_discount: productDiscount
                 })
             }));
         });
