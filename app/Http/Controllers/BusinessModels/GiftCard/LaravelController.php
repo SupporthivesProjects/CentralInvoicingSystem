@@ -1052,6 +1052,12 @@ class LaravelController extends Controller
             $discountChanged = abs($current_discount - $new_discount) > 0.01;
             $rrpChanged = abs($current_rrp - $new_rrp) > 0.01;
     
+            if (!$rrpChanged && !$discountChanged) {
+                continue;
+            }
+    
+            $new_price = $current_price;
+    
             if ($rrpChanged && !$discountChanged) {
                 $new_price = $current_discount > 0 && $new_rrp > 0
                     ? round($new_rrp * (1 - $current_discount / 100), 2)

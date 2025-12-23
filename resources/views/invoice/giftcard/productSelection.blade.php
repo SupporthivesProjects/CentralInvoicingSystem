@@ -990,17 +990,17 @@ function clearRandomizedFilter(button) {
             const $rrpInput = $(`input.product-rrp[data-product-id="${productId}"]`);
             const siteRRP = parseFloat($rrpInput.val()) || 0;
             const reverseRate = parseFloat($rrpInput.data('reverse-rate')) || 1;
-            const originalCardRRP = parseFloat($rrpInput.data('card-rrp')) || 0;
             const productDiscount = parseFloat($(`input.product-discount[data-product-id="${productId}"]`).val()) || 0;
             
-            const cardRRP = originalCardRRP || (siteRRP * reverseRate);
+            const cardRRP = siteRRP * reverseRate;
             const match = productName.match(/([A-Z]{3})\s*(\d+)/i);
             
             if (match) {
                 const nameRRP = parseInt(match[2]);
-                const expectedRRP = Math.round(cardRRP);
+                const difference = Math.abs(nameRRP - cardRRP);
                 
-                if (Math.abs(nameRRP - expectedRRP) > 1) {
+                if (difference > 0.5) {
+                    const expectedRRP = Math.round(cardRRP);
                     toastr.warning(`PID ${productId}: Name should end with "${expectedRRP}" but found "${nameRRP}"`);
                     productNameInput.css('border', '2px solid red');
                     setTimeout(() => productNameInput.css('border', ''), 3000);
