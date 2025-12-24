@@ -3,7 +3,7 @@
 <head>
   <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
 </head>
-<body>
+<body style="margin=0px; padding=0px;">
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
             <td align="center" bgcolor="#f2f2f2" style="padding: 0px 0;">
@@ -21,7 +21,7 @@
 
                      <tr style=" background: url('{{ $invoice_image1 }}');background-repeat: no-repeat;background-size: cover;background-position: center;">
                         <td style="padding:40px;  font-family: arial;">
-                            <p style="text-align: center; color: #2E75B5; font-size: 20px; margin: 0;"><b>I</b>nvoice<b> #{{ $invoice_number }}</b></p>
+                            <p style="text-align: center; color: #2E75B5; font-size: 20px; margin: 0;"><b>Invoice</b><b> #{{ $invoice_number }}</b></p>
 
 
                             <table style="width: 100%; border: 1px solid #0074d9; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 10px; margin-top: 20px;">
@@ -30,21 +30,23 @@
                                   <th style="background-color: #DEEBF6; text-align: left; padding: 10px; border-bottom: 1px solid #0074d9;">Bill from</th>
                                 </tr>
                                 <tr>
-                                  <td style="padding: 20px; border-right: 1px solid #0074d9;">
+                                  <td style="padding: 16px; border-right: 1px solid #0074d9; display:flex; flex-direction: column">
                                     <p><strong>Name</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ $customer_name  }}</p>
-                                    <p><strong>Email</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ $customer_email }}</p>
+                                    <!-- <p><strong>Email</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ $customer_email }}</p> -->
                                   </td>
-                                  <td style="padding: 20px;">
-                                    <div style="border-top: 1px solid #0074d9; padding-top: 10px;">
+                                  <td style="padding: 16px;">
+                                    <div>
                                       <p><strong>Name</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ $site_name }}</p>
                                       <p><strong>Address</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {!! $company_address !!}</p>
-                                      <p><strong>Phone</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ $company_mobile  }}</p>
+                                      @if(!empty($company_mobile))
+                                        <p><strong>Phone</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ $company_mobile  }}</p>
+                                      @endif
                                       <p><strong>Email</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ $company_email }}</p>
                                     </div>
                                   </td>
                                 </tr>
                               </table>
-                              <div style="min-height: 430px !important;">
+                              <div style="min-height: 460px !important;">
                               <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; border: 1px solid #0074d9; font-size: 10px; margin-top: 20px;">
                                 <thead>
                                   <tr style="background-color: #DEEBF6;">
