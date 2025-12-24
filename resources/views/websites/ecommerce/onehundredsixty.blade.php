@@ -69,6 +69,16 @@
                                             >
                                                 No.{{ $invoice_number }}
                                             </b>
+                                            <b
+                                                style="
+                                                color: white;
+                                                font-size: 9px;
+                                                font-family: 'Courier New', Courier, monospace;
+                                                margin-top: 4px;
+                                                "
+                                            >
+                                                {{ $invoice_date }}
+                                            </b>
                                             </div>
 
                                     </td>
