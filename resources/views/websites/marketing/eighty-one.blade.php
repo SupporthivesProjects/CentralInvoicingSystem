@@ -30,11 +30,11 @@
                                   <th style="background-color: #DEEBF6; text-align: left; padding: 10px; border-bottom: 1px solid #0074d9;">Bill from</th>
                                 </tr>
                                 <tr>
-                                  <td style="padding: 16px; border-right: 1px solid #0074d9; display:flex; flex-direction: column">
+                                  <td style="padding: 16px; display:flex; flex-direction: column">
                                     <p><strong>Name</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ $customer_name  }}</p>
                                     <!-- <p><strong>Email</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ $customer_email }}</p> -->
                                   </td>
-                                  <td style="padding: 16px;">
+                                  <td style="padding: 16px; border-left: 1px solid #0074d9;">
                                     <div>
                                       <p><strong>Name</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ $site_name }}</p>
                                       <p><strong>Address</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {!! $company_address !!}</p>
