@@ -62,12 +62,13 @@ class LaravelController extends Controller
             $query->where('category_id', $categoryId);
         }
     
-        $products = $query->orderByDesc('unit_price')->get();
+        $products = $query->get();
     
         if ($products->isEmpty()) {
             session()->forget('ready_products');
             session()->forget('current_amount');
-
+            session()->forget('last_used_combinations');
+    
             return response()->json([
                 'tableRows' => '',
                 'total' => 0,
@@ -80,123 +81,22 @@ class LaravelController extends Controller
     
         $bestMatch = null;
         $bestTotal = 0;
-        $bestDistance = PHP_INT_MAX;
     
         if ($perfectMatch) {
             $bestMatch = collect([$perfectMatch]);
             $bestTotal = $invoiceAmount;
-        }
+        } else {
+            $lastUsedCombinations = session()->get('last_used_combinations', []);
+            $result = $this->findBestProductCombination($products, $invoiceAmount, $noOfProducts, $lastUsedCombinations);
     
-        for ($i = 0; $i < 50; $i++) {
-            $shuffled = $products->shuffle();
-            $selected = [];
-            $currentTotal = 0;
+            if ($result && !empty($result['products'])) {
+                $bestMatch = collect($result['products']);
+                $bestTotal = $result['total'];
     
-            foreach ($shuffled as $product) {
-                $price = floatval($product->unit_price);
-    
-                if ($noOfProducts && count($selected) >= $noOfProducts) break;
-                if ($currentTotal + $price > $invoiceAmount) continue;
-    
-                $selected[] = $product;
-                $currentTotal += $price;
-    
-                if ($currentTotal == $invoiceAmount) {
-                    if (!$noOfProducts || count($selected) == $noOfProducts) {
-                        $bestMatch = $selected;
-                        $bestTotal = $currentTotal;
-                        break 2;
-                    }
-                }
-    
-                if ($noOfProducts && count($selected) == $noOfProducts) break;
-            }
-    
-            if (!$noOfProducts && $currentTotal == $invoiceAmount && count($selected) > 0) {
-                $bestMatch = $selected;
-                $bestTotal = $currentTotal;
-                break;
-            }
-        }
-    
-        if (!$bestMatch) {
-            $maxTotal = $invoiceAmount * 1.15;
-    
-            for ($i = 0; $i < 50; $i++) {
-                $shuffled = $products->shuffle();
-                $selected = [];
-                $currentTotal = 0;
-    
-                foreach ($shuffled as $product) {
-                    $price = floatval($product->unit_price);
-    
-                    if ($noOfProducts && count($selected) >= $noOfProducts) break;
-                    if ($currentTotal + $price > $maxTotal) continue;
-    
-                    $selected[] = $product;
-                    $currentTotal += $price;
-    
-                    if ($noOfProducts && count($selected) == $noOfProducts) break;
-                }
-    
-                if ($noOfProducts) {
-                    if (count($selected) == $noOfProducts && $currentTotal >= $invoiceAmount) {
-                        $distance = $currentTotal - $invoiceAmount;
-                        if ($distance < $bestDistance) {
-                            $bestMatch = $selected;
-                            $bestTotal = $currentTotal;
-                            $bestDistance = $distance;
-                        }
-                    }
-                } else {
-                    if ($currentTotal >= $invoiceAmount && $currentTotal <= $maxTotal) {
-                        $distance = $currentTotal - $invoiceAmount;
-                        if ($distance < $bestDistance) {
-                            $bestMatch = $selected;
-                            $bestTotal = $currentTotal;
-                            $bestDistance = $distance;
-                        }
-                    }
-                }
-            }
-        }
-    
-        if (!$bestMatch) {
-            $minTotal = $invoiceAmount * 0.8;
-            $maxTotal = $invoiceAmount * 1.2;
-    
-            for ($i = 0; $i < 30; $i++) {
-                $shuffled = $products->shuffle();
-                $selected = [];
-                $currentTotal = 0;
-    
-                foreach ($shuffled as $product) {
-                    $price = floatval($product->unit_price);
-                    if ($noOfProducts && count($selected) >= $noOfProducts) break;
-    
-                    if ($currentTotal + $price <= $maxTotal) {
-                        $selected[] = $product;
-                        $currentTotal += $price;
-                    }
-    
-                    if ($noOfProducts && count($selected) == $noOfProducts) break;
-                }
-    
-                if ($noOfProducts && count($selected) == $noOfProducts) {
-                    if ($currentTotal >= $minTotal) {
-                        $distance = abs($invoiceAmount - $currentTotal);
-                        if ($distance < $bestDistance) {
-                            $bestMatch = $selected;
-                            $bestTotal = $currentTotal;
-                            $bestDistance = $distance;
-                        }
-                    }
-                } elseif (!$noOfProducts && $currentTotal >= $minTotal && $currentTotal <= $maxTotal) {
-                    if ($currentTotal > $bestTotal) {
-                        $bestMatch = $selected;
-                        $bestTotal = $currentTotal;
-                    }
-                }
+                $combinationKey = $bestMatch->pluck('id')->sort()->join('-');
+                $lastUsedCombinations[] = $combinationKey;
+                $lastUsedCombinations = array_slice($lastUsedCombinations, -5);
+                session()->put('last_used_combinations', $lastUsedCombinations);
             }
         }
     
@@ -210,7 +110,6 @@ class LaravelController extends Controller
             ]);
         }
     
-        $bestMatch = collect($bestMatch);
         $categoryIds = $bestMatch->pluck('category_id')->unique();
         $categories = DB::connection($this->connectionType)
             ->table('categories')
@@ -258,6 +157,468 @@ class LaravelController extends Controller
             'tableRows' => $tableRows,
             'total' => $bestTotal
         ]);
+    }
+    
+    private function findBestProductCombination($products, $targetAmount, $requiredCount = null, $lastUsedCombinations = [])
+    {
+        $productArray = $products->shuffle()->values()->all();
+        $productCount = count($productArray);
+    
+        if ($requiredCount) {
+            return $this->findExactCountOptimized($productArray, $targetAmount, $requiredCount, $productCount, $lastUsedCombinations);
+        } else {
+            return $this->findFlexibleOptimized($productArray, $targetAmount, $productCount, $lastUsedCombinations);
+        }
+    }
+    
+    private function findExactCountOptimized($products, $target, $count, $totalProducts, $lastUsedCombinations = [])
+    {
+        shuffle($products);
+    
+        if ($totalProducts < $count) {
+            return ['products' => $products, 'total' => array_sum(array_column($products, 'unit_price'))];
+        }
+    
+        $priceMap = [];
+        foreach ($products as $idx => $product) {
+            $priceMap[$idx] = floatval($product->unit_price);
+        }
+    
+        asort($priceMap);
+        $sortedIndices = array_keys($priceMap);
+        shuffle($sortedIndices);
+    
+        if ($count <= 2) {
+            $percentages = [0, 2, 5, 8, 10, 15, 20, 25, 30, 35, 40, 50];
+            shuffle($percentages);
+    
+            foreach ($percentages as $percentage) {
+                $minTarget = $target;
+                $maxTarget = $target * (1 + $percentage / 100);
+    
+                if ($count == 1) {
+                    $bestIdx = null;
+                    $bestDiff = PHP_INT_MAX;
+    
+                    foreach ($sortedIndices as $idx) {
+                        $price = $priceMap[$idx];
+                        if ($price >= $minTarget && $price <= $maxTarget) {
+                            $diff = abs($price - $target);
+                            if ($diff < $bestDiff) {
+                                $bestDiff = $diff;
+                                $bestIdx = $idx;
+                            }
+                        }
+                    }
+    
+                    if ($bestIdx !== null) {
+                        if (!empty($lastUsedCombinations)) {
+                            $currentCombo = (string)$products[$bestIdx]->id;
+                            if (in_array($currentCombo, $lastUsedCombinations)) {
+                                continue;
+                            }
+                        }
+    
+                        return ['products' => [$products[$bestIdx]], 'total' => $priceMap[$bestIdx]];
+                    }
+                } else if ($count == 2) {
+                    if ($percentage > 0 && rand(0, 1) == 1) {
+                        continue;
+                    }
+                    $bestPair = null;
+                    $bestTotal = 0;
+                    $bestDiff = PHP_INT_MAX;
+    
+                    for ($i = 0; $i < $totalProducts - 1; $i++) {
+                        for ($j = $i + 1; $j < $totalProducts; $j++) {
+                            $idx1 = $sortedIndices[$i];
+                            $idx2 = $sortedIndices[$j];
+    
+                            $price1 = $priceMap[$idx1];
+                            $price2 = $priceMap[$idx2];
+    
+                            if ($price1 == $price2) continue;
+    
+                            $total = $price1 + $price2;
+    
+                            if ($total >= $minTarget && $total <= $maxTarget) {
+                                $diff = abs($total - $target);
+                                if ($diff < $bestDiff) {
+                                    $bestDiff = $diff;
+                                    $bestPair = [$idx1, $idx2];
+                                    $bestTotal = $total;
+                                }
+                            }
+                        }
+                    }
+    
+                    if ($bestPair !== null) {
+                        if (!empty($lastUsedCombinations)) {
+                            $comboIds = array_map(fn($i) => $products[$i]->id, $bestPair);
+                            sort($comboIds);
+                            $currentCombo = implode('-', $comboIds);
+                            if (in_array($currentCombo, $lastUsedCombinations)) {
+                                continue;
+                            }
+                        }
+    
+                        return [
+                            'products' => [$products[$bestPair[0]], $products[$bestPair[1]]],
+                            'total' => $bestTotal
+                        ];
+                    }
+                }
+            }
+        }
+    
+        $percentages = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20];
+    
+        foreach ($percentages as $percentage) {
+            $minTarget = $target * 0.8;
+            $maxTarget = $target * (1 + $percentage / 100);
+            $result = $this->tryFindExactCount($products, $priceMap, $sortedIndices, $minTarget, $maxTarget, $count, $totalProducts, $target);
+    
+            if ($result !== null && count($result['products']) === $count) {
+                return $result;
+            }
+        }
+    
+        $minTotal = $target * 0.8;
+        $maxTotal = $target * 1.2;
+        $bestMatch = null;
+        $bestTotal = 0;
+        $bestDiff = PHP_INT_MAX;
+    
+        for ($attempt = 0; $attempt < 200; $attempt++) {
+            $shuffledIndices = $sortedIndices;
+            shuffle($shuffledIndices);
+    
+            $selected = [];
+            $usedPrices = [];
+            $total = 0;
+    
+            $startIdx = rand(0, max(0, $totalProducts - $count * 3));
+            $searchWindow = array_slice($shuffledIndices, $startIdx, min($count * 5, $totalProducts));
+    
+            foreach ($searchWindow as $idx) {
+                if (count($selected) >= $count) break;
+    
+                $price = $priceMap[$idx];
+                if (isset($usedPrices[$price])) continue;
+    
+                if ($total + $price <= $maxTotal) {
+                    $selected[] = $idx;
+                    $usedPrices[$price] = true;
+                    $total += $price;
+                }
+            }
+    
+            if (count($selected) === $count && $total >= $minTotal && $total <= $maxTotal) {
+                $diff = abs($total - $target);
+                if ($diff < $bestDiff) {
+                    $bestMatch = $selected;
+                    $bestTotal = $total;
+                    $bestDiff = $diff;
+    
+                    if ($diff <= $target * 0.02) {
+                        break;
+                    }
+                }
+            }
+        }
+    
+        if ($bestMatch && count($bestMatch) === $count && $bestTotal >= $minTotal) {
+            $result = [];
+            foreach ($bestMatch as $idx) {
+                $result[] = $products[$idx];
+            }
+            return ['products' => $result, 'total' => $bestTotal];
+        }
+    
+        $selected = [];
+        $usedPrices = [];
+        $remaining = $target;
+    
+        for ($i = 0; $i < $count; $i++) {
+            $remainingSlots = $count - $i;
+            $idealPrice = $remaining / $remainingSlots;
+            $closestIdx = null;
+            $closestDiff = PHP_INT_MAX;
+    
+            foreach ($sortedIndices as $idx) {
+                if (in_array($idx, $selected)) continue;
+    
+                $price = $priceMap[$idx];
+                if (isset($usedPrices[$price])) continue;
+    
+                $diff = abs($price - $idealPrice);
+                if ($diff < $closestDiff) {
+                    $closestDiff = $diff;
+                    $closestIdx = $idx;
+                }
+            }
+    
+            if ($closestIdx !== null) {
+                $selected[] = $closestIdx;
+                $usedPrices[$priceMap[$closestIdx]] = true;
+                $remaining -= $priceMap[$closestIdx];
+            }
+        }
+    
+        if (count($selected) === $count) {
+            $result = [];
+            foreach ($selected as $idx) {
+                $result[] = $products[$idx];
+            }
+            return ['products' => $result, 'total' => array_sum(array_column($result, 'unit_price'))];
+        }
+    
+        return null;
+    }
+    
+    private function tryFindExactCount($products, $priceMap, $sortedIndices, $minTarget, $maxTarget, $count, $totalProducts, $target)
+    {
+        $avgPrice = ($minTarget + $maxTarget) / 2 / $count;
+    
+        $midPoint = 0;
+        foreach ($sortedIndices as $pos => $idx) {
+            if ($priceMap[$idx] >= $avgPrice) {
+                $midPoint = max(0, $pos - intval($count / 2));
+                break;
+            }
+        }
+    
+        $windowSize = min($count * 4, $totalProducts - $midPoint);
+        $searchWindow = array_slice($sortedIndices, $midPoint, $windowSize);
+    
+        if (count($searchWindow) < $count) {
+            $searchWindow = $sortedIndices;
+        }
+    
+        $attempts = min(100, count($searchWindow) * 3);
+        $bestMatch = null;
+        $bestTotal = 0;
+        $bestDiff = PHP_INT_MAX;
+    
+        for ($i = 0; $i < $attempts; $i++) {
+            $windowCopy = $searchWindow;
+            shuffle($searchWindow);
+            $candidatePool = array_slice($searchWindow, 0, min(count($searchWindow), $count * 3));
+    
+            $selectedIndices = [];
+            $seenPrices = [];
+    
+            foreach ($candidatePool as $idx) {
+                if (count($selectedIndices) >= $count) break;
+    
+                $price = $priceMap[$idx];
+                if (!isset($seenPrices[$price])) {
+                    $selectedIndices[] = $idx;
+                    $seenPrices[$price] = true;
+                }
+            }
+    
+            if (count($selectedIndices) !== $count) {
+                continue;
+            }
+    
+            $total = array_sum(array_map(fn($idx) => $priceMap[$idx], $selectedIndices));
+    
+            if ($total >= $minTarget && $total <= $maxTarget) {
+                $diff = abs($total - $target);
+                if ($diff < $bestDiff) {
+                    $bestMatch = $selectedIndices;
+                    $bestTotal = $total;
+                    $bestDiff = $diff;
+    
+                    if ($diff <= $target * 0.02) {
+                        break;
+                    }
+                }
+            }
+        }
+    
+        if ($bestMatch && count($bestMatch) === $count) {
+            $result = [];
+            foreach ($bestMatch as $idx) {
+                $result[] = $products[$idx];
+            }
+            return ['products' => $result, 'total' => $bestTotal];
+        }
+    
+        return null;
+    }
+    
+    private function findFlexibleOptimized($products, $target, $totalProducts, $lastUsedCombinations = [])
+    {
+        $priceMap = [];
+        foreach ($products as $idx => $product) {
+            $price = floatval($product->unit_price);
+            $priceMap[$idx] = $price;
+    
+            if (abs($price - $target) < 0.01) {
+                return ['products' => [$product], 'total' => $price];
+            }
+        }
+    
+        asort($priceMap);
+        $sortedIndices = array_keys($priceMap);
+        shuffle($sortedIndices);
+    
+        $percentages = [0, 2, 4, 6, 8, 10, 15];
+    
+        foreach ($percentages as $percentage) {
+            $currentMax = $target * (1 + $percentage / 100);
+            $result = $this->tryFindFlexible($products, $priceMap, $sortedIndices, $target, $currentMax, $totalProducts);
+    
+            if ($result !== null && $result['total'] >= $target) {
+                if (!empty($lastUsedCombinations)) {
+                    $resultIds = array_map(fn($p) => $p->id, $result['products']);
+                    sort($resultIds);
+                    $currentCombo = implode('-', $resultIds);
+                    if (in_array($currentCombo, $lastUsedCombinations)) {
+                        continue;
+                    }
+                }
+    
+                return $result;
+            }
+        }
+    
+        $minTotal = $target * 0.8;
+        $maxTotal = $target * 1.2;
+        $bestMatch = null;
+        $bestTotal = 0;
+    
+        for ($attempt = 0; $attempt < 20; $attempt++) {
+            $shuffledIndices = $sortedIndices;
+            shuffle($shuffledIndices);
+            $startIdx = rand(0, max(0, $totalProducts - 30));
+            $subset = array_slice($sortedIndices, $startIdx, 30);
+            shuffle($subset);
+    
+            $selected = [];
+            $total = 0;
+            $usedPrices = [];
+    
+            foreach ($subset as $idx) {
+                $price = $priceMap[$idx];
+    
+                if (isset($usedPrices[$price])) continue;
+                if ($total + $price > $maxTotal) continue;
+    
+                $selected[] = $idx;
+                $usedPrices[$price] = true;
+                $total += $price;
+            }
+    
+            if ($total >= $minTotal && $total <= $maxTotal && $total > $bestTotal) {
+                $bestMatch = $selected;
+                $bestTotal = $total;
+            }
+        }
+    
+        if ($bestMatch && $bestTotal >= $minTotal) {
+            $result = [];
+            foreach ($bestMatch as $idx) {
+                $result[] = $products[$idx];
+            }
+            return ['products' => $result, 'total' => $bestTotal];
+        }
+    
+        $selected = [];
+        $usedPrices = [];
+        $total = 0;
+    
+        foreach (array_reverse($sortedIndices) as $idx) {
+            $price = $priceMap[$idx];
+    
+            if (isset($usedPrices[$price])) continue;
+            if ($total + $price > $maxTotal) continue;
+    
+            $selected[] = $idx;
+            $usedPrices[$price] = true;
+            $total += $price;
+    
+            if ($total >= $target) {
+                break;
+            }
+        }
+    
+        if ($total >= $minTotal && $total <= $maxTotal) {
+            $result = [];
+            foreach ($selected as $idx) {
+                $result[] = $products[$idx];
+            }
+            return ['products' => $result, 'total' => $total];
+        }
+    
+        if (!$bestMatch) {
+            $bestMatch = [$sortedIndices[count($sortedIndices) - 1]];
+            $bestTotal = $priceMap[$sortedIndices[count($sortedIndices) - 1]];
+        }
+    
+        $result = [];
+        foreach ($bestMatch as $idx) {
+            $result[] = $products[$idx];
+        }
+        return ['products' => $result, 'total' => $bestTotal];
+    }
+    
+    private function tryFindFlexible($products, $priceMap, $sortedIndices, $minTarget, $maxTarget, $totalProducts)
+    {
+        $bestMatch = null;
+        $bestTotal = 0;
+        $bestDiff = PHP_INT_MAX;
+    
+        for ($attempt = 0; $attempt < 25; $attempt++) {
+            $startIdx = rand(0, max(0, $totalProducts - 25));
+            $subset = array_slice($sortedIndices, $startIdx, 25);
+            shuffle($subset);
+    
+            $selected = [];
+            $total = 0;
+            $usedPrices = [];
+    
+            foreach ($subset as $idx) {
+                $price = $priceMap[$idx];
+    
+                if (isset($usedPrices[$price])) continue;
+                if ($total + $price > $maxTarget) continue;
+    
+                $selected[] = $idx;
+                $usedPrices[$price] = true;
+                $total += $price;
+    
+                if ($total >= $minTarget && $total <= $maxTarget) {
+                    $diff = abs($total - $minTarget);
+                    if ($diff < $bestDiff) {
+                        $bestMatch = $selected;
+                        $bestTotal = $total;
+                        $bestDiff = $diff;
+                    }
+                }
+            }
+    
+            if ($total >= $minTarget && $total <= $maxTarget) {
+                $diff = abs($total - $minTarget);
+                if ($diff < $bestDiff) {
+                    $bestMatch = $selected;
+                    $bestTotal = $total;
+                    $bestDiff = $diff;
+                }
+            }
+        }
+    
+        if ($bestMatch && $bestTotal >= $minTarget) {
+            $result = [];
+            foreach ($bestMatch as $idx) {
+                $result[] = $products[$idx];
+            }
+            return ['products' => $result, 'total' => $bestTotal];
+        }
+    
+        return null;
     }
     
 
