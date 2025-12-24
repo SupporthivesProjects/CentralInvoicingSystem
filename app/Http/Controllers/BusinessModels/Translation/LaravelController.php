@@ -70,7 +70,7 @@ class LaravelController extends Controller
         if ($translationProducts->isEmpty()) {
             session()->forget('ready_products');
             session()->forget('current_amount');
-            session()->forget('last_used_translation_combo');
+            session()->forget('last_translation_params');
             return response()->json([
                 'tableRows' => '',
                 'total' => 0,
@@ -93,7 +93,12 @@ class LaravelController extends Controller
         $certifiedPrice = $certifiedTranslation ? floatval($certifiedTranslation->unit_price) : null;
         $standardPrice = $standardTranslation ? floatval($standardTranslation->unit_price) : null;
     
-        $lastUsedCombo = session()->get('last_used_translation_combo');
+        $lastParams = session()->get('last_translation_params', [
+            'certified_pages' => null,
+            'standard_words' => null,
+            'certified_urgent' => null,
+            'standard_urgent' => null
+        ]);
     
         $bestMatch = null;
         $selectedProducts = null;
@@ -108,7 +113,7 @@ class LaravelController extends Controller
                 $standardPrice,
                 $invoiceAmount,
                 $filterType,
-                $site_id
+                $lastParams
             );
     
             if (!$result) {
@@ -116,6 +121,12 @@ class LaravelController extends Controller
             }
     
             $tempProducts = [];
+            $currentParams = [
+                'certified_pages' => null,
+                'standard_words' => null,
+                'certified_urgent' => null,
+                'standard_urgent' => null
+            ];
     
             foreach ($result['products'] as $item) {
                 $product = clone $item['product'];
@@ -142,8 +153,10 @@ class LaravelController extends Controller
     
                 if ($isCertified) {
                     $product->product_url = $site->certified_translation_url ?? $site->site_link;
+                    $currentParams['certified_pages'] = $quantity;
                 } else {
                     $product->product_url = $site->standard_translation_url ?? $site->site_link;
+                    $currentParams['standard_words'] = $quantity;
                 }
     
                 $tempProducts[] = $product;
@@ -166,6 +179,13 @@ class LaravelController extends Controller
                 foreach ($eligibleProducts as $product) {
                     $product->is_urgent = 1;
                     $product->line_total += $urgentAmount;
+                    
+                    $isCertified = Str::contains(Str::lower($product->name), 'certified');
+                    if ($isCertified) {
+                        $currentParams['certified_urgent'] = 1;
+                    } else {
+                        $currentParams['standard_urgent'] = 1;
+                    }
                 }
             } elseif ($baseTotal == $invoiceAmount) {
                 
@@ -183,6 +203,13 @@ class LaravelController extends Controller
                         foreach ($eligibleProducts as $product) {
                             $product->is_urgent = 1;
                             $product->line_total += $urgentAmount;
+                            
+                            $isCertified = Str::contains(Str::lower($product->name), 'certified');
+                            if ($isCertified) {
+                                $currentParams['certified_urgent'] = 1;
+                            } else {
+                                $currentParams['standard_urgent'] = 1;
+                            }
                         }
                     }
                 }
@@ -200,19 +227,45 @@ class LaravelController extends Controller
                     $product->is_urgent = 0;
                     $product->line_total -= $urgentAmount;
                     $overAmount -= $urgentAmount;
+                    
+                    $isCertified = Str::contains(Str::lower($product->name), 'certified');
+                    if ($isCertified) {
+                        $currentParams['certified_urgent'] = 0;
+                    } else {
+                        $currentParams['standard_urgent'] = 0;
+                    }
                 }
                 
                 $attemptTotal = collect($tempProducts)->sum('line_total');
             }
     
-            $comboKey = $this->generateCombinationKeyWithUrgency($tempProducts);
+            $isDifferent = false;
             
-            if ($comboKey !== $lastUsedCombo) {
+            if ($currentParams['certified_pages'] !== null && 
+                $lastParams['certified_pages'] !== null && 
+                $currentParams['certified_pages'] == $lastParams['certified_pages']) {
+                $isDifferent = false;
+            } elseif ($currentParams['standard_words'] !== null && 
+                      $lastParams['standard_words'] !== null && 
+                      $currentParams['standard_words'] == $lastParams['standard_words']) {
+                $isDifferent = false;
+            } elseif ($currentParams['certified_urgent'] !== null && 
+                      $lastParams['certified_urgent'] !== null && 
+                      $currentParams['certified_urgent'] == $lastParams['certified_urgent'] &&
+                      $currentParams['standard_urgent'] !== null && 
+                      $lastParams['standard_urgent'] !== null && 
+                      $currentParams['standard_urgent'] == $lastParams['standard_urgent']) {
+                $isDifferent = false;
+            } else {
+                $isDifferent = true;
+            }
+    
+            if ($isDifferent) {
                 $bestMatch = $result;
                 $selectedProducts = $tempProducts;
                 $finalTotal = $attemptTotal;
                 
-                session()->put('last_used_translation_combo', $comboKey);
+                session()->put('last_translation_params', $currentParams);
                 break;
             }
         }
@@ -282,28 +335,28 @@ class LaravelController extends Controller
         $standardPrice,
         $invoiceAmount,
         $filterType,
-        $siteId
+        $lastParams
     ) {
         $minWords = 250;
         $wordIncrement = 50;
     
         if ($filterType === 'certified' && $certifiedTranslation && $certifiedPrice) {
-            $result = $this->findCertifiedOnlyCombination($certifiedTranslation, $certifiedPrice, $invoiceAmount);
+            $result = $this->findCertifiedOnlyCombination($certifiedTranslation, $certifiedPrice, $invoiceAmount, $lastParams);
             return ['products' => $result, 'total' => $result[0]['total']];
         }
     
         if ($filterType === 'standard' && $standardTranslation && $standardPrice) {
-            $result = $this->findStandardOnlyCombination($standardTranslation, $standardPrice, $invoiceAmount, $minWords, $wordIncrement);
+            $result = $this->findStandardOnlyCombination($standardTranslation, $standardPrice, $invoiceAmount, $minWords, $wordIncrement, $lastParams);
             return ['products' => $result, 'total' => $result[0]['total']];
         }
     
         if (!$certifiedTranslation || !$standardTranslation || !$certifiedPrice || !$standardPrice) {
             if ($certifiedTranslation && $certifiedPrice) {
-                $result = $this->findCertifiedOnlyCombination($certifiedTranslation, $certifiedPrice, $invoiceAmount);
+                $result = $this->findCertifiedOnlyCombination($certifiedTranslation, $certifiedPrice, $invoiceAmount, $lastParams);
                 return ['products' => $result, 'total' => $result[0]['total']];
             }
             if ($standardTranslation && $standardPrice) {
-                $result = $this->findStandardOnlyCombination($standardTranslation, $standardPrice, $invoiceAmount, $minWords, $wordIncrement);
+                $result = $this->findStandardOnlyCombination($standardTranslation, $standardPrice, $invoiceAmount, $minWords, $wordIncrement, $lastParams);
                 return ['products' => $result, 'total' => $result[0]['total']];
             }
             return null;
@@ -318,9 +371,9 @@ class LaravelController extends Controller
                 $maxTarget = $targetBase * (1 + $percentage / 100);
                 
                 $strategies = [
-                    fn() => $this->strategyCertifiedFirst($certifiedTranslation, $standardTranslation, $certifiedPrice, $standardPrice, $targetBase, $maxTarget, $minWords, $wordIncrement),
-                    fn() => $this->strategyStandardFirst($certifiedTranslation, $standardTranslation, $certifiedPrice, $standardPrice, $targetBase, $maxTarget, $minWords, $wordIncrement),
-                    fn() => $this->strategyBalanced($certifiedTranslation, $standardTranslation, $certifiedPrice, $standardPrice, $targetBase, $maxTarget, $minWords, $wordIncrement)
+                    fn() => $this->strategyCertifiedFirst($certifiedTranslation, $standardTranslation, $certifiedPrice, $standardPrice, $targetBase, $maxTarget, $minWords, $wordIncrement, $lastParams),
+                    fn() => $this->strategyStandardFirst($certifiedTranslation, $standardTranslation, $certifiedPrice, $standardPrice, $targetBase, $maxTarget, $minWords, $wordIncrement, $lastParams),
+                    fn() => $this->strategyBalanced($certifiedTranslation, $standardTranslation, $certifiedPrice, $standardPrice, $targetBase, $maxTarget, $minWords, $wordIncrement, $lastParams)
                 ];
     
                 shuffle($strategies);
@@ -337,8 +390,8 @@ class LaravelController extends Controller
             }
     
             $fallbackStrategies = [
-                fn() => $this->strategyCertifiedFirst($certifiedTranslation, $standardTranslation, $certifiedPrice, $standardPrice, $targetBase, $invoiceAmount * 1.15, $minWords, $wordIncrement),
-                fn() => $this->strategyStandardFirst($certifiedTranslation, $standardTranslation, $certifiedPrice, $standardPrice, $targetBase, $invoiceAmount * 1.15, $minWords, $wordIncrement),
+                fn() => $this->strategyCertifiedFirst($certifiedTranslation, $standardTranslation, $certifiedPrice, $standardPrice, $targetBase, $invoiceAmount * 1.15, $minWords, $wordIncrement, $lastParams),
+                fn() => $this->strategyStandardFirst($certifiedTranslation, $standardTranslation, $certifiedPrice, $standardPrice, $targetBase, $invoiceAmount * 1.15, $minWords, $wordIncrement, $lastParams),
             ];
     
             foreach ($fallbackStrategies as $fallback) {
@@ -348,12 +401,12 @@ class LaravelController extends Controller
                 }
             }
     
-            $lastResort = $this->strategyBalanced($certifiedTranslation, $standardTranslation, $certifiedPrice, $standardPrice, $targetBase, $invoiceAmount * 1.20, $minWords, $wordIncrement);
+            $lastResort = $this->strategyBalanced($certifiedTranslation, $standardTranslation, $certifiedPrice, $standardPrice, $targetBase, $invoiceAmount * 1.20, $minWords, $wordIncrement, $lastParams);
             if ($lastResort && isset($lastResort['match']) && count($lastResort['match']) == 2) {
                 return ['products' => $lastResort['match'], 'total' => $lastResort['total']];
             }
     
-            $certResult = $this->findCertifiedOnlyCombination($certifiedTranslation, $certifiedPrice, $invoiceAmount);
+            $certResult = $this->findCertifiedOnlyCombination($certifiedTranslation, $certifiedPrice, $invoiceAmount, $lastParams);
             return ['products' => $certResult, 'total' => $certResult[0]['total']];
         }
     
@@ -365,9 +418,9 @@ class LaravelController extends Controller
             $maxTarget = $targetBase * (1 + $percentage / 100);
             
             $strategies = [
-                fn() => $this->strategyCertifiedFirst($certifiedTranslation, $standardTranslation, $certifiedPrice, $standardPrice, $targetBase, $maxTarget, $minWords, $wordIncrement),
-                fn() => $this->strategyStandardFirst($certifiedTranslation, $standardTranslation, $certifiedPrice, $standardPrice, $targetBase, $maxTarget, $minWords, $wordIncrement),
-                fn() => $this->strategyBalanced($certifiedTranslation, $standardTranslation, $certifiedPrice, $standardPrice, $targetBase, $maxTarget, $minWords, $wordIncrement)
+                fn() => $this->strategyCertifiedFirst($certifiedTranslation, $standardTranslation, $certifiedPrice, $standardPrice, $targetBase, $maxTarget, $minWords, $wordIncrement, $lastParams),
+                fn() => $this->strategyStandardFirst($certifiedTranslation, $standardTranslation, $certifiedPrice, $standardPrice, $targetBase, $maxTarget, $minWords, $wordIncrement, $lastParams),
+                fn() => $this->strategyBalanced($certifiedTranslation, $standardTranslation, $certifiedPrice, $standardPrice, $targetBase, $maxTarget, $minWords, $wordIncrement, $lastParams)
             ];
     
             shuffle($strategies);
@@ -382,10 +435,10 @@ class LaravelController extends Controller
         }
     
         $fallbackStrategies = [
-            fn() => $this->strategyCertifiedFirst($certifiedTranslation, $standardTranslation, $certifiedPrice, $standardPrice, $targetBase, $invoiceAmount * 1.15, $minWords, $wordIncrement),
-            fn() => $this->strategyStandardFirst($certifiedTranslation, $standardTranslation, $certifiedPrice, $standardPrice, $targetBase, $invoiceAmount * 1.15, $minWords, $wordIncrement),
-            fn() => ['match' => $this->findCertifiedOnlyCombination($certifiedTranslation, $certifiedPrice, $invoiceAmount), 'total' => 0],
-            fn() => ['match' => $this->findStandardOnlyCombination($standardTranslation, $standardPrice, $invoiceAmount, $minWords, $wordIncrement), 'total' => 0]
+            fn() => $this->strategyCertifiedFirst($certifiedTranslation, $standardTranslation, $certifiedPrice, $standardPrice, $targetBase, $invoiceAmount * 1.15, $minWords, $wordIncrement, $lastParams),
+            fn() => $this->strategyStandardFirst($certifiedTranslation, $standardTranslation, $certifiedPrice, $standardPrice, $targetBase, $invoiceAmount * 1.15, $minWords, $wordIncrement, $lastParams),
+            fn() => ['match' => $this->findCertifiedOnlyCombination($certifiedTranslation, $certifiedPrice, $invoiceAmount, $lastParams), 'total' => 0],
+            fn() => ['match' => $this->findStandardOnlyCombination($standardTranslation, $standardPrice, $invoiceAmount, $minWords, $wordIncrement, $lastParams), 'total' => 0]
         ];
     
         foreach ($fallbackStrategies as $fallback) {
@@ -398,13 +451,19 @@ class LaravelController extends Controller
         return null;
     }
     
-    private function strategyCertifiedFirst($certTranslation, $stdTranslation, $certPrice, $stdPrice, $targetBase, $maxTarget, $minWords, $wordIncrement)
+    private function strategyCertifiedFirst($certTranslation, $stdTranslation, $certPrice, $stdPrice, $targetBase, $maxTarget, $minWords, $wordIncrement, $lastParams)
     {
         $maxCertPages = min(15, ceil($maxTarget / $certPrice));
         $bestResult = null;
         $bestDistance = PHP_FLOAT_MAX;
     
         $pageRange = range(1, $maxCertPages);
+        
+        if ($lastParams['certified_pages'] !== null) {
+            $pageRange = array_diff($pageRange, [$lastParams['certified_pages']]);
+        }
+        
+        $pageRange = array_values($pageRange);
         shuffle($pageRange);
     
         foreach ($pageRange as $certPages) {
@@ -423,7 +482,17 @@ class LaravelController extends Controller
             $minRequiredWords = max($minWords, ceil($remainingAmount / $stdPrice));
             $maxWords = min(2000, ceil(($maxTarget - $certTotal) / $stdPrice));
     
-            for ($words = $minRequiredWords; $words <= $maxWords; $words += $wordIncrement) {
+            $wordRange = range($minRequiredWords, $maxWords, $wordIncrement);
+            
+            if ($lastParams['standard_words'] !== null) {
+                $wordRange = array_filter($wordRange, fn($w) => $w != $lastParams['standard_words']);
+            }
+            
+            $wordRange = array_values($wordRange);
+            shuffle($wordRange);
+            $sampledWords = array_slice($wordRange, 0, min(20, count($wordRange)));
+    
+            foreach ($sampledWords as $words) {
                 if ($words < $minWords) continue;
     
                 $stdTotal = $words * $stdPrice;
@@ -447,7 +516,6 @@ class LaravelController extends Controller
                             return $bestResult;
                         }
                     }
-                    break;
                 }
             }
         }
@@ -455,13 +523,19 @@ class LaravelController extends Controller
         return $bestResult;
     }
     
-    private function strategyStandardFirst($certTranslation, $stdTranslation, $certPrice, $stdPrice, $targetBase, $maxTarget, $minWords, $wordIncrement)
+    private function strategyStandardFirst($certTranslation, $stdTranslation, $certPrice, $stdPrice, $targetBase, $maxTarget, $minWords, $wordIncrement, $lastParams)
     {
         $maxWords = min(3000, ceil($maxTarget / $stdPrice));
         $bestResult = null;
         $bestDistance = PHP_FLOAT_MAX;
     
         $wordRange = range($minWords, $maxWords, $wordIncrement);
+        
+        if ($lastParams['standard_words'] !== null) {
+            $wordRange = array_filter($wordRange, fn($w) => $w != $lastParams['standard_words']);
+        }
+        
+        $wordRange = array_values($wordRange);
         shuffle($wordRange);
         $sampledWords = array_slice($wordRange, 0, min(60, count($wordRange)));
     
@@ -482,6 +556,11 @@ class LaravelController extends Controller
     
             if ($remainingAmount >= $certPrice) {
                 $certPages = max(1, ceil($remainingAmount / $certPrice));
+                
+                if ($lastParams['certified_pages'] !== null && $certPages == $lastParams['certified_pages']) {
+                    $certPages = $certPages + 1;
+                }
+                
                 $certTotal = $certPages * $certPrice;
                 $total = $stdTotal + $certTotal;
     
@@ -510,7 +589,7 @@ class LaravelController extends Controller
         return $bestResult;
     }
     
-    private function strategyBalanced($certTranslation, $stdTranslation, $certPrice, $stdPrice, $targetBase, $maxTarget, $minWords, $wordIncrement)
+    private function strategyBalanced($certTranslation, $stdTranslation, $certPrice, $stdPrice, $targetBase, $maxTarget, $minWords, $wordIncrement, $lastParams)
     {
         $bestResult = null;
         $bestDistance = PHP_FLOAT_MAX;
@@ -530,10 +609,22 @@ class LaravelController extends Controller
             $stdBudget = $targetBase * $ratio['std'];
     
             $certPages = max(1, round($certBudget / $certPrice));
+            
+            if ($lastParams['certified_pages'] !== null && $certPages == $lastParams['certified_pages']) {
+                $certPages = $certPages + rand(-1, 1);
+                $certPages = max(1, $certPages);
+            }
+            
             $certTotal = $certPages * $certPrice;
     
             $words = max($minWords, round($stdBudget / $stdPrice));
             $words = ceil($words / $wordIncrement) * $wordIncrement;
+            
+            if ($lastParams['standard_words'] !== null && $words == $lastParams['standard_words']) {
+                $words = $words + (rand(0, 1) ? $wordIncrement : -$wordIncrement);
+                $words = max($minWords, $words);
+            }
+            
             $stdTotal = $words * $stdPrice;
     
             $total = $certTotal + $stdTotal;
@@ -581,9 +672,15 @@ class LaravelController extends Controller
         return $bestResult;
     }
     
-    private function findCertifiedOnlyCombination($certTranslation, $certPrice, $invoiceAmount)
+    private function findCertifiedOnlyCombination($certTranslation, $certPrice, $invoiceAmount, $lastParams)
     {
         $certPages = max(1, round($invoiceAmount / $certPrice));
+        
+        if ($lastParams['certified_pages'] !== null && $certPages == $lastParams['certified_pages']) {
+            $certPages = $certPages + rand(-2, 2);
+            $certPages = max(1, $certPages);
+        }
+        
         $total = $certPages * $certPrice;
     
         return [
@@ -591,25 +688,21 @@ class LaravelController extends Controller
         ];
     }
     
-    private function findStandardOnlyCombination($stdTranslation, $stdPrice, $invoiceAmount, $minWords, $wordIncrement)
+    private function findStandardOnlyCombination($stdTranslation, $stdPrice, $invoiceAmount, $minWords, $wordIncrement, $lastParams)
     {
         $words = max($minWords, round($invoiceAmount / $stdPrice));
         $words = round($words / $wordIncrement) * $wordIncrement;
+        
+        if ($lastParams['standard_words'] !== null && $words == $lastParams['standard_words']) {
+            $words = $words + (rand(0, 1) ? $wordIncrement * 2 : -$wordIncrement * 2);
+            $words = max($minWords, $words);
+        }
+        
         $total = $words * $stdPrice;
     
         return [
             ['product' => $stdTranslation, 'quantity' => $words, 'total' => $total]
         ];
-    }
-    
-    private function generateCombinationKeyWithUrgency($products)
-    {
-        $parts = [];
-        foreach ($products as $product) {
-            $parts[] = $product->id . ':' . $product->pages . ':' . $product->is_urgent;
-        }
-        sort($parts);
-        return implode('|', $parts);
     }
     
     public function updateProduct(Request $request)
