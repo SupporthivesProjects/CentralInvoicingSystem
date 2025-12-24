@@ -46,7 +46,7 @@
                                   </td>
                                 </tr>
                               </table>
-                              <div style="min-height: 530px !important;">
+                              <div style="min-height: 535px !important;">
                               <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; border: 1px solid #0074d9; font-size: 10px; margin-top: 20px;">
                                 <thead>
                                   <tr style="background-color: #DEEBF6;">
