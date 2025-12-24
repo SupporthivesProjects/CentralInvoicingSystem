@@ -51,9 +51,9 @@
                                             <strong> BILLED FROM:</strong>
 
                                         </p>
-                                        <p style="font-family: arial;font-size: 13px;margin: 0px;font-weight: 400;">
+                                        <!-- <p style="font-family: arial;font-size: 13px;margin: 0px;font-weight: 400;">
                                             www.thedigitalkreator.co
-                                        </p>
+                                        </p> -->
 
                                         <p style="font-family: arial;font-size: 13px;margin: 0px;font-weight: 400;">
                                             Website: <a href="{{ $site->site_link }}" style="text-decoration: none; color: #000;">www.thedigitalkreator.co</a>
