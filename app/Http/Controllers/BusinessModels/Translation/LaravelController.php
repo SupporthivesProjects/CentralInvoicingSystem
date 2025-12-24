@@ -36,7 +36,6 @@ class LaravelController extends Controller
         $this->productTable = getProductTable($site->technology);
         $this->connectionType = 'dynamic';
     }
-
     public function randomProducts(Request $request)
     {
         $site_id = $request->get('site_id');
@@ -171,12 +170,11 @@ class LaravelController extends Controller
         }
     
         $baseTotal = collect($selectedProducts)->sum('line_total');
-        $finalTotal = $baseTotal;
+        $urgentAmount = 25;
     
         if ($baseTotal < $invoiceAmount) {
             $deficit = $invoiceAmount - $baseTotal;
-            $urgentAmount = 25;
-            $neededUrgentCount = ceil($deficit / $urgentAmount);
+            $neededUrgentCount = min(count($selectedProducts), ceil($deficit / $urgentAmount));
             
             $eligibleProducts = collect($selectedProducts)->shuffle()->take($neededUrgentCount);
     
@@ -184,16 +182,38 @@ class LaravelController extends Controller
                 $product->is_urgent = 1;
                 $product->line_total += $urgentAmount;
             }
+        } elseif ($baseTotal == $invoiceAmount) {
             
-            $finalTotal = collect($selectedProducts)->sum('line_total');
         } else {
-            $urgencyChance = 30;
+            $excess = $baseTotal - $invoiceAmount;
+            $maxUrgentProducts = floor($excess / $urgentAmount);
             
-            foreach ($selectedProducts as $product) {
-                if (rand(1, 100) <= $urgencyChance) {
-                    $product->is_urgent = 1;
-                    $product->line_total += $product->urgent_amount;
+            if ($maxUrgentProducts > 0) {
+                $urgentCount = rand(0, min($maxUrgentProducts, count($selectedProducts)));
+                
+                if ($urgentCount > 0) {
+                    $eligibleProducts = collect($selectedProducts)->shuffle()->take($urgentCount);
+                    
+                    foreach ($eligibleProducts as $product) {
+                        $product->is_urgent = 1;
+                        $product->line_total += $urgentAmount;
+                    }
                 }
+            }
+        }
+    
+        $finalTotal = collect($selectedProducts)->sum('line_total');
+    
+        if ($finalTotal > $invoiceAmount) {
+            $overAmount = $finalTotal - $invoiceAmount;
+            $urgentProducts = collect($selectedProducts)->where('is_urgent', 1);
+            
+            foreach ($urgentProducts as $product) {
+                if ($overAmount <= 0) break;
+                
+                $product->is_urgent = 0;
+                $product->line_total -= $urgentAmount;
+                $overAmount -= $urgentAmount;
             }
             
             $finalTotal = collect($selectedProducts)->sum('line_total');
@@ -239,73 +259,62 @@ class LaravelController extends Controller
     ) {
         $minWords = 250;
         $wordIncrement = 50;
-        $urgentBuffer = 75;
     
         if ($filterType === 'certified' && $certifiedTranslation && $certifiedPrice) {
-            $result = $this->findCertifiedOnlyCombination($certifiedTranslation, $certifiedPrice, $invoiceAmount, $urgentBuffer);
+            $result = $this->findCertifiedOnlyCombination($certifiedTranslation, $certifiedPrice, $invoiceAmount);
             return ['products' => $result, 'total' => $result[0]['total']];
         }
     
         if ($filterType === 'standard' && $standardTranslation && $standardPrice) {
-            $result = $this->findStandardOnlyCombination($standardTranslation, $standardPrice, $invoiceAmount, $minWords, $wordIncrement, $urgentBuffer);
+            $result = $this->findStandardOnlyCombination($standardTranslation, $standardPrice, $invoiceAmount, $minWords, $wordIncrement);
             return ['products' => $result, 'total' => $result[0]['total']];
         }
     
         if (!$certifiedTranslation || !$standardTranslation || !$certifiedPrice || !$standardPrice) {
             if ($certifiedTranslation && $certifiedPrice) {
-                $result = $this->findCertifiedOnlyCombination($certifiedTranslation, $certifiedPrice, $invoiceAmount, $urgentBuffer);
+                $result = $this->findCertifiedOnlyCombination($certifiedTranslation, $certifiedPrice, $invoiceAmount);
                 return ['products' => $result, 'total' => $result[0]['total']];
             }
             if ($standardTranslation && $standardPrice) {
-                $result = $this->findStandardOnlyCombination($standardTranslation, $standardPrice, $invoiceAmount, $minWords, $wordIncrement, $urgentBuffer);
+                $result = $this->findStandardOnlyCombination($standardTranslation, $standardPrice, $invoiceAmount, $minWords, $wordIncrement);
                 return ['products' => $result, 'total' => $result[0]['total']];
             }
             return null;
         }
     
-        $targetAmounts = [
-            $invoiceAmount,
-            $invoiceAmount - 25,
-            $invoiceAmount - 50,
-            $invoiceAmount - 75,
-        ];
+        $targetBase = $invoiceAmount;
+        $tolerancePercentages = [0, 1, 2, 3, 4, 5, 6, 8, 10];
+        shuffle($tolerancePercentages);
     
-        foreach ($targetAmounts as $targetBase) {
-            if ($targetBase <= 0) continue;
+        foreach ($tolerancePercentages as $percentage) {
+            $maxTarget = $targetBase * (1 + $percentage / 100);
+            
+            $strategies = [
+                fn() => $this->strategyCertifiedFirst($certifiedTranslation, $standardTranslation, $certifiedPrice, $standardPrice, $targetBase, $maxTarget, $minWords, $wordIncrement),
+                fn() => $this->strategyStandardFirst($certifiedTranslation, $standardTranslation, $certifiedPrice, $standardPrice, $targetBase, $maxTarget, $minWords, $wordIncrement),
+                fn() => $this->strategyBalanced($certifiedTranslation, $standardTranslation, $certifiedPrice, $standardPrice, $targetBase, $maxTarget, $minWords, $wordIncrement)
+            ];
     
-            $tolerancePercentages = [0, 1, 2, 3, 4, 5, 6, 8, 10];
-            shuffle($tolerancePercentages);
+            shuffle($strategies);
     
-            foreach ($tolerancePercentages as $percentage) {
-                $maxTarget = $targetBase * (1 + $percentage / 100);
+            foreach ($strategies as $strategy) {
+                $result = $strategy();
                 
-                $strategies = [
-                    fn() => $this->strategyCertifiedFirst($certifiedTranslation, $standardTranslation, $certifiedPrice, $standardPrice, $targetBase, $maxTarget, $minWords, $wordIncrement),
-                    fn() => $this->strategyStandardFirst($certifiedTranslation, $standardTranslation, $certifiedPrice, $standardPrice, $targetBase, $maxTarget, $minWords, $wordIncrement),
-                    fn() => $this->strategyBalanced($certifiedTranslation, $standardTranslation, $certifiedPrice, $standardPrice, $targetBase, $maxTarget, $minWords, $wordIncrement)
-                ];
-    
-                shuffle($strategies);
-    
-                foreach ($strategies as $strategy) {
-                    $result = $strategy();
+                if ($result && $result['total'] >= $targetBase && $result['total'] <= $maxTarget) {
+                    $comboKey = $this->generateCombinationKey($result['match']);
                     
-                    if ($result && $result['total'] >= $targetBase && $result['total'] <= $maxTarget) {
-                        $comboKey = $this->generateCombinationKey($result['match']);
-                        
-                        if ($comboKey !== $lastUsedCombo) {
-                            return ['products' => $result['match'], 'total' => $result['total']];
-                        }
+                    if ($comboKey !== $lastUsedCombo) {
+                        return ['products' => $result['match'], 'total' => $result['total']];
                     }
                 }
             }
         }
     
         $fallbackStrategies = [
-            fn() => $this->strategyCertifiedFirst($certifiedTranslation, $standardTranslation, $certifiedPrice, $standardPrice, $invoiceAmount - $urgentBuffer, $invoiceAmount * 1.15, $minWords, $wordIncrement),
-            fn() => $this->strategyStandardFirst($certifiedTranslation, $standardTranslation, $certifiedPrice, $standardPrice, $invoiceAmount - $urgentBuffer, $invoiceAmount * 1.15, $minWords, $wordIncrement),
-            fn() => ['match' => $this->findCertifiedOnlyCombination($certifiedTranslation, $certifiedPrice, $invoiceAmount, $urgentBuffer), 'total' => 0],
-            fn() => ['match' => $this->findStandardOnlyCombination($standardTranslation, $standardPrice, $invoiceAmount, $minWords, $wordIncrement, $urgentBuffer), 'total' => 0]
+            fn() => $this->strategyCertifiedFirst($certifiedTranslation, $standardTranslation, $certifiedPrice, $standardPrice, $targetBase, $invoiceAmount * 1.15, $minWords, $wordIncrement),
+            fn() => $this->strategyStandardFirst($certifiedTranslation, $standardTranslation, $certifiedPrice, $standardPrice, $targetBase, $invoiceAmount * 1.15, $minWords, $wordIncrement),
+            fn() => ['match' => $this->findCertifiedOnlyCombination($certifiedTranslation, $certifiedPrice, $invoiceAmount), 'total' => 0],
+            fn() => ['match' => $this->findStandardOnlyCombination($standardTranslation, $standardPrice, $invoiceAmount, $minWords, $wordIncrement), 'total' => 0]
         ];
     
         foreach ($fallbackStrategies as $fallback) {
@@ -525,10 +534,9 @@ class LaravelController extends Controller
         return $bestResult;
     }
     
-    private function findCertifiedOnlyCombination($certTranslation, $certPrice, $invoiceAmount, $urgentBuffer)
+    private function findCertifiedOnlyCombination($certTranslation, $certPrice, $invoiceAmount)
     {
-        $targetBase = max($invoiceAmount - $urgentBuffer, $invoiceAmount * 0.9);
-        $certPages = max(1, ceil($targetBase / $certPrice));
+        $certPages = max(1, round($invoiceAmount / $certPrice));
         $total = $certPages * $certPrice;
     
         return [
@@ -536,11 +544,10 @@ class LaravelController extends Controller
         ];
     }
     
-    private function findStandardOnlyCombination($stdTranslation, $stdPrice, $invoiceAmount, $minWords, $wordIncrement, $urgentBuffer)
+    private function findStandardOnlyCombination($stdTranslation, $stdPrice, $invoiceAmount, $minWords, $wordIncrement)
     {
-        $targetBase = max($invoiceAmount - $urgentBuffer, $invoiceAmount * 0.9);
-        $words = max($minWords, ceil($targetBase / $stdPrice));
-        $words = ceil($words / $wordIncrement) * $wordIncrement;
+        $words = max($minWords, round($invoiceAmount / $stdPrice));
+        $words = round($words / $wordIncrement) * $wordIncrement;
         $total = $words * $stdPrice;
     
         return [
