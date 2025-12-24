@@ -95,17 +95,129 @@ class LaravelController extends Controller
     
         $lastUsedCombo = session()->get('last_used_translation_combo');
     
-        $bestMatch = $this->findBestTranslationCombination(
-            $certifiedTranslation,
-            $standardTranslation,
-            $certifiedPrice,
-            $standardPrice,
-            $invoiceAmount,
-            $filterType,
-            $lastUsedCombo
-        );
+        $bestMatch = null;
+        $selectedProducts = null;
+        $finalTotal = 0;
+        $maxAttempts = 5;
     
-        if (!$bestMatch) {
+        for ($attempt = 0; $attempt < $maxAttempts; $attempt++) {
+            $result = $this->findBestTranslationCombination(
+                $certifiedTranslation,
+                $standardTranslation,
+                $certifiedPrice,
+                $standardPrice,
+                $invoiceAmount,
+                $filterType,
+                $site_id
+            );
+    
+            if (!$result) {
+                continue;
+            }
+    
+            $tempProducts = [];
+    
+            foreach ($result['products'] as $item) {
+                $product = clone $item['product'];
+                $quantity = $item['quantity'];
+    
+                if ($quantity <= 0) {
+                    continue;
+                }
+    
+                $productName = Str::lower($product->name);
+                $isWordBased = !Str::contains($productName, 'certified');
+                
+                if ($isWordBased && $quantity < 250) {
+                    continue;
+                }
+    
+                $isCertified = Str::contains($productName, 'certified');
+                
+                $product->pages = $quantity;
+                $product->line_total = $quantity * floatval($product->unit_price);
+                $product->urgent_amount = 25;
+                $product->is_urgent = 0;
+                $product->unit_type = $isCertified ? 'pages' : 'words';
+    
+                if ($isCertified) {
+                    $product->product_url = $site->certified_translation_url ?? $site->site_link;
+                } else {
+                    $product->product_url = $site->standard_translation_url ?? $site->site_link;
+                }
+    
+                $tempProducts[] = $product;
+            }
+    
+            if (empty($tempProducts)) {
+                continue;
+            }
+    
+            $baseTotal = collect($tempProducts)->sum('line_total');
+            $urgentAmount = 25;
+    
+            if ($baseTotal < $invoiceAmount) {
+                $deficit = $invoiceAmount - $baseTotal;
+                $neededUrgentCount = min(count($tempProducts), ceil($deficit / $urgentAmount));
+                
+                $shuffledProducts = collect($tempProducts)->shuffle();
+                $eligibleProducts = $shuffledProducts->take($neededUrgentCount);
+    
+                foreach ($eligibleProducts as $product) {
+                    $product->is_urgent = 1;
+                    $product->line_total += $urgentAmount;
+                }
+            } elseif ($baseTotal == $invoiceAmount) {
+                
+            } else {
+                $excess = $baseTotal - $invoiceAmount;
+                $maxUrgentProducts = floor($excess / $urgentAmount);
+                
+                if ($maxUrgentProducts > 0) {
+                    $urgentCount = rand(0, min($maxUrgentProducts, count($tempProducts)));
+                    
+                    if ($urgentCount > 0) {
+                        $shuffledProducts = collect($tempProducts)->shuffle();
+                        $eligibleProducts = $shuffledProducts->take($urgentCount);
+                        
+                        foreach ($eligibleProducts as $product) {
+                            $product->is_urgent = 1;
+                            $product->line_total += $urgentAmount;
+                        }
+                    }
+                }
+            }
+    
+            $attemptTotal = collect($tempProducts)->sum('line_total');
+    
+            if ($attemptTotal > $invoiceAmount) {
+                $overAmount = $attemptTotal - $invoiceAmount;
+                $urgentProducts = collect($tempProducts)->where('is_urgent', 1);
+                
+                foreach ($urgentProducts as $product) {
+                    if ($overAmount <= 0) break;
+                    
+                    $product->is_urgent = 0;
+                    $product->line_total -= $urgentAmount;
+                    $overAmount -= $urgentAmount;
+                }
+                
+                $attemptTotal = collect($tempProducts)->sum('line_total');
+            }
+    
+            $comboKey = $this->generateCombinationKeyWithUrgency($tempProducts);
+            
+            if ($comboKey !== $lastUsedCombo) {
+                $bestMatch = $result;
+                $selectedProducts = $tempProducts;
+                $finalTotal = $attemptTotal;
+                
+                session()->put('last_used_translation_combo', $comboKey);
+                break;
+            }
+        }
+    
+        if (!$selectedProducts) {
             session()->forget('ready_products');
             session()->forget('current_amount');
             
@@ -116,26 +228,7 @@ class LaravelController extends Controller
             ]);
         }
     
-        $currentCombo = $this->generateCombinationKey($bestMatch['products']);
-        session()->put('last_used_translation_combo', $currentCombo);
-    
-        $selectedProducts = [];
-    
-        foreach ($bestMatch['products'] as $item) {
-            $product = $item['product'];
-            $quantity = $item['quantity'];
-    
-            if ($quantity <= 0) {
-                continue;
-            }
-    
-            $productName = Str::lower($product->name);
-            $isWordBased = !Str::contains($productName, 'certified');
-            
-            if ($isWordBased && $quantity < 250) {
-                continue;
-            }
-    
+        foreach ($selectedProducts as $product) {
             $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
                 ->where('product_id', $product->id)
                 ->orderByDesc('last_price_changed')
@@ -151,72 +244,6 @@ class LaravelController extends Controller
                 $product->can_edit_price = 1;
                 $product->remaining_days = 0;
             }
-    
-            $isCertified = Str::contains($productName, 'certified');
-            
-            $product->pages = $quantity;
-            $product->line_total = $quantity * floatval($product->unit_price);
-            $product->urgent_amount = 25;
-            $product->is_urgent = 0;
-            $product->unit_type = $isCertified ? 'pages' : 'words';
-    
-            if ($isCertified) {
-                $product->product_url = $site->certified_translation_url ?? $site->site_link;
-            } else {
-                $product->product_url = $site->standard_translation_url ?? $site->site_link;
-            }
-    
-            $selectedProducts[] = $product;
-        }
-    
-        $baseTotal = collect($selectedProducts)->sum('line_total');
-        $urgentAmount = 25;
-    
-        if ($baseTotal < $invoiceAmount) {
-            $deficit = $invoiceAmount - $baseTotal;
-            $neededUrgentCount = min(count($selectedProducts), ceil($deficit / $urgentAmount));
-            
-            $eligibleProducts = collect($selectedProducts)->shuffle()->take($neededUrgentCount);
-    
-            foreach ($eligibleProducts as $product) {
-                $product->is_urgent = 1;
-                $product->line_total += $urgentAmount;
-            }
-        } elseif ($baseTotal == $invoiceAmount) {
-            
-        } else {
-            $excess = $baseTotal - $invoiceAmount;
-            $maxUrgentProducts = floor($excess / $urgentAmount);
-            
-            if ($maxUrgentProducts > 0) {
-                $urgentCount = rand(0, min($maxUrgentProducts, count($selectedProducts)));
-                
-                if ($urgentCount > 0) {
-                    $eligibleProducts = collect($selectedProducts)->shuffle()->take($urgentCount);
-                    
-                    foreach ($eligibleProducts as $product) {
-                        $product->is_urgent = 1;
-                        $product->line_total += $urgentAmount;
-                    }
-                }
-            }
-        }
-    
-        $finalTotal = collect($selectedProducts)->sum('line_total');
-    
-        if ($finalTotal > $invoiceAmount) {
-            $overAmount = $finalTotal - $invoiceAmount;
-            $urgentProducts = collect($selectedProducts)->where('is_urgent', 1);
-            
-            foreach ($urgentProducts as $product) {
-                if ($overAmount <= 0) break;
-                
-                $product->is_urgent = 0;
-                $product->line_total -= $urgentAmount;
-                $overAmount -= $urgentAmount;
-            }
-            
-            $finalTotal = collect($selectedProducts)->sum('line_total');
         }
     
         $productList = collect($selectedProducts)->map(function ($product) {
@@ -255,7 +282,7 @@ class LaravelController extends Controller
         $standardPrice,
         $invoiceAmount,
         $filterType,
-        $lastUsedCombo = null
+        $siteId
     ) {
         $minWords = 250;
         $wordIncrement = 50;
@@ -282,6 +309,54 @@ class LaravelController extends Controller
             return null;
         }
     
+        if (!$filterType) {
+            $targetBase = $invoiceAmount;
+            $tolerancePercentages = [0, 1, 2, 3, 4, 5, 6, 8, 10];
+            shuffle($tolerancePercentages);
+    
+            foreach ($tolerancePercentages as $percentage) {
+                $maxTarget = $targetBase * (1 + $percentage / 100);
+                
+                $strategies = [
+                    fn() => $this->strategyCertifiedFirst($certifiedTranslation, $standardTranslation, $certifiedPrice, $standardPrice, $targetBase, $maxTarget, $minWords, $wordIncrement),
+                    fn() => $this->strategyStandardFirst($certifiedTranslation, $standardTranslation, $certifiedPrice, $standardPrice, $targetBase, $maxTarget, $minWords, $wordIncrement),
+                    fn() => $this->strategyBalanced($certifiedTranslation, $standardTranslation, $certifiedPrice, $standardPrice, $targetBase, $maxTarget, $minWords, $wordIncrement)
+                ];
+    
+                shuffle($strategies);
+    
+                foreach ($strategies as $strategy) {
+                    $result = $strategy();
+                    
+                    if ($result && $result['total'] >= $targetBase && $result['total'] <= $maxTarget) {
+                        if (count($result['match']) == 2) {
+                            return ['products' => $result['match'], 'total' => $result['total']];
+                        }
+                    }
+                }
+            }
+    
+            $fallbackStrategies = [
+                fn() => $this->strategyCertifiedFirst($certifiedTranslation, $standardTranslation, $certifiedPrice, $standardPrice, $targetBase, $invoiceAmount * 1.15, $minWords, $wordIncrement),
+                fn() => $this->strategyStandardFirst($certifiedTranslation, $standardTranslation, $certifiedPrice, $standardPrice, $targetBase, $invoiceAmount * 1.15, $minWords, $wordIncrement),
+            ];
+    
+            foreach ($fallbackStrategies as $fallback) {
+                $result = $fallback();
+                if ($result && isset($result['match']) && count($result['match']) == 2) {
+                    return ['products' => $result['match'], 'total' => $result['total']];
+                }
+            }
+    
+            $lastResort = $this->strategyBalanced($certifiedTranslation, $standardTranslation, $certifiedPrice, $standardPrice, $targetBase, $invoiceAmount * 1.20, $minWords, $wordIncrement);
+            if ($lastResort && isset($lastResort['match']) && count($lastResort['match']) == 2) {
+                return ['products' => $lastResort['match'], 'total' => $lastResort['total']];
+            }
+    
+            $certResult = $this->findCertifiedOnlyCombination($certifiedTranslation, $certifiedPrice, $invoiceAmount);
+            return ['products' => $certResult, 'total' => $certResult[0]['total']];
+        }
+    
         $targetBase = $invoiceAmount;
         $tolerancePercentages = [0, 1, 2, 3, 4, 5, 6, 8, 10];
         shuffle($tolerancePercentages);
@@ -301,11 +376,7 @@ class LaravelController extends Controller
                 $result = $strategy();
                 
                 if ($result && $result['total'] >= $targetBase && $result['total'] <= $maxTarget) {
-                    $comboKey = $this->generateCombinationKey($result['match']);
-                    
-                    if ($comboKey !== $lastUsedCombo) {
-                        return ['products' => $result['match'], 'total' => $result['total']];
-                    }
+                    return ['products' => $result['match'], 'total' => $result['total']];
                 }
             }
         }
@@ -346,19 +417,6 @@ class LaravelController extends Controller
             $remainingAmount = $targetBase - $certTotal;
     
             if ($remainingAmount <= 0) {
-                if ($certTotal >= $targetBase) {
-                    $distance = abs($certTotal - $targetBase);
-                    if ($distance < $bestDistance) {
-                        $bestDistance = $distance;
-                        $bestResult = [
-                            'match' => [
-                                ['product' => $certTranslation, 'quantity' => $certPages, 'total' => $certTotal]
-                            ],
-                            'total' => $certTotal,
-                            'distance' => $distance
-                        ];
-                    }
-                }
                 continue;
             }
     
@@ -417,17 +475,6 @@ class LaravelController extends Controller
             }
     
             if ($stdTotal >= $targetBase) {
-                $distance = abs($stdTotal - $targetBase);
-                if ($distance < $bestDistance) {
-                    $bestDistance = $distance;
-                    $bestResult = [
-                        'match' => [
-                            ['product' => $stdTranslation, 'quantity' => $words, 'total' => $stdTotal]
-                        ],
-                        'total' => $stdTotal,
-                        'distance' => $distance
-                    ];
-                }
                 continue;
             }
     
@@ -555,11 +602,11 @@ class LaravelController extends Controller
         ];
     }
     
-    private function generateCombinationKey($matchArray)
+    private function generateCombinationKeyWithUrgency($products)
     {
         $parts = [];
-        foreach ($matchArray as $item) {
-            $parts[] = $item['product']->id . ':' . $item['quantity'];
+        foreach ($products as $product) {
+            $parts[] = $product->id . ':' . $product->pages . ':' . $product->is_urgent;
         }
         sort($parts);
         return implode('|', $parts);
