@@ -104,11 +104,11 @@
                                     <th
                                         style="padding:10px 5px; text-align:left; border-bottom:2px solid #3C8F89; color:#3C8F89; font-weight:bold;">
                                         DESCRIPTION
-                                    </th>
+                                    <!-- </th>
                                     <th
                                         style="padding:10px 5px; text-align:center; border-bottom:2px solid #3C8F89; color:#3C8F89; font-weight:bold;">
                                         STATUS
-                                    </th>
+                                    </th> -->
                                     <th
                                         style="padding:10px 5px; text-align:center; border-bottom:2px solid #3C8F89; color:#3C8F89; font-weight:bold;">
                                         DURATION
@@ -124,9 +124,9 @@
                                     <tr>
                                         <td style="padding:12px 5px; border-bottom:1px solid #3C8F89;">
                                             {{ $product->name }}</td>
-                                        <td
+                                        <!-- <td
                                             style="padding:12px 5px; text-align:center; border-bottom:1px solid #3C8F89; border-left:2px solid #3C8F89;">
-                                            {{ $packageName = trim(explode('-', $product->name)[1] ?? '') }}</td>
+                                            {{ $packageName = trim(explode('-', $product->name)[1] ?? '') }}</td> -->
                                         <td
                                             style="padding:12px 5px; text-align:center; border-bottom:1px solid #3C8F89; border-left:2px solid #3C8F89;">
                                             {{ $product->subscription ?? '-' }}</td>
@@ -148,7 +148,7 @@
                                 <tr>
 
                                     <td></td>
-                                    <td></td>
+                                    <!-- <td></td> -->
                                     <td
                                         style="padding:10px 5px; text-align:right; font-size:14px; color:#3C8F89; font-weight:bold; border-top:2px solid #3C8F89;">
                                         TOTAL
