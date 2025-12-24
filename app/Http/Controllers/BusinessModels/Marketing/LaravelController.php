@@ -901,7 +901,6 @@ class LaravelController extends Controller
         DynamicDatabaseService::connect($site);
     
         if ($productName !== null && trim($productName) !== '') {
-            // Get the current product to find its original name
             $currentProduct = DB::connection($this->connectionType)
                 ->table($this->productTable)
                 ->where('id', $productId)
@@ -918,7 +917,6 @@ class LaravelController extends Controller
                 $updateData['published'] = $published;
             }
             
-            // Update all products with the same name (all durations)
             DB::connection($this->connectionType)
                 ->table($this->productTable)
                 ->where('name', $currentName)
@@ -927,12 +925,11 @@ class LaravelController extends Controller
     
         if (!$subscription && !$category_id) {
             $readyProducts = session()->get('ready_products', []);
-            $productIds = collect($readyProducts)->pluck('id')->reverse()->values()->toArray();
+            $productIds = collect($readyProducts)->pluck('id')->toArray();
             
             $products = DB::connection($this->connectionType)->table($this->productTable)
                 ->select('id', 'subscription', 'category_id', 'name', 'unit_price', 'slug', 'published')
                 ->whereIn('id', $productIds)
-                ->orderByRaw('FIELD(id, ' . implode(',', $productIds) . ')')
                 ->get()
                 ->keyBy('id');
     
@@ -984,9 +981,14 @@ class LaravelController extends Controller
         }
     
         $readyProducts = session()->get('ready_products', []);
-        $readyProducts = array_filter($readyProducts, function ($product) use ($productId) {
-            return $product['id'] != $productId;
-        });
+        
+        $productIndex = null;
+        foreach ($readyProducts as $index => $product) {
+            if ($product['id'] == $productId) {
+                $productIndex = $index;
+                break;
+            }
+        }
     
         $currentProduct = DB::connection($this->connectionType)
             ->table($this->productTable)
@@ -1010,19 +1012,26 @@ class LaravelController extends Controller
             return response()->json(['error' => "The duration '{$subscription}' was not found in the same package."]);
         }
     
-        $readyProducts[] = [
-            'id' => $newProduct->id,
-            'subscription' => $newProduct->subscription,
-            'unit_price' => $newProduct->unit_price,
-        ];
+        if ($productIndex !== null) {
+            $readyProducts[$productIndex] = [
+                'id' => $newProduct->id,
+                'subscription' => $newProduct->subscription,
+                'unit_price' => $newProduct->unit_price,
+            ];
+        } else {
+            $readyProducts[] = [
+                'id' => $newProduct->id,
+                'subscription' => $newProduct->subscription,
+                'unit_price' => $newProduct->unit_price,
+            ];
+        }
     
         session()->put('ready_products', array_values($readyProducts));
     
-        $productIds = collect($readyProducts)->pluck('id')->reverse()->values()->toArray();
+        $productIds = collect($readyProducts)->pluck('id')->toArray();
         $products = DB::connection($this->connectionType)->table($this->productTable)
             ->select('id', 'subscription', 'category_id', 'name', 'unit_price', 'slug', 'published')
             ->whereIn('id', $productIds)
-            ->orderByRaw('FIELD(id, ' . implode(',', $productIds) . ')')
             ->get()
             ->keyBy('id');
     
