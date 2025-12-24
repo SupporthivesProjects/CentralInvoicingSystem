@@ -31,7 +31,7 @@
 
                                     <td style="font-family: 'Montserrat'; font-size: 9px;">
 
-                                        <table width="100%" cellpadding="0" cellspacing="0" style="padding:0px 0px;  ">
+                                        <table width="100%" cellpadding="0" cellspacing="0" style="padding:0px 30px;  ">
                                             <tr>
                                                 <td style="width:20%;  color:#000;">
                                                     <p style="margin:0;margin-top: 10px; font-size:14px; text-transform: capitalize;">Invoice To :</p>
