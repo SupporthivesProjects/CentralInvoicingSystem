@@ -53,53 +53,47 @@ class WordPressController extends Controller
         }
     
         $site = Website::findOrFail($site_id);
-        $modelType = $site->businessModel->model_type;
+        DynamicDatabaseService::connect($site);
     
-        $auth = base64_encode($site->consumer_key . ':' . $site->consumer_secret);
-        $siteUrl = rtrim($site->site_link, '/');
+        $translationProducts = DB::connection($this->connectionType)
+            ->table($this->productTable)
+            ->select('id', 'category_id', 'name', 'unit_price', 'slug')
+            ->where('published', 1)
+            ->where(function ($query) {
+                $query->where('name', 'like', '%translation%')
+                      ->where(function($q) {
+                          $q->where('name', 'like', '%Standard%')
+                            ->orWhere('name', 'like', '%Certified%')
+                            ->orWhere('name', 'like', '%Business%');
+                      });
+            })
+            ->get();
     
-        $products = [];
-        $page = 1;
-    
-        do {
-            $response = Http::withHeaders([
-                'Authorization' => 'Basic ' . $auth,
-                'Content-Type' => 'application/json',
-                'User-Agent' => 'LaravelApp/1.0'
-            ])->get("$siteUrl/wp-json/wc/v3/products", [
-                'per_page' => 100,
-                'page' => $page,
-                'status' => 'publish'
-            ]);
-    
-            if ($response->failed()) break;
-    
-            $data = $response->json();
-            $products = array_merge($products, $data);
-            $page++;
-        } while (!empty($data));
-    
-        if (empty($products)) {
+        if ($translationProducts->isEmpty()) {
+            session()->forget('ready_products');
+            session()->forget('current_amount');
+            session()->forget('last_translation_params');
             return response()->json([
                 'tableRows' => '',
                 'total' => 0,
-                'message' => 'No products found from API.'
+                'message' => 'Translation products not found in the database'
             ]);
         }
     
-        $certifiedProduct = collect($products)->first(function ($product) {
-            return strtolower(trim($product['name'])) === 'certified translation';
+        $certifiedTranslation = $translationProducts->first(function ($item) {
+            $name = Str::lower(trim($item->name));
+            return Str::contains($name, 'certified') && Str::contains($name, 'translation');
         });
     
-        $standardProduct = collect($products)->first(function ($product) {
-            $name = strtolower(trim($product['name']));
-            return str_contains($name, 'standard professional translation') ||
-                str_contains($name, 'standard translation') ||
-                str_contains($name, 'business translation');
+        $standardTranslation = $translationProducts->first(function ($item) {
+            $name = Str::lower(trim($item->name));
+            return (Str::contains($name, 'standard') || Str::contains($name, 'business')) 
+                   && Str::contains($name, 'translation')
+                   && !Str::contains($name, 'certified');
         });
     
-        $certifiedPrice = $certifiedProduct ? floatval($certifiedProduct['price'] ?? 0) : 0;
-        $standardPrice = $standardProduct ? floatval($standardProduct['price'] ?? 0) : 0;
+        $certifiedPrice = $certifiedTranslation ? floatval($certifiedTranslation->unit_price) : 0;
+        $standardPrice = $standardTranslation ? floatval($standardTranslation->unit_price) : 0;
     
         if ($certifiedPrice <= 0 && $standardPrice <= 0) {
             return response()->json([
@@ -111,12 +105,12 @@ class WordPressController extends Controller
     
         $basePercentage = 15;
         $urgencyChance = min(log($invoiceAmount + 1, 10) * $basePercentage, 100);
-        $urgentAmount = 99.75;
+        $urgentAmount = 25;
     
         $bestMatch = null;
         $bestDistance = PHP_FLOAT_MAX;
     
-        if ($filterType === 'certified' && $certifiedProduct && $certifiedPrice > 0) {
+        if ($filterType === 'certified' && $certifiedTranslation && $certifiedPrice > 0) {
             $bestScenario = null;
             $bestDistance = PHP_FLOAT_MAX;
             
@@ -151,14 +145,14 @@ class WordPressController extends Controller
             
             if ($bestScenario) {
                 $bestMatch = [[
-                    'product' => $certifiedProduct,
+                    'product' => $certifiedTranslation,
                     'pages' => $bestScenario['pages'],
                     'total' => $bestScenario['total'],
                     'is_urgent' => $bestScenario['is_urgent'] && (rand(1, 100) <= $urgencyChance),
                     'base_price' => $certifiedPrice
                 ]];
             }
-        } elseif ($filterType === 'standard' && $standardProduct && $standardPrice > 0) {
+        } elseif ($filterType === 'standard' && $standardTranslation && $standardPrice > 0) {
             $bestScenario = null;
             $bestDistance = PHP_FLOAT_MAX;
             
@@ -195,14 +189,14 @@ class WordPressController extends Controller
             
             if ($bestScenario) {
                 $bestMatch = [[
-                    'product' => $standardProduct,
+                    'product' => $standardTranslation,
                     'pages' => $bestScenario['pages'],
                     'total' => $bestScenario['total'],
                     'is_urgent' => $bestScenario['is_urgent'] && (rand(1, 100) <= $urgencyChance),
                     'base_price' => $standardPrice
                 ]];
             }
-        } elseif ($certifiedProduct && $standardProduct && $certifiedPrice > 0 && $standardPrice > 0) {
+        } elseif ($certifiedTranslation && $standardTranslation && $certifiedPrice > 0 && $standardPrice > 0) {
             $urgencyScenarios = [
                 ['cert_urgent' => false, 'std_urgent' => false],
                 ['cert_urgent' => true, 'std_urgent' => false],
@@ -220,7 +214,7 @@ class WordPressController extends Controller
                 ['cert_ratio' => 0.6, 'std_ratio' => 0.4],
             ];
     
-            $results = collect($urgencyScenarios)->map(function($urgencyScenario) use ($ratios, $certifiedPrice, $standardPrice, $urgentAmount, $invoiceAmount, $certifiedProduct, $standardProduct, $urgencyChance) {
+            $results = collect($urgencyScenarios)->map(function($urgencyScenario) use ($ratios, $certifiedPrice, $standardPrice, $urgentAmount, $invoiceAmount, $certifiedTranslation, $standardTranslation, $urgencyChance) {
                 $certEffectivePrice = $certifiedPrice + ($urgencyScenario['cert_urgent'] ? $urgentAmount : 0);
                 $stdEffectivePrice = $standardPrice + ($urgencyScenario['std_urgent'] ? $urgentAmount : 0);
                 
@@ -253,14 +247,14 @@ class WordPressController extends Controller
                                     $localBest = [
                                         'match' => [
                                             [
-                                                'product' => $certifiedProduct,
+                                                'product' => $certifiedTranslation,
                                                 'pages' => $certPages,
                                                 'total' => $certTotal,
                                                 'is_urgent' => $urgencyScenario['cert_urgent'] && (rand(1, 100) <= $urgencyChance),
                                                 'base_price' => $certifiedPrice
                                             ],
                                             [
-                                                'product' => $standardProduct,
+                                                'product' => $standardTranslation,
                                                 'pages' => $stdPages,
                                                 'total' => $stdTotal,
                                                 'is_urgent' => $urgencyScenario['std_urgent'] && (rand(1, 100) <= $urgencyChance),
@@ -286,7 +280,7 @@ class WordPressController extends Controller
         }
     
         if (!$bestMatch) {
-            if ($certifiedProduct && $certifiedPrice > 0) {
+            if ($certifiedTranslation && $certifiedPrice > 0) {
                 $bestScenario = null;
                 $bestDistance = PHP_FLOAT_MAX;
                 
@@ -300,7 +294,7 @@ class WordPressController extends Controller
                     if ($distanceWithoutUrgency < $bestDistance) {
                         $bestDistance = $distanceWithoutUrgency;
                         $bestScenario = [
-                            'product' => $certifiedProduct,
+                            'product' => $certifiedTranslation,
                             'pages' => $pages,
                             'total' => $totalWithoutUrgency,
                             'is_urgent' => false,
@@ -314,7 +308,7 @@ class WordPressController extends Controller
                     if ($distanceWithUrgency < $bestDistance) {
                         $bestDistance = $distanceWithUrgency;
                         $bestScenario = [
-                            'product' => $certifiedProduct,
+                            'product' => $certifiedTranslation,
                             'pages' => $pages,
                             'total' => $totalWithUrgency,
                             'is_urgent' => true,
@@ -328,7 +322,7 @@ class WordPressController extends Controller
                 }
             }
     
-            if ($standardProduct && $standardPrice > 0 && (!$bestMatch || $bestDistance > 50)) {
+            if ($standardTranslation && $standardPrice > 0 && (!$bestMatch || $bestDistance > 50)) {
                 $bestScenario = null;
                 $currentBestDistance = $bestMatch ? $bestDistance : PHP_FLOAT_MAX;
                 
@@ -344,7 +338,7 @@ class WordPressController extends Controller
                     if ($distanceWithoutUrgency < $currentBestDistance) {
                         $currentBestDistance = $distanceWithoutUrgency;
                         $bestScenario = [
-                            'product' => $standardProduct,
+                            'product' => $standardTranslation,
                             'pages' => $pages,
                             'total' => $totalWithoutUrgency,
                             'is_urgent' => false,
@@ -358,7 +352,7 @@ class WordPressController extends Controller
                     if ($distanceWithUrgency < $currentBestDistance) {
                         $currentBestDistance = $distanceWithUrgency;
                         $bestScenario = [
-                            'product' => $standardProduct,
+                            'product' => $standardTranslation,
                             'pages' => $pages,
                             'total' => $totalWithUrgency,
                             'is_urgent' => true,
@@ -383,10 +377,10 @@ class WordPressController extends Controller
     
         $selectedProducts = [];
         foreach ($bestMatch as $item) {
-            $product = (object) $item['product'];
+            $product = clone $item['product'];
             
-            $productName = strtolower(trim($product->name));
-            $isWordBased = !($certifiedProduct && $productName === strtolower(trim($certifiedProduct['name'])));
+            $productName = Str::lower(trim($product->name));
+            $isWordBased = !Str::contains($productName, 'certified');
             
             if ($isWordBased && $item['pages'] < 250) {
                 continue;
@@ -418,7 +412,8 @@ class WordPressController extends Controller
                 $product->line_total += $product->urgent_amount * $product->pages;
             }
     
-            if ($certifiedProduct && $productName === strtolower(trim($certifiedProduct['name']))) {
+            $isCertified = Str::contains($productName, 'certified');
+            if ($isCertified) {
                 $product->unit_type = 'pages';
                 $product->product_url = $site->certified_translation_url ?? $site->site_link;
             } else {
@@ -446,6 +441,7 @@ class WordPressController extends Controller
     
         session(['current_amount' => $finalTotal]);
     
+        $modelType = $site->businessModel->model_type;
         $tableRows = view("invoice.{$modelType}.random_product_rows", [
             'products' => $selectedProducts,
             'site' => $site,
