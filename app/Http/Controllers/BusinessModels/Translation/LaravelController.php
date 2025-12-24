@@ -299,6 +299,383 @@ class LaravelController extends Controller
         ]);
     }
     
+    private function findBestTranslationCombination(
+        $certifiedTranslation,
+        $standardTranslation,
+        $certifiedPrice,
+        $standardPrice,
+        $invoiceAmount,
+        $filterType,
+        $lastParams
+    ) {
+        $minWords = 250;
+        $wordIncrement = 50;
+    
+        if ($filterType === 'certified' && $certifiedTranslation && $certifiedPrice) {
+            $result = $this->findCertifiedOnlyCombination($certifiedTranslation, $certifiedPrice, $invoiceAmount, $lastParams);
+            return ['products' => $result, 'total' => $result[0]['total']];
+        }
+    
+        if ($filterType === 'standard' && $standardTranslation && $standardPrice) {
+            $result = $this->findStandardOnlyCombination($standardTranslation, $standardPrice, $invoiceAmount, $minWords, $wordIncrement, $lastParams);
+            return ['products' => $result, 'total' => $result[0]['total']];
+        }
+    
+        if (!$certifiedTranslation || !$standardTranslation || !$certifiedPrice || !$standardPrice) {
+            if ($certifiedTranslation && $certifiedPrice) {
+                $result = $this->findCertifiedOnlyCombination($certifiedTranslation, $certifiedPrice, $invoiceAmount, $lastParams);
+                return ['products' => $result, 'total' => $result[0]['total']];
+            }
+            if ($standardTranslation && $standardPrice) {
+                $result = $this->findStandardOnlyCombination($standardTranslation, $standardPrice, $invoiceAmount, $minWords, $wordIncrement, $lastParams);
+                return ['products' => $result, 'total' => $result[0]['total']];
+            }
+            return null;
+        }
+    
+        if (!$filterType) {
+            $targetBase = $invoiceAmount;
+            $tolerancePercentages = [0, 1, 2, 3, 4, 5, 6, 8, 10];
+            shuffle($tolerancePercentages);
+    
+            foreach ($tolerancePercentages as $percentage) {
+                $maxTarget = $targetBase * (1 + $percentage / 100);
+                
+                $strategies = [
+                    fn() => $this->strategyCertifiedFirst($certifiedTranslation, $standardTranslation, $certifiedPrice, $standardPrice, $targetBase, $maxTarget, $minWords, $wordIncrement, $lastParams),
+                    fn() => $this->strategyStandardFirst($certifiedTranslation, $standardTranslation, $certifiedPrice, $standardPrice, $targetBase, $maxTarget, $minWords, $wordIncrement, $lastParams),
+                    fn() => $this->strategyBalanced($certifiedTranslation, $standardTranslation, $certifiedPrice, $standardPrice, $targetBase, $maxTarget, $minWords, $wordIncrement, $lastParams)
+                ];
+    
+                shuffle($strategies);
+    
+                foreach ($strategies as $strategy) {
+                    $result = $strategy();
+                    
+                    if ($result && $result['total'] >= $targetBase && $result['total'] <= $maxTarget) {
+                        if (count($result['match']) == 2) {
+                            return ['products' => $result['match'], 'total' => $result['total']];
+                        }
+                    }
+                }
+            }
+    
+            $fallbackStrategies = [
+                fn() => $this->strategyCertifiedFirst($certifiedTranslation, $standardTranslation, $certifiedPrice, $standardPrice, $targetBase, $invoiceAmount * 1.15, $minWords, $wordIncrement, $lastParams),
+                fn() => $this->strategyStandardFirst($certifiedTranslation, $standardTranslation, $certifiedPrice, $standardPrice, $targetBase, $invoiceAmount * 1.15, $minWords, $wordIncrement, $lastParams),
+            ];
+    
+            foreach ($fallbackStrategies as $fallback) {
+                $result = $fallback();
+                if ($result && isset($result['match']) && count($result['match']) == 2) {
+                    return ['products' => $result['match'], 'total' => $result['total']];
+                }
+            }
+    
+            $lastResort = $this->strategyBalanced($certifiedTranslation, $standardTranslation, $certifiedPrice, $standardPrice, $targetBase, $invoiceAmount * 1.20, $minWords, $wordIncrement, $lastParams);
+            if ($lastResort && isset($lastResort['match']) && count($lastResort['match']) == 2) {
+                return ['products' => $lastResort['match'], 'total' => $lastResort['total']];
+            }
+    
+            $certResult = $this->findCertifiedOnlyCombination($certifiedTranslation, $certifiedPrice, $invoiceAmount, $lastParams);
+            return ['products' => $certResult, 'total' => $certResult[0]['total']];
+        }
+    
+        $targetBase = $invoiceAmount;
+        $tolerancePercentages = [0, 1, 2, 3, 4, 5, 6, 8, 10];
+        shuffle($tolerancePercentages);
+    
+        foreach ($tolerancePercentages as $percentage) {
+            $maxTarget = $targetBase * (1 + $percentage / 100);
+            
+            $strategies = [
+                fn() => $this->strategyCertifiedFirst($certifiedTranslation, $standardTranslation, $certifiedPrice, $standardPrice, $targetBase, $maxTarget, $minWords, $wordIncrement, $lastParams),
+                fn() => $this->strategyStandardFirst($certifiedTranslation, $standardTranslation, $certifiedPrice, $standardPrice, $targetBase, $maxTarget, $minWords, $wordIncrement, $lastParams),
+                fn() => $this->strategyBalanced($certifiedTranslation, $standardTranslation, $certifiedPrice, $standardPrice, $targetBase, $maxTarget, $minWords, $wordIncrement, $lastParams)
+            ];
+    
+            shuffle($strategies);
+    
+            foreach ($strategies as $strategy) {
+                $result = $strategy();
+                
+                if ($result && $result['total'] >= $targetBase && $result['total'] <= $maxTarget) {
+                    return ['products' => $result['match'], 'total' => $result['total']];
+                }
+            }
+        }
+    
+        $fallbackStrategies = [
+            fn() => $this->strategyCertifiedFirst($certifiedTranslation, $standardTranslation, $certifiedPrice, $standardPrice, $targetBase, $invoiceAmount * 1.15, $minWords, $wordIncrement, $lastParams),
+            fn() => $this->strategyStandardFirst($certifiedTranslation, $standardTranslation, $certifiedPrice, $standardPrice, $targetBase, $invoiceAmount * 1.15, $minWords, $wordIncrement, $lastParams),
+            fn() => ['match' => $this->findCertifiedOnlyCombination($certifiedTranslation, $certifiedPrice, $invoiceAmount, $lastParams), 'total' => 0],
+            fn() => ['match' => $this->findStandardOnlyCombination($standardTranslation, $standardPrice, $invoiceAmount, $minWords, $wordIncrement, $lastParams), 'total' => 0]
+        ];
+    
+        foreach ($fallbackStrategies as $fallback) {
+            $result = $fallback();
+            if ($result && isset($result['match'])) {
+                return ['products' => $result['match'], 'total' => $result['total'] ?? 0];
+            }
+        }
+    
+        return null;
+    }
+    
+    private function strategyCertifiedFirst($certTranslation, $stdTranslation, $certPrice, $stdPrice, $targetBase, $maxTarget, $minWords, $wordIncrement, $lastParams)
+    {
+        $maxCertPages = min(15, ceil($maxTarget / $certPrice));
+        $bestResult = null;
+        $bestDistance = PHP_FLOAT_MAX;
+    
+        $pageRange = range(1, $maxCertPages);
+        
+        if ($lastParams['certified_pages'] !== null) {
+            $pageRange = array_diff($pageRange, [$lastParams['certified_pages']]);
+        }
+        
+        $pageRange = array_values($pageRange);
+        shuffle($pageRange);
+    
+        foreach ($pageRange as $certPages) {
+            $certTotal = $certPages * $certPrice;
+            
+            if ($certTotal > $maxTarget) {
+                continue;
+            }
+    
+            $remainingAmount = $targetBase - $certTotal;
+    
+            if ($remainingAmount <= 0) {
+                continue;
+            }
+    
+            $minRequiredWords = max($minWords, ceil($remainingAmount / $stdPrice));
+            $maxWords = min(2000, ceil(($maxTarget - $certTotal) / $stdPrice));
+    
+            $wordRange = range($minRequiredWords, $maxWords, $wordIncrement);
+            
+            if ($lastParams['standard_words'] !== null) {
+                $wordRange = array_filter($wordRange, fn($w) => $w != $lastParams['standard_words']);
+            }
+            
+            $wordRange = array_values($wordRange);
+            shuffle($wordRange);
+            $sampledWords = array_slice($wordRange, 0, min(20, count($wordRange)));
+    
+            foreach ($sampledWords as $words) {
+                if ($words < $minWords) continue;
+    
+                $stdTotal = $words * $stdPrice;
+                $total = $certTotal + $stdTotal;
+    
+                if ($total >= $targetBase && $total <= $maxTarget) {
+                    $distance = abs($total - $targetBase);
+    
+                    if ($distance < $bestDistance) {
+                        $bestDistance = $distance;
+                        $bestResult = [
+                            'match' => [
+                                ['product' => $certTranslation, 'quantity' => $certPages, 'total' => $certTotal],
+                                ['product' => $stdTranslation, 'quantity' => $words, 'total' => $stdTotal]
+                            ],
+                            'total' => $total,
+                            'distance' => $distance
+                        ];
+    
+                        if ($distance <= $targetBase * 0.005) {
+                            return $bestResult;
+                        }
+                    }
+                }
+            }
+        }
+    
+        return $bestResult;
+    }
+    
+    private function strategyStandardFirst($certTranslation, $stdTranslation, $certPrice, $stdPrice, $targetBase, $maxTarget, $minWords, $wordIncrement, $lastParams)
+    {
+        $maxWords = min(3000, ceil($maxTarget / $stdPrice));
+        $bestResult = null;
+        $bestDistance = PHP_FLOAT_MAX;
+    
+        $wordRange = range($minWords, $maxWords, $wordIncrement);
+        
+        if ($lastParams['standard_words'] !== null) {
+            $wordRange = array_filter($wordRange, fn($w) => $w != $lastParams['standard_words']);
+        }
+        
+        $wordRange = array_values($wordRange);
+        shuffle($wordRange);
+        $sampledWords = array_slice($wordRange, 0, min(60, count($wordRange)));
+    
+        foreach ($sampledWords as $words) {
+            if ($words < $minWords) continue;
+    
+            $stdTotal = $words * $stdPrice;
+    
+            if ($stdTotal > $maxTarget) {
+                continue;
+            }
+    
+            if ($stdTotal >= $targetBase) {
+                continue;
+            }
+    
+            $remainingAmount = $targetBase - $stdTotal;
+    
+            if ($remainingAmount >= $certPrice) {
+                $certPages = max(1, ceil($remainingAmount / $certPrice));
+                
+                if ($lastParams['certified_pages'] !== null && $certPages == $lastParams['certified_pages']) {
+                    $certPages = $certPages + 1;
+                }
+                
+                $certTotal = $certPages * $certPrice;
+                $total = $stdTotal + $certTotal;
+    
+                if ($total >= $targetBase && $total <= $maxTarget) {
+                    $distance = abs($total - $targetBase);
+    
+                    if ($distance < $bestDistance) {
+                        $bestDistance = $distance;
+                        $bestResult = [
+                            'match' => [
+                                ['product' => $certTranslation, 'quantity' => $certPages, 'total' => $certTotal],
+                                ['product' => $stdTranslation, 'quantity' => $words, 'total' => $stdTotal]
+                            ],
+                            'total' => $total,
+                            'distance' => $distance
+                        ];
+    
+                        if ($distance <= $targetBase * 0.005) {
+                            return $bestResult;
+                        }
+                    }
+                }
+            }
+        }
+    
+        return $bestResult;
+    }
+    
+    private function strategyBalanced($certTranslation, $stdTranslation, $certPrice, $stdPrice, $targetBase, $maxTarget, $minWords, $wordIncrement, $lastParams)
+    {
+        $bestResult = null;
+        $bestDistance = PHP_FLOAT_MAX;
+    
+        $ratios = [
+            ['cert' => 0.5, 'std' => 0.5],
+            ['cert' => 0.4, 'std' => 0.6],
+            ['cert' => 0.6, 'std' => 0.4],
+            ['cert' => 0.3, 'std' => 0.7],
+            ['cert' => 0.7, 'std' => 0.3]
+        ];
+    
+        shuffle($ratios);
+    
+        foreach ($ratios as $ratio) {
+            $certBudget = $targetBase * $ratio['cert'];
+            $stdBudget = $targetBase * $ratio['std'];
+    
+            $certPages = max(1, round($certBudget / $certPrice));
+            
+            if ($lastParams['certified_pages'] !== null && $certPages == $lastParams['certified_pages']) {
+                $certPages = $certPages + rand(-1, 1);
+                $certPages = max(1, $certPages);
+            }
+            
+            $certTotal = $certPages * $certPrice;
+    
+            $words = max($minWords, round($stdBudget / $stdPrice));
+            $words = ceil($words / $wordIncrement) * $wordIncrement;
+            
+            if ($lastParams['standard_words'] !== null && $words == $lastParams['standard_words']) {
+                $words = $words + (rand(0, 1) ? $wordIncrement : -$wordIncrement);
+                $words = max($minWords, $words);
+            }
+            
+            $stdTotal = $words * $stdPrice;
+    
+            $total = $certTotal + $stdTotal;
+    
+            if ($total >= $targetBase && $total <= $maxTarget) {
+                $distance = abs($total - $targetBase);
+    
+                if ($distance < $bestDistance) {
+                    $bestDistance = $distance;
+                    $bestResult = [
+                        'match' => [
+                            ['product' => $certTranslation, 'quantity' => $certPages, 'total' => $certTotal],
+                            ['product' => $stdTranslation, 'quantity' => $words, 'total' => $stdTotal]
+                        ],
+                        'total' => $total,
+                        'distance' => $distance
+                    ];
+                }
+            }
+    
+            if ($total < $targetBase) {
+                $deficit = $targetBase - $total;
+                $additionalWords = max($wordIncrement, ceil($deficit / $stdPrice / $wordIncrement) * $wordIncrement);
+                $words += $additionalWords;
+                $stdTotal = $words * $stdPrice;
+                $total = $certTotal + $stdTotal;
+    
+                if ($total >= $targetBase && $total <= $maxTarget) {
+                    $distance = abs($total - $targetBase);
+                    if ($distance < $bestDistance) {
+                        $bestDistance = $distance;
+                        $bestResult = [
+                            'match' => [
+                                ['product' => $certTranslation, 'quantity' => $certPages, 'total' => $certTotal],
+                                ['product' => $stdTranslation, 'quantity' => $words, 'total' => $stdTotal]
+                            ],
+                            'total' => $total,
+                            'distance' => $distance
+                        ];
+                    }
+                }
+            }
+        }
+    
+        return $bestResult;
+    }
+    
+    private function findCertifiedOnlyCombination($certTranslation, $certPrice, $invoiceAmount, $lastParams)
+    {
+        $certPages = max(1, round($invoiceAmount / $certPrice));
+        
+        if ($lastParams['certified_pages'] !== null && $certPages == $lastParams['certified_pages']) {
+            $certPages = $certPages + rand(-2, 2);
+            $certPages = max(1, $certPages);
+        }
+        
+        $total = $certPages * $certPrice;
+    
+        return [
+            ['product' => $certTranslation, 'quantity' => $certPages, 'total' => $total]
+        ];
+    }
+    
+    private function findStandardOnlyCombination($stdTranslation, $stdPrice, $invoiceAmount, $minWords, $wordIncrement, $lastParams)
+    {
+        $words = max($minWords, round($invoiceAmount / $stdPrice));
+        $words = round($words / $wordIncrement) * $wordIncrement;
+        
+        if ($lastParams['standard_words'] !== null && $words == $lastParams['standard_words']) {
+            $words = $words + (rand(0, 1) ? $wordIncrement * 2 : -$wordIncrement * 2);
+            $words = max($minWords, $words);
+        }
+        
+        $total = $words * $stdPrice;
+    
+        return [
+            ['product' => $stdTranslation, 'quantity' => $words, 'total' => $total]
+        ];
+    }
+    
     public function updateProduct(Request $request)
     {
         $productId = $request->get('product_id');
