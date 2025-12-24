@@ -20,7 +20,8 @@
 
     <!-- INVOICE BODY -->
     <div style="width:600px; margin:0 auto; border-collapse:collapse;">
-        <p style="text-align:center; font-weight:bold; color:#cc0000; font-size:9px; margin:20px 0;">INVOICE {{ $invoice_number }}</p>
+        <p style="text-align:center; font-weight:bold; color:#cc0000; font-size:9px; margin:20px 0;">INVOICE {{ $invoice_number }}  {{ $invoice_date }}</p>
+        
 
         <table
             style="width:100%; border-collapse:collapse; font-size:9px; margin:0 auto; font-family:Arial, sans-serif; table-layout:fixed;">
