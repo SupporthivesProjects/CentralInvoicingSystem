@@ -169,46 +169,30 @@ class LaravelController extends Controller
             $baseTotal = collect($tempProducts)->sum('line_total');
             $urgentAmount = 25;
             $productCount = count($tempProducts);
-            $targetUrgentCount = ceil($productCount * 0.5);
+            $targetUrgentCount = max(1, ceil($productCount * 0.5));
     
-            $shuffledProducts = collect($tempProducts)->shuffle();
-            $urgentProducts = $shuffledProducts->take($targetUrgentCount);
+            $availableSpace = $invoiceAmount - $baseTotal;
+            $maxPossibleUrgent = floor($availableSpace / $urgentAmount);
+            $actualUrgentCount = min($targetUrgentCount, $maxPossibleUrgent, $productCount);
     
-            foreach ($urgentProducts as $product) {
-                $product->is_urgent = 1;
-                $product->line_total += $urgentAmount;
-                
-                $isCertified = Str::contains(Str::lower($product->name), 'certified');
-                if ($isCertified) {
-                    $currentParams['certified_urgent'] = 1;
-                } else {
-                    $currentParams['standard_urgent'] = 1;
+            if ($actualUrgentCount > 0) {
+                $shuffledProducts = collect($tempProducts)->shuffle();
+                $urgentProducts = $shuffledProducts->take($actualUrgentCount);
+    
+                foreach ($urgentProducts as $product) {
+                    $product->is_urgent = 1;
+                    $product->line_total += $urgentAmount;
+                    
+                    $isCertified = Str::contains(Str::lower($product->name), 'certified');
+                    if ($isCertified) {
+                        $currentParams['certified_urgent'] = 1;
+                    } else {
+                        $currentParams['standard_urgent'] = 1;
+                    }
                 }
             }
     
             $attemptTotal = collect($tempProducts)->sum('line_total');
-    
-            if ($attemptTotal > $invoiceAmount) {
-                $overAmount = $attemptTotal - $invoiceAmount;
-                $urgentProductsList = collect($tempProducts)->where('is_urgent', 1);
-                
-                foreach ($urgentProductsList as $product) {
-                    if ($overAmount <= 0) break;
-                    
-                    $product->is_urgent = 0;
-                    $product->line_total -= $urgentAmount;
-                    $overAmount -= $urgentAmount;
-                    
-                    $isCertified = Str::contains(Str::lower($product->name), 'certified');
-                    if ($isCertified) {
-                        $currentParams['certified_urgent'] = 0;
-                    } else {
-                        $currentParams['standard_urgent'] = 0;
-                    }
-                }
-                
-                $attemptTotal = collect($tempProducts)->sum('line_total');
-            }
     
             $isDifferent = false;
             
