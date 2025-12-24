@@ -106,12 +106,30 @@ class LaravelController extends Controller
         $maxAttempts = 5;
     
         for ($attempt = 0; $attempt < $maxAttempts; $attempt++) {
+            $urgentAmount = 25;
+            $preSelectedUrgency = [
+                'certified' => rand(0, 1) === 1,
+                'standard' => rand(0, 1) === 1
+            ];
+    
+            $adjustedInvoiceAmount = $invoiceAmount;
+            $urgentCost = 0;
+            
+            if ($preSelectedUrgency['certified']) {
+                $urgentCost += $urgentAmount;
+            }
+            if ($preSelectedUrgency['standard']) {
+                $urgentCost += $urgentAmount;
+            }
+            
+            $adjustedInvoiceAmount = $invoiceAmount - $urgentCost;
+    
             $result = $this->findBestTranslationCombination(
                 $certifiedTranslation,
                 $standardTranslation,
                 $certifiedPrice,
                 $standardPrice,
-                $invoiceAmount,
+                $adjustedInvoiceAmount,
                 $filterType,
                 $lastParams
             );
@@ -154,9 +172,21 @@ class LaravelController extends Controller
                 if ($isCertified) {
                     $product->product_url = $site->certified_translation_url ?? $site->site_link;
                     $currentParams['certified_pages'] = $quantity;
+                    
+                    if ($preSelectedUrgency['certified']) {
+                        $product->is_urgent = 1;
+                        $product->line_total += $urgentAmount;
+                        $currentParams['certified_urgent'] = 1;
+                    }
                 } else {
                     $product->product_url = $site->standard_translation_url ?? $site->site_link;
                     $currentParams['standard_words'] = $quantity;
+                    
+                    if ($preSelectedUrgency['standard']) {
+                        $product->is_urgent = 1;
+                        $product->line_total += $urgentAmount;
+                        $currentParams['standard_urgent'] = 1;
+                    }
                 }
     
                 $tempProducts[] = $product;
@@ -164,32 +194,6 @@ class LaravelController extends Controller
     
             if (empty($tempProducts)) {
                 continue;
-            }
-    
-            $baseTotal = collect($tempProducts)->sum('line_total');
-            $urgentAmount = 25;
-            $productCount = count($tempProducts);
-            $targetUrgentCount = max(1, ceil($productCount * 0.5));
-    
-            $availableSpace = $invoiceAmount - $baseTotal;
-            $maxPossibleUrgent = floor($availableSpace / $urgentAmount);
-            $actualUrgentCount = min($targetUrgentCount, $maxPossibleUrgent, $productCount);
-    
-            if ($actualUrgentCount > 0) {
-                $shuffledProducts = collect($tempProducts)->shuffle();
-                $urgentProducts = $shuffledProducts->take($actualUrgentCount);
-    
-                foreach ($urgentProducts as $product) {
-                    $product->is_urgent = 1;
-                    $product->line_total += $urgentAmount;
-                    
-                    $isCertified = Str::contains(Str::lower($product->name), 'certified');
-                    if ($isCertified) {
-                        $currentParams['certified_urgent'] = 1;
-                    } else {
-                        $currentParams['standard_urgent'] = 1;
-                    }
-                }
             }
     
             $attemptTotal = collect($tempProducts)->sum('line_total');
