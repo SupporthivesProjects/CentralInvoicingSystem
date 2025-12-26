@@ -81,6 +81,7 @@
                     class="form-control edit-price {{ $isLocked ? 'bg-light' : '' }}"
                     name="products[{{ $product->id }}][unit_price]" value="{{ $product->unit_price }}"
                     {{ $isLocked ? 'readonly' : '' }} data-bs-toggle="tooltip" data-price-status="{{ $lockStatus }}"
+                    data-original-price="{{ $product->unit_price }}"
                     title="{{ $inputTooltip }}">
 
                 <!-- Hidden fields for bundle_id and game_currency_amount needed for update -->
@@ -238,16 +239,19 @@
         function calculateTotalPrice() {
             let currentAmount = 0;
 
-            $('.narayan-checkbox').filter(':checked, :disabled:checked').each(function() {
-                const productRow = $(this).closest('tr');
-                const editPriceInput = productRow.find('.edit-price');
-                let editPrice = parseFloat(editPriceInput.val());
-
-                if (isNaN(editPrice)) {
-                    editPrice = parseFloat($(this).data('unit_price')) || 0;
+            $('#product-table-body tr.product-row').each(function() {
+                const $row = $(this);
+                const editPriceInput = $row.find('.edit-price');
+                
+                if (editPriceInput.length) {
+                    let editPrice = parseFloat(editPriceInput.val());
+                    
+                    if (isNaN(editPrice) || editPrice === '') {
+                        editPrice = parseFloat(editPriceInput.data('original-price')) || 0;
+                    }
+                    
+                    currentAmount += editPrice;
                 }
-
-                currentAmount += editPrice;
             });
             
             const invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
