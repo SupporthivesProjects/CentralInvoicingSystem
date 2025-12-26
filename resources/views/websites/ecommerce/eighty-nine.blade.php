@@ -26,6 +26,7 @@
                                                     <span style="font-size: 26px; font-weight: bold;">INVOICE</span><br>
                                                     <span style="font-size: 10px;">NO. {{ $invoice_number }}</span><br>
                                                     <span style="font-size: 10px;">{{ $invoice_date }}</span>
+                                                    
                                                 </td>
                                             </tr>
                                         </table>

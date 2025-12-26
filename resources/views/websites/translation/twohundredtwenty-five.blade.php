@@ -66,14 +66,12 @@
                                                 <td style="font-weight: bold;">Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ $company_name }}</td>
                                                 <!-- <td>{{ $company_name }}</td> -->
                                             </tr>
-                                            <br>
                                             <tr>
-                                                <td style="font-weight: bold; vertical-align: top;">Address&nbsp;&nbsp;&nbsp;{{ $company_address }}</td>
+                                                <td style="font-weight: bold; vertical-align: top;">Address&nbsp;&nbsp;&nbsp;&nbsp;{{ $company_address }}</td>
                                                 <!-- <td>{{ $company_address }}</td> -->
                                             </tr>
-                                            <br>
                                             <tr>
-                                                <td style="font-weight: bold;">Email&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ $company_email }}</td>
+                                                <td style="font-weight: bold;">Email&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ $company_email }}</td>
                                                 <!-- <td>{{ $company_email }}</td> -->
                                             </tr>
                                         </table>
