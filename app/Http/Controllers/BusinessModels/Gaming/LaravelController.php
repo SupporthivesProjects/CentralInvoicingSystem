@@ -360,23 +360,6 @@ class LaravelController extends Controller
         DynamicDatabaseService::connect($site);
 
         $hasKeyword = $request->filled('keyword');
-        //$hasPriceRange = $request->filled('price_from') && $request->filled('price_to');
-
-        // if (!$hasKeyword && !$hasPriceRange) {
-        //     return response()->json([
-        //         'tableRows' => '<tr><td colspan="7" class="text-center text-muted">Please enter a keyword or price range to search.</td></tr>'
-        //     ]);
-        // }
-
-        // $priceFrom = $request->price_from;
-        // $priceTo = $request->price_to;
-
-        // ✅ Subquery to get max(bundle_first_amount) per product
-        // $costSubquery = DB::connection($this->connectionType)
-        //     ->table('game_sever_based_cost')
-        //     ->select('game_id', DB::raw('MAX(bundle_first_amount) as bundle_first_amount'))
-        //     ->groupBy('game_id');
-
         $costSubquery = DB::connection($this->connectionType)
         ->table('game_sever_based_cost')
         ->select(
