@@ -697,149 +697,98 @@ class WordPressController extends Controller
     {
         $site_id = session('customer.site_id');
         $site = Website::findOrFail($site_id);
-
+    
         $updatedProducts = [];
+        $blockedProducts = [];
         $errors = [];
-
+    
         $wooBaseUrl = rtrim($site->site_link, '/') . '/wp-json/wc/v3';
         $wooConsumerKey = $site->consumer_key;
         $wooConsumerSecret = $site->consumer_secret;
-
+    
         foreach ($productDataArray as $data) {
-            if (empty($data['game_currency_amount']) || !isset($data['unit_price']) || !isset($data['product_id'])) {
-                \Log::warning("Missing required data for product update", $data);
+            if (empty($data['game_currency_amount']) || !isset($data['unit_price']) || !isset($data['id']) || !isset($data['bundle_id'])) {
                 continue;
             }
-
-            $variationId = !empty($data['bundle_id']) && is_numeric($data['bundle_id'])
-                ? intval($data['bundle_id'])
-                : null;
-
-            if (!$variationId) {
-                \Log::warning("Invalid or missing bundle_id for product {$data['product_id']}", $data);
-                continue;
-            }
-
-            $product_id = intval($data['product_id']);
-            $unit_price = number_format(floatval($data['unit_price']), 2, '.', '');
-
+    
+            $product_id = intval($data['id']);
+            $variationId = intval($data['bundle_id']);
+            $unit_price = floatval($data['unit_price']);
+    
             try {
                 $productResponse = Http::timeout(30)
                     ->withBasicAuth($wooConsumerKey, $wooConsumerSecret)
                     ->get("{$wooBaseUrl}/products/{$product_id}/variations/{$variationId}");
-
-                if ($productResponse->status() === 404) {
-                    \Log::warning("Variation not found: Product ID {$product_id}, Variation ID {$variationId}");
-                    $errors[] = "Variation {$variationId} not found for product {$product_id}";
-                    continue;
-                }
-
-                if ($productResponse->status() === 401) {
-                    \Log::error("Authentication failed - check WooCommerce API credentials");
-                    $errors[] = "Authentication failed for product {$product_id}";
-                    continue;
-                }
-
+    
                 if ($productResponse->failed()) {
-                    $errorMsg = "Failed to fetch variation {$variationId}: HTTP {$productResponse->status()} - " . $productResponse->body();
-                    \Log::error($errorMsg);
-                    $errors[] = $errorMsg;
+                    $errors[] = "Failed to fetch variation {$variationId} for product {$product_id}";
                     continue;
                 }
-
+    
                 $productData = $productResponse->json();
-
-                $currentPrice = isset($productData['regular_price']) && $productData['regular_price'] !== ''
-                    ? number_format(floatval($productData['regular_price']), 2, '.', '')
-                    : '0.00';
-
-                \Log::info("Price comparison for variation {$variationId}: Current={$currentPrice}, New={$unit_price}");
-
-                if ($currentPrice !== $unit_price) {
-                    $lastHistory = ProductPriceHistory::where('site_id', $site_id)
-                        ->where('product_id', $product_id)
-                        ->where('bundle', $variationId)
-                        ->orderBy('last_price_changed', 'desc')
-                        ->first();
-
-                    $shouldUpdate = false;
-
-                    if (!$lastHistory) {
-                        $shouldUpdate = true;
-                    } else {
-                        $threeMonthsAgo = now()->subMonths(3);
-                        if ($lastHistory->last_price_changed < $threeMonthsAgo) {
-                            $shouldUpdate = true;
-                        } else {
-                            \Log::info("Skipping update: last update for variation {$variationId} was within 3 months");
-                        }
+                $currentPrice = floatval($productData['regular_price'] ?? 0);
+    
+                if (abs($currentPrice - $unit_price) < 0.01) {
+                    continue;
+                }
+    
+                $lastHistory = ProductPriceHistory::where('site_id', $site_id)
+                    ->where('product_id', $product_id)
+                    ->where('bundle', (string)$variationId)
+                    ->orderByDesc('last_price_changed')
+                    ->first();
+    
+                if (!$lastHistory || Carbon::parse($lastHistory->last_price_changed)->diffInDays(now()) >= 90) {
+                    $updateData = ['regular_price' => (string)$unit_price];
+    
+                    if (isset($productData['sale_price']) && $productData['sale_price'] !== '' && floatval($productData['sale_price']) > $unit_price) {
+                        $updateData['sale_price'] = '';
                     }
-
-                    if ($shouldUpdate) {
-                        $updateData = [
-                            'regular_price' => $unit_price,
-                        ];
-
-                        if (
-                            isset($productData['sale_price']) && $productData['sale_price'] !== '' &&
-                            floatval($productData['sale_price']) > floatval($unit_price)
-                        ) {
-                            $updateData['sale_price'] = '';
-                        }
-
-                        $updateResponse = Http::timeout(30)
-                            ->withBasicAuth($wooConsumerKey, $wooConsumerSecret)
-                            ->put("{$wooBaseUrl}/products/{$product_id}/variations/{$variationId}", $updateData);
-
-                        if ($updateResponse->failed()) {
-                            $errorMsg = "WooCommerce update failed for variation {$variationId}: HTTP {$updateResponse->status()} - " . $updateResponse->body();
-                            \Log::error($errorMsg);
-                            $errors[] = $errorMsg;
-                            continue;
-                        }
-
-                        \Log::info("Successfully updated variation {$variationId} price from {$currentPrice} to {$unit_price}");
-
-                        ProductPriceHistory::create([
-                            'site_id' => $site_id,
-                            'product_id' => $product_id,
-                            'bundle' => $variationId,
-                            'unit_price' => floatval($unit_price),
-                            'last_price_changed' => now(),
-                        ]);
-
-                        $updatedProducts[] = [
-                            'variation_id' => $variationId,
-                            'product_id' => $product_id,
-                            'old_price' => $currentPrice,
-                            'new_price' => $unit_price
-                        ];
+    
+                    $updateResponse = Http::timeout(30)
+                        ->withBasicAuth($wooConsumerKey, $wooConsumerSecret)
+                        ->put("{$wooBaseUrl}/products/{$product_id}/variations/{$variationId}", $updateData);
+    
+                    if ($updateResponse->failed()) {
+                        $errors[] = "Failed to update variation {$variationId} for product {$product_id}";
+                        continue;
                     }
+    
+                    ProductPriceHistory::create([
+                        'site_id' => $site_id,
+                        'product_id' => $product_id,
+                        'bundle' => (string)$variationId,
+                        'unit_price' => $unit_price,
+                        'last_price_changed' => now(),
+                    ]);
+    
+                    $updatedProducts[] = [
+                        'variation_id' => $variationId,
+                        'product_id' => $product_id,
+                        'old_price' => $currentPrice,
+                        'new_price' => $unit_price
+                    ];
                 } else {
-                    \Log::info("No price change needed for variation {$variationId}");
+                    $daysRemaining = 90 - Carbon::parse($lastHistory->last_price_changed)->diffInDays(now());
+    
+                    $blockedProducts[] = [
+                        'variation_id' => $variationId,
+                        'product_id' => $product_id,
+                        'current_price' => $currentPrice,
+                        'requested_price' => $unit_price,
+                        'days_remaining' => $daysRemaining
+                    ];
                 }
             } catch (\Exception $e) {
-                $errorMsg = "Exception for product ID {$product_id}, variation {$variationId}: " . $e->getMessage();
-                \Log::error($errorMsg);
-                $errors[] = $errorMsg;
+                $errors[] = "Exception for product {$product_id}, variation {$variationId}: " . $e->getMessage();
                 continue;
             }
         }
-
-        \Log::info("Price update summary", [
-            'updated_count' => count($updatedProducts),
-            'error_count' => count($errors),
-            'updated_products' => $updatedProducts
-        ]);
-
+    
         return [
-            'updated' => $updatedProducts,
-            'errors' => $errors,
-            'summary' => [
-                'total_processed' => count($productDataArray),
-                'updated_count' => count($updatedProducts),
-                'error_count' => count($errors)
-            ]
+            'updated_products' => $updatedProducts,
+            'blocked_products' => $blockedProducts,
+            'errors' => $errors
         ];
     }
 
