@@ -19,8 +19,9 @@
 
                     <!-- Content -->
                     <tr style="width:100%;">
-                        <td
-                            style="padding: 95px 120px 170px 40px;background: url({{ $invoice_image1 }});background-position: center;background-size: cover;height:444px;" style="width:100%;">
+                        <!-- <td style="padding: 95px 120px 170px 40px;background: url({{ $invoice_image1 }});background-position: center;background-size: cover;height:444px;" style="width:100%;"> -->
+                        <td style="padding: 95px 120px 170px 40px;background: url({{ $invoice_image1 }});background-position: center;background-size: cover;" style="width:100%;">
+
                             <table style="width:100%;">
                                 <tr>
                                     <td>
@@ -49,7 +50,9 @@
                             <br>
                             <br>
                             <br>
-                            <diV style="height: 500px; padding-left: 20px;">
+                            <!-- <div style="height: 500px; padding-left: 20px;"> -->
+                            <div style=" padding-left: 20px;">
+
                                 <table style="border-collapse: collapse;">
                                     <tr style="border-collapse: collapse;height: 24px;">
                                         <td
@@ -136,7 +139,7 @@
                                         </td>
                                     </tr>
                                 </table>
-                            </diV>
+                            </div>
 
                         </td>
                     </tr>
