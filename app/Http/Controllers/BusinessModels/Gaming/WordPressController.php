@@ -321,7 +321,12 @@ class WordPressController extends Controller
         if ($http_code == 200 && $response) {
             $wp_products = json_decode($response, true);
             
-            foreach ($wp_products as $p) {
+            // Initialize multi-curl handle
+            $mh = curl_multi_init();
+            $curl_handles = [];
+            
+            // Add all variation requests to multi-curl
+            foreach ($wp_products as $index => $p) {
                 $variation_url = $wp_api_url . '/' . $p['id'] . '/variations';
                 
                 $ch = curl_init();
@@ -330,9 +335,24 @@ class WordPressController extends Controller
                 curl_setopt($ch, CURLOPT_USERPWD, $consumer_key . ':' . $consumer_secret);
                 curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
                 
-                $var_response = curl_exec($ch);
+                curl_multi_add_handle($mh, $ch);
+                $curl_handles[$index] = ['handle' => $ch, 'product' => $p];
+            }
+            
+            // Execute all requests simultaneously
+            $running = null;
+            do {
+                curl_multi_exec($mh, $running);
+                curl_multi_select($mh);
+            } while ($running > 0);
+            
+            // Collect all responses
+            foreach ($curl_handles as $index => $data) {
+                $ch = $data['handle'];
+                $p = $data['product'];
+                
+                $var_response = curl_multi_getcontent($ch);
                 $var_http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-                curl_close($ch);
                 
                 if ($var_http_code == 200 && $var_response) {
                     $variations = json_decode($var_response, true);
@@ -356,7 +376,12 @@ class WordPressController extends Controller
                         ]);
                     }
                 }
+                
+                curl_multi_remove_handle($mh, $ch);
+                curl_close($ch);
             }
+            
+            curl_multi_close($mh);
         }
     
         if ($products->isEmpty()) {
