@@ -533,6 +533,8 @@ class WordPressController extends Controller
     }
 
 
+
+
     public function generateInvoice(Request $request)
     {
         $site = Website::findOrFail($request->input('site_id'));
@@ -548,12 +550,12 @@ class WordPressController extends Controller
             $invoice_data['company_address']     = $request->input('remote_company_address') ?? '';
             $invoice_data['registration_number'] = $request->input('remote_registration_number') ?? '';
             $invoice_data['license_number']      = $request->input('remote_license_number') ?? '';
-    
+        
             $remote_database = DB::connection($this->connectionType)
                 ->table('general_settings')
                 ->orderByDesc('updated_at')
                 ->first();
-    
+        
             if ($remote_database) {
                 DB::connection($this->connectionType)
                     ->table('general_settings')
@@ -574,17 +576,17 @@ class WordPressController extends Controller
             $invoice_data['company_address']     = $request->input('local_company_address') ?? '';
             $invoice_data['registration_number'] = $request->input('local_registration_number') ?? '';
             $invoice_data['license_number']      = $request->input('local_license_number') ?? '';
-    
-            $site->site_name           = $invoice_data['site_name'];
-            $site->company_name        = $invoice_data['company_name'];
-            $site->company_email       = $invoice_data['company_email'];
-            $site->company_mobile      = $invoice_data['company_mobile'];
-            $site->company_address     = $invoice_data['company_address'];
-            $site->registration_number = $invoice_data['registration_number'];
-            $site->license_number      = $invoice_data['license_number'];
+        
+            $site->site_name            = $invoice_data['site_name'];
+            $site->company_name         = $invoice_data['company_name'];
+            $site->company_email        = $invoice_data['company_email'];
+            $site->company_mobile       = $invoice_data['company_mobile'];
+            $site->company_address      = $invoice_data['company_address'];
+            $site->registration_number  = $invoice_data['registration_number'];
+            $site->license_number       = $invoice_data['license_number'];
             $site->save();
         }
-    
+        
         $invoice_data = array_merge($invoice_data, [
             'site'                 => $site,
             'invoice_number'       => $request->input('invoice_number'),
@@ -618,36 +620,38 @@ class WordPressController extends Controller
         $sessionProducts = session('products', []);
         $processedProducts = [];
     
-        foreach ($sessionProducts as $key => $product) {
+        foreach ($sessionProducts as $product) {
             $processedProducts[] = [
-                'id' => (int) ($product['id'] ?? 0),
-                'bundle_id' => (int) ($product['bundle_id'] ?? 0),
-                'old_price' => (float) ($product['original_price'] ?? 0),
-                'unit_price' => (float) ($product['unit_price'] ?? 0),
+                'id' => $product['id'] ?? null,
+                'bundle_id' => $product['bundle_id'] ?? null,
+                'old_price' => $product['original_price'] ?? 0,
+                'unit_price' => $product['unit_price'] ?? 0,
                 'game_currency_amount' => $product['game_currency_amount'] ?? null,
             ];
         }
     
         $invoice_data['products'] = $sessionProducts;
-    
-        // Debug log to ensure correct product data
-        Log::info('Products for update:', $processedProducts);
+        
+        $modelType = strtolower($site->businessModel->model_type);
+        $siteWords = numberToWords($site->id);
+        $viewPath  = "websites.{$modelType}.{$siteWords}";
     
         $this->updateProductPrice($processedProducts);
     
         InvoiceController::createInvoiceHistory($invoice_data, $sessionProducts);
-    
-        $filename = $request->filled('invoice_file_name')
-            ? $request->input('invoice_file_name') . '.pdf'
-            : $invoice_data['invoice_number'] . '.pdf';
+        
+        if ($request->filled('invoice_file_name')) {
+            $filename = $request->input('invoice_file_name') . '.pdf';
+        } else {
+            $filename = $invoice_data['invoice_number'] . '.pdf';
+        }
     
         try {
-            return $this->generateWithApi2Pdf("websites." . strtolower($site->businessModel->model_type) . "." . numberToWords($site->id), $invoice_data, $filename);
+            return $this->generateWithApi2Pdf($viewPath, $invoice_data, $filename);
         } catch (\Exception $e) {
-            return $this->generateWithDompdf("websites." . strtolower($site->businessModel->model_type) . "." . numberToWords($site->id), $invoice_data, $filename);
+            return $this->generateWithDompdf($viewPath, $invoice_data, $filename);
         }
     }
-    
 
     protected function generateWithDompdf($viewPath, $invoice_data, $filename)
     {
