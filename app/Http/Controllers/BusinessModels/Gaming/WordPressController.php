@@ -639,7 +639,7 @@ class WordPressController extends Controller
     
         $this->updateProductPrice($processedProducts);
     
-        InvoiceController::createInvoiceHistory($invoice_data, $sessionProducts);
+        InvoiceController::createInvoiceHistory($invoice_data, $selecetd_Products);
         
         if ($request->filled('invoice_file_name')) {
             $filename = $request->input('invoice_file_name') . '.pdf';
