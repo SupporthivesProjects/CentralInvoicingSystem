@@ -617,20 +617,21 @@ class WordPressController extends Controller
             'site_id'              => $site->id,
         ]);
     
-        $sessionProducts = session('products', []);
+        $selecetd_Products = $request->input('products', []);
         $processedProducts = [];
-    
-        foreach ($sessionProducts as $product) {
+
+        foreach ($selecetd_Products as $product) {
             $processedProducts[] = [
-                'id' => $product['id'] ?? null,
-                'bundle_id' => $product['bundle_id'] ?? null,
-                'old_price' => $product['original_price'] ?? 0,
-                'unit_price' => $product['unit_price'] ?? 0,
+                'id' => (int) ($product['id'] ?? 0),
+                'bundle_id' => (int) ($product['bundle_id'] ?? 0),
+                'old_price' => (float) ($product['original_price'] ?? 0),
+                'unit_price' => (float) ($product['unit_price'] ?? 0),
                 'game_currency_amount' => $product['game_currency_amount'] ?? null,
             ];
         }
+
     
-        $invoice_data['products'] = $sessionProducts;
+        $invoice_data['products'] = $selecetd_Products;
         
         $modelType = strtolower($site->businessModel->model_type);
         $siteWords = numberToWords($site->id);
@@ -723,7 +724,6 @@ class WordPressController extends Controller
     
             $product_id   = (int) $data['id'];
             $variation_id = (int) $data['bundle_id'];
-            $old_price    = (float) $data['old_price']; 
             $unit_price   = (float) $data['unit_price'];
     
             try {
