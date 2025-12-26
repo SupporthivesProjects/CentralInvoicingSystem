@@ -442,6 +442,14 @@
                                         onclick="customizeProducts('search')">Search</button>
                                 </div>
                             </div>
+                            <div class="col-md-2">
+                                <label for="sort_unit_price" class="form-label text-center fw-semibold">Sort By Price</label>
+                                <input type="hidden" name="current_page_number" id="current_page_number" value="1">
+                                <select class="form-select" id="sort_unit_price" name="sort_unit_price"  aria-label="Sort By Price">
+                                    <option value="asc" selected>Low to High</option>
+                                    <option value="desc">High to Low</option>
+                                </select>
+                            </div>
                         </div>
 
                         <!-- Amount Summary Section -->
@@ -515,7 +523,6 @@
     </div>
 
 
-    {{-- Modal for Custom Game Selection --}}
 @endsection
 @push('scripts')
     <script>
