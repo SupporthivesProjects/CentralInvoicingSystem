@@ -755,26 +755,11 @@
             $('input[name="products[]"]').prop('disabled', true);
             $('.product-price').prop('readonly', true);
 
-            $('#product-table-body').html(`
-                <tr>
-                    <td colspan="8" class="text-center py-5">
-                        <div class="pacman-loader">
-                            <div class="pacman"></div>
-                            <div class="dots">
-                                <div class="dot"></div>
-                                <div class="dot"></div>
-                                <div class="dot"></div>
-                                <div class="dot"></div>
-                                <div class="dot"></div>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-            `);
+            $('#product-table-body').html(getLoaderRowHTML());
 
             const priceFrom = $('#hidden_price_from_input_id').val();
             const priceTo = $('#hidden_price_to_input_id').val();
-            const productCount = $('input[name="product_count"]').val(); // 🔥 New line
+            const productCount = $('input[name="product_count"]').val(); 
             const keyword = $('#keywordInput').val().trim();
 
             if (!customMode) {
@@ -783,11 +768,10 @@
                     type: 'GET',
                     data: {
                         site_id: SITE_ID,
-                        //invoice_amount: "{{ $invoice['invoice_amount'] ?? '' }}",
                         invoice_amount: parseFloat($('#invoice_amount').val()) || 0,
                         price_from: priceFrom,
                         price_to: priceTo,
-                        product_count: productCount, // 🔥 New line
+                        product_count: productCount,
                         search_query: keyword,
 
                     },
@@ -796,7 +780,7 @@
 
                         if (response.total === 0) {
                             $('#product-table-body').html(
-                                '<tr><td colspan="8" class="text-center text-muted py-5">No results found. Try randomizing or use a different keyword.</td></tr>'
+                                '<tr><td colspan="8" class="text-center text-muted py-5">No results found. use a different keyword.</td></tr>'
                             );
                             toastr.info("Oops! No magic combo this time. Try another spin or go custom!");
                             return;
