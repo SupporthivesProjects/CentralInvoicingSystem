@@ -122,18 +122,19 @@
                 </table>
             </td>
         </tr>
-        <div class="footer-fixed">
-                        <tr style="height: 100px;background-color: black;color: white;">
+        
+    </table>
+    <!--Footer-->
+    <div class="footer-fixed" style="height: 100px;background-color: black;color: white; padding : 20px;">
+                        <tr >
                             <td colspan="2" style="text-align: end;padding-right: 40px;font-size: 8px;">
                                 <!-- <b style="font-size: 12px;">For More Information</b> -->
-                                <p >{!! $company_address !!}</p>
-                                <p >Phone #</p>
-                                <p >{{ $company_email }}</p>
+                                <p style="text-align: end;padding-right: 40px;font-size: 8px;">{!! $company_address !!}</p>
+                                <p style="text-align: end;padding-right: 40px;font-size: 8px;">Phone #</p>
+                                <p style="text-align: end;padding-right: 40px;font-size: 8px;">{{ $company_email }}</p>
                             </td>
                         </tr>
                     </div>
-    </table>
-    <!--Footer-->
     
 </body>
 </html>
