@@ -517,171 +517,178 @@
         const SITE_ID = {{ session('customer.site_id') ?? 0 }};
     </script>
     <script>
-        $(document).ready(function() {
-            let sessionAmount = parseFloat("{{ session('invoice_amount') ?? 0 }}");
+       $(document).ready(function() {
+    let sessionAmount = parseFloat("{{ session('invoice_amount') ?? 0 }}");
 
-            function setEditIcon() {
-                $('#update_invoice_amount')
-                    .removeClass('bg-warning bg-success')
-                    .addClass('bg-light')
-                    .html('<i data-feather="edit" id="icon" style="color: black;width:20px;"></i>');
-                feather.replace();
-            }
+    function setEditIcon() {
+        $('#update_invoice_amount')
+            .removeClass('bg-warning bg-success')
+            .addClass('bg-light')
+            .html('<i data-feather="edit" id="icon" style="color: black;width:20px;"></i>');
+        feather.replace();
+    }
 
-            function setUploadIcon() {
-                $('#update_invoice_amount')
-                    .removeClass('bg-light bg-success')
-                    .addClass('bg-warning')
-                    .html('<i data-feather="upload-cloud" id="icon" style="color: black;width:20px;"></i>');
-                feather.replace();
-            }
+    function setUploadIcon() {
+        $('#update_invoice_amount')
+            .removeClass('bg-light bg-success')
+            .addClass('bg-warning')
+            .html('<i data-feather="upload-cloud" id="icon" style="color: black;width:20px;"></i>');
+        feather.replace();
+    }
 
-            function setLoader() {
-                $('#update_invoice_amount')
-                    .removeClass('bg-warning bg-light bg-success')
-                    .addClass('bg-warning')
-                    .html(
-                        '<div class="d-flex align-items-center justify-content-center" style="width:20px;">' +
-                        '<div class="spinner-border text-dark" style="width: 18px; height: 18px;" role="status">' +
-                        '<span class="visually-hidden">Loading...</span>' +
-                        '</div>' +
-                        '</div>'
-                    );
-            }
+    function setLoader() {
+        $('#update_invoice_amount')
+            .removeClass('bg-warning bg-light bg-success')
+            .addClass('bg-warning')
+            .html(
+                '<div class="d-flex align-items-center justify-content-center" style="width:20px;">' +
+                '<div class="spinner-border text-dark" style="width: 18px; height: 18px;" role="status">' +
+                '<span class="visually-hidden">Loading...</span>' +
+                '</div>' +
+                '</div>'
+            );
+    }
 
-            function setSuccessIcon() {
-                $('#update_invoice_amount')
-                    .removeClass('bg-warning')
-                    .addClass('bg-success')
-                    .html('<i data-feather="check-circle" id="icon" style="color: white;width:20px;"></i>');
-                feather.replace();
-            }
+    function setSuccessIcon() {
+        $('#update_invoice_amount')
+            .removeClass('bg-warning')
+            .addClass('bg-success')
+            .html('<i data-feather="check-circle" id="icon" style="color: white;width:20px;"></i>');
+        feather.replace();
+    }
 
-            $('#invoice_amount').on('input', function() {
-                let currentVal = parseFloat($(this).val());
-                if (!isNaN(currentVal) && currentVal !== sessionAmount) {
-                    setUploadIcon();
-                } else {
-                    setEditIcon();
-                }
-            });
+    $('#invoice_amount').on('input', function() {
+        let currentVal = parseFloat($(this).val());
+        if (!isNaN(currentVal) && currentVal !== sessionAmount) {
+            setUploadIcon();
+        } else {
+            setEditIcon();
+        }
+    });
 
-            $(document).on('click', '#update_invoice_amount', function() {
-                let currentVal = parseFloat($('#invoice_amount').val());
-                if (isNaN(currentVal) || currentVal === sessionAmount) {
-                    return;
-                }
+    $(document).on('click', '#update_invoice_amount', function() {
+        let currentVal = parseFloat($('#invoice_amount').val());
+        if (isNaN(currentVal) || currentVal === sessionAmount) {
+            return;
+        }
 
-                setLoader();
+        setLoader();
 
-                let invoice_amount = $('#invoice_amount').val();
-                let invoice_date = $('#invoice_date').val();
-                let customer_name = $('#customer_name').val();
-                let customer_email = $('#customer_email').val();
-                let customer_mobile = $('#customer_mobile').val();
+        let invoice_amount = $('#invoice_amount').val();
+        let invoice_date = $('#invoice_date').val();
+        let customer_name = $('#customer_name').val();
+        let customer_email = $('#customer_email').val();
+        let customer_mobile = $('#customer_mobile').val();
 
-                $.ajax({
-                    url: "{{ route('update.invoice.amount') }}",
-                    type: 'POST',
-                    data: {
-                        invoice_amount,
-                        invoice_date,
-                        customer_name,
-                        customer_email,
-                        customer_mobile,
-                        _token: '{{ csrf_token() }}'
-                    },
-                    success: function(response) {
-                        if (response.success) {
-                            sessionAmount = parseFloat(invoice_amount);
-                            setSuccessIcon();
+        $.ajax({
+            url: "{{ route('update.invoice.amount') }}",
+            type: 'POST',
+            data: {
+                invoice_amount,
+                invoice_date,
+                customer_name,
+                customer_email,
+                customer_mobile,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(response) {
+                if (response.success) {
+                    sessionAmount = parseFloat(invoice_amount);
+                    setSuccessIcon();
 
-                            $('#invoice_amount').val(response.updated.invoice_amount);
-                            $('#invoice_date').val(response.updated.invoice_date);
-                            $('#customer_name').val(response.updated.customer_name);
-                            $('#customer_email').val(response.updated.customer_email);
-                            $('#customer_mobile').val(response.updated.customer_mobile);
-                            generateRandomProducts();
+                    $('#invoice_amount').val(response.updated.invoice_amount);
+                    $('#invoice_date').val(response.updated.invoice_date);
+                    $('#customer_name').val(response.updated.customer_name);
+                    $('#customer_email').val(response.updated.customer_email);
+                    $('#customer_mobile').val(response.updated.customer_mobile);
+                    generateRandomProducts();
 
-                            setTimeout(() => {
-                                setEditIcon();
-                            }, 4000);
-                        }
-                    },
-                    error: function() {
+                    setTimeout(() => {
                         setEditIcon();
-                    }
-                });
-            });
-
-            const priceSlider = document.getElementById('price-slider');
-            
-            if (priceSlider) {
-                const defaultMin = 10, defaultMax = 1000;
-                const currency = "{{ site_currency() }}";
-
-                noUiSlider.create(priceSlider, {
-                    start: [defaultMin, defaultMax],
-                    connect: true,
-                    step: 1,
-                    range: {
-                        min: defaultMin,
-                        max: defaultMax
-                    },
-                    tooltips: [true, true],
-                    format: {
-                        to: v => `${currency}${Math.round(v)}`,
-                        from: v => Number(v.replace(currency, ''))
-                    }
-                });
-
-                const updateHiddenInputs = (values) => {
-                    const min = Math.round(parseFloat(values[0].replace(currency, '')));
-                    const max = Math.round(parseFloat(values[1].replace(currency, '')));
-                    
-                    $('#hidden_price_from_input_id').val(min);
-                    $('#hidden_price_to_input_id').val(max);
-                };
-
-                updateHiddenInputs([`${currency}${defaultMin}`, `${currency}${defaultMax}`]);
-
-                priceSlider.noUiSlider.on('update', function(values) {
-                    updateHiddenInputs(values);
-                });
-
-                priceSlider.noUiSlider.on('change', function(values) {
-                    updateHiddenInputs(values);
-                    generateRandomProducts('random');
-                });
+                    }, 4000);
+                }
+            },
+            error: function() {
+                setEditIcon();
             }
+        });
+    });
 
-            const slider = document.getElementById('customize-price-slider');
-            
-            if (slider) {
-                noUiSlider.create(slider, {
-                    start: [0, 500],
-                    connect: true,
-                    range: {
-                        'min': 10,
-                        'max': 1000
-                    }
-                });
+    const priceSlider = document.getElementById('price-slider');
+    
+    if (priceSlider) {
+        const defaultMin = 10, defaultMax = 1000;
+        const currency = "{{ site_currency() }}";
 
-                slider.noUiSlider.on('update', function(values, handle) {
-                    $('#hidden_customize_price_from_input_id_modal').val(parseFloat(values[0]));
-                    $('#hidden_customize_price_to_input_id_modal').val(parseFloat(values[1]));
-                });
+        noUiSlider.create(priceSlider, {
+            start: [defaultMin, defaultMax],
+            connect: true,
+            step: 1,
+            range: {
+                min: defaultMin,
+                max: defaultMax
+            },
+            tooltips: [true, true],
+            format: {
+                to: v => `${currency}${Math.round(v)}`,
+                from: v => Number(v.replace(currency, ''))
             }
         });
 
-        let filterTimer;
+        const updateHiddenInputs = (values) => {
+            let min, max;
+            
+            if (typeof values[0] === 'string') {
+                min = Math.round(parseFloat(values[0].replace(/[^\d.-]/g, '')));
+                max = Math.round(parseFloat(values[1].replace(/[^\d.-]/g, '')));
+            } else {
+                min = Math.round(values[0]);
+                max = Math.round(values[1]);
+            }
+            
+            $('#hidden_price_from_input_id').val(min);
+            $('#hidden_price_to_input_id').val(max);
+        };
 
-        $('#keywordInput').on('input', function() {
-            clearTimeout(filterTimer);
-            filterTimer = setTimeout(() => {
-                generateRandomProducts('random');
-            }, 1500);
+        updateHiddenInputs([defaultMin, defaultMax]);
+
+        priceSlider.noUiSlider.on('update', function(values) {
+            updateHiddenInputs(values);
         });
+
+        priceSlider.noUiSlider.on('change', function(values) {
+            updateHiddenInputs(values);
+            generateRandomProducts('random');
+        });
+    }
+
+    const slider = document.getElementById('customize-price-slider');
+    
+    if (slider) {
+        noUiSlider.create(slider, {
+            start: [0, 500],
+            connect: true,
+            range: {
+                'min': 10,
+                'max': 1000
+            }
+        });
+
+        slider.noUiSlider.on('update', function(values, handle) {
+            $('#hidden_customize_price_from_input_id_modal').val(parseFloat(values[0]));
+            $('#hidden_customize_price_to_input_id_modal').val(parseFloat(values[1]));
+        });
+    }
+});
+
+let filterTimer;
+
+$('#keywordInput').on('input', function() {
+    clearTimeout(filterTimer);
+    filterTimer = setTimeout(() => {
+        generateRandomProducts('random');
+    }, 1500);
+});
     </script>
 
     <style>
