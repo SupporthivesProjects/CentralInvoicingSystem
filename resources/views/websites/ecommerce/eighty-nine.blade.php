@@ -24,7 +24,9 @@
                                                 <td
                                                     style="padding: 30px; text-align: right; width: 40%; vertical-align: middle; font-family: 'Dubai';">
                                                     <span style="font-size: 26px; font-weight: bold;">INVOICE</span><br>
-                                                    <span style="font-size: 10px;">NO. {{ $invoice_number }}</span>
+                                                    <span style="font-size: 10px;">NO. {{ $invoice_number }}</span><br>
+                                                    <span style="font-size: 10px;">{{ $invoice_date }}</span>
+                                                    
                                                 </td>
                                             </tr>
                                         </table>
