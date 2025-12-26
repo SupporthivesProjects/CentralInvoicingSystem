@@ -109,7 +109,7 @@
                                         <td style="width: 100px;text-align: right;font-family: Arial;font-size: 10px;margin: 0px;font-weight: 400;padding-right: 10px; "
                                             colspan="2">
                                         </td>
-                                        <td style="width: 100px;color: #FFFFFF;text-align: start;font-family: Arial;font-size: 12px;margin: 0px;font-weight: 400; padding: 0px 10px;"
+                                        <td style="width: 100px;color: #FFFFFF;text-align: start;font-family: Arial;font-size: 12px;margin: 0px;font-weight: 400; padding: 0px 10px 0px 0px;"
                                             colspan="1">
                                             <p>
                                                 DISCOUNT
@@ -124,7 +124,7 @@
                                         <td style="width: 100px;text-align: right;font-family: Arial;font-size: 10px;margin: 0px;font-weight: 400;padding-right: 10px;"
                                             colspan="2">
                                         </td>
-                                        <td style="width: 100px;color: #FFFFFF;text-align: start;font-family: Arial;font-size: 12px;margin: 0px;font-weight: 400; padding: 0px 10px 0px 0px; background-color: #ec4185;"
+                                        <td style="width: 100px;color: #FFFFFF;text-align: start;font-family: Arial;font-size: 12px;margin: 0px;font-weight: 400; padding: 0px 10px; background-color: #ec4185;"
                                             colspan="1">
                                             <p>
                                                 TOTAL
