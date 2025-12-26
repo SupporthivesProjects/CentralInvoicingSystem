@@ -12,15 +12,15 @@
 
 <body style="padding: 0px; margin: 0px;">
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
-        <tr>
-            <td align="center" style="padding: 0px;">
+        <tr style="width:100%;">
+            <td align="center" style="padding: 0px;" style="width:100%;">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
-                    style="border-collapse: collapse; ">
+                    style="border-collapse: collapse; " >
 
                     <!-- Content -->
-                    <tr>
+                    <tr style="width:100%;">
                         <td
-                            style="padding: 95px 120px 170px 40px;background: url({{ $invoice_image1 }});background-position: center;background-size: cover;height:444px;">
+                            style="padding: 95px 120px 170px 40px;background: url({{ $invoice_image1 }});background-position: center;background-size: cover;height:444px;" style="width:100%;">
                             <table style="width:100%;">
                                 <tr>
                                     <td>

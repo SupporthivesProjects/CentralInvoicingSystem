@@ -8,8 +8,8 @@
             padding: 0;
         }
         .footer-fixed {
-            position: fixed;
-            bottom: 0px;
+            position: absolute;
+            bottom: -1px;
             left: 0;
             right: 0;
             width: 100%;
@@ -22,7 +22,7 @@
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
             <td align="center" >
-                <table style="border-collapse: collapse;border: 0px;background-color: white; ">
+                <table width="100%" style="border-collapse: collapse;border: 0px;background-color: white; ">
                     <!--Header-->
                     <tr style="font-family: sans-serif;font-size: 11px;">
                         <td style="width: 375px;padding: 40px;">
@@ -33,7 +33,7 @@
                         </td>
                     </tr>
                         
-                    <tr style="background: url({{$invoice_header_image}}) no-repeat;background-position:center;background-size:cover; height: 230px;color: white;border-collapse: collapse;font-family: sans-serif;">
+                    <tr style="background: url({{$invoice_header_image}}) no-repeat;background-position:center;background-size:cover; height: 230px;color: white;border-collapse: collapse;font-family: sans-serif;width: 100%;">
                         <td style="padding: 43px;">
                             <p style="padding-top: 10px;padding-top: 22px;font-size: 15px;">Discountedg<b>cards</b></p>
                             <h1 style="font-size: 50px; margin: 0px;">INVOICE</h1>
@@ -116,21 +116,25 @@
                         </td>
                     </tr>
                     
-                    <!--Footer-->
-                    <div class="footer-fixed">
-                        <tr style="height: 100px;background-color: black;color: white;">
-                            <td colspan="2" style="text-align: end;padding-right: 40px;font-size: 8px;">
-                                <!-- <b style="font-size: 12px;">For More Information</b> -->
-                                <p >{!! $company_address !!}</p>
-                                <p >Phone #</p>
-                                <p >{{ $company_email }}</p>
-                            </td>
-                        </tr>
-                    </div>
+                    
+                    
                     
                 </table>
             </td>
         </tr>
+        
     </table>
+    <!--Footer-->
+    <div class="footer-fixed" style="height: 100px;background-color: black;color: white; padding : 20px;">
+                        <tr >
+                            <td colspan="2" style="text-align: end;padding-right: 40px;font-size: 8px;">
+                                <!-- <b style="font-size: 12px;">For More Information</b> -->
+                                <p style="text-align: end;padding-right: 40px;font-size: 11px;">{!! $company_address !!}</p>
+                                <p style="text-align: end;padding-right: 40px;font-size: 11px;">Phone #</p>
+                                <p style="text-align: end;padding-right: 40px;font-size: 11px;">{{ $company_email }}</p>
+                            </td>
+                        </tr>
+                    </div>
+    
 </body>
 </html>
