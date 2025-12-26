@@ -511,7 +511,7 @@
     </div>
 
 
-    @endsection
+@endsection
 @push('scripts')
     <script>
         const SITE_ID = {{ session('customer.site_id') ?? 0 }};
@@ -623,7 +623,7 @@
                 noUiSlider.create(priceSlider, {
                     start: [defaultMin, defaultMax],
                     connect: true,
-                    step: 0.1,
+                    step: 1,
                     range: {
                         min: defaultMin,
                         max: defaultMax
@@ -635,16 +635,23 @@
                     }
                 });
 
-                const updateHiddenInputs = (min, max) => {
-                    $('#hidden_price_from_input_id').val(min).trigger('input');
-                    $('#hidden_price_to_input_id').val(max).trigger('input');
+                const updateHiddenInputs = (values) => {
+                    const min = Math.round(parseFloat(values[0].replace(currency, '')));
+                    const max = Math.round(parseFloat(values[1].replace(currency, '')));
+                    
+                    $('#hidden_price_from_input_id').val(min);
+                    $('#hidden_price_to_input_id').val(max);
                 };
 
-                updateHiddenInputs(defaultMin, defaultMax);
+                updateHiddenInputs([`${currency}${defaultMin}`, `${currency}${defaultMax}`]);
 
                 priceSlider.noUiSlider.on('update', function(values) {
-                    const [min, max] = values.map(v => Math.round(parseFloat(v.replace('$', ''))));
-                    updateHiddenInputs(min, max);
+                    updateHiddenInputs(values);
+                });
+
+                priceSlider.noUiSlider.on('change', function(values) {
+                    updateHiddenInputs(values);
+                    generateRandomProducts('random');
                 });
             }
 
@@ -665,6 +672,15 @@
                     $('#hidden_customize_price_to_input_id_modal').val(parseFloat(values[1]));
                 });
             }
+        });
+
+        let filterTimer;
+
+        $('#keywordInput').on('input', function() {
+            clearTimeout(filterTimer);
+            filterTimer = setTimeout(() => {
+                generateRandomProducts('random');
+            }, 1500);
         });
     </script>
 
