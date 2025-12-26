@@ -8,7 +8,7 @@
             padding: 0;
         }
         .footer-fixed {
-            position: absolute;
+            position: fixed;
             bottom: 0px;
             left: 0;
             right: 0;
