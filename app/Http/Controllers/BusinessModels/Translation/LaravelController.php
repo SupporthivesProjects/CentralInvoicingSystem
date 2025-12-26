@@ -106,7 +106,7 @@ class LaravelController extends Controller
         $maxAttempts = 5;
     
         for ($attempt = 0; $attempt < $maxAttempts; $attempt++) {
-            $urgentAmount = 25;
+            $urgentAmount = $site->urgency_amount;
             $preSelectedUrgency = [
                 'certified' => rand(0, 1) === 1,
                 'standard' => rand(0, 1) === 1
@@ -165,7 +165,7 @@ class LaravelController extends Controller
                 
                 $product->pages = $quantity;
                 $product->line_total = $quantity * floatval($product->unit_price);
-                $product->urgent_amount = 25;
+                $product->urgent_amount = $site->urgency_amount;
                 $product->is_urgent = 0;
                 $product->unit_type = $isCertified ? 'pages' : 'words';
     
@@ -829,7 +829,7 @@ class LaravelController extends Controller
             $product->unit_price = $unit_price;
             $product->pages = $pages;
             $product->line_total = $unit_price * $pages;
-            $product->urgent_amount = 25;
+            $product->urgent_amount = $site->urgency_amount;
 
             $product->category_name = DB::connection($this->connectionType)->table('categories')
                 ->where('id', $product->category_id)

@@ -111,7 +111,7 @@ class WordPressController extends Controller
     
         $basePercentage = 15;
         $urgencyChance = min(log($invoiceAmount + 1, 10) * $basePercentage, 100);
-        $urgentAmount = 99.75;
+        $urgentAmount = $site->urgency_amount;
     
         $bestMatch = null;
         $bestDistance = PHP_FLOAT_MAX;
@@ -547,7 +547,7 @@ class WordPressController extends Controller
     
             $apiProduct->unit_price = floatval($sessionProduct['unit_price']);
             $apiProduct->pages = intval($sessionProduct['pages']);
-            $apiProduct->urgent_amount = floatval($sessionProduct['urgent_amount'] ?? 99.75);
+            $apiProduct->urgent_amount = floatval($sessionProduct['urgent_amount'] ?? $site->urgency_amount);
             $apiProduct->is_urgent = $sessionProduct['is_urgent'] ?? false;
             $apiProduct->line_total = $apiProduct->pages * $apiProduct->unit_price;
     
