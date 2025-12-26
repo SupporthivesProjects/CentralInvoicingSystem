@@ -358,34 +358,21 @@ class LaravelController extends Controller
         $site_id = session('customer.site_id');
         $site = Website::findOrFail($site_id);
         DynamicDatabaseService::connect($site);
-
+    
         $hasKeyword = $request->filled('keyword');
-        //$hasPriceRange = $request->filled('price_from') && $request->filled('price_to');
-
-        // if (!$hasKeyword && !$hasPriceRange) {
-        //     return response()->json([
-        //         'tableRows' => '<tr><td colspan="7" class="text-center text-muted">Please enter a keyword or price range to search.</td></tr>'
-        //     ]);
-        // }
-
-        // $priceFrom = $request->price_from;
-        // $priceTo = $request->price_to;
-
-        // ✅ Subquery to get max(bundle_first_amount) per product
-        // $costSubquery = DB::connection($this->connectionType)
-        //     ->table('game_sever_based_cost')
-        //     ->select('game_id', DB::raw('MAX(bundle_first_amount) as bundle_first_amount'))
-        //     ->groupBy('game_id');
-
+        $sortOrder = $request->get('sort_unit_price', 'asc');
+        $perPage = 15;
+        $currentPage = $request->get('page', 1);
+    
         $costSubquery = DB::connection($this->connectionType)
-        ->table('game_sever_based_cost')
-        ->select(
-            'game_id',
-            DB::raw('MAX(COALESCE(bundle_first_amount, avg_amount)) as bundle_first_amount')
-        )
-        ->groupBy('game_id');
-
-        $products = DB::connection($this->connectionType)
+            ->table('game_sever_based_cost')
+            ->select(
+                'game_id',
+                DB::raw('MAX(COALESCE(bundle_first_amount, avg_amount)) as bundle_first_amount')
+            )
+            ->groupBy('game_id');
+    
+        $query = DB::connection($this->connectionType)
             ->table('products as p')
             ->joinSub($costSubquery, 'c', function ($join) {
                 $join->on('p.id', '=', 'c.game_id');
@@ -404,34 +391,90 @@ class LaravelController extends Controller
                 'p.game_need_to_capture',
                 'c.bundle_first_amount'
             )
-            ->distinct()
-            ->get();
-
+            ->distinct();
+    
+        if ($sortOrder === 'asc') {
+            $query->orderBy('c.bundle_first_amount', 'asc');
+        } else {
+            $query->orderBy('c.bundle_first_amount', 'desc');
+        }
+    
+        $totalCount = $query->count();
+        $totalPages = ceil($totalCount / $perPage);
+        $offset = ($currentPage - 1) * $perPage;
+    
+        $products = $query->offset($offset)->limit($perPage)->get();
+    
         if ($products->isEmpty()) {
             return response()->json([
-                'tableRows' => '<tr><td colspan="7" class="text-center text-muted">No results found. Try randomizing or use a different keyword.</td></tr>'
+                'tableRows' => '<tr><td colspan="6" class="text-center text-muted">No results found. Try randomizing or use a different keyword.</td></tr>',
+                'pagination' => ''
             ]);
         }
-
+    
         $currency = DB::connection($this->connectionType)
             ->table('currencies')
             ->where('status', 1)
             ->first();
-
+    
         $modelType = $site->businessModel->model_type;
-        //dd(session('current_amount'));
+    
+        $paginationPages = $this->getPaginationPages($currentPage, $totalPages);
+    
         $tableRows = view("invoice.{$modelType}.add_product_rows", [
             'products' => $products,
             'currency' => $currency,
-            'site'     => $site,
+            'site' => $site,
             'current_amount' => session('current_amount'),
         ])->render();
-
+    
+        $pagination = view('"invoice.{$modelType}.pagination', [
+            'currentPage' => $currentPage,
+            'totalPages' => $totalPages,
+            'paginationPages' => $paginationPages
+        ])->render();
+    
         return response()->json([
             'tableRows' => $tableRows,
-            'currency'  => $currency,
+            'pagination' => $pagination,
+            'currency' => $currency,
             'is_random' => false
         ]);
+    }
+    
+    private function getPaginationPages($currentPage, $totalPages)
+    {
+        $pages = [];
+        
+        if ($totalPages <= 7) {
+            for ($i = 1; $i <= $totalPages; $i++) {
+                $pages[] = $i;
+            }
+        } else {
+            if ($currentPage <= 4) {
+                for ($i = 1; $i <= 5; $i++) {
+                    $pages[] = $i;
+                }
+                $pages[] = '...';
+                $pages[] = $totalPages;
+            } elseif ($currentPage >= $totalPages - 3) {
+                $pages[] = 1;
+                $pages[] = '...';
+                for ($i = $totalPages - 4; $i <= $totalPages; $i++) {
+                    $pages[] = $i;
+                }
+            } else {
+                $pages[] = 1;
+                $pages[] = '...';
+                for ($i = $currentPage - 1; $i <= $currentPage + 1; $i++) {
+                    $pages[] = $i;
+                }
+                $pages[] = '...';
+                $pages[] = $totalPages;
+            }
+        }
+        
+        return $pages;
     }
 
     public function addProducts(Request $request)
