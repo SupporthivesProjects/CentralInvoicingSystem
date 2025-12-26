@@ -53,7 +53,7 @@
                                         style="padding: 10px; vertical-align: top; font-size: 13px; border-right: 1px solid #000000;">
                                         <table cellpadding="5" cellspacing="0" style="width: 100%; font-size: 9px;">
                                             <tr>
-                                                <td style="font-weight: bold;">Name&nbsp;&nbsp;{{ $customer_name }}</td>
+                                                <td style="font-weight: bold;">Name&nbsp;&nbsp;&nbsp;&nbsp;{{ $customer_name }}</td>
                                                 <!-- <td>{{ $customer_name }}</td> -->
                                             </tr>
                                         </table>
@@ -63,17 +63,17 @@
                                     <td style="padding: 10px; vertical-align: top; font-size: 13px;">
                                         <table cellpadding="5" cellspacing="0" style="width: 100%; font-size: 8px;">
                                             <tr>
-                                                <td style="font-weight: bold;">Name&nbsp;&nbsp;{{ $company_name }}</td>
+                                                <td style="font-weight: bold;">Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ $company_name }}</td>
                                                 <!-- <td>{{ $company_name }}</td> -->
                                             </tr>
                                             <br>
                                             <tr>
-                                                <td style="font-weight: bold; vertical-align: top;">Address&nbsp;{{ $company_address }}</td>
+                                                <td style="font-weight: bold; vertical-align: top;">Address&nbsp;&nbsp;&nbsp;{{ $company_address }}</td>
                                                 <!-- <td>{{ $company_address }}</td> -->
                                             </tr>
                                             <br>
                                             <tr>
-                                                <td style="font-weight: bold;">Email&nbsp;&nbsp;{{ $company_email }}</td>
+                                                <td style="font-weight: bold;">Email&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ $company_email }}</td>
                                                 <!-- <td>{{ $company_email }}</td> -->
                                             </tr>
                                         </table>
