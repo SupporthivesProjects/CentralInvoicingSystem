@@ -366,7 +366,6 @@ class LaravelController extends Controller
         DynamicDatabaseService::connect($site);
     
         $keyword = $request->get('keyword');
-        $sortOrder = $request->get('sort_unit_price', 'asc');
     
         $productsQuery = DB::connection($this->connectionType)
             ->table('products as p')
@@ -393,7 +392,7 @@ class LaravelController extends Controller
             'c.id as bundle_id',
             'c.game_id',
             'c.costs'
-        )->get();
+        )->limit(100)->get();
     
         $allProducts = collect();
         $alreadyAdded = [];
@@ -426,6 +425,10 @@ class LaravelController extends Controller
                         'game_need_to_capture' => $product->game_need_to_capture,
                         'bundle_first_amount' => $bundleAmount
                     ]);
+    
+                    if ($allProducts->count() >= 60) {
+                        break 2;
+                    }
                 }
             }
         }
@@ -440,14 +443,6 @@ class LaravelController extends Controller
             ]);
         }
     
-        if ($sortOrder === 'asc') {
-            $allProducts = $allProducts->sortBy('unit_price')->values();
-        } else {
-            $allProducts = $allProducts->sortByDesc('unit_price')->values();
-        }
-    
-        $results = $allProducts->take(60);
-    
         $currency = DB::connection($this->connectionType)
             ->table('currencies')
             ->where('status', 1)
@@ -456,7 +451,7 @@ class LaravelController extends Controller
         $modelType = $site->businessModel->model_type;
     
         $tableRows = view("invoice.{$modelType}.add_product_rows", [
-            'products' => $results,
+            'products' => $allProducts,
             'currency' => $currency,
             'site' => $site
         ])->render();
@@ -467,7 +462,7 @@ class LaravelController extends Controller
             'is_random' => false
         ]);
     }
-
+    
     public function addProducts(Request $request)
     {
         $site_id = session('customer.site_id');
