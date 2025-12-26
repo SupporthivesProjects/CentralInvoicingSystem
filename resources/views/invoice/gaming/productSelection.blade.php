@@ -514,6 +514,9 @@
     @endsection
 @push('scripts')
     <script>
+        const SITE_ID = {{ session('customer.site_id') ?? 0 }};
+    </script>
+    <script>
         $(document).ready(function() {
             let sessionAmount = parseFloat("{{ session('invoice_amount') ?? 0 }}");
 
