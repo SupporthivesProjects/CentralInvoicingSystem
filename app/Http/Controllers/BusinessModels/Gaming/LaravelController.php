@@ -364,88 +364,53 @@ class LaravelController extends Controller
         $perPage = 15;
         $currentPage = $request->get('page', 1);
     
-        $productsQuery = DB::connection($this->connectionType)
+        $costSubquery = DB::connection($this->connectionType)
+            ->table('game_sever_based_cost')
+            ->select(
+                'game_id',
+                DB::raw('MAX(COALESCE(bundle_first_amount, avg_amount)) as bundle_first_amount')
+            )
+            ->groupBy('game_id');
+    
+        $query = DB::connection($this->connectionType)
             ->table('products as p')
-            ->join('game_sever_based_cost as c', 'p.id', '=', 'c.game_id')
-            ->where('p.published', 1);
+            ->joinSub($costSubquery, 'c', function ($join) {
+                $join->on('p.id', '=', 'c.game_id');
+            })
+            ->where('p.published', 1)
+            ->when($hasKeyword, function ($query) use ($request) {
+                $query->where('p.name', 'like', '%' . strtolower($request->keyword) . '%');
+            })
+            ->select(
+                'p.id',
+                'p.name',
+                'p.slug',
+                'p.game_currency',
+                'p.game_platform',
+                'p.game_server_region',
+                'p.game_need_to_capture',
+                'c.bundle_first_amount'
+            )
+            ->distinct();
     
-        if ($hasKeyword) {
-            $keyword = strtolower($request->keyword);
-            $productsQuery->where(function($query) use ($keyword) {
-                $query->where(DB::raw('LOWER(p.name)'), 'like', '%' . $keyword . '%')
-                      ->orWhere(DB::raw('LOWER(p.game_currency)'), 'like', '%' . $keyword . '%')
-                      ->orWhere(DB::raw('LOWER(p.game_platform)'), 'like', '%' . $keyword . '%')
-                      ->orWhere(DB::raw('LOWER(p.game_server_region)'), 'like', '%' . $keyword . '%');
-            });
+        if ($sortOrder === 'asc') {
+            $query->orderBy('c.bundle_first_amount', 'asc');
+        } else {
+            $query->orderBy('c.bundle_first_amount', 'desc');
         }
     
-        $products = $productsQuery->select(
-            'p.id',
-            'p.name',
-            'p.slug',
-            'p.game_currency',
-            'p.game_platform',
-            'p.game_server_region',
-            'p.game_need_to_capture',
-            'c.id as bundle_id',
-            'c.game_id',
-            'c.costs',
-            DB::raw('COALESCE(c.bundle_first_amount, c.avg_amount) as bundle_first_amount')
-        )->get();
+        $totalCount = $query->count();
+        $totalPages = ceil($totalCount / $perPage);
+        $offset = ($currentPage - 1) * $perPage;
     
-        $allProducts = collect();
-        $alreadyAdded = [];
+        $products = $query->offset($offset)->limit($perPage)->get();
     
-        foreach ($products as $product) {
-            $costs = json_decode($product->costs, true);
-    
-            if (isset($costs['bundles']) && is_array($costs['bundles'])) {
-                foreach ($costs['bundles'] as $bundleAmount => $unitPrice) {
-                    $unitPrice = floatval($unitPrice);
-    
-                    $uniqueKey = $product->id . '-' . $bundleAmount;
-    
-                    if (isset($alreadyAdded[$uniqueKey])) {
-                        continue;
-                    }
-    
-                    $alreadyAdded[$uniqueKey] = true;
-    
-                    $allProducts->push((object)[
-                        'id' => $product->id,
-                        'bundle_id' => $product->bundle_id,
-                        'name' => $product->name,
-                        'unit_price' => $unitPrice,
-                        'slug' => $product->slug ?? Str::slug($product->name),
-                        'game_currency' => $product->game_currency,
-                        'game_currency_amount' => $bundleAmount,
-                        'game_platform' => $product->game_platform,
-                        'game_region' => $product->game_server_region,
-                        'game_need_to_capture' => $product->game_need_to_capture,
-                        'bundle_first_amount' => $bundleAmount
-                    ]);
-                }
-            }
-        }
-    
-        if ($allProducts->isEmpty()) {
+        if ($products->isEmpty()) {
             return response()->json([
                 'tableRows' => '<tr><td colspan="6" class="text-center text-muted">No results found. Try randomizing or use a different keyword.</td></tr>',
                 'pagination' => ''
             ]);
         }
-    
-        if ($sortOrder === 'asc') {
-            $allProducts = $allProducts->sortBy('unit_price')->values();
-        } else {
-            $allProducts = $allProducts->sortByDesc('unit_price')->values();
-        }
-    
-        $totalCount = $allProducts->count();
-        $totalPages = ceil($totalCount / $perPage);
-        $offset = ($currentPage - 1) * $perPage;
-    
-        $paginatedProducts = $allProducts->slice($offset, $perPage)->values();
     
         $currency = DB::connection($this->connectionType)
             ->table('currencies')
@@ -457,12 +422,13 @@ class LaravelController extends Controller
         $paginationPages = $this->getPaginationPages($currentPage, $totalPages);
     
         $tableRows = view("invoice.{$modelType}.add_product_rows", [
-            'products' => $paginatedProducts,
+            'products' => $products,
             'currency' => $currency,
-            'site' => $site
+            'site' => $site,
+            'current_amount' => session('current_amount'),
         ])->render();
     
-        $pagination = view("invoice.{$modelType}.pagination", [
+        $pagination = view('"invoice.{$modelType}.pagination', [
             'currentPage' => $currentPage,
             'totalPages' => $totalPages,
             'paginationPages' => $paginationPages
