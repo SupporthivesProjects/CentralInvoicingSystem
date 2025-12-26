@@ -420,7 +420,6 @@
     function validateSelectedProducts() {
         const selected = document.querySelectorAll('input[name="add_product_ids[]"]:checked');
         if (selected.length === 0) {
-            alert('Please select at least one product to proceed.');
             return false;
         }
         return true;
