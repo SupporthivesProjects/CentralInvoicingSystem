@@ -2,12 +2,18 @@
 <html>
 <head>
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
 </head>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@900&display=swap" rel="stylesheet">
 <body>
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
-            <td align="center" bgcolor="#f2f2f2" style="padding: 20px 0;">
+            <td align="center" >
                 <table style="border-collapse: collapse;border: 0px;background-color: white; ">
                     <!--Header-->
                     <tr style="font-family: sans-serif;font-size: 11px;">
@@ -22,7 +28,7 @@
                     <tr style="background: url({{$invoice_header_image}}) no-repeat;background-position:center;background-size:cover; height: 230px;color: white;border-collapse: collapse;font-family: sans-serif;">
                         <td style="padding: 43px;">
                             <p style="padding-top: 10px;padding-top: 22px;font-size: 15px;">Discountedg<b>cards</b></p>
-                            <h1 style="font-size: 50px; margin: 0px;">INVIOCE</h1>
+                            <h1 style="font-size: 50px; margin: 0px;">INVOICE</h1>
                         </td>
                         <td style="text-align: end;padding: 40px;">
                             <p style="font-size: 30px;margin-bottom: 0px;font-weight: 700;">Thank You<br>for Ordering</p>
@@ -53,7 +59,7 @@
                                         </td>
                                      </tr>
                                     @foreach($products as $product)
-                                        <tr style="border-collapse: collapse;height: 30px; ;font-family: sans-serif;font-size: 8px;">
+                                        <tr style="border-collapse: collapse;height: 30px; ;font-family: sans-serif;font-size: 11px;">
                                             <td style="width: 300px;text-align: left;padding-left: 20px;">
                                             <p>{{ $product->name }}</p>
                                             </td>
@@ -105,7 +111,7 @@
                     <!--Footer-->
                     <tr style="height: 100px;background-color: black;color: white;">
                         <td colspan="2" style="text-align: end;padding-right: 40px;font-size: 8px;">
-                            <b style="font-size: 12px;">For More Information</b>
+                            <!-- <b style="font-size: 12px;">For More Information</b> -->
                             <p >{!! $company_address !!}</p>
                             <p >Phone #</p>
                             <p >{{ $company_email }}</p>
