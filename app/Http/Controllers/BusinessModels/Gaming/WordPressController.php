@@ -289,79 +289,93 @@ class WordPressController extends Controller
         ]);
     }
 
-
-
-
-
-
-
     public function filterProducts(Request $request)
     {
         $site_id = session('customer.site_id');
         $site = Website::findOrFail($site_id);
-
+    
         $hasKeyword = $request->filled('keyword');
         $keyword = strtolower($request->keyword);
-
-        // WooCommerce REST API credentials
-        $wp_api_url = 'https://gm3boot.jkt-mainos.com/wp-json/wc/v3/products';
+    
+        $wp_api_url = rtrim($site->site_link, '/') . '/wp-json/wc/v3/products';
         $consumer_key = $site->consumer_key;
         $consumer_secret = $site->consumer_secret;
-
-        // Build API URL with search keyword if provided
-        $api_url = $wp_api_url . '?per_page=50';
+    
+        $api_url = $wp_api_url . '?per_page=50&type=variable';
         if ($hasKeyword) {
             $api_url .= '&search=' . urlencode($keyword);
         }
-
-        // Setup cURL
+    
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $api_url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_USERPWD, $consumer_key . ':' . $consumer_secret);
         curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-
+    
         $response = curl_exec($ch);
         $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
-
-        //dd($response, $http_code);
-
+    
         $products = collect();
+        
         if ($http_code == 200 && $response) {
             $wp_products = json_decode($response, true);
+            
             foreach ($wp_products as $p) {
-                $products->push((object)[
-                    'id' => $p['id'],
-                    'name' => $p['name'],
-                    'slug' => $p['slug'],
-                    'game_currency' => $p['sku'] ?? '',
-                    'game_platform' => $p['categories'][0]['name'] ?? '',
-                    'game_server_region' => '',
-                    'game_need_to_capture' => '',
-                    'bundle_first_amount' => $p['price'] ?? '',
-                ]);
+                $variation_url = $wp_api_url . '/' . $p['id'] . '/variations';
+                
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, $variation_url);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_USERPWD, $consumer_key . ':' . $consumer_secret);
+                curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+                
+                $var_response = curl_exec($ch);
+                $var_http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                curl_close($ch);
+                
+                if ($var_http_code == 200 && $var_response) {
+                    $variations = json_decode($var_response, true);
+                    
+                    foreach ($variations as $var) {
+                        $attrs = collect($var['attributes'])->pluck('option', 'name')->toArray();
+                        $bundleAmount = preg_replace('/\D/', '', $attrs['Amount'] ?? '0');
+                        
+                        $products->push((object)[
+                            'id' => $p['id'],
+                            'bundle_id' => $var['id'],
+                            'name' => $p['name'],
+                            'slug' => $p['slug'],
+                            'unit_price' => floatval($var['price']),
+                            'game_currency' => $p['sku'] ?? '',
+                            'game_currency_amount' => $bundleAmount,
+                            'game_platform' => $attrs['Platform'] ?? '',
+                            'game_server_region' => $attrs['Region'] ?? '',
+                            'game_need_to_capture' => null,
+                            'bundle_first_amount' => $var['price'] ?? '',
+                        ]);
+                    }
+                }
             }
         }
-        //dd($products);
-
+    
         if ($products->isEmpty()) {
             return response()->json([
                 'tableRows' => '<tr><td colspan="7" class="text-center text-muted">No results found. Try randomizing or use a different keyword.</td></tr>'
             ]);
         }
-
+    
         $modelType = $site->businessModel->model_type;
         $tableRows = view("invoice.{$modelType}.add_product_rows", [
             'products' => $products,
             'currency' => site_currency(),
-            'site'     => $site,
+            'site' => $site,
             'current_amount' => session('current_amount'),
         ])->render();
-
+    
         return response()->json([
             'tableRows' => $tableRows,
-            'currency'  => site_currency(),
+            'currency' => site_currency(),
             'is_random' => false
         ]);
     }
