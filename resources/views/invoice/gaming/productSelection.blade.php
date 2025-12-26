@@ -756,7 +756,7 @@
             $('input[name="products[]"]').prop('disabled', true);
             $('.product-price').prop('readonly', true);
             $('#discount_amount').val(0.00);
-            generateRandomProducts();
+            // generateRandomProducts();
         });
 
         function generateRandomProducts(mode = 'initial') {
