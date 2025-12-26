@@ -58,7 +58,7 @@
                                             <!-- </div> -->
                                         </div>
                                     </td>
-                                    <td width="50%" valign="top" align="right" style="font-size:14px; line-height:20px;padding-left: 10px;">
+                                    <td width="60%" valign="top" align="right" style="font-size:14px; line-height:20px;padding-left: 10px;">
                                         <div style="background: #0D022C;border-radius: 20px 0px 0px 20px;height: 295px;position: relative;">
                                             <img src="{{ $invoice_image2 }}" style="position: absolute;top: 20px; right: 20px;width: 50px;" alt="">
                                             <div style="width: 110px;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);">
