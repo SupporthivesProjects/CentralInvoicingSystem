@@ -49,10 +49,6 @@
                     value="{{ $product->unit_price }}">
             </td>
         @endif
-
-        {{-- <td>
-            <input form="generate-invoice-form" type="number" class="form-control edit-price" name="products[{{ $product->id }}][unit_price]" value="{{ $product->unit_price }}">
-        </td> --}}
         <td>
             @php
                 $lastUpdate = \App\Models\ProductPriceHistory::where('site_id', session('customer.site_id'))
@@ -96,7 +92,7 @@
             </div>
         </td>
 
-        <td>
+        <td class="text-center">
             <button type="button" class="btn btn-sm btn-outline-danger px-2 py-1 remove-product"
                 data-product-id="{{ $product->id }}" data-unit-price="{{ $product->unit_price }}"
                 data-product-name="{{ $product->name }}" title="Remove Row">
