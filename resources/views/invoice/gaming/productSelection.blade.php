@@ -852,7 +852,7 @@
             updateTotalDisplay();
             attachCheckboxHandlers();
             $('#discount_amount').val(0.00);
-            toastr.info('Now filter and pick your custom products.', 'Let's begin!');
+            toastr.info('Now filter and pick your custom products.', 'Let`s begin!');
 
         }
 
@@ -1214,21 +1214,6 @@
             }
         });
     }
-
-    $(document).ready(function() {
-        $('#sort_unit_price').on('change', function() {
-            customizeProducts('search', 1);
-        });
-
-        $('#modalkeywordInput').on('keypress', function(e) {
-            if (e.which === 13) {
-                e.preventDefault();
-                customizeProducts('search', 1);
-            }
-        });
-        
-        customizeProducts('onload', 1);
-    });
     </script>
 
     <script>
