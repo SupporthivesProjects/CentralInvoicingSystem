@@ -122,9 +122,7 @@
                 </table>
             </td>
         </tr>
-    </table>
-    <!--Footer-->
-    <div class="footer-fixed">
+        <div class="footer-fixed">
                         <tr style="height: 100px;background-color: black;color: white;">
                             <td colspan="2" style="text-align: end;padding-right: 40px;font-size: 8px;">
                                 <!-- <b style="font-size: 12px;">For More Information</b> -->
@@ -134,5 +132,8 @@
                             </td>
                         </tr>
                     </div>
+    </table>
+    <!--Footer-->
+    
 </body>
 </html>
