@@ -442,14 +442,6 @@
                                         onclick="customizeProducts('search')">Search</button>
                                 </div>
                             </div>
-                            <div class="col-md-2">
-                                <label for="sort_unit_price" class="form-label text-center fw-semibold">Sort By Price</label>
-                                <input type="hidden" name="current_page_number" id="current_page_number" value="1">
-                                <select class="form-select" id="sort_unit_price" name="sort_unit_price"  aria-label="Sort By Price">
-                                    <option value="asc" selected>Low to High</option>
-                                    <option value="desc">High to Low</option>
-                                </select>
-                            </div>
                         </div>
 
                         <!-- Amount Summary Section -->
@@ -1235,7 +1227,6 @@
     <script>
      function customizeProducts(action = 'onload', page = 1) {
         let keyword = $('#modalkeywordInput').val();
-        let sortOrder = $('#sort_unit_price').val();
         let siteId = {{ $site->id ?? 'null' }};
 
         if (!siteId) {
@@ -1250,7 +1241,6 @@
             type: 'GET',
             data: {
                 keyword: keyword,
-                sort_unit_price: sortOrder,
                 site_id: siteId
             },
             success: function(response) {
