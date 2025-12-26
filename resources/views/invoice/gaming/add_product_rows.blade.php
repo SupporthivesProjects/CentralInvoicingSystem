@@ -130,56 +130,6 @@
 </script>
 
 
-
-
-<script>
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl);
-    });
-
-
-    function closeFilters() {
-        let originalAmount = parseFloat(@json(session('current_amount', 0)));
-        let invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
-        $('input[name="add_product_ids[]"]').prop('checked', false);
-        $('.add-product-price').val('');
-        $('#keywordInput').val('');
-        let discountAmount = 0;
-
-        if (originalAmount > invoiceAmount) {
-            discountAmount = originalAmount - invoiceAmount;
-        }
-
-        $('#temp_current_amount_text').text(originalAmount.toFixed(2));
-        $('#temp_discount_amount_text').text(discountAmount.toFixed(2));
-        $('#temp_invoice_amount_text').text(invoiceAmount.toFixed(2));
-    }
-
-    function clearFilters() {
-        let originalAmount = parseFloat(@json(session('current_amount', 0)));
-        let invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
-
-        $('input[name="add_product_ids[]"]').prop('checked', false);
-        $('.add-product-price').val('');
-        $('#manual_keyword').val('');
-        $('#customize-product-table-body').html(getErrorRowHTML('No results found. Try randomizing or use a different keyword.'));
-        let discountAmount = 0;
-
-
-        if (originalAmount > invoiceAmount) {
-            discountAmount = originalAmount - invoiceAmount;
-        }
-
-        $('#temp_current_amount_text').text(originalAmount.toFixed(2));
-        $('#temp_discount_amount_text').text(discountAmount.toFixed(2));
-        $('#temp_invoice_amount_text').text(invoiceAmount.toFixed(2));
-
-        toastr.info('Filters have been reset.');
-    }
-
-</script>
-
 <script>
 
 
