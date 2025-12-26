@@ -535,15 +535,14 @@ class WordPressController extends Controller
 
 
 
-   public function generateInvoice(Request $request)
+    public function generateInvoice(Request $request)
     {
         $site = Website::findOrFail($request->input('site_id'));
         DynamicDatabaseService::connect($site);
-
+    
         $company_detail_type = $request->input('company_detail_type');
-
+    
         if ($company_detail_type === 'remote') {
-
             $invoice_data['site_name']           = $request->input('remote_site_name') ?? '';
             $invoice_data['company_name']        = $request->input('remote_company_name') ?? '';
             $invoice_data['company_email']       = $request->input('remote_company_email') ?? '';
@@ -569,9 +568,7 @@ class WordPressController extends Controller
                         'updated_at' => now(),
                     ]);
             }
-        
         } else {
-        
             $invoice_data['site_name']           = $request->input('local_site_name') ?? '';
             $invoice_data['company_name']        = $request->input('local_company_name') ?? '';
             $invoice_data['company_email']       = $request->input('local_company_email') ?? '';
@@ -619,32 +616,38 @@ class WordPressController extends Controller
             'model_type'           => $site->businessModel->model_type,
             'site_id'              => $site->id,
         ]);
-
-        $products = $request->input('products', []);
+    
+        $sessionProducts = session('selected_games', []);
         $processedProducts = [];
-
-        foreach ($products as $productId => $productData) {
-            $productData['product_id'] = $productId;
-            $processedProducts[] = $productData;
+    
+        foreach ($sessionProducts as $product) {
+            $processedProducts[] = [
+                'id' => $product['id'] ?? null,
+                'bundle_id' => $product['bundle_id'] ?? null,
+                'unit_price' => $product['unit_price'] ?? 0,
+                'game_currency_amount' => $product['game_currency_amount'] ?? null,
+            ];
         }
-        $invoice_data['products'] = $processedProducts;
+    
+        $invoice_data['products'] = $sessionProducts;
+        
         $modelType = strtolower($site->businessModel->model_type);
         $siteWords = numberToWords($site->id);
         $viewPath  = "websites.{$modelType}.{$siteWords}";
-
+    
         $this->updateProductPrice($processedProducts);
-
-        InvoiceController::createInvoiceHistory($invoice_data, $processedProducts);
+    
+        InvoiceController::createInvoiceHistory($invoice_data, $sessionProducts);
+        
         if ($request->filled('invoice_file_name')) {
             $filename = $request->input('invoice_file_name') . '.pdf';
         } else {
             $filename = $invoice_data['invoice_number'] . '.pdf';
         }
-
+    
         try {
             return $this->generateWithApi2Pdf($viewPath, $invoice_data, $filename);
         } catch (\Exception $e) {
-            // Fallback to Dompdf if API2PDF fails
             return $this->generateWithDompdf($viewPath, $invoice_data, $filename);
         }
     }
