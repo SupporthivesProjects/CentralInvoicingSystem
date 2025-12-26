@@ -840,7 +840,6 @@
         let selectedTotal = 0;
         let customMode = false;
         const invoiceAmount = parseFloat('{{ $invoice['invoice_amount'] ?? 0 }}');
-        const SITE_ID = {{ session('customer.site_id') ?? 0 }};
 
         function setCustomOnly() {
             customMode = true;
