@@ -420,7 +420,16 @@ class LaravelController extends Controller
             $minRequiredWords = max($minWords, ceil($remainingAmount / $stdPrice));
             $maxWords = min(2000, ceil(($maxTarget - $certTotal) / $stdPrice));
     
-            $wordRange = range($minRequiredWords, $maxWords, $wordIncrement);
+            if ($minRequiredWords > $maxWords) {
+                continue;
+            }
+    
+            $step = min($wordIncrement, $maxWords - $minRequiredWords);
+            if ($step <= 0) {
+                $step = 1;
+            }
+    
+            $wordRange = range($minRequiredWords, $maxWords, $step);
             
             if ($lastParams['standard_words'] !== null) {
                 $wordRange = array_filter($wordRange, fn($w) => $w != $lastParams['standard_words']);
@@ -467,7 +476,16 @@ class LaravelController extends Controller
         $bestResult = null;
         $bestDistance = PHP_FLOAT_MAX;
     
-        $wordRange = range($minWords, $maxWords, $wordIncrement);
+        if ($minWords > $maxWords) {
+            return null;
+        }
+    
+        $step = min($wordIncrement, $maxWords - $minWords);
+        if ($step <= 0) {
+            $step = 1;
+        }
+    
+        $wordRange = range($minWords, $maxWords, $step);
         
         if ($lastParams['standard_words'] !== null) {
             $wordRange = array_filter($wordRange, fn($w) => $w != $lastParams['standard_words']);
