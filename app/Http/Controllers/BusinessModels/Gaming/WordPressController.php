@@ -755,7 +755,7 @@ class WordPressController extends Controller
     
                     if ($shouldUpdate) {
                         $updateData = [
-                            'regular_price' => (string) $unit_price,
+                            'regular_price' => $unit_price,
                         ];
     
                         if (
@@ -785,8 +785,6 @@ class WordPressController extends Controller
                             'unit_price' => floatval($unit_price),
                             'last_price_changed' => now(),
                         ]);
-    
-                        $this->clearWooCommerceCache($product_id, $variationId);
     
                         $updatedProducts[] = [
                             'variation_id' => $variationId,
@@ -821,46 +819,6 @@ class WordPressController extends Controller
                 'error_count' => count($errors)
             ]
         ];
-    }
-    
-    private function clearWooCommerceCache($product_id, $variation_id = null)
-    {
-        global $wpdb;
-    
-        $product_id = intval($product_id);
-        $variation_id = intval($variation_id);
-    
-        try {
-            if (function_exists('wp_cache_delete')) {
-                wp_cache_delete($product_id, 'post');
-                wp_cache_delete('product-' . $product_id, 'product');
-                wp_cache_delete('product_variation-' . $variation_id, 'product');
-                wp_cache_delete('woocommerce_product_' . $product_id);
-                wp_cache_delete('woocommerce_variation_' . $variation_id);
-            }
-    
-            if (function_exists('wc_delete_product_transients')) {
-                wc_delete_product_transients($product_id);
-            }
-    
-            $wpdb->query(
-                $wpdb->prepare(
-                    "DELETE FROM {$wpdb->options} WHERE option_name LIKE %s",
-                    '%' . $product_id . '%wc_var%'
-                )
-            );
-    
-            $wpdb->query(
-                $wpdb->prepare(
-                    "DELETE FROM {$wpdb->options} WHERE option_name LIKE %s",
-                    '%product_%'
-                )
-            );
-    
-            \Log::info("Cleared WooCommerce cache for product {$product_id}, variation {$variation_id}");
-        } catch (\Exception $e) {
-            \Log::error("Error clearing cache: " . $e->getMessage());
-        }
     }
 
 
