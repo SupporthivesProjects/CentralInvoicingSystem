@@ -69,7 +69,7 @@
                                 </p>
                                 </td>
                                 <td style="padding:10px;" align="center">
-                                 <p style="font-family: Soleil Bk;font-weight: bold;font-size:12x;color:#bfc543;margin:0px;line-height:16px">
+                                 <p style="font-family: Soleil Bk;font-weight: bold;font-size:12px;color:#bfc543;margin:0px;line-height:16px">
                                     QTY
                                 </p>
                                 </td>
