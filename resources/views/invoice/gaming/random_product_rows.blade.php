@@ -11,17 +11,12 @@
     <tr class="product-row align-middle" id="product-main-row-{{ $index + 1 }}" data-bs-toggle=""
         data-bs-target="#collapse-{{ $index + 1 }}" aria-expanded="false" aria-controls="collapse-{{ $index + 1 }}"
         style="cursor: pointer;">
-        <td class="text-center">
             <div class="form-check m-0 d-flex justify-content-center d-none">
                 <input form="generate-invoice-form" class="form-check-input narayan-checkbox border-primary"
                     type="checkbox" data-unit_price="{{ $product->unit_price }}"
-                    name="products[{{ $product->id }}][selected_checkbox]" value="1" checked disabled
-                    {{-- @if (request()->has('is_random') && request('is_random'))
-           disabled
-       @endif --}}>
+                    name="products[{{ $product->id }}][selected_checkbox]" value="1" checked>
                 <input type="hidden" name="products[{{ $product->id }}][selected]" value="1">
             </div>
-        </td>
         <td>{{ $index + 1 }}</td>
         <td>
             {{ $product->name }}
