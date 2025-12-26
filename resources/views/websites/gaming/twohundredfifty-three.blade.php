@@ -14,7 +14,7 @@
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr style="width:100%;">
             <td align="center" style="padding: 0px;" style="width:100%;">
-                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
+                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#0000000"
                     style="border-collapse: collapse; " >
 
                     <!-- Content -->
@@ -95,7 +95,7 @@
                                             {{ $site_name }}<br>
                                             {{ $company_address }}<br>
                                         </td>
-                                        <td style="width: 100px;color: #FFFFFF;text-align: start;font-family: Arial;font-size: 12px;margin: 0px;font-weight: 400; padding-top: 40px;padding: 0px 10px;"
+                                        <td style="width: 100px;color: #FFFFFF;text-align: start;font-family: Arial;font-size: 12px;margin: 0px;font-weight: 400; padding-top: 80px;padding: 0px 10px;"
                                             colspan="1">
                                             <p>SUBTOTAL</p>
                                         </td>
