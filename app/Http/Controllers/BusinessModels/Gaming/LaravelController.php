@@ -353,120 +353,121 @@ class LaravelController extends Controller
     }
 
     public function filterProducts(Request $request)
-{
-    $site_id = $request->get('site_id') ?? session('customer.site_id');
+    {
+        $site_id = $request->get('site_id') ?? session('customer.site_id');
+        
+        if (!$site_id) {
+            return response()->json([
+                'tableRows' => '<tr><td colspan="6" class="text-center text-danger">Site ID is missing.</td></tr>'
+            ]);
+        }
+        
+        $site = Website::findOrFail($site_id);
+        DynamicDatabaseService::connect($site);
     
-    if (!$site_id) {
-        return response()->json([
-            'tableRows' => '<tr><td colspan="6" class="text-center text-danger">Site ID is missing.</td></tr>'
-        ]);
-    }
+        $keyword = $request->get('keyword');
+        $sortOrder = $request->get('sort_unit_price', 'asc');
     
-    $site = Website::findOrFail($site_id);
-    DynamicDatabaseService::connect($site);
-
-    $keyword = $request->get('keyword');
-    $sortOrder = $request->get('sort_unit_price', 'asc');
-
-    $productsQuery = DB::connection($this->connectionType)
-        ->table('products as p')
-        ->join('game_sever_based_cost as c', 'p.id', '=', 'c.game_id')
-        ->where('p.published', 1);
-
-    if ($keyword) {
-        $productsQuery->where(function($query) use ($keyword) {
-            $query->where('p.name', 'like', '%' . $keyword . '%')
-                  ->orWhere('p.game_currency', 'like', '%' . $keyword . '%')
-                  ->orWhere('p.game_platform', 'like', '%' . $keyword . '%')
-                  ->orWhere('p.game_server_region', 'like', '%' . $keyword . '%');
-        });
-    }
-
-    $products = $productsQuery->select(
-        'p.id',
-        'p.name',
-        'p.slug',
-        'p.game_currency',
-        'p.game_platform',
-        'p.game_server_region',
-        'p.game_need_to_capture',
-        'c.id as bundle_id',
-        'c.game_id',
-        'c.costs',
-    )->get();
-
-    $allProducts = collect();
-    $alreadyAdded = [];
-
-    foreach ($products as $product) {
-        $costs = json_decode($product->costs, true);
-
-        if (isset($costs['bundles']) && is_array($costs['bundles'])) {
-            foreach ($costs['bundles'] as $bundleAmount => $unitPrice) {
-                $unitPrice = floatval($unitPrice);
-
-                $uniqueKey = $product->id . '-' . $bundleAmount;
-
-                if (isset($alreadyAdded[$uniqueKey])) {
-                    continue;
+        $productsQuery = DB::connection($this->connectionType)
+            ->table('products as p')
+            ->join('game_sever_based_cost as c', 'p.id', '=', 'c.game_id')
+            ->where('p.published', 1);
+    
+        if ($keyword) {
+            $productsQuery->where(function($query) use ($keyword) {
+                $query->where('p.name', 'like', '%' . $keyword . '%')
+                      ->orWhere('p.game_currency', 'like', '%' . $keyword . '%')
+                      ->orWhere('p.game_platform', 'like', '%' . $keyword . '%')
+                      ->orWhere('p.game_server_region', 'like', '%' . $keyword . '%');
+            });
+        }
+    
+        $products = $productsQuery->select(
+            'p.id',
+            'p.name',
+            'p.slug',
+            'p.game_currency',
+            'p.game_platform',
+            'p.game_server_region',
+            'p.game_need_to_capture',
+            'c.id as bundle_id',
+            'c.game_id',
+            'c.costs'
+        )->get();
+    
+        $allProducts = collect();
+        $alreadyAdded = [];
+    
+        foreach ($products as $product) {
+            $costs = json_decode($product->costs, true);
+    
+            if (isset($costs['bundles']) && is_array($costs['bundles'])) {
+                foreach ($costs['bundles'] as $bundleAmount => $unitPrice) {
+                    $unitPrice = floatval($unitPrice);
+    
+                    $uniqueKey = $product->id . '-' . $bundleAmount;
+    
+                    if (isset($alreadyAdded[$uniqueKey])) {
+                        continue;
+                    }
+    
+                    $alreadyAdded[$uniqueKey] = true;
+    
+                    $productObject = new \stdClass();
+                    $productObject->id = $product->id;
+                    $productObject->bundle_id = $product->bundle_id;
+                    $productObject->name = $product->name;
+                    $productObject->unit_price = $unitPrice;
+                    $productObject->slug = $product->slug ?? Str::slug($product->name);
+                    $productObject->game_currency = $product->game_currency;
+                    $productObject->game_currency_amount = $bundleAmount;
+                    $productObject->game_platform = $product->game_platform;
+                    $productObject->game_region = $product->game_server_region;
+                    $productObject->game_need_to_capture = $product->game_need_to_capture;
+                    $productObject->bundle_first_amount = $bundleAmount;
+    
+                    $allProducts->push($productObject);
                 }
-
-                $alreadyAdded[$uniqueKey] = true;
-
-                $allProducts->push((object)[
-                    'id' => $product->id,
-                    'bundle_id' => $product->bundle_id,
-                    'name' => $product->name,
-                    'unit_price' => $unitPrice,
-                    'slug' => $product->slug ?? Str::slug($product->name),
-                    'game_currency' => $product->game_currency,
-                    'game_currency_amount' => $bundleAmount,
-                    'game_platform' => $product->game_platform,
-                    'game_region' => $product->game_server_region,
-                    'game_need_to_capture' => $product->game_need_to_capture,
-                    'bundle_first_amount' => $bundleAmount
-                ]);
             }
         }
-    }
-
-    if ($allProducts->isEmpty()) {
-        $message = $keyword 
-            ? 'No products found matching your search. Please try a different keyword.' 
-            : 'No products available at the moment.';
-            
+    
+        if ($allProducts->isEmpty()) {
+            $message = $keyword 
+                ? 'No products found matching your search. Please try a different keyword.' 
+                : 'No products available at the moment.';
+                
+            return response()->json([
+                'tableRows' => '<tr><td colspan="6" class="text-center text-muted">' . $message . '</td></tr>'
+            ]);
+        }
+    
+        if ($sortOrder === 'asc') {
+            $allProducts = $allProducts->sortBy('unit_price')->values();
+        } else {
+            $allProducts = $allProducts->sortByDesc('unit_price')->values();
+        }
+    
+        $results = $allProducts->take(60);
+    
+        $currency = DB::connection($this->connectionType)
+            ->table('currencies')
+            ->where('status', 1)
+            ->first();
+    
+        $modelType = $site->businessModel->model_type;
+    
+        $tableRows = view("invoice.{$modelType}.add_product_rows", [
+            'products' => $results,
+            'currency' => $currency,
+            'site' => $site
+        ])->render();
+    
         return response()->json([
-            'tableRows' => '<tr><td colspan="6" class="text-center text-muted">' . $message . '</td></tr>'
+            'tableRows' => $tableRows,
+            'currency' => $currency,
+            'is_random' => false
         ]);
     }
-
-    if ($sortOrder === 'asc') {
-        $allProducts = $allProducts->sortBy('unit_price')->values();
-    } else {
-        $allProducts = $allProducts->sortByDesc('unit_price')->values();
-    }
-
-    $results = $allProducts->take(60);
-
-    $currency = DB::connection($this->connectionType)
-        ->table('currencies')
-        ->where('status', 1)
-        ->first();
-
-    $modelType = $site->businessModel->model_type;
-
-    $tableRows = view("invoice.{$modelType}.add_product_rows", [
-        'products' => $results,
-        'currency' => $currency,
-        'site' => $site
-    ])->render();
-
-    return response()->json([
-        'tableRows' => $tableRows,
-        'currency' => $currency,
-        'is_random' => false
-    ]);
-}
 
     public function addProducts(Request $request)
     {
