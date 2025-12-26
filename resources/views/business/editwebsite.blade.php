@@ -118,55 +118,59 @@
                                     value="{{ old('site_link', $website->site_link) }}" required>
                             </div>
                             @if(isset($website->businessModel) && strtolower($website->businessModel->model_type) == 'translation')
-                            <div class="col-12">
-                                <div class="card border-info">
-                                    <div class="card-header bg-info bg-opacity-10">
-                                        <h6 class="mb-0 text-info">
-                                            <i class="bi bi-translate"></i> <strong>Note:</strong> This section is only for Translation Business Model sites.
-                                        </h6>
-                                    </div>
-                                    <div class="card-body">
-                                       
-                                        <div class="row g-3">
-                                            <div class="col-md-6">
-                                                <label class="form-label fw-semibold">
-                                                    Standard Translation URL Path
-                                                </label>
-                                                <div class="input-group">
-                                                    <span class="input-group-text bg-light text-muted small" style="min-width: 120px;">
-                                                        {{ rtrim($website->site_link ?? 'yoursite.com', '/') }}/
-                                                    </span>
+                                <div class="col-12">
+                                    <div class="card border-info">
+                                        <div class="card-header bg-info bg-opacity-10">
+                                            <h6 class="mb-0 text-info">
+                                                <i class="bi bi-translate"></i> <strong>Note:</strong> This section is only for Translation Business Model sites.
+                                            </h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row g-3">
+                                                <div class="col-md-4">
+                                                    <label class="form-label fw-semibold">
+                                                        Standard Translation URL
+                                                    </label>
                                                     <input type="text" 
                                                         name="std_trans_url" 
                                                         class="form-control" 
                                                         placeholder="request-translation"
                                                         value="{{ old('std_trans_url', $website->std_trans_url ?? '') }}">
                                                 </div>
-                                               
-                                            </div>
 
-                                            <div class="col-md-6">
-                                                <label class="form-label fw-semibold">
-                                                    Certified Translation URL Path
-                                                </label>
-                                                <div class="input-group">
-                                                    <span class="input-group-text bg-light text-muted small" style="min-width: 120px;">
-                                                        {{ rtrim($website->site_link ?? 'yoursite.com', '/') }}/
-                                                    </span>
+                                                <div class="col-md-4">
+                                                    <label class="form-label fw-semibold">
+                                                        Certified Translation URL
+                                                    </label>
                                                     <input type="text" 
                                                         name="cert_trans_url" 
                                                         class="form-control" 
                                                         placeholder="request-translation?ref=certified"
                                                         value="{{ old('cert_trans_url', $website->cert_trans_url ?? '') }}">
                                                 </div>
-                                              
-                                            </div>
 
+                                                <div class="col-md-4">
+                                                    <label class="form-label fw-semibold">
+                                                        Urgency Amount
+                                                    </label>
+                                                    <div class="input-group">
+                                                        <span class="input-group-text bg-light text-muted">
+                                                            {{ site_currency() }}
+                                                        </span>
+                                                        <input type="number" 
+                                                            name="urgency_amount" 
+                                                            class="form-control" 
+                                                            placeholder="0.00"
+                                                            min="0"
+                                                            step="0.01"
+                                                            value="{{ old('urgency_amount', $website->urgency_amount ?? 24) }}">
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        @endif
+                            @endif
                             <div class="col-md-6 mx-auto">
                                 <label class="form-label">Site Name <span style="color:red">*</span></label>
                                 <input type="text" name="site_name" class="form-control" required placeholder="Enter Site Name"

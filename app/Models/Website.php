@@ -33,7 +33,8 @@ class Website extends Model
         'site_name',
         'site_link',
         'std_trans_url',   
-        'cert_trans_url', 
+        'cert_trans_url',
+        'urgency_amount',
         'remark',
         'company_name',
         'company_email',
@@ -63,6 +64,10 @@ class Website extends Model
         'invoice_template',
     ];
 
+    protected $casts = [
+        'urgency_amount' => 'decimal:2',
+    ];
+
     /**
      * Get the business model this website belongs to.
      */
@@ -80,6 +85,8 @@ class Website extends Model
     {
         return rtrim($this->site_link, '/') . '/' . ltrim($this->cert_trans_url, '/');
     }
+
+    
     
 
 }
