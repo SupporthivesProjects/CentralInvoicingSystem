@@ -2,12 +2,8 @@
     @php
         $captureFields = json_decode($product->game_need_to_capture ?? '{}', true);
         $platforms = array_keys($captureFields);
-
     @endphp
 
-
-    {{-- Main Row --}}
-    <!-- Add data-bs-toggle="collapse" for expand each list -->
     <tr class="product-row align-middle" id="product-main-row-{{ $index + 1 }}" data-bs-toggle=""
         data-bs-target="#collapse-{{ $index + 1 }}" aria-expanded="false" aria-controls="collapse-{{ $index + 1 }}"
         style="cursor: pointer;">
@@ -21,7 +17,6 @@
         <td>
             {{ $product->name }}
             @if ($product->slug)
-            {{--  --}}
                 <a href="{{ $site->site_link.'games/'.$product->slug }}" target="_blank"><i class="bi bi-box-arrow-up-right ms-1"></i></a>
             @endif
             <input form="generate-invoice-form" type="hidden" name="products[{{ $product->id }}][name]"
@@ -36,19 +31,14 @@
                 name="products[{{ $product->id }}][game_currency_amount]"
                 value="{{ $product->game_currency_amount }}">
         </td>
-        @if ($product->source == 'Random')
-            <td>{{ site_currency() }}{{ number_format($product->unit_price, 2) }}
-                <input form="generate-invoice-form" type="hidden" name="products[{{ $product->id }}][unit_price]"
-                    value="{{ $product->unit_price }}">
-                <input form="generate-invoice-form" type="hidden" name="products[{{ $product->id }}][bundle_id]"
-                    value="{{ $product->bundle_id }}">
-            </td>
-        @else
-            <td>{{ site_currency() }}{{ number_format($product->unit_price, 2) }}
-                <input form="generate-invoice-form" type="hidden" name="products[{{ $product->id }}][unit_price]"
-                    value="{{ $product->unit_price }}">
-            </td>
-        @endif
+        <td>{{ site_currency() }}{{ number_format($product->unit_price, 2) }}
+            <input form="generate-invoice-form" type="hidden" 
+                name="products[{{ $product->id }}][original_price]"
+                value="{{ $product->unit_price }}">
+            <input form="generate-invoice-form" type="hidden" 
+                name="products[{{ $product->id }}][bundle_id]"
+                value="{{ $product->bundle_id }}">
+        </td>
         <td>
             @php
                 $lastUpdate = \App\Models\ProductPriceHistory::where('site_id', session('customer.site_id'))
@@ -57,13 +47,14 @@
                     ->latest('last_price_changed')
                     ->first();
 
-                $isLocked = $lastUpdate && Carbon\Carbon::parse($lastUpdate->last_price_changed)->gt(now()->subMonths(3));
+                $isLocked = $lastUpdate && Carbon\Carbon::parse($lastUpdate->last_price_changed)->gt(now()->subDays(90));
                 $daysRemaining = $isLocked
-                    ? now()->diffInDays(Carbon\Carbon::parse($lastUpdate->last_price_changed)->addMonths(3))
+                    ? now()->diffInDays(Carbon\Carbon::parse($lastUpdate->last_price_changed)->addDays(90))
                     : 0;
 
                 $lockStatus = $isLocked ? 'locked' : 'unlocked';
-                $iconClass = $isLocked ? 'fa-lock bg-warning' : 'fa-pencil bg-success';
+                $iconClass = $isLocked ? 'fa-lock text-white' : 'fa-pencil text-white';
+                $bgClass = $isLocked ? 'bg-warning' : 'bg-success';
                 $tooltip = $isLocked ? "Price locked for {$daysRemaining} more days" : 'Price can be edited';
                 $inputTooltip = $isLocked
                     ? 'This price was updated on ' .
@@ -73,19 +64,24 @@
             @endphp
 
             <div class="input-group">
-                <span class="input-group-text {{ $isLocked ? 'bg-warning' : 'bg-success' }}" data-bs-toggle="tooltip"
+                <span class="input-group-text {{ $bgClass }}" data-bs-toggle="tooltip"
                     title="{{ $tooltip }}">
                     <i class="fa {{ $iconClass }}"></i>
                 </span>
                 <input form="generate-invoice-form" type="number" step="0.01"
                     class="form-control edit-price {{ $isLocked ? 'bg-light' : '' }}"
-                    name="products[{{ $product->id }}][unit_price]" value="{{ $product->unit_price }}"
-                    {{ $isLocked ? 'readonly' : '' }} data-bs-toggle="tooltip" data-price-status="{{ $lockStatus }}"
+                    name="products[{{ $product->id }}][unit_price]" 
+                    value="{{ $product->unit_price }}"
+                    {{ $isLocked ? 'readonly' : '' }} 
+                    data-bs-toggle="tooltip" 
+                    data-price-status="{{ $lockStatus }}"
                     data-original-price="{{ $product->unit_price }}"
+                    data-product-id="{{ $product->id }}"
+                    data-bundle-id="{{ $product->bundle_id }}"
                     title="{{ $inputTooltip }}">
 
-                <!-- Hidden fields for bundle_id and game_currency_amount needed for update -->
-                <input form="generate-invoice-form" type="hidden" name="products[{{ $product->id }}][bundle_id]"
+                <input form="generate-invoice-form" type="hidden" 
+                    name="products[{{ $product->id }}][bundle_id]"
                     value="{{ $product->bundle_id }}">
                 <input form="generate-invoice-form" type="hidden"
                     name="products[{{ $product->id }}][game_currency_amount]"
@@ -108,7 +104,6 @@
 
     </tr>
 
-    {{-- Expandable Capture Row --}}
     <tr id="product-collapse-row-{{ $index + 1 }}">
         <td colspan="8" class="p-0 border-0">
             <div class="collapse bg-light" id="collapse-{{ $index + 1 }}" data-bs-parent="#product-table-body">
@@ -116,7 +111,6 @@
                     <h6 class="fw-bold mb-3">Game Account Details Required:</h6>
 
                     @if (!empty($captureFields))
-                        {{-- Platform Dropdown --}}
                         <div class="mb-3">
                             <label class="form-label">Select Platform:</label>
                             <select form="generate-invoice-form" class="form-select select-platform"
@@ -132,7 +126,6 @@
                             </select>
                         </div>
 
-                        {{-- Fields for each platform --}}
                         @foreach ($captureFields as $platform => $fields)
                             @php $slug = \Illuminate\Support\Str::slug($platform, '_'); @endphp
                             <div class="platform-section" data-product-id="{{ $product->id }}"
@@ -161,10 +154,6 @@
         <td colspan="8" class="text-center text-muted py-3">No results found.</td>
     </tr>
 @endforelse
-
-@php
-    //dd($products);
-@endphp
 
 <script>
     $(document).ready(function() {
@@ -270,18 +259,45 @@
         function updateSessionCurrentAmount() {
             let currentAmount = parseFloat($('#current_amount').val()) || 0;
             
+            let productsData = [];
+            $('#product-table-body tr.product-row').each(function() {
+                const $row = $(this);
+                const editPriceInput = $row.find('.edit-price');
+                
+                if (editPriceInput.length) {
+                    const productId = editPriceInput.data('product-id');
+                    const originalPrice = parseFloat(editPriceInput.data('original-price')) || 0;
+                    const currentPrice = parseFloat(editPriceInput.val()) || 0;
+                    const bundleId = editPriceInput.data('bundle-id');
+                    const gameCurrencyAmount = $row.find('input[name="products[' + productId + '][game_currency_amount]"]').val();
+                    
+                    const priceChanged = Math.abs(originalPrice - currentPrice) > 0.01;
+                    
+                    productsData.push({
+                        product_id: productId,
+                        bundle_id: bundleId,
+                        original_price: originalPrice,
+                        unit_price: currentPrice,
+                        game_currency_amount: gameCurrencyAmount,
+                        price_changed: priceChanged,
+                        price_difference: (originalPrice - currentPrice).toFixed(2)
+                    });
+                }
+            });
+            
             $.ajax({
-                url: "{{ route('update.product') }}",
+                url: "{{ route('update.products.session') }}",
                 type: 'POST',
                 data: {
+                    products: productsData,
                     current_amount: currentAmount,
                     _token: '{{ csrf_token() }}'
                 },
                 success: function(response) {
-                    console.log('Session updated');
+                    console.log('Session updated with price changes');
                 },
                 error: function() {
-                    toastr.error('Error updating session current amount.');
+                    toastr.error('Error updating session.');
                 }
             });
         }
