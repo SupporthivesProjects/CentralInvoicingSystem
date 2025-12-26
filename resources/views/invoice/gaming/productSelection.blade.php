@@ -493,9 +493,7 @@
                                         <th>SELECT</th>
                                     </tr>
                                 </thead>
-                                <tbody id="customize-product-table-body">
-                                    {{-- Injected by Ajax --}}
-                                </tbody>
+                                <tbody id="customize-product-table-body"></tbody>
                             </table>
                         </div>
 
@@ -747,7 +745,6 @@
         $(document).ready(function() {
             customMode = false;
             $('input[name="products[]"]').prop('disabled', true);
-            //$('input[name="manual_keyword"]').prop('disabled', true);
             $('.product-price').prop('readonly', true);
             $('#discount_amount').val(0.00);
             generateRandomProducts();
@@ -756,7 +753,6 @@
         function generateRandomProducts(mode = 'initial') {
             customMode = false;
             $('input[name="products[]"]').prop('disabled', true);
-            //$('input[name="manual_keyword"]').prop('disabled', true);
             $('.product-price').prop('readonly', true);
 
             $('#product-table-body').html(`
@@ -1253,53 +1249,56 @@
     </script>
 
     <script>
-     
      function customizeProducts(action = 'onload', page = 1) {
-                    let keyword = $('#modalkeywordInput').val();
-                    let sortOrder = $('#sort_unit_price').val();
-                    let siteId = {{ $site->id ?? 'null' }};
+        let keyword = $('#modalkeywordInput').val();
+        let sortOrder = $('#sort_unit_price').val();
+        let siteId = {{ $site->id ?? 'null' }};
 
-                    if (!siteId) {
-                        toastr.error('Site ID is missing.');
-                        return;
-                    }
+        if (!siteId) {
+            toastr.error('Site ID is missing.');
+            return;
+        }
 
-                    $('#customize-product-table-body').html('<tr><td colspan="6" class="text-center"><i class="fas fa-spinner fa-spin"></i> Loading...</td></tr>');
+        $('#customize-product-table-body').html('<tr><td colspan="6" class="text-center"><i class="fas fa-spinner fa-spin"></i> Loading...</td></tr>');
 
-                    $.ajax({
-                        url: '{{ route("filter.products") }}',
-                        type: 'GET',
-                        data: {
-                            keyword: keyword,
-                            sort_unit_price: sortOrder,
-                            page: page,
-                            site_id: siteId
-                        },
-                        success: function(response) {
-                            $('#customize-product-table-body').html(response.tableRows);
-                            $('#customize-pagination').html(response.pagination || '');
-                            $('#current_page_number').val(page);
-                        },
-                        error: function(xhr, status, error) {
-                            console.error('Error fetching products:', error);
-                            $('#customize-product-table-body').html('<tr><td colspan="6" class="text-center text-danger">Failed to load products. Please try again.</td></tr>');
-                            toastr.error('Failed to load products.');
-                        }
-                    });
+        $.ajax({
+            url: '{{ route("filter.products") }}',
+            type: 'GET',
+            data: {
+                keyword: keyword,
+                sort_unit_price: sortOrder,
+                site_id: siteId
+            },
+            success: function(response) {
+                if (response.tableRows) {
+                    $('#customize-product-table-body').html(response.tableRows);
+                } else {
+                    $('#customize-product-table-body').html('<tr><td colspan="6" class="text-center text-muted">No products found.</td></tr>');
                 }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error fetching products:', error);
+                console.log('Response:', xhr.responseText);
+                $('#customize-product-table-body').html('<tr><td colspan="6" class="text-center text-danger">Failed to load products. Please try again.</td></tr>');
+                toastr.error('Failed to load products.');
+            }
+        });
+    }
 
-                $(document).ready(function() {
-                    $('#sort_unit_price').on('change', function() {
-                        customizeProducts('search', 1);
-                    });
+    $(document).ready(function() {
+        $('#sort_unit_price').on('change', function() {
+            customizeProducts('search', 1);
+        });
 
-                    $('#modalkeywordInput').on('keypress', function(e) {
-                        if (e.which === 13) {
-                            e.preventDefault();
-                            customizeProducts('search', 1);
-                        }
-                    });
-                });
+        $('#modalkeywordInput').on('keypress', function(e) {
+            if (e.which === 13) {
+                e.preventDefault();
+                customizeProducts('search', 1);
+            }
+        });
+        
+        customizeProducts('onload', 1);
+    });
     </script>
 
     <script>
