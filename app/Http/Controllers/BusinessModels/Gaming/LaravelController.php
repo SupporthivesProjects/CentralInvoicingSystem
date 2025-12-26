@@ -413,20 +413,19 @@ class LaravelController extends Controller
     
                     $alreadyAdded[$uniqueKey] = true;
     
-                    $productObject = new \stdClass();
-                    $productObject->id = $product->id;
-                    $productObject->bundle_id = $product->bundle_id;
-                    $productObject->name = $product->name;
-                    $productObject->unit_price = $unitPrice;
-                    $productObject->slug = $product->slug ?? Str::slug($product->name);
-                    $productObject->game_currency = $product->game_currency;
-                    $productObject->game_currency_amount = $bundleAmount;
-                    $productObject->game_platform = $product->game_platform;
-                    $productObject->game_region = $product->game_server_region;
-                    $productObject->game_need_to_capture = $product->game_need_to_capture;
-                    $productObject->bundle_first_amount = $bundleAmount;
-    
-                    $allProducts->push($productObject);
+                    $allProducts->push((object)[
+                        'id' => $product->id,
+                        'bundle_id' => $product->bundle_id,
+                        'name' => $product->name,
+                        'unit_price' => $unitPrice,
+                        'slug' => $product->slug ?? Str::slug($product->name),
+                        'game_currency' => $product->game_currency,
+                        'game_currency_amount' => $bundleAmount,
+                        'game_platform' => $product->game_platform,
+                        'game_region' => $product->game_server_region,
+                        'game_need_to_capture' => $product->game_need_to_capture,
+                        'bundle_first_amount' => $bundleAmount
+                    ]);
                 }
             }
         }
@@ -434,7 +433,7 @@ class LaravelController extends Controller
         if ($allProducts->isEmpty()) {
             $message = $keyword 
                 ? 'No products found matching your search. Please try a different keyword.' 
-                : 'No products available at the moment.';
+                : 'No products available. Please contact administrator.';
                 
             return response()->json([
                 'tableRows' => '<tr><td colspan="6" class="text-center text-muted">' . $message . '</td></tr>'
