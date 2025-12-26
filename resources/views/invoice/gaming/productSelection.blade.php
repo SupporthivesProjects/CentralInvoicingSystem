@@ -379,7 +379,6 @@
                                     id="productTable">
                                     <thead class="table-dark">
                                         <tr>
-                                            <th>SELECT</th>
                                             <th>SR. NO.</th>
                                             <th>GAME NAME</th>
                                             <th>GAME CURRENCY</th>
@@ -387,7 +386,6 @@
                                             <th>UNIT PRICE</th>
                                             <th>EDIT PRICE</th>
                                             <th>REMOVE</th>
-                                            {{-- <th>MODIFY PRICE</th> --}}
                                         </tr>
                                     </thead>
                                     <tbody id="product-table-body">

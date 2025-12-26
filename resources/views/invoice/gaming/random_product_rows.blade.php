@@ -12,7 +12,7 @@
         data-bs-target="#collapse-{{ $index + 1 }}" aria-expanded="false" aria-controls="collapse-{{ $index + 1 }}"
         style="cursor: pointer;">
         <td class="text-center">
-            <div class="form-check m-0 d-flex justify-content-center">
+            <div class="form-check m-0 d-flex justify-content-center d-none">
                 <input form="generate-invoice-form" class="form-check-input narayan-checkbox border-primary"
                     type="checkbox" data-unit_price="{{ $product->unit_price }}"
                     name="products[{{ $product->id }}][selected_checkbox]" value="1" checked disabled
