@@ -698,13 +698,12 @@ class WordPressController extends Controller
     }
 
 
-    protected function updateProductPrice($productDataArray)
+    protected function updateProductPrice(array $productDataArray)
     {
         $site_id = session('customer.site_id');
         $site = Website::findOrFail($site_id);
     
         $updatedProducts = [];
-        $blockedProducts = [];
         $errors = [];
     
         $wooBaseUrl = rtrim($site->site_link, '/') . '/wp-json/wc/v3';
@@ -713,53 +712,20 @@ class WordPressController extends Controller
     
         foreach ($productDataArray as $data) {
     
-            if (
-                !array_key_exists('game_currency_amount', $data) ||
-                !isset($data['id']) ||
-                !isset($data['bundle_id']) ||
-                !isset($data['unit_price'])
-            ) {
+            if (!isset($data['id'], $data['bundle_id'], $data['unit_price'], $data['old_price'])) {
                 continue;
             }
     
             $product_id   = (int) $data['id'];
             $variation_id = (int) $data['bundle_id'];
+            $currentPrice = (float) $data['old_price'];
             $unit_price   = (float) $data['unit_price'];
     
+            if ($variation_id <= 0 || abs($currentPrice - $unit_price) < 0.01) {
+                continue;
+            }
+    
             try {
-                $productResponse = Http::timeout(30)
-                    ->withBasicAuth($wooConsumerKey, $wooConsumerSecret)
-                    ->get("{$wooBaseUrl}/products/{$product_id}/variations/{$variation_id}");
-    
-                if ($productResponse->failed()) {
-                    $errors[] = "Failed to fetch variation {$variation_id} for product {$product_id}";
-                    continue;
-                }
-    
-                $productData = $productResponse->json();
-                $currentPrice = (float) ($productData['regular_price'] ?? 0);
-    
-                if (abs($currentPrice - $unit_price) < 0.01) {
-                    continue;
-                }
-    
-                $lastHistory = ProductPriceHistory::where('site_id', $site_id)
-                    ->where('product_id', $product_id)
-                    ->where('bundle', (string) $variation_id)
-                    ->orderByDesc('last_price_changed')
-                    ->first();
-    
-                if ($lastHistory && Carbon::parse($lastHistory->last_price_changed)->diffInDays(now()) < 90) {
-                    $blockedProducts[] = [
-                        'product_id' => $product_id,
-                        'variation_id' => $variation_id,
-                        'current_price' => $currentPrice,
-                        'requested_price' => $unit_price,
-                        'days_remaining' => 90 - Carbon::parse($lastHistory->last_price_changed)->diffInDays(now())
-                    ];
-                    continue;
-                }
-    
                 $updateResponse = Http::timeout(30)
                     ->withBasicAuth($wooConsumerKey, $wooConsumerSecret)
                     ->put(
@@ -779,6 +745,7 @@ class WordPressController extends Controller
                     'site_id' => $site_id,
                     'product_id' => $product_id,
                     'bundle' => (string) $variation_id,
+                    'old_price' => $currentPrice,
                     'unit_price' => $unit_price,
                     'last_price_changed' => now(),
                 ]);
@@ -797,10 +764,10 @@ class WordPressController extends Controller
     
         return [
             'updated_products' => $updatedProducts,
-            'blocked_products' => $blockedProducts,
             'errors' => $errors
         ];
     }
+    
     
 
 
