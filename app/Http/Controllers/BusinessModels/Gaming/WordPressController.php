@@ -301,7 +301,7 @@ class WordPressController extends Controller
         $consumer_key = $site->consumer_key;
         $consumer_secret = $site->consumer_secret;
     
-        $api_url = $wp_api_url . '?per_page=50';
+        $api_url = $wp_api_url . '?per_page=100&status=publish&type=variable';
         if ($hasKeyword) {
             $api_url .= '&search=' . urlencode($keyword);
         }
@@ -318,9 +318,53 @@ class WordPressController extends Controller
         curl_close($ch);
     
         $products = collect();
+        
         if ($http_code == 200 && $response) {
             $wp_products = json_decode($response, true);
-            foreach ($wp_products as $p) {
+            
+            $mh = curl_multi_init();
+            $curl_handles = [];
+            
+            foreach ($wp_products as $index => $p) {
+                $variation_url = $wp_api_url . '/' . $p['id'] . '/variations?per_page=100';
+                
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, $variation_url);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_USERPWD, $consumer_key . ':' . $consumer_secret);
+                curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+                curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+                
+                curl_multi_add_handle($mh, $ch);
+                $curl_handles[$index] = ['handle' => $ch, 'product' => $p];
+            }
+            
+            $running = null;
+            do {
+                curl_multi_exec($mh, $running);
+                curl_multi_select($mh);
+            } while ($running > 0);
+            
+            foreach ($curl_handles as $index => $data) {
+                $ch = $data['handle'];
+                $p = $data['product'];
+                
+                $var_response = curl_multi_getcontent($ch);
+                $var_http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                
+                $maxPrice = 0;
+                
+                if ($var_http_code == 200 && $var_response) {
+                    $variations = json_decode($var_response, true);
+                    
+                    foreach ($variations as $var) {
+                        $price = floatval($var['price'] ?? 0);
+                        if ($price > $maxPrice) {
+                            $maxPrice = $price;
+                        }
+                    }
+                }
+                
                 $products->push((object)[
                     'id' => $p['id'],
                     'name' => $p['name'],
@@ -329,9 +373,14 @@ class WordPressController extends Controller
                     'game_platform' => $p['categories'][0]['name'] ?? '',
                     'game_server_region' => '',
                     'game_need_to_capture' => '',
-                    'bundle_first_amount' => $p['price'] ?? '',
+                    'bundle_first_amount' => $maxPrice
                 ]);
+                
+                curl_multi_remove_handle($mh, $ch);
+                curl_close($ch);
             }
+            
+            curl_multi_close($mh);
         }
     
         if ($products->isEmpty()) {
