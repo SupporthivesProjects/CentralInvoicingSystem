@@ -297,11 +297,11 @@ class WordPressController extends Controller
         $hasKeyword = $request->filled('keyword');
         $keyword = strtolower($request->keyword);
     
-        $wp_api_url = rtrim($site->site_link, '/') . '/wp-json/wc/v3/products';
+        $wp_api_url = rtrim($site->site_url, '/') . '/wp-json/wc/v3/products';
         $consumer_key = $site->consumer_key;
         $consumer_secret = $site->consumer_secret;
     
-        $api_url = $wp_api_url . '?per_page=50&type=variable';
+        $api_url = $wp_api_url . '?per_page=50';
         if ($hasKeyword) {
             $api_url .= '&search=' . urlencode($keyword);
         }
@@ -317,71 +317,20 @@ class WordPressController extends Controller
         curl_close($ch);
     
         $products = collect();
-        
         if ($http_code == 200 && $response) {
             $wp_products = json_decode($response, true);
-            
-            // Initialize multi-curl handle
-            $mh = curl_multi_init();
-            $curl_handles = [];
-            
-            // Add all variation requests to multi-curl
-            foreach ($wp_products as $index => $p) {
-                $variation_url = $wp_api_url . '/' . $p['id'] . '/variations';
-                
-                $ch = curl_init();
-                curl_setopt($ch, CURLOPT_URL, $variation_url);
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                curl_setopt($ch, CURLOPT_USERPWD, $consumer_key . ':' . $consumer_secret);
-                curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-                
-                curl_multi_add_handle($mh, $ch);
-                $curl_handles[$index] = ['handle' => $ch, 'product' => $p];
+            foreach ($wp_products as $p) {
+                $products->push((object)[
+                    'id' => $p['id'],
+                    'name' => $p['name'],
+                    'slug' => $p['slug'],
+                    'game_currency' => $p['sku'] ?? '',
+                    'game_platform' => $p['categories'][0]['name'] ?? '',
+                    'game_server_region' => '',
+                    'game_need_to_capture' => '',
+                    'bundle_first_amount' => $p['price'] ?? '',
+                ]);
             }
-            
-            // Execute all requests simultaneously
-            $running = null;
-            do {
-                curl_multi_exec($mh, $running);
-                curl_multi_select($mh);
-            } while ($running > 0);
-            
-            // Collect all responses
-            foreach ($curl_handles as $index => $data) {
-                $ch = $data['handle'];
-                $p = $data['product'];
-                
-                $var_response = curl_multi_getcontent($ch);
-                $var_http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-                
-                if ($var_http_code == 200 && $var_response) {
-                    $variations = json_decode($var_response, true);
-                    
-                    foreach ($variations as $var) {
-                        $attrs = collect($var['attributes'])->pluck('option', 'name')->toArray();
-                        $bundleAmount = preg_replace('/\D/', '', $attrs['Amount'] ?? '0');
-                        
-                        $products->push((object)[
-                            'id' => $p['id'],
-                            'bundle_id' => $var['id'],
-                            'name' => $p['name'],
-                            'slug' => $p['slug'],
-                            'unit_price' => floatval($var['price']),
-                            'game_currency' => $p['sku'] ?? '',
-                            'game_currency_amount' => $bundleAmount,
-                            'game_platform' => $attrs['Platform'] ?? '',
-                            'game_server_region' => $attrs['Region'] ?? '',
-                            'game_need_to_capture' => null,
-                            'bundle_first_amount' => $var['price'] ?? '',
-                        ]);
-                    }
-                }
-                
-                curl_multi_remove_handle($mh, $ch);
-                curl_close($ch);
-            }
-            
-            curl_multi_close($mh);
         }
     
         if ($products->isEmpty()) {
@@ -404,6 +353,7 @@ class WordPressController extends Controller
             'is_random' => false
         ]);
     }
+    
 
     public function addProducts(Request $request)
     {
@@ -696,77 +646,73 @@ class WordPressController extends Controller
     {
         $site_id = session('customer.site_id');
         $site = Website::findOrFail($site_id);
-    
+
         $updatedProducts = [];
         $errors = [];
-    
+
         $wooBaseUrl = rtrim($site->site_link, '/') . '/wp-json/wc/v3';
         $wooConsumerKey = $site->consumer_key;
         $wooConsumerSecret = $site->consumer_secret;
-    
+
         foreach ($productDataArray as $data) {
             if (empty($data['game_currency_amount']) || !isset($data['unit_price']) || !isset($data['product_id'])) {
                 \Log::warning("Missing required data for product update", $data);
                 continue;
             }
-    
+
             $variationId = !empty($data['bundle_id']) && is_numeric($data['bundle_id'])
                 ? intval($data['bundle_id'])
                 : null;
-    
+
             if (!$variationId) {
                 \Log::warning("Invalid or missing bundle_id for product {$data['product_id']}", $data);
                 continue;
             }
-    
+
             $product_id = intval($data['product_id']);
             $unit_price = number_format(floatval($data['unit_price']), 2, '.', '');
-    
+
             try {
                 $productResponse = Http::timeout(30)
                     ->withBasicAuth($wooConsumerKey, $wooConsumerSecret)
                     ->get("{$wooBaseUrl}/products/{$product_id}/variations/{$variationId}");
-    
+
                 if ($productResponse->status() === 404) {
                     \Log::warning("Variation not found: Product ID {$product_id}, Variation ID {$variationId}");
                     $errors[] = "Variation {$variationId} not found for product {$product_id}";
                     continue;
                 }
-    
+
                 if ($productResponse->status() === 401) {
                     \Log::error("Authentication failed - check WooCommerce API credentials");
                     $errors[] = "Authentication failed for product {$product_id}";
                     continue;
                 }
-    
+
                 if ($productResponse->failed()) {
                     $errorMsg = "Failed to fetch variation {$variationId}: HTTP {$productResponse->status()} - " . $productResponse->body();
                     \Log::error($errorMsg);
                     $errors[] = $errorMsg;
                     continue;
                 }
-    
+
                 $productData = $productResponse->json();
-    
+
                 $currentPrice = isset($productData['regular_price']) && $productData['regular_price'] !== ''
                     ? number_format(floatval($productData['regular_price']), 2, '.', '')
                     : '0.00';
-    
+
                 \Log::info("Price comparison for variation {$variationId}: Current={$currentPrice}, New={$unit_price}");
-    
-                $currentPriceFloat = floatval($currentPrice);
-                $unitPriceFloat = floatval($unit_price);
-                $pricesDiffer = abs($currentPriceFloat - $unitPriceFloat) >= 0.01;
-    
-                if ($pricesDiffer) {
+
+                if ($currentPrice !== $unit_price) {
                     $lastHistory = ProductPriceHistory::where('site_id', $site_id)
                         ->where('product_id', $product_id)
                         ->where('bundle', $variationId)
                         ->orderBy('last_price_changed', 'desc')
                         ->first();
-    
+
                     $shouldUpdate = false;
-    
+
                     if (!$lastHistory) {
                         $shouldUpdate = true;
                     } else {
@@ -777,32 +723,32 @@ class WordPressController extends Controller
                             \Log::info("Skipping update: last update for variation {$variationId} was within 3 months");
                         }
                     }
-    
+
                     if ($shouldUpdate) {
                         $updateData = [
                             'regular_price' => $unit_price,
                         ];
-    
+
                         if (
                             isset($productData['sale_price']) && $productData['sale_price'] !== '' &&
                             floatval($productData['sale_price']) > floatval($unit_price)
                         ) {
                             $updateData['sale_price'] = '';
                         }
-    
+
                         $updateResponse = Http::timeout(30)
                             ->withBasicAuth($wooConsumerKey, $wooConsumerSecret)
                             ->put("{$wooBaseUrl}/products/{$product_id}/variations/{$variationId}", $updateData);
-    
+
                         if ($updateResponse->failed()) {
                             $errorMsg = "WooCommerce update failed for variation {$variationId}: HTTP {$updateResponse->status()} - " . $updateResponse->body();
                             \Log::error($errorMsg);
                             $errors[] = $errorMsg;
                             continue;
                         }
-    
+
                         \Log::info("Successfully updated variation {$variationId} price from {$currentPrice} to {$unit_price}");
-    
+
                         ProductPriceHistory::create([
                             'site_id' => $site_id,
                             'product_id' => $product_id,
@@ -810,7 +756,7 @@ class WordPressController extends Controller
                             'unit_price' => floatval($unit_price),
                             'last_price_changed' => now(),
                         ]);
-    
+
                         $updatedProducts[] = [
                             'variation_id' => $variationId,
                             'product_id' => $product_id,
@@ -828,13 +774,13 @@ class WordPressController extends Controller
                 continue;
             }
         }
-    
+
         \Log::info("Price update summary", [
             'updated_count' => count($updatedProducts),
             'error_count' => count($errors),
             'updated_products' => $updatedProducts
         ]);
-    
+
         return [
             'updated' => $updatedProducts,
             'errors' => $errors,

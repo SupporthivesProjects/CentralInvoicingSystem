@@ -352,117 +352,88 @@ class LaravelController extends Controller
         ]);
     }
 
+
     public function filterProducts(Request $request)
     {
-        $site_id = $request->get('site_id') ?? session('customer.site_id');
-        
-        if (!$site_id) {
-            return response()->json([
-                'tableRows' => '<tr><td colspan="6" class="text-center text-danger">Site ID is missing.</td></tr>'
-            ]);
-        }
-        
+        $site_id = session('customer.site_id');
         $site = Website::findOrFail($site_id);
         DynamicDatabaseService::connect($site);
-    
-        $keyword = $request->get('keyword');
-    
-        $productsQuery = DB::connection($this->connectionType)
+
+        $hasKeyword = $request->filled('keyword');
+        //$hasPriceRange = $request->filled('price_from') && $request->filled('price_to');
+
+        // if (!$hasKeyword && !$hasPriceRange) {
+        //     return response()->json([
+        //         'tableRows' => '<tr><td colspan="7" class="text-center text-muted">Please enter a keyword or price range to search.</td></tr>'
+        //     ]);
+        // }
+
+        // $priceFrom = $request->price_from;
+        // $priceTo = $request->price_to;
+
+        // ✅ Subquery to get max(bundle_first_amount) per product
+        // $costSubquery = DB::connection($this->connectionType)
+        //     ->table('game_sever_based_cost')
+        //     ->select('game_id', DB::raw('MAX(bundle_first_amount) as bundle_first_amount'))
+        //     ->groupBy('game_id');
+
+        $costSubquery = DB::connection($this->connectionType)
+        ->table('game_sever_based_cost')
+        ->select(
+            'game_id',
+            DB::raw('MAX(COALESCE(bundle_first_amount, avg_amount)) as bundle_first_amount')
+        )
+        ->groupBy('game_id');
+
+        $products = DB::connection($this->connectionType)
             ->table('products as p')
-            ->join('game_sever_based_cost as c', 'p.id', '=', 'c.game_id')
-            ->where('p.published', 1);
-    
-        if ($keyword) {
-            $productsQuery->where(function($query) use ($keyword) {
-                $query->where('p.name', 'like', '%' . $keyword . '%')
-                      ->orWhere('p.game_currency', 'like', '%' . $keyword . '%')
-                      ->orWhere('p.game_platform', 'like', '%' . $keyword . '%')
-                      ->orWhere('p.game_server_region', 'like', '%' . $keyword . '%');
-            });
-        }
-    
-        $products = $productsQuery->select(
-            'p.id',
-            'p.name',
-            'p.slug',
-            'p.game_currency',
-            'p.game_platform',
-            'p.game_server_region',
-            'p.game_need_to_capture',
-            'c.id as bundle_id',
-            'c.game_id',
-            'c.costs'
-        )->limit(100)->get();
-    
-        $allProducts = collect();
-        $alreadyAdded = [];
-    
-        foreach ($products as $product) {
-            $costs = json_decode($product->costs, true);
-    
-            if (isset($costs['bundles']) && is_array($costs['bundles'])) {
-                foreach ($costs['bundles'] as $bundleAmount => $unitPrice) {
-                    $unitPrice = floatval($unitPrice);
-    
-                    $uniqueKey = $product->id . '-' . $bundleAmount;
-    
-                    if (isset($alreadyAdded[$uniqueKey])) {
-                        continue;
-                    }
-    
-                    $alreadyAdded[$uniqueKey] = true;
-    
-                    $allProducts->push((object)[
-                        'id' => $product->id,
-                        'bundle_id' => $product->bundle_id,
-                        'name' => $product->name,
-                        'unit_price' => $unitPrice,
-                        'slug' => $product->slug ?? Str::slug($product->name),
-                        'game_currency' => $product->game_currency,
-                        'game_currency_amount' => $bundleAmount,
-                        'game_platform' => $product->game_platform,
-                        'game_region' => $product->game_server_region,
-                        'game_need_to_capture' => $product->game_need_to_capture,
-                        'bundle_first_amount' => $bundleAmount
-                    ]);
-    
-                    if ($allProducts->count() >= 60) {
-                        break 2;
-                    }
-                }
-            }
-        }
-    
-        if ($allProducts->isEmpty()) {
-            $message = $keyword 
-                ? 'No products found matching your search. Please try a different keyword.' 
-                : 'No products available. Please contact administrator.';
-                
+            ->joinSub($costSubquery, 'c', function ($join) {
+                $join->on('p.id', '=', 'c.game_id');
+            })
+            ->where('p.published', 1)
+            ->when($hasKeyword, function ($query) use ($request) {
+                $query->where('p.name', 'like', '%' . strtolower($request->keyword) . '%');
+            })
+            ->select(
+                'p.id',
+                'p.name',
+                'p.slug',
+                'p.game_currency',
+                'p.game_platform',
+                'p.game_server_region',
+                'p.game_need_to_capture',
+                'c.bundle_first_amount'
+            )
+            ->distinct()
+            ->get();
+
+        if ($products->isEmpty()) {
             return response()->json([
-                'tableRows' => '<tr><td colspan="6" class="text-center text-muted">' . $message . '</td></tr>'
+                'tableRows' => '<tr><td colspan="7" class="text-center text-muted">No results found. Try randomizing or use a different keyword.</td></tr>'
             ]);
         }
-    
+
         $currency = DB::connection($this->connectionType)
             ->table('currencies')
             ->where('status', 1)
             ->first();
-    
+
         $modelType = $site->businessModel->model_type;
-    
+        //dd(session('current_amount'));
         $tableRows = view("invoice.{$modelType}.add_product_rows", [
-            'products' => $allProducts,
+            'products' => $products,
             'currency' => $currency,
-            'site' => $site
+            'site'     => $site,
+            'current_amount' => session('current_amount'),
         ])->render();
-    
+
         return response()->json([
             'tableRows' => $tableRows,
-            'currency' => $currency,
+            'currency'  => $currency,
             'is_random' => false
         ]);
     }
-    
+
     public function addProducts(Request $request)
     {
         $site_id = session('customer.site_id');
