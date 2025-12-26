@@ -1234,7 +1234,7 @@
             return;
         }
 
-        $('#customize-product-table-body').html(getProductsSearchRowHTML(10));
+        $('#customize-product-table-body').html(getProductsSearchRowHTML(7));
 
         $.ajax({
             url: '{{ route("filter.products") }}',
