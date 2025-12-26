@@ -760,21 +760,21 @@
             $('.product-price').prop('readonly', true);
 
             $('#product-table-body').html(`
-        <tr>
-            <td colspan="8" class="text-center py-5">
-                <div class="pacman-loader">
-                    <div class="pacman"></div>
-                    <div class="dots">
-                        <div class="dot"></div>
-                        <div class="dot"></div>
-                        <div class="dot"></div>
-                        <div class="dot"></div>
-                        <div class="dot"></div>
-                    </div>
-                </div>
-            </td>
-        </tr>
-    `);
+                <tr>
+                    <td colspan="8" class="text-center py-5">
+                        <div class="pacman-loader">
+                            <div class="pacman"></div>
+                            <div class="dots">
+                                <div class="dot"></div>
+                                <div class="dot"></div>
+                                <div class="dot"></div>
+                                <div class="dot"></div>
+                                <div class="dot"></div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            `);
 
             const priceFrom = $('#hidden_price_from_input_id').val();
             const priceTo = $('#hidden_price_to_input_id').val();
@@ -873,86 +873,85 @@
         }
 
 
-        // function filterProducts() {
-        //     const keyword = $('#keywordInput').val().trim();
-        //     const priceFrom = $('#hidden_price_from_input_id').val();
-        //     const priceTo = $('#hidden_price_to_input_id').val();
+        function filterProducts() {
+            const keyword = $('#keywordInput').val().trim();
+            const priceFrom = $('#hidden_price_from_input_id').val();
+            const priceTo = $('#hidden_price_to_input_id').val();
 
-        //     // Don't fetch anything if both fields are empty
-        //     if (!keyword && !priceFrom && !priceTo) {
-        //         $('#product-table-body').html(
-        //             '<tr><td colspan="7" class="text-center text-muted">Please enter a keyword or price range to search.</td></tr>'
-        //         );
-        //         return;
-        //     }
+            if (!keyword && !priceFrom && !priceTo) {
+                $('#product-table-body').html(
+                    '<tr><td colspan="7" class="text-center text-muted">Please enter a keyword or price range to search.</td></tr>'
+                );
+                return;
+            }
 
-        //     // Insert the Pacman loader inside the table body
-        //     $('#product-table-body').html(`
-    //         <tr>
-    //             <td colspan="7" class="text-center py-5">
-    //                 <div class="pacman-loader">
-    //                     <div class="pacman"></div>
-    //                     <div class="dots">
-    //                         <div class="dot"></div>
-    //                         <div class="dot"></div>
-    //                         <div class="dot"></div>
-    //                         <div class="dot"></div>
-    //                         <div class="dot"></div>
-    //                     </div>
-    //                 </div>
-    //             </td>
-    //         </tr>
-    //     `);
+            // Insert the Pacman loader inside the table body
+            $('#product-table-body').html(`
+            <tr>
+                <td colspan="7" class="text-center py-5">
+                    <div class="pacman-loader">
+                        <div class="pacman"></div>
+                        <div class="dots">
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        `);
 
-        //     $.ajax({
-        //         url: "{{ route('filter.products') }}",
-        //         type: 'GET',
-        //         data: {
-        //             keyword: keyword,
-        //             price_from: priceFrom,
-        //             price_to: priceTo
-        //         },
-        //         success: function (response) {
-        //             //alert(1);
-        //             $('#customize-product-table-body').html(response.tableRows);
-        //             selectedTotal = 0;
-        //             updateTotalDisplay();
-        //             attachCheckboxHandlers();
+            $.ajax({
+                url: "{{ route('filter.products') }}",
+                type: 'GET',
+                data: {
+                    keyword: keyword,
+                    price_from: priceFrom,
+                    price_to: priceTo
+                },
+                success: function (response) {
+                    //alert(1);
+                    $('#customize-product-table-body').html(response.tableRows);
+                    selectedTotal = 0;
+                    updateTotalDisplay();
+                    attachCheckboxHandlers();
 
-        //             //==
-        //             if ($.fn.DataTable.isDataTable('#customize-products-table')) {
-        //                 $('#customize-products-table').DataTable().clear().destroy();
-        //                 $('#customize-products-table').empty(); // optional cleanup
-        //             }
+                    //==
+                    if ($.fn.DataTable.isDataTable('#customize-products-table')) {
+                        $('#customize-products-table').DataTable().clear().destroy();
+                        $('#customize-products-table').empty(); // optional cleanup
+                    }
 
-        //             const customizeTable = $('#customize-products-table').DataTable({
-        //                 responsive: true,
-        //                 searchHighlight: true,
-        //                 dom: 'lrtip', // removes built-in search bar
-        //                 language: {
-        //                     search: "",
-        //                     searchPlaceholder: "Search..."
-        //                 },
-        //                 columnDefs: [
-        //                     { orderable: false, targets: [4, 5] }
-        //                 ]
-        //             });
+                    const customizeTable = $('#customize-products-table').DataTable({
+                        responsive: true,
+                        searchHighlight: true,
+                        dom: 'lrtip', // removes built-in search bar
+                        language: {
+                            search: "",
+                            searchPlaceholder: "Search..."
+                        },
+                        columnDefs: [
+                            { orderable: false, targets: [4, 5] }
+                        ]
+                    });
 
-        //             // 🔍 Custom search input functionality
-        //             $('#keywordInput').on('input', function () {
-        //                 customizeTable.search(this.value).draw();
-        //             });
+                    // 🔍 Custom search input functionality
+                    $('#keywordInput').on('input', function () {
+                        customizeTable.search(this.value).draw();
+                    });
 
-        //             //==
-        //         },
-        //         error: function () {
-        //             toastr.error('Something went wrong while filtering.', 'Oops!');
-        //             $('#product-table-body').html(
-        //                 '<tr><td colspan="7" class="text-center text-danger py-5">Failed to load products. Please try again.</td></tr>'
-        //             );
-        //         }
-        //     });
-        // }
+                    //==
+                },
+                error: function () {
+                    toastr.error('Something went wrong while filtering.', 'Oops!');
+                    $('#product-table-body').html(
+                        '<tr><td colspan="7" class="text-center text-danger py-5">Failed to load products. Please try again.</td></tr>'
+                    );
+                }
+            });
+        }
 
 
         function attachCheckboxHandlers() {
