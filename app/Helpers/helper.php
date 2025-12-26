@@ -223,6 +223,71 @@ if (!function_exists('site_currency')) {
     }
 }
 
+if (!function_exists('get_site_currency_by_id')) {
+    function get_site_currency_by_id($site_id)
+    {
+        if (!$site_id) {
+            return '$';
+        }
+
+        try {
+            $site = \App\Models\Website::findOrFail($site_id);
+            \App\Services\DynamicDatabaseService::connect($site);
+
+            $currencySymbols = [
+                'USD' => '$',
+                'EUR' => '€',
+                'INR' => '₹',
+                'GBP' => '£',
+                'AED' => 'د.إ',
+                'NGN' => '₦',
+                'AUD' => 'A$',
+                'CAD' => 'C$',
+                'SGD' => 'S$',
+                'JPY' => '¥',
+                'CNY' => '¥',
+                'ZAR' => 'R',
+                'CHF' => 'CHF',
+                'MYR' => 'RM',
+                'THB' => '฿',
+                'PKR' => '₨',
+                'BDT' => '৳',
+                'LKR' => 'Rs',
+                'KWD' => 'KD',
+                'QAR' => 'QR',
+            ];
+
+            if ($site->technology === 'wordpress') {
+                $currencyTable = $site->currency_table ?? 'wp_options';
+
+                $currencyRow = DB::connection('dynamic')
+                    ->table($currencyTable)
+                    ->where('option_name', 'woocommerce_currency')
+                    ->first();
+
+                $currencyCode = $currencyRow?->option_value ?? 'USD';
+
+                return $currencySymbols[$currencyCode] ?? $currencyCode;
+            }
+
+            $site_currency = DB::connection('dynamic')->table('business_settings')->where('type', 'system_default_currency')->first()
+                ?? DB::connection('dynamic')->table('business_settings')->where('type', 'home_default_currency')->first();
+
+            $currency = DB::connection('dynamic')->table('currencies')->where('id', $site_currency->value ?? null)->first();
+
+            return $currency->symbol ?? '$';
+        } catch (\Exception $e) {
+            \Log::error('Exception caught: '.$e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            return '$';
+        }
+    }
+}
+
 
 if (!function_exists('site_currency_code')) {
     function site_currency_code()

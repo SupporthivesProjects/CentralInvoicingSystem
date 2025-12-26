@@ -154,6 +154,9 @@
                                                         Urgency Amount
                                                     </label>
                                                     <div class="input-group">
+                                                        <span class="input-group-text bg-light text-muted">
+                                                        {{ get_site_currency_by_id($website->id) }} 
+                                                        </span>
                                                         <input type="number" 
                                                             name="urgency_amount" 
                                                             class="form-control" 
@@ -162,7 +165,6 @@
                                                             step="0.01"
                                                             value="{{ old('urgency_amount', $website->urgency_amount ?? 24) }}">
                                                     </div>
-                                                    <small class="text-muted">in site default currency</small>
                                                 </div>
                                             </div>
                                         </div>
