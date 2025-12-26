@@ -7,6 +7,14 @@
             margin: 0;
             padding: 0;
         }
+        .footer-fixed {
+            position: absolute;
+            bottom: 0px;
+            left: 0;
+            right: 0;
+            width: 100%;
+            
+        }
     </style>
 </head>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@900&display=swap" rel="stylesheet">
@@ -109,14 +117,17 @@
                     </tr>
                     
                     <!--Footer-->
-                    <tr style="height: 100px;background-color: black;color: white;">
-                        <td colspan="2" style="text-align: end;padding-right: 40px;font-size: 8px;">
-                            <!-- <b style="font-size: 12px;">For More Information</b> -->
-                            <p >{!! $company_address !!}</p>
-                            <p >Phone #</p>
-                            <p >{{ $company_email }}</p>
-                        </td>
-                    </tr>
+                    <div class="footer-fixed">
+                        <tr style="height: 100px;background-color: black;color: white;">
+                            <td colspan="2" style="text-align: end;padding-right: 40px;font-size: 8px;">
+                                <!-- <b style="font-size: 12px;">For More Information</b> -->
+                                <p >{!! $company_address !!}</p>
+                                <p >Phone #</p>
+                                <p >{{ $company_email }}</p>
+                            </td>
+                        </tr>
+                    </div>
+                    
                 </table>
             </td>
         </tr>
