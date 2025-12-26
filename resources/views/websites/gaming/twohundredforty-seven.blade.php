@@ -91,13 +91,13 @@
                         <td style="padding:30px;">
                             <table width="100%" cellspacing="0" cellpadding="0">
                                 <tr>
-                                    {{--<td width="50%" style="font-size:14px; line-height:20px;padding: 0px 70px 0px 25px;vertical-align: top;">
+                                    <td width="50%" style="font-size:14px; line-height:20px;padding: 0px 70px 0px 25px;vertical-align: top;">
                                         <div class="">
-                                            <p style="color: #FFF;font-size: 12px;text-align: left;font-weight: bold;line-height: 15px;margin-bottom: 4px;">Terms & Conditions</p>
+                                            {{-- <p style="color: #FFF;font-size: 12px;text-align: left;font-weight: bold;line-height: 15px;margin-bottom: 4px;">Terms & Conditions</p>
                                             <p style="color: #FFF;font-size: 8px;text-align: left;font-weight: 400;line-height: 10px;line-height: 10px;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                                            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam</p>
+                                            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam</p> --}}
                                         </div>
-                                    </td>--}}
+                                    </td>
                                     <td width="50%" style="font-size:14px; line-height:20px;padding: 0px 70px 0px 25px;vertical-align: top;">
                                         <div class="">
                                             <p style="color: #FFF;font-size: 12px;text-align: left;font-weight: bold;line-height: 15px;margin-bottom: 4px;">Invoice To :</p>
