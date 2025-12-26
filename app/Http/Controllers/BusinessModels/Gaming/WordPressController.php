@@ -617,7 +617,7 @@ class WordPressController extends Controller
             'site_id'              => $site->id,
         ]);
     
-        $sessionProducts = session('selected_games', []);
+        $sessionProducts = session('products', []);
         $processedProducts = [];
     
         foreach ($sessionProducts as $product) {
