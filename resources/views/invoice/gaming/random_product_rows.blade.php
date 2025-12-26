@@ -167,7 +167,6 @@
 
 <script>
     $(document).ready(function() {
-        // Remove product with confirmation
         $(document).off('click', '.remove-product').on('click', '.remove-product', function() {
             var $button = $(this);
             var productId = $button.data('product-id');
@@ -203,10 +202,8 @@
                         success: function(response) {
                             if (response.tableRows !== undefined) {
                                 $('#product-table-body').html(response.tableRows);
-
-                                // Update Current Amount
                                 $('#current_amount').val(response.total.toFixed(2));
-
+                                calculateTotalPrice();
                                 toastr.success('Product removed successfully!');
                             }
                         },
@@ -216,36 +213,31 @@
                         },
                         complete: function() {
                             $('#table-blocker').hide();
-                            $button.prop('disabled', false).html(
-                                '<i class="fa fa-trash"></i>');
+                            $button.prop('disabled', false).html('<i class="fa fa-trash"></i>');
                         }
                     });
                 }
             });
         });
 
-        // ✅ Recalculate when checkbox changes
         $(document).on('change', '.narayan-checkbox', function() {
             calculateTotalPrice();
+            updateSessionCurrentAmount();
         });
 
-        // ✅ Recalculate when Edit Price input changes
         let sessionAmountTimeout;
         $(document).on('input', '.edit-price', function() {
+            calculateTotalPrice();
+            
             clearTimeout(sessionAmountTimeout);
-
             sessionAmountTimeout = setTimeout(function() {
                 updateSessionCurrentAmount();
             }, 1000);
-
-            calculateTotalPrice(); // still runs immediately
         });
 
-        // Main Calculation Function
         function calculateTotalPrice() {
             let currentAmount = 0;
 
-            // Loop through all selected products
             $('.narayan-checkbox:checked').each(function() {
                 const productRow = $(this).closest('tr');
                 const editPriceInput = productRow.find('.edit-price');
@@ -257,6 +249,7 @@
 
                 currentAmount += editPrice;
             });
+            
             const invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
             let discountAmount = 0;
 
@@ -266,30 +259,25 @@
 
             $('#current_amount').val(currentAmount.toFixed(2));
             $('#discount_amount').val(discountAmount.toFixed(2));
+        }
 
-
-
+        function updateSessionCurrentAmount() {
+            let currentAmount = parseFloat($('#current_amount').val()) || 0;
+            
+            $.ajax({
+                url: "{{ route('update.product') }}",
+                type: 'POST',
+                data: {
+                    current_amount: currentAmount,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    console.log('Session updated');
+                },
+                error: function() {
+                    toastr.error('Error updating session current amount.');
+                }
+            });
         }
     });
-</script>
-<script>
-    //Write a function to update session current amount
-    function updateSessionCurrentAmount() {
-        let currentAmount = parseFloat($('#current_amount').val()) || 0;
-        $.ajax({
-            url: "{{ route('update.product') }}",
-            type: 'POST',
-            data: {
-                current_amount: currentAmount,
-                _token: '{{ csrf_token() }}'
-            },
-            success: function(response) {
-
-            },
-            error: function() {
-                // Handle error in toastr
-                toastr.error('Error updating session current amount.');
-            }
-        });
-    }
 </script>
