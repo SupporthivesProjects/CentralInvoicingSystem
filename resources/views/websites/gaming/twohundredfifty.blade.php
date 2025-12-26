@@ -133,7 +133,7 @@
                             
 
                             <!-- Terms & Conditions -->
-                            <table width="100%" style="margin:25px 0px; font-size:14px; border: 1px solid #fff;background:#121a3d; border-radius:8px;">
+                            {{-- <table width="100%" style="margin:25px 0px; font-size:14px; border: 1px solid #fff;background:#121a3d; border-radius:8px;">
                                 <tr>
                                     <td style="padding:15px;">
                                         <b>Terms & Conditions</b>
@@ -143,7 +143,7 @@
                                         </p>
                                     </td>
                                 </tr>
-                            </table>
+                            </table> --}}
 
                             <table width="100%" border="0" cellspacing="0" cellpadding="0" style="padding:0px;">
                                 <tr>
@@ -151,33 +151,33 @@
                                         <!-- Payment Methods -->
                                         <table width="100%" style="margin-top:0px; font-size:14px;">
                                             <tr>
-                                                <td><b>Payment Method</b></td>
+                                                <td><b>{{ $company_name }}</b></td>
                                             </tr>
                                             <tr>
                                                 <td>
                                                     <table width="100%" cellspacing="0" cellpadding="0" style="margin-top:0px; font-size:14px;">
                                                         <tr>
                                                             <td style="width: 20%;">
-                                                                <p style="font-size:10px;line-height: 12px;font-weight: bold;">PayPal</p>
+                                                                <p style="font-size:10px;line-height: 12px;font-weight: bold;">Address</p>
                                                             </td>
                                                             <td style="width: 80%;">
-                                                                <p style="font-size:8px;line-height: 12px;">Lorem ipsum dolor sit amet,</p>
+                                                                <p style="font-size:8px;line-height: 12px;">{!! $company_address !!}</p>
                                                             </td>
                                                         </tr>
                                                         <tr>
                                                             <td style="width: 20%;">
-                                                                <p style="font-size:10px;line-height: 12px;font-weight: bold;">Card Payment</p>
+                                                                <p style="font-size:10px;line-height: 12px;font-weight: bold;">EMAIL</p>
                                                             </td>
                                                             <td style="width: 80%;">
-                                                                <p style="font-size:8px;line-height: 12px;">Lorem ipsum dolor sit amet,</p>
+                                                                <p style="font-size:8px;line-height: 12px;">{{ $company_email }},</p>
                                                             </td>
                                                         </tr>
                                                         <tr>
                                                             <td style="width: 20%;">
-                                                                <p style="font-size:10px;line-height: 12px;font-weight: bold;">Bank Transfer</p>
+                                                                <p style="font-size:10px;line-height: 12px;font-weight: bold;">CONTACT NO.</p>
                                                             </td>
                                                             <td style="width: 80%;">
-                                                                <p style="font-size:8px;line-height: 12px;">Bank Name - Account Name - Account No. - SWIFT Code</p>
+                                                                <p style="font-size:8px;line-height: 12px;">{{ $company_mobile }}</p>
                                                             </td>
                                                         </tr>
                                                     </table>
