@@ -80,9 +80,6 @@
                     data-bundle-id="{{ $product->bundle_id }}"
                     title="{{ $inputTooltip }}">
 
-                <input form="generate-invoice-form" type="hidden" 
-                    name="products[{{ $product->id }}][bundle_id]"
-                    value="{{ $product->bundle_id }}">
                 <input form="generate-invoice-form" type="hidden"
                     name="products[{{ $product->id }}][game_currency_amount]"
                     value="{{ $product->game_currency_amount }}">
@@ -286,7 +283,7 @@
             });
             
             $.ajax({
-                url: "{{ route('update.products.session') }}",
+                url: "{{ route('update.product') }}",
                 type: 'POST',
                 data: {
                     products: productsData,
@@ -294,10 +291,10 @@
                     _token: '{{ csrf_token() }}'
                 },
                 success: function(response) {
-                    console.log('Session updated with price changes');
+                    console.log('Session updated');
                 },
                 error: function() {
-                    toastr.error('Error updating session.');
+                    toastr.error('Error updating session current amount.');
                 }
             });
         }
