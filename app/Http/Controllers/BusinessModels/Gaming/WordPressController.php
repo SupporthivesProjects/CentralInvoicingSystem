@@ -297,65 +297,76 @@ class WordPressController extends Controller
         $hasKeyword = $request->filled('keyword');
         $keyword = strtolower($request->keyword);
     
-        $wp_api_url = rtrim($site->site_link, '/') . '/wp-json/wc/v3/products';
-        $consumer_key = $site->consumer_key;
-        $consumer_secret = $site->consumer_secret;
+        $consumerKey = $site->consumer_key;
+        $consumerSecret = $site->consumer_secret;
+        $base = rtrim($site->site_link, '/') . '/wp-json/wc/v3/products';
     
-        $api_url = $wp_api_url . '?per_page=50&type=variable';
+        $params = ['per_page' => 50, 'type' => 'variable'];
         if ($hasKeyword) {
-            $api_url .= '&search=' . urlencode($keyword);
+            $params['search'] = $keyword;
         }
     
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $api_url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_USERPWD, $consumer_key . ':' . $consumer_secret);
-        curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+        $response = Http::withBasicAuth($consumerKey, $consumerSecret)
+            ->timeout(30)
+            ->get($base, $params);
     
-        $response = curl_exec($ch);
-        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
+        if ($response->failed()) {
+            return response()->json([
+                'tableRows' => '<tr><td colspan="7" class="text-center text-muted">Failed to fetch products from WooCommerce.</td></tr>'
+            ]);
+        }
+    
+        $wp_products = $response->json();
+        
+        if (empty($wp_products)) {
+            return response()->json([
+                'tableRows' => '<tr><td colspan="7" class="text-center text-muted">No results found. Try randomizing or use a different keyword.</td></tr>'
+            ]);
+        }
+    
+        $requests = [];
+        foreach ($wp_products as $product) {
+            $requests[$product['id']] = Http::withBasicAuth($consumerKey, $consumerSecret)
+                ->timeout(30)
+                ->get($base . '/' . $product['id'] . '/variations');
+        }
+    
+        $responses = Http::pool(fn (Pool $pool) => array_map(
+            fn ($product) => $pool->as($product['id'])
+                ->withBasicAuth($consumerKey, $consumerSecret)
+                ->timeout(30)
+                ->get($base . '/' . $product['id'] . '/variations'),
+            $wp_products
+        ));
     
         $products = collect();
-        
-        if ($http_code == 200 && $response) {
-            $wp_products = json_decode($response, true);
+    
+        foreach ($wp_products as $p) {
+            $variationResponse = $responses[$p['id']];
             
-            foreach ($wp_products as $p) {
-                $variation_url = $wp_api_url . '/' . $p['id'] . '/variations';
-                
-                $ch = curl_init();
-                curl_setopt($ch, CURLOPT_URL, $variation_url);
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                curl_setopt($ch, CURLOPT_USERPWD, $consumer_key . ':' . $consumer_secret);
-                curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-                
-                $var_response = curl_exec($ch);
-                $var_http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-                curl_close($ch);
-                
-                if ($var_http_code == 200 && $var_response) {
-                    $variations = json_decode($var_response, true);
-                    
-                    foreach ($variations as $var) {
-                        $attrs = collect($var['attributes'])->pluck('option', 'name')->toArray();
-                        $bundleAmount = preg_replace('/\D/', '', $attrs['Amount'] ?? '0');
-                        
-                        $products->push((object)[
-                            'id' => $p['id'],
-                            'bundle_id' => $var['id'],
-                            'name' => $p['name'],
-                            'slug' => $p['slug'],
-                            'unit_price' => floatval($var['price']),
-                            'game_currency' => $p['sku'] ?? '',
-                            'game_currency_amount' => $bundleAmount,
-                            'game_platform' => $attrs['Platform'] ?? '',
-                            'game_server_region' => $attrs['Region'] ?? '',
-                            'game_need_to_capture' => null,
-                            'bundle_first_amount' => $var['price'] ?? '',
-                        ]);
-                    }
-                }
+            if ($variationResponse->failed()) {
+                continue;
+            }
+    
+            $variations = $variationResponse->json();
+    
+            foreach ($variations as $var) {
+                $attrs = collect($var['attributes'])->pluck('option', 'name')->toArray();
+                $bundleAmount = preg_replace('/\D/', '', $attrs['Amount'] ?? '0');
+    
+                $products->push((object)[
+                    'id' => $p['id'],
+                    'bundle_id' => $var['id'],
+                    'name' => $p['name'],
+                    'slug' => $p['slug'],
+                    'unit_price' => floatval($var['price']),
+                    'game_currency' => $p['sku'] ?? '',
+                    'game_currency_amount' => $bundleAmount,
+                    'game_platform' => $attrs['Platform'] ?? '',
+                    'game_server_region' => $attrs['Region'] ?? '',
+                    'game_need_to_capture' => null,
+                    'bundle_first_amount' => $var['price'] ?? '',
+                ]);
             }
         }
     
