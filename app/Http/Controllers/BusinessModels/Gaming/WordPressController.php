@@ -297,7 +297,7 @@ class WordPressController extends Controller
         $hasKeyword = $request->filled('keyword');
         $keyword = strtolower($request->keyword);
     
-        $wp_api_url = rtrim($site->site_url, '/') . '/wp-json/wc/v3/products';
+        $wp_api_url = rtrim($site->site_link, '/') . '/wp-json/wc/v3/products';
         $consumer_key = $site->consumer_key;
         $consumer_secret = $site->consumer_secret;
     
@@ -357,24 +357,26 @@ class WordPressController extends Controller
                 if ($var_http_code == 200 && $var_response) {
                     $variations = json_decode($var_response, true);
                     
-                    foreach ($variations as $var) {
-                        $price = floatval($var['price'] ?? 0);
-                        if ($price > $maxPrice) {
-                            $maxPrice = $price;
+                    if (!empty($variations)) {
+                        foreach ($variations as $var) {
+                            $price = floatval($var['price'] ?? 0);
+                            if ($price > $maxPrice) {
+                                $maxPrice = $price;
+                            }
                         }
+                        
+                        $products->push((object)[
+                            'id' => $p['id'],
+                            'name' => $p['name'],
+                            'slug' => $p['slug'],
+                            'game_currency' => $p['sku'] ?? '',
+                            'game_platform' => $p['categories'][0]['name'] ?? '',
+                            'game_server_region' => '',
+                            'game_need_to_capture' => '',
+                            'bundle_first_amount' => $maxPrice
+                        ]);
                     }
                 }
-                
-                $products->push((object)[
-                    'id' => $p['id'],
-                    'name' => $p['name'],
-                    'slug' => $p['slug'],
-                    'game_currency' => $p['sku'] ?? '',
-                    'game_platform' => $p['categories'][0]['name'] ?? '',
-                    'game_server_region' => '',
-                    'game_need_to_capture' => '',
-                    'bundle_first_amount' => $maxPrice
-                ]);
                 
                 curl_multi_remove_handle($mh, $ch);
                 curl_close($ch);
@@ -403,7 +405,6 @@ class WordPressController extends Controller
             'is_random' => false
         ]);
     }
-    
 
     public function addProducts(Request $request)
     {
