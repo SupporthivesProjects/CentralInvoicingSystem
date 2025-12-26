@@ -712,101 +712,91 @@ class WordPressController extends Controller
         foreach ($productDataArray as $data) {
     
             if (
-                !isset($data['unit_price']) ||
+                !array_key_exists('game_currency_amount', $data) ||
                 !isset($data['id']) ||
                 !isset($data['bundle_id']) ||
-                !array_key_exists('game_currency_amount', $data)
+                !isset($data['unit_price'])
             ) {
                 continue;
             }
     
-            $product_id  = (int) $data['id'];
-            $variationId = (int) $data['bundle_id'];
-            $unit_price  = (float) $data['unit_price'];
+            $product_id   = (int) $data['id'];
+            $variation_id = (int) $data['bundle_id'];
+            $unit_price   = (float) $data['unit_price'];
     
             try {
                 $productResponse = Http::timeout(30)
                     ->withBasicAuth($wooConsumerKey, $wooConsumerSecret)
-                    ->get("{$wooBaseUrl}/products/{$product_id}/variations/{$variationId}");
+                    ->get("{$wooBaseUrl}/products/{$product_id}/variations/{$variation_id}");
     
                 if ($productResponse->failed()) {
-                    $errors[] = "Failed to fetch variation {$variationId} for product {$product_id}";
+                    $errors[] = "Failed to fetch variation {$variation_id} for product {$product_id}";
                     continue;
                 }
     
-                $productData  = $productResponse->json();
+                $productData = $productResponse->json();
                 $currentPrice = (float) ($productData['regular_price'] ?? 0);
-    
-                $lastHistory = ProductPriceHistory::where('site_id', $site_id)
-                    ->where('product_id', $product_id)
-                    ->where('bundle', (string) $variationId)
-                    ->orderByDesc('last_price_changed')
-                    ->first();
-    
-                $allowUpdate = false;
-    
-                if (!$lastHistory) {
-                    $allowUpdate = true;
-                } elseif (Carbon::parse($lastHistory->last_price_changed)->diffInDays(now()) >= 90) {
-                    $allowUpdate = true;
-                }
-    
-                if (!$allowUpdate) {
-                    $daysRemaining = 90 - Carbon::parse($lastHistory->last_price_changed)->diffInDays(now());
-    
-                    $blockedProducts[] = [
-                        'product_id'      => $product_id,
-                        'variation_id'    => $variationId,
-                        'current_price'   => $currentPrice,
-                        'requested_price' => $unit_price,
-                        'days_remaining'  => $daysRemaining,
-                    ];
-    
-                    continue;
-                }
     
                 if (abs($currentPrice - $unit_price) < 0.01) {
                     continue;
                 }
     
-                $updateData = [
-                    'regular_price' => (string) $unit_price,
-                    'sale_price'    => '',
-                ];
+                $lastHistory = ProductPriceHistory::where('site_id', $site_id)
+                    ->where('product_id', $product_id)
+                    ->where('bundle', (string) $variation_id)
+                    ->orderByDesc('last_price_changed')
+                    ->first();
+    
+                if ($lastHistory && Carbon::parse($lastHistory->last_price_changed)->diffInDays(now()) < 90) {
+                    $blockedProducts[] = [
+                        'product_id' => $product_id,
+                        'variation_id' => $variation_id,
+                        'current_price' => $currentPrice,
+                        'requested_price' => $unit_price,
+                        'days_remaining' => 90 - Carbon::parse($lastHistory->last_price_changed)->diffInDays(now())
+                    ];
+                    continue;
+                }
     
                 $updateResponse = Http::timeout(30)
                     ->withBasicAuth($wooConsumerKey, $wooConsumerSecret)
-                    ->put("{$wooBaseUrl}/products/{$product_id}/variations/{$variationId}", $updateData);
+                    ->put(
+                        "{$wooBaseUrl}/products/{$product_id}/variations/{$variation_id}",
+                        [
+                            'regular_price' => (string) $unit_price,
+                            'sale_price' => ''
+                        ]
+                    );
     
                 if ($updateResponse->failed()) {
-                    $errors[] = "Failed to update variation {$variationId} for product {$product_id}";
+                    $errors[] = "Failed to update variation {$variation_id} for product {$product_id}";
                     continue;
                 }
     
                 ProductPriceHistory::create([
-                    'site_id'            => $site_id,
-                    'product_id'         => $product_id,
-                    'bundle'             => (string) $variationId,
-                    'unit_price'         => $unit_price,
+                    'site_id' => $site_id,
+                    'product_id' => $product_id,
+                    'bundle' => (string) $variation_id,
+                    'unit_price' => $unit_price,
                     'last_price_changed' => now(),
                 ]);
     
                 $updatedProducts[] = [
-                    'product_id'   => $product_id,
-                    'variation_id' => $variationId,
-                    'old_price'    => $currentPrice,
-                    'new_price'    => $unit_price,
+                    'product_id' => $product_id,
+                    'variation_id' => $variation_id,
+                    'old_price' => $currentPrice,
+                    'new_price' => $unit_price
                 ];
     
             } catch (\Exception $e) {
-                $errors[] = "Exception for product {$product_id}, variation {$variationId}: " . $e->getMessage();
+                $errors[] = "Exception for product {$product_id}, variation {$variation_id}: {$e->getMessage()}";
             }
         }
     
         return [
             'updated_products' => $updatedProducts,
             'blocked_products' => $blockedProducts,
-            'errors'           => $errors,
+            'errors' => $errors
         ];
     }
     
