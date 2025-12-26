@@ -92,13 +92,19 @@
             </div>
         </td>
 
-        <td class="text-center">
-            <button type="button" class="btn btn-sm btn-outline-danger px-2 py-1 remove-product"
-                data-product-id="{{ $product->id }}" data-unit-price="{{ $product->unit_price }}"
-                data-product-name="{{ $product->name }}" title="Remove Row">
-                <i class="fa fa-trash"></i>
-            </button>
+        <td class="text-center align-middle">
+            <div class="d-flex justify-content-center">
+                <button type="button"
+                    class="btn btn-sm btn-outline-danger px-2 py-1 remove-product"
+                    data-product-id="{{ $product->id }}"
+                    data-unit-price="{{ $product->unit_price }}"
+                    data-product-name="{{ $product->name }}"
+                    title="Remove Row">
+                    <i class="fa fa-trash"></i>
+                </button>
+            </div>
         </td>
+
     </tr>
 
     {{-- Expandable Capture Row --}}
