@@ -442,14 +442,6 @@
                                         onclick="customizeProducts('search')">Search</button>
                                 </div>
                             </div>
-                            <div class="col-md-2">
-                                <label for="sort_unit_price" class="form-label text-center fw-semibold">Sort By Price</label>
-                                <input type="hidden" name="current_page_number" id="current_page_number" value="1">
-                                <select class="form-select" id="sort_unit_price" name="sort_unit_price"  aria-label="Sort By Price">
-                                    <option value="asc" selected>Low to High</option>
-                                    <option value="desc">High to Low</option>
-                                </select>
-                            </div>
                         </div>
 
                         <!-- Amount Summary Section -->
@@ -493,9 +485,7 @@
                                         <th>SELECT</th>
                                     </tr>
                                 </thead>
-                                <tbody id="customize-product-table-body">
-                                    {{-- Injected by Ajax --}}
-                                </tbody>
+                                <tbody id="customize-product-table-body"></tbody>
                             </table>
                         </div>
 
@@ -747,7 +737,6 @@
         $(document).ready(function() {
             customMode = false;
             $('input[name="products[]"]').prop('disabled', true);
-            //$('input[name="manual_keyword"]').prop('disabled', true);
             $('.product-price').prop('readonly', true);
             $('#discount_amount').val(0.00);
             generateRandomProducts();
@@ -756,29 +745,13 @@
         function generateRandomProducts(mode = 'initial') {
             customMode = false;
             $('input[name="products[]"]').prop('disabled', true);
-            //$('input[name="manual_keyword"]').prop('disabled', true);
             $('.product-price').prop('readonly', true);
 
-            $('#product-table-body').html(`
-                <tr>
-                    <td colspan="8" class="text-center py-5">
-                        <div class="pacman-loader">
-                            <div class="pacman"></div>
-                            <div class="dots">
-                                <div class="dot"></div>
-                                <div class="dot"></div>
-                                <div class="dot"></div>
-                                <div class="dot"></div>
-                                <div class="dot"></div>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-            `);
+            $('#product-table-body').html(getLoaderRowHTML(10));
 
             const priceFrom = $('#hidden_price_from_input_id').val();
             const priceTo = $('#hidden_price_to_input_id').val();
-            const productCount = $('input[name="product_count"]').val(); // 🔥 New line
+            const productCount = $('input[name="product_count"]').val(); 
             const keyword = $('#keywordInput').val().trim();
 
             if (!customMode) {
@@ -787,11 +760,10 @@
                     type: 'GET',
                     data: {
                         site_id: SITE_ID,
-                        //invoice_amount: "{{ $invoice['invoice_amount'] ?? '' }}",
                         invoice_amount: parseFloat($('#invoice_amount').val()) || 0,
                         price_from: priceFrom,
                         price_to: priceTo,
-                        product_count: productCount, // 🔥 New line
+                        product_count: productCount,
                         search_query: keyword,
 
                     },
@@ -800,7 +772,7 @@
 
                         if (response.total === 0) {
                             $('#product-table-body').html(
-                                '<tr><td colspan="8" class="text-center text-muted py-5">No results found. Try randomizing or use a different keyword.</td></tr>'
+                                '<tr><td colspan="8" class="text-center text-muted py-5">No results found. use a different keyword.</td></tr>'
                             );
                             toastr.info("Oops! No magic combo this time. Try another spin or go custom!");
                             return;
@@ -1253,53 +1225,54 @@
     </script>
 
     <script>
-     
      function customizeProducts(action = 'onload', page = 1) {
-                    let keyword = $('#modalkeywordInput').val();
-                    let sortOrder = $('#sort_unit_price').val();
-                    let siteId = {{ $site->id ?? 'null' }};
+        let keyword = $('#modalkeywordInput').val();
+        let siteId = {{ $site->id ?? 'null' }};
 
-                    if (!siteId) {
-                        toastr.error('Site ID is missing.');
-                        return;
-                    }
+        if (!siteId) {
+            toastr.error('Site ID is missing.');
+            return;
+        }
 
-                    $('#customize-product-table-body').html('<tr><td colspan="6" class="text-center"><i class="fas fa-spinner fa-spin"></i> Loading...</td></tr>');
+        $('#customize-product-table-body').html(getProductsSearchRowHTML(7));
 
-                    $.ajax({
-                        url: '{{ route("filter.products") }}',
-                        type: 'GET',
-                        data: {
-                            keyword: keyword,
-                            sort_unit_price: sortOrder,
-                            page: page,
-                            site_id: siteId
-                        },
-                        success: function(response) {
-                            $('#customize-product-table-body').html(response.tableRows);
-                            $('#customize-pagination').html(response.pagination || '');
-                            $('#current_page_number').val(page);
-                        },
-                        error: function(xhr, status, error) {
-                            console.error('Error fetching products:', error);
-                            $('#customize-product-table-body').html('<tr><td colspan="6" class="text-center text-danger">Failed to load products. Please try again.</td></tr>');
-                            toastr.error('Failed to load products.');
-                        }
-                    });
+        $.ajax({
+            url: '{{ route("filter.products") }}',
+            type: 'GET',
+            data: {
+                keyword: keyword,
+                site_id: siteId
+            },
+            success: function(response) {
+                if (response.tableRows) {
+                    $('#customize-product-table-body').html(response.tableRows);
+                } else {
+                    $('#customize-product-table-body').html('<tr><td colspan="6" class="text-center text-muted">No products found.</td></tr>');
                 }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error fetching products:', error);
+                console.log('Response:', xhr.responseText);
+                $('#customize-product-table-body').html('<tr><td colspan="6" class="text-center text-danger">Failed to load products. Please try again.</td></tr>');
+                toastr.error('Failed to load products.');
+            }
+        });
+    }
 
-                $(document).ready(function() {
-                    $('#sort_unit_price').on('change', function() {
-                        customizeProducts('search', 1);
-                    });
+    $(document).ready(function() {
+        $('#sort_unit_price').on('change', function() {
+            customizeProducts('search', 1);
+        });
 
-                    $('#modalkeywordInput').on('keypress', function(e) {
-                        if (e.which === 13) {
-                            e.preventDefault();
-                            customizeProducts('search', 1);
-                        }
-                    });
-                });
+        $('#modalkeywordInput').on('keypress', function(e) {
+            if (e.which === 13) {
+                e.preventDefault();
+                customizeProducts('search', 1);
+            }
+        });
+        
+        customizeProducts('onload', 1);
+    });
     </script>
 
     <script>
