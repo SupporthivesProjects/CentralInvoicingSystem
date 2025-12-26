@@ -514,805 +514,634 @@
 @endsection
 @push('scripts')
     <script>
-        $(document).ready(function() {
-            let sessionAmount = parseFloat("{{ session('invoice_amount') ?? 0 }}");
+                        $(document).ready(function() {
+    let sessionAmount = parseFloat("{{ session('invoice_amount') ?? 0 }}");
 
-            function setEditIcon() {
-                $('#update_invoice_amount')
-                    .removeClass('bg-warning bg-success')
-                    .addClass('bg-light')
-                    .html('<i data-feather="edit" id="icon" style="color: black;width:20px;"></i>');
-                feather.replace();
-            }
+    function setEditIcon() {
+        $('#update_invoice_amount')
+            .removeClass('bg-warning bg-success')
+            .addClass('bg-light')
+            .html('<i data-feather="edit" id="icon" style="color: black;width:20px;"></i>');
+        feather.replace();
+    }
 
-            function setUploadIcon() {
-                $('#update_invoice_amount')
-                    .removeClass('bg-light bg-success')
-                    .addClass('bg-warning')
-                    .html('<i data-feather="upload-cloud" id="icon" style="color: black;width:20px;"></i>');
-                feather.replace();
-            }
+    function setUploadIcon() {
+        $('#update_invoice_amount')
+            .removeClass('bg-light bg-success')
+            .addClass('bg-warning')
+            .html('<i data-feather="upload-cloud" id="icon" style="color: black;width:20px;"></i>');
+        feather.replace();
+    }
 
-            function setLoader() {
-                $('#update_invoice_amount')
-                    .removeClass('bg-warning bg-light bg-success')
-                    .addClass('bg-warning')
-                    .html(
-                        '<div class="d-flex align-items-center justify-content-center" style="width:20px;">' +
-                        '<div class="spinner-border text-dark" style="width: 18px; height: 18px;" role="status">' +
-                        '<span class="visually-hidden">Loading...</span>' +
-                        '</div>' +
-                        '</div>'
-                    );
-            }
+    function setLoader() {
+        $('#update_invoice_amount')
+            .removeClass('bg-warning bg-light bg-success')
+            .addClass('bg-warning')
+            .html(
+                '<div class="d-flex align-items-center justify-content-center" style="width:20px;">' +
+                '<div class="spinner-border text-dark" style="width: 18px; height: 18px;" role="status">' +
+                '<span class="visually-hidden">Loading...</span>' +
+                '</div>' +
+                '</div>'
+            );
+    }
 
-            function setSuccessIcon() {
-                $('#update_invoice_amount')
-                    .removeClass('bg-warning')
-                    .addClass('bg-success')
-                    .html('<i data-feather="check-circle" id="icon" style="color: white;width:20px;"></i>');
-                feather.replace();
-            }
+    function setSuccessIcon() {
+        $('#update_invoice_amount')
+            .removeClass('bg-warning')
+            .addClass('bg-success')
+            .html('<i data-feather="check-circle" id="icon" style="color: white;width:20px;"></i>');
+        feather.replace();
+    }
 
-            $('#invoice_amount').on('input', function() {
-                let currentVal = parseFloat($(this).val());
-                if (!isNaN(currentVal) && currentVal !== sessionAmount) {
-                    setUploadIcon();
-                } else {
-                    setEditIcon();
-                }
-            });
-
-            $(document).on('click', '#update_invoice_amount', function() {
-                let currentVal = parseFloat($('#invoice_amount').val());
-                if (isNaN(currentVal) || currentVal === sessionAmount) {
-                    return;
-                }
-
-                setLoader();
-
-                let invoice_amount = $('#invoice_amount').val();
-                let invoice_date = $('#invoice_date').val();
-                let customer_name = $('#customer_name').val();
-                let customer_email = $('#customer_email').val();
-                let customer_mobile = $('#customer_mobile').val();
-
-                $.ajax({
-                    url: "{{ route('update.invoice.amount') }}",
-                    type: 'POST',
-                    data: {
-                        invoice_amount,
-                        invoice_date,
-                        customer_name,
-                        customer_email,
-                        customer_mobile,
-                        _token: '{{ csrf_token() }}'
-                    },
-                    success: function(response) {
-                        if (response.success) {
-                            sessionAmount = parseFloat(invoice_amount);
-                            setSuccessIcon();
-
-                            $('#invoice_amount').val(response.updated.invoice_amount);
-                            $('#invoice_date').val(response.updated.invoice_date);
-                            $('#customer_name').val(response.updated.customer_name);
-                            $('#customer_email').val(response.updated.customer_email);
-                            $('#customer_mobile').val(response.updated.customer_mobile);
-                            generateRandomProducts();
-
-                            setTimeout(() => {
-                                setEditIcon();
-                            }, 4000);
-                        }
-                    },
-                    error: function() {
-                        setEditIcon();
-                    }
-                });
-            });
-        });
-    </script>
-
-    <script>
-        const priceSlider = document.getElementById('price-slider');
-        const defaultMin = 10,
-            defaultMax = 1000;
-        const currency = "{{ site_currency() }}";
-
-        noUiSlider.create(priceSlider, {
-            start: [defaultMin, defaultMax],
-            connect: true,
-            step: 0.1,
-            range: {
-                min: defaultMin,
-                max: defaultMax
-            },
-            tooltips: [true, true],
-            format: {
-                to: v => `${currency}${Math.round(v)}`,
-                from: v => Number(v.replace(currency, ''))
-            }
-        });
-
-        const updateHiddenInputs = (min, max) => {
-            $('#hidden_price_from_input_id').val(min).trigger('input');
-            $('#hidden_price_to_input_id').val(max).trigger('input');
-        };
-
-        updateHiddenInputs(defaultMin, defaultMax);
-
-        priceSlider.noUiSlider.on('update', function(values) {
-            const [min, max] = values.map(v => Math.round(parseFloat(v.replace('$', ''))));
-            updateHiddenInputs(min, max);
-        });
-    </script>
-
-
-    <style>
-        /* Pacman Loader Styles */
-        .pacman-loader {
-            position: relative;
-            width: 100px;
-            height: 40px;
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            overflow: hidden;
+    $('#invoice_amount').on('input', function() {
+        let currentVal = parseFloat($(this).val());
+        if (!isNaN(currentVal) && currentVal !== sessionAmount) {
+            setUploadIcon();
+        } else {
+            setEditIcon();
         }
-
-        .pacman {
-            width: 0;
-            height: 0;
-            border-right: 20px solid transparent;
-            border-top: 20px solid yellow;
-            border-left: 20px solid yellow;
-            border-bottom: 20px solid yellow;
-            border-radius: 20px;
-            animation: pacman-chomp 0.5s infinite alternate;
-            z-index: 2;
-        }
-
-        @keyframes pacman-chomp {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(-20deg);
-            }
-        }
-
-        .dots {
-            display: flex;
-            margin-left: 10px;
-            position: relative;
-        }
-
-        .dot {
-            width: 10px;
-            height: 10px;
-            margin-left: 20px;
-            background: rgb(255, 255, 255);
-            border-radius: 50%;
-            animation: move-dot 1.5s linear infinite;
-        }
-
-        .dot:nth-child(1) {
-            animation-delay: 0s;
-        }
-
-        .dot:nth-child(2) {
-            animation-delay: 0.3s;
-        }
-
-        .dot:nth-child(3) {
-            animation-delay: 0.6s;
-        }
-
-        .dot:nth-child(4) {
-            animation-delay: 0.9s;
-        }
-
-        .dot:nth-child(5) {
-            animation-delay: 1.2s;
-        }
-
-        @keyframes move-dot {
-            0% {
-                transform: translateX(0);
-                opacity: 1;
-            }
-
-            100% {
-                transform: translateX(-100px);
-                opacity: 0;
-            }
-        }
-    </style>
-
-    <script>
-        $(document).ready(function() {
-            customMode = false;
-            $('input[name="products[]"]').prop('disabled', true);
-            $('.product-price').prop('readonly', true);
-            $('#discount_amount').val(0.00);
-            generateRandomProducts();
-        });
-
-        function generateRandomProducts(mode = 'initial') {
-            customMode = false;
-            $('input[name="products[]"]').prop('disabled', true);
-            $('.product-price').prop('readonly', true);
-
-            $('#product-table-body').html(getLoaderRowHTML(10));
-
-            const priceFrom = $('#hidden_price_from_input_id').val();
-            const priceTo = $('#hidden_price_to_input_id').val();
-            const productCount = $('input[name="product_count"]').val(); 
-            const keyword = $('#keywordInput').val().trim();
-
-            if (!customMode) {
-                $.ajax({
-                    url: "{{ route('random.products') }}",
-                    type: 'GET',
-                    data: {
-                        site_id: SITE_ID,
-                        invoice_amount: parseFloat($('#invoice_amount').val()) || 0,
-                        price_from: priceFrom,
-                        price_to: priceTo,
-                        product_count: productCount,
-                        search_query: keyword,
-
-                    },
-                    success: function(response) {
-                        $('#discount_amount').val(0.00);
-
-                        if (response.total === 0) {
-                            $('#product-table-body').html(
-                                '<tr><td colspan="8" class="text-center text-muted py-5">No results found. use a different keyword.</td></tr>'
-                            );
-                            toastr.info("Oops! No magic combo this time. Try another spin or go custom!");
-                            return;
-                        } else {
-
-
-
-                            // const invoiceAmount = parseFloat("{{ $invoice['invoice_amount'] ?? 0 }}");
-                            const invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
-                            const currentAmount = parseFloat(response.total.toFixed(2));
-                            const discountAmount = currentAmount - invoiceAmount;
-
-
-                            //const modalCurrentAmount = parseFloat()
-
-                            $('#product-table-body').html(response.tableRows);
-                            $('#current_amount').val(currentAmount.toFixed(2));
-                            $('#modal_current_amount').val(currentAmount.toFixed(2));
-
-                            // 💥 Update Discount Amount also
-                            if (discountAmount > 0) {
-                                $('#discount_amount').val(discountAmount.toFixed(2));
-                                $('#modal_discount_amount').val(discountAmount.toFixed(2));
-                            } else {
-                                $('#discount_amount').val(0.00);
-                            }
-
-                            if (response.is_random) {
-                                $('.narayan-checkbox').prop('checked', true).prop('disabled', true);
-                            } else {
-                                $('.narayan-checkbox').prop('disabled', false);
-                            }
-
-                            validateAmounts();
-
-                        }
-                    },
-                    error: function() {
-                        toastr.error("Could not fetch random products.");
-                        $('#product-table-body').html(
-                            '<tr><td colspan="8" class="text-center text-danger py-5">Failed to load products. Please try again.</td></tr>'
-                        );
-                    }
-                });
-            }
-        }
-    </script>
-
-
-
-    <script>
-        let selectedTotal = 0;
-        let customMode = false;
-        const invoiceAmount = parseFloat('{{ $invoice['invoice_amount'] ?? 0 }}');
-        const SITE_ID = {{ session('customer.site_id') ?? 0 }};
-
-        // Triggered when custom button is clicked
-        function setCustomOnly() {
-            customMode = true;
-            $('input[name="products[]"]').prop('disabled', false);
-            $('input[name="manual_keyword"]').prop('disabled', false);
-            $('.product-price').prop('readonly', false);
-            $('#product-table-body').empty();
-            selectedTotal = 0;
-            updateTotalDisplay();
-            attachCheckboxHandlers();
-            $('#discount_amount').val(0.00);
-            toastr.info('Now filter and pick your custom products.', 'Let’s begin!');
-
-        }
-
-
-        function filterProducts() {
-            const keyword = $('#keywordInput').val().trim();
-            const priceFrom = $('#hidden_price_from_input_id').val();
-            const priceTo = $('#hidden_price_to_input_id').val();
-
-            if (!keyword && !priceFrom && !priceTo) {
-                $('#product-table-body').html(
-                    '<tr><td colspan="7" class="text-center text-muted">Please enter a keyword or price range to search.</td></tr>'
-                );
-                return;
-            }
-
-            // Insert the Pacman loader inside the table body
-            $('#product-table-body').html(`
-            <tr>
-                <td colspan="7" class="text-center py-5">
-                    <div class="pacman-loader">
-                        <div class="pacman"></div>
-                        <div class="dots">
-                            <div class="dot"></div>
-                            <div class="dot"></div>
-                            <div class="dot"></div>
-                            <div class="dot"></div>
-                            <div class="dot"></div>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-        `);
-
-            $.ajax({
-                url: "{{ route('filter.products') }}",
-                type: 'GET',
-                data: {
-                    keyword: keyword,
-                    price_from: priceFrom,
-                    price_to: priceTo
-                },
-                success: function (response) {
-                    //alert(1);
-                    $('#customize-product-table-body').html(response.tableRows);
-                    selectedTotal = 0;
-                    updateTotalDisplay();
-                    attachCheckboxHandlers();
-
-                    //==
-                    if ($.fn.DataTable.isDataTable('#customize-products-table')) {
-                        $('#customize-products-table').DataTable().clear().destroy();
-                        $('#customize-products-table').empty(); // optional cleanup
-                    }
-
-                    const customizeTable = $('#customize-products-table').DataTable({
-                        responsive: true,
-                        searchHighlight: true,
-                        dom: 'lrtip', // removes built-in search bar
-                        language: {
-                            search: "",
-                            searchPlaceholder: "Search..."
-                        },
-                        columnDefs: [
-                            { orderable: false, targets: [4, 5] }
-                        ]
-                    });
-
-                    // 🔍 Custom search input functionality
-                    $('#keywordInput').on('input', function () {
-                        customizeTable.search(this.value).draw();
-                    });
-
-                    //==
-                },
-                error: function () {
-                    toastr.error('Something went wrong while filtering.', 'Oops!');
-                    $('#product-table-body').html(
-                        '<tr><td colspan="7" class="text-center text-danger py-5">Failed to load products. Please try again.</td></tr>'
-                    );
-                }
-            });
-        }
-
-
-        function attachCheckboxHandlers() {
-            function calculateTotal() {
-                let tempTotal = 0;
-                $('input[name="product_ids[]"]:checked').each(function() {
-                    const productId = $(this).val();
-                    const price = $(`input[data-product-id="${productId}"]`).val();
-                    const unitPrice = parseFloat(price) || 0;
-                    tempTotal += unitPrice;
-                });
-
-                return tempTotal;
-            }
-
-
-            $('input[name="product_ids[]"]').off('change').on('change', function() {
-                const tempTotal = calculateTotal();
-
-                if (tempTotal > invoiceAmount) {
-                    toastr.error(`Product total exceeds your invoice amount of $${invoiceAmount.toFixed(2)}`,
-                        'Limit Reached');
-                }
-
-                selectedTotal = tempTotal;
-                updateTotalDisplay();
-            });
-
-            $('.product-price').on('input', function() {
-                const tempTotal = calculateTotal();
-
-                if (tempTotal > invoiceAmount) {
-                    toastr.error(`Product total exceeds your invoice amount of $${invoiceAmount.toFixed(2)}`,
-                        'Limit Reached');
-                }
-
-                selectedTotal = tempTotal;
-                updateTotalDisplay();
-            });
-        }
-
-
-        function updateTotalDisplay() {
-            $('#current_amount').val(selectedTotal.toFixed(2));
-        }
-    </script>
-
-
-    <script>
-        // function clearAllProducts() {
-        //     $('#product-table-body').empty();
-        //     $('input[name="manual_keyword"]').val('');
-        //     $('#discount_amount').val('');
-        //     $('#current_amount').val('');
-        //     selectedTotal = 0;
-        //     updateTotalDisplay();
-        //     toastr.success('Your filter has been reset now', 'Filter Cleared');
-        // }
-        function clearAllProducts(button) {
-            const icon = $(button).find('i');
-            const originalIconClass = 'fa-filter-circle-xmark';
-            icon.removeClass(originalIconClass).addClass('fa-spinner fa-spin');
-
-            $.ajax({
-                url: "{{ route('clear.products') }}",
-                type: 'GET',
-                success: function(response) {
-                    $('#product-table-body').empty();
-                    $('input[name="manual_keyword"]').val('');
-                    $('#discount_amount').val('');
-                    $('#current_amount').val('');
-                    $('#temp_current_amount_text').text('0.00');
-                    $('#temp_discount_amount_text').text('0.00');
-                    $('#temp_invoice_amount_text').text($('#invoice_amount').val());
-                    $('#product-table-body').html(getErrorRowHTML(
-                        'Randomize filter cleared. You can now randomize products again or add custom products.',
-                        9));
-                    toastr.success('Randomized products filter has been reset');
-                    updateTotalDisplay();
-
-
-                },
-                error: function(xhr, status, error) {
-                    icon.removeClass('fa-spinner fa-spin').addClass(originalIconClass);
-                    toastr.error(error, 'Error clearing randomized products');
-                },
-                complete: function() {
-                    icon.removeClass('fa-spinner fa-spin').addClass(originalIconClass);
-                }
-            });
-        }
-    </script>
-    <script>
-        let filterTimer;
-
-        $('#keywordInput, #hidden_price_from_input_id, #hidden_price_to_input_id').on('input change', function() {
-            clearTimeout(filterTimer);
-            //const isKeyword = $(this).attr('id') === 'keywordInput';
-            filterTimer = setTimeout(() => {
-                generateRandomProducts('random');
-            }, 1500);
-        });
-    </script>
-
-
-    <script>
-        function gatherGameCaptureData() {
-            const gameCaptureData = [];
-
-            // Loop through all products and their respective platforms
-            document.querySelectorAll('.platform-section').forEach(section => {
-                const productId = section.getAttribute('data-product-id');
-                const platform = section.getAttribute('data-platform');
-
-                // Check if the platform section is visible and if fields are entered
-                const fieldsData = {};
-
-                section.querySelectorAll('input[type="text"]').forEach(input => {
-                    const fieldName = input.name.split('[').pop().split(']')[0]; // Extract the field name
-                    fieldsData[fieldName] = input.value; // Store the input data
-                });
-
-                if (Object.keys(fieldsData).length > 0) {
-                    gameCaptureData.push({
-                        product_id: productId,
-                        platform: platform,
-                        fields: fieldsData
-                    });
-                }
-            });
-
-            return gameCaptureData;
-        }
-
-        function generateInvoice(event) {
-            event.preventDefault();
-            //const gameCaptureData = gatherGameCaptureData();
-
-            // Now you can send this data to the server or process it further
-            //console.log(gameCaptureData);
-
-            const visibleProducts = $('input[name="product_ids[]"]:visible');
-            const selectedProducts = $('input[name="product_ids[]"]:checked');
-            const invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
-            const current_amount = parseFloat($('#current_amount').val()) || 0;
-            const discountAmount = parseFloat($('#discount_amount').val()) || 0;
-
-            // if (selectedProducts.length === 0) {
-            //     toastr.error('Please select your products combo...', 'No Product Selected');
-            //     return;
-            // }
-
-            if (current_amount < invoiceAmount) {
-                $('#current_amount').addClass('border border-danger');
-                setTimeout(() => {
-                    $('#current_amount').removeClass('border border-danger');
-                }, 2000);
-                toastr.error('Total is less than invoice amount.', 'Mismatch');
-                return;
-            }
-
-            const expectedAmount = current_amount - discountAmount;
-            const epsilon = 0.01;
-
-            if (Math.abs(expectedAmount - invoiceAmount) > epsilon) {
-                const diff = current_amount - invoiceAmount;
-                const diffFixed = diff.toFixed(2);
-
-                $('#discount_amount').addClass('border border-danger');
-                setTimeout(() => {
-                    $('#discount_amount').removeClass('border border-danger');
-                }, 2000);
-
-                if (discountAmount > diff) {
-                    toastr.error(
-                        `The discount amount of $${discountAmount} exceeds the expected discount of $${diffFixed}.`,
-                        'Discount Too High');
-                } else {
-                    toastr.error(`Please apply a discount of $${diffFixed} to match the invoice amount.`, 'Give Discount');
-                }
-                return;
-            }
-
-            let blinkCount = 0;
-            const maxBlinkCount = 15;
-            const blinkInterval = 500;
-
-            $('#discount_amount, #current_amount, #invoice_amount').css('transition', 'border-color 0.3s ease');
-
-            (function blinkBorder() {
-                $('#discount_amount, #current_amount, #invoice_amount').toggleClass('border border-success');
-                blinkCount++;
-                if (blinkCount < maxBlinkCount) {
-                    setTimeout(blinkBorder, blinkInterval);
-                } else {
-                    $('#discount_amount, #current_amount, #invoice_amount').removeClass('border border-success');
-                }
-            })();
-            toastr.options.timeOut = 5000;
-            toastr.info('Preparing your invoice details...', 'Initializing');
-            $.ajax({
-                url: "{{ route('generate.invoice.number') }}",
-                method: 'GET',
-                data: {
-                    site_name: "{{ $customer['site_name'] ?? 'N/A' }}"
-                },
-                success: function(response) {
-                    if (!response.success) {
-                        Swal.close();
-                        toastr.error('Failed to generate new invoice number', 'Error');
-                        return;
-                    }
-
-                    $('input[name="invoice_number"]').val(response.new_invoice_number);
-                    $('#generate-invoice-form').find('input[name="product_data[]"]').remove();
-
-                    // selectedProducts.each(function () {
-                    //     const productId = $(this).val();
-                    //     const unitPrice = $(`input[data-product-id="${productId}"]`).val();
-
-                    //     $('#generate-invoice-form').append($('<input>', {
-                    //         type: 'hidden',
-                    //         name: 'product_data[]',
-                    //         value: JSON.stringify({ product_id: productId, unit_price: unitPrice })
-                    //     }));
-                    // });
-
-                    $('#generate-invoice-form')[0].submit();
-
-                    toastr.options = {
-                        timeOut: 15000,
-                        onHidden: function() {
-                            toastr.options = {
-                                timeOut: 4000
-                            };
-                            toastr.success('Invoice is ready and will download shortly.', 'Completed');
-
-                        }
-                    };
-
-                    toastr.info('Generating invoice PDF file...', 'Processing');
-
-                },
-                error: function() {
-                    Swal.close();
-                    toastr.error('There was an error generating the invoice number', 'Error');
-                }
-            });
-        }
-    </script>
-
-
-
-
-    <script>
-        function handlePlatformChange(select) {
-            const platform = select.value;
-            const productId = select.getAttribute('data-product-id');
-
-            document.querySelectorAll(`.platform-section[data-product-id="${productId}"]`).forEach(section => {
-                section.style.display = 'none';
-            });
-
-            if (platform) {
-                const selected = document.querySelector(
-                    `.platform-section[data-product-id="${productId}"][data-platform="${platform}"]`);
-                if (selected) selected.style.display = 'block';
-            }
-        }
-    </script>
-
-    {{-- Remove Row Script --}}
-    <script>
-        function removeProductRow(index) {
-            const mainRow = document.getElementById(`product-main-row-${index}`);
-            const collapseRow = document.getElementById(`product-collapse-row-${index}`);
-
-            if (mainRow) mainRow.remove();
-            if (collapseRow) collapseRow.remove();
-        }
-    </script>
-
-    <script>
-        const slider = document.getElementById('customize-price-slider');
-
-        noUiSlider.create(slider, {
-            start: [0, 500],
-            connect: true,
-            range: {
-                'min': 10,
-                'max': 1000
-            }
-        });
-
-        slider.noUiSlider.on('update', function(values, handle) {
-            $('#hidden_customize_price_from_input_id_modal').val(parseFloat(values[0]));
-            $('#hidden_customize_price_to_input_id_modal').val(parseFloat(values[1]));
-        });
-    </script>
-
-    <script>
-     function customizeProducts(action = 'onload', page = 1) {
-        let keyword = $('#modalkeywordInput').val();
-        let siteId = {{ $site->id ?? 'null' }};
-
-        if (!siteId) {
-            toastr.error('Site ID is missing.');
+    });
+
+    $(document).on('click', '#update_invoice_amount', function() {
+        let currentVal = parseFloat($('#invoice_amount').val());
+        if (isNaN(currentVal) || currentVal === sessionAmount) {
             return;
         }
 
-        $('#customize-product-table-body').html(getProductsSearchRowHTML(7));
+        setLoader();
+
+        let invoice_amount = $('#invoice_amount').val();
+        let invoice_date = $('#invoice_date').val();
+        let customer_name = $('#customer_name').val();
+        let customer_email = $('#customer_email').val();
+        let customer_mobile = $('#customer_mobile').val();
 
         $.ajax({
-            url: '{{ route("filter.products") }}',
-            type: 'GET',
+            url: "{{ route('update.invoice.amount') }}",
+            type: 'POST',
             data: {
-                keyword: keyword,
-                site_id: siteId
+                invoice_amount,
+                invoice_date,
+                customer_name,
+                customer_email,
+                customer_mobile,
+                _token: '{{ csrf_token() }}'
             },
             success: function(response) {
-                if (response.tableRows) {
-                    $('#customize-product-table-body').html(response.tableRows);
-                } else {
-                    $('#customize-product-table-body').html('<tr><td colspan="6" class="text-center text-muted">No products found.</td></tr>');
+                if (response.success) {
+                    sessionAmount = parseFloat(invoice_amount);
+                    setSuccessIcon();
+
+                    $('#invoice_amount').val(response.updated.invoice_amount);
+                    $('#invoice_date').val(response.updated.invoice_date);
+                    $('#customer_name').val(response.updated.customer_name);
+                    $('#customer_email').val(response.updated.customer_email);
+                    $('#customer_mobile').val(response.updated.customer_mobile);
+                    generateRandomProducts();
+
+                    setTimeout(() => {
+                        setEditIcon();
+                    }, 4000);
                 }
             },
-            error: function(xhr, status, error) {
-                console.error('Error fetching products:', error);
-                console.log('Response:', xhr.responseText);
-                $('#customize-product-table-body').html('<tr><td colspan="6" class="text-center text-danger">Failed to load products. Please try again.</td></tr>');
-                toastr.error('Failed to load products.');
+            error: function() {
+                setEditIcon();
+            }
+        });
+    });
+});
+
+const priceSlider = document.getElementById('price-slider');
+const defaultMin = 10,
+    defaultMax = 1000;
+const currency = "{{ site_currency() }}";
+
+noUiSlider.create(priceSlider, {
+    start: [defaultMin, defaultMax],
+    connect: true,
+    step: 0.1,
+    range: {
+        min: defaultMin,
+        max: defaultMax
+    },
+    tooltips: [true, true],
+    format: {
+        to: v => `${currency}${Math.round(v)}`,
+        from: v => Number(v.replace(currency, ''))
+    }
+});
+
+const updateHiddenInputs = (min, max) => {
+    $('#hidden_price_from_input_id').val(min).trigger('input');
+    $('#hidden_price_to_input_id').val(max).trigger('input');
+};
+
+updateHiddenInputs(defaultMin, defaultMax);
+
+priceSlider.noUiSlider.on('update', function(values) {
+    const [min, max] = values.map(v => Math.round(parseFloat(v.replace('$', ''))));
+    updateHiddenInputs(min, max);
+});
+
+$(document).ready(function() {
+    customMode = false;
+    $('input[name="products[]"]').prop('disabled', true);
+    $('.product-price').prop('readonly', true);
+    $('#discount_amount').val(0.00);
+    generateRandomProducts();
+});
+
+function generateRandomProducts(mode = 'initial') {
+    customMode = false;
+    $('input[name="products[]"]').prop('disabled', true);
+    $('.product-price').prop('readonly', true);
+
+    $('#product-table-body').html(getLoaderRowHTML(10));
+
+    const priceFrom = $('#hidden_price_from_input_id').val();
+    const priceTo = $('#hidden_price_to_input_id').val();
+    const productCount = $('input[name="product_count"]').val(); 
+    const keyword = $('#keywordInput').val().trim();
+
+    if (!customMode) {
+        $.ajax({
+            url: "{{ route('random.products') }}",
+            type: 'GET',
+            data: {
+                site_id: SITE_ID,
+                invoice_amount: parseFloat($('#invoice_amount').val()) || 0,
+                price_from: priceFrom,
+                price_to: priceTo,
+                product_count: productCount,
+                search_query: keyword,
+
+            },
+            success: function(response) {
+                $('#discount_amount').val(0.00);
+
+                if (response.total === 0) {
+                    $('#product-table-body').html(
+                        '<tr><td colspan="8" class="text-center text-muted py-5">No results found. use a different keyword.</td></tr>'
+                    );
+                    toastr.info("Oops! No magic combo this time. Try another spin or go custom!");
+                    return;
+                } else {
+                    const invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
+                    const currentAmount = parseFloat(response.total.toFixed(2));
+                    const discountAmount = currentAmount - invoiceAmount;
+
+                    $('#product-table-body').html(response.tableRows);
+                    $('#current_amount').val(currentAmount.toFixed(2));
+                    $('#modal_current_amount').val(currentAmount.toFixed(2));
+
+                    if (discountAmount > 0) {
+                        $('#discount_amount').val(discountAmount.toFixed(2));
+                        $('#modal_discount_amount').val(discountAmount.toFixed(2));
+                    } else {
+                        $('#discount_amount').val(0.00);
+                    }
+
+                    if (response.is_random) {
+                        $('.narayan-checkbox').prop('checked', true).prop('disabled', true);
+                    } else {
+                        $('.narayan-checkbox').prop('disabled', false);
+                    }
+
+                    validateAmounts();
+                }
+            },
+            error: function() {
+                toastr.error("Could not fetch random products.");
+                $('#product-table-body').html(
+                    '<tr><td colspan="8" class="text-center text-danger py-5">Failed to load products. Please try again.</td></tr>'
+                );
             }
         });
     }
+}
 
-    $(document).ready(function() {
-        $('#sort_unit_price').on('change', function() {
-            customizeProducts('search', 1);
-        });
+let selectedTotal = 0;
+let customMode = false;
+const invoiceAmount = parseFloat('{{ $invoice['invoice_amount'] ?? 0 }}');
+const SITE_ID = {{ session('customer.site_id') ?? 0 }};
 
-        $('#modalkeywordInput').on('keypress', function(e) {
-            if (e.which === 13) {
-                e.preventDefault();
-                customizeProducts('search', 1);
-            }
-        });
-        
-        customizeProducts('onload', 1);
-    });
-    </script>
+function setCustomOnly() {
+    customMode = true;
+    $('input[name="products[]"]').prop('disabled', false);
+    $('input[name="manual_keyword"]').prop('disabled', false);
+    $('.product-price').prop('readonly', false);
+    $('#product-table-body').empty();
+    selectedTotal = 0;
+    updateTotalDisplay();
+    attachCheckboxHandlers();
+    $('#discount_amount').val(0.00);
+    toastr.info('Now filter and pick your custom products.', 'Let's begin!');
+}
 
-    <script>
-        $('#addgames').on('hidden.bs.modal', function() {
+function filterProducts() {
+    const keyword = $('#keywordInput').val().trim();
+    const priceFrom = $('#hidden_price_from_input_id').val();
+    const priceTo = $('#hidden_price_to_input_id').val();
+
+    if (!keyword && !priceFrom && !priceTo) {
+        $('#product-table-body').html(
+            '<tr><td colspan="7" class="text-center text-muted">Please enter a keyword or price range to search.</td></tr>'
+        );
+        return;
+    }
+
+    $('#product-table-body').html(`
+        <tr>
+            <td colspan="7" class="text-center py-5">
+                <div class="pacman-loader">
+                    <div class="pacman"></div>
+                    <div class="dots">
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    `);
+
+    $.ajax({
+        url: "{{ route('filter.products') }}",
+        type: 'GET',
+        data: {
+            keyword: keyword,
+            price_from: priceFrom,
+            price_to: priceTo
+        },
+        success: function (response) {
+            $('#customize-product-table-body').html(response.tableRows);
+            selectedTotal = 0;
+            updateTotalDisplay();
+            attachCheckboxHandlers();
+
             if ($.fn.DataTable.isDataTable('#customize-products-table')) {
                 $('#customize-products-table').DataTable().clear().destroy();
+                $('#customize-products-table').empty();
             }
 
-            // Optional: Clear HTML rows to avoid leftover data
-            $('#customize-product-table-body').empty();
+            const customizeTable = $('#customize-products-table').DataTable({
+                responsive: true,
+                searchHighlight: true,
+                dom: 'lrtip',
+                language: {
+                    search: "",
+                    searchPlaceholder: "Search..."
+                },
+                columnDefs: [
+                    { orderable: false, targets: [4, 5] }
+                ]
+            });
+
+            $('#keywordInput').on('input', function () {
+                customizeTable.search(this.value).draw();
+            });
+        },
+        error: function () {
+            toastr.error('Something went wrong while filtering.', 'Oops!');
+            $('#product-table-body').html(
+                '<tr><td colspan="7" class="text-center text-danger py-5">Failed to load products. Please try again.</td></tr>'
+            );
+        }
+    });
+}
+
+function attachCheckboxHandlers() {
+    function calculateTotal() {
+        let tempTotal = 0;
+        $('input[name="product_ids[]"]:checked').each(function() {
+            const productId = $(this).val();
+            const price = $(`input[data-product-id="${productId}"]`).val();
+            const unitPrice = parseFloat(price) || 0;
+            tempTotal += unitPrice;
         });
-    </script>
-    <script>
-        function validateAmounts() {
-            const currentAmountInput = document.getElementById("current_amount");
-            const discountAmountInput = document.getElementById("discount_amount");
-            const invoiceAmountInput = document.getElementById("invoice_amount");
 
-            const currentAmount = parseFloat(currentAmountInput.value) || 0;
-            const discountAmount = parseFloat(discountAmountInput.value) || 0;
-            const invoiceAmount = parseFloat(invoiceAmountInput.value) || 0;
+        return tempTotal;
+    }
 
-            const expectedTotal = (invoiceAmount + discountAmount).toFixed(2);
-            const currentTotal = currentAmount.toFixed(2);
+    $('input[name="product_ids[]"]').off('change').on('change', function() {
+        const tempTotal = calculateTotal();
 
-            const isValid = expectedTotal === currentTotal;
-
-            const color = isValid ? "green" : "red";
-
-            currentAmountInput.style.color = color;
-            discountAmountInput.style.color = color;
-            invoiceAmountInput.style.color = color;
+        if (tempTotal > invoiceAmount) {
+            toastr.error(`Product total exceeds your invoice amount of $${invoiceAmount.toFixed(2)}`,
+                'Limit Reached');
         }
 
-        document.addEventListener("DOMContentLoaded", function() {
-            // Set up listeners
-            document.getElementById("current_amount").addEventListener("input", validateAmounts);
-            document.getElementById("discount_amount").addEventListener("input", validateAmounts);
-            document.getElementById("invoice_amount").addEventListener("input", validateAmounts);
+        selectedTotal = tempTotal;
+        updateTotalDisplay();
+    });
 
-            // Initial check
-            validateAmounts();
+    $('.product-price').on('input', function() {
+        const tempTotal = calculateTotal();
+
+        if (tempTotal > invoiceAmount) {
+            toastr.error(`Product total exceeds your invoice amount of $${invoiceAmount.toFixed(2)}`,
+                'Limit Reached');
+        }
+
+        selectedTotal = tempTotal;
+        updateTotalDisplay();
+    });
+}
+
+function updateTotalDisplay() {
+    $('#current_amount').val(selectedTotal.toFixed(2));
+}
+
+function clearAllProducts(button) {
+    const icon = $(button).find('i');
+    const originalIconClass = 'fa-filter-circle-xmark';
+    icon.removeClass(originalIconClass).addClass('fa-spinner fa-spin');
+
+    $.ajax({
+        url: "{{ route('clear.products') }}",
+        type: 'GET',
+        success: function(response) {
+            $('#product-table-body').empty();
+            $('input[name="manual_keyword"]').val('');
+            $('#discount_amount').val('');
+            $('#current_amount').val('');
+            $('#temp_current_amount_text').text('0.00');
+            $('#temp_discount_amount_text').text('0.00');
+            $('#temp_invoice_amount_text').text($('#invoice_amount').val());
+            $('#product-table-body').html(getErrorRowHTML(
+                'Randomize filter cleared. You can now randomize products again or add custom products.',
+                9));
+            toastr.success('Randomized products filter has been reset');
+            updateTotalDisplay();
+        },
+        error: function(xhr, status, error) {
+            icon.removeClass('fa-spinner fa-spin').addClass(originalIconClass);
+            toastr.error(error, 'Error clearing randomized products');
+        },
+        complete: function() {
+            icon.removeClass('fa-spinner fa-spin').addClass(originalIconClass);
+        }
+    });
+}
+
+let filterTimer;
+
+$('#keywordInput, #hidden_price_from_input_id, #hidden_price_to_input_id').on('input change', function() {
+    clearTimeout(filterTimer);
+    filterTimer = setTimeout(() => {
+        generateRandomProducts('random');
+    }, 1500);
+});
+
+function gatherGameCaptureData() {
+    const gameCaptureData = [];
+
+    document.querySelectorAll('.platform-section').forEach(section => {
+        const productId = section.getAttribute('data-product-id');
+        const platform = section.getAttribute('data-platform');
+
+        const fieldsData = {};
+
+        section.querySelectorAll('input[type="text"]').forEach(input => {
+            const fieldName = input.name.split('[').pop().split(']')[0];
+            fieldsData[fieldName] = input.value;
         });
+
+        if (Object.keys(fieldsData).length > 0) {
+            gameCaptureData.push({
+                product_id: productId,
+                platform: platform,
+                fields: fieldsData
+            });
+        }
+    });
+
+    return gameCaptureData;
+}
+
+function generateInvoice(event) {
+    event.preventDefault();
+
+    const visibleProducts = $('input[name="product_ids[]"]:visible');
+    const selectedProducts = $('input[name="product_ids[]"]:checked');
+    const invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
+    const current_amount = parseFloat($('#current_amount').val()) || 0;
+    const discountAmount = parseFloat($('#discount_amount').val()) || 0;
+
+    if (current_amount < invoiceAmount) {
+        $('#current_amount').addClass('border border-danger');
+        setTimeout(() => {
+            $('#current_amount').removeClass('border border-danger');
+        }, 2000);
+        toastr.error('Total is less than invoice amount.', 'Mismatch');
+        return;
+    }
+
+    const expectedAmount = current_amount - discountAmount;
+    const epsilon = 0.01;
+
+    if (Math.abs(expectedAmount - invoiceAmount) > epsilon) {
+        const diff = current_amount - invoiceAmount;
+        const diffFixed = diff.toFixed(2);
+
+        $('#discount_amount').addClass('border border-danger');
+        setTimeout(() => {
+            $('#discount_amount').removeClass('border border-danger');
+        }, 2000);
+
+        if (discountAmount > diff) {
+            toastr.error(
+                `The discount amount of $${discountAmount} exceeds the expected discount of $${diffFixed}.`,
+                'Discount Too High');
+        } else {
+            toastr.error(`Please apply a discount of $${diffFixed} to match the invoice amount.`, 'Give Discount');
+        }
+        return;
+    }
+
+    let blinkCount = 0;
+    const maxBlinkCount = 15;
+    const blinkInterval = 500;
+
+    $('#discount_amount, #current_amount, #invoice_amount').css('transition', 'border-color 0.3s ease');
+
+    (function blinkBorder() {
+        $('#discount_amount, #current_amount, #invoice_amount').toggleClass('border border-success');
+        blinkCount++;
+        if (blinkCount < maxBlinkCount) {
+            setTimeout(blinkBorder, blinkInterval);
+        } else {
+            $('#discount_amount, #current_amount, #invoice_amount').removeClass('border border-success');
+        }
+    })();
+    toastr.options.timeOut = 5000;
+    toastr.info('Preparing your invoice details...', 'Initializing');
+    $.ajax({
+        url: "{{ route('generate.invoice.number') }}",
+        method: 'GET',
+        data: {
+            site_name: "{{ $customer['site_name'] ?? 'N/A' }}"
+        },
+        success: function(response) {
+            if (!response.success) {
+                Swal.close();
+                toastr.error('Failed to generate new invoice number', 'Error');
+                return;
+            }
+
+            $('input[name="invoice_number"]').val(response.new_invoice_number);
+            $('#generate-invoice-form').find('input[name="product_data[]"]').remove();
+
+            $('#generate-invoice-form')[0].submit();
+
+            toastr.options = {
+                timeOut: 15000,
+                onHidden: function() {
+                    toastr.options = {
+                        timeOut: 4000
+                    };
+                    toastr.success('Invoice is ready and will download shortly.', 'Completed');
+
+                }
+            };
+
+            toastr.info('Generating invoice PDF file...', 'Processing');
+
+        },
+        error: function() {
+            Swal.close();
+            toastr.error('There was an error generating the invoice number', 'Error');
+        }
+    });
+}
+
+function handlePlatformChange(select) {
+    const platform = select.value;
+    const productId = select.getAttribute('data-product-id');
+
+    document.querySelectorAll(`.platform-section[data-product-id="${productId}"]`).forEach(section => {
+        section.style.display = 'none';
+    });
+
+    if (platform) {
+        const selected = document.querySelector(
+            `.platform-section[data-product-id="${productId}"][data-platform="${platform}"]`);
+        if (selected) selected.style.display = 'block';
+    }
+}
+
+function removeProductRow(index) {
+    const mainRow = document.getElementById(`product-main-row-${index}`);
+    const collapseRow = document.getElementById(`product-collapse-row-${index}`);
+
+    if (mainRow) mainRow.remove();
+    if (collapseRow) collapseRow.remove();
+}
+
+const slider = document.getElementById('customize-price-slider');
+
+noUiSlider.create(slider, {
+    start: [0, 500],
+    connect: true,
+    range: {
+        'min': 10,
+        'max': 1000
+    }
+});
+
+slider.noUiSlider.on('update', function(values, handle) {
+    $('#hidden_customize_price_from_input_id_modal').val(parseFloat(values[0]));
+    $('#hidden_customize_price_to_input_id_modal').val(parseFloat(values[1]));
+});
+
+function customizeProducts(action = 'onload', page = 1) {
+    let keyword = $('#modalkeywordInput').val();
+    let siteId = {{ $site->id ?? 'null' }};
+
+    if (!siteId) {
+        toastr.error('Site ID is missing.');
+        return;
+    }
+
+    $('#customize-product-table-body').html(getProductsSearchRowHTML(7));
+
+    $.ajax({
+        url: '{{ route("filter.products") }}',
+        type: 'GET',
+        data: {
+            keyword: keyword,
+            site_id: siteId
+        },
+        success: function(response) {
+            if (response.tableRows) {
+                $('#customize-product-table-body').html(response.tableRows);
+            } else {
+                $('#customize-product-table-body').html('<tr><td colspan="6" class="text-center text-muted">No products found.</td></tr>');
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Error fetching products:', error);
+            console.log('Response:', xhr.responseText);
+            $('#customize-product-table-body').html('<tr><td colspan="6" class="text-center text-danger">Failed to load products. Please try again.</td></tr>');
+            toastr.error('Failed to load products.');
+        }
+    });
+}
+
+$(document).ready(function() {
+    $('#sort_unit_price').on('change', function() {
+        customizeProducts('search', 1);
+    });
+
+    $('#modalkeywordInput').on('keypress', function(e) {
+        if (e.which === 13) {
+            e.preventDefault();
+            customizeProducts('search', 1);
+        }
+    });
+    
+    customizeProducts('onload', 1);
+});
+
+$('#addgames').on('hidden.bs.modal', function() {
+    if ($.fn.DataTable.isDataTable('#customize-products-table')) {
+        $('#customize-products-table').DataTable().clear().destroy();
+    }
+
+    $('#customize-product-table-body').empty();
+});
+
+function validateAmounts() {
+    const currentAmountInput = document.getElementById("current_amount");
+    const discountAmountInput = document.getElementById("discount_amount");
+    const invoiceAmountInput = document.getElementById("invoice_amount");
+
+    const currentAmount = parseFloat(currentAmountInput.value) || 0;
+    const discountAmount = parseFloat(discountAmountInput.value) || 0;
+    const invoiceAmount = parseFloat(invoiceAmountInput.value) || 0;
+
+    const expectedTotal = (invoiceAmount + discountAmount).toFixed(2);
+    const currentTotal = currentAmount.toFixed(2);
+
+    const isValid = expectedTotal === currentTotal;
+
+    const color = isValid ? "green" : "red";
+
+    currentAmountInput.style.color = color;
+    discountAmountInput.style.color = color;
+    invoiceAmountInput.style.color = color;
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+    document.getElementById("current_amount").addEventListener("input", validateAmounts);
+    document.getElementById("discount_amount").addEventListener("input", validateAmounts);
+    document.getElementById("invoice_amount").addEventListener("input", validateAmounts);
+
+    validateAmounts();
+});
     </script>
+
 @endpush
