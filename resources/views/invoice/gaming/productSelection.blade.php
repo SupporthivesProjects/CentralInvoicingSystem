@@ -370,32 +370,25 @@
 
 
                         <!-- Combined Table -->
-                        <div class="table-responsive border rounded">
-                            <div id="product-table-wrapper" style="position: relative;">
-                                <div id="table-blocker"
-                                    style="display: none; position: absolute; inset: 0; background: rgba(255,255,255,0.6); z-index: 5; cursor: not-allowed;">
-                                </div>
-                                <table class="table table-hover table-bordered align-middle shadow-sm rounded"
-                                    id="productTable">
-                                    <thead class="table-dark">
-                                        <tr>
-                                            <th>SELECT</th>
-                                            <th>SR. NO.</th>
-                                            <th>GAME NAME</th>
-                                            <th>GAME CURRENCY</th>
-                                            <th>GAME CURRENCY AMOUNT</th>
-                                            <th>UNIT PRICE</th>
-                                            <th>EDIT PRICE</th>
-                                            <th>REMOVE</th>
-                                            {{-- <th>MODIFY PRICE</th> --}}
-                                        </tr>
-                                    </thead>
-                                    <tbody id="product-table-body">
-                                        <!-- Injected by AJAX -->
-                                    </tbody>
-                                </table>
-                            </div>
+                        <div class="table-responsive border rounded shadow-sm">
+                            <table class="table table-bordered table-hover align-middle mb-0"
+                                id="customize-products-table" style="width: 100%;">
+                                <thead class="table-dark text-center">
+                                    <tr>
+                                        <th>SR. NO.</th>
+                                        <th>GAME NAME</th>
+                                        <th>GAME CURRENCY</th>
+                                        <th>GAME CURRENCY AMOUNT</th>
+                                        <th>UNIT PRICE</th>
+                                        <th>SELECT</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="customize-product-table-body">
+                                </tbody>
+                            </table>
                         </div>
+
+                        <div id="customize-pagination"></div>
                     </div>
                 </div>
 
@@ -1254,107 +1247,53 @@
     </script>
 
     <script>
-        let customizeProductsTimeout; // ⏳ for debounce
+     
+     function customizeProducts(action = 'onload', page = 1) {
+                    let keyword = $('#modalkeywordInput').val();
+                    let sortOrder = $('#sort_unit_price').val();
+                    let siteId = {{ $site->id ?? 'null' }};
 
-        function customizeProducts(search_type = 'search') {
-            //const keyword = $('#keywordInput').val().trim();
-            //const priceFrom = $('#hidden_customize_price_from_input_id_modal').val();
-            //const priceTo = $('#hidden_customize_price_to_input_id_modal').val();
-            const invoice_amount = parseFloat($('#invoice_amount').val()) || 0;
-            const current_amount = parseFloat($('#current_amount').val()) || 0;
-
-            const discountAmount = Math.max(0, current_amount - invoice_amount);
-
-            // $('#temp_current_amount_text').text(current_amount.toFixed(2));
-            // $('#temp_invoice_amount_text').text(invoice_amount.toFixed(2));
-            // $('#temp_discount_amount_text').text(discountAmount.toFixed(2));
-
-            if (!isNaN(current_amount) && current_amount > 0) {
-                $('#temp_current_amount_text').text(current_amount.toFixed(2));
-            }
-            if (!isNaN(invoice_amount) && invoice_amount > 0) {
-                $('#temp_invoice_amount_text').text(invoice_amount.toFixed(2));
-            }
-            if (!isNaN(discountAmount) && discountAmount > 0) {
-                $('#temp_discount_amount_text').text(discountAmount.toFixed(2));
-            }
-
-            // Show temporary loading state in table
-            $('#customize-product-table-body').html(getProductsSearchRowHTML());
-
-            $.ajax({
-                url: "{{ route('filter.products') }}",
-                type: 'GET',
-                data: {
-                    //keyword: keyword,
-                    //price_from: priceFrom,
-                    //price_to: priceTo,
-                    search_type: search_type
-                },
-                success: function(response) {
-                    if (response && response.tableRows && response.tableRows.trim() !== '') {
-                        $('#customize-product-table-body').html(response.tableRows);
-
-                        // Wait for DOM update
-                        setTimeout(function() {
-                            let customizeTable;
-
-                            if ($.fn.DataTable.isDataTable('#customize-products-table')) {
-                                $('#customize-products-table').DataTable().clear().destroy();
-                            }
-
-                            customizeTable = $('#customize-products-table').DataTable({
-                                responsive: true,
-                                searchHighlight: true,
-                                dom: 'lrtip', // removes built-in search bar
-                                language: {
-                                    search: "",
-                                    searchPlaceholder: "Search..."
-                                },
-                                columnDefs: [{
-                                    orderable: false,
-                                    targets: [4, 5]
-                                }]
-                            });
-
-                            // ✅ Custom search input functionality
-                            $('#modalkeywordInput').off('keyup').on('keyup', function() {
-                                customizeTable.search(this.value).draw();
-                            });
-
-                            // Calculate totals
-                            if (typeof calculateTotalPrice === 'function') {
-                                calculateTotalPrice();
-                            }
-                        }, 0); // ⏳ Use timeout to ensure DOM is ready
-                    } else {
-                        $('#customize-product-table-body').html(
-                            getErrorRowHTML(
-                                'No matching products found. Please try a different keyword or adjust your price range.'
-                                )
-                        );
+                    if (!siteId) {
+                        toastr.error('Site ID is missing.');
+                        return;
                     }
-                },
-                error: function(xhr, status, error) {
-                    console.error('Ajax Error:', status, error);
-                    toastr.error('Failed to filter products. Please try again.', 'Error');
-                    $('#customize-product-table-body').html(
-                        getErrorRowHTML('Failed to load products. Please refresh or try again.')
-                    );
+
+                    $('#customize-product-table-body').html('<tr><td colspan="6" class="text-center"><i class="fas fa-spinner fa-spin"></i> Loading...</td></tr>');
+
+                    $.ajax({
+                        url: '{{ route("filter.products") }}',
+                        type: 'GET',
+                        data: {
+                            keyword: keyword,
+                            sort_unit_price: sortOrder,
+                            page: page,
+                            site_id: siteId
+                        },
+                        success: function(response) {
+                            $('#customize-product-table-body').html(response.tableRows);
+                            $('#customize-pagination').html(response.pagination || '');
+                            $('#current_page_number').val(page);
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error fetching products:', error);
+                            $('#customize-product-table-body').html('<tr><td colspan="6" class="text-center text-danger">Failed to load products. Please try again.</td></tr>');
+                            toastr.error('Failed to load products.');
+                        }
+                    });
                 }
-            });
-        }
 
-        // 🚀 Call customizeProducts() once when modal opens
+                $(document).ready(function() {
+                    $('#sort_unit_price').on('change', function() {
+                        customizeProducts('search', 1);
+                    });
 
-
-        // 🚀 Debounce user typing to prevent too many Ajax requests
-        $('#keywordInput').on('input', function() {
-            clearTimeout(customizeProductsTimeout);
-            customizeProductsTimeout = setTimeout(function() {
-                generateRandomProducts();
-            }, 500); // 500ms delay after user stops typing
-        });
+                    $('#modalkeywordInput').on('keypress', function(e) {
+                        if (e.which === 13) {
+                            e.preventDefault();
+                            customizeProducts('search', 1);
+                        }
+                    });
+                });
     </script>
 
     <script>
