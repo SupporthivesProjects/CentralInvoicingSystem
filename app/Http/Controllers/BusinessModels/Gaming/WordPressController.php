@@ -706,38 +706,65 @@ class WordPressController extends Controller
         $updatedProducts = [];
         $errors = [];
     
-        $wooBaseUrl = rtrim($site->site_link, '/') . '/wp-json/wc/v3';
-        $wooConsumerKey = $site->consumer_key;
-        $wooConsumerSecret = $site->consumer_secret;
+        $consumerKey = $site->consumer_key;
+        $consumerSecret = $site->consumer_secret;
+        $base = rtrim($site->site_link, '/') . '/wp-json/wc/v3/products';
+    
+        \Log::info('Starting product price update', [
+            'site_id' => $site_id,
+            'total_products' => count($productDataArray)
+        ]);
     
         foreach ($productDataArray as $data) {
     
             if (!isset($data['id'], $data['bundle_id'], $data['unit_price'], $data['old_price'])) {
+                \Log::warning('Missing required fields', ['data' => $data]);
                 continue;
             }
     
-            $product_id   = (int) $data['id'];
+            $product_id = (int) $data['id'];
             $variation_id = (int) $data['bundle_id'];
             $currentPrice = (float) $data['old_price'];
-            $unit_price   = (float) $data['unit_price'];
+            $unit_price = (float) $data['unit_price'];
     
-            if ($variation_id <= 0 || abs($currentPrice - $unit_price) < 0.01) {
+            if ($variation_id <= 0) {
+                \Log::warning('Invalid variation ID', ['variation_id' => $variation_id]);
+                continue;
+            }
+    
+            if (abs($currentPrice - $unit_price) < 0.01) {
+                \Log::info('Price unchanged, skipping', [
+                    'product_id' => $product_id,
+                    'variation_id' => $variation_id
+                ]);
                 continue;
             }
     
             try {
-                $updateResponse = Http::timeout(30)
-                    ->withBasicAuth($wooConsumerKey, $wooConsumerSecret)
-                    ->put(
-                        "{$wooBaseUrl}/products/{$product_id}/variations/{$variation_id}",
-                        [
-                            'regular_price' => (string) $unit_price,
-                            'sale_price' => ''
-                        ]
-                    );
+                $endpoint = $base . '/' . $product_id . '/variations/' . $variation_id;
+    
+                \Log::info('Updating price via WooCommerce API', [
+                    'endpoint' => $endpoint,
+                    'old_price' => $currentPrice,
+                    'new_price' => $unit_price
+                ]);
+    
+                $updateResponse = Http::withBasicAuth($consumerKey, $consumerSecret)
+                    ->timeout(30)
+                    ->put($endpoint, [
+                        'regular_price' => (string) $unit_price,
+                        'sale_price' => ''
+                    ]);
     
                 if ($updateResponse->failed()) {
-                    $errors[] = "Failed to update variation {$variation_id} for product {$product_id}";
+                    $errorMsg = "Product {$product_id}, Variation {$variation_id}: Status {$updateResponse->status()}";
+                    \Log::error('WooCommerce API update failed', [
+                        'product_id' => $product_id,
+                        'variation_id' => $variation_id,
+                        'status' => $updateResponse->status(),
+                        'response' => $updateResponse->body()
+                    ]);
+                    $errors[] = $errorMsg;
                     continue;
                 }
     
@@ -757,17 +784,33 @@ class WordPressController extends Controller
                     'new_price' => $unit_price
                 ];
     
+                \Log::info('Price updated successfully', [
+                    'product_id' => $product_id,
+                    'variation_id' => $variation_id,
+                    'new_price' => $unit_price
+                ]);
+    
             } catch (\Exception $e) {
-                $errors[] = "Exception for product {$product_id}, variation {$variation_id}: {$e->getMessage()}";
+                $errorMsg = "Exception: Product {$product_id}, Variation {$variation_id} - {$e->getMessage()}";
+                \Log::error('Exception during price update', [
+                    'product_id' => $product_id,
+                    'variation_id' => $variation_id,
+                    'error' => $e->getMessage()
+                ]);
+                $errors[] = $errorMsg;
             }
         }
+    
+        \Log::info('Product price update completed', [
+            'updated_count' => count($updatedProducts),
+            'error_count' => count($errors)
+        ]);
     
         return [
             'updated_products' => $updatedProducts,
             'errors' => $errors
         ];
     }
-    
     
 
 
