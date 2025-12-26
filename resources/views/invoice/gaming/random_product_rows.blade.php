@@ -17,7 +17,7 @@
                     name="products[{{ $product->id }}][selected_checkbox]" value="1" checked>
                 <input type="hidden" name="products[{{ $product->id }}][selected]" value="1">
             </div>
-        <td>{{ $index + 1 }}</td>
+        <td class="text-center" >{{ $index + 1 }}</td>
         <td>
             {{ $product->name }}
             @if ($product->slug)
