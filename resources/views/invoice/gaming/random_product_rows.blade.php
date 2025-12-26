@@ -238,7 +238,7 @@
         function calculateTotalPrice() {
             let currentAmount = 0;
 
-            $('.narayan-checkbox:checked').each(function() {
+            $('.narayan-checkbox').filter(':checked, :disabled:checked').each(function() {
                 const productRow = $(this).closest('tr');
                 const editPriceInput = productRow.find('.edit-price');
                 let editPrice = parseFloat(editPriceInput.val());
@@ -259,6 +259,8 @@
 
             $('#current_amount').val(currentAmount.toFixed(2));
             $('#discount_amount').val(discountAmount.toFixed(2));
+            
+            validateAmounts();
         }
 
         function updateSessionCurrentAmount() {

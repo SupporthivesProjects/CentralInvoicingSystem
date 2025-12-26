@@ -514,7 +514,7 @@
 @endsection
 @push('scripts')
     <script>
-                        $(document).ready(function() {
+ $(document).ready(function() {
     let sessionAmount = parseFloat("{{ session('invoice_amount') ?? 0 }}");
 
     function setEditIcon() {
