@@ -46,6 +46,7 @@ class LaravelController extends Controller
         $max_unit_price = DB::connection($this->connectionType)->table($this->productTable)->where('published', 1)->max('unit_price');
         return response()->json(['minProductPrice' => $min_unit_price, 'maxProductPrice' => $max_unit_price]);
     }
+    
     public function randomProducts(Request $request)
     {
         Session::forget('selected_products');

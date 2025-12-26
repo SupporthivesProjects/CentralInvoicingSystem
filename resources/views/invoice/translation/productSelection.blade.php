@@ -364,36 +364,6 @@
                     <div class="card-body">
                         <div class="container">
                             <div class="row g-3 justify-content-center mb-3">
-                                {{--
-                                <div class="col-md-3">
-                                    <div class="d-flex flex-column align-items-center h-100">
-                                        <small class="text-muted fw-semibold mb-2">No. of Products</small>
-                                        <div class="input-group shadow-sm bg-white w-100">
-                                            <button class="btn btn-outline-primary" type="button"
-                                                onclick="adjustNoOfProducts('noOfProducts', -1)">−</button>
-                                            <input type="text" class="form-control text-center" name="noOfProducts"
-                                                id="noOfProducts" min="1" max="2" placeholder="Auto"
-                                                onfocus="this.placeholder = ''" onblur="this.placeholder = 'Auto'"
-                                                readonly>
-                                            <button class="btn btn-outline-primary" type="button"
-                                                onclick="adjustNoOfProducts('noOfProducts', 1)">+</button>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <div class="d-flex flex-column align-items-center h-100 ms-3">
-                                        <small class="text-muted fw-semibold mb-2">Price Range</small>
-                                        <div class="w-100 h-100">
-                                            <div id="randomize-price-slider" class="w-100"></div>
-                                            <input type="hidden" name="price_from"
-                                                id="hidden_randomize_price_from_input_id">
-                                            <input type="hidden" name="price_to"
-                                                id="hidden_randomize_price_to_input_id">
-                                        </div>
-                                    </div>
-                                </div>--}}
-
                                 <div class="col-md-3">
                                     <div class="d-flex flex-column align-items-center h-100">
                                         <small class="text-muted fw-semibold mb-2">Product Category</small>
