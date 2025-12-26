@@ -1234,7 +1234,7 @@
             return;
         }
 
-        $('#customize-product-table-body').html('<tr><td colspan="6" class="text-center"><i class="fas fa-spinner fa-spin"></i> Loading...</td></tr>');
+        $('#customize-product-table-body').html(getProductsSearchRowHTML(10));
 
         $.ajax({
             url: '{{ route("filter.products") }}',
