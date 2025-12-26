@@ -58,7 +58,7 @@
                                             <!-- </div> -->
                                         </div>
                                     </td>
-                                    <td width="50%" valign="top" align="right" style="font-size:14px; line-height:20px;padding-left: 10px;">
+                                    <td width="60%" valign="top" align="right" style="font-size:14px; line-height:20px;padding-left: 10px;">
                                         <div style="background: #0D022C;border-radius: 20px 0px 0px 20px;height: 295px;position: relative;">
                                             <img src="{{ $invoice_image2 }}" style="position: absolute;top: 20px; right: 20px;width: 50px;" alt="">
                                             <div style="width: 110px;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);">
@@ -72,7 +72,7 @@
                                                 <div class="">
                                                     <p style="font-size: 10px;letter-spacing: 1px;color: #D83E71;text-align: left;">{{ $company_mobile }}</p>
                                                     <p style="color: #FFF;font-size: 8px;text-align: left;font-weight: 400;line-height: 10px;">{{ $company_email }}</p>
-                                                    <p style="color: #FFF;font-size: 8px;text-align: left;font-weight: 400;line-height: 10px;">Western Union</p>
+                                                    <p style="color: #FFF;font-size: 8px;text-align: left;font-weight: 400;line-height: 10px;">{{ $company_address }}</p>
                                                 </div>
                                             </div>
                                             <img src="{{ $invoice_image1 }}" style="position: absolute;bottom: 20px; left: 20px;width: 50px;" alt="">
@@ -91,13 +91,13 @@
                         <td style="padding:30px;">
                             <table width="100%" cellspacing="0" cellpadding="0">
                                 <tr>
-                                    <td width="50%" style="font-size:14px; line-height:20px;padding: 0px 70px 0px 25px;vertical-align: top;">
+                                    {{--<td width="50%" style="font-size:14px; line-height:20px;padding: 0px 70px 0px 25px;vertical-align: top;">
                                         <div class="">
                                             <p style="color: #FFF;font-size: 12px;text-align: left;font-weight: bold;line-height: 15px;margin-bottom: 4px;">Terms & Conditions</p>
                                             <p style="color: #FFF;font-size: 8px;text-align: left;font-weight: 400;line-height: 10px;line-height: 10px;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
                                             incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam</p>
                                         </div>
-                                    </td>
+                                    </td>--}}
                                     <td width="50%" style="font-size:14px; line-height:20px;padding: 0px 70px 0px 25px;vertical-align: top;">
                                         <div class="">
                                             <p style="color: #FFF;font-size: 12px;text-align: left;font-weight: bold;line-height: 15px;margin-bottom: 4px;">Invoice To :</p>
