@@ -9,7 +9,7 @@
         }
         .footer-fixed {
             position: absolute;
-            bottom: 0px;
+            bottom: -1px;
             left: 0;
             right: 0;
             width: 100%;
@@ -33,7 +33,7 @@
                         </td>
                     </tr>
                         
-                    <tr style="background: url({{$invoice_header_image}}) no-repeat;background-position:center;background-size:cover; height: 230px;color: white;border-collapse: collapse;font-family: sans-serif;">
+                    <tr style="background: url({{$invoice_header_image}}) no-repeat;background-position:center;background-size:cover; height: 230px;color: white;border-collapse: collapse;font-family: sans-serif;width: 100%;">
                         <td style="padding: 43px;">
                             <p style="padding-top: 10px;padding-top: 22px;font-size: 15px;">Discountedg<b>cards</b></p>
                             <h1 style="font-size: 50px; margin: 0px;">INVOICE</h1>
@@ -129,9 +129,9 @@
                         <tr >
                             <td colspan="2" style="text-align: end;padding-right: 40px;font-size: 8px;">
                                 <!-- <b style="font-size: 12px;">For More Information</b> -->
-                                <p style="text-align: end;padding-right: 40px;font-size: 8px;">{!! $company_address !!}</p>
-                                <p style="text-align: end;padding-right: 40px;font-size: 8px;">Phone #</p>
-                                <p style="text-align: end;padding-right: 40px;font-size: 8px;">{{ $company_email }}</p>
+                                <p style="text-align: end;padding-right: 40px;font-size: 11px;">{!! $company_address !!}</p>
+                                <p style="text-align: end;padding-right: 40px;font-size: 11px;">Phone #</p>
+                                <p style="text-align: end;padding-right: 40px;font-size: 11px;">{{ $company_email }}</p>
                             </td>
                         </tr>
                     </div>
