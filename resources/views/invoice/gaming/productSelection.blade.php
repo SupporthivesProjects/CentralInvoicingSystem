@@ -370,25 +370,32 @@
 
 
                         <!-- Combined Table -->
-                        <div class="table-responsive border rounded shadow-sm">
-                            <table class="table table-bordered table-hover align-middle mb-0"
-                                id="customize-products-table" style="width: 100%;">
-                                <thead class="table-dark text-center">
-                                    <tr>
-                                        <th>SR. NO.</th>
-                                        <th>GAME NAME</th>
-                                        <th>GAME CURRENCY</th>
-                                        <th>GAME CURRENCY AMOUNT</th>
-                                        <th>UNIT PRICE</th>
-                                        <th>SELECT</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="customize-product-table-body">
-                                </tbody>
-                            </table>
+                        <div class="table-responsive border rounded">
+                            <div id="product-table-wrapper" style="position: relative;">
+                                <div id="table-blocker"
+                                    style="display: none; position: absolute; inset: 0; background: rgba(255,255,255,0.6); z-index: 5; cursor: not-allowed;">
+                                </div>
+                                <table class="table table-hover table-bordered align-middle shadow-sm rounded"
+                                    id="productTable">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th>SELECT</th>
+                                            <th>SR. NO.</th>
+                                            <th>GAME NAME</th>
+                                            <th>GAME CURRENCY</th>
+                                            <th>GAME CURRENCY AMOUNT</th>
+                                            <th>UNIT PRICE</th>
+                                            <th>EDIT PRICE</th>
+                                            <th>REMOVE</th>
+                                            {{-- <th>MODIFY PRICE</th> --}}
+                                        </tr>
+                                    </thead>
+                                    <tbody id="product-table-body">
+                                        <!-- Injected by AJAX -->
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-
-                        <div id="customize-pagination"></div>
                     </div>
                 </div>
 
