@@ -671,73 +671,77 @@ class WordPressController extends Controller
     {
         $site_id = session('customer.site_id');
         $site = Website::findOrFail($site_id);
-
+    
         $updatedProducts = [];
         $errors = [];
-
+    
         $wooBaseUrl = rtrim($site->site_link, '/') . '/wp-json/wc/v3';
         $wooConsumerKey = $site->consumer_key;
         $wooConsumerSecret = $site->consumer_secret;
-
+    
         foreach ($productDataArray as $data) {
             if (empty($data['game_currency_amount']) || !isset($data['unit_price']) || !isset($data['product_id'])) {
                 \Log::warning("Missing required data for product update", $data);
                 continue;
             }
-
+    
             $variationId = !empty($data['bundle_id']) && is_numeric($data['bundle_id'])
                 ? intval($data['bundle_id'])
                 : null;
-
+    
             if (!$variationId) {
                 \Log::warning("Invalid or missing bundle_id for product {$data['product_id']}", $data);
                 continue;
             }
-
+    
             $product_id = intval($data['product_id']);
             $unit_price = number_format(floatval($data['unit_price']), 2, '.', '');
-
+    
             try {
                 $productResponse = Http::timeout(30)
                     ->withBasicAuth($wooConsumerKey, $wooConsumerSecret)
                     ->get("{$wooBaseUrl}/products/{$product_id}/variations/{$variationId}");
-
+    
                 if ($productResponse->status() === 404) {
                     \Log::warning("Variation not found: Product ID {$product_id}, Variation ID {$variationId}");
                     $errors[] = "Variation {$variationId} not found for product {$product_id}";
                     continue;
                 }
-
+    
                 if ($productResponse->status() === 401) {
                     \Log::error("Authentication failed - check WooCommerce API credentials");
                     $errors[] = "Authentication failed for product {$product_id}";
                     continue;
                 }
-
+    
                 if ($productResponse->failed()) {
                     $errorMsg = "Failed to fetch variation {$variationId}: HTTP {$productResponse->status()} - " . $productResponse->body();
                     \Log::error($errorMsg);
                     $errors[] = $errorMsg;
                     continue;
                 }
-
+    
                 $productData = $productResponse->json();
-
+    
                 $currentPrice = isset($productData['regular_price']) && $productData['regular_price'] !== ''
                     ? number_format(floatval($productData['regular_price']), 2, '.', '')
                     : '0.00';
-
+    
                 \Log::info("Price comparison for variation {$variationId}: Current={$currentPrice}, New={$unit_price}");
-
-                if ($currentPrice !== $unit_price) {
+    
+                $currentPriceFloat = floatval($currentPrice);
+                $unitPriceFloat = floatval($unit_price);
+                $pricesDiffer = abs($currentPriceFloat - $unitPriceFloat) >= 0.01;
+    
+                if ($pricesDiffer) {
                     $lastHistory = ProductPriceHistory::where('site_id', $site_id)
                         ->where('product_id', $product_id)
                         ->where('bundle', $variationId)
                         ->orderBy('last_price_changed', 'desc')
                         ->first();
-
+    
                     $shouldUpdate = false;
-
+    
                     if (!$lastHistory) {
                         $shouldUpdate = true;
                     } else {
@@ -748,32 +752,32 @@ class WordPressController extends Controller
                             \Log::info("Skipping update: last update for variation {$variationId} was within 3 months");
                         }
                     }
-
+    
                     if ($shouldUpdate) {
                         $updateData = [
                             'regular_price' => $unit_price,
                         ];
-
+    
                         if (
                             isset($productData['sale_price']) && $productData['sale_price'] !== '' &&
                             floatval($productData['sale_price']) > floatval($unit_price)
                         ) {
                             $updateData['sale_price'] = '';
                         }
-
+    
                         $updateResponse = Http::timeout(30)
                             ->withBasicAuth($wooConsumerKey, $wooConsumerSecret)
                             ->put("{$wooBaseUrl}/products/{$product_id}/variations/{$variationId}", $updateData);
-
+    
                         if ($updateResponse->failed()) {
                             $errorMsg = "WooCommerce update failed for variation {$variationId}: HTTP {$updateResponse->status()} - " . $updateResponse->body();
                             \Log::error($errorMsg);
                             $errors[] = $errorMsg;
                             continue;
                         }
-
+    
                         \Log::info("Successfully updated variation {$variationId} price from {$currentPrice} to {$unit_price}");
-
+    
                         ProductPriceHistory::create([
                             'site_id' => $site_id,
                             'product_id' => $product_id,
@@ -781,7 +785,7 @@ class WordPressController extends Controller
                             'unit_price' => floatval($unit_price),
                             'last_price_changed' => now(),
                         ]);
-
+    
                         $updatedProducts[] = [
                             'variation_id' => $variationId,
                             'product_id' => $product_id,
@@ -799,13 +803,13 @@ class WordPressController extends Controller
                 continue;
             }
         }
-
+    
         \Log::info("Price update summary", [
             'updated_count' => count($updatedProducts),
             'error_count' => count($errors),
             'updated_products' => $updatedProducts
         ]);
-
+    
         return [
             'updated' => $updatedProducts,
             'errors' => $errors,
