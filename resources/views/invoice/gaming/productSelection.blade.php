@@ -755,7 +755,7 @@
             $('input[name="products[]"]').prop('disabled', true);
             $('.product-price').prop('readonly', true);
 
-            $('#product-table-body').html(getLoaderRowHTML());
+            $('#product-table-body').html(getLoaderRowHTML(10));
 
             const priceFrom = $('#hidden_price_from_input_id').val();
             const priceTo = $('#hidden_price_to_input_id').val();
