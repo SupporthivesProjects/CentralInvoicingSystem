@@ -15,8 +15,11 @@
             height: 100%;
             margin: 0;
             padding: 0;
-            overflow: hidden;
             font-family: Arial, Helvetica, sans-serif;
+        }
+        body {
+            background: url({{$invoice_image1}}) no-repeat center center;
+            background-size: cover;
         }
 
         h1,h2,h3,h4,h5,h6,p {
@@ -32,17 +35,8 @@
         <td width="100%" height="100%">
 
             <!-- MAIN BACKGROUND CONTAINER -->
-            <table width="102%" height="102%" cellpadding="0" cellspacing="0"
-                style="
-                    background: url({{$invoice_image1}});
-                    background-size: cover;
-                    background-repeat: no-repeat;
-                    background-position: center;
-                    color: #ffffff;
-                    padding: 30px;
-                    margin-left: -1%;
-                    margin-top: -1%;
-                ">
+            <table width="100%" height="100%" cellpadding="0" cellspacing="0"
+    style="color:#fff; padding:30px;">
 
                 <!-- ================= TOP CONTENT ================= -->
                 <tr>
