@@ -698,7 +698,7 @@ class WordPressController extends Controller
     }
 
 
-    public function updateProductPrices(Request $request)
+    public function updateProductPrice(Request $request)
     {
         $site_id = $request->site_id;
         $products = $request->products;
