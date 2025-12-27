@@ -698,118 +698,84 @@ class WordPressController extends Controller
     }
 
 
-    protected function updateProductPrice(array $productDataArray)
+    public function updateProductPrice(Request $request)
     {
-        $site_id = session('customer.site_id');
+        $site_id = $request->site_id;
+        $products = $request->products;
+    
+        Log::info('Starting product price update', [
+            'site_id' => $site_id,
+            'total_products' => count($products)
+        ]);
+    
         $site = Website::findOrFail($site_id);
-    
-        $updatedProducts = [];
-        $errors = [];
-    
         $consumerKey = $site->consumer_key;
         $consumerSecret = $site->consumer_secret;
         $base = rtrim($site->site_link, '/') . '/wp-json/wc/v3/products';
     
-        \Log::info('Starting product price update', [
-            'site_id' => $site_id,
-            'total_products' => count($productDataArray)
-        ]);
+        $updatedCount = 0;
+        $errorCount = 0;
     
-        foreach ($productDataArray as $data) {
+        foreach ($products as $product) {
+            $variationId = $product['variation_id'];
+            $oldPrice = floatval($product['old_price']);
+            $newPrice = floatval($product['new_price']);
     
-            if (!isset($data['id'], $data['bundle_id'], $data['unit_price'], $data['old_price'])) {
-                \Log::warning('Missing required fields', ['data' => $data]);
+            if (empty($variationId)) {
+                Log::error('Invalid variation ID', [
+                    'variation_id' => $variationId
+                ]);
+                $errorCount++;
                 continue;
             }
     
-            $product_id = (int) $data['id'];
-            $variation_id = (int) $data['bundle_id'];
-            $currentPrice = (float) $data['old_price'];
-            $unit_price = (float) $data['unit_price'];
-    
-            if ($variation_id <= 0) {
-                \Log::warning('Invalid variation ID', ['variation_id' => $variation_id]);
-                continue;
-            }
-    
-            if (abs($currentPrice - $unit_price) < 0.01) {
-                \Log::info('Price unchanged, skipping', [
-                    'product_id' => $product_id,
-                    'variation_id' => $variation_id
+            if (abs($oldPrice - $newPrice) < 0.01) {
+                Log::info('Price unchanged, skipping', [
+                    'variation_id' => $variationId
                 ]);
                 continue;
             }
     
-            try {
-                $endpoint = $base . '/' . $product_id . '/variations/' . $variation_id;
+            $endpoint = $base . '/variations/' . $variationId;
     
-                \Log::info('Updating price via WooCommerce API', [
-                    'endpoint' => $endpoint,
-                    'old_price' => $currentPrice,
-                    'new_price' => $unit_price
+            Log::info('Updating price via WooCommerce API', [
+                'endpoint' => $endpoint,
+                'old_price' => $oldPrice,
+                'new_price' => $newPrice
+            ]);
+    
+            $response = Http::withBasicAuth($consumerKey, $consumerSecret)
+                ->put($endpoint, [
+                    'regular_price' => strval($newPrice),
+                    'price' => strval($newPrice)
                 ]);
     
-                $updateResponse = Http::withBasicAuth($consumerKey, $consumerSecret)
-                    ->timeout(30)
-                    ->put($endpoint, [
-                        'regular_price' => (string) $unit_price,
-                        'sale_price' => ''
-                    ]);
-    
-                if ($updateResponse->failed()) {
-                    $errorMsg = "Product {$product_id}, Variation {$variation_id}: Status {$updateResponse->status()}";
-                    \Log::error('WooCommerce API update failed', [
-                        'product_id' => $product_id,
-                        'variation_id' => $variation_id,
-                        'status' => $updateResponse->status(),
-                        'response' => $updateResponse->body()
-                    ]);
-                    $errors[] = $errorMsg;
-                    continue;
-                }
-    
-                ProductPriceHistory::create([
-                    'site_id' => $site_id,
-                    'product_id' => $product_id,
-                    'bundle' => (string) $variation_id,
-                    'old_price' => $currentPrice,
-                    'unit_price' => $unit_price,
-                    'last_price_changed' => now(),
+            if ($response->successful()) {
+                $updatedCount++;
+                Log::info('Price updated successfully', [
+                    'variation_id' => $variationId,
+                    'new_price' => $newPrice
                 ]);
-    
-                $updatedProducts[] = [
-                    'product_id' => $product_id,
-                    'variation_id' => $variation_id,
-                    'old_price' => $currentPrice,
-                    'new_price' => $unit_price
-                ];
-    
-                \Log::info('Price updated successfully', [
-                    'product_id' => $product_id,
-                    'variation_id' => $variation_id,
-                    'new_price' => $unit_price
+            } else {
+                $errorCount++;
+                Log::error('WooCommerce API update failed', [
+                    'variation_id' => $variationId,
+                    'status' => $response->status(),
+                    'response' => $response->body()
                 ]);
-    
-            } catch (\Exception $e) {
-                $errorMsg = "Exception: Product {$product_id}, Variation {$variation_id} - {$e->getMessage()}";
-                \Log::error('Exception during price update', [
-                    'product_id' => $product_id,
-                    'variation_id' => $variation_id,
-                    'error' => $e->getMessage()
-                ]);
-                $errors[] = $errorMsg;
             }
         }
     
-        \Log::info('Product price update completed', [
-            'updated_count' => count($updatedProducts),
-            'error_count' => count($errors)
+        Log::info('Product price update completed', [
+            'updated_count' => $updatedCount,
+            'error_count' => $errorCount
         ]);
     
-        return [
-            'updated_products' => $updatedProducts,
-            'errors' => $errors
-        ];
+        return response()->json([
+            'success' => true,
+            'updated' => $updatedCount,
+            'errors' => $errorCount
+        ]);
     }
     
 
