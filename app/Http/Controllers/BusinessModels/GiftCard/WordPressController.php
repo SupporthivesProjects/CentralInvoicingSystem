@@ -1440,7 +1440,7 @@ class WordPressController extends Controller
                             ->where('product_id', $product_id)
                             ->update($updatePriceData);
                     }
-
+    
                     if (!empty($updatePriceData)) {
                         $prefix = explode('_', $priceTable)[0] ?? 'wp';
                         $postMetaTable = $prefix . '_postmeta'; 
@@ -1448,7 +1448,7 @@ class WordPressController extends Controller
                             ->table($postMetaTable)
                             ->where('post_id', $product_id)
                             ->where('meta_key', '_price')
-                            ->update($updatePriceData);
+                            ->update(['meta_value' => $new_price]);
                     }
                     
                     ProductPriceHistory::create([
@@ -1462,7 +1462,6 @@ class WordPressController extends Controller
         }
         
     }
-    
 
 
 }
