@@ -1369,6 +1369,8 @@ class WordPressController extends Controller
         $priceTable = $this->productPriceTable; 
         $connection = $this->connectionType;
         
+        \Log::info('updateProductPrice started', ['site_id' => $site_id, 'product_count' => count($productDataArray)]);
+        
         foreach ($productDataArray as $item) {
             $data = json_decode($item, true);
         
@@ -1389,6 +1391,7 @@ class WordPressController extends Controller
                     ->first();
         
                 if (! $product) {
+                    \Log::error('Product not found', ['product_id' => $product_id]);
                     continue;
                 }
         
@@ -1407,6 +1410,7 @@ class WordPressController extends Controller
                 }
         
                 if (empty($updatePostData) && empty($updatePriceData)) {
+                    \Log::info('No changes detected', ['product_id' => $product_id]);
                     continue;
                 }
         
@@ -1419,48 +1423,62 @@ class WordPressController extends Controller
         
                 if (! $lastUpdate) {
                     $shouldUpdate = true;
+                    \Log::info('No price history found, allowing update', ['product_id' => $product_id]);
                 } else {
                     $monthsSinceLast = Carbon::parse($lastUpdate->last_price_changed)->diffInMonths(now());
                     if ($monthsSinceLast >= 3) {
                         $shouldUpdate = true;
+                        \Log::info('3+ months passed, allowing update', ['product_id' => $product_id, 'months_since_last' => $monthsSinceLast]);
+                    } else {
+                        \Log::warning('Price update blocked - less than 3 months', ['product_id' => $product_id, 'months_since_last' => $monthsSinceLast, 'last_changed' => $lastUpdate->last_price_changed]);
                     }
                 }
         
                 if ($shouldUpdate) {
-                    if (!empty($updatePostData)) {
-                        DB::connection($connection)
-                            ->table($postsTable)
-                            ->where('ID', $product_id)
-                            ->update($updatePostData);
-                    }
-        
-                    if (!empty($updatePriceData)) {
-                        DB::connection($connection)
-                            ->table($priceTable)
-                            ->where('product_id', $product_id)
-                            ->update($updatePriceData);
-                    }
+                    try {
+                        if (!empty($updatePostData)) {
+                            DB::connection($connection)
+                                ->table($postsTable)
+                                ->where('ID', $product_id)
+                                ->update($updatePostData);
+                            \Log::info('Post title updated', ['product_id' => $product_id]);
+                        }
+            
+                        if (!empty($updatePriceData)) {
+                            DB::connection($connection)
+                                ->table($priceTable)
+                                ->where('product_id', $product_id)
+                                ->update($updatePriceData);
+                            \Log::info('Price table updated', ['product_id' => $product_id, 'new_price' => $new_price]);
+                        }
     
-                    if (!empty($updatePriceData)) {
-                        $prefix = explode('_', $priceTable)[0] ?? 'wp';
-                        $postMetaTable = $prefix . '_postmeta'; 
-                        DB::connection($connection)
-                            ->table($postMetaTable)
-                            ->where('post_id', $product_id)
-                            ->where('meta_key', '_price')
-                            ->update(['meta_value' => $new_price]);
+                        if (!empty($updatePriceData)) {
+                            $prefix = explode('_', $priceTable)[0] ?? 'wp';
+                            $postMetaTable = $prefix . '_postmeta'; 
+                            DB::connection($connection)
+                                ->table($postMetaTable)
+                                ->where('post_id', $product_id)
+                                ->where('meta_key', '_price')
+                                ->update(['meta_value' => $new_price]);
+                            \Log::info('Postmeta updated', ['product_id' => $product_id, 'table' => $postMetaTable]);
+                        }
+                        
+                        ProductPriceHistory::create([
+                            'site_id'            => $site_id,
+                            'product_id'         => $product_id,
+                            'unit_price'         => $new_price,
+                            'last_price_changed' => now(),
+                        ]);
+                        \Log::info('Price history created', ['product_id' => $product_id, 'new_price' => $new_price]);
+                        
+                    } catch (\Exception $e) {
+                        \Log::error('Failed to update product', ['product_id' => $product_id, 'error' => $e->getMessage()]);
                     }
-                    
-                    ProductPriceHistory::create([
-                        'site_id'            => $site_id,
-                        'product_id'         => $product_id,
-                        'unit_price'         => $new_price,
-                        'last_price_changed' => now(),
-                    ]);
                 }
             }
         }
         
+        \Log::info('updateProductPrice completed');
     }
 
 
