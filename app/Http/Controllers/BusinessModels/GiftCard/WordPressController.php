@@ -1464,6 +1464,12 @@ class WordPressController extends Controller
                                 ->where('meta_key', '_regular_price')
                                 ->update(['meta_value' => $new_price]);
                             
+                            $lookupTable = $prefix . '_wc_product_meta_lookup';
+                            DB::connection($connection)
+                                ->table($lookupTable)
+                                ->where('product_id', $product_id)
+                                ->update(['min_price' => $new_price]);
+                            
                             DB::connection($connection)
                                 ->table($postMetaTable)
                                 ->where('post_id', $product_id)
