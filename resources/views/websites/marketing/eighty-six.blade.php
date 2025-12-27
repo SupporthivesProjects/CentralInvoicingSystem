@@ -43,7 +43,7 @@
                                   <td style="font-weight: bold; padding: 8px;">Customer</td>
                                   <td style="padding: 8px;border-right: 1px solid #000;">{{ $customer_name }}</td>
                                   <td style="font-weight: bold; padding: 8px;">Website</td>
-                                  <td style="padding: 8px;">webstrategix.co</td>
+                                  <td style="padding: 8px;">Webstrategix.co</td>
                                 </tr>
                                 @if(trim(strip_tags($company_email ?? '')) !== '')
                                 <tr>
@@ -131,7 +131,7 @@
 
                             <p style="margin: 0; text-align: right; margin-top: 10px;">
                                 {!! $company_address !!} | {{ $site_name }}<br>
-                                {{ $company_mobile }} | {{ $site->site_link }}
+                                {{ $company_mobile }} | www.{{ parse_url($site->site_link, PHP_URL_HOST) }}
 
                             </p>
                         </td>
