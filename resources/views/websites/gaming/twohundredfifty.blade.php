@@ -46,7 +46,7 @@
                     <td valign="top">
 
                         <!-- HEADER -->
-                        <table width="100%" cellpadding="0" cellspacing="0">
+                        <!-- <table width="100%" cellpadding="0" cellspacing="0">
                             <tr>
                                 <td width="50%">
                                     <img src="{{ $invoice_header_image }}" width="200" style="display:block;">
@@ -57,7 +57,32 @@
                                     <p style="font-size:16px;font-weight:bold;">{{ $customer_name }}</p>
                                 </td>
                             </tr>
-                        </table>
+                        </table> -->
+                        <!-- Logo & Title -->
+                        <table width="100%">
+                                <tr>
+                                    <td width="50%">
+                                        <img src="{{ $invoice_header_image }}" width="200" style="display:block;">
+                                    </td>
+                                    <td width="50%" valign="top" style="">
+                                        <h1 style="font-size:70px;">INVOICE</h1>
+                                        <p style="font-size:15px;margin-bottom: 6px;">Invoice To :</p>
+                                        <p style="font-size:16px;font-weight:bold;margin-bottom: 6px;">{{ $customer_name ? $customer_name : '' }}</p>
+                                        <div style="display: flex;flex-direction: row;justify-content: space-between;align-items: top; gap: 16px;">
+                                            <p style="font-size:8px;line-height: 12px;">
+                                                {!! $company_address !!}
+                                            </p>
+
+                                            <p style="font-size:8px;line-height: 12px;">
+                                                {{ $customer_email ? $customer_email : '' }}<br>
+                                                
+                                            </p>
+
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+
 
                         <!-- INVOICE META -->
                         <table width="100%" cellpadding="0" cellspacing="0"
@@ -74,7 +99,7 @@
 
                         <!-- DESCRIPTION TABLE -->
                         <table width="100%" cellpadding="8" cellspacing="0"
-                            style="background:#121a3d;border-radius:8px;border:1px solid #ffffff;">
+                            style="background:#121a3d;border-radius:8px;border:1px solid #ffffff;padding:15px;">
 
                             <tr style="font-weight:bold;text-transform:uppercase;">
                                 <td>Description</td>
@@ -130,8 +155,12 @@
                         <table width="100%" cellpadding="0" cellspacing="0">
                             <tr>
                                 <td style="font-size:10px;">
-                                    <b>Email</b><br>
-                                    {{ $company_email }}
+                                    <b>Email</b>: {{ $company_email }}<br>
+                                    
+                                </td>
+                                <td style="font-size:10px;">
+                                    <b>Contact</b>: {{ $company_mobile }}<br>
+                                    
                                 </td>
                                 <td align="right">
                                     <b>THANK YOU!</b><br>
