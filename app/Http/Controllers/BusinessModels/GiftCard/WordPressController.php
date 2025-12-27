@@ -1288,7 +1288,7 @@ class WordPressController extends Controller
         $invoice_data['products'] = $products;
         $invoice_data['product_ids'] = $productIds;
     
-        $this->updateProductPrice($productDataArray);
+        #$this->updateProductPrice($productDataArray);
         InvoiceController::createInvoiceHistory($invoice_data);
     
         $modelType = strtolower($site->businessModel->model_type);
