@@ -156,12 +156,9 @@
                             <tr>
                                 <td style="font-size:10px;">
                                     <b>Email</b>: {{ $company_email }}<br>
-                                    
-                                </td>
-                                <td style="font-size:10px;">
                                     <b>Contact</b>: {{ $company_mobile }}<br>
-                                    
                                 </td>
+                                
                                 <td align="right">
                                     <b>THANK YOU!</b><br>
                                     <span style="font-size:12px;">{{ $company_email }}</span>
