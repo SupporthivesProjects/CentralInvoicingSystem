@@ -725,8 +725,11 @@ class WordPressController extends Controller
             $currentPrice = (float) $data['old_price'];
             $unit_price = (float) $data['unit_price'];
     
-            if ($variation_id <= 0) {
-                \Log::warning('Invalid variation ID', ['variation_id' => $variation_id]);
+            if ($product_id <= 0 || $variation_id <= 0) {
+                \Log::warning('Invalid product or variation ID', [
+                    'product_id' => $product_id,
+                    'variation_id' => $variation_id
+                ]);
                 continue;
             }
     
@@ -739,38 +742,22 @@ class WordPressController extends Controller
             }
     
             try {
-                if ($product_id <= 0) {
-                    $fetchEndpoint = $base . '?include=' . $variation_id . '&type=variation';
-                    
-                    \Log::info('Fetching parent product ID', [
-                        'variation_id' => $variation_id,
-                        'endpoint' => $fetchEndpoint
-                    ]);
-    
-                    $fetchResponse = Http::withBasicAuth($consumerKey, $consumerSecret)
-                        ->timeout(30)
-                        ->get($fetchEndpoint);
-    
-                    if ($fetchResponse->successful() && !empty($fetchResponse->json())) {
-                        $variationData = $fetchResponse->json()[0] ?? null;
-                        if ($variationData && isset($variationData['parent_id'])) {
-                            $product_id = (int) $variationData['parent_id'];
-                            \Log::info('Parent product ID found', [
-                                'variation_id' => $variation_id,
-                                'parent_id' => $product_id
-                            ]);
-                        }
-                    }
-    
-                    if ($product_id <= 0) {
-                        $errorMsg = "Could not fetch parent product ID for variation {$variation_id}";
-                        \Log::error($errorMsg);
-                        $errors[] = $errorMsg;
-                        continue;
-                    }
-                }
-    
                 $endpoint = $base . '/' . $product_id . '/variations/' . $variation_id;
+    
+                $verifyResponse = Http::withBasicAuth($consumerKey, $consumerSecret)
+                    ->timeout(30)
+                    ->get($endpoint);
+    
+                if ($verifyResponse->failed()) {
+                    $errorMsg = "Variation {$variation_id} does not exist for product {$product_id}";
+                    \Log::error('Variation not found, skipping update', [
+                        'product_id' => $product_id,
+                        'variation_id' => $variation_id,
+                        'status' => $verifyResponse->status()
+                    ]);
+                    $errors[] = $errorMsg;
+                    continue;
+                }
     
                 \Log::info('Updating price via WooCommerce API', [
                     'endpoint' => $endpoint,
@@ -783,8 +770,8 @@ class WordPressController extends Controller
                 $updateResponse = Http::withBasicAuth($consumerKey, $consumerSecret)
                     ->timeout(30)
                     ->put($endpoint, [
-                        'regular_price' => (string) $unit_price,
-                        'sale_price' => ''
+                        'regular_price' => number_format($unit_price, 2, '.', ''),
+                        'sale_price' => number_format($unit_price, 2, '.', '')
                     ]);
     
                 if ($updateResponse->failed()) {
