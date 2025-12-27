@@ -6,8 +6,18 @@
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
 
     <style>
+        @page {
+            margin: 0;
+            size: A4;
+        }
         h1,h2,h3,h4,h5,h6,p {
             margin: 0px;
+        }
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
         }
     </style>
 
@@ -15,15 +25,15 @@
 
 <body style="margin:0; padding:0; background: #fff; font-family: Arial, Helvetica, sans-serif;">
 
-    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="padding:0px;">
+    <table width="100%" height="100%"  border="0" cellspacing="0" cellpadding="0" style="padding:0px;">
         <tr>
-            <td>
+            <td width="100%" height="100%">
 
                 <!-- Main Container -->
-                <table align="center" width="650" cellpadding="0" cellspacing="0"
-                    style="background: url({{$invoice_image1}}); color:white; padding:30px;">
+                <table width="100%" height="100%" cellpadding="0" cellspacing="0"
+                    style="background: url({{$invoice_image1}});background-size: cover; background-position: center; color: white; padding:30px;">
                     <tr>
-                        <td style="padding:0px;">
+                        <td style="padding:0px;" >
 
                             <!-- Logo & Title -->
                             <table width="100%">
