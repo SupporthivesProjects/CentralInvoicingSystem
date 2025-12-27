@@ -158,15 +158,13 @@
                                                     <table width="100%" cellspacing="0" cellpadding="0" style="margin-top:0px; font-size:14px;">
                                                         <tr>
                                                             <td style="width: 20%;">
-                                                                <p style="font-size:10px;line-height: 12px;font-weight: bold;">Address</p>
+                                                                <p style="font-size:10px;line-height: 12px;font-weight: bold;">{{ $company_name }}</p>
                                                             </td>
-                                                            <td style="width: 80%;">
-                                                                <p style="font-size:8px;line-height: 12px;">{!! $company_address !!}</p>
-                                                            </td>
+    
                                                         </tr>
                                                         <tr>
                                                             <td style="width: 20%;">
-                                                                <p style="font-size:10px;line-height: 12px;font-weight: bold;">EMAIL</p>
+                                                                <p style="font-size:10px;line-height: 12px;font-weight: bold;">Email</p>
                                                             </td>
                                                             <td style="width: 80%;">
                                                                 <p style="font-size:8px;line-height: 12px;">{{ $company_email }},</p>
@@ -174,7 +172,7 @@
                                                         </tr>
                                                         <tr>
                                                             <td style="width: 20%;">
-                                                                <p style="font-size:10px;line-height: 12px;font-weight: bold;">CONTACT NO.</p>
+                                                                <p style="font-size:10px;line-height: 12px;font-weight: bold;">Contact</p>
                                                             </td>
                                                             <td style="width: 80%;">
                                                                 <p style="font-size:8px;line-height: 12px;">{{ $company_mobile }}</p>
