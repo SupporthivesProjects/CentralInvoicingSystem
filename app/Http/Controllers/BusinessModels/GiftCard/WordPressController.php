@@ -1384,6 +1384,7 @@ class WordPressController extends Controller
                     ->select([
                         "$postsTable.ID as id",
                         "$postsTable.post_title as name",
+                        "$postsTable.post_type as type",
                         "$priceTable.min_price as unit_price"
                     ])
                     ->first();
@@ -1428,6 +1429,11 @@ class WordPressController extends Controller
         
                 if ($shouldUpdate) {
                     try {
+                        $prefix = explode('_', $priceTable)[0] ?? 'wp';
+                        $postMetaTable = $prefix . '_postmeta'; 
+                        $lookupTable = $prefix . '_wc_product_meta_lookup';
+                        $optionsTable = $prefix . '_options';
+                        
                         if (!empty($updatePostData)) {
                             DB::connection($connection)
                                 ->table($postsTable)
@@ -1436,51 +1442,74 @@ class WordPressController extends Controller
                         }
             
                         if (!empty($updatePriceData)) {
-                            DB::connection($connection)
-                                ->table($priceTable)
-                                ->where('product_id', $product_id)
-                                ->update($updatePriceData);
+                            
+                            $variations = DB::connection($connection)
+                                ->table($postsTable)
+                                ->where('post_parent', $product_id)
+                                ->where('post_type', 'product_variation')
+                                ->where('post_status', 'publish')
+                                ->pluck('ID');
+                            
+                            $productIds = collect([$product_id])->merge($variations)->toArray();
+                            
+                            foreach ($productIds as $pid) {
+                                DB::connection($connection)
+                                    ->table($postMetaTable)
+                                    ->where('post_id', $pid)
+                                    ->where('meta_key', '_price')
+                                    ->update(['meta_value' => $new_price]);
                                 
-                            \Log::info('Price updated', [
-                                'product_id' => $product_id,
-                                'from' => $current_price,
-                                'to' => $new_price
-                            ]);
-                        }
-    
-                        if (!empty($updatePriceData)) {
-                            $prefix = explode('_', $priceTable)[0] ?? 'wp';
-                            $postMetaTable = $prefix . '_postmeta'; 
+                                DB::connection($connection)
+                                    ->table($postMetaTable)
+                                    ->where('post_id', $pid)
+                                    ->where('meta_key', '_regular_price')
+                                    ->update(['meta_value' => $new_price]);
+                                
+                                DB::connection($connection)
+                                    ->table($postMetaTable)
+                                    ->where('post_id', $pid)
+                                    ->where('meta_key', '_sale_price')
+                                    ->delete();
+                                
+                                $lookupExists = DB::connection($connection)
+                                    ->select("SHOW TABLES LIKE '{$lookupTable}'");
+                                    
+                                if (!empty($lookupExists)) {
+                                    DB::connection($connection)
+                                        ->table($lookupTable)
+                                        ->where('product_id', $pid)
+                                        ->update([
+                                            'min_price' => $new_price,
+                                            'max_price' => $new_price
+                                        ]);
+                                }
+                                
+                                DB::connection($connection)
+                                    ->table($priceTable)
+                                    ->where('product_id', $pid)
+                                    ->update(['min_price' => $new_price]);
+                                
+                                DB::connection($connection)
+                                    ->table($postsTable)
+                                    ->where('ID', $pid)
+                                    ->update([
+                                        'post_modified' => now(),
+                                        'post_modified_gmt' => now()
+                                    ]);
+                                
+                                DB::connection($connection)
+                                    ->table($postMetaTable)
+                                    ->where('post_id', $pid)
+                                    ->whereIn('meta_key', ['_price_hash', '_wc_average_rating', '_wc_review_count', '_product_version'])
+                                    ->delete();
+                            }
                             
-                            DB::connection($connection)
-                                ->table($postMetaTable)
-                                ->where('post_id', $product_id)
-                                ->where('meta_key', '_price')
-                                ->update(['meta_value' => $new_price]);
-                            
-                            DB::connection($connection)
-                                ->table($postMetaTable)
-                                ->where('post_id', $product_id)
-                                ->where('meta_key', '_regular_price')
-                                ->update(['meta_value' => $new_price]);
-                            
-                            $lookupTable = $prefix . '_wc_product_meta_lookup';
-                            DB::connection($connection)
-                                ->table($lookupTable)
-                                ->where('product_id', $product_id)
-                                ->update(['min_price' => $new_price]);
-                            
-                            DB::connection($connection)
-                                ->table($postMetaTable)
-                                ->where('post_id', $product_id)
-                                ->whereIn('meta_key', ['_price_hash', '_wc_average_rating', '_wc_review_count'])
-                                ->delete();
-                            
-                            $optionsTable = $prefix . '_options';
                             DB::connection($connection)
                                 ->table($optionsTable)
-                                ->where('option_name', 'LIKE', '%transient%')
-                                ->where('option_name', 'LIKE', '%' . $product_id . '%')
+                                ->where(function($query) {
+                                    $query->where('option_name', 'LIKE', '_transient_%')
+                                          ->orWhere('option_name', 'LIKE', '_site_transient_%');
+                                })
                                 ->delete();
                                 
                             DB::connection($connection)
@@ -1488,6 +1517,13 @@ class WordPressController extends Controller
                                 ->where('post_id', $product_id)
                                 ->where('meta_key', '_edit_last')
                                 ->update(['meta_value' => time()]);
+                                
+                            \Log::info('Price updated for parent and variations', [
+                                'product_id' => $product_id,
+                                'variations' => $variations,
+                                'from' => $current_price,
+                                'to' => $new_price
+                            ]);
                         }
                         
                         ProductPriceHistory::create([
