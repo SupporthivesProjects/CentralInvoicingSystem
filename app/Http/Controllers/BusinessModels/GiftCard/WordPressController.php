@@ -1407,6 +1407,7 @@ class WordPressController extends Controller
         
                 if ($current_price !== $new_price) {
                     $updatePriceData['min_price'] = $new_price;
+                    $updatePriceData['max_price'] = $new_price;
                 }
         
                 if (empty($updatePostData) && empty($updatePriceData)) {
@@ -1460,7 +1461,14 @@ class WordPressController extends Controller
                                 ->where('post_id', $product_id)
                                 ->where('meta_key', '_price')
                                 ->update(['meta_value' => $new_price]);
-                            \Log::info('Postmeta updated', ['product_id' => $product_id, 'table' => $postMetaTable]);
+                            \Log::info('Postmeta _price updated', ['product_id' => $product_id, 'table' => $postMetaTable]);
+                            
+                            DB::connection($connection)
+                                ->table($postMetaTable)
+                                ->where('post_id', $product_id)
+                                ->where('meta_key', '_regular_price')
+                                ->update(['meta_value' => $new_price]);
+                            \Log::info('Postmeta _regular_price updated', ['product_id' => $product_id]);
                         }
                         
                         ProductPriceHistory::create([
@@ -1480,6 +1488,5 @@ class WordPressController extends Controller
         
         \Log::info('updateProductPrice completed');
     }
-
 
 }
