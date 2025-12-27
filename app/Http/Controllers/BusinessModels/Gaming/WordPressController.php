@@ -630,7 +630,7 @@ class WordPressController extends Controller
             ];
         }
 
-        $invoice_data['products'] = $selecetd_Products;
+        $invoice_data['products'] = $selected_Products;
         
         $modelType = strtolower($site->businessModel->model_type);
         $siteWords = numberToWords($site->id);
@@ -638,7 +638,7 @@ class WordPressController extends Controller
     
         $this->updateProductPrice($processedProducts);
     
-        InvoiceController::createInvoiceHistory($invoice_data, $selecetd_Products);
+        InvoiceController::createInvoiceHistory($invoice_data, $selected_Products);
         
         if ($request->filled('invoice_file_name')) {
             $filename = $request->input('invoice_file_name') . '.pdf';
