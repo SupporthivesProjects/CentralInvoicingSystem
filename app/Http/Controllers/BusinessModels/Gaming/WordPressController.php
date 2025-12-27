@@ -697,7 +697,6 @@ class WordPressController extends Controller
         }, $filename);
     }
 
-
     protected function updateProductPrice(array $productDataArray)
     {
         $site_id = session('customer.site_id');
@@ -741,10 +740,42 @@ class WordPressController extends Controller
             }
     
             try {
-                $endpoint = $base . '/variations/' . $variation_id;
+                if ($product_id <= 0) {
+                    $fetchEndpoint = $base . '?include=' . $variation_id . '&type=variation';
+                    
+                    \Log::info('Fetching parent product ID', [
+                        'variation_id' => $variation_id,
+                        'endpoint' => $fetchEndpoint
+                    ]);
+    
+                    $fetchResponse = Http::withBasicAuth($consumerKey, $consumerSecret)
+                        ->timeout(30)
+                        ->get($fetchEndpoint);
+    
+                    if ($fetchResponse->successful() && !empty($fetchResponse->json())) {
+                        $variationData = $fetchResponse->json()[0] ?? null;
+                        if ($variationData && isset($variationData['parent_id'])) {
+                            $product_id = (int) $variationData['parent_id'];
+                            \Log::info('Parent product ID found', [
+                                'variation_id' => $variation_id,
+                                'parent_id' => $product_id
+                            ]);
+                        }
+                    }
+    
+                    if ($product_id <= 0) {
+                        $errorMsg = "Could not fetch parent product ID for variation {$variation_id}";
+                        \Log::error($errorMsg);
+                        $errors[] = $errorMsg;
+                        continue;
+                    }
+                }
+    
+                $endpoint = $base . '/' . $product_id . '/variations/' . $variation_id;
     
                 \Log::info('Updating price via WooCommerce API', [
                     'endpoint' => $endpoint,
+                    'product_id' => $product_id,
                     'variation_id' => $variation_id,
                     'old_price' => $currentPrice,
                     'new_price' => $unit_price
@@ -758,8 +789,9 @@ class WordPressController extends Controller
                     ]);
     
                 if ($updateResponse->failed()) {
-                    $errorMsg = "Variation {$variation_id}: Status {$updateResponse->status()}";
+                    $errorMsg = "Product {$product_id}, Variation {$variation_id}: Status {$updateResponse->status()}";
                     \Log::error('WooCommerce API update failed', [
+                        'product_id' => $product_id,
                         'variation_id' => $variation_id,
                         'status' => $updateResponse->status(),
                         'response' => $updateResponse->body()
@@ -785,6 +817,7 @@ class WordPressController extends Controller
                 ];
     
                 \Log::info('Price updated successfully', [
+                    'product_id' => $product_id,
                     'variation_id' => $variation_id,
                     'new_price' => $unit_price
                 ]);
@@ -809,7 +842,6 @@ class WordPressController extends Controller
             'errors' => $errors
         ];
     }
-    
 
 
     private function getGameDetails(array $sessongames)
