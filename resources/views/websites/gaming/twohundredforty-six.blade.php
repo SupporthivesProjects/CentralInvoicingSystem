@@ -45,7 +45,7 @@
                                 <!-- INVOICE NUMBER + DATE -->
                                 <tr>
                                     <td colspan="2" style="padding-top:4px;">
-                                        <table width="53%" cellpadding="0" cellspacing="0">
+                                        <table width="35%" cellpadding="0" cellspacing="0">
                                             <tr>
                                                 <td align="left" style="font-family:serif; color:#ffffff; font-size:9px;">
                                                     Invoice #{{ $invoice_number }}
@@ -63,7 +63,7 @@
                             <!-- INVOICE TO -->
                             <table width="100%" cellpadding="0" cellspacing="0" style="padding:40px 0 20px;">
                                 <tr>
-                                    <td align="center" style="color:#ffffff; font-family:Arial; font-size:9px;">
+                                    <td align="center" style="color:#ffffff; font-family:Arial; font-size:10px;">
                                         Invoice To :
                                     </td>
                                 </tr>
@@ -82,7 +82,7 @@
                                 <!-- CUSTOMER DETAILS -->
                                 <tr>
                                     <td align="center"
-                                        style="color:#ffffff; font-family:Arial; font-size:9px; padding-top:16px;">
+                                        style="color:#ffffff; font-family:Arial; font-size:16px; padding-top:16px;">
                                         {{ $customer_name }} <br>
                                         {{ $customer_email }}
                                     </td>
@@ -96,38 +96,38 @@
 
                                 <tr>
                                     <td width="40%" style="background:#ff29e4; color:#ffffff; font-family:Arial;
-                                                           font-size:9px; padding:10px 40px; font-weight:bold;">
+                                                           font-size:13px; padding:10px 40px; font-weight:bold;">
                                         DESCRIPTION
                                     </td>
                                     <td width="20%" style="background:#ff29e4; color:#ffffff; font-family:Arial;
-                                                           font-size:9px; padding:10px 40px; font-weight:bold;">
+                                                           font-size:13px; padding:10px 20px; font-weight:bold;">
                                         UNIT PRICE
                                     </td>
                                     <td width="10%" style="background:#ff29e4; color:#ffffff; font-family:Arial;
-                                                           font-size:9px; padding:10px 40px; font-weight:bold;">
+                                                           font-size:13px; padding:10px 40px; font-weight:bold;">
                                         QTY
                                     </td>
                                     <td width="20%" style="background:#ff29e4; color:#ffffff; font-family:Arial;
-                                                           font-size:9px; padding:10px 40px; font-weight:bold;">
+                                                           font-size:13px; padding:10px 40px; font-weight:bold;">
                                         TOTAL
                                     </td>
                                 </tr>
 
                                 @foreach($products as $product)
                                 <tr>
-                                    <td style="color:#ffffff; font-family:Arial; font-size:9px;
+                                    <td style="color:#ffffff; font-family:Arial; font-size:13px;
                                                padding:10px 40px; border-bottom:1px solid;">
                                         {{ $product['name'] }}
                                     </td>
-                                    <td style="color:#ffffff; font-family:Arial; font-size:9px;
-                                               padding:10px 40px; border-bottom:1px solid;">
+                                    <td style="color:#ffffff; font-family:Arial; font-size:13px;
+                                               padding:10px 20px; border-bottom:1px solid;">
                                         {{ site_currency() . number_format($product['unit_price'], 2) }}
                                     </td>
-                                    <td style="color:#ffffff; font-family:Arial; font-size:9px;
+                                    <td style="color:#ffffff; font-family:Arial; font-size:13px;
                                                padding:10px 40px; border-bottom:1px solid;">
                                         1
                                     </td>
-                                    <td style="color:#ffffff; font-family:Arial; font-size:9px;
+                                    <td style="color:#ffffff; font-family:Arial; font-size:13px;
                                                padding:10px 40px; border-bottom:1px solid;">
                                         {{ site_currency() . number_format($product['unit_price'], 2) }}
                                     </td>
@@ -142,19 +142,19 @@
                                    style="padding-top:40px; margin-left:auto; margin-right:40px;">
 
                                 <tr>
-                                    <td align="right" style="color:#fff; font-family:Arial; font-size:9px;">
+                                    <td align="right" style="color:#fff; font-family:Arial; font-size:13px;">
                                         Sub Total
                                     </td>
-                                    <td width="120" align="right" style="color:#fff; font-family:Arial; font-size:9px;">
+                                    <td width="120" align="right" style="color:#fff; font-family:Arial; font-size:13px;">
                                         {{ site_currency() . number_format($invoice_amount + $discount_amount, 2) }}
                                     </td>
                                 </tr>
 
                                 <tr>
-                                    <td align="right" style="color:#fff; font-family:Arial; font-size:9px; padding-top:6px;">
+                                    <td align="right" style="color:#fff; font-family:Arial; font-size:13px; padding-top:6px;">
                                         Discount
                                     </td>
-                                    <td align="right" style="color:#fff; font-family:Arial; font-size:9px; padding-top:6px;">
+                                    <td align="right" style="color:#fff; font-family:Arial; font-size:13px; padding-top:6px;">
                                         {{ site_currency() . number_format($discount_amount, 2) }}
                                     </td>
                                 </tr>
@@ -171,11 +171,11 @@
 
                                 <tr>
                                     <td align="right"
-                                        style="color:#ff29e4; font-family:Arial; font-size:9px; font-weight:bold; padding-top:6px;">
+                                        style="color:#ff29e4; font-family:Arial; font-size:13px; font-weight:bold; padding-top:6px;">
                                         TOTAL
                                     </td>
                                     <td align="right"
-                                        style="color:#ff29e4; font-family:Arial; font-size:9px; font-weight:bold; padding-top:6px;">
+                                        style="color:#ff29e4; font-family:Arial; font-size:13px; font-weight:bold; padding-top:6px;">
                                         {{ site_currency() . number_format($invoice_amount, 2) }}
                                     </td>
                                 </tr>
