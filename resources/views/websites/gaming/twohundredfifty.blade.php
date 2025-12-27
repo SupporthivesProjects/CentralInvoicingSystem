@@ -15,6 +15,7 @@
             height: 100%;
             margin: 0;
             padding: 0;
+            overflow: hidden;
             font-family: Arial, Helvetica, sans-serif;
         }
 
@@ -31,7 +32,7 @@
         <td width="100%" height="100%">
 
             <!-- MAIN BACKGROUND CONTAINER -->
-            <table width="100%" height="100%" cellpadding="0" cellspacing="0"
+            <table width="102%" height="102%" cellpadding="0" cellspacing="0"
                 style="
                     background: url({{$invoice_image1}});
                     background-size: cover;
@@ -39,6 +40,8 @@
                     background-position: center;
                     color: #ffffff;
                     padding: 30px;
+                    margin-left: -1%;
+                    margin-top: -1%;
                 ">
 
                 <!-- ================= TOP CONTENT ================= -->
@@ -156,12 +159,9 @@
                             <tr>
                                 <td style="font-size:10px;">
                                     <b>Email</b>: {{ $company_email }}<br>
-                                    
-                                </td>
-                                <td style="font-size:10px;">
                                     <b>Contact</b>: {{ $company_mobile }}<br>
-                                    
                                 </td>
+                                
                                 <td align="right">
                                     <b>THANK YOU!</b><br>
                                     <span style="font-size:12px;">{{ $company_email }}</span>
