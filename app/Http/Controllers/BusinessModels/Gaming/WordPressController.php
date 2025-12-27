@@ -617,12 +617,12 @@ class WordPressController extends Controller
             'site_id'              => $site->id,
         ]);
     
-        $selecetd_Products = $request->input('products', []);
+        $selected_Products = $request->input('products', []);
         $processedProducts = [];
 
-        foreach ($selecetd_Products as $product) {
+        foreach ($selected_Products as $productId => $product) {
             $processedProducts[] = [
-                'id' => (int) ($product['id'] ?? 0),
+                'id' => (int) $productId,
                 'bundle_id' => (int) ($product['bundle_id'] ?? 0),
                 'old_price' => (float) ($product['original_price'] ?? 0),
                 'unit_price' => (float) ($product['unit_price'] ?? 0),
@@ -630,7 +630,6 @@ class WordPressController extends Controller
             ];
         }
 
-    
         $invoice_data['products'] = $selecetd_Products;
         
         $modelType = strtolower($site->businessModel->model_type);
