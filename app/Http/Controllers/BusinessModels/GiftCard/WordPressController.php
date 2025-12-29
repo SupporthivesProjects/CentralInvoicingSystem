@@ -68,7 +68,8 @@ class WordPressController extends Controller
             ->join($priceTable, "$postsTable.ID", '=', "$priceTable.product_id")
             ->select(
                 "$postsTable.ID as id",
-                "$priceTable.product_id as variation_id",
+                "$postsTable.post_parent as parent_id",
+                "$postsTable.post_type as post_type",
                 "$postsTable.post_title as name",
                 "$postsTable.post_excerpt as description",
                 "$postsTable.post_name as slug",
@@ -103,6 +104,21 @@ class WordPressController extends Controller
                 'message' => 'No products found in this range or category.'
             ]);
         }
+    
+        $allProducts->transform(function ($product) use ($connection, $postsTable) {
+            if ($product->post_type === 'product_variation') {
+                $product->variation_id = $product->id;
+                $product->id = $product->parent_id;
+            } else {
+                $product->variation_id = DB::connection($connection)
+                    ->table($postsTable)
+                    ->where('post_parent', $product->id)
+                    ->where('post_type', 'product_variation')
+                    ->where('post_status', 'publish')
+                    ->value('ID') ?? 0;
+            }
+            return $product;
+        });
     
         $lastUsedCombinations = session()->get('last_used_combinations', []);
     
@@ -147,7 +163,12 @@ class WordPressController extends Controller
             $product->discount = 0;
         });
     
-        $productList = $bestMatch->map(fn($p) => ['id' => $p->id, 'unit_price' => $p->unit_price])->toArray();
+        $productList = $bestMatch->map(fn($p) => [
+            'id' => $p->id,
+            'variation_id' => $p->variation_id,
+            'unit_price' => $p->unit_price
+        ])->toArray();
+    
         session()->forget('ready_products');
         session()->put('ready_products', $productList);
         session(['current_amount' => $bestTotal]);
