@@ -1185,46 +1185,52 @@ class WordPressController extends Controller
         $company_detail_type = $request->input('company_detail_type');
     
         if ($company_detail_type === 'remote') {
-            $invoice_data['site_name'] = $request->input('remote_site_name') ?? '';
-            $invoice_data['company_name'] = $request->input('remote_company_name') ?? '';
-            $invoice_data['company_email'] = $request->input('remote_company_email') ?? '';
-            $invoice_data['company_mobile'] = $request->input('remote_company_mobile') ?? '';
-            $invoice_data['company_address'] = $request->input('remote_company_address') ?? '';
+
+            $invoice_data['site_name']          = $request->input('remote_site_name') ?? '';
+            $invoice_data['company_name']       = $request->input('remote_company_name') ?? '';
+            $invoice_data['company_email']      = $request->input('remote_company_email') ?? '';
+            $invoice_data['company_mobile']     = $request->input('remote_company_mobile') ?? '';
+            $invoice_data['company_address']    = $request->input('remote_company_address') ?? '';
             $invoice_data['registration_number'] = $request->input('remote_registration_number') ?? '';
-            $invoice_data['license_number'] = $request->input('remote_license_number') ?? '';
-    
+            $invoice_data['license_number']      = $request->input('remote_license_number') ?? '';
+        
             $remote_database = DB::connection($this->connectionType)->table('general_settings')->orderByDesc('updated_at')->first();
-    
+        
             if ($remote_database) {
                 DB::connection($this->connectionType)->table('general_settings')->where('id', $remote_database->id)
                     ->update([
-                        'site_name' => $request->input('remote_site_name') ?? '',
-                        'email' => $request->input('remote_company_email') ?? '',
-                        'phone' => $request->input('remote_company_mobile') ?? '',
-                        'address' => $request->input('remote_company_address') ?? '',
-                        'updated_at' => now(),
+                        'site_name'            => $request->input('remote_site_name') ?? '',
+                        //'company_name'        => $request->input('remote_company_name') ?? '',
+                        'email'                => $request->input('remote_company_email') ?? '',
+                        'phone'                => $request->input('remote_company_mobile') ?? '',
+                        'address'              => $request->input('remote_company_address') ?? '',
+                       // 'registration_number'  => $request->input('remote_registration_number') ?? '',
+                       // 'license_number'       => $request->input('remote_license_number') ?? '',
+                        'updated_at'           => now(),
                     ]);
             }
+        
         } else {
-            $invoice_data['site_name'] = $request->input('local_site_name') ?? '';
-            $invoice_data['company_name'] = $request->input('local_company_name') ?? '';
-            $invoice_data['company_email'] = $request->input('local_company_email') ?? '';
-            $invoice_data['company_mobile'] = $request->input('local_company_mobile') ?? '';
-            $invoice_data['company_address'] = $request->input('local_company_address') ?? '';
+        
+            $invoice_data['site_name']          = $request->input('local_site_name') ?? '';
+            $invoice_data['company_name']       = $request->input('local_company_name') ?? '';
+            $invoice_data['company_email']      = $request->input('local_company_email') ?? '';
+            $invoice_data['company_mobile']     = $request->input('local_company_mobile') ?? '';
+            $invoice_data['company_address']    = $request->input('local_company_address') ?? '';
             $invoice_data['registration_number'] = $request->input('registration_number') ?? '';
-            $invoice_data['license_number'] = $request->input('license_number') ?? '';
-    
-            $site->site_name = $invoice_data['site_name'];
-            $site->company_name = $invoice_data['company_name'];
-            $site->company_email = $invoice_data['company_email'];
-            $site->company_mobile = $invoice_data['company_mobile'];
-            $site->company_address = $invoice_data['company_address'];
+            $invoice_data['license_number']      = $request->input('license_number') ?? '';
+        
+            $site->site_name          = $invoice_data['site_name'];
+            $site->company_name       = $invoice_data['company_name'];
+            $site->company_email      = $invoice_data['company_email'];
+            $site->company_mobile     = $invoice_data['company_mobile'];
+            $site->company_address    = $invoice_data['company_address'];
             $site->registration_number = $invoice_data['registration_number'];
-            $site->license_number = $invoice_data['license_number'];
-    
+            $site->license_number      = $invoice_data['license_number'];
+        
             $site->save();
         }
-    
+        
         $invoice_data['invoice_header_image'] = base64EncodeImage($site->invoice_header_image);
         $invoice_data['invoice_footer_image'] = base64EncodeImage($site->invoice_footer_image);
         $invoice_data['invoice_signature'] = base64EncodeImage($site->invoice_signature);
@@ -1250,39 +1256,39 @@ class WordPressController extends Controller
                 $customPrices[$data['product_id']] = $data['unit_price'];
             }
         }
-    
-        $postsTable = $this->productTable;
-        $priceTable = $this->productPriceTable;
-        $connection = $this->connectionType;
-    
-        $products = DB::connection($connection)
-            ->table($postsTable)
-            ->join($priceTable, "$postsTable.ID", '=', "$priceTable.product_id")
-            ->whereIn("$postsTable.ID", $productIds)
-            ->select([
-                "$postsTable.ID as id",
-                "$postsTable.post_title as name",
-                "$postsTable.post_excerpt as description",
-                "$postsTable.post_name as slug",
-                "$priceTable.min_price as unit_price"
-            ])
-            ->get()
-            ->sortBy(function ($product) use ($productIds) {
-                return array_search($product->id, $productIds);
-            })
-            ->values()
-            ->map(function ($product) use ($customPrices) {
-                $product->unit_price = $customPrices[$product->id] ?? $product->unit_price;
-                $product->category_name = '-';
-                $product->rrp = $product->unit_price;
-                $product->discount = 0;
-                return $product;
-            });
-    
+
+    $postsTable = $this->productTable;
+    $priceTable = $this->productPriceTable;
+    $connection = $this->connectionType;
+
+    $products = DB::connection($connection)
+        ->table($postsTable)
+        ->join($priceTable, "$postsTable.ID", '=', "$priceTable.product_id")
+        ->whereIn("$postsTable.ID", $productIds)
+        ->select([
+            "$postsTable.ID as id",
+            "$postsTable.post_title as name",
+            "$postsTable.post_excerpt as description",
+            "$postsTable.post_name as slug",
+            "$priceTable.min_price as unit_price"
+        ])
+        ->get()
+        ->sortBy(function ($product) use ($productIds) {
+            return array_search($product->id, $productIds);
+        })
+        ->values()
+        ->map(function ($product) use ($customPrices) {
+            $product->unit_price = $customPrices[$product->id] ?? $product->unit_price;
+            $product->category_name = '-';
+            $product->rrp = $product->unit_price;
+            $product->discount = 0;
+            return $product;
+        });
+
         $invoice_data['products'] = $products;
         $invoice_data['product_ids'] = $productIds;
     
-        $this->updateProductPrice($productDataArray);
+        #$this->updateProductPrice($productDataArray);
         InvoiceController::createInvoiceHistory($invoice_data);
     
         $modelType = strtolower($site->businessModel->model_type);
@@ -1293,13 +1299,20 @@ class WordPressController extends Controller
             ? $request->input('invoice_file_name') . '.pdf'
             : $invoice_data['invoice_number'] . '.pdf';
     
-        try {
-            return $this->generateWithApi2Pdf($site, $viewPath, $invoice_data, $filename);
-        } catch (\Exception $e) {
-            return $this->generateWithDompdf($site, $viewPath, $invoice_data, $filename);
-        }
-    }
+            $filename = $request->filled('invoice_file_name')
+            ? $request->input('invoice_file_name') . '.pdf'
+            : $invoice_data['invoice_number'] . '.pdf';
+            
+            try {
+                return $this->generateWithApi2Pdf($site, $viewPath, $invoice_data, $filename);
+
+            } catch (\Exception $e) {
+                // Fallback to Dompdf if API2PDF fails
+                return $this->generateWithDompdf($site, $viewPath, $invoice_data, $filename);
+            }
     
+    }
+
     protected function generateWithApi2Pdf($site, $viewPath, $invoice_data, $filename)
     {
         $html = View::make($viewPath, $invoice_data)->render();
@@ -1352,184 +1365,179 @@ class WordPressController extends Controller
     protected function updateProductPrice(array $productDataArray)
     {
         $site_id = session('customer.site_id');
-        $postsTable = $this->productTable;
-        $priceTable = $this->productPriceTable;
+        $postsTable = $this->productTable;      
+        $priceTable = $this->productPriceTable; 
         $connection = $this->connectionType;
-    
+        
         foreach ($productDataArray as $item) {
             $data = json_decode($item, true);
-    
-            if (empty($data['product_id']) || !isset($data['unit_price'])) {
-                continue;
-            }
-    
-            $product_id  = $data['product_id'];
-            $new_name    = $data['product_name'] ?? null;
-            $new_price   = floatval($data['unit_price']);
-            $current_rrp = isset($data['current_rrp']) ? floatval($data['current_rrp']) : null;
-    
-            $product = DB::connection($connection)
-                ->table($postsTable)
-                ->join($priceTable, "$postsTable.ID", '=', "$priceTable.product_id")
-                ->where("$postsTable.ID", $product_id)
-                ->select([
-                    "$postsTable.ID as id",
-                    "$postsTable.post_title as name",
-                    "$priceTable.min_price as unit_price"
-                ])
-                ->first();
-    
-            if (! $product) {
-                continue;
-            }
-    
-            $current_name  = $product->name;
-            $current_price = floatval($product->unit_price);
-    
-            if ($current_rrp !== null && abs($current_price - $current_rrp) > 0.001) {
-                \Log::info('RRP mismatch, skipping update', [
-                    'product_id' => $product_id,
-                    'db_rrp'     => $current_price,
-                    'passed_rrp'=> $current_rrp
-                ]);
-                continue;
-            }
-    
-            $updatePostData  = [];
-            $updatePriceData = [];
-    
-            if ($new_name !== null && $current_name !== $new_name) {
-                $updatePostData['post_title'] = $new_name;
-            }
-    
-            if (abs($current_price - $new_price) > 0.001) {
-                $updatePriceData['min_price'] = $new_price;
-            }
-    
-            if (empty($updatePostData) && empty($updatePriceData)) {
-                continue;
-            }
-    
-            $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
-                ->where('product_id', $product_id)
-                ->orderByDesc('last_price_changed')
-                ->first();
-    
-            if ($lastUpdate) {
-                $monthsSinceLast = Carbon::parse($lastUpdate->last_price_changed)->diffInMonths(now());
-                if ($monthsSinceLast < 3) {
+        
+            if (!empty($data['product_id']) && isset($data['unit_price'])) {
+                $product_id   = $data['product_id'];
+                $new_name     = $data['product_name'];
+                $new_price    = floatval($data['unit_price']);
+            
+                $product = DB::connection($connection)
+                    ->table($postsTable)
+                    ->join($priceTable, "$postsTable.ID", '=', "$priceTable.product_id")
+                    ->where("$postsTable.ID", $product_id)
+                    ->select([
+                        "$postsTable.ID as id",
+                        "$postsTable.post_title as name",
+                        "$postsTable.post_type as type",
+                        "$priceTable.min_price as unit_price"
+                    ])
+                    ->first();
+        
+                if (! $product) {
                     continue;
                 }
-            }
-    
-            try {
-                $prefix = explode('_', $priceTable)[0] ?? 'wp';
-                $postMetaTable = $prefix . '_postmeta';
-                $lookupTable   = $prefix . '_wc_product_meta_lookup';
-                $optionsTable  = $prefix . '_options';
-    
-                if (!empty($updatePostData)) {
-                    DB::connection($connection)
-                        ->table($postsTable)
-                        ->where('ID', $product_id)
-                        ->update($updatePostData);
+        
+                $current_name     = $product->name;
+                $current_price    = floatval($product->unit_price);
+               
+                $updatePostData  = [];
+                $updatePriceData = [];
+        
+                if ($current_name !== $new_name) {
+                    $updatePostData['post_title'] = $new_name;
                 }
-    
-                if (!empty($updatePriceData)) {
-                    $variations = DB::connection($connection)
-                        ->table($postsTable)
-                        ->where('post_parent', $product_id)
-                        ->where('post_type', 'product_variation')
-                        ->where('post_status', 'publish')
-                        ->pluck('ID');
-    
-                    $productIds = collect([$product_id])->merge($variations)->toArray();
-    
-                    foreach ($productIds as $pid) {
-                        DB::connection($connection)
-                            ->table($postMetaTable)
-                            ->where('post_id', $pid)
-                            ->whereIn('meta_key', ['_price', '_regular_price'])
-                            ->update(['meta_value' => $new_price]);
-    
-                        DB::connection($connection)
-                            ->table($postMetaTable)
-                            ->where('post_id', $pid)
-                            ->where('meta_key', '_sale_price')
-                            ->delete();
-    
-                        $lookupExists = DB::connection($connection)
-                            ->select("SHOW TABLES LIKE '{$lookupTable}'");
-    
-                        if (!empty($lookupExists)) {
-                            DB::connection($connection)
-                                ->table($lookupTable)
-                                ->where('product_id', $pid)
-                                ->update([
-                                    'min_price' => $new_price,
-                                    'max_price' => $new_price
-                                ]);
-                        }
-    
-                        DB::connection($connection)
-                            ->table($priceTable)
-                            ->where('product_id', $pid)
-                            ->update(['min_price' => $new_price]);
-    
-                        DB::connection($connection)
-                            ->table($postsTable)
-                            ->where('ID', $pid)
-                            ->update([
-                                'post_modified' => now(),
-                                'post_modified_gmt' => now()
-                            ]);
-    
-                        DB::connection($connection)
-                            ->table($postMetaTable)
-                            ->where('post_id', $pid)
-                            ->whereIn('meta_key', [
-                                '_price_hash',
-                                '_wc_average_rating',
-                                '_wc_review_count',
-                                '_product_version'
-                            ])
-                            ->delete();
+        
+                if (abs($current_price - $new_price) > 0.001) {
+                    $updatePriceData['min_price'] = $new_price;
+                }
+        
+                if (empty($updatePostData) && empty($updatePriceData)) {
+                    continue;
+                }
+        
+                $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
+                                   ->where('product_id', $product_id)
+                                   ->orderByDesc('last_price_changed')
+                                   ->first();
+        
+                $shouldUpdate = false;
+        
+                if (! $lastUpdate) {
+                    $shouldUpdate = true;
+                } else {
+                    $monthsSinceLast = Carbon::parse($lastUpdate->last_price_changed)->diffInMonths(now());
+                    if ($monthsSinceLast >= 3) {
+                        $shouldUpdate = true;
                     }
-    
-                    DB::connection($connection)
-                        ->table($optionsTable)
-                        ->where(function ($query) {
-                            $query->where('option_name', 'LIKE', '_transient_%')
-                                  ->orWhere('option_name', 'LIKE', '_site_transient_%');
-                        })
-                        ->delete();
-    
-                    DB::connection($connection)
-                        ->table($postMetaTable)
-                        ->where('post_id', $product_id)
-                        ->where('meta_key', '_edit_last')
-                        ->update(['meta_value' => time()]);
-    
-                    \Log::info('Price updated for parent and variations', [
-                        'product_id' => $product_id,
-                        'from' => $current_price,
-                        'to' => $new_price
-                    ]);
                 }
-    
-                ProductPriceHistory::create([
-                    'site_id'            => $site_id,
-                    'product_id'         => $product_id,
-                    'unit_price'         => $new_price,
-                    'last_price_changed' => now(),
-                ]);
-            } catch (\Exception $e) {
-                \Log::error('Failed to update product', [
-                    'product_id' => $product_id,
-                    'error' => $e->getMessage()
-                ]);
+        
+                if ($shouldUpdate) {
+                    try {
+                        $prefix = explode('_', $priceTable)[0] ?? 'wp';
+                        $postMetaTable = $prefix . '_postmeta'; 
+                        $lookupTable = $prefix . '_wc_product_meta_lookup';
+                        $optionsTable = $prefix . '_options';
+                        
+                        if (!empty($updatePostData)) {
+                            DB::connection($connection)
+                                ->table($postsTable)
+                                ->where('ID', $product_id)
+                                ->update($updatePostData);
+                        }
+            
+                        if (!empty($updatePriceData)) {
+                            
+                            $variations = DB::connection($connection)
+                                ->table($postsTable)
+                                ->where('post_parent', $product_id)
+                                ->where('post_type', 'product_variation')
+                                ->where('post_status', 'publish')
+                                ->pluck('ID');
+                            
+                            $productIds = collect([$product_id])->merge($variations)->toArray();
+                            
+                            foreach ($productIds as $pid) {
+                                DB::connection($connection)
+                                    ->table($postMetaTable)
+                                    ->where('post_id', $pid)
+                                    ->where('meta_key', '_price')
+                                    ->update(['meta_value' => $new_price]);
+                                
+                                DB::connection($connection)
+                                    ->table($postMetaTable)
+                                    ->where('post_id', $pid)
+                                    ->where('meta_key', '_regular_price')
+                                    ->update(['meta_value' => $new_price]);
+                                
+                                DB::connection($connection)
+                                    ->table($postMetaTable)
+                                    ->where('post_id', $pid)
+                                    ->where('meta_key', '_sale_price')
+                                    ->delete();
+                                
+                                $lookupExists = DB::connection($connection)
+                                    ->select("SHOW TABLES LIKE '{$lookupTable}'");
+                                    
+                                if (!empty($lookupExists)) {
+                                    DB::connection($connection)
+                                        ->table($lookupTable)
+                                        ->where('product_id', $pid)
+                                        ->update([
+                                            'min_price' => $new_price,
+                                            'max_price' => $new_price
+                                        ]);
+                                }
+                                
+                                DB::connection($connection)
+                                    ->table($priceTable)
+                                    ->where('product_id', $pid)
+                                    ->update(['min_price' => $new_price]);
+                                
+                                DB::connection($connection)
+                                    ->table($postsTable)
+                                    ->where('ID', $pid)
+                                    ->update([
+                                        'post_modified' => now(),
+                                        'post_modified_gmt' => now()
+                                    ]);
+                                
+                                DB::connection($connection)
+                                    ->table($postMetaTable)
+                                    ->where('post_id', $pid)
+                                    ->whereIn('meta_key', ['_price_hash', '_wc_average_rating', '_wc_review_count', '_product_version'])
+                                    ->delete();
+                            }
+                            
+                            DB::connection($connection)
+                                ->table($optionsTable)
+                                ->where(function($query) {
+                                    $query->where('option_name', 'LIKE', '_transient_%')
+                                          ->orWhere('option_name', 'LIKE', '_site_transient_%');
+                                })
+                                ->delete();
+                                
+                            DB::connection($connection)
+                                ->table($postMetaTable)
+                                ->where('post_id', $product_id)
+                                ->where('meta_key', '_edit_last')
+                                ->update(['meta_value' => time()]);
+                                
+                            \Log::info('Price updated for parent and variations', [
+                                'product_id' => $product_id,
+                                'variations' => $variations,
+                                'from' => $current_price,
+                                'to' => $new_price
+                            ]);
+                        }
+                        
+                        ProductPriceHistory::create([
+                            'site_id'            => $site_id,
+                            'product_id'         => $product_id,
+                            'unit_price'         => $new_price,
+                            'last_price_changed' => now(),
+                        ]);
+                        
+                    } catch (\Exception $e) {
+                        \Log::error('Failed to update product', ['product_id' => $product_id, 'error' => $e->getMessage()]);
+                    }
+                }
             }
         }
     }
-    
 }
