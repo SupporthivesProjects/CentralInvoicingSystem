@@ -1288,7 +1288,7 @@ class WordPressController extends Controller
         $invoice_data['products'] = $products;
         $invoice_data['product_ids'] = $productIds;
     
-        #$this->updateProductPrice($productDataArray);
+        $this->updateProductPrice($productDataArray);
         InvoiceController::createInvoiceHistory($invoice_data);
     
         $modelType = strtolower($site->businessModel->model_type);
@@ -1376,12 +1376,18 @@ class WordPressController extends Controller
                 $product_id   = $data['product_id'];
                 $new_name     = $data['product_name'];
                 $new_price    = floatval($data['unit_price']);
+                $current_rrp  = isset($data['current_rrp']) ? floatval($data['current_rrp']) : null;
             
-                $product = DB::connection($connection)
+                $query = DB::connection($connection)
                     ->table($postsTable)
                     ->join($priceTable, "$postsTable.ID", '=', "$priceTable.product_id")
-                    ->where("$postsTable.ID", $product_id)
-                    ->select([
+                    ->where("$postsTable.ID", $product_id);
+                
+                if ($current_rrp !== null) {
+                    $query->whereRaw("ABS($priceTable.min_price - ?) < 0.01", [$current_rrp]);
+                }
+                
+                $product = $query->select([
                         "$postsTable.ID as id",
                         "$postsTable.post_title as name",
                         "$postsTable.post_type as type",
@@ -1390,6 +1396,10 @@ class WordPressController extends Controller
                     ->first();
         
                 if (! $product) {
+                    \Log::warning('Product not found or RRP mismatch', [
+                        'product_id' => $product_id,
+                        'expected_rrp' => $current_rrp
+                    ]);
                     continue;
                 }
         
@@ -1522,7 +1532,8 @@ class WordPressController extends Controller
                                 'product_id' => $product_id,
                                 'variations' => $variations,
                                 'from' => $current_price,
-                                'to' => $new_price
+                                'to' => $new_price,
+                                'verified_rrp' => $current_rrp
                             ]);
                         }
                         
