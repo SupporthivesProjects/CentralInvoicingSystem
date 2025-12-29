@@ -55,6 +55,7 @@
                    class="form-control text-center product-rrp" 
                    step="0.01"
                    value="{{ number_format($product->rrp, 2, '.', '') }}"
+                   data-unit-rrp="{{ number_format($product->rrp, 2, '.', '') }}"
                    data-reverse-rate="{{ $product->reverse_rate ?? 1 }}"
                    data-product-id="{{ $product->id }}"
                    aria-label="RRP"
@@ -106,8 +107,8 @@
         <input style="display: none;"  class="form-check-input border narayan-checkbox border-1 border-primary"  type="checkbox" name="product_ids[]"  
             data-unit_price="{{ number_format($product->unit_price, 2, '.', '') }}"
             data-reverse-rate="{{ $product->reverse_rate ?? 1 }}"
-            data-original-rrp="{{ number_format($product->rrp, 0, '.', '') }}"
-            data-original-discount="{{ number_format($product->discount, 0, '.', '') }}"
+            data-unit-rrp="{{ number_format($product->rrp, 0, '.', '') }}"
+            data-unit-discount="{{ number_format($product->discount, 0, '.', '') }}"
             value="{{ $product->id }}" 
             checked>
     </td>
@@ -196,8 +197,3 @@
     });
 
 </script>
-
-
-
-
-
