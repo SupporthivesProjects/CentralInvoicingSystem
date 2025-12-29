@@ -1372,6 +1372,9 @@ class WordPressController extends Controller
     {
         $site_id = session('customer.site_id');
         $site = Website::findOrFail($site_id);
+        $postsTable = $this->productTable;
+        $priceTable = $this->productPriceTable;
+        $connection = $this->connectionType;
     
         $updatedProducts = [];
         $errors = [];
@@ -1395,7 +1398,6 @@ class WordPressController extends Controller
             }
     
             $product_id = (int) $data['product_id'];
-            $variation_id = (int) ($data['variation_id'] ?? 0);
             $unit_price = floatval($data['unit_price']);
     
             if ($product_id <= 0) {
@@ -1405,26 +1407,39 @@ class WordPressController extends Controller
             }
     
             try {
-                $variationEndpoint = $endpoint . '/' . $product_id;
+                $product = DB::connection($connection)
+                    ->table($postsTable)
+                    ->join($priceTable, "$postsTable.ID", '=', "$priceTable.product_id")
+                    ->select(
+                        "$postsTable.ID as id",
+                        "$postsTable.post_parent as parent_id",
+                        "$postsTable.post_type as post_type",
+                        "$postsTable.post_title as name",
+                        "$priceTable.min_price as current_price"
+                    )
+                    ->where("$postsTable.ID", $product_id)
+                    ->where("$postsTable.post_status", 'publish')
+                    ->first();
+    
+                if (!$product) {
+                    \Log::error('PRODUCT_NOT_FOUND', ['product_id' => $product_id]);
+                    $errors[] = ['product_id' => $product_id, 'reason' => 'Product not found'];
+                    continue;
+                }
+    
+                $current_price = floatval($product->current_price);
+    
+                if (abs($current_price - $unit_price) < 0.01) {
+                    continue;
+                }
+    
+                $api_product_id = $product->parent_id > 0 ? $product->parent_id : $product->id;
+                $variation_id = $product->post_type === 'product_variation' ? $product->id : 0;
+    
+                $variationEndpoint = $endpoint . '/' . $api_product_id;
     
                 if ($variation_id > 0) {
                     $variationEndpoint .= '/variations/' . $variation_id;
-                }
-    
-                $verifyResponse = Http::withBasicAuth($consumerKey, $consumerSecret)
-                    ->timeout(30)
-                    ->retry(2, 100)
-                    ->get($variationEndpoint);
-    
-                if ($verifyResponse->failed()) {
-                    $statusCode = $verifyResponse->status();
-                    \Log::error('VERIFY_FAILED', [
-                        'product_id' => $product_id,
-                        'variation_id' => $variation_id,
-                        'status' => $statusCode
-                    ]);
-                    $errors[] = ['product_id' => $product_id, 'variation_id' => $variation_id, 'reason' => 'Not found'];
-                    continue;
                 }
     
                 $updatePayload = [
@@ -1440,46 +1455,46 @@ class WordPressController extends Controller
                 if ($updateResponse->failed()) {
                     $statusCode = $updateResponse->status();
                     \Log::error('UPDATE_FAILED', [
-                        'product_id' => $product_id,
+                        'product_id' => $api_product_id,
                         'variation_id' => $variation_id,
                         'status' => $statusCode
                     ]);
-                    $errors[] = ['product_id' => $product_id, 'variation_id' => $variation_id, 'reason' => 'Update failed'];
+                    $errors[] = ['product_id' => $product_id, 'reason' => 'API update failed'];
                     continue;
                 }
     
                 $updated = $updateResponse->json();
-                $verifiedPrice = (float) ($updated['regular_price'] ?? 0);
+                $verifiedPrice = (float) ($updated['regular_price'] ?? $updated['price'] ?? 0);
     
                 if (abs($verifiedPrice - $unit_price) > 0.01) {
                     \Log::error('PRICE_VERIFY_FAIL', [
-                        'product_id' => $product_id,
+                        'product_id' => $api_product_id,
                         'variation_id' => $variation_id,
                         'expected' => $unit_price,
                         'actual' => $verifiedPrice
                     ]);
-                    $errors[] = ['product_id' => $product_id, 'variation_id' => $variation_id, 'reason' => 'Price mismatch'];
+                    $errors[] = ['product_id' => $product_id, 'reason' => 'Price mismatch'];
                     continue;
                 }
     
                 ProductPriceHistory::create([
                     'site_id' => $site_id,
-                    'product_id' => $product_id,
+                    'product_id' => $api_product_id,
                     'variation_id' => $variation_id,
                     'unit_price' => $unit_price,
                     'last_price_changed' => now(),
                 ]);
     
                 $updatedProducts[] = [
-                    'product_id' => $product_id,
+                    'product_id' => $api_product_id,
                     'variation_id' => $variation_id,
+                    'old_price' => $current_price,
                     'new_price' => $unit_price
                 ];
     
             } catch (\Exception $e) {
                 \Log::error('UPDATE_EXCEPTION', [
                     'product_id' => $product_id,
-                    'variation_id' => $variation_id,
                     'error' => $e->getMessage()
                 ]);
                 $errors[] = ['product_id' => $product_id, 'error' => $e->getMessage()];
