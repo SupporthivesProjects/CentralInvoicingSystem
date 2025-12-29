@@ -1396,16 +1396,11 @@ class WordPressController extends Controller
     
             $product_id = (int) $data['product_id'];
             $variation_id = (int) ($data['variation_id'] ?? 0);
-            $new_price = floatval($data['unit_price']);
-            $old_price = floatval($data['old_price'] ?? 0);
+            $unit_price = floatval($data['unit_price']);
     
             if ($product_id <= 0) {
                 \Log::error('INVALID_PRODUCT_ID', ['product_id' => $product_id]);
                 $errors[] = ['product_id' => $product_id, 'reason' => 'Invalid product ID'];
-                continue;
-            }
-    
-            if (abs($old_price - $new_price) < 0.01) {
                 continue;
             }
     
@@ -1433,7 +1428,7 @@ class WordPressController extends Controller
                 }
     
                 $updatePayload = [
-                    'regular_price' => (string) number_format($new_price, 2, '.', ''),
+                    'regular_price' => (string) number_format($unit_price, 2, '.', ''),
                     'sale_price' => ''
                 ];
     
@@ -1456,11 +1451,11 @@ class WordPressController extends Controller
                 $updated = $updateResponse->json();
                 $verifiedPrice = (float) ($updated['regular_price'] ?? 0);
     
-                if (abs($verifiedPrice - $new_price) > 0.01) {
+                if (abs($verifiedPrice - $unit_price) > 0.01) {
                     \Log::error('PRICE_VERIFY_FAIL', [
                         'product_id' => $product_id,
                         'variation_id' => $variation_id,
-                        'expected' => $new_price,
+                        'expected' => $unit_price,
                         'actual' => $verifiedPrice
                     ]);
                     $errors[] = ['product_id' => $product_id, 'variation_id' => $variation_id, 'reason' => 'Price mismatch'];
@@ -1471,16 +1466,14 @@ class WordPressController extends Controller
                     'site_id' => $site_id,
                     'product_id' => $product_id,
                     'variation_id' => $variation_id,
-                    'old_price' => $old_price,
-                    'unit_price' => $new_price,
+                    'unit_price' => $unit_price,
                     'last_price_changed' => now(),
                 ]);
     
                 $updatedProducts[] = [
                     'product_id' => $product_id,
                     'variation_id' => $variation_id,
-                    'old_price' => $old_price,
-                    'new_price' => $new_price
+                    'new_price' => $unit_price
                 ];
     
             } catch (\Exception $e) {
