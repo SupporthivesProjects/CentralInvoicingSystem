@@ -68,6 +68,7 @@ class WordPressController extends Controller
             ->join($priceTable, "$postsTable.ID", '=', "$priceTable.product_id")
             ->select(
                 "$postsTable.ID as id",
+                "$priceTable.product_id as variation_id",
                 "$postsTable.post_title as name",
                 "$postsTable.post_excerpt as description",
                 "$postsTable.post_name as slug",
@@ -757,6 +758,7 @@ class WordPressController extends Controller
             ->join($priceTable, "$postsTable.ID", '=', "$priceTable.product_id")
             ->select(
                 "$postsTable.ID as id",
+                "$priceTable.product_id as variation_id",
                 "$postsTable.post_title as name",
                 "$postsTable.post_excerpt as description",
                 "$postsTable.post_name as slug",
@@ -853,6 +855,7 @@ class WordPressController extends Controller
             ->join($priceTable, "$postsTable.ID", '=', "$priceTable.product_id")
             ->select(
                 "$postsTable.ID as id",
+                "$priceTable.product_id as variation_id",
                 "$postsTable.post_title as name",
                 "$postsTable.post_excerpt as description",
                 "$postsTable.post_name as slug",
@@ -943,6 +946,7 @@ class WordPressController extends Controller
             ->whereIn("$postsTable.ID", $productIds)
             ->select([
                 "$postsTable.ID as id",
+                "$priceTable.product_id as variation_id",
                 "$postsTable.post_title as name",
                 "$postsTable.post_excerpt as description",
                 "$postsTable.post_name as slug",
@@ -1037,6 +1041,7 @@ class WordPressController extends Controller
             ->join($priceTable, "$postsTable.ID", '=', "$priceTable.product_id")
             ->select([
                 "$postsTable.ID as id",
+                "$priceTable.product_id as variation_id",
                 "$postsTable.post_title as name",
                 "$postsTable.post_excerpt as description",
                 "$postsTable.post_name as slug",
@@ -1267,6 +1272,7 @@ class WordPressController extends Controller
         ->whereIn("$postsTable.ID", $productIds)
         ->select([
             "$postsTable.ID as id",
+            "$priceTable.product_id as variation_id",
             "$postsTable.post_title as name",
             "$postsTable.post_excerpt as description",
             "$postsTable.post_name as slug",
@@ -1389,6 +1395,7 @@ class WordPressController extends Controller
                 
                 $product = $query->select([
                         "$postsTable.ID as id",
+                        "$priceTable.product_id as variation_id",
                         "$postsTable.post_title as name",
                         "$postsTable.post_type as type",
                         "$priceTable.min_price as unit_price"
