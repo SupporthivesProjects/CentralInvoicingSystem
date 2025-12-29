@@ -1536,7 +1536,6 @@ class WordPressController extends Controller
                 $updatedProducts[] = [
                     'product_id' => $api_product_id,
                     'variation_id' => $variation_id,
-                    'old_price' => $current_price,
                     'new_price' => $unit_price
                 ];
     
