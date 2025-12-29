@@ -751,11 +751,12 @@ class WordPressController extends Controller
     
         foreach ($productsData as $productData) {
             $productId = $productData['product_id'];
+            $variationId = (int) ($productData['variation_id'] ?? 0);
             $unitPrice = floatval($productData['unit_price']);
     
             $exists = false;
             foreach ($readyProducts as &$item) {
-                if ($item['id'] == $productId) {
+                if ($item['id'] == $productId && $item['variation_id'] == $variationId) {
                     $item['unit_price'] = $unitPrice;
                     $exists = true;
                     break;
@@ -765,6 +766,7 @@ class WordPressController extends Controller
             if (!$exists) {
                 $readyProducts[] = [
                     'id' => $productId,
+                    'variation_id' => $variationId,
                     'unit_price' => $unitPrice,
                 ];
             }
@@ -779,7 +781,8 @@ class WordPressController extends Controller
             ->join($priceTable, "$postsTable.ID", '=', "$priceTable.product_id")
             ->select(
                 "$postsTable.ID as id",
-                "$priceTable.product_id as variation_id",
+                "$postsTable.post_parent as parent_id",
+                "$postsTable.post_type as post_type",
                 "$postsTable.post_title as name",
                 "$postsTable.post_excerpt as description",
                 "$postsTable.post_name as slug",
@@ -787,7 +790,6 @@ class WordPressController extends Controller
             )
             ->whereIn("$postsTable.ID", $productIds)
             ->where("$postsTable.post_status", 'publish')
-            ->where("$postsTable.post_type", 'product')
             ->get()
             ->keyBy('id');
     
@@ -798,12 +800,22 @@ class WordPressController extends Controller
         $products = $products->map(function ($product) use ($readyProducts, $site_id) {
             $sessionProduct = collect($readyProducts)->firstWhere('id', $product->id);
     
+            if ($product->post_type === 'product_variation') {
+                $api_product_id = $product->parent_id;
+                $variation_id = $product->id;
+            } else {
+                $api_product_id = $product->id;
+                $variation_id = $sessionProduct['variation_id'] ?? 0;
+            }
+    
             $product->unit_price = $sessionProduct['unit_price'] ?? $product->unit_price;
             $product->category_name = '-';
+            $product->variation_id = $variation_id;
     
             $lastUpdate = DB::table('product_price_histories')
                 ->where('site_id', $site_id)
-                ->where('product_id', $product->id)
+                ->where('product_id', $api_product_id)
+                ->where('variation_id', $variation_id)
                 ->orderByDesc('last_price_changed')
                 ->first();
     
@@ -841,12 +853,10 @@ class WordPressController extends Controller
         ]);
     }
     
-
-    
-
     public function removeProduct(Request $request)
     {
         $productId = $request->get('product_id');
+        $variationId = (int) ($request->get('variation_id') ?? 0);
         $site_id = $request->get('site_id');
         $site = Website::findOrFail($site_id);
     
@@ -856,7 +866,10 @@ class WordPressController extends Controller
     
         $readyProducts = session('ready_products', []);
     
-        $updatedProducts = collect($readyProducts)->reject(fn($product) => $product['id'] == $productId)->values()->toArray();
+        $updatedProducts = collect($readyProducts)->reject(function ($product) use ($productId, $variationId) {
+            return $product['id'] == $productId && $product['variation_id'] == $variationId;
+        })->values()->toArray();
+    
         session()->put('ready_products', $updatedProducts);
     
         if (empty($updatedProducts)) {
@@ -876,7 +889,8 @@ class WordPressController extends Controller
             ->join($priceTable, "$postsTable.ID", '=', "$priceTable.product_id")
             ->select(
                 "$postsTable.ID as id",
-                "$priceTable.product_id as variation_id",
+                "$postsTable.post_parent as parent_id",
+                "$postsTable.post_type as post_type",
                 "$postsTable.post_title as name",
                 "$postsTable.post_excerpt as description",
                 "$postsTable.post_name as slug",
@@ -884,7 +898,6 @@ class WordPressController extends Controller
             )
             ->whereIn("$postsTable.ID", $productIds)
             ->where("$postsTable.post_status", 'publish')
-            ->where("$postsTable.post_type", 'product')
             ->get()
             ->keyBy('id');
     
@@ -893,11 +906,21 @@ class WordPressController extends Controller
         $products = $products->map(function ($product) use ($updatedProducts, $site_id) {
             $sessionProduct = collect($updatedProducts)->firstWhere('id', $product->id);
     
+            if ($product->post_type === 'product_variation') {
+                $api_product_id = $product->parent_id;
+                $variation_id = $product->id;
+            } else {
+                $api_product_id = $product->id;
+                $variation_id = $sessionProduct['variation_id'] ?? 0;
+            }
+    
             $product->unit_price = $sessionProduct['unit_price'] ?? $product->unit_price;
             $product->category_name = '-';
+            $product->variation_id = $variation_id;
     
             $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
-                ->where('product_id', $product->id)
+                ->where('product_id', $api_product_id)
+                ->where('variation_id', $variation_id)
                 ->orderByDesc('last_price_changed')
                 ->first();
     
@@ -934,58 +957,69 @@ class WordPressController extends Controller
         ]);
     }
     
-    
-
     public function updateProduct(Request $request)
     {
         $productId = $request->get('product_id');
+        $variationId = (int) ($request->get('variation_id') ?? 0);
         $quantity = $request->get('quantity');
         $site_id = $request->get('site_id');
-
+    
         $site = Website::findOrFail($site_id);
         DynamicDatabaseService::connect($site);
-
+    
         $readyProducts = session()->get('ready_products', []);
-
+    
         foreach ($readyProducts as &$product) {
-            if ($product['id'] == $productId) {
+            if ($product['id'] == $productId && $product['variation_id'] == $variationId) {
                 $product['quantity'] = $quantity;
                 break;
             }
         }
         session()->put('ready_products', $readyProducts);
-
+    
         $productIds = collect($readyProducts)->pluck('id')->toArray();
-
+    
         $postsTable = $this->productTable;
         $priceTable = $this->productPriceTable;
         $connection = $this->connectionType;
-
+    
         $products = DB::connection($connection)
             ->table($postsTable)
             ->join($priceTable, "$postsTable.ID", '=', "$priceTable.product_id")
             ->whereIn("$postsTable.ID", $productIds)
             ->select([
                 "$postsTable.ID as id",
-                "$priceTable.product_id as variation_id",
+                "$postsTable.post_parent as parent_id",
+                "$postsTable.post_type as post_type",
                 "$postsTable.post_title as name",
                 "$postsTable.post_excerpt as description",
                 "$postsTable.post_name as slug",
                 "$priceTable.min_price as unit_price"
             ])
             ->get();
-
+    
         $products = $products->map(function ($product) use ($readyProducts, $site_id) {
             $sessionProduct = collect($readyProducts)->firstWhere('id', $product->id);
+    
+            if ($product->post_type === 'product_variation') {
+                $api_product_id = $product->parent_id;
+                $variation_id = $product->id;
+            } else {
+                $api_product_id = $product->id;
+                $variation_id = $sessionProduct['variation_id'] ?? 0;
+            }
+    
             $product->unit_price = $sessionProduct['unit_price'] ?? $product->unit_price;
             $product->quantity = $sessionProduct['quantity'] ?? 1;
             $product->category_name = '-';
-
+            $product->variation_id = $variation_id;
+    
             $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
-                ->where('product_id', $product->id)
+                ->where('product_id', $api_product_id)
+                ->where('variation_id', $variation_id)
                 ->orderByDesc('last_price_changed')
                 ->first();
-
+    
             if ($lastUpdate) {
                 $lastPriceChanged = Carbon::parse($lastUpdate->last_price_changed);
                 $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
@@ -1000,24 +1034,24 @@ class WordPressController extends Controller
                 $product->rrp = $product->unit_price;
                 $product->discount = 0;
             }
-
+    
             return $product;
         });
-
+    
         $modelType = $site->businessModel->model_type;
-
+    
         $total = $products->sum(function ($product) {
             return $product->unit_price * ($product->quantity ?? 1);
         });
-
+    
         session(['current_amount' => $total]);
-
+    
         $tableRows = view("invoice.{$modelType}.random_product_rows", [
             'products' => $products,
             'site' => $site,
             'total' => $total
         ])->render();
-
+    
         return response()->json([
             'tableRows' => $tableRows,
             'total' => $total
