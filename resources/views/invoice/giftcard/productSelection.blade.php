@@ -989,7 +989,6 @@ function clearRandomizedFilter(button) {
             const productName = productNameInput.val() || '';
             const unitPrice = parseFloat($(`input.product-price[data-product-id="${productId}"]`).val()) || 0;
             const $rrpInput = $(`input.product-rrp[data-product-id="${productId}"]`);
-            const currentRRP = parseFloat($rrpInput.val()) || 0;
             const siteRRP = parseFloat($rrpInput.val()) || 0;
             const reverseRate = parseFloat($rrpInput.data('reverse-rate')) || 1;
             const originalCardRRP = parseFloat($rrpInput.data('card-rrp')) || 0;
@@ -1022,7 +1021,6 @@ function clearRandomizedFilter(button) {
                     product_name: productName,
                     unit_price: unitPrice,
                     unit_rrp: siteRRP,
-                    current_rrp: currentRRP, 
                     unit_discount: productDiscount
                 })
             }));
