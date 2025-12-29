@@ -1427,12 +1427,9 @@ class WordPressController extends Controller
     {
         $site_id = session('customer.site_id');
         $site = Website::findOrFail($site_id);
-        $postsTable = $this->productTable;
-        $priceTable = $this->productPriceTable;
-        $connection = $this->connectionType;
     
-        $updatedProducts = [];
-        $errors = [];
+        $connection = $this->connectionType;
+        $priceTable = $this->productPriceTable;
     
         $consumerKey = $site->consumer_key;
         $consumerSecret = $site->consumer_secret;
@@ -1440,68 +1437,66 @@ class WordPressController extends Controller
         $endpoint = $baseUrl . '/wp-json/wc/v3/products';
     
         if (!$consumerKey || !$consumerSecret) {
-            \Log::error('API_CRED_MISSING', ['site_id' => $site_id]);
             throw new \Exception('WooCommerce API credentials not configured');
         }
     
+        $updatedProducts = [];
+        $errors = [];
+    
         foreach ($productDataArray as $item) {
-            $data = json_decode($item, true);
-    
-            if (!isset($data['product_id'], $data['unit_price'])) {
-                $errors[] = ['reason' => 'Missing product_id or unit_price'];
-                continue;
-            }
-    
-            $api_product_id = (int) $data['product_id'];
-            $variation_id = (int) ($data['variation_id'] ?? 0);
-            $unit_price = floatval($data['unit_price']);
-    
-            if ($api_product_id <= 0) {
-                \Log::error('INVALID_PRODUCT_ID', ['product_id' => $api_product_id]);
-                $errors[] = ['product_id' => $api_product_id, 'reason' => 'Invalid product ID'];
-                continue;
-            }
-    
             try {
+                $data = json_decode($item, true);
     
-                $variationEndpoint = $endpoint . '/' . $api_product_id;
-    
-                if ($variation_id > 0) {
-                    $variationEndpoint .= '/variations/' . $variation_id;
+                if (!isset($data['product_id'], $data['unit_price'])) {
+                    $errors[] = ['reason' => 'Missing product_id or unit_price'];
+                    continue;
                 }
     
-                $updatePayload = [
-                    'regular_price' => (string) number_format($unit_price, 2, '.', ''),
-                    'sale_price' => ''
-                ];
+                $product_id = (int) $data['product_id'];
+                $variation_id = (int) ($data['variation_id'] ?? 0);
+                $salePrice = (float) $data['unit_price'];
+    
+                if ($product_id <= 0) {
+                    $errors[] = ['product_id' => $product_id, 'reason' => 'Invalid product ID'];
+                    continue;
+                }
+    
+                $productEndpoint = $endpoint . '/' . $product_id;
+                if ($variation_id > 0) {
+                    $productEndpoint .= '/variations/' . $variation_id;
+                }
+    
+                $currentResponse = Http::withBasicAuth($consumerKey, $consumerSecret)
+                    ->timeout(30)
+                    ->get($productEndpoint);
+    
+                if ($currentResponse->failed()) {
+                    $errors[] = ['product_id' => $product_id, 'reason' => 'Fetch failed'];
+                    continue;
+                }
+    
+                $currentData = $currentResponse->json();
+                $regularPrice = (float) ($currentData['regular_price'] ?? 0);
+    
+                if ($regularPrice <= 0 || $salePrice >= $regularPrice) {
+                    $updatePayload = [
+                        'regular_price' => number_format($salePrice, 2, '.', ''),
+                        'sale_price' => ''
+                    ];
+                } else {
+                    $updatePayload = [
+                        'regular_price' => number_format($regularPrice, 2, '.', ''),
+                        'sale_price' => number_format($salePrice, 2, '.', '')
+                    ];
+                }
     
                 $updateResponse = Http::withBasicAuth($consumerKey, $consumerSecret)
                     ->timeout(30)
                     ->retry(2, 100)
-                    ->put($variationEndpoint, $updatePayload);
+                    ->put($productEndpoint, $updatePayload);
     
                 if ($updateResponse->failed()) {
-                    $statusCode = $updateResponse->status();
-                    \Log::error('UPDATE_FAILED', [
-                        'product_id' => $api_product_id,
-                        'variation_id' => $variation_id,
-                        'status' => $statusCode
-                    ]);
-                    $errors[] = ['product_id' => $api_product_id, 'reason' => 'API update failed'];
-                    continue;
-                }
-    
-                $updated = $updateResponse->json();
-                $verifiedPrice = (float) ($updated['regular_price'] ?? $updated['price'] ?? 0);
-    
-                if (abs($verifiedPrice - $unit_price) > 0.01) {
-                    \Log::error('PRICE_VERIFY_FAIL', [
-                        'product_id' => $api_product_id,
-                        'variation_id' => $variation_id,
-                        'expected' => $unit_price,
-                        'actual' => $verifiedPrice
-                    ]);
-                    $errors[] = ['product_id' => $api_product_id, 'reason' => 'Price mismatch'];
+                    $errors[] = ['product_id' => $product_id, 'reason' => 'Update failed'];
                     continue;
                 }
     
@@ -1509,42 +1504,43 @@ class WordPressController extends Controller
                 $postMetaTable = $prefix . '_postmeta';
                 $optionsTable = $prefix . '_options';
     
-                DB::connection($connection)
-                    ->table($optionsTable)
+                DB::connection($connection)->table($optionsTable)
                     ->where('option_name', 'LIKE', '%_transient_%')
                     ->delete();
     
-                DB::connection($connection)
-                    ->table($optionsTable)
+                DB::connection($connection)->table($optionsTable)
                     ->where('option_name', 'LIKE', '%_site_transient_%')
                     ->delete();
     
-                DB::connection($connection)
-                    ->table($postMetaTable)
-                    ->where('post_id', $api_product_id)
-                    ->whereIn('meta_key', ['_price_hash', '_wc_average_rating', '_wc_review_count', '_product_version'])
+                DB::connection($connection)->table($postMetaTable)
+                    ->where('post_id', $product_id)
+                    ->whereIn('meta_key', [
+                        '_price_hash',
+                        '_wc_average_rating',
+                        '_wc_review_count',
+                        '_product_version'
+                    ])
                     ->delete();
     
                 ProductPriceHistory::create([
                     'site_id' => $site_id,
-                    'product_id' => $api_product_id,
-                    'variation_id' => $variation_id,
-                    'unit_price' => $unit_price,
+                    'product_id' => $product_id,
+                    'bundle' => $variation_id,
+                    'unit_price' => $salePrice,
                     'last_price_changed' => now(),
                 ]);
     
                 $updatedProducts[] = [
-                    'product_id' => $api_product_id,
+                    'product_id' => $product_id,
                     'variation_id' => $variation_id,
-                    'new_price' => $unit_price
+                    'new_price' => $salePrice
                 ];
     
             } catch (\Exception $e) {
-                \Log::error('UPDATE_EXCEPTION', [
-                    'product_id' => $api_product_id,
+                $errors[] = [
+                    'product_id' => $data['product_id'] ?? 0,
                     'error' => $e->getMessage()
-                ]);
-                $errors[] = ['product_id' => $api_product_id, 'error' => $e->getMessage()];
+                ];
             }
         }
     
@@ -1558,4 +1554,5 @@ class WordPressController extends Controller
             ]
         ];
     }
+    
 }
