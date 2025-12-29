@@ -995,7 +995,6 @@ function clearRandomizedFilter(button) {
         
         const cardRRP = originalCardRRP || (siteRRP * reverseRate);
         
-        // ADDED: Get current_rrp from data attribute or fallback to siteRRP
         const currentRRP = $rrpInput.data('unit-rrp') ? parseFloat($rrpInput.data('unit-rrp')) : siteRRP;
         
         /* COMMENTED: Product name validation - no longer needed
