@@ -1487,7 +1487,7 @@ class WordPressController extends Controller
                         'variation_id' => $variation_id,
                         'status' => $statusCode
                     ]);
-                    $errors[] = ['product_id' => $product_id, 'reason' => 'API update failed'];
+                    $errors[] = ['product_id' => $api_product_id, 'reason' => 'API update failed'];
                     continue;
                 }
     
@@ -1501,7 +1501,7 @@ class WordPressController extends Controller
                         'expected' => $unit_price,
                         'actual' => $verifiedPrice
                     ]);
-                    $errors[] = ['product_id' => $product_id, 'reason' => 'Price mismatch'];
+                    $errors[] = ['product_id' => $api_product_id, 'reason' => 'Price mismatch'];
                     continue;
                 }
     
@@ -1521,7 +1521,7 @@ class WordPressController extends Controller
     
                 DB::connection($connection)
                     ->table($postMetaTable)
-                    ->where('post_id', $product_id)
+                    ->where('post_id', $api_product_id)
                     ->whereIn('meta_key', ['_price_hash', '_wc_average_rating', '_wc_review_count', '_product_version'])
                     ->delete();
     
