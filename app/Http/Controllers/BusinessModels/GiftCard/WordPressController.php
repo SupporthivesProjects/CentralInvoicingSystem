@@ -152,7 +152,7 @@ class WordPressController extends Controller
                 $lastChanged = Carbon::parse($lastUpdate->last_price_changed);
                 $nextChange = $lastChanged->copy()->addMonths(3);
                 $daysLeft = now()->diffInDays($nextChange, false);
-                $product->remaining_days = max($daysLeft, 0);
+                $product->remaining_days = max((int) floor($daysLeft), 0);
                 $product->can_edit_price = now()->greaterThanOrEqualTo($nextChange) ? 1 : 0;
             } else {
                 $product->remaining_days = 0;
@@ -927,7 +927,7 @@ class WordPressController extends Controller
             if ($lastUpdate) {
                 $nextDate = Carbon::parse($lastUpdate->last_price_changed)->addMonths(3);
                 $remaining = now()->diffInDays($nextDate, false);
-                $product->remaining_days = max($remaining, 0);
+                $product->remaining_days = round(max($remaining, 0));
                 $product->can_edit_price = now()->gte($nextDate) ? 1 : 0;
                 $product->rrp = $product->unit_price;
                 $product->discount = 0;
@@ -1152,7 +1152,7 @@ class WordPressController extends Controller
                 $lastPriceChanged = Carbon::parse($lastUpdate->last_price_changed);
                 $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
                 $remainingDays = now()->diffInDays($nextPriceChangeDate, false);
-                $product->remaining_days = max($remainingDays, 0);
+                $product->remaining_days = round(max($remainingDays, 0));
                 $product->can_edit_price = now()->gte($nextPriceChangeDate) ? 1 : 0;
                 $product->rrp = $product->unit_price;
                 $product->discount = 0;
