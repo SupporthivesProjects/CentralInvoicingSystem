@@ -1371,191 +1371,136 @@ class WordPressController extends Controller
     protected function updateProductPrice(array $productDataArray)
     {
         $site_id = session('customer.site_id');
-        $postsTable = $this->productTable;      
-        $priceTable = $this->productPriceTable; 
-        $connection = $this->connectionType;
-        
+        $site = Website::findOrFail($site_id);
+    
+        $updatedProducts = [];
+        $errors = [];
+    
+        $consumerKey = $site->consumer_key;
+        $consumerSecret = $site->consumer_secret;
+        $baseUrl = rtrim($site->site_link, '/');
+        $endpoint = $baseUrl . '/wp-json/wc/v3/products';
+    
+        if (!$consumerKey || !$consumerSecret) {
+            \Log::error('API_CRED_MISSING', ['site_id' => $site_id]);
+            throw new \Exception('WooCommerce API credentials not configured');
+        }
+    
         foreach ($productDataArray as $item) {
             $data = json_decode($item, true);
-        
-            if (!empty($data['product_id']) && isset($data['unit_price'])) {
-                $product_id   = $data['product_id'];
-                $new_name     = $data['product_name'];
-                $new_price    = floatval($data['unit_price']);
-                $current_rrp  = isset($data['current_rrp']) ? floatval($data['current_rrp']) : null;
-            
-                $query = DB::connection($connection)
-                    ->table($postsTable)
-                    ->join($priceTable, "$postsTable.ID", '=', "$priceTable.product_id")
-                    ->where("$postsTable.ID", $product_id);
-                
-                if ($current_rrp !== null) {
-                    $query->whereRaw("ABS($priceTable.min_price - ?) < 0.01", [$current_rrp]);
+    
+            if (!isset($data['product_id'], $data['unit_price'])) {
+                $errors[] = ['reason' => 'Missing product_id or unit_price'];
+                continue;
+            }
+    
+            $product_id = (int) $data['product_id'];
+            $variation_id = (int) ($data['variation_id'] ?? 0);
+            $new_price = floatval($data['unit_price']);
+            $old_price = floatval($data['old_price'] ?? 0);
+    
+            if ($product_id <= 0) {
+                \Log::error('INVALID_PRODUCT_ID', ['product_id' => $product_id]);
+                $errors[] = ['product_id' => $product_id, 'reason' => 'Invalid product ID'];
+                continue;
+            }
+    
+            if (abs($old_price - $new_price) < 0.01) {
+                continue;
+            }
+    
+            try {
+                $variationEndpoint = $endpoint . '/' . $product_id;
+    
+                if ($variation_id > 0) {
+                    $variationEndpoint .= '/variations/' . $variation_id;
                 }
-                
-                $product = $query->select([
-                        "$postsTable.ID as id",
-                        "$priceTable.product_id as variation_id",
-                        "$postsTable.post_title as name",
-                        "$postsTable.post_type as type",
-                        "$priceTable.min_price as unit_price"
-                    ])
-                    ->first();
-        
-                if (! $product) {
-                    \Log::warning('Product not found or RRP mismatch', [
+    
+                $verifyResponse = Http::withBasicAuth($consumerKey, $consumerSecret)
+                    ->timeout(30)
+                    ->retry(2, 100)
+                    ->get($variationEndpoint);
+    
+                if ($verifyResponse->failed()) {
+                    $statusCode = $verifyResponse->status();
+                    \Log::error('VERIFY_FAILED', [
                         'product_id' => $product_id,
-                        'expected_rrp' => $current_rrp
+                        'variation_id' => $variation_id,
+                        'status' => $statusCode
                     ]);
+                    $errors[] = ['product_id' => $product_id, 'variation_id' => $variation_id, 'reason' => 'Not found'];
                     continue;
                 }
-        
-                $current_name     = $product->name;
-                $current_price    = floatval($product->unit_price);
-               
-                $updatePostData  = [];
-                $updatePriceData = [];
-        
-                if ($current_name !== $new_name) {
-                    $updatePostData['post_title'] = $new_name;
-                }
-        
-                if (abs($current_price - $new_price) > 0.001) {
-                    $updatePriceData['min_price'] = $new_price;
-                }
-        
-                if (empty($updatePostData) && empty($updatePriceData)) {
+    
+                $updatePayload = [
+                    'regular_price' => (string) number_format($new_price, 2, '.', ''),
+                    'sale_price' => ''
+                ];
+    
+                $updateResponse = Http::withBasicAuth($consumerKey, $consumerSecret)
+                    ->timeout(30)
+                    ->retry(2, 100)
+                    ->put($variationEndpoint, $updatePayload);
+    
+                if ($updateResponse->failed()) {
+                    $statusCode = $updateResponse->status();
+                    \Log::error('UPDATE_FAILED', [
+                        'product_id' => $product_id,
+                        'variation_id' => $variation_id,
+                        'status' => $statusCode
+                    ]);
+                    $errors[] = ['product_id' => $product_id, 'variation_id' => $variation_id, 'reason' => 'Update failed'];
                     continue;
                 }
-        
-                $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
-                                   ->where('product_id', $product_id)
-                                   ->orderByDesc('last_price_changed')
-                                   ->first();
-        
-                $shouldUpdate = false;
-        
-                if (! $lastUpdate) {
-                    $shouldUpdate = true;
-                } else {
-                    $monthsSinceLast = Carbon::parse($lastUpdate->last_price_changed)->diffInMonths(now());
-                    if ($monthsSinceLast >= 3) {
-                        $shouldUpdate = true;
-                    }
+    
+                $updated = $updateResponse->json();
+                $verifiedPrice = (float) ($updated['regular_price'] ?? 0);
+    
+                if (abs($verifiedPrice - $new_price) > 0.01) {
+                    \Log::error('PRICE_VERIFY_FAIL', [
+                        'product_id' => $product_id,
+                        'variation_id' => $variation_id,
+                        'expected' => $new_price,
+                        'actual' => $verifiedPrice
+                    ]);
+                    $errors[] = ['product_id' => $product_id, 'variation_id' => $variation_id, 'reason' => 'Price mismatch'];
+                    continue;
                 }
-        
-                if ($shouldUpdate) {
-                    try {
-                        $prefix = explode('_', $priceTable)[0] ?? 'wp';
-                        $postMetaTable = $prefix . '_postmeta'; 
-                        $lookupTable = $prefix . '_wc_product_meta_lookup';
-                        $optionsTable = $prefix . '_options';
-                        
-                        if (!empty($updatePostData)) {
-                            DB::connection($connection)
-                                ->table($postsTable)
-                                ->where('ID', $product_id)
-                                ->update($updatePostData);
-                        }
-            
-                        if (!empty($updatePriceData)) {
-                            
-                            $variations = DB::connection($connection)
-                                ->table($postsTable)
-                                ->where('post_parent', $product_id)
-                                ->where('post_type', 'product_variation')
-                                ->where('post_status', 'publish')
-                                ->pluck('ID');
-                            
-                            $productIds = collect([$product_id])->merge($variations)->toArray();
-                            
-                            foreach ($productIds as $pid) {
-                                DB::connection($connection)
-                                    ->table($postMetaTable)
-                                    ->where('post_id', $pid)
-                                    ->where('meta_key', '_price')
-                                    ->update(['meta_value' => $new_price]);
-                                
-                                DB::connection($connection)
-                                    ->table($postMetaTable)
-                                    ->where('post_id', $pid)
-                                    ->where('meta_key', '_regular_price')
-                                    ->update(['meta_value' => $new_price]);
-                                
-                                DB::connection($connection)
-                                    ->table($postMetaTable)
-                                    ->where('post_id', $pid)
-                                    ->where('meta_key', '_sale_price')
-                                    ->delete();
-                                
-                                $lookupExists = DB::connection($connection)
-                                    ->select("SHOW TABLES LIKE '{$lookupTable}'");
-                                    
-                                if (!empty($lookupExists)) {
-                                    DB::connection($connection)
-                                        ->table($lookupTable)
-                                        ->where('product_id', $pid)
-                                        ->update([
-                                            'min_price' => $new_price,
-                                            'max_price' => $new_price
-                                        ]);
-                                }
-                                
-                                DB::connection($connection)
-                                    ->table($priceTable)
-                                    ->where('product_id', $pid)
-                                    ->update(['min_price' => $new_price]);
-                                
-                                DB::connection($connection)
-                                    ->table($postsTable)
-                                    ->where('ID', $pid)
-                                    ->update([
-                                        'post_modified' => now(),
-                                        'post_modified_gmt' => now()
-                                    ]);
-                                
-                                DB::connection($connection)
-                                    ->table($postMetaTable)
-                                    ->where('post_id', $pid)
-                                    ->whereIn('meta_key', ['_price_hash', '_wc_average_rating', '_wc_review_count', '_product_version'])
-                                    ->delete();
-                            }
-                            
-                            DB::connection($connection)
-                                ->table($optionsTable)
-                                ->where(function($query) {
-                                    $query->where('option_name', 'LIKE', '_transient_%')
-                                          ->orWhere('option_name', 'LIKE', '_site_transient_%');
-                                })
-                                ->delete();
-                                
-                            DB::connection($connection)
-                                ->table($postMetaTable)
-                                ->where('post_id', $product_id)
-                                ->where('meta_key', '_edit_last')
-                                ->update(['meta_value' => time()]);
-                                
-                            \Log::info('Price updated for parent and variations', [
-                                'product_id' => $product_id,
-                                'variations' => $variations,
-                                'from' => $current_price,
-                                'to' => $new_price,
-                                'verified_rrp' => $current_rrp
-                            ]);
-                        }
-                        
-                        ProductPriceHistory::create([
-                            'site_id'            => $site_id,
-                            'product_id'         => $product_id,
-                            'unit_price'         => $new_price,
-                            'last_price_changed' => now(),
-                        ]);
-                        
-                    } catch (\Exception $e) {
-                        \Log::error('Failed to update product', ['product_id' => $product_id, 'error' => $e->getMessage()]);
-                    }
-                }
+    
+                ProductPriceHistory::create([
+                    'site_id' => $site_id,
+                    'product_id' => $product_id,
+                    'variation_id' => $variation_id,
+                    'old_price' => $old_price,
+                    'unit_price' => $new_price,
+                    'last_price_changed' => now(),
+                ]);
+    
+                $updatedProducts[] = [
+                    'product_id' => $product_id,
+                    'variation_id' => $variation_id,
+                    'old_price' => $old_price,
+                    'new_price' => $new_price
+                ];
+    
+            } catch (\Exception $e) {
+                \Log::error('UPDATE_EXCEPTION', [
+                    'product_id' => $product_id,
+                    'variation_id' => $variation_id,
+                    'error' => $e->getMessage()
+                ]);
+                $errors[] = ['product_id' => $product_id, 'error' => $e->getMessage()];
             }
         }
+    
+        return [
+            'success' => count($errors) === 0,
+            'updated_products' => $updatedProducts,
+            'errors' => $errors,
+            'summary' => [
+                'updated' => count($updatedProducts),
+                'failed' => count($errors)
+            ]
+        ];
     }
 }
