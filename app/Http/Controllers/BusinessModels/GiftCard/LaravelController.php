@@ -1282,6 +1282,7 @@ class LaravelController extends Controller
                 $customPrices[$data['product_id']] = [
                     'product_name' => $data['product_name'],
                     'unit_rrp' => $data['unit_rrp'],
+                    'unit_current_rrp' => $data['unit_current_rrp'] ?? $data['unit_rrp'],
                     'unit_discount' => $data['unit_discount'],
                     'unit_price' => $data['unit_price'],
                 ];
@@ -1316,6 +1317,7 @@ class LaravelController extends Controller
                 if (isset($customPrices[$product->id])) {
                     $product->name = $customPrices[$product->id]['product_name'];
                     $product->rrp = $customPrices[$product->id]['unit_rrp'];
+                    $product->current_rrp = $customPrices[$product->id]['unit_current_rrp'];
                     $product->discount = $customPrices[$product->id]['unit_discount'];
                     $product->unit_price = $customPrices[$product->id]['unit_price'];
                 }
@@ -1350,7 +1352,7 @@ class LaravelController extends Controller
             return $this->generateWithDompdf($site, $viewPath, $invoice_data, $filename);
         }
     }
-
+    
     protected function generateWithApi2Pdf($site, $viewPath, $invoice_data, $filename)
     {
         $html = View::make($viewPath, $invoice_data)->render();

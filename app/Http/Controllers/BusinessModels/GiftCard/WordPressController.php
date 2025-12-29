@@ -1242,12 +1242,14 @@ class WordPressController extends Controller
         $productDataArray = $request->input('product_data', []);
         $productIds = [];
         $customPrices = [];
+        $currentRRPs = [];
     
         foreach ($productDataArray as $item) {
             $data = json_decode($item, true);
             if (!empty($data['product_id'])) {
                 $productIds[] = $data['product_id'];
                 $customPrices[$data['product_id']] = $data['unit_price'];
+                $currentRRPs[$data['product_id']] = $data['unit_current_rrp'] ?? $data['unit_price'];
             }
         }
     
@@ -1271,9 +1273,10 @@ class WordPressController extends Controller
                 return array_search($product->id, $productIds);
             })
             ->values()
-            ->map(function ($product) use ($customPrices) {
+            ->map(function ($product) use ($customPrices, $currentRRPs) {
                 $product->unit_price = $customPrices[$product->id] ?? $product->unit_price;
                 $product->category_name = '-';
+                $product->current_rrp = $currentRRPs[$product->id] ?? $product->unit_price;
                 $product->rrp = $product->unit_price;
                 $product->discount = 0;
                 return $product;
@@ -1299,7 +1302,7 @@ class WordPressController extends Controller
             return $this->generateWithDompdf($site, $viewPath, $invoice_data, $filename);
         }
     }
-    
+
     protected function generateWithApi2Pdf($site, $viewPath, $invoice_data, $filename)
     {
         $html = View::make($viewPath, $invoice_data)->render();
