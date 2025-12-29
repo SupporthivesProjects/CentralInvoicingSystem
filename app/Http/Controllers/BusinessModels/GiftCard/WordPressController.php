@@ -1418,44 +1418,17 @@ class WordPressController extends Controller
                 continue;
             }
     
-            $product_id = (int) $data['product_id'];
+            $api_product_id = (int) $data['product_id'];
+            $variation_id = (int) ($data['variation_id'] ?? 0);
             $unit_price = floatval($data['unit_price']);
     
-            if ($product_id <= 0) {
-                \Log::error('INVALID_PRODUCT_ID', ['product_id' => $product_id]);
-                $errors[] = ['product_id' => $product_id, 'reason' => 'Invalid product ID'];
+            if ($api_product_id <= 0) {
+                \Log::error('INVALID_PRODUCT_ID', ['product_id' => $api_product_id]);
+                $errors[] = ['product_id' => $api_product_id, 'reason' => 'Invalid product ID'];
                 continue;
             }
     
             try {
-                $product = DB::connection($connection)
-                    ->table($postsTable)
-                    ->join($priceTable, "$postsTable.ID", '=', "$priceTable.product_id")
-                    ->select(
-                        "$postsTable.ID as id",
-                        "$postsTable.post_parent as parent_id",
-                        "$postsTable.post_type as post_type",
-                        "$postsTable.post_title as name",
-                        "$priceTable.min_price as current_price"
-                    )
-                    ->where("$postsTable.ID", $product_id)
-                    ->where("$postsTable.post_status", 'publish')
-                    ->first();
-    
-                if (!$product) {
-                    \Log::error('PRODUCT_NOT_FOUND', ['product_id' => $product_id]);
-                    $errors[] = ['product_id' => $product_id, 'reason' => 'Product not found'];
-                    continue;
-                }
-    
-                $current_price = floatval($product->current_price);
-    
-                if (abs($current_price - $unit_price) < 0.01) {
-                    continue;
-                }
-    
-                $api_product_id = $product->parent_id > 0 ? $product->parent_id : $product->id;
-                $variation_id = $product->post_type === 'product_variation' ? $product->id : 0;
     
                 $variationEndpoint = $endpoint . '/' . $api_product_id;
     
@@ -1498,6 +1471,26 @@ class WordPressController extends Controller
                     continue;
                 }
     
+                $prefix = explode('_', $priceTable)[0] ?? 'wp';
+                $postMetaTable = $prefix . '_postmeta';
+                $optionsTable = $prefix . '_options';
+    
+                DB::connection($connection)
+                    ->table($optionsTable)
+                    ->where('option_name', 'LIKE', '%_transient_%')
+                    ->delete();
+    
+                DB::connection($connection)
+                    ->table($optionsTable)
+                    ->where('option_name', 'LIKE', '%_site_transient_%')
+                    ->delete();
+    
+                DB::connection($connection)
+                    ->table($postMetaTable)
+                    ->where('post_id', $product_id)
+                    ->whereIn('meta_key', ['_price_hash', '_wc_average_rating', '_wc_review_count', '_product_version'])
+                    ->delete();
+    
                 ProductPriceHistory::create([
                     'site_id' => $site_id,
                     'product_id' => $api_product_id,
@@ -1515,10 +1508,10 @@ class WordPressController extends Controller
     
             } catch (\Exception $e) {
                 \Log::error('UPDATE_EXCEPTION', [
-                    'product_id' => $product_id,
+                    'product_id' => $api_product_id,
                     'error' => $e->getMessage()
                 ]);
-                $errors[] = ['product_id' => $product_id, 'error' => $e->getMessage()];
+                $errors[] = ['product_id' => $api_product_id, 'error' => $e->getMessage()];
             }
         }
     
