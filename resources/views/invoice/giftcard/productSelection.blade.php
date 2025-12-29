@@ -995,6 +995,8 @@ function clearRandomizedFilter(button) {
             const productDiscount = parseFloat($(`input.product-discount[data-product-id="${productId}"]`).val()) || 0;
             
             const cardRRP = originalCardRRP || (siteRRP * reverseRate);
+
+            const currentRRP = $rrpInput.data('unit-rrp') ? parseFloat($rrpInput.data('unit-rrp')) : siteRRP;
             
             /* COMMENTED: Product name validation - no longer needed
             const match = productName.match(/([A-Z]{3})\s*(\d+)/i);
@@ -1021,6 +1023,7 @@ function clearRandomizedFilter(button) {
                     product_name: productName,
                     unit_price: unitPrice,
                     unit_rrp: siteRRP,
+                    current_rrp: currentRRP,
                     unit_discount: productDiscount
                 })
             }));
