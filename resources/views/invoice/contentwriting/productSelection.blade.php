@@ -1289,7 +1289,7 @@ $(document).ready(function() {
 
 <script>
     $(document).ready(function() {
-        const wcStep = 25;
+        const wcStep = 10;
         const wcStepLarge = 100;
         const imgStep = 1;
         const wcMin = 0;
