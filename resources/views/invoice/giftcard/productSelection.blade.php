@@ -1010,26 +1010,6 @@ function clearRandomizedFilter(button) {
             const originalRRP = productRRP * reverseRate;
             const productDiscount = $(`input.product-discount[data-product-id="${productId}"]`).val() || 0;
 
-            const match = productName.match(/([A-Z]{3})\s*(\d+(\.\d+)?)/i);
-            const displayRRP = Math.round(originalRRP);
-
-            if (match) {
-                const nameRRP = parseFloat(match[2]);
-                const nameRRPRounded = Math.round(nameRRP);
-                const displayRRPRounded = Math.round(displayRRP);
-
-                if (nameRRPRounded !== displayRRPRounded) {
-                    toastr.warning(`PID ${productId}: Name should end with "${displayRRPRounded}" but found "${nameRRPRounded}"`);
-                    productNameInput.css('border', '1px solid red');
-                    setTimeout(() => {
-                        productNameInput.css('border', '');
-                    }, 3000);
-
-                    hasMismatch = true;
-                    return false; 
-                }
-            }
-
             $('#generate-invoice-form').append($('<input>', {
                 type: 'hidden',
                 name: 'product_data[]',
