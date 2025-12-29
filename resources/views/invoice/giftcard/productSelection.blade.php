@@ -921,7 +921,6 @@ function clearRandomizedFilter(button) {
     });
 }
 </script>
-
 <script>
         function generateInvoice(event) {
     event.preventDefault();
@@ -1005,9 +1004,9 @@ function clearRandomizedFilter(button) {
         const unitPrice = $(`input.product-price[data-product-id="${productId}"]`).val() || 0;
 
         const $rrpInput = $(`input.product-rrp[data-product-id="${productId}"]`);
-        const currentRRP = parseFloat($rrpInput.val()) || 0;
+        const unitRRP = parseFloat($rrpInput.val()) || 0;
         
-        const originalUnitRRP = $rrpInput.data('unit-rrp') ? parseFloat($rrpInput.data('unit-rrp')) : currentRRP;
+        const currentRRP = $rrpInput.data('unit-rrp') ? parseFloat($rrpInput.data('unit-rrp')) : unitRRP;
         
         const productDiscount = $(`input.product-discount[data-product-id="${productId}"]`).val() || 0;
 
@@ -1019,7 +1018,7 @@ function clearRandomizedFilter(button) {
                 product_name: productName,
                 unit_price: unitPrice,
                 current_rrp: currentRRP,
-                original_unit_rrp: originalUnitRRP,
+                unit_rrp: unitRRP,
                 unit_discount: productDiscount
             })
         }));
