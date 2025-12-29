@@ -57,6 +57,7 @@
                    value="{{ number_format($product->rrp, 2, '.', '') }}"
                    data-reverse-rate="{{ $product->reverse_rate ?? 1 }}"
                    data-product-id="{{ $product->id }}"
+                   data-db-rrp="{{ number_format($product->rrp, 2, '.', '') }}"
                    aria-label="RRP"
                    inputmode="numeric"
                    {{ $product->can_edit_price == 0 ? 'readonly' : '' }}>
