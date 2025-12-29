@@ -107,6 +107,7 @@
             data-unit_price="{{ number_format($product->unit_price, 2, '.', '') }}"
             data-reverse-rate="{{ $product->reverse_rate ?? 1 }}"
             data-original-rrp="{{ number_format($product->rrp, 0, '.', '') }}"
+            data-current-rrp="{{ number_format($product->rrp, 0, '.', '') }}"
             data-original-discount="{{ number_format($product->discount, 0, '.', '') }}"
             value="{{ $product->id }}" 
             checked>

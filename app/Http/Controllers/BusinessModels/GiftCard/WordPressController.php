@@ -1185,52 +1185,46 @@ class WordPressController extends Controller
         $company_detail_type = $request->input('company_detail_type');
     
         if ($company_detail_type === 'remote') {
-
-            $invoice_data['site_name']          = $request->input('remote_site_name') ?? '';
-            $invoice_data['company_name']       = $request->input('remote_company_name') ?? '';
-            $invoice_data['company_email']      = $request->input('remote_company_email') ?? '';
-            $invoice_data['company_mobile']     = $request->input('remote_company_mobile') ?? '';
-            $invoice_data['company_address']    = $request->input('remote_company_address') ?? '';
+            $invoice_data['site_name'] = $request->input('remote_site_name') ?? '';
+            $invoice_data['company_name'] = $request->input('remote_company_name') ?? '';
+            $invoice_data['company_email'] = $request->input('remote_company_email') ?? '';
+            $invoice_data['company_mobile'] = $request->input('remote_company_mobile') ?? '';
+            $invoice_data['company_address'] = $request->input('remote_company_address') ?? '';
             $invoice_data['registration_number'] = $request->input('remote_registration_number') ?? '';
-            $invoice_data['license_number']      = $request->input('remote_license_number') ?? '';
-        
+            $invoice_data['license_number'] = $request->input('remote_license_number') ?? '';
+    
             $remote_database = DB::connection($this->connectionType)->table('general_settings')->orderByDesc('updated_at')->first();
-        
+    
             if ($remote_database) {
                 DB::connection($this->connectionType)->table('general_settings')->where('id', $remote_database->id)
                     ->update([
-                        'site_name'            => $request->input('remote_site_name') ?? '',
-                        //'company_name'        => $request->input('remote_company_name') ?? '',
-                        'email'                => $request->input('remote_company_email') ?? '',
-                        'phone'                => $request->input('remote_company_mobile') ?? '',
-                        'address'              => $request->input('remote_company_address') ?? '',
-                       // 'registration_number'  => $request->input('remote_registration_number') ?? '',
-                       // 'license_number'       => $request->input('remote_license_number') ?? '',
-                        'updated_at'           => now(),
+                        'site_name' => $request->input('remote_site_name') ?? '',
+                        'email' => $request->input('remote_company_email') ?? '',
+                        'phone' => $request->input('remote_company_mobile') ?? '',
+                        'address' => $request->input('remote_company_address') ?? '',
+                        'updated_at' => now(),
                     ]);
             }
-        
         } else {
-        
-            $invoice_data['site_name']          = $request->input('local_site_name') ?? '';
-            $invoice_data['company_name']       = $request->input('local_company_name') ?? '';
-            $invoice_data['company_email']      = $request->input('local_company_email') ?? '';
-            $invoice_data['company_mobile']     = $request->input('local_company_mobile') ?? '';
-            $invoice_data['company_address']    = $request->input('local_company_address') ?? '';
+            $invoice_data['site_name'] = $request->input('local_site_name') ?? '';
+            $invoice_data['company_name'] = $request->input('local_company_name') ?? '';
+            $invoice_data['company_email'] = $request->input('local_company_email') ?? '';
+            $invoice_data['company_mobile'] = $request->input('local_company_mobile') ?? '';
+            $invoice_data['company_address'] = $request->input('local_company_address') ?? '';
             $invoice_data['registration_number'] = $request->input('registration_number') ?? '';
-            $invoice_data['license_number']      = $request->input('license_number') ?? '';
-        
-            $site->site_name          = $invoice_data['site_name'];
-            $site->company_name       = $invoice_data['company_name'];
-            $site->company_email      = $invoice_data['company_email'];
-            $site->company_mobile     = $invoice_data['company_mobile'];
-            $site->company_address    = $invoice_data['company_address'];
+            $invoice_data['license_number'] = $request->input('license_number') ?? '';
+    
+            $site->site_name = $invoice_data['site_name'];
+            $site->company_name = $invoice_data['company_name'];
+            $site->company_email = $invoice_data['company_email'];
+            $site->company_mobile = $invoice_data['company_mobile'];
+            $site->company_address = $invoice_data['company_address'];
             $site->registration_number = $invoice_data['registration_number'];
-            $site->license_number      = $invoice_data['license_number'];
-        
+            $site->license_number = $invoice_data['license_number'];
+    
             $site->save();
         }
-        
+    
         $invoice_data['invoice_header_image'] = base64EncodeImage($site->invoice_header_image);
         $invoice_data['invoice_footer_image'] = base64EncodeImage($site->invoice_footer_image);
         $invoice_data['invoice_signature'] = base64EncodeImage($site->invoice_signature);
@@ -1256,35 +1250,35 @@ class WordPressController extends Controller
                 $customPrices[$data['product_id']] = $data['unit_price'];
             }
         }
-
-    $postsTable = $this->productTable;
-    $priceTable = $this->productPriceTable;
-    $connection = $this->connectionType;
-
-    $products = DB::connection($connection)
-        ->table($postsTable)
-        ->join($priceTable, "$postsTable.ID", '=', "$priceTable.product_id")
-        ->whereIn("$postsTable.ID", $productIds)
-        ->select([
-            "$postsTable.ID as id",
-            "$postsTable.post_title as name",
-            "$postsTable.post_excerpt as description",
-            "$postsTable.post_name as slug",
-            "$priceTable.min_price as unit_price"
-        ])
-        ->get()
-        ->sortBy(function ($product) use ($productIds) {
-            return array_search($product->id, $productIds);
-        })
-        ->values()
-        ->map(function ($product) use ($customPrices) {
-            $product->unit_price = $customPrices[$product->id] ?? $product->unit_price;
-            $product->category_name = '-';
-            $product->rrp = $product->unit_price;
-            $product->discount = 0;
-            return $product;
-        });
-
+    
+        $postsTable = $this->productTable;
+        $priceTable = $this->productPriceTable;
+        $connection = $this->connectionType;
+    
+        $products = DB::connection($connection)
+            ->table($postsTable)
+            ->join($priceTable, "$postsTable.ID", '=', "$priceTable.product_id")
+            ->whereIn("$postsTable.ID", $productIds)
+            ->select([
+                "$postsTable.ID as id",
+                "$postsTable.post_title as name",
+                "$postsTable.post_excerpt as description",
+                "$postsTable.post_name as slug",
+                "$priceTable.min_price as unit_price"
+            ])
+            ->get()
+            ->sortBy(function ($product) use ($productIds) {
+                return array_search($product->id, $productIds);
+            })
+            ->values()
+            ->map(function ($product) use ($customPrices) {
+                $product->unit_price = $customPrices[$product->id] ?? $product->unit_price;
+                $product->category_name = '-';
+                $product->rrp = $product->unit_price;
+                $product->discount = 0;
+                return $product;
+            });
+    
         $invoice_data['products'] = $products;
         $invoice_data['product_ids'] = $productIds;
     
@@ -1299,20 +1293,13 @@ class WordPressController extends Controller
             ? $request->input('invoice_file_name') . '.pdf'
             : $invoice_data['invoice_number'] . '.pdf';
     
-            $filename = $request->filled('invoice_file_name')
-            ? $request->input('invoice_file_name') . '.pdf'
-            : $invoice_data['invoice_number'] . '.pdf';
-            
-            try {
-                return $this->generateWithApi2Pdf($site, $viewPath, $invoice_data, $filename);
-
-            } catch (\Exception $e) {
-                // Fallback to Dompdf if API2PDF fails
-                return $this->generateWithDompdf($site, $viewPath, $invoice_data, $filename);
-            }
-    
+        try {
+            return $this->generateWithApi2Pdf($site, $viewPath, $invoice_data, $filename);
+        } catch (\Exception $e) {
+            return $this->generateWithDompdf($site, $viewPath, $invoice_data, $filename);
+        }
     }
-
+    
     protected function generateWithApi2Pdf($site, $viewPath, $invoice_data, $filename)
     {
         $html = View::make($viewPath, $invoice_data)->render();
