@@ -1023,7 +1023,6 @@ function clearRandomizedFilter(button) {
                     unit_price: unitPrice,
                     unit_rrp: siteRRP,
                     current_rrp: BbRRP,
-                    current_rrp: currentRRP,
                     unit_discount: productDiscount
                 })
             }));
