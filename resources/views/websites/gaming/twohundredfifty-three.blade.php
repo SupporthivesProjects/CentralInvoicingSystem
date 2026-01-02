@@ -14,7 +14,7 @@
     }
 </style>
 
-<body style="padding: 0px; margin: 0px;background-image: linear-gradient(to right, #020524 70%, #F43D87 70%);">
+<body style="padding: 0px; margin: 0px;background-image: linear-gradient(to right, #020524 72%, #F43D87 72%);">
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr style="width:100%;">
             <td align="center" style="padding: 0px;" style="width:100%;">
