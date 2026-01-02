@@ -53,7 +53,7 @@
                             <br>
                             <br>
                             <br>
-                            <div style="height: 500px; padding-left: 20px;">
+                            <div style="height: 500px; padding-left: 20px;padding-top: 60px;">
                                 <table style="border-collapse: collapse;">
                                     <tr style="border-collapse: collapse;height: 24px;">
                                         <td
