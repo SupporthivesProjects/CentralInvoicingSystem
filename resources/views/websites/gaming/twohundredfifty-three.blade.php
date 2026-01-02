@@ -8,6 +8,10 @@
     table tr:nth-last-child(4) {
         border-bottom: 1px solid #FFFFFF;
     }
+    @page {
+        margin: 0px;
+        padding: 0px;
+    }
 </style>
 
 <body style="padding: 0px; margin: 0px;">
