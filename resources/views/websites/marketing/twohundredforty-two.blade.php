@@ -93,7 +93,7 @@
                                                             <td rowspan="2" style="padding: 0; text-transform:uppercase; text-align:center;">
                                                                 <table style="border-collapse: collapse; width: 100%;border-collapse: collapse;">
                                                                     <tr>
-                                                                        <td style="padding: 0; text-transform:uppercase; text-align:center;">
+                                                                        <td style="padding: 0; text-transform:uppercase; text-align:left;">
                                                                             Grand Total
                                                                         </td>
                                                                         <td style="padding:15px 0px; text-align:left; color:#ff5722; font-size:20px;">
