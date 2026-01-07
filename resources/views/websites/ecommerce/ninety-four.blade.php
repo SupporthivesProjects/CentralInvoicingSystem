@@ -109,7 +109,7 @@
       <!-- Footer Details -->
       <tr>
         <td style="padding: 10px 20px 20px 20px; text-align: center; font-size: 10px; color: #333;font-weight: bold;">
-          {{ $company_name }} {!! $company_address !!} | PHONE: {{ $company_mobile }}
+          {{ $company_name }} {!! $company_address !!}
         </td>
       </tr>
 
