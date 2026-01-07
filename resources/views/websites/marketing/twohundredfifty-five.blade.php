@@ -22,7 +22,7 @@
                                 </p>
                                 <p
                                     style="color: #000000; font-family: Arial;text-align: start; margin: 0px; font-size: 10px;margin-top:6px;font-weight: 400;">
-                                    {!! nl2br($company_address) !!}<br>
+                                    {{ $company_address }}<br>
                                     {{ $company_email }} | {{ $company_mobile }}
                                 </p>
                             </div>
@@ -85,15 +85,15 @@
                                                 style="width: 300px; height: 140px; border: 1px solid grey; padding: 5px; display: flex; flex-direction: column; gap: 8px;">
                                                 <p
                                                     style="color:#000000; text-align:start;padding:8px 10px;font-family:  Arial;font-size:10px;margin: 0px;font-weight: 400; width: 93%; background-color: #F2F2F2;">
-                                                    Invoice to
+                                                    Invoice To
                                                 </p>
                                                 <p
-                                                    style="color:#000000; text-align:start;padding:8px;font-family:  Arial;font-size:18px;margin: 0px;font-weight: 400;">
+                                                    style="color:#000000; text-align:start;padding:0px;font-family:  Arial;font-size:18px;margin: 0px;font-weight: 400;">
                                                     {{ $customer_name }}
                                                 </p>
                                                 <p
                                                     style="color:#000000; text-align:start;padding:0px;font-family:  Arial;font-size:10px;margin: 0px;font-weight: 400;">
-                                                    {{ $site_name }}<br>{{ $company_email }}
+                                                    {{ $site_name }}<br>{{ $company_address }}<br>{{ $company_email }}
                                                     | {{ $company_mobile }}
                                                 </p>
                                             </div>
@@ -160,14 +160,14 @@
                                         </td>
                                         <td
                                             style="width:100px;color: #FFFFFF;text-align:center;padding-right:10px;font-family: Arial;font-size: 12px;margin: 0px;font-weight: 400;border-collapse: collapse; background-color: #a6a6a6; border-bottom: 1px solid #F2F2F2;">
-                                            <p style="margin: 0px; padding: 10px;">{{ site_currency() . number_format($invoice_amount + $discount_amount, 2) }}</p>
+                                            <p style="margin: 0px; padding: 10px;">{{ site_currency() . number_format($invoice_amount + $discount_amount, 2) }}/p>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td style="width: 100px;text-align: right;font-family: Arial;font-size: 10px;margin: 0px;font-weight: 400;padding-right: 10px; "
                                             colspan="3">
                                         </td>
-                                        {{-- <td style="width: 100px;color: #FFFFFF;text-align: end;font-family: Arial;font-size: 12px;margin: 0px;font-weight: 400; background-color: #a6a6a6; border-bottom: 1px solid #F2F2F2;"
+                                        <td style="width: 100px;color: #FFFFFF;text-align: end;font-family: Arial;font-size: 12px;margin: 0px;font-weight: 400; background-color: #a6a6a6; border-bottom: 1px solid #F2F2F2;"
                                             colspan="1">
                                             <p style="margin: 0px; padding: 10px;">
                                                 Tax
@@ -176,7 +176,7 @@
                                         <td
                                             style="width:100px;color: #FFFFFF;text-align:center;padding-right:10px;font-family: Arial;font-size: 12px;margin: 0px;font-weight: 400;border-collapse: collapse; background-color: #a6a6a6; border-bottom: 1px solid #F2F2F2;">
                                             <p style="margin: 0px; padding: 10px;">$00.00</p>
-                                        </td> --}}
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td style="width: 100px;text-align: right;font-family: Arial;font-size: 10px;margin: 0px;font-weight: 400;padding-right: 10px; "
