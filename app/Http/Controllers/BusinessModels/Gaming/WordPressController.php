@@ -715,26 +715,17 @@ class WordPressController extends Controller
     
         foreach ($productDataArray as $data) {
     
-            if (!isset($data['bundle_id'], $data['unit_price'], $data['old_price'])) {
+            if (!isset($data['bundle_id'], $data['unit_price'])) {
                 \Log::warning('Missing required fields', ['data' => $data]);
                 continue;
             }
     
             $product_id = isset($data['id']) ? (int) $data['id'] : 0;
             $variation_id = (int) $data['bundle_id'];
-            $currentPrice = (float) $data['old_price'];
             $unit_price = (float) $data['unit_price'];
     
             if ($product_id <= 0 || $variation_id <= 0) {
                 \Log::warning('Invalid product or variation ID', [
-                    'product_id' => $product_id,
-                    'variation_id' => $variation_id
-                ]);
-                continue;
-            }
-    
-            if (abs($currentPrice - $unit_price) < 0.01) {
-                \Log::info('Price unchanged, skipping', [
                     'product_id' => $product_id,
                     'variation_id' => $variation_id
                 ]);
@@ -756,6 +747,19 @@ class WordPressController extends Controller
                         'status' => $verifyResponse->status()
                     ]);
                     $errors[] = $errorMsg;
+                    continue;
+                }
+    
+                $currentData = $verifyResponse->json();
+                $currentPrice = (float) ($currentData['price'] ?? 0);
+    
+                if (abs($currentPrice - $unit_price) < 0.01) {
+                    \Log::info('Price unchanged, skipping', [
+                        'product_id' => $product_id,
+                        'variation_id' => $variation_id,
+                        'current_price' => $currentPrice,
+                        'new_price' => $unit_price
+                    ]);
                     continue;
                 }
     

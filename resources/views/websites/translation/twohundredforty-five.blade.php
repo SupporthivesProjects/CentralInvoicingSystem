@@ -53,12 +53,14 @@
                                                 <span style="font-size: 12px;"><b>Billed To:</b></span><br> 
                                                 {{ $customer_name }}<br>
                                             </p>
-                                            <p style="line-height: 165%; width: 50%; padding-left: 100px; font-family: Arial;font-size: 11px;margin: 0px;font-weight: 400;">
+                                            <p style="line-height: 165%; width: 60%; padding-left: 100px; font-family: Arial;font-size: 11px;margin: 0px;font-weight: 400;">
                                                 <span style="font-size: 12px;"><b>Billed From:</b></span><br>
+                                                {{ $site_name }}<br>
                                                 {{ $company_name }}<br>
-                                                {{ $company_address }}<br>
                                                 {{ $company_email }}<br>
-                                                +123 44 555 6789
+                                                 @if(!empty($company_mobile))
+                                                    {{ $company_mobile}}<br>
+                                                @endif
                                                 <br>
                                             </p>
                                         </div>
@@ -74,10 +76,10 @@
                                        <b>Service type</b> 
                                     </td>
                                     <td style="width: 100px; color: #FFFFFF; text-align: center; padding: 10px;font-family:  Arial;font-size: 14px;margin: 0px;font-weight: 400;border-collapse: collapse;">
-                                        <b>Pages</b>
+                                        <b>Quantity</b>
                                     </td>
                                     <td style="width: 150px; color: #FFFFFF; text-align: center; padding: 10px; font-family:  Arial;font-size: 14px;margin: 0px;font-weight: 400;border-collapse: collapse;">
-                                        <b>Words</b>
+                                        <b>Type</b>
                                     </td>
                                     <td style="width: 150px; color: #FFFFFF; text-align: end; padding: 10px; font-family:  Arial;font-size: 14px;margin: 0px;font-weight: 400;border-collapse: collapse;">
                                         <b>Total</b>
