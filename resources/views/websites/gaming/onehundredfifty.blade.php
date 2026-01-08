@@ -38,7 +38,12 @@
         <table width="100%" style="font-size: 14px; ">
           <tr>
             <td style="color: #1a1a1a;">
-             {!! $company_address !!}
+             <!-- {!! $company_address !!} -->
+             {{ company_$address = preg_replace(
+    '/^(.*?)\s(Harju maakond.*?,\s\d{5})\s([^\s]+@[^\s]+)/',
+    "$1<br><br>$2<br><br>$3",
+    $address
+); }}
               {{ $company_mobile  }}<br>
               <a href="mailto:{{ $company_email }}" style="color: #0044cc;">{{ $company_email }}</a> | <a href="{{ $site->site_link }}" style="color: #0044cc;">{{ $site->site_link }}</a>
             </td>
