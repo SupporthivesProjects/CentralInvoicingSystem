@@ -146,7 +146,7 @@
 
         .desc-col {
             width: 45%;
-            text-align: left;
+            text-align: right;
         }
 
         .price-col {
@@ -162,6 +162,7 @@
         .product-name {
             font-weight: bold;
             margin-bottom: 2px;
+            text-align: right;
         }
 
         .platform-info {
@@ -253,9 +254,9 @@
                     <thead>
                         <tr>
                             <th class="qty-col" >Quantity</th>
-                            <th class="desc-col" style="align-content: flex-end; display: flex;">Description</th>
-                            <th class="price-col" style="align-content: flex-end; display: flex;">Unit Price</th>
-                            <th class="total-col" style="align-content: flex-end; display: flex;">Total</th>
+                            <th class="desc-col"  style="text-align: right">Description</th>
+                            <th class="price-col" style="text-align: right">Unit Price</th>
+                            <th class="total-col" style="text-align: right">Total</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -264,7 +265,7 @@
                         <tr>
                             <td class="qty-col">1</td>
                             <td class="desc-col">
-                                <div class="product-name" style="align-content: flex-end; display: flex;">{{ $product['name'] }}</div>
+                                <div class="product-name">{{ $product['name'] }}</div>
                                 @if(isset($product['platform_fields']) && isset($product['selected_platform']))
                                     <div class="platform-info">{{ $product['selected_platform'] }}:</div>
                                     @foreach($product['platform_fields'][$product['selected_platform']] as $fieldName => $value)
