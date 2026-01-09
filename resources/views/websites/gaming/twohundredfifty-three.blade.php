@@ -99,7 +99,7 @@
                                             {{ $site_name }}<br>
                                             {{ $company_address }}<br>
                                         </td>
-                                        <td style="width: 100px;color: #FFFFFF;text-align: start;font-family: Arial;font-size: 12px;margin: 0px;font-weight: 400; padding-top: 80px;padding: 0px 10px;"
+                                        <td style="width: 100px;color: #FFFFFF;text-align: start;font-family: Arial;font-size: 12px;margin: 0px;font-weight: 400; padding-top: 80px;padding: 0px 10px;padding-top: 40px;"
                                             colspan="1">
                                             <p>SUBTOTAL</p>
                                         </td>
