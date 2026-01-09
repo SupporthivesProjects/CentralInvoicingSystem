@@ -21,8 +21,17 @@
 
                      <tr style=" background: url('{{ $invoice_image1 }}');background-repeat: no-repeat;background-size: cover;background-position: center;">
                         <td style="padding:40px;  font-family: arial;">
-                            <p style="text-align: center; color: #2E75B5; font-size: 20px; margin: 0;"><b>Invoice</b><b> #{{ $invoice_number }}</b></p>
-
+                            <!-- <p style="text-align: center; color: #2E75B5; font-size: 20px; margin: 0;"><b>Invoice</b><b> #{{ $invoice_number }}</b></p> -->
+                            <table style="width: 100%; border: none; border-collapse: collapse;">
+                              <tr>
+                                <td>
+                                  <p style="text-align: center; color: #2E75B5; font-size: 20px; margin: 0;"><b>Invoice</b><b> #{{ $invoice_number }}</b></p>
+                                </td>
+                                <td>
+                                  <p style="text-align: center; color: #2E75B5; font-size: 20px; margin: 0;"><b>Invoice Date:</b><b> #{{ $invoice_date }}</b></p>
+                                </td>
+                              </tr>
+                            </table>
 
                             <table style="width: 100%; border: 1px solid #0074d9; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 10px; margin-top: 20px;">
                                 <tr>
