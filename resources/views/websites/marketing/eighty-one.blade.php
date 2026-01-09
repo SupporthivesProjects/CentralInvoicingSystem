@@ -31,17 +31,17 @@
                                 </tr>
                                 <tr>
                                   <td style="padding: 16px; display:flex; flex-direction: column">
-                                    <p><strong>Name</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ $customer_name  }}</p>
+                                    <p><strong>Name : </strong> {{ $customer_name  }}</p>
                                     <!-- <p><strong>Email</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ $customer_email }}</p> -->
                                   </td>
                                   <td style="padding: 16px; border-left: 1px solid #0074d9;">
                                     <div>
-                                      <p><strong>Name</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ $site_name }}</p>
-                                      <p><strong>Address</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {!! $company_address !!}</p>
+                                      <p><strong>Name : </strong> {{ $site_name }}</p>
+                                      <p><strong>Address : </strong><a> {!! $company_address !!} </a></p>
                                       @if(!empty($company_mobile))
-                                        <p><strong>Phone</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ $company_mobile  }}</p>
+                                        <p><strong>Phone : </strong> {{ $company_mobile  }}</p>
                                       @endif
-                                      <p><strong>Email</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ $company_email }}</p>
+                                      <p><strong>Email : </strong> {{ $company_email }}</p>
                                     </div>
                                   </td>
                                 </tr>
