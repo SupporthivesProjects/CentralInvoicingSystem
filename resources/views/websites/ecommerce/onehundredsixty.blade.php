@@ -65,6 +65,7 @@
                                                 font-size: 9px;
                                                 font-family: 'Courier New', Courier, monospace;
                                                 margin-top: 4px;
+                                                font-weight: bold;
                                                 "
                                             >
                                                 No.{{ $invoice_number }}
@@ -75,6 +76,7 @@
                                                 font-size: 9px;
                                                 font-family: 'Courier New', Courier, monospace;
                                                 margin-top: 4px;
+                                                font-weight: bold;
                                                 "
                                             >
                                                 {{ $invoice_date }}
