@@ -62,7 +62,7 @@
                                             <b
                                                 style="
                                                 color: white;
-                                                font-size: 10px;
+                                                font-size: 9px;
                                                 font-family: 'Courier New', Courier, monospace;
                                                 margin-top: 4px;
                                                 font-weight: 700;
