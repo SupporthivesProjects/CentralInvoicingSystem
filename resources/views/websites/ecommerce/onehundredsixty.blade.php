@@ -65,7 +65,7 @@
                                                 font-size: 9px;
                                                 font-family: 'Courier New', Courier, monospace;
                                                 margin-top: 4px;
-                                                font-weight: bold;
+                                                font-weight: 800;
                                                 "
                                             >
                                                 No.{{ $invoice_number }}
