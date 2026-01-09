@@ -73,12 +73,12 @@
                       <p style="color: #58595b;font-size: 12px;margin: 0 0 0 0;">Invoice Date:</p>
                     </td>
                     <td style="text-align: right;">
-                      <p style="color: #58595b;font-size: 12px;margin: 0 0 0 0;">Issue Date:</p>
+                    
                     </td>
                   </tr>
                   <tr>
                     <td style="text-align: left;"><p style="margin: 0; font-size: 14px;">{{ $invoice_date }}</p></td>
-                    <td style="text-align: right;"><p style="margin: 0; font-size: 14px;">{{ $invoice_date }}</p></td>
+                    <td style="text-align: right;"></td>
                   </tr>
                 </table>
               </td>
@@ -108,7 +108,7 @@
                 <tr style="border-bottom: 1px solid #ccc;">
                   <td>{{ $product->name }}<br />
                     <small> 
-                          @if($product->wordcount)<span class="me-2 badge bg-light text-dark"><strong>Words Count:</strong> {{ $product->wordcount }}</span>@endif
+                          @if($product->wordcount)<span class="me-2 badge bg-light text-dark"><strong>Word Count:</strong> {{ $product->wordcount }}</span>@endif
                           @if($product->quality)<span class="me-2 badge bg-light text-dark"><strong>Quality:</strong> {{ $product->quality }}</span>@endif
                           @if($product->imagecount)<span class="me-2 badge bg-light text-dark"><strong>Image Count:</strong> {{ $product->imagecount }}</span>@endif
                           <br />
