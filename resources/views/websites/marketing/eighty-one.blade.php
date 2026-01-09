@@ -46,7 +46,7 @@
                                   <td style="padding: 16px; border-left: 1px solid #0074d9;">
                                     <div>
                                       <p><strong>Name : </strong> {{ $site_name }}</p>
-                                      <p><strong>Address : </strong><a> {!! $company_address !!} </a></p>
+                                      <p><strong>Address : </strong><p> {!! $company_address !!} </p></p>
                                       @if(!empty($company_mobile))
                                         <p><strong>Phone : </strong> {{ $company_mobile  }}</p>
                                       @endif
