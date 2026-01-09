@@ -22,7 +22,7 @@
                                 </p>
                                 <p
                                     style="color: #000000; font-family: Arial;text-align: start; margin: 0px; font-size: 10px;margin-top:6px;font-weight: 400;">
-                                    {{ $company_address }}<br>
+                                    {!! $company_address !!}<br>
                                     {{ $company_email }} | {{ $company_mobile }}
                                 </p>
                             </div>

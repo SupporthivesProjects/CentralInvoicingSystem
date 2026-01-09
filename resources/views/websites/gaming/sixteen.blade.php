@@ -146,7 +146,7 @@
 
         .desc-col {
             width: 45%;
-            text-align: left;
+            text-align: right;
         }
 
         .price-col {
@@ -162,6 +162,7 @@
         .product-name {
             font-weight: bold;
             margin-bottom: 2px;
+            text-align: right;
         }
 
         .platform-info {
@@ -233,7 +234,9 @@
                             <td class="billing-from">
                                 <span class="billing-label">BILLED FROM:</span>
                                 <div class="billing-info">{{ $site->site_name }}</div>
-                                <div class="billing-info">Website: <a href="{{ $site->site_link ?? 'N/A' }}" style="text-decoration: none; color: #000000;">www.goldforgamers.com</a></div>
+                                {{--<div class="billing-info">Website: <a href="{{ $site->site_link ?? 'N/A' }}" style="text-decoration: none; color: #000000;">www.goldforgamers.com</a></div>--}}
+                                <div class="billing-info">{{ $company_name }}</div>
+                                <div class="billing-info">Address: <a style="text-decoration: none; color: #000000;">{{ $company_address }}</a></div>
                                 <div class="billing-info">Email: {{ $company_email }}</div>
                             </td>
                             <td class="billing-to">
@@ -250,10 +253,10 @@
                 <table class="invoice-table">
                     <thead>
                         <tr>
-                            <th class="qty-col">Quantity</th>
-                            <th class="desc-col">Description</th>
-                            <th class="price-col">Unit Price</th>
-                            <th class="total-col">Total</th>
+                            <th class="qty-col" >Quantity</th>
+                            <th class="desc-col"  style="text-align: right">Description</th>
+                            <th class="price-col" style="text-align: right">Unit Price</th>
+                            <th class="total-col" style="text-align: right">Total</th>
                         </tr>
                     </thead>
                     <tbody>
