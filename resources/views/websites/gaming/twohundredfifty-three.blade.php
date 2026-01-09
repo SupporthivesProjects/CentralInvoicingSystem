@@ -94,7 +94,7 @@
                                         </tr>
                                     @endforeach
                                     <tr>
-                                        <td style="    text-align: start; font-family: Arial; font-size: 10px; margin: 0px; font-weight: 400; padding-left: 40px; color: #FFFFFF; font-style: italic; padding-top: 50px;"
+                                        <td style="    text-align: start; font-family: Arial; font-size: 10px; margin: 0px; font-weight: 400; padding-left: 0px; color: #FFFFFF; font-style: italic; padding-top: 50px;"
                                             colspan="2">
                                             {{ $site_name }}<br>
                                             {{ $company_address }}<br>
