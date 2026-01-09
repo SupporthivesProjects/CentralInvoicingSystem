@@ -59,7 +59,7 @@
                                             >
                                                 Invoice
                                             </b>
-                                            <b
+                                            <strong
                                                 style="
                                                 color: white;
                                                 font-size: 9px;
@@ -69,7 +69,7 @@
                                                 "
                                             >
                                                 No.{{ $invoice_number }}
-                                            </b>
+                                            </strong>
                                             <b
                                                 style="
                                                 color: white;
