@@ -70,7 +70,7 @@
                                             >
                                                 No.{{ $invoice_number }}
                                             </b>
-                                            <b
+                                            <p
                                                 style="
                                                 color: white;
                                                 font-size: 9px;
@@ -79,8 +79,8 @@
                                                 font-weight: 700;
                                                 "
                                             >
-                                                {{ $invoice_date }}
-                                            </b>
+                                                {{ $invoice_date }}hjk
+                                            </p>
                                             </div>
 
                                     </td>
