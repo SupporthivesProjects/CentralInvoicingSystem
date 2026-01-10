@@ -118,7 +118,7 @@
                                 <tr>
                                     <td></td>
                                     <td style="text-align:right; padding-top:8px; font-size:11px;">
-                                        <span style="margin-right:18px;">{{ $invoice_date }}</span>
+                                        <span style="padding-right:18px;">{{ $invoice_date }}</span>
                                         <span>{{ $invoice_number }}</span>
                                     </td>
                                 </tr>
