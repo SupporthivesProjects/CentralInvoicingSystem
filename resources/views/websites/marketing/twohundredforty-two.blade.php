@@ -31,18 +31,18 @@
 
                                     <td style="font-family: 'Montserrat'; font-size: 9px;">
 
-                                        <table width="100%" cellpadding="0" cellspacing="0" style="padding:0px 30px;  ">
+                                        <table width="100%" cellpadding="0" cellspacing="0" style="padding:0px 80px;  ">
                                             <tr>
                                                 <td style="width:20%;  color:#000;">
                                                     <p style="margin:0;margin-top: 10px; font-size:14px; text-transform: capitalize;">Invoice To :</p>
-                                                    <p style="margin:0; margin-top: 10px; font-size:12px; text-transform: capitalize;">Invoice Date :</p>
+                                                    <p style="margin:0; margin-top: 10px; font-size:14px; text-transform: capitalize;">Invoice Date :</p>
                                                     <p style="margin:0; margin-top: 10px; font-size:12px; text-transform: capitalize;">Invoice No :</p>
                                                 </td>
 
                                                 <td style="width:80%;  color:#000;">
                                                     <p style="margin: 0%;margin-top: 10px; font-size: 14px; font-weight:bold;">{{ $customer_name ? $customer_name : '' }}</p>
-                                                    <p style="margin:0%; margin-top: 10px; font-size: 12px;">{{ $invoice_date }}</p>
-                                                    <p style="margin:0; margin-top: 10px;font-size: 12px;">{{ $invoice_number }}</p>
+                                                    <p style="margin:0%; margin-top: 10px; font-size: 14px;">{{ $invoice_date }}</p>
+                                                    <p style="margin:0; margin-top: 10px;font-size: 14px;">{{ $invoice_number }}</p>
                                                 </td>
                                             </tr>
                                         </table>
@@ -70,8 +70,8 @@
                                                         <tr style="font-size:12px;">
                                                             <td style="padding:25px 18px 18px 18px;">{{ $product->name }}</td>
                                                             <td style="padding:25px 18px 18px 18px; text-align:center;">{{ site_currency() . number_format($product->unit_price ?? 0, 2) }}</td>
-                                                            <td style="padding:25px 18px 18px 18px; text-align:center;">2</td>
-                                                            <td style="padding:25px 18px 18px 18px; text-align:center;">{{ site_currency() . number_format($invoice_amount ?? 0, 2) }}</td>
+                                                            <td style="padding:25px 18px 18px 18px; text-align:center;">1</td>
+                                                            <td style="padding:25px 18px 18px 18px; text-align:center;">{{ site_currency() . number_format($product->unit_price ?? 0, 2) }}</td>
                                                         </tr>
                                                         @endforeach
                                                     
@@ -138,8 +138,8 @@
                                                             <td>
                                                                 <div style="display: flex;flex-direction: row;justify-content: left;align-items: center; gap: 16px;">
                                                                     <svg style="width: 15px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path fill="#D95D27" d="M0 188.6C0 84.4 86 0 192 0S384 84.4 384 188.6c0 119.3-120.2 262.3-170.4 316.8-11.8 12.8-31.5 12.8-43.3 0-50.2-54.5-170.4-197.5-170.4-316.8zM192 256a64 64 0 1 0 0-128 64 64 0 1 0 0 128z"/></svg>
-                                                                    <p style="font-size: 12px;">
-                                                                        {!! $company_address !!}
+                                                                    <p style="font-size: 10px;">
+                                                                        {{ $company_address }}
                                                                     </p>
                                                                 </div>
                                                                 
