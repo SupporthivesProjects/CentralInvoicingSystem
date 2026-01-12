@@ -127,7 +127,7 @@
         color: #f39c12;
         font-size: 14px;
         font-weight: bold;
-        padding-bottom: 20px;
+        padding-bottom: 100px;
         text-align: center; 
       "
     >
