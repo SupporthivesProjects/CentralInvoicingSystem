@@ -158,13 +158,13 @@
                                <tbody>
                                  
                                  <tr>
-                                 <td class="addrss" style="width: 40%; vertical-align: top;">
+                                 <td class="addrss" style="width:30%; vertical-align: top;">
                                         <h4>Billed To:</h4>
                                         <p style="font-size: 12px;">{{ $customer_name }}</p>
                                         <p style="font-size: 12px;">{{ $customer_email }}</p>
                                     </td>
 
-                                    <td class="addrss">
+                                    <td class="addrss" style="width:40%;vertical-align: top;">
                                         <h4>Billed From:</h4>
                                         <p style="font-size: 12px;">{{ $site_name }}</p>
                                         <p style="font-size: 12px;">{!! $company_address !!}</p>
