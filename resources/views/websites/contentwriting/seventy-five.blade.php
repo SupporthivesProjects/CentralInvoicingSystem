@@ -2,6 +2,17 @@
 <html>
 <head>
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
+    <style>
+      .footer-fixed {
+        position: fixed;
+        bottom: -1px;
+        left: 0;
+        right: 0;
+        width: 100%;
+        /* background: url('{{ $invoice_footer_image }}') center center no-repeat; */
+        /* background-size: cover; */
+      }
+    </style>
 </head>
 <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #ffffff;">
   <table width="100%" cellpadding="0" cellspacing="0" border="0"
@@ -91,7 +102,7 @@
 
 
     <!-- Table -->
-      <tr style=" height: 459px;">
+      <tr>
         <td style="padding: 16px 24px;" align="center" >
           <table width="100%" cellpadding="" cellspacing="0">
           <tr>
@@ -164,9 +175,25 @@
         </td>
       </tr>
 
-    <tr style=" background: url('{{ $invoice_footer_image }}');background-repeat: no-repeat; background-size: cover;background-position: center;height: 104px;">
+    <!-- <tr class="footer-fixed" style=" background: url('{{ $invoice_footer_image }}');background-repeat: no-repeat; background-size: cover;background-position: center;height: 104px;">
         <td style=" padding: 0px; color: #ffffff; font-size: 12px; text-align: center;">
         </td>
+    </tr> -->
+    <tr>
+      <td>
+        <div
+          class="footer-fixed"
+          style="
+            background: url('{{ $invoice_footer_image }}');
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            height: 104px;
+          "
+        >
+        </div>
+
+      </td>
     </tr>
   </table>
 </body>
