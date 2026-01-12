@@ -122,7 +122,17 @@
 
     <tr style=" background: url('{{ $invoice_footer_image }}');background-repeat: no-repeat; background-size: cover;background-position: center;height: 75px;">
       <td style=" padding: 0px; color: #ffffff; font-size: 12px; text-align: center;">
-
+      <div
+      style="
+        color: #f39c12;
+        font-size: 14px;
+        font-weight: bold;
+        padding-bottom: 20px;
+        text-align: center; 
+      "
+    >
+      THANK YOU FOR YOUR BUSINESS!
+    </div>
       </td>
     </tr>
   </table>
