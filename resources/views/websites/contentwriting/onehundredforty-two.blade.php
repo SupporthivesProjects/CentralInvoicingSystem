@@ -164,10 +164,14 @@
                                         <p style="font-size: 12px;">{{ $customer_email }}</p>
                                     </td>
 
-                                    <td class="addrss" style="width:30%;vertical-align: top;">
+                                    <td class="addrss" style="width:40%;vertical-align: top;">
                                         <h4>Billed From:</h4>
                                         <p style="font-size: 12px;">{{ $site_name }}</p>
-                                        <p style="font-size: 12px;">{!! $company_address !!}</p>
+                                        <!-- <p style="font-size: 12px;">{!! $company_address !!}</p> -->
+                                        <p style="font-size: 12px;">
+                                            {!! preg_replace('/, /', ',<br>', $company_address, 2) !!}
+                                        </p>
+
                                         <p style="font-size: 12px;">{{ $company_email }}</p>
                                         <p style="font-size: 12px;">{{ $company_mobile }}</p>
                                     </td>
