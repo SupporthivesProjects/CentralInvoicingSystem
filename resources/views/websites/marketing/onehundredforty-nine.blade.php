@@ -147,7 +147,7 @@
                                             <td style="width:50px;">
                                                 <p
                                                     style="color:#000000;font-size:9px;font-weight:400;font-family:arial;margin: 0px;line-height:16px;text-align: center;">
-                                                    1.
+                                                    1
                                                 </p>
                                             </td>
                                             <td style="width: 100px;">
