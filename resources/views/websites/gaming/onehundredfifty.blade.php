@@ -8,6 +8,14 @@
         padding: 0px;
 
       }
+
+      .footer-fixed {
+            position: fixed;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            
+        }
     </style>
 </head>
 <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #ffffff;">
@@ -120,14 +128,14 @@
 
 
 
-    <tr style=" background: url('{{ $invoice_footer_image }}');background-repeat: no-repeat; background-size: cover;background-position: center;height: 75px;">
+    <tr style=" background: url('{{ $invoice_footer_image }}');background-repeat: no-repeat; background-size: cover;background-position: center;height: 75px;" class="footer-fixed">
       <td style=" padding: 0px; color: #ffffff; font-size: 12px; text-align: center;">
       <div
       style="
         color: #f39c12;
         font-size: 14px;
         font-weight: bold;
-        padding-bottom: 100px;
+        padding-bottom: 150px;
         text-align: center; 
       "
     >
