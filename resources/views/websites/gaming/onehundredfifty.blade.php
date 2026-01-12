@@ -39,7 +39,7 @@
           <tr>
             <td style="color: #1a1a1a;">
               {!! $company_address !!}<br>
-              {{ $company_mobile  }}
+              {{ $company_mobile  }}<br>
               <a href="mailto:{{ $company_email }}" style="color: #0044cc;">{{ $company_email }}</a> <br> <a href="http://www.combatcove.co/" style="color: #0044cc;">www.combatcove.co</a>
             </td>
             <td align="right" valign="top">
