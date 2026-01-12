@@ -38,8 +38,8 @@
         <table width="100%" style="font-size: 14px; ">
           <tr>
             <td style="color: #1a1a1a;">
-             {!! $company_address !!} 
-              {{ $company_mobile  }}<br>
+              {!! $company_address !!}<br>
+              {{ $company_mobile  }}
               <a href="mailto:{{ $company_email }}" style="color: #0044cc;">{{ $company_email }}</a> <br> <a href="http://www.combatcove.co/" style="color: #0044cc;">www.combatcove.co</a>
             </td>
             <td align="right" valign="top">
