@@ -164,10 +164,22 @@
                                         <p style="font-size: 12px;">{{ $customer_email }}</p>
                                     </td>
 
-                                    <td class="addrss" style="width:35%;vertical-align: top;">
+                                    @php
+                                        $parts = explode(',', $company_address);
+
+                                        $formattedAddress =
+                                            trim($parts[0]) . ',<br>' .
+                                            trim($parts[1]) . ', ' . trim($parts[2]) . ',<br>' .
+                                            implode(',', array_slice($parts, 3));
+                                    @endphp
+
+
+                                    <td class="addrss" style="width:40%;vertical-align: top;">
                                         <h4>Billed From:</h4>
                                         <p style="font-size: 12px;">{{ $site_name }}</p>
-                                        <p style="font-size: 12px;">{!! $company_address !!}</p>
+                                        <p style="font-size: 12px;">{!! $formattedAddress !!}</p>
+                                        
+
                                         <p style="font-size: 12px;">{{ $company_email }}</p>
                                         <p style="font-size: 12px;">{{ $company_mobile }}</p>
                                     </td>
