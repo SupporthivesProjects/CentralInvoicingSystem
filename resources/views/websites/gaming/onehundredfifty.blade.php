@@ -110,11 +110,11 @@
     <!-- Footer -->
    
 
-    <tr>
+    <!-- <tr>
       <td colspan="2" style="color: #f39c12; padding: 100px; text-align: center; font-weight: bold;">
         THANK YOU FOR YOUR BUSINESS!
       </td>
-    </tr>
+    </tr> -->
 
     <!-- Footer -->
 
