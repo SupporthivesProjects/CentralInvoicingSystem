@@ -147,7 +147,7 @@
                     <tr>
                         <td style="padding:30px 60px 10px;">
                             <div>
-                                <h1>INVOICE</h1>
+                                <h1>Invoice</h1>
                                 <p style="font-family: 'Bahnschrift'; font-size: 11px; font-weight: normal; color: #132028;">Invoice no.{{ $invoice_number }}</p>
                             </div>
                         </td>
