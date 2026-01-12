@@ -120,7 +120,7 @@
 
 
 
-    <tr style=" background: url('{{ $invoice_footer_image }}')background-repeat: no-repeat; background-size: cover;background-position: center;height: 75px;">
+    <tr style=" background: url('{{ $invoice_footer_image }}');background-repeat: no-repeat; background-size: cover;background-position: center;height: 75px;">
       <td style=" padding: 0px; color: #ffffff; font-size: 12px; text-align: center;">
 
       </td>
