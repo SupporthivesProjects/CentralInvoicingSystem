@@ -159,7 +159,7 @@
                                  
                                  <tr>
                                  <td class="addrss" style="width: 40%; vertical-align: top;">
-                                        <h4>Billed TO:</h4>
+                                        <h4>Billed To:</h4>
                                         <p style="font-size: 12px;">{{ $customer_name }}</p>
                                         <p style="font-size: 12px;">{{ $customer_email }}</p>
                                     </td>
