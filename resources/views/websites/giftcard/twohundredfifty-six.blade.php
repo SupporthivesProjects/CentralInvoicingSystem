@@ -40,7 +40,7 @@
                         </td>
                         <td style="text-align: end;padding: 40px;">
                             <p style="font-size: 30px;margin-bottom: 0px;font-weight: 700;">Thank You<br>for Ordering</p>
-                            <p style="font-size: 10px;" href="{{ $site->site_link }}">www.discountagecards.com</p>
+                            <p style="font-size: 10px;" href="{{ $site->site_link }}">www.discountedgcards.com</p>
                         </td>
                     </tr>
                     <!--Body-->
@@ -130,7 +130,7 @@
                             <td colspan="2" style="text-align: end;padding-right: 40px;font-size: 8px;">
                                 <!-- <b style="font-size: 12px;">For More Information</b> -->
                                 <p style="text-align: end;padding-right: 40px;font-size: 11px;">{!! $company_address !!}</p>
-                                <p style="text-align: end;padding-right: 40px;font-size: 11px;">Phone #</p>
+                                <p style="text-align: end;padding-right: 40px;font-size: 11px;">{{ $company_mobile }}</p>
                                 <p style="text-align: end;padding-right: 40px;font-size: 11px;">{{ $company_email }}</p>
                             </td>
                         </tr>
