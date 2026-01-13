@@ -69,7 +69,7 @@
                                     @foreach($products as $product)
                                         <tr style="border-collapse: collapse;height: 30px; ;font-family: sans-serif;font-size: 11px;">
                                             <td style="width: 300px;text-align: left;padding-left: 20px;">
-                                            <p>{{ $product->name }} - {{ site_currency() }} {{ number_format($product->unit_price, 2) }}</p>
+                                            <p>{{ $product->name }}</p>
                                             </td>
                                             <td style="width: 200px;text-align: right;">
                                                 <p>{{ site_currency() }} {{ number_format($product->unit_price, 2) }}</p>
