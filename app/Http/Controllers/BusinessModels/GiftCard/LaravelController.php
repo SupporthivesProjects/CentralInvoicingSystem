@@ -1524,125 +1524,349 @@ class LaravelController extends Controller
     //     }
     // }
     protected function updateProductPrice(array $productDataArray)
-{
-    $site_id = session('customer.site_id');
+    {
+        $site_id = session('customer.site_id');
 
-    foreach ($productDataArray as $item) {
-        $data = json_decode($item, true);
+        foreach ($productDataArray as $item) {
+            $data = json_decode($item, true);
 
-        if (empty($data['product_id']) || !isset($data['unit_price'])) {
-            Log::info('Invalid item data', ['item' => $item]);
-            continue;
-        }
+            // Validate required data
+            if (empty($data['product_id']) || !isset($data['unit_price'])) {
+                Log::info('Invalid item data', ['item' => $item]);
+                continue;
+            }
 
-        $product_id = $data['product_id'];
+            $product_id = $data['product_id'];
 
-        $product = DB::connection($this->connectionType)
-            ->table($this->productTable)
-            ->where('id', $product_id)
-            ->first();
-
-        if (!$product) {
-            Log::info('Product not found', ['product_id' => $product_id]);
-            continue;
-        }
-
-        $siteCurrency = site_currency_code();
-
-        // ✅ FIXED: correct conversion direction (product → site)
-        $rate = DB::connection($this->connectionType)
-            ->table('conversion_rates')
-            ->where('from_currency', $product->card_currency)
-            ->where('to_currency', $siteCurrency)
-            ->value('rate') ?: 1;
-
-        $current_price = floatval($product->unit_price);
-        $current_rrp = floatval($product->rrp ?? 0);
-        $current_discount = floatval($product->discount ?? 0);
-
-        $siteRRP = floatval($data['unit_rrp'] ?? 0);
-        $new_discount = floatval($data['unit_discount'] ?? 0);
-
-        // ✅ FIXED: convert site RRP back to product currency
-        $new_rrp = round($siteRRP / $rate, 2);
-
-        $discountChanged = abs($current_discount - $new_discount) > 0.01;
-        $rrpChanged = abs($current_rrp - $new_rrp) > 0.01;
-
-        if (!$rrpChanged && !$discountChanged) {
-            continue;
-        }
-
-        $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
-            ->where('product_id', $product_id)
-            ->orderByDesc('last_price_changed')
-            ->first();
-
-        $canUpdate = !$lastUpdate || Carbon::parse($lastUpdate->last_price_changed)->diffInMonths(now()) >= 3;
-
-        if (!$canUpdate) {
-            continue;
-        }
-
-        if ($rrpChanged && !$discountChanged) {
-
-            $new_price = $current_discount > 0 && $new_rrp > 0
-                ? round($new_rrp * (1 - $current_discount / 100), 2)
-                : $new_rrp;
-
-            DB::connection($this->connectionType)
+            // Fetch current product data from database
+            $product = DB::connection($this->connectionType)
                 ->table($this->productTable)
                 ->where('id', $product_id)
-                ->update([
-                    'rrp' => $new_rrp,
-                    'unit_price' => $new_price
+                ->first();
+
+            if (!$product) {
+                Log::info('Product not found', ['product_id' => $product_id]);
+                continue;
+            }
+
+            $siteCurrency = site_currency_code();
+
+            // Get conversion rate from product currency to site currency
+            // This is used to convert prices between currencies
+            $rate = DB::connection($this->connectionType)
+                ->table('conversion_rates')
+                ->where('from_currency', $product->card_currency)
+                ->where('to_currency', $siteCurrency)
+                ->value('rate') ?: 1;
+
+            // ========================================
+            // STEP 1: Parse Product Names for Price Changes
+            // ========================================
+            // Product names follow format: "Brand - CURRENCY AMOUNT" (e.g., "Aesop- AUD 30")
+            // ⚠️ CRITICAL: The price in the name is the FINAL CUSTOMER PRICE (Our Price), NOT RRP!
+            // Example: "Aesop- AUD 30" means the customer pays AUD 30 as the final price
+            
+            $current_name = $product->name ?? '';
+            $new_name = $data['product_name'] ?? $current_name;
+            
+            // Extract price from current (old) product name
+            // Pattern matches: "USD 150", "GBP 200", "AUD 30", etc.
+            preg_match('/([A-Z]{3})\s*(\d+(\.\d+)?)/i', $current_name, $oldNameMatch);
+            $oldNamePrice = isset($oldNameMatch[2]) ? (float)$oldNameMatch[2] : null;
+            $oldNameCurrency = isset($oldNameMatch[1]) ? strtoupper($oldNameMatch[1]) : null;
+            
+            // Extract price from new product name
+            preg_match('/([A-Z]{3})\s*(\d+(\.\d+)?)/i', $new_name, $newNameMatch);
+            $newNamePrice = isset($newNameMatch[2]) ? (float)$newNameMatch[2] : null;
+            $newNameCurrency = isset($newNameMatch[1]) ? strtoupper($newNameMatch[1]) : null;
+            
+            // Detect if price embedded in name has changed
+            // Example: "Aesop- AUD 50" → "Aesop- AUD 30" means Our Price changed from 50 to 30
+            $priceInNameChanged = false;
+            $newOurPriceFromName = null;
+            
+            if ($oldNamePrice && $newNamePrice && abs($oldNamePrice - $newNamePrice) > 0.01) {
+                // Price in name changed! This is the target final selling price
+                $priceInNameChanged = true;
+                
+                // The name price is in site currency
+                // This will be the new "Our Price" (unit_price) target
+                if ($newNameCurrency === $siteCurrency) {
+                    $newOurPriceFromName = $newNamePrice;
+                } else {
+                    // If name shows different currency, convert to site currency
+                    // This shouldn't normally happen, but handle it just in case
+                    $newOurPriceFromName = $newNamePrice;
+                }
+                
+                Log::info('Price in product name changed', [
+                    'product_id' => $product_id,
+                    'old_name_price' => $oldNamePrice,
+                    'new_name_price' => $newNamePrice,
+                    'currency' => $newNameCurrency,
+                    'target_our_price' => $newOurPriceFromName
                 ]);
+            }
+            
+            // ========================================
+            // STEP 2: Determine What Changed
+            // ========================================
+            
+            $current_price = floatval($product->unit_price);
+            $current_rrp = floatval($product->rrp ?? 0);
+            $current_discount = floatval($product->discount ?? 0);
 
-            ProductPriceHistory::create([
-                'site_id' => $site_id,
-                'product_id' => $product_id,
-                'unit_price' => $new_price,
-                'last_price_changed' => now(),
-            ]);
+            $siteRRP = floatval($data['unit_rrp'] ?? 0);
+            $new_discount = floatval($data['unit_discount'] ?? 0);
 
-        } elseif ($discountChanged && !$rrpChanged) {
-
-            DB::connection($this->connectionType)
-                ->table($this->productTable)
-                ->where('id', $product_id)
-                ->update([
-                    'discount' => $new_discount
-                ]);
-
-            ProductPriceHistory::create([
-                'site_id' => $site_id,
-                'product_id' => $product_id,
-                'unit_price' => $current_price,
-                'last_price_changed' => now(),
-            ]);
-
-        } elseif ($rrpChanged && $discountChanged) {
-
-            $new_price = $new_discount > 0 && $new_rrp > 0
-                ? round($new_rrp * (1 - $new_discount / 100), 2)
-                : $new_rrp;
-
-            DB::connection($this->connectionType)
-                ->table($this->productTable)
-                ->where('id', $product_id)
-                ->update([
-                    'rrp' => $new_rrp,
+            // Convert site RRP back to product currency for storage
+            $new_rrp = round($siteRRP / $rate, 2);
+            
+            // ⚠️ CRITICAL LOGIC: If price in name changed, we need to recalculate RRP
+            // Formula: RRP = Our_Price / (1 - Discount%)
+            // Example: If Our Price = 30 and Discount = 9%, then RRP = 30 / 0.91 = 32.97
+            if ($priceInNameChanged && $newOurPriceFromName) {
+                // Calculate what RRP should be to achieve this final price with current discount
+                if ($new_discount > 0 && $new_discount < 100) {
+                    // RRP = Our_Price / (1 - Discount/100)
+                    $calculatedSiteRRP = round($newOurPriceFromName / (1 - $new_discount / 100), 2);
+                } else {
+                    // No discount, so RRP equals Our Price
+                    $calculatedSiteRRP = $newOurPriceFromName;
+                }
+                
+                // Convert calculated RRP to product currency for database storage
+                $new_rrp = round($calculatedSiteRRP / $rate, 2);
+                
+                Log::info('Calculated RRP from name price', [
+                    'product_id' => $product_id,
+                    'our_price_target' => $newOurPriceFromName,
                     'discount' => $new_discount,
-                    'unit_price' => $new_price
+                    'calculated_rrp_site_currency' => $calculatedSiteRRP,
+                    'calculated_rrp_product_currency' => $new_rrp
+                ]);
+            }
+
+            // Detect what has changed
+            $discountChanged = abs($current_discount - $new_discount) > 0.01;
+            $rrpChanged = abs($current_rrp - $new_rrp) > 0.01;
+            $nameChanged = $current_name !== $new_name;
+            
+            // If nothing changed, skip this product
+            if (!$rrpChanged && !$discountChanged && !$nameChanged) {
+                continue;
+            }
+
+            // ========================================
+            // STEP 3: Check 90-Day Price Lock
+            // ========================================
+            // Price changes are locked for 90 days (3 months) after last update
+            // This prevents frequent price manipulation
+            
+            $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
+                ->where('product_id', $product_id)
+                ->orderByDesc('last_price_changed')
+                ->first();
+
+            // Check if price update is allowed (no update in last 3 months)
+            $canUpdatePrice = !$lastUpdate || Carbon::parse($lastUpdate->last_price_changed)->diffInMonths(now()) >= 3;
+
+            // ========================================
+            // STEP 4: Handle Pure Cosmetic Name Changes
+            // ========================================
+            // If ONLY the name changed (no price in name, no RRP, no discount changed)
+            // Example: "Aesop- AUD 30" → "Aesop Brand- AUD 30" (only text, same price)
+            // This should update name without triggering price lock
+            
+            if ($nameChanged && !$rrpChanged && !$discountChanged && !$priceInNameChanged) {
+                DB::connection($this->connectionType)
+                    ->table($this->productTable)
+                    ->where('id', $product_id)
+                    ->update([
+                        'name' => $new_name
+                    ]);
+                
+                Log::info('Product name updated (cosmetic only)', [
+                    'product_id' => $product_id,
+                    'old_name' => $current_name,
+                    'new_name' => $new_name
+                ]);
+                continue;
+            }
+
+            // ========================================
+            // STEP 5: Enforce 90-Day Price Lock
+            // ========================================
+            // For any price-affecting changes (RRP, discount, or price in name),
+            // check the 90-day restriction
+            
+            if (!$canUpdatePrice) {
+                Log::warning('Price update blocked by 90-day lock', [
+                    'product_id' => $product_id,
+                    'last_update' => $lastUpdate->last_price_changed ?? 'none',
+                    'days_remaining' => $lastUpdate ? now()->diffInDays(Carbon::parse($lastUpdate->last_price_changed)->addMonths(3)) : 0
+                ]);
+                continue;
+            }
+
+            // ========================================
+            // STEP 6: Update Product Based on What Changed
+            // ========================================
+            // Three main scenarios:
+            // 1. RRP changed (field or calculated from name price)
+            // 2. Discount changed only
+            // 3. Both RRP and discount changed
+            
+            // SCENARIO 1: RRP Changed, Discount Stayed Same
+            // This includes when price in name changed (which recalculated RRP)
+            // Example A: Admin changes RRP field $150 → $160 with 20% discount
+            //            Result: Our Price = $160 × (1 - 20%) = $128
+            // Example B: Admin changes name "AUD 50" → "AUD 30" with 9% discount
+            //            Calculated RRP = 30 / 0.91 = 32.97
+            //            Result: Our Price = 30 (stays as in name)
+            if ($rrpChanged && !$discountChanged) {
+
+                // Recalculate "Our Price" using new RRP and current discount
+                $new_price = $current_discount > 0 && $new_rrp > 0
+                    ? round($new_rrp * (1 - $current_discount / 100), 2)
+                    : $new_rrp;
+
+                // ⚠️ IMPORTANT: Keep the name price as-is (don't recalculate from RRP)
+                // The name shows what the customer pays, which should match our calculated price
+                // Only update the name if it doesn't already have the correct price
+                $finalNamePrice = round($new_price * $rate, 2); // Convert to site currency
+                if ($newNamePrice && abs($newNamePrice - $finalNamePrice) > 0.01) {
+                    // Sync name to show the final price
+                    $new_name = preg_replace(
+                        '/([A-Z]{3})\s*(\d+(\.\d+)?)/i',
+                        '$1 ' . $finalNamePrice,
+                        $new_name
+                    );
+                }
+
+                DB::connection($this->connectionType)
+                    ->table($this->productTable)
+                    ->where('id', $product_id)
+                    ->update([
+                        'name' => $new_name,
+                        'rrp' => $new_rrp,
+                        'unit_price' => $new_price
+                    ]);
+
+                ProductPriceHistory::create([
+                    'site_id' => $site_id,
+                    'product_id' => $product_id,
+                    'unit_price' => $new_price,
+                    'last_price_changed' => now(),
+                ]);
+                
+                Log::info('Product RRP and price updated', [
+                    'product_id' => $product_id,
+                    'old_rrp' => $current_rrp,
+                    'new_rrp' => $new_rrp,
+                    'old_price' => $current_price,
+                    'new_price' => $new_price,
+                    'discount' => $current_discount,
+                    'price_in_site_currency' => $finalNamePrice
                 ]);
 
-            ProductPriceHistory::create([
-                'site_id' => $site_id,
-                'product_id' => $product_id,
-                'unit_price' => $new_price,
-                'last_price_changed' => now(),
-            ]);
+            } 
+            // SCENARIO 2: Discount Changed, RRP Stayed Same
+            // Example: Discount 15% → 20% with RRP $150
+            // Result: Our Price = $150 × (1 - 20%) = $120
+            // ⚠️ CRITICAL FIX: Previously this didn't update unit_price!
+            elseif ($discountChanged && !$rrpChanged) {
+
+                // Recalculate "Our Price" using current RRP and new discount
+                $new_price = $new_discount > 0 && $current_rrp > 0
+                    ? round($current_rrp * (1 - $new_discount / 100), 2)
+                    : $current_rrp;
+
+                // Update name to reflect the new final price
+                $finalNamePrice = round($new_price * $rate, 2); // Convert to site currency
+                if ($newNamePrice && abs($newNamePrice - $finalNamePrice) > 0.01) {
+                    $new_name = preg_replace(
+                        '/([A-Z]{3})\s*(\d+(\.\d+)?)/i',
+                        '$1 ' . $finalNamePrice,
+                        $new_name
+                    );
+                }
+
+                DB::connection($this->connectionType)
+                    ->table($this->productTable)
+                    ->where('id', $product_id)
+                    ->update([
+                        'name' => $new_name,
+                        'discount' => $new_discount,
+                        'unit_price' => $new_price  // ✅ CRITICAL FIX: Now updates the actual price!
+                    ]);
+
+                ProductPriceHistory::create([
+                    'site_id' => $site_id,
+                    'product_id' => $product_id,
+                    'unit_price' => $new_price,
+                    'last_price_changed' => now(),
+                ]);
+                
+                Log::info('Product discount and price updated', [
+                    'product_id' => $product_id,
+                    'old_discount' => $current_discount,
+                    'new_discount' => $new_discount,
+                    'old_price' => $current_price,
+                    'new_price' => $new_price,
+                    'rrp' => $current_rrp,
+                    'price_in_site_currency' => $finalNamePrice
+                ]);
+
+            } 
+            // SCENARIO 3: Both RRP and Discount Changed
+            // Example: RRP $150 → $160 AND Discount 15% → 20%
+            // Result: Our Price = $160 × (1 - 20%) = $128
+            elseif ($rrpChanged && $discountChanged) {
+
+                // Recalculate "Our Price" using both new RRP and new discount
+                $new_price = $new_discount > 0 && $new_rrp > 0
+                    ? round($new_rrp * (1 - $new_discount / 100), 2)
+                    : $new_rrp;
+
+                // Update name to reflect the new final price
+                $finalNamePrice = round($new_price * $rate, 2); // Convert to site currency
+                if ($newNamePrice && abs($newNamePrice - $finalNamePrice) > 0.01) {
+                    $new_name = preg_replace(
+                        '/([A-Z]{3})\s*(\d+(\.\d+)?)/i',
+                        '$1 ' . $finalNamePrice,
+                        $new_name
+                    );
+                }
+
+                DB::connection($this->connectionType)
+                    ->table($this->productTable)
+                    ->where('id', $product_id)
+                    ->update([
+                        'name' => $new_name,
+                        'rrp' => $new_rrp,
+                        'discount' => $new_discount,
+                        'unit_price' => $new_price
+                    ]);
+
+                ProductPriceHistory::create([
+                    'site_id' => $site_id,
+                    'product_id' => $product_id,
+                    'unit_price' => $new_price,
+                    'last_price_changed' => now(),
+                ]);
+                
+                Log::info('Product RRP, discount, and price updated', [
+                    'product_id' => $product_id,
+                    'old_rrp' => $current_rrp,
+                    'new_rrp' => $new_rrp,
+                    'old_discount' => $current_discount,
+                    'new_discount' => $new_discount,
+                    'old_price' => $current_price,
+                    'new_price' => $new_price,
+                    'price_in_site_currency' => $finalNamePrice
+                ]);
+            }
         }
     }
-}
 }
