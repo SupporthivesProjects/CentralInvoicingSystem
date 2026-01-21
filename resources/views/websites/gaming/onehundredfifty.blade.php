@@ -127,6 +127,19 @@
     <!-- Footer -->
 
 
+    <tr>
+      <td
+        style="
+          text-align: center;
+          color: #f39c12;
+          font-size: 14px;
+          font-weight: bold;
+          padding: 10px 0;
+        "
+      >
+        THANK YOU FOR YOUR BUSINESS!
+      </td>
+    </tr>
 
     <tr style=" background: url('{{ $invoice_footer_image }}');background-repeat: no-repeat; background-size: cover;background-position: center;height: 75px;" class="footer-fixed">
       <td style=" padding: 0px; color: #ffffff; font-size: 12px; text-align: center;">
