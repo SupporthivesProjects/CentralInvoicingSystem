@@ -294,15 +294,16 @@
                 </tbody>
 
                 <!-- Footer (Always at Bottom) -->
-                <tfoot>
+                <!-- <tfoot>
                     <tr>
-                        <td style="width: 100%; no-repeat; background-size: cover; padding: 60px 0px;">
+                        <td style="width: 100%; background: url('{{ $invoice_footer_image }}') no-repeat; background-size: cover; padding: 60px 0px;">
                             <div style="text-align: center;">
-                                
+                                <h5>Notes</h5>
+                                <p>{{ $site->site_description }}</p>
                             </div>
                         </td>
                     </tr>
-                </tfoot> 
+                </tfoot> -->
 
             </table>
 
