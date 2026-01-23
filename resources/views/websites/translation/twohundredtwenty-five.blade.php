@@ -64,17 +64,17 @@
                                         <table cellpadding="5" cellspacing="0" style="width: 100%; font-size: 8px;">
                                             <tr>
                                                 <!-- <td style="font-weight: bold;">Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ $company_name }}</td> -->
-                                                <td style="font-weight: bold;min-width: 150px;max-width: 180px;">Name</td>
+                                                <td style="font-weight: bold;min-width: 50px;max-width: 80px;">Name</td>
                                                 <td>{{ $company_name }}</td>
                                             </tr>
                                             <tr>
                                                 <!-- <td style="font-weight: bold; vertical-align: top;">Address&nbsp;&nbsp;&nbsp;&nbsp;{{ $company_address }}</td> -->
-                                                <td style="font-weight: bold;min-width: 150px;max-width: 180px;vertical-align: top;">Address</td>
+                                                <td style="font-weight: bold;min-width: 50px;max-width: 80px;vertical-align: top;">Address</td>
                                                 <td>{{ $company_address }}</td>
                                             </tr>
                                             <tr>
                                                 <!-- <td style="font-weight: bold;">Email&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ $company_email }}</td> -->
-                                                <td style="font-weight: bold;min-width: 150px;max-width: 180px;">Email</td>
+                                                <td style="font-weight: bold;min-width: 50px;max-width: 80px;">Email</td>
                                                 <td>{{ $company_email }}</td>
                                             </tr>
                                         </table>
