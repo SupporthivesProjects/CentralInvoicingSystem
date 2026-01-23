@@ -2,245 +2,312 @@
 <html>
 <head>
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
-
     <link href="https://fonts.cdnfonts.com/css/calibri-light" rel="stylesheet">
-
     <style>
-        html, body {
-            width: 100%;
-            height: 100%;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            background: #e7e0cf;
+        * {
+            margin: 0px;
+            padding: 0px;
+            box-sizing: border-box;
             font-family: 'Mazzard';
         }
-
-        * {
-            box-sizing: border-box;
+        @font-face {
+            font-family: 'Mazzard';
+            src: url("{{ asset('fonts/MazzardH-Black.otf') }}");
         }
-
         @font-face {
             font-family: 'Mazzard';
             src: url("{{ asset('fonts/mazzard-m-regular.otf') }}");
         }
-
         @font-face {
             font-family: 'Mazzard M';
             src: url("{{ asset('fonts/mazzard-m-bold.otf') }}");
         }
-
-        table {
-            border-collapse: collapse;
+        @font-face {
+            font-family: 'centurygothic';
+            src: url("{{ asset('fonts/centurygothic.ttf') }}");
+        }
+        @font-face {
+            font-family: 'centurygothic';
+            src: url("{{ asset('fonts/centurygothic_bold.ttf') }}");
         }
 
-        h2 {
+       
+        table, th, td {
+            border-collapse: collapse;
+        }
+        .table-heade{
+            width: 100%;
+            table-layout: fixed;
+        }
+        table td h2{
             font-family: 'Mazzard M';
             font-size: 24px;
             color: #ffffff;
+            font-weight: bold;
+            letter-spacing: 0px;
         }
-
-        .table-div p {
+        .table-div p{
+            font-family: 'centurygothic';
             color: #ffffff;
+            font-weight: normal;
             font-size: 8px;
         }
-
+        h5 span{
+            font-size: 11px;
+            font-family: Avenir;
+            font-weight: bold;
+            color: #000;
+        } 
+        h5 {
+            font-size: 11px;
+            font-family: Avenir;
+            font-weight: normal;
+            color: #000;
+        }
+        
         .addrss h4 {
             font-size: 10px;
             font-family: 'Mazzard M';
+            font-weight: normal;
             color: #000;
+            text-align: left;
+            margin-bottom: 0px;
+            letter-spacing: 0px;
         }
-
         .addrss p {
             font-size: 10px;
-            font-family: 'Mazzard';
-            color: #000;
-        }
-
-        .table-list {
-            width: 100%;
-            border: 5px solid #ff7f00;
-            background: #ffffff;
-        }
-
-        .table-list th {
-            padding: 10px;
-            font-size: 9px;
             font-family: 'Mazzard M';
-            border: 1px solid #ff7f00;
-            background: #ffffff;
+            font-weight: normal;
+            color: #000;
             text-align: left;
+            padding: 1px 0px;
+        }
+         
+        .table-list th{
+            background: #E9FCF7;
+        }
+        .table-list th {
+            background: #ffffff;
+            padding: 10px 10px;
+            color: #000000f5;
+            font-family: 'Mazzard M';
+            font-size: 9px;
+            font-weight: bold;
+            border: 1px solid #ff7f00;
+        }
+        .table-list td{
+            border: 1px solid #ff7f00;
+            padding: 7px 10px;
+            background: #FFFFFF;
         }
 
-        .table-list td {
-            padding: 8px;
-            border: 1px solid #ff7f00;
+        table{
+            background: #e7e0cf;
+        }
+        .table-list td p{
             font-size: 10px;
             font-family: 'Mazzard';
+            font-weight: normal;
+            color: #000000;
             text-align: center;
         }
-
-        .table-list td h6 {
+        .table-list td div p{
+            text-align: left;
+        }
+        .table-list td div h6{
+            color: #000000;
             font-family: 'Mazzard M';
             font-size: 9px;
-            text-align: left;
-            margin: 0;
+            font-weight: bold;
         }
-
-        .table-right {
-            width: 100%;
-            border: 5px solid #ff7f00;
-        }
-
         .table-right td {
-            padding: 6px 20px;
-            font-size: 10px;
+            padding: 6px 30px;
         }
-
-        .table-right h6 {
+        .table-right td {
+            font-size: 10px;
+            font-family: 'Mazzard';
+            font-weight: normal;
+            color: #000000;
+            text-align: left;
+        }
+        .table-right td:last-child{
+           text-align: right;
+        }
+        .table-right h6{
+            color: #000000;
             font-family: 'Mazzard M';
             font-size: 10px;
-            margin: 0;
+            font-weight: bold;
         }
+        tfoot div p{
+            font-size: 6px;
+            font-family: 'Mazzard M';
+            font-weight: normal;
+            color: #ffffff;
+            text-align: center;
+        }
+        tfoot div h5{
+            font-size: 12px;
+            font-family: 'Mazzard M';
+            font-weight: bold;
+            color: #ffffff;
+            text-align: center;
+            margin-bottom: 5px;
+        }
+        tfoot div{
+            text-align: center;
+            width: 219px;
+            margin: auto;
+        }
+        
     </style>
 </head>
+<body style="padding:0px,margin:0px; background: #e7e0cf;">
+    <table width="800" cellspacing="0" cellpadding="0" border="0" style="margin:0px; background: #e7e0cf;">
+        <tr>
+            <td style="background-size: cover; height: 100vh;margin:0px:padding:0px;vertical-align:top; background: #e7e0cf;">
+            @php
+                $minRows = 10; 
+                $rowCount = count($products);
+                $padRows = $minRows - $rowCount;
+            @endphp
 
-<body>
+            <table width="800" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse; background: #e7e0cf;">
+                <tbody>
+                    <!-- Invoice Header -->
+                    <tr>
+                        <td style="background: url('{{ $invoice_header_image }}') no-repeat; background-size: cover; padding:50px 50px;">
+                            <table class="table-div" style="background: transparent;">
+                                <tr>
+                                    <td>
+                                        <h2>INVOICE</h2>
+                                        <div style="display: flex; gap: 24px; margin-top: 10px;">
+                                            <div>
+                                                <p style="color:#ffffff">Company Name</p>
+                                                <p style="color:#ffffff">{{ $site_name }} <br>
+                                                  {{ $company_email }}<br>
+                                                </p>
+                                            </div>
+                                            <div>
+                                                <p style="color:#ffffff">Address</p>
+                                                <p style="color:#ffffff">
+                                                    
+                                                    {{ $company_mobile }}<br>
+                                                    {!! $company_address !!}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
 
-<!-- PAGE WRAPPER WITH PADDING -->
-<table width="100%" cellpadding="0" cellspacing="0"
-       style="min-height:100vh; background:#e7e0cf; padding:40px;">
-    <tr>
-        <td>
+                    <!-- Billed To -->
+                    <tr>
+                        <td style="padding: 24px 60px;">
+                            <table class="table-heade" style="width: 100%; background: transparent;">
+                                <tbody>
+                                    <tr>
+                                        <td class="addrss" style="width: 40%;">
+                                            <h4>BILLED TO:</h4>
+                                            <p>{{ $customer_name }}</p>
+                                            <p>{{ $customer_email }}</p>
+                                        </td>
+                                        <td class="addrss" style="display: flex;">
+                                            <div style="display: flex; justify-content: space-between; width: 350px; max-width: 100%;">
+                                                <h4>Invoice #{{ $invoice_number }}</h4>
+                                                <h4>DATE {{ $invoice_date }}</h4>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
 
-            <!-- INVOICE CONTAINER -->
-            <table width="100%" cellpadding="0" cellspacing="0" style="background:#ffffff;">
+                    <!-- Product Table with Padding -->
+                    <tr>
+                        <td style="padding: 0px 56px 50px;">
+                            <table class="table-list" style="width: 100%; border: 5px solid #ff7f00;">
+                                <tbody>
+                                    <tr>
+                                        <th style="text-align: left;">Product</th>
+                                        <th>Duration</th>
+                                        <th>QTY</th>
+                                        <th>Total</th>
+                                    </tr>
 
-                @php
-                    $minRows = 10;
-                    $rowCount = count($products);
-                    $padRows = $minRows - $rowCount;
-                @endphp
+                                    @foreach($products as $product)
+                                    <tr>
+                                        <td><h6>{{ $product->name }}</h6></td>
+                                        <td>{{ $product->subscription ?? '-' }}</td>
+                                        <td>1</td>
+                                        <td>{{ site_currency() }} {{ number_format($product->unit_price ?? 0, 2) }}</td>
+                                    </tr>
+                                    @endforeach
 
-                <!-- HEADER -->
-                <tr>
-                    <td style="
-                        background: url('{{ $invoice_header_image }}') no-repeat center;
-                        background-size: cover;
-                        padding:50px;
-                    ">
-                        <h2>INVOICE</h2>
+                                    @for ($i = 0; $i < $padRows; $i++)
+                                    <tr>
+                                        <td style="height: 40px;">&nbsp;</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    @endfor
 
-                        <table class="table-div" style="margin-top:10px;">
-                            <tr>
-                                <td>
-                                    <p>Company Name</p>
-                                    <p>
-                                        {{ $site_name }}<br>
-                                        {{ $company_email }}
-                                    </p>
-                                </td>
-                                <td style="padding-left:30px;">
-                                    <p>Address</p>
-                                    <p>
-                                        {{ $company_mobile }}<br>
-                                        {!! $company_address !!}
-                                    </p>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
 
-                <!-- BILL TO -->
-                <tr>
-                    <td style="padding:24px 60px;">
-                        <table width="100%">
-                            <tr>
-                                <td class="addrss" width="40%">
-                                    <h4>BILLED TO:</h4>
-                                    <p>{{ $customer_name }}</p>
-                                    <p>{{ $customer_email }}</p>
-                                </td>
-                                <td class="addrss" align="right">
-                                    <h4>Invoice #{{ $invoice_number }}</h4>
-                                    <h4>Date {{ $invoice_date }}</h4>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
+                    <!-- Totals -->
+                    <tr>
+                        <td style="padding: 0px 56px 156px;">
+                            <table style="width: 100%; background: transparent;">
+                                <tbody>
+                                    <tr>
+                                        <td style="width: 61%;"></td>
+                                        <td>
+                                            <table class="table-right" style="width: 100%; background: transparent; border: 5px solid #ff7f00;">
+                                                <tbody>
+                                                    <tr>
+                                                        <td>Subtotal</td>
+                                                        <td>{{ site_currency() }} {{ number_format(($invoice_amount + $discount_amount) ?? 0, 2) }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Discount</td>
+                                                        <td>{{ site_currency() }} {{ number_format($discount_amount ?? 0, 2) }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="background: #ff7f00;"><h6>GRAND TOTAL</h6></td>
+                                                        <td style="background: #ff7f00;"><h6>{{ site_currency() }} {{ number_format($invoice_amount ?? 0, 2) }}</h6></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
 
-                <!-- PRODUCTS -->
-                <tr>
-                    <td style="padding:0 56px 30px;">
-                        <table class="table-list">
-                            <tr>
-                                <th>Product</th>
-                                <th>Duration</th>
-                                <th>Qty</th>
-                                <th>Total</th>
-                            </tr>
-
-                            @foreach($products as $product)
-                            <tr>
-                                <td><h6>{{ $product->name }}</h6></td>
-                                <td>{{ $product->subscription ?? '-' }}</td>
-                                <td>1</td>
-                                <td>{{ site_currency() }} {{ number_format($product->unit_price ?? 0, 2) }}</td>
-                            </tr>
-                            @endforeach
-
-                            @for ($i = 0; $i < $padRows; $i++)
-                            <tr>
-                                <td>&nbsp;</td><td></td><td></td><td></td>
-                            </tr>
-                            @endfor
-                        </table>
-                    </td>
-                </tr>
-
-                <!-- TOTALS -->
-                <tr>
-                    <td style="padding:30px 56px 120px;">
-                        <table width="100%">
-                            <tr>
-                                <td width="60%"></td>
-                                <td>
-                                    <table class="table-right">
-                                        <tr>
-                                            <td>Subtotal</td>
-                                            <td align="right">
-                                                {{ site_currency() }} {{ number_format(($invoice_amount + $discount_amount) ?? 0, 2) }}
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Discount</td>
-                                            <td align="right">
-                                                {{ site_currency() }} {{ number_format($discount_amount ?? 0, 2) }}
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td style="background:#ff7f00;"><h6>GRAND TOTAL</h6></td>
-                                            <td style="background:#ff7f00;" align="right">
-                                                <h6>{{ site_currency() }} {{ number_format($invoice_amount ?? 0, 2) }}</h6>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
+                <!-- Footer (Always at Bottom) -->
+                < <tfoot>
+                    <tr>
+                        <td style="width: 100%; background: url('{{ $invoice_footer_image }}') no-repeat; background-size: cover; padding: 60px 0px;">
+                            <div style="text-align: center;">
+                                
+                            </div>
+                        </td>
+                    </tr>
+                </tfoot> 
 
             </table>
-            <!-- END INVOICE CONTAINER -->
 
-        </td>
-    </tr>
-</table>
-
+            </td>
+        </tr>
+    </table>
 </body>
 </html>
