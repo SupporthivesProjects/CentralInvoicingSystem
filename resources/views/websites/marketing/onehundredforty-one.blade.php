@@ -2,6 +2,11 @@
 <html>
     <head>
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
+    <style>
+    @page { 
+            margin: 0 !important; 
+        }
+    </style>
 </head>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
 <body>

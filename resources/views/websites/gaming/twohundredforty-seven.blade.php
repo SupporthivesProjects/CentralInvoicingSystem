@@ -70,9 +70,9 @@
                                                     <p style="color: #FFF;font-size: 8px;text-align: left;font-weight: 400;line-height: 10px;">SWIFT Code</p> --}}
                                                 </div>
                                                 <div class="">
-                                                    <p style="font-size: 10px;letter-spacing: 1px;color: #D83E71;text-align: left;">{{ $company_mobile }}</p>
+                                                    <p style="font-size: 10px;letter-spacing: 1px;color: #D83E71;text-align: left;">{{ $company_address }}</p>
+                                                    <p style="color: #FFF;font-size: 8px;text-align: left;font-weight: 400;line-height: 10px;">{{ $company_mobile }}</p>
                                                     <p style="color: #FFF;font-size: 8px;text-align: left;font-weight: 400;line-height: 10px;">{{ $company_email }}</p>
-                                                    <p style="color: #FFF;font-size: 8px;text-align: left;font-weight: 400;line-height: 10px;">{{ $company_address }}</p>
                                                 </div>
                                             </div>
                                             <img src="{{ $invoice_image1 }}" style="position: absolute;bottom: 20px; left: 20px;width: 50px;" alt="">
