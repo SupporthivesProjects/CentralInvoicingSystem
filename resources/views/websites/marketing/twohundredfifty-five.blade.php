@@ -87,7 +87,7 @@
                                                     style="color:#000000; text-align:start;padding:8px 10px;font-family:  Arial;font-size:10px;margin: 0px;font-weight: 400; width: 93%; background-color: #F2F2F2;">
                                                     Invoice to
                                                 </p>
-                                                <p
+                                                <!-- <p
                                                     style="color:#000000; text-align:start;padding:8px;font-family:  Arial;font-size:18px;margin: 0px;font-weight: 400;">
                                                     {{ $customer_name }}
                                                 </p>
@@ -95,7 +95,7 @@
                                                     style="color:#000000; text-align:start;padding:0px;font-family:  Arial;font-size:10px;margin: 0px;font-weight: 400;">
                                                     {{ $site_name }}<br>{{ $company_email }}
                                                     | {{ $company_mobile }}
-                                                </p>
+                                                </p> -->
                                             </div>
                                         </div>
                                     </td>
