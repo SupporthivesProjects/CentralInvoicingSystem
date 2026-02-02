@@ -44,11 +44,11 @@
                 <p style="margin: 0 0 8px 0;"><strong>Invoice #:</strong> {{ $invoice_number }}</p>
               </td>
               <td style="width: 10%; vertical-align: top;border-left: 1px solid #FFEEEE;">
-                <p style="margin: 0 0 8px 0;"><strong>To:</strong></p>
+                <p style="margin: 0 0 8px 0;"><strong>To:</strong> {{ $customer_name }}<br/>{{ $customer_email }}</p>
               </td>
-              <td style="width: 40%; vertical-align: top;border-left: 1px solid #FFEEEE;">
+              <!-- <td style="width: 40%; vertical-align: top;border-left: 1px solid #FFEEEE;">
                 <p style="margin: 0 0 8px 0;">{{ $customer_name }}<br/>{{ $customer_email }}</p>
-              </td>
+              </td> -->
             </tr>
           </table>
         </td>
