@@ -143,11 +143,11 @@
                                 <td style="background: linear-gradient(to right, #e03b42 35%, #202020 35%); padding: 60px 40px 60px 40px; display: flex; justify-content: space-between;">
                             <p style="font-family: Arial;font-size: 22px;margin: 0px;font-weight: 400; color: #FFFFFF;">Thank You for<br>Purchasing!</p>
                             <p style="font-family: Arial;font-size: 9px;margin: 0px;font-weight: 400; color: #FFFFFF; text-align: end; line-height: 15px;"><span style="color: #e03b42; font-size: 14px;">Contact</span><br>
-                                {{ $company_name }}<br>
-                                {{ $company_email }}<br>
+                                {{!! $company_name !!}}<br>
                                 {!! $company_address !!}<br>
-                                {{ $company_mobile }}<br>
-                                {{ $site_name }}                                
+                                {{!! $company_email !!}}<br>
+                                {{!! $company_mobile !!}}<br>
+                                {{!! $site_name !!}}                                
                             </p>
                         </td>
     </tr>
