@@ -2,6 +2,9 @@
 <html>
 <head>
     <title>Your Email Title</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <style>
             .for_bttom {
             position: fixed;
@@ -59,28 +62,28 @@
                                             >
                                                 Invoice
                                             </b>
-                                            <b
+                                            <p
                                                 style="
                                                 color: white;
-                                                font-size: 9px;
-                                                font-family: 'Courier New', Courier, monospace;
+                                                font-size: 10px;
+                                                font-family: 'Montserrat', sans-serif;
                                                 margin-top: 4px;
                                                 font-weight: 700;
                                                 "
                                             >
                                                 No.{{ $invoice_number }}
-                                            </b>
-                                            <b
+                                            </p>
+                                            <p
                                                 style="
                                                 color: white;
-                                                font-size: 9px;
-                                                font-family: 'Courier New', Courier, monospace;
+                                                font-size: 10px;
+                                                font-family: 'Montserrat', sans-serif;
                                                 margin-top: 4px;
                                                 font-weight: 700;
                                                 "
                                             >
                                                 {{ $invoice_date }}
-                                            </b>
+                                            </p>
                                             </div>
 
                                     </td>

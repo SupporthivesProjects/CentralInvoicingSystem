@@ -8,6 +8,14 @@
         padding: 0px;
 
       }
+
+      .footer-fixed {
+            position: fixed;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            
+        }
     </style>
 </head>
 <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #ffffff;">
@@ -38,14 +46,9 @@
         <table width="100%" style="font-size: 14px; ">
           <tr>
             <td style="color: #1a1a1a;">
-             <!-- {!! $company_address !!} -->
-             {{ $company_address = preg_replace(
-    '/^(.*?)\s(Harju maakond.*?,\s\d{5})\s([^\s]+@[^\s]+)/',
-    "$1<br><br>$2<br><br>$3",
-    $company_address
-); }}
+              {!! $company_address !!}<br>
               {{ $company_mobile  }}<br>
-              <a href="mailto:{{ $company_email }}" style="color: #0044cc;">{{ $company_email }}</a> <br> <a href="http://www.combatcove.co/" style="color: #0044cc;">www.combatcove.co</a>
+              <a href="mailto:{{ $company_email }}" style="color: #0044cc;">support@combatcave.co</a> <br> <a href="http://www.combatcove.co/" style="color: #0044cc;">www.combatcove.co</a>
             </td>
             <td align="right" valign="top">
               <p style="margin: 0px 0px 5px 0;"><strong style="color: #f39c12;">INVOICE #</strong> {{ $invoice_number }} </p>
@@ -115,19 +118,42 @@
     <!-- Footer -->
    
 
-    <tr>
+    <!-- <tr>
       <td colspan="2" style="color: #f39c12; padding: 100px; text-align: center; font-weight: bold;">
         THANK YOU FOR YOUR BUSINESS!
       </td>
-    </tr>
+    </tr> -->
 
     <!-- Footer -->
 
 
+    <tr>
+      <td
+        style="
+          text-align: center;
+          color: #f39c12;
+          font-size: 14px;
+          font-weight: bold;
+          padding: 10px 0;
+        "
+      >
+        THANK YOU FOR YOUR BUSINESS!
+      </td>
+    </tr>
 
-    <tr style=" background: url('{{ $invoice_footer_image }}')background-repeat: no-repeat; background-size: cover;background-position: center;height: 75px;">
+    <tr style=" background: url('{{ $invoice_footer_image }}');background-repeat: no-repeat; background-size: cover;background-position: center;height: 75px;" class="footer-fixed">
       <td style=" padding: 0px; color: #ffffff; font-size: 12px; text-align: center;">
-
+      <!-- <div
+      style="
+        color: #f39c12;
+        font-size: 14px;
+        font-weight: bold;
+        padding-bottom: 150px;
+        text-align: center; 
+      "
+    >
+      THANK YOU FOR YOUR BUSINESS!
+    </div> -->
       </td>
     </tr>
   </table>

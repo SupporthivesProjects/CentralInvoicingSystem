@@ -125,7 +125,7 @@
 
                         <td
                             style=" padding-right: 50px; display: flex; flex-direction: column; align-items: flex-end; font-family: arial;font-size:10px;">
-                            <p style="text-align: right; margin: 0;"><b>Thank you for you business!</b></p>
+                            <p style="text-align: right; margin: 0;"><b>Thank you for your business!</b></p>
 
                             <p style="color: #FF4700; text-align: right;margin: 0;margin-top: 30px;">{{ $site_name }}</p>
 

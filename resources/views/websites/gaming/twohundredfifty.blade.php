@@ -108,7 +108,7 @@
                             <tr>
                                 <td>{{ $product['name'] }} / {{ $product['game_currency_amount'] }} {{ $product['game_currency'] }}</td>
                                 <td>{{ site_currency() . number_format($product['unit_price'], 2) }}</td>
-                                <td align="center">2</td>
+                                <td align="center">1</td>
                                 <td align="right">{{ site_currency() . number_format($product['unit_price'], 2) }}</td>
                             </tr>
                             @endforeach
