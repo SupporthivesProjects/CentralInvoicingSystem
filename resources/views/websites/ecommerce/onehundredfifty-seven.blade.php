@@ -46,7 +46,7 @@
                     </tr>
                     <tr>
                         <td colspan="3" style="padding: 10px; border-bottom: 1px solid #ddd; font-size: 14px">
-                            <strong>Phone :</strong>{{ $invoice_date }}<strong>Phone :</strong>{{ $invoice_number }}
+                            <strong>Phone :</strong>{{ $invoice_date }}<strong>Phone :</strong>{{ $invoice_number }}<br>
                             <strong>Relationship Resource Hub</strong><br />
                             {{ $company_address }}<br />
                             <strong>Phone :</strong> {{ $company_mobile }}<br />
