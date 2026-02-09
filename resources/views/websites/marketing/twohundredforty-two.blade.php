@@ -36,7 +36,7 @@
                                                 <td style="width:20%;  color:#000;">
                                                     <p style="margin:0;margin-top: 10px; font-size:14px; text-transform: capitalize;">Invoice To :</p>
                                                     <p style="margin:0; margin-top: 10px; font-size:14px; text-transform: capitalize;">Invoice Date :</p>
-                                                    <p style="margin:0; margin-top: 10px; font-size:12px; text-transform: capitalize;">Invoice No :</p>
+                                                    <p style="margin:0; margin-top: 10px; font-size:14px; text-transform: capitalize;">Invoice No :</p>
                                                 </td>
 
                                                 <td style="width:80%;  color:#000;">
