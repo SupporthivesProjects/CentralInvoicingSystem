@@ -94,12 +94,12 @@
                                         </tr>
                                     @endforeach
                                     <tr>
-                                        <td style="    text-align: start; font-family: Arial; font-size: 10px; margin: 0px; font-weight: 400; padding-left: 40px; color: #FFFFFF; font-style: italic; padding-top: 50px;"
+                                        <td style="    text-align: start; font-family: Arial; font-size: 10px; margin: 0px; font-weight: 400; padding-left: 0px; color: #FFFFFF; font-style: italic; padding-top: 50px;"
                                             colspan="2">
                                             {{ $site_name }}<br>
                                             {{ $company_address }}<br>
                                         </td>
-                                        <td style="width: 100px;color: #FFFFFF;text-align: start;font-family: Arial;font-size: 12px;margin: 0px;font-weight: 400; padding-top: 80px;padding: 0px 10px;"
+                                        <td style="width: 100px;color: #FFFFFF;text-align: start;font-family: Arial;font-size: 12px;margin: 0px;font-weight: 400; padding-top: 80px;padding: 0px 10px;padding-top: 40px;"
                                             colspan="1">
                                             <p>SUBTOTAL</p>
                                         </td>

@@ -146,23 +146,23 @@
 
         .desc-col {
             width: 45%;
-            text-align: right;
+            text-align: left;
         }
 
         .price-col {
             width: 20%;
-            text-align: right;
+            text-align: left;
         }
 
         .total-col {
             width: 20%;
-            text-align: right;
+            text-align: left;
         }
 
         .product-name {
             font-weight: bold;
             margin-bottom: 2px;
-            text-align: right;
+            text-align: left;
         }
 
         .platform-info {
@@ -254,9 +254,9 @@
                     <thead>
                         <tr>
                             <th class="qty-col" >Quantity</th>
-                            <th class="desc-col"  style="text-align: right">Description</th>
-                            <th class="price-col" style="text-align: right">Unit Price</th>
-                            <th class="total-col" style="text-align: right">Total</th>
+                            <th class="desc-col"  style="text-align: left">Description</th>
+                            <th class="price-col" style="text-align: left">Unit Price</th>
+                            <th class="total-col" style="text-align: left">Total</th>
                         </tr>
                     </thead>
                     <tbody>

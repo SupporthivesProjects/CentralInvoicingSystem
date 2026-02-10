@@ -147,7 +147,7 @@
                     <tr>
                         <td style="padding:30px 60px 10px;">
                             <div>
-                                <h1>INVOICE</h1>
+                                <h1>Invoice</h1>
                                 <p style="font-family: 'Bahnschrift'; font-size: 11px; font-weight: normal; color: #132028;">Invoice no.{{ $invoice_number }}</p>
                             </div>
                         </td>
@@ -158,16 +158,28 @@
                                <tbody>
                                  
                                  <tr>
-                                 <td class="addrss" style="width: 40%; vertical-align: top;">
-                                        <h4>BILLED TO:</h4>
+                                 <td class="addrss" style="width:30%; vertical-align: top;">
+                                        <h4>Billed To:</h4>
                                         <p style="font-size: 12px;">{{ $customer_name }}</p>
                                         <p style="font-size: 12px;">{{ $customer_email }}</p>
                                     </td>
 
-                                    <td class="addrss">
+                                    @php
+                                        $parts = explode(',', $company_address);
+
+                                        $formattedAddress =
+                                            trim($parts[0]) . ',<br>' .
+                                            trim($parts[1]) . ', ' . trim($parts[2]) . ',<br>' .
+                                            implode(',', array_slice($parts, 3));
+                                    @endphp
+
+
+                                    <td class="addrss" style="width:40%;vertical-align: top;">
                                         <h4>Billed From:</h4>
                                         <p style="font-size: 12px;">{{ $site_name }}</p>
-                                        <p style="font-size: 12px;">{!! $company_address !!}</p>
+                                        <p style="font-size: 12px;">{!! $formattedAddress !!}</p>
+                                        
+
                                         <p style="font-size: 12px;">{{ $company_email }}</p>
                                         <p style="font-size: 12px;">{{ $company_mobile }}</p>
                                     </td>

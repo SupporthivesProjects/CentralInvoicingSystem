@@ -102,7 +102,7 @@
                                 <!-- HEADER ROW -->
                                 <tr>
                                     <th
-                                        style="padding:10px 5px; text-align:left; border-bottom:2px solid #3C8F89; color:#3C8F89; font-weight:bold;">
+                                        style="padding:10px 5px; text-align:left; border-bottom:1px solid #3C8F89; color:#3C8F89; font-weight:bold;">
                                         DESCRIPTION
                                     <!-- </th>
                                     <th
@@ -110,11 +110,11 @@
                                         STATUS
                                     </th> -->
                                     <th
-                                        style="padding:10px 5px; text-align:center; border-bottom:2px solid #3C8F89; color:#3C8F89; font-weight:bold;">
+                                        style="padding:10px 5px; text-align:center; border-bottom:1px solid #3C8F89; color:#3C8F89; font-weight:bold;">
                                         DURATION
                                     </th>
                                     <th
-                                        style="padding:10px 5px; text-align:right; border-bottom:2px solid #3C8F89; color:#3C8F89; font-weight:bold;">
+                                        style="padding:10px 5px; text-align:right; border-bottom:1px solid #3C8F89; color:#3C8F89; font-weight:bold;">
                                         AMOUNT
                                     </th>
                                 </tr>
@@ -128,10 +128,10 @@
                                             style="padding:12px 5px; text-align:center; border-bottom:1px solid #3C8F89; border-left:2px solid #3C8F89;">
                                             {{ $packageName = trim(explode('-', $product->name)[1] ?? '') }}</td> -->
                                         <td
-                                            style="padding:12px 5px; text-align:center; border-bottom:1px solid #3C8F89; border-left:2px solid #3C8F89;">
+                                            style="padding:12px 5px; text-align:center; border-bottom:1px solid #3C8F89; border-left:1px solid #3C8F89;">
                                             {{ $product->subscription ?? '-' }}</td>
                                         <td
-                                            style="padding:12px 5px; text-align:right; border-bottom:1px solid #3C8F89; border-left:2px solid #3C8F89;">
+                                            style="padding:12px 5px; text-align:right; border-bottom:1px solid #3C8F89; border-left:1px solid #3C8F89;">
                                             {{ site_currency() }} {{ number_format($product->unit_price ?? 0, 2) }}
                                         </td>
                                     </tr>
@@ -150,11 +150,11 @@
                                     <td></td>
                                     <!-- <td></td> -->
                                     <td
-                                        style="padding:10px 5px; text-align:right; font-size:14px; color:#3C8F89; font-weight:bold; border-top:2px solid #3C8F89;">
+                                        style="padding:10px 5px; text-align:right; font-size:14px; color:#3C8F89; font-weight:bold; border-top:1px solid #3C8F89;">
                                         TOTAL
                                     </td>
                                     <td
-                                        style="padding:10px 5px; text-align:right; font-size:14px; color:#3C8F89; font-weight:bold; border-top:2px solid #3C8F89; border-left:2px solid #3C8F89;">
+                                        style="padding:10px 5px; text-align:right; font-size:14px; color:#3C8F89; font-weight:bold; border-top:1px solid #3C8F89; border-left:1px solid #3C8F89;">
                                         {{ site_currency() }}{{ number_format($invoice_amount, 2) }}
                                     </td>
                                 </tr>

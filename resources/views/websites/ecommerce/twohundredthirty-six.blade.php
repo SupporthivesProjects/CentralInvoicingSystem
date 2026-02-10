@@ -22,7 +22,7 @@
                             <!-- <table style=" background-color: #FFFFFF;border-collapse: collapse;"> -->
                             <table width="100%" style="border-collapse: collapse; table-layout: fixed; background: #ECECFF;">
                                 <tr >
-                                    <td style="background: #ECECFF; height: 140px; width: 320px;padding-left: 20px; font-family: 'Nunito', sans-serif; border-bottom-right-radius: 20px;">
+                                    <td style="background: #ECECFF; height: 140px; width: 350px;padding-left: 20px; font-family: 'Nunito', sans-serif; border-bottom-right-radius: 20px;">
                                         <p style="font-size: 24px;color: black">INVOICE <span style="font-size: 24px;color: #7B5CFF;">[{{ $invoice_number }}]</span></p>
                                         <p style="font-size: 10px;margin: 0px;color: #7B5CFF;">{{ $company_name }}</p>
                                         <p style="font-size: 9px;margin-top: 0px;">{!! $company_address !!}</p> 
