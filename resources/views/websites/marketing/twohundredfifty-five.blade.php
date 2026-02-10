@@ -91,11 +91,17 @@
                                                     style="color:#000000; text-align:start;padding:8px;font-family:  Arial;font-size:18px;margin: 0px;font-weight: 400;">
                                                     {{ $customer_name }}
                                                 </p>
-                                                <p
+                                                <!-- <p
                                                     style="color:#000000; text-align:start;padding:0px;font-family:  Arial;font-size:10px;margin: 0px;font-weight: 400;">
+<<<<<<< HEAD
                                                     {{ $site_name }}<br>{{ $customer_email ? $customer_email : '' }}
                                                     | {{ $customer_mobile ? $customer_mobile : '' }}
                                                 </p>
+=======
+                                                    {{ $site_name }}<br>{{ $company_email }}
+                                                    | {{ $company_mobile }}
+                                                </p> -->
+>>>>>>> 833ef6a547442350c310183d1953aaad4468a7ad
                                             </div>
                                         </div>
                                     </td>

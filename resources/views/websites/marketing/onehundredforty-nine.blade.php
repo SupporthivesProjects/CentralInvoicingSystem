@@ -137,7 +137,7 @@
                                         </td>
                                     </tr>
                                     @foreach ($products as $product)
-                                        <tr class="row-color" style="width:520px;height:60px;">
+                                        <tr class="row-color" style="width:520px;height:50px;">
                                             <td style="width: 150px;padding: 10px;" align="left">
                                                 <p
                                                     style="color:#000000;font-size:12px;font-weight:400;font-family:arial;margin: 0px;line-height:16px;">

@@ -12,7 +12,8 @@
         <td>
             {{ $product->name }}
             @if($site->site_link && $product->slug)
-                <a href="{{ $site->site_link }}games" target="_blank" title="View Product">🔗</a>
+                <!-- <a href="{{ $site->site_link }}games" target="_blank" title="View Product">🔗</a> -->
+                 <a href="{{ $site->site_link.'games/'.$product->slug }}" target="_blank" title="View Product"><i class="bi bi-box-arrow-up-right ms-1"></i></a>
             @endif
         </td>
 
@@ -125,7 +126,8 @@
             return $(this).prop('readonly');
         });
 
-        $currencyInput.val(totalAmount+'0'); // No decimals
+        //$currencyInput.val(totalAmount+'0'); // No decimals
+        $currencyInput.val(totalAmount); // No decimals
     });
 </script>
 

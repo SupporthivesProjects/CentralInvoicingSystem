@@ -149,7 +149,7 @@
                                     <td style="border-bottom:1px solid grey ;">
                                         <p
                                             style="font-size:10px;font-weight:500;font-family:Urbanist;margin: 0px;text-transform: uppercase;">
-                                            {{ site_currency() }} {{ number_format($product->unit_price ?? 0, 2) }}
+                                            {{ site_currency() .number_format(($invoice_amount + $discount_amount), 2) }}
                                         </p>
                                     </td>
                                 </tr>
