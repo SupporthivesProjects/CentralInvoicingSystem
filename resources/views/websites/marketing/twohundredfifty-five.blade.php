@@ -91,9 +91,10 @@
                                                     style="color:#000000; text-align:start;padding:8px;font-family:  Arial;font-size:18px;margin: 0px;font-weight: 400;">
                                                     {{ $customer_name }}
                                                 </p>
+                                                {{-- $site_name --}}
                                                 <p
                                                     style="color:#000000; text-align:start;padding:0px;font-family:  Arial;font-size:10px;margin: 0px;font-weight: 400;">
-                                                    {{ $site_name }}<br>{{ $customer_email ? $customer_email : '' }}
+                                                    {{ $customer_email ? $customer_email : '' }}
                                                     | {{ $customer_mobile ? $customer_mobile : '' }}
                                                 </p>
                                             </div>
