@@ -47,6 +47,35 @@ class WordPressController extends Controller
         $this->connectionType = 'dynamic';
     }
 
+    private function getVariationName($connection, $variationId, $productName)
+    {
+        if ($variationId <= 0) {
+            return $productName;
+        }
+
+        $prefix = explode('_', $this->productTable)[0] ?? 'wp';
+        $postMetaTable = $prefix . '_postmeta';
+
+        $attributes = DB::connection($connection)
+            ->table($postMetaTable)
+            ->where('post_id', $variationId)
+            ->where('meta_key', 'LIKE', 'attribute_%')
+            ->pluck('meta_value', 'meta_key')
+            ->toArray();
+
+        if (empty($attributes)) {
+            return $productName;
+        }
+
+        $variationParts = [];
+        foreach ($attributes as $key => $value) {
+            $variationParts[] = ucfirst(str_replace(['attribute_', 'pa_', '-', '_'], [' ', '', ' ', ' '], $value));
+        }
+
+        return $productName . ' - ' . implode(' ', $variationParts);
+    }
+
+
     public function randomProducts(Request $request)
     {
         $site_id = $request->get('site_id') ?? session('customer.site_id');
@@ -161,6 +190,7 @@ class WordPressController extends Controller
     
             $product->rrp = $product->unit_price;
             $product->discount = 0;
+            $product->name = $this->getVariationName($connection, $product->variation_id, $product->name);
         });
     
         $productList = $bestMatch->map(fn($p) => [
@@ -833,6 +863,7 @@ class WordPressController extends Controller
                 $product->rrp = $product->unit_price;
                 $product->discount = 0;
             }
+            $product->name = $this->getVariationName($connection, $product->variation_id, $product->name);
     
             return $product;
         });
@@ -937,6 +968,8 @@ class WordPressController extends Controller
                 $product->rrp = $product->unit_price;
                 $product->discount = 0;
             }
+
+            $product->name = $this->getVariationName($connection, $product->variation_id, $product->name);
     
             return $product;
         });
@@ -1034,7 +1067,9 @@ class WordPressController extends Controller
                 $product->rrp = $product->unit_price;
                 $product->discount = 0;
             }
-    
+
+            $product->name = $this->getVariationName($connection, $product->variation_id, $product->name);
+
             return $product;
         });
     
@@ -1162,6 +1197,8 @@ class WordPressController extends Controller
                 $product->rrp = $product->unit_price;
                 $product->discount = 0;
             }
+
+            $product->name = $this->getVariationName($connection, $product->variation_id, $product->name);
 
             return $product;
         });
@@ -1343,6 +1380,7 @@ class WordPressController extends Controller
             $product->category_name = '-';
             $product->rrp = $product->unit_price;
             $product->discount = 0;
+            $product->name = $this->getVariationName($this->connectionType, $product->variation_id, $product->name);
             return $product;
         });
 
