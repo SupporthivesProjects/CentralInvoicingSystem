@@ -171,7 +171,7 @@ class WordPressController extends Controller
         $lastUsedCombinations = array_slice($lastUsedCombinations, -5);
         session()->put('last_used_combinations', $lastUsedCombinations);
     
-        $bestMatch->each(function ($product) use ($site_id) {
+        $bestMatch->each(function ($product) use ($site_id, $connection) {
             $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
                 ->where('product_id', $product->id)
                 ->orderByDesc('last_price_changed')
@@ -827,7 +827,7 @@ class WordPressController extends Controller
             return $products[$id] ?? null;
         })->filter();
     
-        $products = $products->map(function ($product) use ($readyProducts, $site_id) {
+        $products = $products->map(function ($product) use ($readyProducts, $site_id, $connection) {
             $sessionProduct = collect($readyProducts)->firstWhere('id', $product->id);
     
             if ($product->post_type === 'product_variation') {
@@ -1031,7 +1031,7 @@ class WordPressController extends Controller
             ])
             ->get();
     
-        $products = $products->map(function ($product) use ($readyProducts, $site_id) {
+        $products = $products->map(function ($product) use ($readyProducts, $site_id, $connection) {
             $sessionProduct = collect($readyProducts)->firstWhere('id', $product->id);
     
             if ($product->post_type === 'product_variation') {
@@ -1175,7 +1175,7 @@ class WordPressController extends Controller
             ]);
         }
 
-        $products = $products->map(function ($product) use ($site_id) {
+        $products = $products->map(function ($product) use ($site_id, $connection) {
             $product->category_name = '-';
 
             $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
