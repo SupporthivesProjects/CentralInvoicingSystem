@@ -1354,17 +1354,18 @@ class WordPressController extends Controller
             }
         }
 
-    $postsTable = $this->productTable;
-    $priceTable = $this->productPriceTable;
-    $connection = $this->connectionType;
+        $postsTable = $this->productTable;
+        $priceTable = $this->productPriceTable;
+        $connection = $this->connectionType;
 
-    $products = DB::connection($connection)
+        $products = DB::connection($connection)
         ->table($postsTable)
         ->join($priceTable, "$postsTable.ID", '=', "$priceTable.product_id")
         ->whereIn("$postsTable.ID", $productIds)
         ->select([
             "$postsTable.ID as id",
-            "$priceTable.product_id as variation_id",
+            "$postsTable.post_parent as parent_id",
+            "$postsTable.post_type as post_type",
             "$postsTable.post_title as name",
             "$postsTable.post_excerpt as description",
             "$postsTable.post_name as slug",
@@ -1375,15 +1376,25 @@ class WordPressController extends Controller
             return array_search($product->id, $productIds);
         })
         ->values()
-        ->map(function ($product) use ($customPrices) {
+        ->map(function ($product) use ($customPrices, $connection, $postsTable) {
+            // Determine variation_id properly
+            if ($product->post_type === 'product_variation') {
+                $product->variation_id = $product->id;
+                $product->id = $product->parent_id;
+            } else {
+                // Get the variation ID from session's ready_products
+                $readyProducts = session('ready_products', []);
+                $sessionProduct = collect($readyProducts)->firstWhere('id', $product->id);
+                $product->variation_id = $sessionProduct['variation_id'] ?? 0;
+            }
+            
             $product->unit_price = $customPrices[$product->id] ?? $product->unit_price;
             $product->category_name = '-';
             $product->rrp = $product->unit_price;
             $product->discount = 0;
-            $product->name = $this->getVariationName($this->connectionType, $product->variation_id, $product->name);
+            $product->name = $this->getVariationName($connection, $product->variation_id, $product->name);
             return $product;
         });
-
         $invoice_data['products'] = $products;
         $invoice_data['product_ids'] = $productIds;
     
