@@ -47,38 +47,38 @@ class WordPressController extends Controller
         $this->connectionType = 'dynamic';
     }
 
-    // private function getVariationName($connection, $variationId, $productName)
-    // {
-    //     if ($variationId <= 0) {
-    //         return $productName;
-    //     }
-
-    //     $prefix = explode('_', $this->productTable)[0] ?? 'wp';
-    //     $postMetaTable = $prefix . '_postmeta';
-
-    //     $attributes = DB::connection($connection)
-    //         ->table($postMetaTable)
-    //         ->where('post_id', $variationId)
-    //         ->where('meta_key', 'LIKE', 'attribute_%')
-    //         ->pluck('meta_value', 'meta_key')
-    //         ->toArray();
-
-    //     if (empty($attributes)) {
-    //         return $productName;
-    //     }
-
-    //     $variationParts = [];
-    //     foreach ($attributes as $key => $value) {
-    //         $variationParts[] = ucfirst(str_replace(['attribute_', 'pa_', '-', '_'], [' ', '', ' ', ' '], $value));
-    //     }
-
-    //     return $productName . ' - ' . implode(' ', $variationParts);
-    // }
-
     private function getVariationName($connection, $variationId, $productName)
     {
-        return $productName;
+        if ($variationId <= 0) {
+            return $productName;
+        }
+
+        $prefix = explode('_', $this->productTable)[0] ?? 'wp';
+        $postMetaTable = $prefix . '_postmeta';
+
+        $attributes = DB::connection($connection)
+            ->table($postMetaTable)
+            ->where('post_id', $variationId)
+            ->where('meta_key', 'LIKE', 'attribute_%')
+            ->pluck('meta_value', 'meta_key')
+            ->toArray();
+
+        if (empty($attributes)) {
+            return $productName;
+        }
+
+        $variationParts = [];
+        foreach ($attributes as $key => $value) {
+            $variationParts[] = ucfirst(str_replace(['attribute_', 'pa_', '-', '_'], [' ', '', ' ', ' '], $value));
+        }
+
+        return $productName . ' - ' . implode(' ', $variationParts);
     }
+
+    // private function getVariationName($connection, $variationId, $productName)
+    // {
+    //     return $productName;
+    // }
 
 
     public function randomProducts(Request $request)
