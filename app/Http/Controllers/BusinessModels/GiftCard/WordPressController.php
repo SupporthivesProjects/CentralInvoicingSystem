@@ -934,7 +934,7 @@ class WordPressController extends Controller
     
         $products = collect($productIds)->map(fn($id) => $products[$id] ?? null)->filter();
     
-        $products = $products->map(function ($product) use ($updatedProducts, $site_id) {
+        $products = $products->map(function ($product) use ($updatedProducts, $site_id, $connection) {
             $sessionProduct = collect($updatedProducts)->firstWhere('id', $product->id);
     
             if ($product->post_type === 'product_variation') {
