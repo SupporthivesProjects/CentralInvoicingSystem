@@ -3,16 +3,17 @@
     <head>
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
     <style>
-    @page { 
-            margin: 0 !important; 
+        @page {
+          margin:0px;
+          padding:0px;
         }
     </style>
 </head>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
-<body>
+<body style="border-collapse: collapse; margin:0; padding:0; background:#FFF; font-family:Arial, sans-serif;">
     <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse;">
         <tr>
-            <td align="center" bgcolor="#f2f2f2">
+            <td align="center" bgcolor="#FFF">
                 <table  style="border-collapse: collapse;border: 0px;background-color: white;background-color: #E9E3D3; ">
                     <!--Header-->
                     <tr style="background: url('{{ $invoice_header_image }}') no-repeat;background-position:center;background-size:contain; height: 145px;color: white;border-collapse: collapse;width: 600px;">

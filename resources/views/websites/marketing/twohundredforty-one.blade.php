@@ -16,7 +16,7 @@
 
                 <!-- MAIN CONTAINER -->
                 <table width="100%" cellpadding="0" cellspacing="0"
-                    style="background:#FFF;border-collapse: collapse; ">
+                    style="background:red;border-collapse: collapse; ">
 
                     <!-- HEADER -->
                     <tr>
