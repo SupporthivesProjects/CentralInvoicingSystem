@@ -11,12 +11,12 @@
     </style>
 </head>
 
-<body style="margin:0; padding:0; background:#FFF; font-family:Arial, sans-serif;">
+<body style="border-collapse: collapse; margin:0; padding:0; background:#FFF; font-family:Arial, sans-serif;">
 
 
                 <!-- MAIN CONTAINER -->
                 <table width="100%" cellpadding="0" cellspacing="0"
-                    style="background:#FFF;">
+                    style="background:#FFF;border-collapse: collapse; ">
 
                     <!-- HEADER -->
                     <tr>
@@ -31,7 +31,7 @@
                                         <table cellpadding="0" cellspacing="0"
                                             style="font-size:11px; line-height:18px; font-family:Arial;">
                                             <tr>
-                                                <td><i>ttttttttttt{!! $company_address !!}</i></td>
+                                                <td><i>{!! $company_address !!}</i></td>
                                             </tr>
                                             
                                             <tr>
