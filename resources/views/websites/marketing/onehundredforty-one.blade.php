@@ -129,20 +129,7 @@
                         </td>
                     </tr>
 
-                    <!-----------Footer----------->
-                    <tr>
-                        <td style="height: 100vh;">
-                            <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;"> 
-                                <tr style="background: url() no-repeat;background-position: center;background-size: cover;background-size:cover;width: 100%;">
-                                    <td style="width: 150px;text-align: center;color: white;font-family: Arial, Helvetica, sans-serif;font-size: 10px;"> 
-                                      
-                                    </td> 
-                                          
-                                </tr>
-                                <tr>              
-                            </table>
-                        </td>
-                    </tr> 
+                   
                 </table>
             </td>
         </tr>
