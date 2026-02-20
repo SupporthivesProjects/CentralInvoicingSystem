@@ -3,6 +3,12 @@
 
 <head>
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
+    <style>
+        *{
+          margin:0px;
+          padding:0px;
+        }
+    </style>
 </head>
 
 <body style="margin:0; padding:0; background:#f5f6f8; font-family:Arial, sans-serif;">
