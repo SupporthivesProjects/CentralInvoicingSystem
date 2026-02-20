@@ -11,16 +11,16 @@
     </style>
 </head>
 
-<body style="margin:0; padding:0; background:#f5f6f8; font-family:Arial, sans-serif;">
+<body style="margin:0; padding:0; background:#FFF; font-family:Arial, sans-serif;">
 
     <!-- OUTER WRAPPER TABLE -->
-    <table width="100%" cellpadding="0" cellspacing="0" style="background:#FFFCF8;height:100vh">
+    <table width="100%" cellpadding="0" cellspacing="0" style="background:#FFF;height:100vh">
         <tr>
             <td align="center" style="vertical-align:top;">
 
                 <!-- MAIN CONTAINER -->
                 <table width="100%" cellpadding="0" cellspacing="0"
-                    style="background:#FFFCF8; border-radius:6px; overflow:hidden;">
+                    style="background:#FFF; border-radius:6px; overflow:hidden;">
 
                     <!-- HEADER -->
                     <tr>
