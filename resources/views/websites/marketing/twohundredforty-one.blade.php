@@ -11,18 +11,22 @@
     </style>
 </head>
 
-<body style="border-collapse: collapse; margin:0; padding:0; background:#FFF; font-family:Arial, sans-serif;">
+<body style="margin:0; padding:0; background:#f5f6f8; font-family:Arial, sans-serif;">
 
+    <!-- OUTER WRAPPER TABLE -->
+    <table width="100%" cellpadding="0" cellspacing="0" style="background:#FFFCF8;height:100vh">
+        <tr>
+            <td align="center" style="vertical-align:top;">
 
                 <!-- MAIN CONTAINER -->
                 <table width="100%" cellpadding="0" cellspacing="0"
-                    style="background:#FFF;border-collapse: collapse; ">
+                    style="background:#FFFCF8; border-radius:6px; overflow:hidden;">
 
                     <!-- HEADER -->
                     <tr>
                         <td>
                             <table width="100%" cellpadding="0" cellspacing="0"
-                                style="padding:60px 50px 10px 50px;">
+                                style="padding:60px 50px 10px 50px;position: relative;">
                                 <tr>
                                     <!-- LEFT SIDE -->
                                     <td width="60%" valign="top">
@@ -33,7 +37,12 @@
                                             <tr>
                                                 <td><i>{!! $company_address !!}</i></td>
                                             </tr>
-                                            
+                                            {{-- <tr>
+                        <td>123 place, City,</td>
+                      </tr>
+                      <tr>
+                        <td>Country, Post code</td>
+                      </tr> --}}
                                             <tr>
                                                 <td>Email: {{ $company_email }}</td>
                                             </tr>
@@ -172,6 +181,10 @@
                     </tr>
 
                 </table>
+
+            </td>
+        </tr>
+    </table>
 
 </body>
 
