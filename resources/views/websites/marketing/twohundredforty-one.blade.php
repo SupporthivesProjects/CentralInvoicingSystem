@@ -4,7 +4,7 @@
 <head>
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
     <style>
-        *{
+        @page {
           margin:0px;
           padding:0px;
         }
@@ -22,7 +22,7 @@
                     <tr>
                         <td>
                             <table width="100%" cellpadding="0" cellspacing="0"
-                                style="padding:60px 50px 10px 50px;">
+                                style="border-collapse: collapse;padding:60px 50px 10px 50px;">
                                 <tr>
                                     <!-- LEFT SIDE -->
                                     <td width="60%" valign="top">
@@ -75,7 +75,7 @@
                     <tr>
                         <td>
                             <table width="100%" cellpadding="0" cellspacing="0"
-                                style="padding:10px 50px 5px 50px; position: relative;">
+                                style="border-collapse: collapse;padding:10px 50px 5px 50px; position: relative;">
                                 <tr>
                                     <td style="font-size:14px; line-height:18px;">
                                         <img src="{{ $invoice_image3 }}" alt=""
@@ -100,7 +100,7 @@
                                 <tr>
                                     <th
                                         style="padding:10px 5px; text-align:left; border-bottom:1px solid #3C8F89; color:#3C8F89; font-weight:bold;">
-                                        DESCRIPTION
+                                        DESCRIPTIONnnnnnnn
                                     <!-- </th>
                                     <th
                                         style="padding:10px 5px; text-align:center; border-bottom:2px solid #3C8F89; color:#3C8F89; font-weight:bold;">
