@@ -10,7 +10,7 @@
     </style>
 </head>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
-<body style="border-collapse: collapse; margin:0; padding:0; background:#FFF; font-family:Arial, sans-serif;">
+<body style="border-collapse: collapse; margin:0; padding:0; background:#E9E3D3; font-family:Arial, sans-serif;">
     <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse;">
         <tr>
             <td align="center" bgcolor="#FFF">
