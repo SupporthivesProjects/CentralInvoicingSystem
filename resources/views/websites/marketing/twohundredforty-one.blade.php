@@ -27,7 +27,7 @@
                                     <!-- LEFT SIDE -->
                                     <td width="60%" valign="top">
                                         <img src="{{ $company_logo }}" alt="Brand Throttle"
-                                            style="width:140px; height:auto; margin-bottom:10px;">
+                                            style="width:140px; margin-bottom:10px;">
                                         <table cellpadding="0" cellspacing="0"
                                             style="font-size:11px; line-height:18px; font-family:Arial;">
                                             <tr>
