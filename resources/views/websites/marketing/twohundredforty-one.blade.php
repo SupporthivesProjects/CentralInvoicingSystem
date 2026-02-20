@@ -13,10 +13,6 @@
 
 <body style="margin:0; padding:0; background:#FFF; font-family:Arial, sans-serif;">
 
-    <!-- OUTER WRAPPER TABLE -->
-    <table width="100%" cellpadding="0" cellspacing="0" style="background:#FFF;height:100vh">
-        <tr>
-            <td align="center" style="vertical-align:top;">
 
                 <!-- MAIN CONTAINER -->
                 <table width="100%" cellpadding="0" cellspacing="0"
@@ -37,12 +33,7 @@
                                             <tr>
                                                 <td><i>{!! $company_address !!}</i></td>
                                             </tr>
-                                            {{-- <tr>
-                        <td>123 place, City,</td>
-                      </tr>
-                      <tr>
-                        <td>Country, Post code</td>
-                      </tr> --}}
+                                            
                                             <tr>
                                                 <td>Email: {{ $company_email }}</td>
                                             </tr>
@@ -181,10 +172,6 @@
                     </tr>
 
                 </table>
-
-            </td>
-        </tr>
-    </table>
 
 </body>
 
