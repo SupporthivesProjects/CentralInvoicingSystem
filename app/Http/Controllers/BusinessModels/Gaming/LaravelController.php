@@ -321,7 +321,7 @@ class LaravelController extends Controller
                     'id'             => $product->id,
                     'name'           => $product->name,
                     'bundle_id'      => $product->bundle_id,
-                    'unit_price'     => floatval($sessionGame['unit_price']),
+                    'unit_price'     => number_format(floatval($sessionGame['unit_price']), 2, '.', ''),
                     'slug' => $product->slug ?? Str::slug($product->name),
                     'source'         => 'Random',
                     'can_edit_price' => 0,
@@ -441,7 +441,7 @@ class LaravelController extends Controller
             if (!in_array($key, $seenKeys)) {
                 $existingAssoc[] = [
                     'id'                   => (int)$game_id,
-                    'unit_price'           => (float) $item['unit_price'],
+                    'unit_price'           => number_format((float) $item['unit_price'], 2, '.', ''),
                     'game_currency_amount' => (string)$bundle_amount,
                     'bundle'               => 'custom',
                 ];
@@ -461,7 +461,7 @@ class LaravelController extends Controller
             if (!in_array($key, $seenKeys)) {
                 $existingAssoc[] = [
                     'id'                   => (int)$game_id,
-                    'unit_price'           => (float) $gameData['unit_price'],
+                    'unit_price'           => number_format((float) $gameData['unit_price'], 2, '.', ''),
                     'game_currency_amount' => (string)$bundle_amount,
                     'bundle'               => 'custom',
                 ];
@@ -1071,7 +1071,7 @@ class LaravelController extends Controller
 
             return (object)[
                 'id' => $game['id'],
-                'unit_price' => $game['unit_price'],
+                'unit_price' => number_format((float) $game['unit_price'], 2, '.', ''),
                 'game_currency_amount' => $game['game_currency_amount'],
                 //'bundle' => $game['bundle'],
                 'bundle_id' => rand(1000, 9999),

@@ -9,7 +9,7 @@
         style="cursor: pointer;">
             <div class="form-check m-0 d-flex justify-content-center d-none">
                 <input form="generate-invoice-form" class="form-check-input narayan-checkbox border-primary"
-                    type="checkbox" data-unit_price="{{ $product->unit_price }}"
+                    type="checkbox" data-unit_price="{{ number_format((float)$product->unit_price, 2, '.', '') }}"
                     name="products[{{ $product->id }}][selected_checkbox]" value="1" checked>
                 <input type="hidden" name="products[{{ $product->id }}][selected]" value="1">
             </div>
@@ -34,7 +34,7 @@
         <td>{{ site_currency() }}{{ number_format($product->unit_price, 2) }}
             <input form="generate-invoice-form" type="hidden" 
                 name="products[{{ $product->id }}][original_price]"
-                value="{{ $product->unit_price }}">
+                value="{{ number_format((float)$product->unit_price, 2, '.', '') }}">
             <input form="generate-invoice-form" type="hidden" 
                 name="products[{{ $product->id }}][bundle_id]"
                 value="{{ $product->bundle_id }}">
@@ -71,14 +71,15 @@
                 <input form="generate-invoice-form" type="number" step="0.01"
                     class="form-control edit-price {{ $isLocked ? 'bg-light' : '' }}"
                     name="products[{{ $product->id }}][unit_price]" 
-                    value="{{ $product->unit_price }}"
+                    value="{{ number_format((float)$product->unit_price, 2, '.', '') }}"
                     {{ $isLocked ? 'readonly' : '' }} 
                     data-bs-toggle="tooltip" 
                     data-price-status="{{ $lockStatus }}"
-                    data-original-price="{{ $product->unit_price }}"
+                    data-original-price="{{ number_format((float)$product->unit_price, 2, '.', '') }}"
                     data-product-id="{{ $product->id }}"
                     data-bundle-id="{{ $product->bundle_id }}"
-                    title="{{ $inputTooltip }}">
+                    title="{{ $inputTooltip }}"
+                    value="0.00">
 
                 <input form="generate-invoice-form" type="hidden"
                     name="products[{{ $product->id }}][game_currency_amount]"
@@ -91,7 +92,7 @@
                 <button type="button"
                     class="btn btn-sm btn-outline-danger px-2 py-1 remove-product"
                     data-product-id="{{ $product->id }}"
-                    data-unit-price="{{ $product->unit_price }}"
+                    data-unit-price="{{ number_format((float)$product->unit_price, 2, '.', '') }}"
                     data-product-name="{{ $product->name }}"
                     title="Remove Row">
                     <i class="fa fa-trash"></i>
