@@ -639,12 +639,12 @@
             $('#temp_invoice_amount_text').text(invoiceAmount.toFixed(2));
             $('#temp_discount_amount_text').text(autoDiscount.toFixed(2));
 
-            if (response.matchedAtPercentage > 0) {
-                toastr.info(
-                    'Matched at ' + response.matchedAtPercentage + '% above invoice. Discount auto-applied.',
-                    'Auto Match'
-                );
-            }
+            // if (response.matchedAtPercentage > 0) {
+            //     toastr.info(
+            //         'Matched at ' + response.matchedAtPercentage + '% above invoice. Discount auto-applied.',
+            //         'Auto Match'
+            //     );
+            // }
 
             calculateTotalPrice();
         },
