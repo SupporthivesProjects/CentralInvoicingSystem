@@ -190,7 +190,8 @@
                         success: function(response) {
                             if (response.tableRows !== undefined) {
                                 $('#product-table-body').html(response.tableRows);
-                                $('#current_amount').val(response.total.toFixed(2));
+                                $('#current_amount').val(parseFloat(response.total || 0).toFixed(2));
+                                $('#discount_amount').val('0.00');
                                 calculateTotalPrice();
                                 toastr.success('Product removed successfully!');
                             }

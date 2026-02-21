@@ -1017,8 +1017,8 @@
                 success: function(response) {
                     $('#product-table-body').empty();
                     $('input[name="manual_keyword"]').val('');
-                    $('#discount_amount').val('');
-                    $('#current_amount').val('');
+                    $('#discount_amount').val('0.00');
+                    $('#current_amount').val('0.00');
                     $('#temp_current_amount_text').text('0.00');
                     $('#temp_discount_amount_text').text('0.00');
                     $('#temp_invoice_amount_text').text($('#invoice_amount').val());
