@@ -42,67 +42,80 @@ class LaravelController extends Controller
         $site_id = $request->get('site_id');
         $invoiceAmount = floatval($request->get('invoice_amount'));
 
-
+        // ─── Configurable Settings ─────────────────────────────────────────
+        $percentageStep = 5;   // Each step increases by this % (e.g. 0% → 5% → 10% ...)
+        $maxPercentage  = 50;  // Maximum % above invoice amount to search
+        // ──────────────────────────────────────────────────────────────────
 
         $site = Website::findOrFail($site_id);
-        $productstable = getProductTable($site->technology);
         DynamicDatabaseService::connect($site);
-        //Clear ready products session
         session()->forget('ready_products');
 
         $allProducts = DB::connection($this->connectionType)->table($this->productTable)
             ->select('id', 'name', 'credits', 'price')->get();
 
+        $filteredProducts = collect();
+        $matchedAtPercentage = 0;
 
-        $minTotal = $invoiceAmount;
-        $maxTotal = $invoiceAmount;
+        // Step-by-step percentage increase until product found or max reached
+        for ($pct = 0; $pct <= $maxPercentage; $pct += $percentageStep) {
+            $minPrice = $invoiceAmount;
+            $maxPrice = $invoiceAmount * (1 + $pct / 100);
 
-        // Write code as user entered invoice amount must be matched with any one product which is availeable in db, can use where clause to get exact amount, if no products are found then return empty response with button to add custom packs
-        $filteredProducts = $allProducts->filter(function ($product) use ($minTotal, $maxTotal) {
-            return $product->price >= $minTotal && $product->price <= $maxTotal;
-        });
+            $filteredProducts = $allProducts->filter(function ($product) use ($minPrice, $maxPrice) {
+                return $product->price >= $minPrice && $product->price <= $maxPrice;
+            })->sortBy('price'); // Pick cheapest first to minimize discount
+
+            if ($filteredProducts->isNotEmpty()) {
+                $matchedAtPercentage = $pct;
+                break;
+            }
+        }
+
         if ($filteredProducts->isEmpty()) {
             session()->forget('ready_products');
             session()->forget('current_amount');
             return response()->json([
-            'tableRows' => '<tr><td colspan="6" class="text-center text-muted">No products found matching the invoice amount. <br><button class="btn btn-primary mt-2" onclick="addCustomPacks()">Add Custom Packs</button></td></tr>',
-            'success' => false,
-            'total' => 0
+                'tableRows' => '
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-3">
+                            No products found within ' . $maxPercentage . '% of invoice amount 
+                            (<strong>' . site_currency() . number_format($invoiceAmount, 2) . '</strong>).<br>
+                            <button class="btn btn-primary btn-sm mt-2" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#addmoreproducts" 
+                                onclick="customizeProducts(\'onload\')">
+                                Add Custom Pack
+                            </button>
+                        </td>
+                    </tr>',
+                'success' => false,
+                'total'   => 0
             ], 200);
         }
-        $readyProducts = session()->get('ready_products', []);
-        $randomProducts = $filteredProducts->shuffle()->take(1)->map(function ($product) use ($readyProducts) {
-            $exists = collect($readyProducts)->firstWhere('id', $product->id);
-            if ($exists) {
-                $product->price = $exists->price;
-            } else {
-                $product->price = $product->price;
-            }
-            return $product;
-        });
-        // Put the selected products into session
-        $readyProducts = collect($readyProducts)->keyBy('id')->merge($randomProducts->keyBy('id'))->values()->toArray();
+
+        // Take the cheapest matching product (sorted above)
+        $randomProducts = $filteredProducts->take(1);
+
+        $readyProducts = $randomProducts->values()->toArray();
         session()->put('ready_products', $readyProducts);
-        //dd($readyProducts);
+
         $modelType = $site->businessModel->model_type;
-        session(['current_amount' => $randomProducts->sum('price')]);
-        //$current_amount = session('current_amount', 0);
-        //dd($current_amount);
+        $total = collect($readyProducts)->sum('price');
+        session(['current_amount' => $total]);
+
         $tableRows = view("invoice.{$modelType}.random_product_rows", [
             'products' => collect($readyProducts),
-            'site' => $site,
-            'total' => collect($readyProducts)->sum('price')
+            'site'     => $site,
+            'total'    => $total
         ])->render();
+
         return response()->json([
-            'tableRows' => $tableRows,
-            'total' => collect($readyProducts)->sum('price')
+            'tableRows'          => $tableRows,
+            'total'              => $total,
+            'matchedAtPercentage' => $matchedAtPercentage  // optional, useful for JS feedback
         ]);
-
     }
-
-
-
-
 
     public function addProducts(Request $request)
 {

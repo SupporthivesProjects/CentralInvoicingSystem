@@ -616,24 +616,38 @@
                 $('#invoice_amount').removeClass('text-danger text-success');
             },
             success: function (response) {
-                Swal.close();
-                $('#discount_amount').val(0.00);
-                if (response.total === 0) {
-                    $('#randomize-product-table-body').html(getErrorRowHTML('No results found. Try randomizing or use a different keyword.'));
-                    return;
-                } else {
-                    const invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
-                    const currentAmount = parseFloat(response.total.toFixed(2));
+            Swal.close();
 
-                    //$('#temp_current_amount_text').text(currentAmount.toFixed(2));
-                    $('#temp_invoice_amount_text').text(invoiceAmount.toFixed(2));
-                    $('#randomize-product-table-body').html(response.tableRows);
-                    $('#current_amount').val(currentAmount.toFixed(2));
-                    $('#discount_amount').prop('readonly', false).prop('type', 'number');
-                    calculateTotalPrice();
-                    //alert(currentAmount);
-                }
-            },
+            if (response.total === 0) {
+                $('#randomize-product-table-body').html(response.tableRows);
+                $('#current_amount').val('0.00');
+                $('#discount_amount').prop('type', 'number').val('0.00').prop('readonly', false);
+                return;
+            }
+
+            const invoiceAmount  = parseFloat($('#invoice_amount').val()) || 0;
+            const currentAmount  = parseFloat(response.total.toFixed(2));
+            const autoDiscount   = parseFloat(Math.max(currentAmount - invoiceAmount, 0).toFixed(2));
+
+            $('#randomize-product-table-body').html(response.tableRows);
+            $('#current_amount').val(currentAmount.toFixed(2));
+            $('#discount_amount')
+                .prop('readonly', false)
+                .prop('type', 'number')
+                .val(autoDiscount.toFixed(2));
+
+            $('#temp_invoice_amount_text').text(invoiceAmount.toFixed(2));
+            $('#temp_discount_amount_text').text(autoDiscount.toFixed(2));
+
+            if (response.matchedAtPercentage > 0) {
+                toastr.info(
+                    'Matched at ' + response.matchedAtPercentage + '% above invoice. Discount auto-applied.',
+                    'Auto Match'
+                );
+            }
+
+            calculateTotalPrice();
+        },
             error: function (xhr, textStatus) {
                 if (textStatus !== 'abort') {
                     $('#randomize-product-table-body').html(getErrorRowHTML('Oops! Something went wrong. Please try again.'));
