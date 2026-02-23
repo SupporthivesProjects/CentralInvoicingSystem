@@ -134,11 +134,19 @@ class LaravelController extends Controller
             ]);
         }
 
+        $urgencyFee = 35;
         $lastUsedCombinations = session()->get('last_used_combinations', []);
         $result = $this->findBestProductCombination($products, $invoiceAmount, $noOfProducts, $lastUsedCombinations);
 
         $bestMatch = collect($result['products']);
         $bestTotal = $bestMatch->sum('unit_price');
+        $gap = $invoiceAmount - $bestTotal;
+        $autoUrgent = $bestTotal > 0
+            && $invoiceAmount > 0
+            && $gap > 0
+            && ($gap / $invoiceAmount) <= 0.40
+            && $gap <= ($bestMatch->count() * $urgencyFee)
+            && ($bestTotal + ($bestMatch->count() * $urgencyFee)) >= $invoiceAmount;
 
         $combinationKey = $bestMatch->pluck('id')->sort()->join('-');
         $lastUsedCombinations[] = $combinationKey;
@@ -181,9 +189,6 @@ class LaravelController extends Controller
         session()->forget('ready_products');
         session()->put('ready_products', $productList);
         session(['current_amount' => $bestTotal]);
-
-        $urgencyFee = 35;
-        $autoUrgent = $bestTotal > 0 && $invoiceAmount > 0 && $bestTotal < $invoiceAmount && ($bestTotal + ($bestMatch->count() * $urgencyFee)) >= $invoiceAmount;
 
         $modelType = $site->businessModel->model_type;
         $tableRows = view("invoice.{$modelType}.random_product_rows", [
