@@ -148,6 +148,11 @@
                             $('#randomize-product-table-body').html(response.tableRows);
                             toastr.success('Product has been removed successfully.', 'Product Removed');
                             $('#discount_amount').prop('readonly', false).prop('type', 'number');
+                            $('#randomize-product-table-body .urgency-select').each(function() {
+                                if ($(this).data('auto-urgent') === 'true' && $(this).val() === 'urgent') {
+                                    $(this).trigger('change');
+                                }
+                            });
                             calculateTotalPrice();
 
                             setTimeout(() => {
@@ -234,6 +239,14 @@
             }
         });
     });
+
+    function initUrgencySelects(scope) {
+        $(scope || document).find('.urgency-select').each(function() {
+            if ($(this).data('auto-urgent') === 'true' && $(this).val() === 'urgent') {
+                $(this).trigger('change');
+            }
+        });
+    }
 
     function number_format(number, decimals = 2, dec_point = '.', thousands_sep = ',') {
         number = (number + '').replace(/[^0-9+\-Ee.]/g, '');
