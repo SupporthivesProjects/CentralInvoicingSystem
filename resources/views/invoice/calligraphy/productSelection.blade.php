@@ -371,18 +371,17 @@
                         <table class="table table-bordered table-hover align-middle mb-0">
                             <thead class="">
                             <tr>
-                                <th class="text-center" style="width: 6%;">PID</th>
-                                <th class="text-center" style="width: 36%;">Product Name</th>
-                                <th class="text-center unit-price-header" style="width: 20%;" data-column="3" data-order="desc">
+                               <th class="text-center" style="width: 4%;">PID</th>
+                                <th class="text-center" style="width: 42%;">Product Name / Option</th>
+                                <th class="text-center unit-price-header" style="width: 13%;" data-column="3" data-order="desc">
                                     <span class="d-inline-flex align-items-center justify-content-center gap-1">
                                     Unit Price <i class="bi bi-caret-down-fill"></i>
                                     </span>
                                 </th>
-                                <th class="text-center" style="width: 20%;">Editable Price</th>
-                                <th class="text-center" style="width: 20%;">Urgency</th>
-                                <th class="text-center" style="width: 6%;">Remove</th>
-                                </tr>
-
+                                <th class="text-center" style="width: 19%;">Editable Price</th>
+                                <th class="text-center" style="width: 17%;">Urgency</th>
+                                <th class="text-center" style="width: 5%;">Remove</th>
+                            </tr>
                             </thead>
                             <tbody id="randomize-product-table-body">
                             </tbody>
@@ -473,16 +472,16 @@
                         <table id="customize-products-table" class="table table-bordered table-hover align-middle mb-0 table-responsive" style="width:100% !important;">
                             <thead class="text-center">
                                 <tr>
-                                <th style="width: 10%;">PID</th>
-                                <th style="width: 40%;">Product Name</th>
-                                <th class="text-center unit-price-header" style="width: 20%;"  data-column="3" data-order="desc">
-                                    <span class="d-inline-flex align-items-center justify-content-center gap-1">
-                                        Unit Price <i class="bi bi-caret-down-fill"></i>
-                                    </span>
-                                </th>
-                                <th style="width: 25%;">Editable Price</th>
-                                <th style="width: 10%;">Select</th>
-                            </tr>
+                                    <th style="width: 5%;">PID</th>
+                                    <th style="width: 45%;">Product Name / Option</th>
+                                    <th class="text-center unit-price-header" style="width: 15%;"  data-column="3" data-order="desc">
+                                        <span class="d-inline-flex align-items-center justify-content-center gap-1">
+                                            Unit Price <i class="bi bi-caret-down-fill"></i>
+                                        </span>
+                                    </th>
+                                    <th style="width: 25%;">Editable Price</th>
+                                    <th style="width: 10%;">Select</th>
+                                </tr>
                             </thead>
                             <tbody id="customize-product-table-body">
                             </tbody>
