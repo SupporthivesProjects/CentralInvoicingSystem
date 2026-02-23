@@ -182,12 +182,16 @@ class LaravelController extends Controller
         session()->put('ready_products', $productList);
         session(['current_amount' => $bestTotal]);
 
+        $urgencyFee = 35;
+        $autoUrgent = $bestTotal > 0 && $invoiceAmount > 0 && $bestTotal < $invoiceAmount && ($bestTotal + ($bestMatch->count() * $urgencyFee)) >= $invoiceAmount;
+
         $modelType = $site->businessModel->model_type;
         $tableRows = view("invoice.{$modelType}.random_product_rows", [
             'products' => $bestMatch,
             'site' => $site,
             'total' => $bestTotal,
-            'urgency_fee' => 35,
+            'urgency_fee' => $urgencyFee,
+            'auto_urgent' => $autoUrgent,
         ])->render();
 
         return response()->json([
@@ -829,6 +833,7 @@ class LaravelController extends Controller
             'site' => $site,
             'total' => collect($products)->sum('unit_price'),
             'urgency_fee' => 35,
+            'auto_urgent' => false,
         ])->render();
 
         return response()->json([
@@ -909,6 +914,7 @@ class LaravelController extends Controller
             'site' => $site,
             'total' => collect($products)->sum('unit_price'),
             'urgency_fee' => 35,
+            'auto_urgent' => false,
         ])->render();
 
         return response()->json([
@@ -991,6 +997,7 @@ class LaravelController extends Controller
             'site' => $site,
             'total' => $total,
             'urgency_fee' => 35,
+            'auto_urgent' => false,
         ])->render();
 
         return response()->json([

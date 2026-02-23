@@ -37,14 +37,9 @@
             <select class="form-select form-select-sm urgency-select" aria-label="Urgency"
                 data-product-id="{{ $product->id }}"
                 data-base-price="{{ number_format($product->unit_price, 2, '.', '') }}"
-                @php
-                    $invoiceAmount = session('invoice.invoice_amount') ?? 0;
-                    $currentTotal = $total ?? 0;
-                    $autoUrgent = ($currentTotal > 0 && $invoiceAmount > 0 && $currentTotal < $invoiceAmount) ? true : false;
-                @endphp
-                data-auto-urgent="{{ $autoUrgent ? 'true' : 'false' }}">
-                <option value="standard" {{ !$autoUrgent ? 'selected' : '' }}>Standard 5-7 days</option>
-                <option value="urgent" {{ $autoUrgent ? 'selected' : '' }}>Urgent 2-3 days (+{{ site_currency() }}{{ $urgency_fee }})</option>
+                data-auto-urgent="{{ isset($auto_urgent) && $auto_urgent ? 'true' : 'false' }}">
+                <option value="standard" {{ !isset($auto_urgent) || !$auto_urgent ? 'selected' : '' }}>Standard 5-7 days</option>
+                <option value="urgent" {{ isset($auto_urgent) && $auto_urgent ? 'selected' : '' }}>Urgent 2-3 days (+{{ site_currency() }}{{ $urgency_fee }})</option>
             </select>
         </td>
 
