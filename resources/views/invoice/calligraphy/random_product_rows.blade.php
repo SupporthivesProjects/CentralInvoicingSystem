@@ -34,7 +34,9 @@
                     checked>
                 <input type="text" class="form-control product-price text-center"
                     value="{{ number_format($product->unit_price, 2, '.', '') }}"
-                    data-product-id="{{ $product->id }}" {{ $product->can_edit_price == 0 ? 'readonly' : '' }}
+                    data-product-id="{{ $product->id }}"
+                    data-option-id="{{ $product->personalization_option_id ?? '' }}"
+                    {{ $product->can_edit_price == 0 ? 'readonly' : '' }}
                     aria-label="Amount (to the nearest dollar)">
                 <span class="input-group-text d-flex align-items-center">
                     <i class="{{ $product->can_edit_price == 0 ? 'fas fa-lock text-muted' : 'fas fa-edit' }}"
@@ -79,6 +81,7 @@
             var $select = $(this);
             var selectedOption = $select.find('option:selected');
             var newPrice = parseFloat(selectedOption.data('price'));
+            var newOptionId = selectedOption.val();
 
             var $row = $select.closest('tr.product-row');
             var $priceInput = $row.find('.product-price');
@@ -89,15 +92,12 @@
             $urgencySelect.data('base-price', newPrice.toFixed(2));
             $urgencySelect.val('standard');
             $row.data('urgency-fee', 0);
-            $priceInput.data('urgency-price', null);
 
             $unitPriceCell.html(currencySymbol + number_format(newPrice, 2));
 
-            if (!$priceInput.prop('readonly')) {
-                $priceInput.val(newPrice.toFixed(2));
-            } else {
-                $priceInput.data('urgency-price', newPrice);
-            }
+            $priceInput.val(newPrice.toFixed(2));
+            $priceInput.data('urgency-price', newPrice);
+            $priceInput.data('option-id', newOptionId);
 
             if (typeof calculateTotalPrice === 'function') {
                 calculateTotalPrice();
@@ -195,10 +195,7 @@
         $unitPriceCell.html(currencySymbol + number_format(newPrice, 2));
         $row.data('urgency-fee', urgencyFee);
         $editableInput.data('urgency-price', newPrice);
-
-        if (!$editableInput.prop('readonly')) {
-            $editableInput.val(number_format(newPrice, 2, '.', ''));
-        }
+        $editableInput.val(number_format(newPrice, 2, '.', ''));
 
         if (urgencyFee > 0) {
             $unitPriceCell.addClass('text-warning');
@@ -234,7 +231,6 @@
 
     $('.urgency-select').each(function() {
         var autoUrgent = $(this).data('auto-urgent');
-        var val = $(this).find('option[selected]').val() || $(this).val();
         if (autoUrgent === 'true') {
             applyUrgency($(this), 'urgent');
         }
