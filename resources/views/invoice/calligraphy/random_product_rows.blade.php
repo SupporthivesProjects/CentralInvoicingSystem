@@ -77,7 +77,6 @@
 
         $(document).off('change', '.personalization-option-select').on('change', '.personalization-option-select', function() {
             var $select = $(this);
-            var productId = $select.data('product-id');
             var selectedOption = $select.find('option:selected');
             var newPrice = parseFloat(selectedOption.data('price'));
 
@@ -194,12 +193,12 @@
 
             $unitPriceCell.html(currencySymbol + number_format(newPrice, 2));
 
+            $row.data('urgency-fee', urgencyFee);
+            $editableInput.data('urgency-price', newPrice);
+
             if (!$editableInput.prop('readonly')) {
                 $editableInput.val(number_format(newPrice, 2, '.', ''));
             }
-
-            $row.data('urgency-fee', urgencyFee);
-            $editableInput.data('urgency-price', newPrice);
 
             if (typeof calculateTotalPrice === 'function') {
                 calculateTotalPrice();
@@ -229,6 +228,7 @@
             }
         });
 
+        // Initialize all pre-selected urgent rows first, then call calculateTotalPrice ONCE after all rows are done
         $('.urgency-select').each(function() {
             var $select = $(this);
             if ($select.data('auto-urgent') === 'true' && $select.val() === 'urgent') {
@@ -243,14 +243,18 @@
 
                 $unitPriceCell.html(currencySymbol + number_format(newPrice, 2));
 
-                if (!$editableInput.prop('readonly')) {
-                    $editableInput.val(number_format(newPrice, 2, '.', ''));
-                }
-
+                // Must set urgency-fee on the row so calculateTotalPrice can pick it up
                 $row.data('urgency-fee', urgencyFee);
+
+                // Must set urgency-price on input so calculateTotalPrice uses correct value
+                $editableInput.data('urgency-price', newPrice);
+
+                // Always update the input value (even readonly) so calculateTotalPrice reads the correct amount
+                $editableInput.val(number_format(newPrice, 2, '.', ''));
             }
         });
 
+        // Fire ONCE after ALL rows have been initialized with their urgency fees
         if (typeof calculateTotalPrice === 'function') {
             calculateTotalPrice();
         }
