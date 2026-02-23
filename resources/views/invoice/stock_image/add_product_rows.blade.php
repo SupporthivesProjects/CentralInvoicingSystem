@@ -8,7 +8,6 @@
         @endif
     </td>
     <td>
-        {{-- Show credits --}}
         @if($product->credits > 0)
             <span class="badge bg-success">{{ $product->credits }} Credits</span>
         @else
@@ -149,53 +148,4 @@
             updateTempTotal();
         });
     });
-</script>
-
-
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-    // Select all radio buttons for product selection
-    const productRadios = document.querySelectorAll('input[name="add_product_ids[]"]');
-
-    productRadios.forEach(radio => {
-        radio.addEventListener("change", function () {
-            // When a radio is selected
-            if (this.checked) {
-                const productId = this.getAttribute("data-product-id");
-
-                // Find the corresponding price input
-                const priceInput = document.querySelector(`input.add-product-price[data-product-id="${productId}"]`);
-
-                if (priceInput) {
-                    const unitPrice = parseFloat(priceInput.value).toFixed(2);
-
-                    // Update the Current Amount box with ONLY the unit price
-                    const currentAmountElement = document.getElementById("modal_current_amount");
-                    if (currentAmountElement) {
-                        // Force set the value to only show unit price
-                        currentAmountElement.textContent = `€${unitPrice}`;
-                        currentAmountElement.innerHTML = `€${unitPrice}`;
-
-                        // Also check if there's a value attribute and update it
-                        if (currentAmountElement.hasAttribute('value')) {
-                            currentAmountElement.setAttribute('value', unitPrice);
-                        }
-                    }
-
-                    // If there's a hidden input for current amount, update it too
-                    const hiddenCurrentAmount = document.querySelector('input[name="current_amount"], #current_amount_input');
-                    if (hiddenCurrentAmount) {
-                        hiddenCurrentAmount.value = unitPrice;
-                    }
-                }
-            }
-        });
-    });
-
-    // Also trigger the change event for any pre-selected radio button on page load
-    const checkedRadio = document.querySelector('input[name="add_product_ids[]"]:checked');
-    if (checkedRadio) {
-        checkedRadio.dispatchEvent(new Event('change'));
-    }
-});
 </script>
