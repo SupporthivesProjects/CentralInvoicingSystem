@@ -2,9 +2,12 @@
     <tr class="product-row">
         <td class="text-center">{{ $product->id }}</td>
         <td>
-            {{ $product->name }}
+           {{ $product->name }}
             @if ($site->site_link && $product->slug)
                 <a href="{{ $site->site_link }}product/{{ $product->slug }}" target="_blank">🔗</a>
+            @endif
+            @if (!empty($product->personalization_label))
+                <br><small class="text-muted" style="font-size:10px;">{{ $product->personalization_label }}</small>
             @endif
         </td>
         <td class="text-center">{{ site_currency() }}{{ number_format($product->unit_price, 2) }}</td>
