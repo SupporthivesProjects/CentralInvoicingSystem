@@ -150,7 +150,13 @@ class LaravelController extends Controller
         $bestMatch = collect($result['products']);
         $bestTotal = $bestMatch->sum('unit_price');
         $gap = $invoiceAmount - $bestTotal;
-
+        // $autoUrgent = $bestTotal > 0
+        //     && $invoiceAmount > 0
+        //     && $gap > 0
+        //     && ($gap / $invoiceAmount) <= 0.40
+        //     && $gap <= ($bestMatch->count() * $urgencyFee)
+        //     && ($bestTotal + ($bestMatch->count() * $urgencyFee)) >= $invoiceAmount;
+        
         $autoUrgent = false;
         $combinationKey = $bestMatch->pluck('id')->sort()->join('-');
         $lastUsedCombinations[] = $combinationKey;
@@ -1238,6 +1244,7 @@ class LaravelController extends Controller
         $company_detail_type = $request->input('company_detail_type');
 
         if ($company_detail_type === 'remote') {
+
             $invoice_data['site_name']          = $request->input('remote_site_name') ?? '';
             $invoice_data['company_name']       = $request->input('remote_company_name') ?? '';
             $invoice_data['company_email']      = $request->input('remote_company_email') ?? '';
@@ -1258,7 +1265,9 @@ class LaravelController extends Controller
                         'updated_at' => now(),
                     ]);
             }
+
         } else {
+
             $invoice_data['site_name']          = $request->input('local_site_name') ?? '';
             $invoice_data['company_name']       = $request->input('local_company_name') ?? '';
             $invoice_data['company_email']      = $request->input('local_company_email') ?? '';
@@ -1295,14 +1304,12 @@ class LaravelController extends Controller
         $productDataArray = $request->input('product_data', []);
         $productIds = [];
         $customPrices = [];
-        $customOptionIds = [];
 
         foreach ($productDataArray as $item) {
             $data = json_decode($item, true);
             if (!empty($data['product_id'])) {
                 $productIds[] = $data['product_id'];
                 $customPrices[$data['product_id']] = $data['unit_price'];
-                $customOptionIds[$data['product_id']] = $data['personalization_option_id'] ?? null;
             }
         }
 
@@ -1319,13 +1326,8 @@ class LaravelController extends Controller
                 return array_search($product->id, $productIds);
             })
             ->values()
-            ->map(function ($product) use ($customPrices, $customOptionIds, $personalizationOptions) {
-                $savedOptionId = $customOptionIds[$product->id] ?? null;
-                $allOptions = isset($personalizationOptions[$product->id]) ? $personalizationOptions[$product->id] : collect();
-                $option = $savedOptionId
-                    ? ($allOptions->firstWhere('id', $savedOptionId) ?? $allOptions->first())
-                    : $allOptions->first();
-
+            ->map(function ($product) use ($customPrices, $personalizationOptions) {
+                $option = isset($personalizationOptions[$product->id]) ? $personalizationOptions[$product->id]->first() : null;
                 $storedPrice = $option ? floatval($option->price) : 0;
                 $submittedPrice = isset($customPrices[$product->id]) ? floatval($customPrices[$product->id]) : $storedPrice;
                 $product->unit_price = $submittedPrice;
@@ -1419,64 +1421,52 @@ class LaravelController extends Controller
         foreach ($productDataArray as $item) {
             $data = json_decode($item, true);
 
-            if (empty($data['product_id']) || !isset($data['unit_price'])) continue;
+            if (!empty($data['product_id']) && isset($data['unit_price'])) {
+                $product_id = $data['product_id'];
+                $new_price = floatval($data['original_unit_price'] ?? $data['unit_price']);
 
-            $product_id = $data['product_id'];
-            $new_price = floatval($data['original_unit_price'] ?? $data['unit_price']);
-            $option_id = $data['personalization_option_id'] ?? null;
-
-            $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
-                ->where('product_id', $product_id)
-                ->orderByDesc('last_price_changed')
-                ->first();
-
-            $canUpdate = !$lastUpdate || Carbon::parse($lastUpdate->last_price_changed)->diffInMonths(now()) >= 3;
-
-            if (!$canUpdate) continue;
-
-            $option = null;
-
-            if ($option_id) {
-                $option = DB::connection($this->connectionType)->table('personalization_options')
-                    ->where('id', $option_id)
-                    ->where('product_id', $product_id)
-                    ->first();
-            }
-
-            if (!$option) {
                 $option = DB::connection($this->connectionType)->table('personalization_options')
                     ->where('product_id', $product_id)
                     ->first();
-            }
 
-            if ($option) {
+                if (!$option) continue;
+
                 $current_price = floatval($option->price);
+
                 if ($current_price == $new_price) continue;
 
-                DB::connection($this->connectionType)->table('personalization_options')
-                    ->where('id', $option->id)
-                    ->update(['price' => $new_price]);
-            } else {
-                $product = DB::connection($this->connectionType)->table($this->productTable)
-                    ->where('id', $product_id)
+                $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
+                    ->where('product_id', $product_id)
+                    ->orderByDesc('last_price_changed')
                     ->first();
 
-                if (!$product) continue;
+                if (!$lastUpdate) {
+                    DB::connection($this->connectionType)->table('personalization_options')
+                        ->where('id', $option->id)
+                        ->update(['price' => $new_price]);
 
-                $current_price = floatval($product->price ?? 0);
-                if ($current_price == $new_price) continue;
+                    ProductPriceHistory::create([
+                        'site_id' => $site_id,
+                        'product_id' => $product_id,
+                        'unit_price' => $new_price,
+                        'last_price_changed' => now(),
+                    ]);
+                    continue;
+                }
 
-                DB::connection($this->connectionType)->table($this->productTable)
-                    ->where('id', $product_id)
-                    ->update(['price' => $new_price]);
+                if (Carbon::parse($lastUpdate->last_price_changed)->diffInMonths(now()) >= 3) {
+                    DB::connection($this->connectionType)->table('personalization_options')
+                        ->where('id', $option->id)
+                        ->update(['price' => $new_price]);
+
+                    ProductPriceHistory::create([
+                        'site_id' => $site_id,
+                        'product_id' => $product_id,
+                        'unit_price' => $new_price,
+                        'last_price_changed' => now(),
+                    ]);
+                }
             }
-
-            ProductPriceHistory::create([
-                'site_id' => $site_id,
-                'product_id' => $product_id,
-                'unit_price' => $new_price,
-                'last_price_changed' => now(),
-            ]);
         }
     }
 }
