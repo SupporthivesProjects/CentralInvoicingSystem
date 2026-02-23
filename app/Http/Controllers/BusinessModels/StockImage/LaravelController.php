@@ -44,7 +44,7 @@ class LaravelController extends Controller
 
         // ─── Configurable Settings ─────────────────────────────────────────
         $percentageStep = 5;   // Each step increases by this % (e.g. 0% → 5% → 10% ...)
-        $maxPercentage  = 50;  // Maximum % above invoice amount to search
+        $maxPercentage  = 30;  // Maximum % above invoice amount to search
         // ──────────────────────────────────────────────────────────────────
 
         $site = Website::findOrFail($site_id);
