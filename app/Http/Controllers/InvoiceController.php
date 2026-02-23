@@ -131,7 +131,7 @@ class InvoiceController extends Controller
     public function productSelection(Request $request)
     {
         $invoice_id = $request->query('invoice_id');
-    
+
         if ($invoice_id) {
             $invoiceHistory = InvoiceGenerationHistory::where('id', $invoice_id)->first();
 
@@ -149,16 +149,16 @@ class InvoiceController extends Controller
                 ]);
             }
         }
-    
+
         $new_site_id = $request->query('new_site_id');
-    
+
         if ($new_site_id && session('customer.site_id') != $new_site_id) {
             $site = Website::findOrFail($new_site_id);
             $customer = session('customer');
             $customer['site_id'] = $new_site_id;
             $customer['site_name'] = $site->site_name;
             $invoice = session('invoice', []);
-            
+
             if (empty($invoice_id)) {
                 $newInvoiceNumber = generateInvoiceNumber($site->site_name);
                 $invoice['invoice_number'] = $newInvoiceNumber;
@@ -171,19 +171,18 @@ class InvoiceController extends Controller
                 $invoice['invoice_number'] = $invoice['invoice_number'] ?? generateInvoiceNumber('DefaultSite');
                 session(['invoice' => $invoice]);
             }
-            
-    
+
             session()->put('customer', $customer);
             session()->flash('success', 'Website has been changed');
         }
-    
+
         $site_id = session('customer.site_id');
-    
+
         if (!$site_id) {
             return redirect()->back()
                 ->with('error', 'Missing invoice session data. Please try again.');
         }
-    
+
         try {
             $site = Website::with('businessModel')->findOrFail($site_id);
 
@@ -192,11 +191,19 @@ class InvoiceController extends Controller
             }
 
             DynamicDatabaseService::connect($site);
-            DB::connection($this->connectionType)->getPdo(); 
-    
+            DB::connection($this->connectionType)->getPdo();
+
             try {
-                $min_unit_price = DB::connection($this->connectionType)->table($this->productTable)->where('published', 1)->min('unit_price') ?? 10;
-                $max_unit_price = DB::connection($this->connectionType)->table($this->productTable)->where('published', 1)->max('unit_price') ?? 1000;
+                if (strtolower(trim($site->businessModel->model_type)) === 'calligraphy') {
+                    $min_unit_price = floatval(DB::table('personalization_options')->min('price') ?? 10);
+                    $max_unit_price = floatval(DB::table('personalization_options')->max('price') ?? 1000);
+                    if ($min_unit_price >= $max_unit_price) {
+                        $max_unit_price = $min_unit_price + 100;
+                    }
+                } else {
+                    $min_unit_price = DB::connection($this->connectionType)->table($this->productTable)->where('published', 1)->min('unit_price') ?? 10;
+                    $max_unit_price = DB::connection($this->connectionType)->table($this->productTable)->where('published', 1)->max('unit_price') ?? 1000;
+                }
             } catch (\Exception $e) {
                 $min_unit_price = 10;
                 $max_unit_price = 1000;
@@ -216,10 +223,10 @@ class InvoiceController extends Controller
                 } catch (\Throwable $e) {
                     \Log::error("🔥 Error ensuring conversion_rates table: " . $e->getMessage());
                 }
-            } 
-                    
+            }
+
             $sites = Website::orderBy('id', 'DESC')->get();
-    
+
             return view("invoice.{$modelType}.productSelection", [
                 'customer' => session('customer'),
                 'invoice' => session('invoice'),
@@ -227,17 +234,15 @@ class InvoiceController extends Controller
                 'sites' => $sites,
                 'min_unit_price' => $min_unit_price,
                 'max_unit_price' => $max_unit_price,
-                'remote_database' =>$remote_database,
+                'remote_database' => $remote_database,
                 'isWordPress' => $site->technology === 'wordpress',
             ]);
-    
+
         } catch (\Exception $e) {
             return redirect()->back()
                 ->with('error', 'Database connection failed: ' . $e->getMessage());
         }
     }
-
-    
     public function ensureConversionRatesTable(string $connection, $site)
     {
         DynamicDatabaseService::connect($site);

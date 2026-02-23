@@ -596,6 +596,8 @@
 <script>
     const randomizePriceSlider = document.getElementById('randomize-price-slider');
     const customizePriceSlider = document.getElementById('customize-price-slider');
+
+    {{-- FIXED: min/max now come from personalization_options prices, not products.unit_price --}}
     const minUnitPrice = @json($min_unit_price);
     const maxUnitPrice = @json($max_unit_price);
     const currency = "{{ site_currency() }}";

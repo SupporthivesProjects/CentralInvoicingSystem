@@ -31,7 +31,6 @@
         </td>
 
         <td class="text-center">
-            <!--Add a dropdown with urgency-select class-->
             <select class="form-select form-select-sm urgency-select" aria-label="Urgency"
                 data-product-id="{{ $product->id }}">
                 <option value="standard">Standard 5-7 days</option>
@@ -82,8 +81,7 @@
                     $('.remove-product').prop('disabled', true);
                     $button.html('<i class="fas fa-spinner fa-spin"></i>');
                     $('#current_amount').val('Recalculating...');
-                    $('#discount_amount').prop('type', 'text').val('Recalculating...').prop(
-                        'readonly', true);
+                    $('#discount_amount').prop('type', 'text').val('Recalculating...').prop('readonly', true);
                     $('#current_amount').removeClass('text-danger text-success');
                     $('#discount_amount').removeClass('text-danger text-success');
                     $('#invoice_amount').removeClass('text-danger text-success');
@@ -98,40 +96,29 @@
                         },
                         success: function(response) {
                             $button.html('<i class="fas fa-check-square"></i>');
-                            $button.removeClass('btn-danger').addClass(
-                                'btn-success');
-                            $('#randomize-product-table-body').html(response
-                                .tableRows);
-                            toastr.success('Product has been removed successfully.',
-                                'Product Removed');
-                            $('#discount_amount').prop('readonly', false).prop(
-                                'type', 'number');
+                            $button.removeClass('btn-danger').addClass('btn-success');
+                            $('#randomize-product-table-body').html(response.tableRows);
+                            toastr.success('Product has been removed successfully.', 'Product Removed');
+                            $('#discount_amount').prop('readonly', false).prop('type', 'number');
                             calculateTotalPrice();
 
                             setTimeout(() => {
-                                $button.html(
-                                    '<i class="fas fa-trash-alt"></i>');
-                                $button.removeClass('btn-success').addClass(
-                                    'btn-danger');
+                                $button.html('<i class="fas fa-trash-alt"></i>');
+                                $button.removeClass('btn-success').addClass('btn-danger');
                             }, 2000);
                         },
                         error: function() {
                             $('.remove-product').prop('disabled', false);
                             $button.html('<i class="fas fa-trash-alt"></i>');
-                            $button.removeClass('btn-success').addClass(
-                                'btn-danger');
+                            $button.removeClass('btn-success').addClass('btn-danger');
                             calculateTotalPrice();
-                            toastr.error(
-                                'Error removing product. Please try again.');
+                            toastr.error('Error removing product. Please try again.');
                         },
                         complete: function() {
-
                             $('.remove-product').prop('disabled', false);
                             setTimeout(() => {
-                                $button.html(
-                                    '<i class="fas fa-trash-alt"></i>');
-                                $button.removeClass('btn-success').addClass(
-                                    'btn-danger');
+                                $button.html('<i class="fas fa-trash-alt"></i>');
+                                $button.removeClass('btn-success').addClass('btn-danger');
                             }, 1000);
                         }
                     });
@@ -140,49 +127,37 @@
         });
     });
 </script>
+
 <script>
     $(document).ready(function() {
-        // Handle urgency dropdown changes
         $(document).off('change', '.urgency-select').on('change', '.urgency-select', function() {
             var $select = $(this);
             var $row = $select.closest('tr.product-row');
             var urgencyValue = $select.val();
 
-            // Get the original unit price from the checkbox data attribute
             var $checkbox = $row.find('input[name="product_ids[]"]');
             var originalUnitPrice = parseFloat($checkbox.data('unit_price'));
 
-            // Get the editable price input
             var $editableInput = $row.find('.product-price');
-            var currentEditablePrice = parseFloat($editableInput.val()) || 0;
+            var $unitPriceCell = $row.find('td').eq(2);
 
-            // Get the unit price display cell
-            var $unitPriceCell = $row.find('td').eq(2); // Third column (index 2)
-
-            // Calculate urgency fee
             var urgencyFee = (urgencyValue === 'urgent') ? 35 : 0;
-
-            // Calculate new prices
             var newUnitPrice = originalUnitPrice + urgencyFee;
-            var newEditablePrice = originalUnitPrice + urgencyFee; // Reset to base price + urgency
+            var newEditablePrice = originalUnitPrice + urgencyFee;
 
-            // Update unit price display
-            $unitPriceCell.html(site_currency() + number_format(newUnitPrice, 2));
+            var currencySymbol = @json(site_currency());
+            $unitPriceCell.html(currencySymbol + number_format(newUnitPrice, 2));
 
-            // Update editable price input (only if the field is not readonly)
             if (!$editableInput.prop('readonly')) {
                 $editableInput.val(number_format(newEditablePrice, 2, '.', ''));
             }
 
-            // Store the urgency fee in a data attribute for future calculations
             $row.data('urgency-fee', urgencyFee);
 
-            // Trigger calculation update if you have a total calculation function
             if (typeof calculateTotalPrice === 'function') {
                 calculateTotalPrice();
             }
 
-            // Optional: Show a brief indication of the price change
             if (urgencyFee > 0) {
                 $unitPriceCell.addClass('text-warning');
                 $editableInput.addClass('border-warning');
@@ -193,23 +168,13 @@
             }
         });
 
-        // Handle manual price edits (preserve urgency fee)
         $(document).off('input', '.product-price').on('input', '.product-price', function() {
-            var $input = $(this);
-            var $row = $input.closest('tr.product-row');
-            var urgencyFee = $row.data('urgency-fee') || 0;
-
-            // You might want to add validation here to ensure the price doesn't go below original + urgency fee
-            // This depends on your business logic requirements
-
-            // Trigger total calculation
             if (typeof calculateTotalPrice === 'function') {
                 calculateTotalPrice();
             }
         });
     });
 
-    // Helper function to format numbers (if not already available)
     function number_format(number, decimals = 2, dec_point = '.', thousands_sep = ',') {
         number = (number + '').replace(/[^0-9+\-Ee.]/g, '');
         var n = !isFinite(+number) ? 0 : +number,
@@ -230,12 +195,5 @@
             s[1] += new Array(prec - s[1].length + 1).join('0');
         }
         return s.join(dec);
-    }
-
-    // Helper function to get currency symbol (if not already available globally)
-    function site_currency() {
-        // This should match your Laravel helper function
-        // You might need to pass this from your blade template or make it available globally
-        return '$'; // Replace with your actual currency symbol or make it dynamic
     }
 </script>
