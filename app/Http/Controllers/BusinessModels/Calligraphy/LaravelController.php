@@ -811,7 +811,7 @@ class LaravelController extends Controller
                 $lastPriceChanged = Carbon::parse($lastUpdate->last_price_changed);
                 $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
                 $remainingDays = now()->diffInDays($nextPriceChangeDate, false);
-                $product->remaining_days = (int) max(ceil($remainingDays), 0);
+                $product->remaining_days = round(max($remainingDays, 0));
                 $product->can_edit_price = now()->greaterThanOrEqualTo($nextPriceChangeDate) ? 1 : 0;
             } else {
                 $product->can_edit_price = 1;
@@ -827,8 +827,7 @@ class LaravelController extends Controller
         $tableRows = view("invoice.{$modelType}.random_product_rows", [
             'products' => $products,
             'site' => $site,
-            'total' => collect($products)->sum('unit_price'),
-            'urgency_fee' => 35,
+            'total' => collect($products)->sum('unit_price')
         ])->render();
 
         return response()->json([
@@ -892,7 +891,7 @@ class LaravelController extends Controller
                 $lastPriceChanged = Carbon::parse($lastUpdate->last_price_changed);
                 $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
                 $remainingDays = now()->diffInDays($nextPriceChangeDate, false);
-                $product->remaining_days = (int) max(ceil($remainingDays), 0);
+                $product->remaining_days = round(max($remainingDays, 0));
                 $product->can_edit_price = now()->greaterThanOrEqualTo($nextPriceChangeDate) ? 1 : 0;
             } else {
                 $product->can_edit_price = 1;
@@ -904,12 +903,10 @@ class LaravelController extends Controller
 
         $modelType = $site->businessModel->model_type;
         session(['current_amount' => collect($products)->sum('unit_price')]);
-
         $tableRows = view("invoice.{$modelType}.random_product_rows", [
             'products' => $products,
             'site' => $site,
-            'total' => collect($products)->sum('unit_price'),
-            'urgency_fee' => 35,
+            'total' => collect($products)->sum('unit_price')
         ])->render();
 
         return response()->json([
@@ -969,7 +966,7 @@ class LaravelController extends Controller
                 $lastPriceChanged = Carbon::parse($lastUpdate->last_price_changed);
                 $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
                 $remainingDays = now()->diffInDays($nextPriceChangeDate, false);
-                $product->remaining_days = (int) max(ceil($remainingDays), 0);
+                $product->remaining_days = round(max($remainingDays, 0));
                 $product->can_edit_price = now()->greaterThanOrEqualTo($nextPriceChangeDate) ? 1 : 0;
             } else {
                 $product->can_edit_price = 1;
@@ -990,8 +987,7 @@ class LaravelController extends Controller
         $tableRows = view("invoice.{$modelType}.random_product_rows", [
             'products' => $products,
             'site' => $site,
-            'total' => $total,
-            'urgency_fee' => 35,
+            'total' => $total
         ])->render();
 
         return response()->json([
@@ -1126,7 +1122,7 @@ class LaravelController extends Controller
                 $lastPriceChanged = Carbon::parse($lastUpdate->last_price_changed);
                 $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
                 $remainingDays = now()->diffInDays($nextPriceChangeDate, false);
-                $product->remaining_days = (int) max(ceil($remainingDays), 0);
+                $product->remaining_days = round(max($remainingDays, 0));
                 $product->can_edit_price = now()->greaterThanOrEqualTo($nextPriceChangeDate) ? 1 : 0;
             } else {
                 $product->can_edit_price = 1;
