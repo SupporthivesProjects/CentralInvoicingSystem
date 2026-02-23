@@ -2,12 +2,25 @@
     <tr class="product-row">
         <td class="text-center">{{ $product->id }}</td>
         <td>
-           {{ $product->name }}
+            {{ $product->name }}
             @if ($site->site_link && $product->slug)
                 <a href="{{ $site->site_link }}product/{{ $product->slug }}" target="_blank">🔗</a>
             @endif
-            @if (!empty($product->personalization_label))
-                <br><small class="text-muted" style="font-size:10px;">{{ $product->personalization_label }}</small>
+            @if (!empty($product->all_personalization_options) && $product->all_personalization_options->count() > 0)
+                <br>
+                <select class="form-select form-select-sm mt-1 personalization-option-select"
+                    data-product-id="{{ $product->id }}"
+                    style="font-size:11px; max-width:100%;">
+                    @foreach($product->all_personalization_options as $opt)
+                        <option value="{{ $opt->id }}"
+                            data-price="{{ number_format($opt->price, 2, '.', '') }}"
+                            {{ $opt->id == $product->personalization_option_id ? 'selected' : '' }}>
+                            {{ $opt->label }} — {{ site_currency() }}{{ number_format($opt->price, 2) }}
+                        </option>
+                    @endforeach
+                </select>
+            @elseif(!empty($product->personalization_label))
+                <br><small class="text-muted" style="font-size:11px;">{{ $product->personalization_label }}</small>
             @endif
         </td>
         <td class="text-center">{{ site_currency() }}{{ number_format($product->unit_price, 2) }}</td>
@@ -61,6 +74,37 @@
 
 <script>
     $(document).ready(function() {
+
+        $(document).off('change', '.personalization-option-select').on('change', '.personalization-option-select', function() {
+            var $select = $(this);
+            var productId = $select.data('product-id');
+            var selectedOption = $select.find('option:selected');
+            var newPrice = parseFloat(selectedOption.data('price'));
+
+            var $row = $select.closest('tr.product-row');
+            var $priceInput = $row.find('.product-price');
+            var $unitPriceCell = $row.find('td').eq(2);
+            var $urgencySelect = $row.find('.urgency-select');
+            var currencySymbol = @json(site_currency());
+
+            $urgencySelect.data('base-price', newPrice.toFixed(2));
+            $urgencySelect.val('standard');
+            $row.data('urgency-fee', 0);
+            $priceInput.data('urgency-price', null);
+
+            $unitPriceCell.html(currencySymbol + number_format(newPrice, 2));
+
+            if (!$priceInput.prop('readonly')) {
+                $priceInput.val(newPrice.toFixed(2));
+            } else {
+                $priceInput.data('urgency-price', newPrice);
+            }
+
+            if (typeof calculateTotalPrice === 'function') {
+                calculateTotalPrice();
+            }
+        });
+
         $(document).off('click', '.remove-product').on('click', '.remove-product', function() {
             var $button = $(this);
             var productId = $button.data('product-id');

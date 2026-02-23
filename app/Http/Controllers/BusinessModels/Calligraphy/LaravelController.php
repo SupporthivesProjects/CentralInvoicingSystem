@@ -57,7 +57,7 @@ class LaravelController extends Controller
         return $result;
     }
 
-    private function buildProductsFromPersonalization($products)
+    private function buildProductsFromPersonalization($products, $targetPerProduct = null)
     {
         $productIds = $products->pluck('id')->toArray();
 
@@ -70,10 +70,18 @@ class LaravelController extends Controller
         foreach ($products as $product) {
             $pid = $product->id;
             if (isset($options[$pid]) && $options[$pid]->isNotEmpty()) {
-                $option = $options[$pid]->first();
-                $product->unit_price = floatval($option->price);
-                $product->personalization_label = $option->label;
-                $product->personalization_option_id = $option->id;
+                $allOptions = $options[$pid];
+
+                if ($targetPerProduct) {
+                    $best = $allOptions->sortBy(fn($o) => abs(floatval($o->price) - $targetPerProduct))->first();
+                } else {
+                    $best = $allOptions->first();
+                }
+
+                $product->unit_price = floatval($best->price);
+                $product->personalization_label = $best->label;
+                $product->personalization_option_id = $best->id;
+                $product->all_personalization_options = $allOptions->values();
                 $enriched->push($product);
             }
         }
@@ -114,7 +122,8 @@ class LaravelController extends Controller
             ]);
         }
 
-        $products = $this->buildProductsFromPersonalization($rawProducts);
+        $targetPerProduct = $noOfProducts > 0 ? ($invoiceAmount / $noOfProducts) : $invoiceAmount;
+        $products = $this->buildProductsFromPersonalization($rawProducts, $targetPerProduct);
 
         if ($priceFrom && $priceTo) {
             $products = $products->filter(function ($p) use ($priceFrom, $priceTo) {
