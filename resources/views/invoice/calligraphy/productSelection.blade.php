@@ -1010,11 +1010,12 @@ function clearRandomizedFilter(button) {
             const $row = $(`input[data-product-id="${productId}"]`).closest('tr.product-row');
             const urgencyFee = parseFloat($row.data('urgency-fee')) || 0;
             const originalPrice = (parseFloat(unitPrice) - urgencyFee).toFixed(2);
+            const personalizationOptionId = $row.find('.personalization-option-select').val() || null;
 
             $('#generate-invoice-form').append($('<input>', {
                 type: 'hidden',
                 name: 'product_data[]',
-                value: JSON.stringify({ product_id: productId, unit_price: unitPrice, original_unit_price: originalPrice })
+                value: JSON.stringify({ product_id: productId, unit_price: unitPrice, original_unit_price: originalPrice, personalization_option_id: personalizationOptionId })
             }));
         });
 

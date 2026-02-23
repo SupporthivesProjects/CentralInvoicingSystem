@@ -1423,11 +1423,17 @@ class LaravelController extends Controller
 
             if (!empty($data['product_id']) && isset($data['unit_price'])) {
                 $product_id = $data['product_id'];
+                $option_id = $data['personalization_option_id'] ?? null;
                 $new_price = floatval($data['original_unit_price'] ?? $data['unit_price']);
 
-                $option = DB::connection($this->connectionType)->table('personalization_options')
-                    ->where('product_id', $product_id)
-                    ->first();
+                $query = DB::connection($this->connectionType)->table('personalization_options')
+                    ->where('product_id', $product_id);
+
+                if ($option_id) {
+                    $query->where('id', $option_id);
+                }
+
+                $option = $query->first();
 
                 if (!$option) continue;
 
