@@ -157,6 +157,7 @@
             }
 
             $row.data('urgency-fee', urgencyFee);
+            $editableInput.data('urgency-price', newPrice);
 
             if (typeof calculateTotalPrice === 'function') {
                 calculateTotalPrice();

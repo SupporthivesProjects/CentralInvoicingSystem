@@ -1271,7 +1271,9 @@ $(document).ready(function() {
         initTooltips();
         $('input[name="product_ids[]"]:checked').each(function () {
             const productId = $(this).val();
-            const punitPrice = parseFloat($(`input[data-product-id="${productId}"]`).val()) || 0;
+            const $priceInput = $(`input[data-product-id="${productId}"]`);
+            const urgencyPrice = $priceInput.data('urgency-price');
+            const punitPrice = urgencyPrice ? parseFloat(urgencyPrice) : (parseFloat($priceInput.val()) || 0);
             currentAmount += punitPrice;
         });
 
