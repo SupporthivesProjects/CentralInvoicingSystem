@@ -667,6 +667,7 @@ function clearRandomizedFilter(button) {
             $('.product-price').val('');
             $('#current_amount').val('0.00');
             $('#discount_amount').val('0.00');
+            $('#temp_current_amount_text').text('0.00');
             $('#temp_discount_amount_text').text('0.00');
             $('#temp_invoice_amount_text').text($('#invoice_amount').val());
             $('#randomize-product-table-body').html(getErrorRowHTML('Randomize filter cleared. You can now randomize products again or add custom products.'));
