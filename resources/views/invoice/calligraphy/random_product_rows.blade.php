@@ -149,7 +149,7 @@
                             toastr.success('Product has been removed successfully.', 'Product Removed');
                             $('#discount_amount').prop('readonly', false).prop('type', 'number');
                             $('#randomize-product-table-body .urgency-select').each(function() {
-                                if ($(this).data('auto-urgent') === 'true') {
+                                if ($(this).data('auto-urgent') === 'true' && $(this).val() === 'urgent') {
                                     applyUrgency($(this), 'urgent');
                                 }
                             });
@@ -182,8 +182,37 @@
 </script>
 
 <script>
+    function applyUrgency($select, urgencyValue) {
+        var $row = $select.closest('tr.product-row');
+        var originalUnitPrice = parseFloat($select.data('base-price'));
+        var urgencyFee = (urgencyValue === 'urgent') ? {{ $urgency_fee ?? 35 }} : 0;
+        var newPrice = originalUnitPrice + urgencyFee;
+
+        var $unitPriceCell = $row.find('td').eq(2);
+        var $editableInput = $row.find('.product-price');
+        var currencySymbol = @json(site_currency());
+
+        $unitPriceCell.html(currencySymbol + number_format(newPrice, 2));
+        $row.data('urgency-fee', urgencyFee);
+        $editableInput.data('urgency-price', newPrice);
+
+        if (!$editableInput.prop('readonly')) {
+            $editableInput.val(number_format(newPrice, 2, '.', ''));
+        }
+
+        if (urgencyFee > 0) {
+            $unitPriceCell.addClass('text-warning');
+            $editableInput.addClass('border-warning');
+            setTimeout(function() {
+                $unitPriceCell.removeClass('text-warning');
+                $editableInput.removeClass('border-warning');
+            }, 2000);
+        }
+    }
+
     $(document).off('change', '.urgency-select').on('change', '.urgency-select', function() {
-        applyUrgency($(this), $(this).val());
+        var urgencyValue = $(this).val();
+        applyUrgency($(this), urgencyValue);
         if (typeof calculateTotalPrice === 'function') {
             calculateTotalPrice();
         }
@@ -202,6 +231,18 @@
             calculateTotalPrice();
         }
     });
+
+    $('.urgency-select').each(function() {
+        var autoUrgent = $(this).data('auto-urgent');
+        var val = $(this).find('option[selected]').val() || $(this).val();
+        if (autoUrgent === 'true') {
+            applyUrgency($(this), 'urgent');
+        }
+    });
+
+    if (typeof calculateTotalPrice === 'function') {
+        calculateTotalPrice();
+    }
 
     function number_format(number, decimals = 2, dec_point = '.', thousands_sep = ',') {
         number = (number + '').replace(/[^0-9+\-Ee.]/g, '');

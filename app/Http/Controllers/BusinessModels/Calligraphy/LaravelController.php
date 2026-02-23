@@ -150,13 +150,14 @@ class LaravelController extends Controller
         $bestMatch = collect($result['products']);
         $bestTotal = $bestMatch->sum('unit_price');
         $gap = $invoiceAmount - $bestTotal;
-        $autoUrgent = $bestTotal > 0
-            && $invoiceAmount > 0
-            && $gap > 0
-            && ($gap / $invoiceAmount) <= 0.40
-            && $gap <= ($bestMatch->count() * $urgencyFee)
-            && ($bestTotal + ($bestMatch->count() * $urgencyFee)) >= $invoiceAmount;
-
+        // $autoUrgent = $bestTotal > 0
+        //     && $invoiceAmount > 0
+        //     && $gap > 0
+        //     && ($gap / $invoiceAmount) <= 0.40
+        //     && $gap <= ($bestMatch->count() * $urgencyFee)
+        //     && ($bestTotal + ($bestMatch->count() * $urgencyFee)) >= $invoiceAmount;
+        
+        $autoUrgent = false;
         $combinationKey = $bestMatch->pluck('id')->sort()->join('-');
         $lastUsedCombinations[] = $combinationKey;
         $lastUsedCombinations = array_slice($lastUsedCombinations, -5);
