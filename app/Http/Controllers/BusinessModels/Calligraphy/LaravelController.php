@@ -773,11 +773,13 @@ class LaravelController extends Controller
         foreach ($productsData as $productData) {
             $productId = $productData['product_id'];
             $unitPrice = floatval($productData['unit_price']);
+            $optionId = $productData['personalization_option_id'] ?? null;
 
             $exists = false;
             foreach ($readyProducts as &$item) {
                 if ($item['id'] == $productId) {
                     $item['unit_price'] = $unitPrice;
+                    $item['personalization_option_id'] = $optionId;
                     $exists = true;
                     break;
                 }
@@ -787,6 +789,7 @@ class LaravelController extends Controller
                 $readyProducts[] = [
                     'id' => $productId,
                     'unit_price' => $unitPrice,
+                    'personalization_option_id' => $optionId,
                 ];
             }
         }
@@ -813,12 +816,24 @@ class LaravelController extends Controller
         $products = $products->map(function ($product) use ($readyProducts, $site_id, $personalizationOptions) {
             $sessionProduct = collect($readyProducts)->firstWhere('id', $product->id);
 
-            $option = isset($personalizationOptions[$product->id]) ? $personalizationOptions[$product->id]->first() : null;
+            $allOptions = isset($personalizationOptions[$product->id])
+                ? $personalizationOptions[$product->id]->values()
+                : collect();
+
+            $savedOptionId = $sessionProduct['personalization_option_id'] ?? null;
+            $option = $savedOptionId
+                ? ($allOptions->firstWhere('id', $savedOptionId) ?? $allOptions->first())
+                : $allOptions->first();
+
             $product->unit_price = $sessionProduct['unit_price'] ?? ($option ? floatval($option->price) : 0);
             $product->personalization_label = $option ? $option->label : null;
             $product->personalization_option_id = $option ? $option->id : null;
+            $product->all_personalization_options = $allOptions;
 
-            $product->category_name = DB::connection($this->connectionType)->table('categories')->where('id', $product->category_id)->value('name') ?? 'unknown';
+            $product->category_name = DB::connection($this->connectionType)
+                ->table('categories')
+                ->where('id', $product->category_id)
+                ->value('name') ?? 'unknown';
 
             $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
                 ->where('product_id', $product->id)
@@ -870,6 +885,7 @@ class LaravelController extends Controller
         })->values()->toArray();
 
         session()->put('ready_products', $updatedProducts);
+
         if (empty($updatedProducts)) {
             session()->forget('current_amount');
             return response()->json([
@@ -895,12 +911,24 @@ class LaravelController extends Controller
         $products = $rawProducts->map(function ($product) use ($updatedProducts, $site_id, $personalizationOptions) {
             $sessionProduct = collect($updatedProducts)->firstWhere('id', $product->id);
 
-            $option = isset($personalizationOptions[$product->id]) ? $personalizationOptions[$product->id]->first() : null;
+            $allOptions = isset($personalizationOptions[$product->id])
+                ? $personalizationOptions[$product->id]->values()
+                : collect();
+
+            $savedOptionId = $sessionProduct['personalization_option_id'] ?? null;
+            $option = $savedOptionId
+                ? ($allOptions->firstWhere('id', $savedOptionId) ?? $allOptions->first())
+                : $allOptions->first();
+
             $product->unit_price = $sessionProduct['unit_price'] ?? ($option ? floatval($option->price) : 0);
             $product->personalization_label = $option ? $option->label : null;
             $product->personalization_option_id = $option ? $option->id : null;
+            $product->all_personalization_options = $allOptions;
 
-            $product->category_name = DB::connection($this->connectionType)->table('categories')->where('id', $product->category_id)->value('name') ?? 'unknown';
+            $product->category_name = DB::connection($this->connectionType)
+                ->table('categories')
+                ->where('id', $product->category_id)
+                ->value('name') ?? 'unknown';
 
             $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
                 ->where('product_id', $product->id)
@@ -923,6 +951,7 @@ class LaravelController extends Controller
 
         $modelType = $site->businessModel->model_type;
         session(['current_amount' => collect($products)->sum('unit_price')]);
+
         $tableRows = view("invoice.{$modelType}.random_product_rows", [
             'products' => $products,
             'site' => $site,
