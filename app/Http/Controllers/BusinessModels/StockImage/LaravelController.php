@@ -43,7 +43,7 @@ class LaravelController extends Controller
         $invoiceAmount = floatval($request->get('invoice_amount'));
 
         // ─── Configurable Settings ─────────────────────────────────────────
-        $percentageStep = 5;   // Each step increases by this % (e.g. 0% → 5% → 10% ...)
+        $percentageStep = 2;   // Each step increases by this % (e.g. 0% → 5% → 10% ...)
         $maxPercentage  = 30;  // Maximum % above invoice amount to search
         // ──────────────────────────────────────────────────────────────────
 
