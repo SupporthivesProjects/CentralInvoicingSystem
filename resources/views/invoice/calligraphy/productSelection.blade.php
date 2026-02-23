@@ -703,6 +703,34 @@
         }, 1000);
     });
 </script>
+<script>
+    function applyUrgency($select, urgencyValue) {
+        var $row = $select.closest('tr.product-row');
+        var originalUnitPrice = parseFloat($select.data('base-price'));
+        var urgencyFee = (urgencyValue === 'urgent') ? 35 : 0;
+        var newPrice = originalUnitPrice + urgencyFee;
+
+        var $unitPriceCell = $row.find('td').eq(2);
+        var $editableInput = $row.find('.product-price');
+
+        $unitPriceCell.html('{{ site_currency() }}' + number_format(newPrice, 2));
+        $row.data('urgency-fee', urgencyFee);
+        $editableInput.data('urgency-price', newPrice);
+
+        if (!$editableInput.prop('readonly')) {
+            $editableInput.val(number_format(newPrice, 2, '.', ''));
+        }
+
+        if (urgencyFee > 0) {
+            $unitPriceCell.addClass('text-warning');
+            $editableInput.addClass('border-warning');
+            setTimeout(function() {
+                $unitPriceCell.removeClass('text-warning');
+                $editableInput.removeClass('border-warning');
+            }, 2000);
+        }
+    }
+</script>
 
 <script>
     let randomizeRequest = null;
