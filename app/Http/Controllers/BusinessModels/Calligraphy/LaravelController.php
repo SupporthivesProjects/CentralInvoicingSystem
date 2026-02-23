@@ -827,7 +827,8 @@ class LaravelController extends Controller
         $tableRows = view("invoice.{$modelType}.random_product_rows", [
             'products' => $products,
             'site' => $site,
-            'total' => collect($products)->sum('unit_price')
+            'total' => collect($products)->sum('unit_price'),
+            'urgency_fee' => 35,
         ])->render();
 
         return response()->json([
@@ -906,7 +907,8 @@ class LaravelController extends Controller
         $tableRows = view("invoice.{$modelType}.random_product_rows", [
             'products' => $products,
             'site' => $site,
-            'total' => collect($products)->sum('unit_price')
+            'total' => collect($products)->sum('unit_price'),
+            'urgency_fee' => 35,
         ])->render();
 
         return response()->json([
@@ -987,7 +989,8 @@ class LaravelController extends Controller
         $tableRows = view("invoice.{$modelType}.random_product_rows", [
             'products' => $products,
             'site' => $site,
-            'total' => $total
+            'total' => $total,
+            'urgency_fee' => 35,
         ])->render();
 
         return response()->json([
