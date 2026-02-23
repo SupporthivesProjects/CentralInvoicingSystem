@@ -195,8 +195,8 @@ class InvoiceController extends Controller
 
             try {
                 if (strtolower(trim($site->businessModel->model_type)) === 'calligraphy') {
-                    $min_unit_price = floatval(DB::table('personalization_options')->min('price') ?? 10);
-                    $max_unit_price = floatval(DB::table('personalization_options')->max('price') ?? 1000);
+                    $min_unit_price = floatval(DB::connection($this->connectionType)->table('personalization_options')->min('price') ?? 10);
+                    $max_unit_price = floatval(DB::connection($this->connectionType)->table('personalization_options')->max('price') ?? 1000);
                     if ($min_unit_price >= $max_unit_price) {
                         $max_unit_price = $min_unit_price + 100;
                     }

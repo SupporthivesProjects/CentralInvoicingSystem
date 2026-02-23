@@ -40,7 +40,7 @@ class LaravelController extends Controller
 
     private function getProductsWithPersonalizationPrices($productIds, $usedProductIds = [])
     {
-        $options = DB::table('personalization_options')
+        $options = DB::connection($this->connectionType)->table('personalization_options')
             ->whereIn('product_id', $productIds)
             ->get()
             ->groupBy('product_id');
@@ -61,7 +61,7 @@ class LaravelController extends Controller
     {
         $productIds = $products->pluck('id')->toArray();
 
-        $options = DB::table('personalization_options')
+        $options = DB::connection($this->connectionType)->table('personalization_options')
             ->whereIn('product_id', $productIds)
             ->get()
             ->groupBy('product_id');
@@ -726,7 +726,7 @@ class LaravelController extends Controller
             return $rawProducts[$id] ?? null;
         })->filter();
 
-        $personalizationOptions = DB::table('personalization_options')
+        $personalizationOptions = DB::connection($this->connectionType)->table('personalization_options')
             ->whereIn('product_id', $productIds)
             ->get()
             ->groupBy('product_id');
@@ -806,7 +806,7 @@ class LaravelController extends Controller
             ->whereIn('id', $productIds)
             ->get();
 
-        $personalizationOptions = DB::table('personalization_options')
+        $personalizationOptions = DB::connection($this->connectionType)->table('personalization_options')
             ->whereIn('product_id', $productIds)
             ->get()
             ->groupBy('product_id');
@@ -880,7 +880,7 @@ class LaravelController extends Controller
             ->whereIn('id', $productIds)
             ->get();
 
-        $personalizationOptions = DB::table('personalization_options')
+        $personalizationOptions = DB::connection($this->connectionType)->table('personalization_options')
             ->whereIn('product_id', $productIds)
             ->get()
             ->groupBy('product_id');
@@ -992,7 +992,7 @@ class LaravelController extends Controller
 
         $allProductIds = (clone $query)->pluck('products.id')->toArray();
 
-        $personalizationOptions = DB::table('personalization_options')
+        $personalizationOptions = DB::connection($this->connectionType)->table('personalization_options')
             ->whereIn('product_id', $allProductIds)
             ->get()
             ->groupBy('product_id');
@@ -1198,7 +1198,7 @@ class LaravelController extends Controller
             }
         }
 
-        $personalizationOptions = DB::table('personalization_options')
+        $personalizationOptions = DB::connection($this->connectionType)->table('personalization_options')
             ->whereIn('product_id', $productIds)
             ->get()
             ->groupBy('product_id');
@@ -1307,7 +1307,7 @@ class LaravelController extends Controller
                 $product_id = $data['product_id'];
                 $new_price = floatval($data['unit_price']);
 
-                $option = DB::table('personalization_options')
+                $option = DB::connection($this->connectionType)->table('personalization_options')
                     ->where('product_id', $product_id)
                     ->first();
 
@@ -1323,7 +1323,7 @@ class LaravelController extends Controller
                     ->first();
 
                 if (!$lastUpdate) {
-                    DB::table('personalization_options')
+                    DB::connection($this->connectionType)->table('personalization_options')
                         ->where('id', $option->id)
                         ->update(['price' => $new_price]);
 
@@ -1337,7 +1337,7 @@ class LaravelController extends Controller
                 }
 
                 if (Carbon::parse($lastUpdate->last_price_changed)->diffInMonths(now()) >= 3) {
-                    DB::table('personalization_options')
+                    DB::connection($this->connectionType)->table('personalization_options')
                         ->where('id', $option->id)
                         ->update(['price' => $new_price]);
 
