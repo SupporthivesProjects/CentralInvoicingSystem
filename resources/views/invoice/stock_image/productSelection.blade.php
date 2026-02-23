@@ -615,6 +615,7 @@
         let current_amount = parseFloat($('#current_amount').val()) || 0;
         let discountAmount = Math.max(current_amount - invoice_amount, 0);
 
+        $('#temp_current_amount_text').text(current_amount.toFixed(2));
         $('#temp_invoice_amount_text').text(invoice_amount.toFixed(2));
         $('#temp_discount_amount_text').text(discountAmount.toFixed(2));
 
