@@ -1274,7 +1274,10 @@ class LaravelController extends Controller
             ->values()
             ->map(function ($product) use ($customPrices, $personalizationOptions) {
                 $option = isset($personalizationOptions[$product->id]) ? $personalizationOptions[$product->id]->first() : null;
-                $product->unit_price = $customPrices[$product->id] ?? ($option ? floatval($option->price) : 0);
+                $storedPrice = $option ? floatval($option->price) : 0;
+                $submittedPrice = isset($customPrices[$product->id]) ? floatval($customPrices[$product->id]) : $storedPrice;
+                $product->unit_price = $submittedPrice;
+                $product->original_unit_price = $storedPrice;
                 $product->personalization_label = $option ? $option->label : null;
                 $product->personalization_option_id = $option ? $option->id : null;
                 return $product;
@@ -1366,7 +1369,7 @@ class LaravelController extends Controller
 
             if (!empty($data['product_id']) && isset($data['unit_price'])) {
                 $product_id = $data['product_id'];
-                $new_price = floatval($data['unit_price']);
+                $new_price = floatval($data['original_unit_price'] ?? $data['unit_price']);
 
                 $option = DB::connection($this->connectionType)->table('personalization_options')
                     ->where('product_id', $product_id)

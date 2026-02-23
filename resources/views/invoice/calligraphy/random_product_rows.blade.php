@@ -33,9 +33,15 @@
         <td class="text-center">
             <select class="form-select form-select-sm urgency-select" aria-label="Urgency"
                 data-product-id="{{ $product->id }}"
-                data-base-price="{{ number_format($product->unit_price, 2, '.', '') }}">
-                <option value="standard">Standard 5-7 days</option>
-                <option value="urgent">Urgent 2-3 days (+{{ site_currency() }}{{ $urgency_fee }})</option>
+                data-base-price="{{ number_format($product->unit_price, 2, '.', '') }}"
+                @php
+                    $invoiceAmount = session('invoice.invoice_amount') ?? 0;
+                    $currentTotal = $total ?? 0;
+                    $autoUrgent = ($currentTotal > 0 && $invoiceAmount > 0 && $currentTotal < $invoiceAmount) ? true : false;
+                @endphp
+                data-auto-urgent="{{ $autoUrgent ? 'true' : 'false' }}">
+                <option value="standard" {{ !$autoUrgent ? 'selected' : '' }}>Standard 5-7 days</option>
+                <option value="urgent" {{ $autoUrgent ? 'selected' : '' }}>Urgent 2-3 days (+{{ site_currency() }}{{ $urgency_fee }})</option>
             </select>
         </td>
 
@@ -167,10 +173,44 @@
         });
 
         $(document).off('input', '.product-price').on('input', '.product-price', function() {
+            var $input = $(this);
+            var $row = $input.closest('tr.product-row');
+            var $select = $row.find('.urgency-select');
+            var urgencyFee = parseFloat($row.data('urgency-fee')) || 0;
+            var currentPrice = parseFloat($input.val()) || 0;
+            var originalPrice = currentPrice - urgencyFee;
+            $select.data('base-price', number_format(originalPrice, 2, '.', ''));
+
             if (typeof calculateTotalPrice === 'function') {
                 calculateTotalPrice();
             }
         });
+
+        $('.urgency-select').each(function() {
+            var $select = $(this);
+            if ($select.data('auto-urgent') === 'true' && $select.val() === 'urgent') {
+                var $row = $select.closest('tr.product-row');
+                var originalUnitPrice = parseFloat($select.data('base-price'));
+                var urgencyFee = {{ $urgency_fee ?? 35 }};
+                var newPrice = originalUnitPrice + urgencyFee;
+
+                var $unitPriceCell = $row.find('td').eq(2);
+                var $editableInput = $row.find('.product-price');
+                var currencySymbol = @json(site_currency());
+
+                $unitPriceCell.html(currencySymbol + number_format(newPrice, 2));
+
+                if (!$editableInput.prop('readonly')) {
+                    $editableInput.val(number_format(newPrice, 2, '.', ''));
+                }
+
+                $row.data('urgency-fee', urgencyFee);
+            }
+        });
+
+        if (typeof calculateTotalPrice === 'function') {
+            calculateTotalPrice();
+        }
     });
 
     function number_format(number, decimals = 2, dec_point = '.', thousands_sep = ',') {

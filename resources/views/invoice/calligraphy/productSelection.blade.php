@@ -975,10 +975,14 @@ function clearRandomizedFilter(button) {
             const productId = $(this).val();
             const unitPrice = $(`input[data-product-id="${productId}"]`).val();
 
+            const $row = $(`input[data-product-id="${productId}"]`).closest('tr.product-row');
+            const urgencyFee = parseFloat($row.data('urgency-fee')) || 0;
+            const originalPrice = (parseFloat(unitPrice) - urgencyFee).toFixed(2);
+
             $('#generate-invoice-form').append($('<input>', {
                 type: 'hidden',
                 name: 'product_data[]',
-                value: JSON.stringify({ product_id: productId, unit_price: unitPrice })
+                value: JSON.stringify({ product_id: productId, unit_price: unitPrice, original_unit_price: originalPrice })
             }));
         });
 
