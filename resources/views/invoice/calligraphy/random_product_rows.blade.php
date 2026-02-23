@@ -16,13 +16,9 @@
                     type="checkbox" name="product_ids[]"
                     data-unit_price="{{ number_format($product->unit_price, 2, '.', '') }}" value="{{ $product->id }}"
                     checked>
-                <input type="hidden" class="urgency-fee-input" data-product-id="{{ $product->id }}" value="0">
                 <input type="text" class="form-control product-price text-center"
                     value="{{ number_format($product->unit_price, 2, '.', '') }}"
-                    data-product-id="{{ $product->id }}"
-                    data-original-price="{{ number_format($product->unit_price, 2, '.', '') }}"
-                    data-manually-edited="0"
-                    {{ $product->can_edit_price == 0 ? 'readonly' : '' }}
+                    data-product-id="{{ $product->id }}" {{ $product->can_edit_price == 0 ? 'readonly' : '' }}
                     aria-label="Amount (to the nearest dollar)">
                 <span class="input-group-text d-flex align-items-center">
                     <i class="{{ $product->can_edit_price == 0 ? 'fas fa-lock text-muted' : 'fas fa-edit' }}"
@@ -49,6 +45,7 @@
                 <i class="fa fa-trash"></i>
             </button>
         </td>
+
     </tr>
 @empty
     <tr>
@@ -141,25 +138,35 @@
 
             var originalUnitPrice = parseFloat($select.data('base-price'));
             var urgencyFee = (urgencyValue === 'urgent') ? {{ $urgency_fee ?? 35 }} : 0;
+            var newPrice = originalUnitPrice + urgencyFee;
 
             var $unitPriceCell = $row.find('td').eq(2);
-            var $urgencyFeeInput = $row.find('.urgency-fee-input');
+            var $editableInput = $row.find('.product-price');
             var currencySymbol = @json(site_currency());
 
-            $urgencyFeeInput.val(urgencyFee);
-            $unitPriceCell.html(currencySymbol + number_format(originalUnitPrice, 2));
+            $unitPriceCell.html(currencySymbol + number_format(newPrice, 2));
 
-            if (urgencyFee > 0) {
-                $unitPriceCell.append(' <small class="text-warning fw-bold">+' + currencySymbol + number_format(urgencyFee, 2) + ' urgency</small>');
+            if (!$editableInput.prop('readonly')) {
+                $editableInput.val(number_format(newPrice, 2, '.', ''));
             }
+
+            $row.data('urgency-fee', urgencyFee);
 
             if (typeof calculateTotalPrice === 'function') {
                 calculateTotalPrice();
             }
+
+            if (urgencyFee > 0) {
+                $unitPriceCell.addClass('text-warning');
+                $editableInput.addClass('border-warning');
+                setTimeout(function() {
+                    $unitPriceCell.removeClass('text-warning');
+                    $editableInput.removeClass('border-warning');
+                }, 2000);
+            }
         });
 
         $(document).off('input', '.product-price').on('input', '.product-price', function() {
-            $(this).attr('data-manually-edited', '1');
             if (typeof calculateTotalPrice === 'function') {
                 calculateTotalPrice();
             }
