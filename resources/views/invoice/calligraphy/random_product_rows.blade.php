@@ -150,7 +150,7 @@
                             $('#discount_amount').prop('readonly', false).prop('type', 'number');
                             $('#randomize-product-table-body .urgency-select').each(function() {
                                 if ($(this).data('auto-urgent') === 'true' && $(this).val() === 'urgent') {
-                                    $(this).trigger('change');
+                                    applyUrgency($(this), 'urgent');
                                 }
                             });
                             calculateTotalPrice();
@@ -182,35 +182,22 @@
 </script>
 
 <script>
-    console.log('[PARTIAL] script block executing immediately (no document.ready wrapper)');
-
-    $(document).off('change', '.urgency-select').on('change', '.urgency-select', function() {
-        var $select = $(this);
+    function applyUrgency($select, urgencyValue) {
         var $row = $select.closest('tr.product-row');
-        var urgencyValue = $select.val();
         var originalUnitPrice = parseFloat($select.data('base-price'));
         var urgencyFee = (urgencyValue === 'urgent') ? {{ $urgency_fee ?? 35 }} : 0;
         var newPrice = originalUnitPrice + urgencyFee;
-
-        console.log('[urgency change] productId:', $select.data('product-id'), '| urgencyValue:', urgencyValue, '| basePrice:', originalUnitPrice, '| urgencyFee:', urgencyFee, '| newPrice:', newPrice);
 
         var $unitPriceCell = $row.find('td').eq(2);
         var $editableInput = $row.find('.product-price');
         var currencySymbol = @json(site_currency());
 
         $unitPriceCell.html(currencySymbol + number_format(newPrice, 2));
-
         $row.data('urgency-fee', urgencyFee);
         $editableInput.data('urgency-price', newPrice);
 
-        console.log('[urgency change] set urgency-price on input:', $editableInput.data('urgency-price'), '| readonly:', $editableInput.prop('readonly'));
-
         if (!$editableInput.prop('readonly')) {
             $editableInput.val(number_format(newPrice, 2, '.', ''));
-        }
-
-        if (typeof calculateTotalPrice === 'function') {
-            calculateTotalPrice();
         }
 
         if (urgencyFee > 0) {
@@ -220,6 +207,14 @@
                 $unitPriceCell.removeClass('text-warning');
                 $editableInput.removeClass('border-warning');
             }, 2000);
+        }
+    }
+
+    $(document).off('change', '.urgency-select').on('change', '.urgency-select', function() {
+        var urgencyValue = $(this).val();
+        applyUrgency($(this), urgencyValue);
+        if (typeof calculateTotalPrice === 'function') {
+            calculateTotalPrice();
         }
     });
 
@@ -237,18 +232,17 @@
         }
     });
 
-    console.log('[PARTIAL] scanning for pre-selected urgent rows...');
     $('.urgency-select').each(function() {
         var autoUrgent = $(this).data('auto-urgent');
-        var val = $(this).val();
-        console.log('[PARTIAL] urgency-select found | auto-urgent:', autoUrgent, '| val:', val, '| productId:', $(this).data('product-id'));
-        if (autoUrgent === 'true' && val === 'urgent') {
-            console.log('[PARTIAL] triggering change for productId:', $(this).data('product-id'));
-            $(this).trigger('change');
+        var val = $(this).find('option[selected]').val() || $(this).val();
+        if (autoUrgent === 'true') {
+            applyUrgency($(this), 'urgent');
         }
     });
 
-    console.log('[PARTIAL] script block done');
+    if (typeof calculateTotalPrice === 'function') {
+        calculateTotalPrice();
+    }
 
     function number_format(number, decimals = 2, dec_point = '.', thousands_sep = ',') {
         number = (number + '').replace(/[^0-9+\-Ee.]/g, '');

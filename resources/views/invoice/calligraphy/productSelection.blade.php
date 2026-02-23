@@ -746,8 +746,8 @@
                     $('#current_amount').val(currentAmount.toFixed(2));
                     $('#discount_amount').prop('readonly', false).prop('type', 'number');
                     $('#randomize-product-table-body .urgency-select').each(function () {
-                        if ($(this).data('auto-urgent') === 'true' && $(this).val() === 'urgent') {
-                            $(this).trigger('change');
+                        if ($(this).data('auto-urgent') === 'true') {
+                            applyUrgency($(this), 'urgent');
                         }
                     });
                     calculateTotalPrice();
