@@ -134,40 +134,16 @@ class LaravelController extends Controller
             ]);
         }
 
-        $perfectMatch = $products->first(function ($p) use ($invoiceAmount) {
-            return abs($p->unit_price - $invoiceAmount) < 0.01;
-        });
+        $lastUsedCombinations = session()->get('last_used_combinations', []);
+        $result = $this->findBestProductCombination($products, $invoiceAmount, $noOfProducts, $lastUsedCombinations);
 
-        $bestMatch = null;
-        $bestTotal = 0;
+        $bestMatch = collect($result['products']);
+        $bestTotal = $bestMatch->sum('unit_price');
 
-        if ($perfectMatch) {
-            $bestMatch = collect([$perfectMatch]);
-            $bestTotal = $invoiceAmount;
-        } else {
-            $lastUsedCombinations = session()->get('last_used_combinations', []);
-            $result = $this->findBestProductCombination($products, $invoiceAmount, $noOfProducts, $lastUsedCombinations);
-
-            if ($result && !empty($result['products'])) {
-                $bestMatch = collect($result['products']);
-                $bestTotal = $result['total'];
-
-                $combinationKey = $bestMatch->pluck('id')->sort()->join('-');
-                $lastUsedCombinations[] = $combinationKey;
-                $lastUsedCombinations = array_slice($lastUsedCombinations, -5);
-                session()->put('last_used_combinations', $lastUsedCombinations);
-            }
-        }
-
-        if (!$bestMatch) {
-            session()->forget('ready_products');
-            session()->forget('current_amount');
-            return response()->json([
-                'tableRows' => '',
-                'total' => 0,
-                'message' => 'No matching combination found, try again please'
-            ]);
-        }
+        $combinationKey = $bestMatch->pluck('id')->sort()->join('-');
+        $lastUsedCombinations[] = $combinationKey;
+        $lastUsedCombinations = array_slice($lastUsedCombinations, -5);
+        session()->put('last_used_combinations', $lastUsedCombinations);
 
         $categoryIds = $bestMatch->pluck('category_id')->unique();
         $categories = DB::connection($this->connectionType)
@@ -186,14 +162,15 @@ class LaravelController extends Controller
             ->get()
             ->groupBy('product_id');
 
-        $bestMatch->each(function ($product) use ($priceHistories) {
+        $now = now();
+        $bestMatch->each(function ($product) use ($priceHistories, $now) {
             $history = $priceHistories[$product->id][0] ?? null;
             if ($history) {
                 $lastChanged = Carbon::parse($history->last_price_changed);
                 $nextChange = $lastChanged->copy()->addMonths(3);
-                $daysLeft = now()->diffInDays($nextChange, false);
+                $daysLeft = $now->diffInDays($nextChange, false);
                 $product->remaining_days = max($daysLeft, 0);
-                $product->can_edit_price = now()->greaterThanOrEqualTo($nextChange) ? 1 : 0;
+                $product->can_edit_price = $now->greaterThanOrEqualTo($nextChange) ? 1 : 0;
             } else {
                 $product->remaining_days = 0;
                 $product->can_edit_price = 1;
@@ -330,27 +307,26 @@ class LaravelController extends Controller
             }
         }
 
-        $percentages = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20];
+        $percentages = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30];
 
         foreach ($percentages as $percentage) {
-            $minTarget = $target * 0.8;
+            $minTarget = $target;
             $maxTarget = $target * (1 + $percentage / 100);
-            $result = $this->tryFindExactCount($products, $priceMap, $sortedIndices, $minTarget, $maxTarget, $count, $totalProducts, $target);
+            $result = $this->tryFindExactCount($products, $priceMap, $sortedIndices, $minTarget, $maxTarget, $count, $totalProducts);
 
-            if ($result !== null && count($result['products']) === $count) {
+            if ($result !== null && $result['total'] >= $target && count($result['products']) === $count) {
                 return $result;
             }
         }
 
-        $minTotal = $target * 0.8;
-        $maxTotal = $target * 1.2;
+        $maxTotal = $target * 1.20;
         $bestMatch = null;
         $bestTotal = 0;
         $bestDiff = PHP_INT_MAX;
 
         for ($attempt = 0; $attempt < 200; $attempt++) {
             $shuffledIndices = $sortedIndices;
-            shuffle($shuffledIndices);
+            shuffle($sortedIndices);
 
             $selected = [];
             $usedPrices = [];
@@ -372,7 +348,7 @@ class LaravelController extends Controller
                 }
             }
 
-            if (count($selected) === $count && $total >= $minTotal && $total <= $maxTotal) {
+            if (count($selected) === $count && $total >= $target && $total <= $maxTotal) {
                 $diff = abs($total - $target);
                 if ($diff < $bestDiff) {
                     $bestMatch = $selected;
@@ -386,7 +362,7 @@ class LaravelController extends Controller
             }
         }
 
-        if ($bestMatch && count($bestMatch) === $count && $bestTotal >= $minTotal) {
+        if ($bestMatch && count($bestMatch) === $count && $bestTotal >= $target) {
             $result = [];
             foreach ($bestMatch as $idx) {
                 $result[] = $products[$idx];
@@ -425,17 +401,43 @@ class LaravelController extends Controller
         }
 
         if (count($selected) === $count) {
-            $result = [];
-            foreach ($selected as $idx) {
-                $result[] = $products[$idx];
+            $total = array_sum(array_map(fn($idx) => $priceMap[$idx], $selected));
+
+            if ($total < $target) {
+                $reverseIndices = array_reverse($sortedIndices);
+
+                foreach ($reverseIndices as $replaceIdx) {
+                    if (in_array($replaceIdx, $selected)) continue;
+
+                    $replacePrice = $priceMap[$replaceIdx];
+                    if (isset($usedPrices[$replacePrice])) continue;
+
+                    for ($i = 0; $i < $count; $i++) {
+                        $currentIdx = $selected[$i];
+                        $currentPrice = $priceMap[$currentIdx];
+                        $newTotal = $total - $currentPrice + $replacePrice;
+
+                        if ($newTotal >= $target && $newTotal <= $maxTotal) {
+                            $selected[$i] = $replaceIdx;
+                            unset($usedPrices[$currentPrice]);
+                            $usedPrices[$replacePrice] = true;
+                            $total = $newTotal;
+                            break 2;
+                        }
+                    }
+                }
             }
-            return ['products' => $result, 'total' => array_sum(array_column($result, 'unit_price'))];
         }
 
-        return null;
+        $result = [];
+        foreach ($selected as $idx) {
+            $result[] = $products[$idx];
+        }
+
+        return ['products' => $result, 'total' => array_sum(array_column($result, 'unit_price'))];
     }
 
-    private function tryFindExactCount($products, $priceMap, $sortedIndices, $minTarget, $maxTarget, $count, $totalProducts, $target)
+    private function tryFindExactCount($products, $priceMap, $sortedIndices, $minTarget, $maxTarget, $count, $totalProducts)
     {
         $avgPrice = ($minTarget + $maxTarget) / 2 / $count;
 
@@ -484,13 +486,13 @@ class LaravelController extends Controller
             $total = array_sum(array_map(fn($idx) => $priceMap[$idx], $selectedIndices));
 
             if ($total >= $minTarget && $total <= $maxTarget) {
-                $diff = abs($total - $target);
+                $diff = abs($total - $minTarget);
                 if ($diff < $bestDiff) {
                     $bestMatch = $selectedIndices;
                     $bestTotal = $total;
                     $bestDiff = $diff;
 
-                    if ($diff <= $target * 0.02) {
+                    if ($total >= $minTarget && $total <= $minTarget * 1.02) {
                         break;
                     }
                 }
@@ -503,6 +505,65 @@ class LaravelController extends Controller
                 $result[] = $products[$idx];
             }
             return ['products' => $result, 'total' => $bestTotal];
+        }
+
+        $result = $this->greedySelection($products, $priceMap, $sortedIndices, $minTarget, $maxTarget, $count, $searchWindow);
+        if ($result !== null && count($result['products']) === $count) {
+            return $result;
+        }
+
+        return null;
+    }
+
+    private function greedySelection($products, $priceMap, $sortedIndices, $minTarget, $maxTarget, $count, $searchWindow)
+    {
+        $windowSize = min(count($searchWindow), $count * 5);
+        $expandedWindow = array_slice($sortedIndices, 0, max($windowSize, $count * 2));
+
+        $remaining = $minTarget;
+        $selected = [];
+        $usedIndices = [];
+        $usedPrices = [];
+
+        for ($i = 0; $i < $count; $i++) {
+            $remainingSlots = $count - $i;
+            $idealPrice = $remaining / $remainingSlots;
+            $closestIdx = null;
+            $closestDiff = PHP_INT_MAX;
+
+            foreach ($expandedWindow as $idx) {
+                if (in_array($idx, $usedIndices)) continue;
+
+                $price = $priceMap[$idx];
+                if (isset($usedPrices[$price])) continue;
+
+                $diff = abs($price - $idealPrice);
+                if ($diff < $closestDiff) {
+                    $closestDiff = $diff;
+                    $closestIdx = $idx;
+                }
+            }
+
+            if ($closestIdx !== null) {
+                $selected[] = $closestIdx;
+                $usedIndices[] = $closestIdx;
+                $usedPrices[$priceMap[$closestIdx]] = true;
+                $remaining -= $priceMap[$closestIdx];
+            } else {
+                break;
+            }
+        }
+
+        if (count($selected) === $count) {
+            $total = array_sum(array_map(fn($idx) => $priceMap[$idx], $selected));
+
+            if ($total >= $minTarget && $total <= $maxTarget) {
+                $result = [];
+                foreach ($selected as $idx) {
+                    $result[] = $products[$idx];
+                }
+                return ['products' => $result, 'total' => $total];
+            }
         }
 
         return null;
@@ -524,7 +585,7 @@ class LaravelController extends Controller
         $sortedIndices = array_keys($priceMap);
         shuffle($sortedIndices);
 
-        $percentages = [0, 2, 4, 6, 8, 10, 15];
+        $percentages = [0, 2, 4, 6, 8, 10];
 
         foreach ($percentages as $percentage) {
             $currentMax = $target * (1 + $percentage / 100);
@@ -544,8 +605,7 @@ class LaravelController extends Controller
             }
         }
 
-        $minTotal = $target * 0.8;
-        $maxTotal = $target * 1.2;
+        $maxTotal = $target * 1.10;
         $bestMatch = null;
         $bestTotal = 0;
 
@@ -571,13 +631,13 @@ class LaravelController extends Controller
                 $total += $price;
             }
 
-            if ($total >= $minTotal && $total <= $maxTotal && $total > $bestTotal) {
+            if ($total >= $target && $total <= $maxTotal && $total > $bestTotal) {
                 $bestMatch = $selected;
                 $bestTotal = $total;
             }
         }
 
-        if ($bestMatch && $bestTotal >= $minTotal) {
+        if ($bestMatch && $bestTotal >= $target) {
             $result = [];
             foreach ($bestMatch as $idx) {
                 $result[] = $products[$idx];
@@ -604,7 +664,7 @@ class LaravelController extends Controller
             }
         }
 
-        if ($total >= $minTotal && $total <= $maxTotal) {
+        if ($total >= $target && $total <= $maxTotal) {
             $result = [];
             foreach ($selected as $idx) {
                 $result[] = $products[$idx];
