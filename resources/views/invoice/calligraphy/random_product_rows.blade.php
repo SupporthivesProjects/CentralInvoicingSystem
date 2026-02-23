@@ -228,36 +228,11 @@
             }
         });
 
-        // Initialize all pre-selected urgent rows first, then call calculateTotalPrice ONCE after all rows are done
         $('.urgency-select').each(function() {
-            var $select = $(this);
-            if ($select.data('auto-urgent') === 'true' && $select.val() === 'urgent') {
-                var $row = $select.closest('tr.product-row');
-                var originalUnitPrice = parseFloat($select.data('base-price'));
-                var urgencyFee = {{ $urgency_fee ?? 35 }};
-                var newPrice = originalUnitPrice + urgencyFee;
-
-                var $unitPriceCell = $row.find('td').eq(2);
-                var $editableInput = $row.find('.product-price');
-                var currencySymbol = @json(site_currency());
-
-                $unitPriceCell.html(currencySymbol + number_format(newPrice, 2));
-
-                // Must set urgency-fee on the row so calculateTotalPrice can pick it up
-                $row.data('urgency-fee', urgencyFee);
-
-                // Must set urgency-price on input so calculateTotalPrice uses correct value
-                $editableInput.data('urgency-price', newPrice);
-
-                // Always update the input value (even readonly) so calculateTotalPrice reads the correct amount
-                $editableInput.val(number_format(newPrice, 2, '.', ''));
+            if ($(this).data('auto-urgent') === 'true' && $(this).val() === 'urgent') {
+                $(this).trigger('change');
             }
         });
-
-        // Fire ONCE after ALL rows have been initialized with their urgency fees
-        if (typeof calculateTotalPrice === 'function') {
-            calculateTotalPrice();
-        }
     });
 
     function number_format(number, decimals = 2, dec_point = '.', thousands_sep = ',') {
