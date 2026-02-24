@@ -503,15 +503,15 @@ class WordPressController extends Controller
         $site_id = $request->get('site_id');
         $site = Website::findOrFail($site_id);
         $modelType = $site->businessModel->model_type;
-    
+
         $readyProducts = session('ready_products', []);
-    
+
         $updatedProducts = collect($readyProducts)->filter(function ($product) use ($productId) {
             return $product['id'] != $productId;
         })->values()->toArray();
-    
+
         session()->put('ready_products', $updatedProducts);
-    
+
         if (empty($updatedProducts)) {
             session()->forget('current_amount');
             return response()->json([
@@ -520,69 +520,58 @@ class WordPressController extends Controller
                 'currency' => null
             ]);
         }
-    
+
         $consumerKey = $site->consumer_key;
         $consumerSecret = $site->consumer_secret;
         $siteUrl = $site->site_link;
         $auth = base64_encode($consumerKey . ':' . $consumerSecret);
-    
+
         $productIds = collect($updatedProducts)->pluck('id')->all();
         $selectedProducts = [];
-    
-        $certifiedProduct = collect($updatedProducts)->first(function ($product) {
-            return strtolower(trim($product['name'])) === 'certified translation';
-        });
-    
+
         foreach ($productIds as $id) {
             $response = Http::withHeaders([
                 'Authorization' => 'Basic ' . $auth,
                 'Content-Type' => 'application/json',
                 'User-Agent' => 'LaravelApp/1.0'
             ])->get("{$siteUrl}/wp-json/wc/v3/products/{$id}");
-    
+
             if ($response->failed()) continue;
-    
+
             $apiProduct = (object) $response->json();
             $sessionProduct = collect($updatedProducts)->firstWhere('id', $id);
-    
+
             $apiProduct->unit_price = floatval($sessionProduct['unit_price']);
             $apiProduct->pages = intval($sessionProduct['pages']);
             $apiProduct->urgent_amount = floatval($sessionProduct['urgent_amount'] ?? $site->urgency_amount);
             $apiProduct->is_urgent = $sessionProduct['is_urgent'] ?? false;
             $apiProduct->line_total = $apiProduct->pages * $apiProduct->unit_price;
-    
+
             if ($apiProduct->is_urgent) {
-                $apiProduct->line_total += $apiProduct->urgent_amount;
+                $apiProduct->line_total += $apiProduct->urgent_amount * $apiProduct->pages;
             }
-    
+
             $apiProduct->can_edit_price = 1;
             $apiProduct->remaining_days = 0;
-    
-            $productName = strtolower(trim($apiProduct->name));
-            if ($certifiedProduct && $productName === strtolower(trim($certifiedProduct['name']))) {
-                $apiProduct->unit_type = 'pages';
-            } else {
-                $apiProduct->unit_type = 'words';
-            }
-    
+            $apiProduct->unit_type = $sessionProduct['unit_type'] ?? 'words';
+
             $selectedProducts[] = $apiProduct;
         }
-    
+
         $finalTotal = collect($selectedProducts)->sum('line_total');
         session(['current_amount' => $finalTotal]);
-    
+
         $tableRows = view("invoice.{$modelType}.random_product_rows", [
             'products' => $selectedProducts,
             'site' => $site,
             'total' => $finalTotal
         ])->render();
-    
+
         return response()->json([
             'tableRows' => $tableRows,
             'total' => $finalTotal
         ]);
     }
-    
 
 
     public function clearProducts(Request $request)
