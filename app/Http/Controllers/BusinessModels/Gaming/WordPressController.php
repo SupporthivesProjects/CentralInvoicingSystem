@@ -69,8 +69,15 @@ class WordPressController extends Controller
         $consumerSecret = $site->consumer_secret;
         $base = rtrim($site->site_link, '/') . '/wp-json/wc/v3/products';
 
+        // $response = Http::withBasicAuth($consumerKey, $consumerSecret)
+        //     ->get($base, ['type' => 'variable', 'per_page' => 100, 'search' => $searchQuery]);
         $response = Http::withBasicAuth($consumerKey, $consumerSecret)
-            ->get($base, ['type' => 'variable', 'per_page' => 100, 'search' => $searchQuery]);
+        ->get($base, [
+            'type' => 'variable',
+            'per_page' => 100,
+            'search' => $searchQuery,
+            'status' => 'publish' 
+        ]);
 
         if ($response->failed()) {
             return response()->json(['tableRows' => '', 'total' => 0, 'message' => 'Failed to fetch products']);
