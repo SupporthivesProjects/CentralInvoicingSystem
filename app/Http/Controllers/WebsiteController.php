@@ -155,99 +155,85 @@ class WebsiteController extends Controller
     public function updateWebsite(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'site_connectivity' => 'nullable|in:db,api',
-            'business_model_id' => 'required|exists:business_models,id',
-            'technology' => 'required|in:html,wordpress,corephp,laravel,django,other',
-            'site_name' => 'nullable|string|max:255',
-            'site_description' => 'nullable|string|max:500',
-            'db_host' => 'required|string|max:255',
-            'db_port' => 'required|numeric',
-            'db_name' => 'required|string|max:255',
-            'db_username' => 'required|string|max:255',
-            'db_password' => 'required|string|max:255',
-            'product_table' => 'required|string|max:255',
-            'product_price_table' => 'required|string|max:255',
-            'currency_table' => 'required|string|max:255',
-            'bundle_table' => 'required|string|max:255',
-            'general_settings' => 'required|string|max:255',
-            'category_table'  => 'required|string|max:255',
-            'tags_table'  => 'required|string|max:255',
+            'site_connectivity'    => 'nullable|in:db,api',
+            'business_model_id'    => 'required|exists:business_models,id',
+            'technology'           => 'required|in:html,wordpress,corephp,laravel,django,other',
+            'site_name'            => 'nullable|string|max:255',
+            'site_description'     => 'nullable|string|max:500',
+            'db_host'              => 'required|string|max:255',
+            'db_port'              => 'required|numeric',
+            'db_name'              => 'required|string|max:255',
+            'db_username'          => 'required|string|max:255',
+            'db_password'          => 'required|string|max:255',
+            'product_table'        => 'required|string|max:255',
+            'product_price_table'  => 'required|string|max:255',
+            'currency_table'       => 'required|string|max:255',
+            'bundle_table'         => 'required|string|max:255',
+            'general_settings'     => 'required|string|max:255',
+            'category_table'       => 'required|string|max:255',
+            'tags_table'           => 'required|string|max:255',
             'term_taxonomy_table'  => 'required|string|max:255',
-            'consumer_key' => 'nullable|string|max:1000',
-            'consumer_secret' => 'nullable|string|max:1000',
-            'site_link' => 'nullable|url|max:255',
-            'std_trans_url' => 'nullable|string|max:255',   
-            'cert_trans_url' => 'nullable|string|max:255',
-            'urgency_amount' => 'nullable|numeric|min:0|max:99999999.99',
-            'company_name' => 'nullable|string|max:255',
-            'company_email' => 'nullable|email|max:255',
-            'company_mobile' => 'nullable|string|max:20',
-            'company_address' => 'nullable|string|max:1000',
-            'registration_number' => 'nullable|string|max:255',
-            'license_number'      => 'nullable|string|max:255',
-            'bank_name' => 'nullable|string|max:255',
-            'bank_code' => 'nullable|string|max:255',
-            'pdf_size' => 'required|in:A4,A5,Letter,Legal',
-            'pdf_orientation' => 'required|in:portrait,landscape',
-            'site_status' => 'nullable|in:live,tdown,pdown',
-            'company_logo' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
+            'consumer_key'         => 'nullable|string|max:1000',
+            'consumer_secret'      => 'nullable|string|max:1000',
+            'site_link'            => 'nullable|url|max:255',
+            'std_trans_url'        => 'nullable|string|max:255',
+            'cert_trans_url'       => 'nullable|string|max:255',
+            'urgency_amount'       => 'nullable|numeric|min:0|max:99999999.99',
+            'urgency_24h_per_page' => 'nullable|numeric|min:0|max:99999999.99',
+            'urgency_12h_per_page' => 'nullable|numeric|min:0|max:99999999.99',
+            'urgency_24h_per_word' => 'nullable|numeric|min:0|max:99999999.99',
+            'urgency_12h_per_word' => 'nullable|numeric|min:0|max:99999999.99',
+            'company_name'         => 'nullable|string|max:255',
+            'company_email'        => 'nullable|email|max:255',
+            'company_mobile'       => 'nullable|string|max:20',
+            'company_address'      => 'nullable|string|max:1000',
+            'registration_number'  => 'nullable|string|max:255',
+            'license_number'       => 'nullable|string|max:255',
+            'bank_name'            => 'nullable|string|max:255',
+            'bank_code'            => 'nullable|string|max:255',
+            'pdf_size'             => 'required|in:A4,A5,Letter,Legal',
+            'pdf_orientation'      => 'required|in:portrait,landscape',
+            'site_status'          => 'nullable|in:live,tdown,pdown',
+            'company_logo'         => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
             'invoice_header_image' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
             'invoice_footer_image' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
-            'invoice_signature' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
-            'invoice_template' => 'nullable|file|mimes:html,htm,php|max:5120',
-            'invoice_image1' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
-            'invoice_image2' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
-            'invoice_image3' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
-            'invoice_image4' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
-            'invoice_image5' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
-            'invoice_image6' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
-            'invoice_image7' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
-            'invoice_image8' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
-            'invoice_image9' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
+            'invoice_signature'    => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
+            'invoice_template'     => 'nullable|file|mimes:html,htm,php|max:5120',
+            'invoice_image1'       => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
+            'invoice_image2'       => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
+            'invoice_image3'       => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
+            'invoice_image4'       => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
+            'invoice_image5'       => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
+            'invoice_image6'       => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
+            'invoice_image7'       => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
+            'invoice_image8'       => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
+            'invoice_image9'       => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
         ], [
-            '*.max' => 'Each uploaded file must not exceed 5MB.',
+            '*.max'   => 'Each uploaded file must not exceed 5MB.',
             '*.mimes' => 'Only jpeg, jpg, png, html, htm, or php file types are allowed.',
         ]);
 
         if ($validator->fails()) {
             $errors = $validator->errors()->all();
-            $firstError = $errors[0] ?? 'Validation failed.';
-
-            return redirect()->back()
-                ->with('error', $firstError);
-        }
-
-
-        if ($validator->fails()) {
-            $errors = $validator->errors()->all();
-            $firstError = $errors[0] ?? 'Validation failed.';
-
-            return redirect()->back()
-                ->with('error', $firstError);
+            return redirect()->back()->with('error', $errors[0] ?? 'Validation failed.');
         }
 
         try {
             $website = Website::findOrFail($id);
 
-            $modelType = strtolower($website->businessModel->model_type);
-            $siteId = $website->id;
+            $modelType     = strtolower($website->businessModel->model_type);
+            $siteId        = $website->id;
             $siteIdInWords = numberToWords($siteId);
-
             $baseUploadPath = public_path("uploads/websites/{$modelType}/{$siteId}/");
 
             $uploadFile = function ($field, $subfolder, $prefix = null) use ($request, $website, $baseUploadPath, $modelType, $siteId) {
                 if ($request->hasFile($field)) {
-                    $file = $request->file($field);
-                    $prefix = $prefix ?? $field;
+                    $file     = $request->file($field);
+                    $prefix   = $prefix ?? $field;
                     $filename = $prefix . '_' . time() . '.' . $file->getClientOriginalExtension();
-                    $path = $baseUploadPath . $subfolder;
-
-                    if (!file_exists($path)) {
-                        mkdir($path, 0755, true);
-                    }
-
+                    $path     = $baseUploadPath . $subfolder;
+                    if (!file_exists($path)) mkdir($path, 0755, true);
                     $file->move($path, $filename);
-
                     $website->$field = "uploads/websites/{$modelType}/{$siteId}/{$subfolder}/{$filename}";
                 }
             };
@@ -268,61 +254,60 @@ class WebsiteController extends Controller
 
             if ($request->hasFile('invoice_template')) {
                 $oldTemplatePath = resource_path("views/websites/{$modelType}/{$siteIdInWords}.blade.php");
-                if (file_exists($oldTemplatePath)) {
-                    unlink($oldTemplatePath);
-                }
-                $file = $request->file('invoice_template');
+                if (file_exists($oldTemplatePath)) unlink($oldTemplatePath);
+                $file     = $request->file('invoice_template');
                 $viewPath = resource_path("views/websites/{$modelType}/");
-
-                if (!file_exists($viewPath)) {
-                    mkdir($viewPath, 0755, true);
-                }
-
+                if (!file_exists($viewPath)) mkdir($viewPath, 0755, true);
                 $file->move($viewPath, "{$siteIdInWords}.blade.php");
                 $website->invoice_template = "views/websites/{$modelType}/{$siteIdInWords}.blade.php";
             }
 
-                $website->update([
-                    'business_model_id' => $request->business_model_id,
-                    'technology' => $request->technology,
-                    'site_name' => $request->site_name,
-                    'site_description' => $request->site_description,
-                    'db_host' => $request->db_host,
-                    'db_port' => $request->db_port,
-                    'db_name' => $request->db_name,
-                    'db_username' => $request->db_username,
-                    'db_password' => $request->db_password,
-                    'product_table' => $request->product_table,
-                    'product_price_table' => $request->product_price_table,
-                    'currency_table' => $request->currency_table,
-                    'bundle_table' => $request->bundle_table,
-                    'general_settings' => $request->general_settings,
-                    'category_table' => $request->category_table,
-                    'tags_table' => $request->tags_table,
-                    'term_taxonomy_table' => $request->term_taxonomy_table,
-                    'consumer_key' => $request->consumer_key,
-                    'consumer_secret' => $request->consumer_secret,
-                    'site_link' => rtrim($request->site_link, '/') . '/',
-                    'std_trans_url' => $request->std_trans_url,     
-                    'cert_trans_url' => $request->cert_trans_url, 
-                    'urgency_amount' => $request->filled('urgency_amount') ? $request->urgency_amount : 24, 
-                    'company_name' => $request->company_name,
-                    'company_email' => $request->company_email,
-                    'company_mobile' => $request->company_mobile,
-                    'company_address' => $request->company_address,
-                    'registration_number'  => $request->registration_number,
-                    'license_number'  => $request->license_number,
-                    'site_status' => $request->site_status,
-                    'bank_name' => $request->bank_name,
-                    'bank_code' => $request->bank_code,
-                    'pdf_size' => $request->pdf_size,
-                    'pdf_orientation' => $request->pdf_orientation,
-                    'updated_at' => now(),
-                ]);
+            $website->update([
+                'business_model_id'    => $request->business_model_id,
+                'technology'           => $request->technology,
+                'site_name'            => $request->site_name,
+                'site_description'     => $request->site_description,
+                'db_host'              => $request->db_host,
+                'db_port'              => $request->db_port,
+                'db_name'              => $request->db_name,
+                'db_username'          => $request->db_username,
+                'db_password'          => $request->db_password,
+                'product_table'        => $request->product_table,
+                'product_price_table'  => $request->product_price_table,
+                'currency_table'       => $request->currency_table,
+                'bundle_table'         => $request->bundle_table,
+                'general_settings'     => $request->general_settings,
+                'category_table'       => $request->category_table,
+                'tags_table'           => $request->tags_table,
+                'term_taxonomy_table'  => $request->term_taxonomy_table,
+                'consumer_key'         => $request->consumer_key,
+                'consumer_secret'      => $request->consumer_secret,
+                'site_link'            => rtrim($request->site_link, '/') . '/',
+                'std_trans_url'        => $request->std_trans_url,
+                'cert_trans_url'       => $request->cert_trans_url,
+                'urgency_amount'       => $request->filled('urgency_amount') ? $request->urgency_amount : 24,
+                'urgency_24h_per_page' => $request->urgency_24h_per_page ?: null,
+                'urgency_12h_per_page' => $request->urgency_12h_per_page ?: null,
+                'urgency_24h_per_word' => $request->urgency_24h_per_word ?: null,
+                'urgency_12h_per_word' => $request->urgency_12h_per_word ?: null,
+                'company_name'         => $request->company_name,
+                'company_email'        => $request->company_email,
+                'company_mobile'       => $request->company_mobile,
+                'company_address'      => $request->company_address,
+                'registration_number'  => $request->registration_number,
+                'license_number'       => $request->license_number,
+                'site_status'          => $request->site_status,
+                'bank_name'            => $request->bank_name,
+                'bank_code'            => $request->bank_code,
+                'pdf_size'             => $request->pdf_size,
+                'pdf_orientation'      => $request->pdf_orientation,
+                'updated_at'           => now(),
+            ]);
 
-                $website->save();
+            $website->save();
 
-                return redirect()->back()->with('success', 'Website updated successfully!');
+            return redirect()->back()->with('success', 'Website updated successfully!');
+
         } catch (\Exception $e) {
             Log::error('Website Update Error: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Something went wrong. Please try again.');
@@ -332,118 +317,114 @@ class WebsiteController extends Controller
     public function createWebsite(Request $request)
     {
         try {
-
             $validator = Validator::make($request->all(), [
-                'site_connectivity' => 'nullable|in:db,api',
-                'business_model_id' => 'required|exists:business_models,id',
-                'technology' => 'required|in:html,wordpress,corephp,laravel,django,other',
-                'site_name' => 'nullable|string|max:255',
-                'site_description' => 'nullable|string|max:500',
-                'db_host' => 'required|string|max:255',
-                'db_port' => 'required|numeric',
-                'db_name' => 'required|string|max:255',
-                'db_username' => 'required|string|max:255',
-                'db_password' => 'required|string|max:255',
-                'site_link' => 'nullable|url|max:255',
-                'std_trans_url' => 'nullable|string|max:255',   
-                'cert_trans_url' => 'nullable|string|max:255', 
-                'urgency_amount' => 'nullable|numeric|min:0|max:99999999.99', 
-                'company_name' => 'nullable|string|max:255',
-                'company_email' => 'nullable|email|max:255',
-                'consumer_key' => 'nullable|string|max:1000',
-                'consumer_secret' => 'nullable|string|max:1000',
-                'company_mobile' => 'nullable|string|max:20',
-                'company_address' => 'nullable|string|max:1000',
-                'registration_number' => 'nullable|string|max:255',
-                'license_number'      => 'nullable|string|max:255',
-                'bank_name' => 'nullable|string|max:255',
-                'bank_code' => 'nullable|string|max:255',
-                'pdf_size' => 'required|in:A4,A5,Letter,Legal',
-                'pdf_orientation' => 'required|in:portrait,landscape',
-                'site_status' => 'required|in:live,tdown,pdown',
-                'added_by' => 'nullable|exists:users,id',
-                'company_logo' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
+                'site_connectivity'    => 'nullable|in:db,api',
+                'business_model_id'    => 'required|exists:business_models,id',
+                'technology'           => 'required|in:html,wordpress,corephp,laravel,django,other',
+                'site_name'            => 'nullable|string|max:255',
+                'site_description'     => 'nullable|string|max:500',
+                'db_host'              => 'required|string|max:255',
+                'db_port'              => 'required|numeric',
+                'db_name'              => 'required|string|max:255',
+                'db_username'          => 'required|string|max:255',
+                'db_password'          => 'required|string|max:255',
+                'site_link'            => 'nullable|url|max:255',
+                'std_trans_url'        => 'nullable|string|max:255',
+                'cert_trans_url'       => 'nullable|string|max:255',
+                'urgency_amount'       => 'nullable|numeric|min:0|max:99999999.99',
+                'urgency_24h_per_page' => 'nullable|numeric|min:0|max:99999999.99',
+                'urgency_12h_per_page' => 'nullable|numeric|min:0|max:99999999.99',
+                'urgency_24h_per_word' => 'nullable|numeric|min:0|max:99999999.99',
+                'urgency_12h_per_word' => 'nullable|numeric|min:0|max:99999999.99',
+                'company_name'         => 'nullable|string|max:255',
+                'company_email'        => 'nullable|email|max:255',
+                'consumer_key'         => 'nullable|string|max:1000',
+                'consumer_secret'      => 'nullable|string|max:1000',
+                'company_mobile'       => 'nullable|string|max:20',
+                'company_address'      => 'nullable|string|max:1000',
+                'registration_number'  => 'nullable|string|max:255',
+                'license_number'       => 'nullable|string|max:255',
+                'bank_name'            => 'nullable|string|max:255',
+                'bank_code'            => 'nullable|string|max:255',
+                'pdf_size'             => 'required|in:A4,A5,Letter,Legal',
+                'pdf_orientation'      => 'required|in:portrait,landscape',
+                'site_status'          => 'required|in:live,tdown,pdown',
+                'added_by'             => 'nullable|exists:users,id',
+                'company_logo'         => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
                 'invoice_header_image' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
                 'invoice_footer_image' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
-                'invoice_signature' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
-                'invoice_template' => 'nullable|file|mimes:html,htm,php|max:5120',
-                'invoice_image1' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
-                'invoice_image2' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
-                'invoice_image3' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
-                'invoice_image4' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
-                'invoice_image5' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
-                'invoice_image6' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
-                'invoice_image7' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
-                'invoice_image8' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
-                'invoice_image9' => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
+                'invoice_signature'    => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
+                'invoice_template'     => 'nullable|file|mimes:html,htm,php|max:5120',
+                'invoice_image1'       => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
+                'invoice_image2'       => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
+                'invoice_image3'       => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
+                'invoice_image4'       => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
+                'invoice_image5'       => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
+                'invoice_image6'       => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
+                'invoice_image7'       => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
+                'invoice_image8'       => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
+                'invoice_image9'       => 'nullable|file|mimes:jpeg,png,jpg|max:5120',
             ], [
-                '*.max' => 'Each uploaded file must not exceed 5MB.',
+                '*.max'   => 'Each uploaded file must not exceed 5MB.',
                 '*.mimes' => 'Only jpeg, jpg, png, html, htm, or php file types are allowed.',
             ]);
 
             if ($validator->fails()) {
                 $errors = $validator->errors()->all();
-                $firstError = $errors[0] ?? 'Validation failed.';
-
-                return redirect()->back()
-                    ->with('error', $firstError);
+                return redirect()->back()->with('error', $errors[0] ?? 'Validation failed.');
             }
 
-            $exists = Website::where('db_host', $request->db_host) ->where('db_password', $request->db_password)->exists();
-
+            $exists = Website::where('db_host', $request->db_host)->where('db_password', $request->db_password)->exists();
             if ($exists) {
-                return redirect()->back()
-                    ->withInput()
-                    ->with('error', 'A website with the same host and password already exists.');
+                return redirect()->back()->withInput()->with('error', 'A website with the same host and password already exists.');
             }
 
             $website = Website::create([
-                'business_model_id' => $request->business_model_id,
-                'technology' => $request->technology,
-                'site_name' => $request->site_name,
-                'site_description' => $request->site_description,
-                'db_host' => $request->db_host,
-                'db_port' => $request->db_port,
-                'db_name' => $request->db_name,
-                'db_username' => $request->db_username,
-                'db_password' => $request->db_password,
-                'site_link' => rtrim($request->site_link, '/') . '/',
-                'std_trans_url' => $request->std_trans_url,     
-                'cert_trans_url' => $request->cert_trans_url, 
-                'urgency_amount' => $request->filled('urgency_amount') ? $request->urgency_amount : 24, 
-                'company_name' => $request->company_name,
-                'consumer_key' => $request->consumer_key,
-                'consumer_secret' => $request->consumer_secret,
-                'company_email' => $request->company_email,
-                'company_mobile' => $request->company_mobile,
-                'company_address' => $request->company_address,
+                'business_model_id'    => $request->business_model_id,
+                'technology'           => $request->technology,
+                'site_name'            => $request->site_name,
+                'site_description'     => $request->site_description,
+                'db_host'              => $request->db_host,
+                'db_port'              => $request->db_port,
+                'db_name'              => $request->db_name,
+                'db_username'          => $request->db_username,
+                'db_password'          => $request->db_password,
+                'site_link'            => rtrim($request->site_link, '/') . '/',
+                'std_trans_url'        => $request->std_trans_url,
+                'cert_trans_url'       => $request->cert_trans_url,
+                'urgency_amount'       => $request->filled('urgency_amount') ? $request->urgency_amount : 24,
+                'urgency_24h_per_page' => $request->urgency_24h_per_page ?: null,
+                'urgency_12h_per_page' => $request->urgency_12h_per_page ?: null,
+                'urgency_24h_per_word' => $request->urgency_24h_per_word ?: null,
+                'urgency_12h_per_word' => $request->urgency_12h_per_word ?: null,
+                'company_name'         => $request->company_name,
+                'consumer_key'         => $request->consumer_key,
+                'consumer_secret'      => $request->consumer_secret,
+                'company_email'        => $request->company_email,
+                'company_mobile'       => $request->company_mobile,
+                'company_address'      => $request->company_address,
                 'registration_number'  => $request->registration_number,
-                'license_number'  => $request->license_number,
-                'bank_name' => $request->bank_name,
-                'bank_code' => $request->bank_code,
-                'pdf_size' => $request->pdf_size,
-                'pdf_orientation' => $request->pdf_orientation,
-                'site_status' => $request->site_status,
-                'added_by' => auth()->id()
+                'license_number'       => $request->license_number,
+                'bank_name'            => $request->bank_name,
+                'bank_code'            => $request->bank_code,
+                'pdf_size'             => $request->pdf_size,
+                'pdf_orientation'      => $request->pdf_orientation,
+                'site_status'          => $request->site_status,
+                'added_by'             => auth()->id(),
             ]);
 
-            $modelType = strtolower($website->businessModel->model_type);
-            $siteId = $website->id;
-            $siteIdInWords = numberToWords($siteId);
-
+            $modelType      = strtolower($website->businessModel->model_type);
+            $siteId         = $website->id;
+            $siteIdInWords  = numberToWords($siteId);
             $baseUploadPath = public_path("uploads/websites/{$modelType}/{$siteId}/");
 
             $uploadFile = function ($field, $subfolder, $prefix = null) use ($request, $website, $baseUploadPath, $modelType, $siteId) {
                 if ($request->hasFile($field)) {
-                    $file = $request->file($field);
-                    $prefix = $prefix ?? $field;
+                    $file     = $request->file($field);
+                    $prefix   = $prefix ?? $field;
                     $filename = $prefix . '_' . time() . '.' . $file->getClientOriginalExtension();
-                    $path = $baseUploadPath . $subfolder;
-
-                    if (!file_exists($path)) {
-                        mkdir($path, 0755, true);
-                    }
-
+                    $path     = $baseUploadPath . $subfolder;
+                    if (!file_exists($path)) mkdir($path, 0755, true);
                     $file->move($path, $filename);
                     $website->$field = "uploads/websites/{$modelType}/{$siteId}/{$subfolder}/{$filename}";
                 }
@@ -465,20 +446,13 @@ class WebsiteController extends Controller
 
             if ($request->hasFile('invoice_template')) {
                 $oldTemplatePath = resource_path("views/websites/{$modelType}/{$siteIdInWords}.blade.php");
-                if (file_exists($oldTemplatePath)) {
-                    unlink($oldTemplatePath);
-                }
-                $file = $request->file('invoice_template');
+                if (file_exists($oldTemplatePath)) unlink($oldTemplatePath);
+                $file     = $request->file('invoice_template');
                 $viewPath = resource_path("views/websites/{$modelType}/");
-
-                if (!file_exists($viewPath)) {
-                    mkdir($viewPath, 0755, true);
-                }
-
+                if (!file_exists($viewPath)) mkdir($viewPath, 0755, true);
                 $file->move($viewPath, "{$siteIdInWords}.blade.php");
                 $website->invoice_template = "views/websites/{$modelType}/{$siteIdInWords}.blade.php";
             }
-
 
             $website->save();
 
@@ -486,10 +460,7 @@ class WebsiteController extends Controller
 
         } catch (\Exception $e) {
             Log::error('Website creation error: ' . $e->getMessage());
-
-            return redirect()->back()
-                ->withInput()
-                ->with('error', 'Something went wrong. Please try again.');
+            return redirect()->back()->withInput()->with('error', 'Something went wrong. Please try again.');
         }
     }
 
