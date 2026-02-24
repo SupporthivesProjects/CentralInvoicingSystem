@@ -135,7 +135,7 @@
 
                                                 <div class="col-12">
                                                     <hr class="my-2">
-                                                    <p class="fw-semibold mb-2">Additional Fee Tiers <small class="text-muted">(Leave empty to hide from invoice)</small></p>
+                                                    <p class="fw-semibold mb-2">Additional Fee Tiers <small class="text-muted">(Leave empty to set Null)</small></p>
                                                 </div>
 
                                                 <div class="col-md-3">
