@@ -284,31 +284,6 @@
             $hiddenInput.val(lineTotal.toFixed(2));
         }
 
-        // Function to ensure all total cells have hidden inputs
-        function ensureHiddenInputs() {
-            $('.line-total').each(function() {
-                var $cell = $(this);
-                var productId = $cell.data('product-id');
-                var lineTotal = parseFloat($cell.text().replace(siteCurrency, '').replace(/,/g, '')) ||
-                    0;
-
-                // Check if hidden input exists
-                var $hiddenInput = $cell.find('input[type="hidden"]');
-                if ($hiddenInput.length === 0) {
-                    // Create the hidden input
-                    $hiddenInput = $('<input>')
-                        .attr('type', 'hidden')
-                        .attr('form', 'generate-invoice-form')
-                        .attr('name', 'products[' + productId + '][line_total]')
-                        .val(lineTotal.toFixed(2));
-                    $cell.append($hiddenInput);
-                } else {
-                    // Update the value if it exists
-                    $hiddenInput.val(lineTotal.toFixed(2));
-                }
-            });
-        }
-
         // Call this function on page load to ensure all inputs exist initially
         ensureHiddenInputs();
     });
