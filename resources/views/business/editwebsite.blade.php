@@ -107,72 +107,127 @@
                                 <input type="text" name="site_link" class="form-control" placeholder="Enter Website link" value="{{ old('site_link', $website->site_link) }}" required>
                             </div>
 
-                            @if(isset($website->businessModel) && strtolower($website->businessModel->model_type) == 'translation')
-                                <div class="col-12">
-                                    <div class="card border-info">
-                                        <div class="card-header bg-info bg-opacity-10">
-                                            <h6 class="mb-0 text-info">
-                                                <i class="bi bi-translate"></i> <strong>Note:</strong> This section is only for Translation Business Model sites.
-                                            </h6>
-                                        </div>
-                                        <div class="card-body">
-                                            <div class="row g-3">
-                                                <div class="col-md-4">
-                                                    <label class="form-label fw-semibold">Standard Translation URL</label>
-                                                    <input type="text" name="std_trans_url" class="form-control" placeholder="request-translation" value="{{ old('std_trans_url', $website->std_trans_url ?? '') }}">
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <label class="form-label fw-semibold">Certified Translation URL</label>
-                                                    <input type="text" name="cert_trans_url" class="form-control" placeholder="request-translation?ref=certified" value="{{ old('cert_trans_url', $website->cert_trans_url ?? '') }}">
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <label class="form-label fw-semibold">Urgency Amount</label>
-                                                    <div class="input-group">
-                                                        <span class="input-group-text bg-light text-muted">{{ get_site_currency_by_id($website->id) }}</span>
-                                                        <input type="number" name="urgency_amount" class="form-control" placeholder="0.00" min="0" step="0.01" value="{{ old('urgency_amount', $website->urgency_amount ?? 24) }}">
-                                                    </div>
-                                                </div>
+                           @if(isset($website->businessModel) && strtolower($website->businessModel->model_type) == 'translation')
+                            <div class="col-12">
+                                <div class="card border-info">
+                                    <div class="card-header bg-info bg-opacity-10">
+                                        <h6 class="mb-0 text-info">
+                                            <i class="bi bi-translate"></i> <strong>Translation Business Settings</strong>
+                                        </h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row g-3">
+                                            
+                                            <div class="col-md-4">
+                                                <label class="form-label fw-semibold">Standard Translation URL</label>
+                                                <input type="text" 
+                                                    name="std_trans_url" 
+                                                    class="form-control" 
+                                                    placeholder="request-translation" 
+                                                    value="{{ old('std_trans_url', $website->std_trans_url ?? '') }}">
+                                            </div>
 
-                                                <div class="col-12">
-                                                    <hr class="my-2">
-                                                    <p class="fw-semibold mb-2">Additional Fee Tiers <small class="text-muted">(Leave empty to set Null)</small></p>
-                                                </div>
+                                            <div class="col-md-4">
+                                                <label class="form-label fw-semibold">Certified Translation URL</label>
+                                                <input type="text" 
+                                                    name="cert_trans_url" 
+                                                    class="form-control" 
+                                                    placeholder="request-translation?ref=certified" 
+                                                    value="{{ old('cert_trans_url', $website->cert_trans_url ?? '') }}">
+                                            </div>
 
-                                                <div class="col-md-3">
-                                                    <label class="form-label fw-semibold">24h Fee / Page</label>
-                                                    <div class="input-group">
-                                                        <span class="input-group-text bg-light text-muted">{{ get_site_currency_by_id($website->id) }}</span>
-                                                        <input type="number" name="urgency_24h_per_page" class="form-control" placeholder="0.00" min="0" step="0.01" value="{{ old('urgency_24h_per_page', $website->urgency_24h_per_page ?? '') }}">
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-md-3">
-                                                    <label class="form-label fw-semibold">12h Fee / Page</label>
-                                                    <div class="input-group">
-                                                        <span class="input-group-text bg-light text-muted">{{ get_site_currency_by_id($website->id) }}</span>
-                                                        <input type="number" name="urgency_12h_per_page" class="form-control" placeholder="0.00" min="0" step="0.01" value="{{ old('urgency_12h_per_page', $website->urgency_12h_per_page ?? '') }}">
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-md-3">
-                                                    <label class="form-label fw-semibold">24h Fee / Word</label>
-                                                    <div class="input-group">
-                                                        <span class="input-group-text bg-light text-muted">{{ get_site_currency_by_id($website->id) }}</span>
-                                                        <input type="number" name="urgency_24h_per_word" class="form-control" placeholder="0.00" min="0" step="0.01" value="{{ old('urgency_24h_per_word', $website->urgency_24h_per_word ?? '') }}">
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-md-3">
-                                                    <label class="form-label fw-semibold">12h Fee / Word</label>
-                                                    <div class="input-group">
-                                                        <span class="input-group-text bg-light text-muted">{{ get_site_currency_by_id($website->id) }}</span>
-                                                        <input type="number" name="urgency_12h_per_word" class="form-control" placeholder="0.00" min="0" step="0.01" value="{{ old('urgency_12h_per_word', $website->urgency_12h_per_word ?? '') }}">
-                                                    </div>
+                                            <div class="col-md-4">
+                                                <label class="form-label fw-semibold">Default Urgent Delivery Fee</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text bg-light text-muted">
+                                                        {{ get_site_currency_by_id($website->id) }}
+                                                    </span>
+                                                    <input type="number" 
+                                                        name="urgency_amount" 
+                                                        class="form-control" 
+                                                        placeholder="0.00" 
+                                                        min="0" 
+                                                        step="0.01" 
+                                                        value="{{ old('urgency_amount', $website->urgency_amount ?? '') }}">
                                                 </div>
                                             </div>
+
+                                            <div class="col-12">
+                                                <hr class="my-2">
+                                                <p class="fw-semibold mb-2">
+                                                    Urgent Delivery Add-On Pricing 
+                                                    <small class="text-muted">(Leave empty to disable specific tier)</small>
+                                                </p>
+                                            </div>
+
+                                            <div class="col-md-3">
+                                                <label class="form-label fw-semibold">24 Hour Delivery – Per Page</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text bg-light text-muted">
+                                                        {{ get_site_currency_by_id($website->id) }}
+                                                    </span>
+                                                    <input type="number" 
+                                                        name="urgency_24h_per_page" 
+                                                        class="form-control" 
+                                                        placeholder="0.00" 
+                                                        min="0" 
+                                                        step="0.01" 
+                                                        value="{{ old('urgency_24h_per_page', $website->urgency_24h_per_page ?? '') }}">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-3">
+                                                <label class="form-label fw-semibold">12 Hour Delivery – Per Page</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text bg-light text-muted">
+                                                        {{ get_site_currency_by_id($website->id) }}
+                                                    </span>
+                                                    <input type="number" 
+                                                        name="urgency_12h_per_page" 
+                                                        class="form-control" 
+                                                        placeholder="0.00" 
+                                                        min="0" 
+                                                        step="0.01" 
+                                                        value="{{ old('urgency_12h_per_page', $website->urgency_12h_per_page ?? '') }}">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-3">
+                                                <label class="form-label fw-semibold">24 Hour Delivery – Per Word</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text bg-light text-muted">
+                                                        {{ get_site_currency_by_id($website->id) }}
+                                                    </span>
+                                                    <input type="number" 
+                                                        name="urgency_24h_per_word" 
+                                                        class="form-control" 
+                                                        placeholder="0.00" 
+                                                        min="0" 
+                                                        step="0.01" 
+                                                        value="{{ old('urgency_24h_per_word', $website->urgency_24h_per_word ?? '') }}">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-3">
+                                                <label class="form-label fw-semibold">12 Hour Delivery – Per Word</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text bg-light text-muted">
+                                                        {{ get_site_currency_by_id($website->id) }}
+                                                    </span>
+                                                    <input type="number" 
+                                                        name="urgency_12h_per_word" 
+                                                        class="form-control" 
+                                                        placeholder="0.00" 
+                                                        min="0" 
+                                                        step="0.01" 
+                                                        value="{{ old('urgency_12h_per_word', $website->urgency_12h_per_word ?? '') }}">
+                                                </div>
+                                            </div>
+
                                         </div>
                                     </div>
                                 </div>
+                            </div>
                             @endif
 
                             <div class="col-md-6 mx-auto">
