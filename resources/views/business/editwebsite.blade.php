@@ -169,9 +169,9 @@
                                                     <input type="number" 
                                                         name="urgency_24h_per_page" 
                                                         class="form-control" 
-                                                        placeholder="0.00" 
+                                                        placeholder="0.0000" 
                                                         min="0" 
-                                                        step="0.01" 
+                                                        step="0.0001"  
                                                         value="{{ old('urgency_24h_per_page', $website->urgency_24h_per_page ?? '') }}">
                                                 </div>
                                             </div>
@@ -185,9 +185,9 @@
                                                     <input type="number" 
                                                         name="urgency_12h_per_page" 
                                                         class="form-control" 
-                                                        placeholder="0.00" 
+                                                        placeholder="0.0000" 
                                                         min="0" 
-                                                        step="0.01" 
+                                                        step="0.0001"  
                                                         value="{{ old('urgency_12h_per_page', $website->urgency_12h_per_page ?? '') }}">
                                                 </div>
                                             </div>
@@ -201,9 +201,9 @@
                                                     <input type="number" 
                                                         name="urgency_24h_per_word" 
                                                         class="form-control" 
-                                                        placeholder="0.00" 
+                                                        placeholder="0.0000" 
                                                         min="0" 
-                                                        step="0.01" 
+                                                        step="0.0001"  
                                                         value="{{ old('urgency_24h_per_word', $website->urgency_24h_per_word ?? '') }}">
                                                 </div>
                                             </div>
@@ -217,9 +217,9 @@
                                                     <input type="number" 
                                                         name="urgency_12h_per_word" 
                                                         class="form-control" 
-                                                        placeholder="0.00" 
+                                                        placeholder="0.0000" 
                                                         min="0" 
-                                                        step="0.01" 
+                                                        step="0.0001"   
                                                         value="{{ old('urgency_12h_per_word', $website->urgency_12h_per_word ?? '') }}">
                                                 </div>
                                             </div>
