@@ -122,12 +122,13 @@ class LaravelController extends Controller
         $certifiedPrice = $certifiedTranslation ? floatval($certifiedTranslation->unit_price) : null;
         $standardPrice  = $standardTranslation  ? floatval($standardTranslation->unit_price)  : null;
 
-        $lastParams = session()->get('last_translation_params', [
-            'certified_pages'   => null,
-            'standard_words'    => null,
-            'certified_urgency' => null,
-            'standard_urgency'  => null,
-        ]);
+        $lastParamsRaw = session()->get('last_translation_params', []);
+        $lastParams = [
+            'certified_pages'   => $lastParamsRaw['certified_pages']   ?? null,
+            'standard_words'    => $lastParamsRaw['standard_words']    ?? null,
+            'certified_urgency' => $lastParamsRaw['certified_urgency'] ?? null,
+            'standard_urgency'  => $lastParamsRaw['standard_urgency']  ?? null,
+        ];
 
         $urgencyOptions = $this->getAvailableUrgencyOptions($site);
         $hasUrgency     = !empty($urgencyOptions);
