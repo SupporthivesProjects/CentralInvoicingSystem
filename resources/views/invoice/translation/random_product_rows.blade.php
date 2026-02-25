@@ -141,7 +141,7 @@
 @endforelse
 
 <script>
-const siteCurrency = @json(site_currency());
+var siteCurrency = @json(site_currency());
 
 function computeUrgencyAddFromGroup($group, pages) {
     var $checked = $group.find('.urgency-radio:checked');
