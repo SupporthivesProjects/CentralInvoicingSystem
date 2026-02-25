@@ -383,7 +383,7 @@
                                         <th class="text-center" style="width: 16%;">To Language</th>
                                         <th class="text-center" style="width: 20%;">Editable Price</th>
                                         <th class="text-center" style="width: 16%;">Pages/Words</th>
-                                        <th class="text-center" style="width: 9%;">Hurry</th>
+                                        <th class="text-center" style="width: 9%;">Urgency</th>
                                         <th class="text-center" style="width: 12%;">Total</th>
                                         <th class="text-center" style="width: 6%;">Remove</th>
                                     </tr>
