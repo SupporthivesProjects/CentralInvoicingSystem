@@ -145,9 +145,9 @@
                                                     <input type="number" 
                                                         name="urgency_amount" 
                                                         class="form-control" 
-                                                        placeholder="0.00" 
+                                                        placeholder="0.0000" 
                                                         min="0" 
-                                                        step="0.01" 
+                                                        step="0.0001" 
                                                         value="{{ old('urgency_amount', $website->urgency_amount ?? '') }}">
                                                 </div>
                                             </div>
