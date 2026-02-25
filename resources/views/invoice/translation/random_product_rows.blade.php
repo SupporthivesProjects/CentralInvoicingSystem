@@ -49,9 +49,12 @@
             </div>
         </td>
 
-        {{-- URGENCY COLUMN --}}
         <td class="text-center p-1">
             @if(count($urgencyOptions) > 0)
+                @php
+                    $validUrgencyKeys = array_keys($urgencyOptions);
+                    $resolvedUrgencyType = in_array($currentUrgencyType, $validUrgencyKeys) ? $currentUrgencyType : 'none';
+                @endphp
                 <div class="urgency-radio-group d-flex flex-column align-items-start gap-1"
                     data-product-id="{{ $product->id }}"
                     data-unit-type="{{ $product->unit_type ?? 'pages' }}"
@@ -61,7 +64,6 @@
                     @endforeach
                     style="padding-left:2px;">
 
-                    {{-- No Urgency --}}
                     <div class="form-check mb-0" style="min-height:0;">
                         <input
                             class="form-check-input urgency-radio"
@@ -73,7 +75,7 @@
                             data-product-id="{{ $product->id }}"
                             data-rate="0"
                             data-urgkey="none"
-                            {{ $currentUrgencyType === 'none' ? 'checked' : '' }}
+                            {{ $resolvedUrgencyType === 'none' ? 'checked' : '' }}
                             data-bs-toggle="tooltip"
                             data-bs-placement="right"
                             title="No urgency"
@@ -81,7 +83,6 @@
                         <label class="form-check-label" for="urg_none_{{ $product->id }}" style="cursor:pointer;font-size:11px;white-space:nowrap;color:#6c757d;">None</label>
                     </div>
 
-                    {{-- Dynamic urgency options --}}
                     @foreach($urgencyOptions as $key => $opt)
                         @php
                             $qty      = $product->pages;
@@ -99,7 +100,7 @@
                                 data-product-id="{{ $product->id }}"
                                 data-rate="{{ $rate }}"
                                 data-urgkey="{{ $key }}"
-                                {{ $currentUrgencyType === $key ? 'checked' : '' }}
+                                {{ $resolvedUrgencyType === $key ? 'checked' : '' }}
                                 data-bs-toggle="tooltip"
                                 data-bs-placement="right"
                                 title="+ {{ site_currency() }}{{ number_format($urgTotal, 2) }}"
