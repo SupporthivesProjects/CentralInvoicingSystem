@@ -189,106 +189,121 @@ class WordPressController extends Controller
             ]);
         }
 
-        $basePercentage = 15;
-        $urgencyChance = min(log($invoiceAmount + 1, 10) * $basePercentage, 100);
-
         $certUrgencyOptions = $certifiedProduct ? $this->getAvailableUrgencyOptions($site, 'pages') : [];
         $stdUrgencyOptions  = $standardProduct  ? $this->getAvailableUrgencyOptions($site, 'words') : [];
 
         $certUrgencyTypes = array_keys($certUrgencyOptions);
         $stdUrgencyTypes  = array_keys($stdUrgencyOptions);
 
-        $bestMatch = null;
+        // Urgency is only pre-selected when no-urgency cannot get within this
+        // tolerance of the invoice amount. Expressed as a fraction of the invoice.
+        // E.g. 0.01 = within 1% → urgency stays off most of the time.
+        $urgencyTolerance = $invoiceAmount * 0.01;
+
+        $bestMatch    = null;
         $bestDistance = PHP_FLOAT_MAX;
 
         if ($filterType === 'certified' && $certifiedProduct && $certifiedPrice > 0) {
-            $bestScenario = null;
-            $bestDistance = PHP_FLOAT_MAX;
 
-            $basePages = ceil($invoiceAmount / $certifiedPrice);
+            $basePages  = ceil($invoiceAmount / $certifiedPrice);
             $pagesToTry = range(max(1, $basePages - 2), $basePages + 5);
 
-            $urgencyTypesToTry = array_merge(['none'], $certUrgencyTypes);
-
+            // Step 1: try none-urgency first
+            $noneScenario = null;
+            $noneDist     = PHP_FLOAT_MAX;
             foreach ($pagesToTry as $pages) {
-                foreach ($urgencyTypesToTry as $urgType) {
-                    $urgencyAdd = $this->computeUrgencyAmount($site, 'pages', $pages, $urgType);
-                    $total = ($pages * $certifiedPrice) + $urgencyAdd;
-                    $distance = abs($total - $invoiceAmount);
+                $total    = $pages * $certifiedPrice;
+                $distance = abs($total - $invoiceAmount);
+                if ($distance < $noneDist) {
+                    $noneDist     = $distance;
+                    $noneScenario = ['pages' => $pages, 'total' => $total,
+                                     'urgency_type' => 'none', 'urgency_add' => 0];
+                }
+            }
 
-                    if ($distance < $bestDistance) {
-                        $bestDistance = $distance;
-                        $bestScenario = [
-                            'pages'        => $pages,
-                            'total'        => $total,
-                            'urgency_type' => $urgType,
-                            'urgency_add'  => $urgencyAdd,
-                        ];
+            // Step 2: only try urgency options if none-urgency gap > tolerance
+            $bestScenario = $noneScenario;
+            $bestDist     = $noneDist;
+
+            if ($noneDist > $urgencyTolerance && !empty($certUrgencyTypes)) {
+                foreach ($pagesToTry as $pages) {
+                    foreach ($certUrgencyTypes as $urgType) {
+                        $urgencyAdd = $this->computeUrgencyAmount($site, 'pages', $pages, $urgType);
+                        $total      = ($pages * $certifiedPrice) + $urgencyAdd;
+                        $distance   = abs($total - $invoiceAmount);
+                        if ($distance < $bestDist) {
+                            $bestDist     = $distance;
+                            $bestScenario = ['pages' => $pages, 'total' => $total,
+                                             'urgency_type' => $urgType, 'urgency_add' => $urgencyAdd];
+                        }
                     }
                 }
             }
 
             if ($bestScenario) {
-                $applyUrgency = $bestScenario['urgency_type'] !== 'none' && (rand(1, 100) <= $urgencyChance);
-                $bestMatch = [[
+                $bestMatch    = [[
                     'product'      => $certifiedProduct,
                     'pages'        => $bestScenario['pages'],
-                    'total'        => $applyUrgency ? $bestScenario['total'] : $bestScenario['pages'] * $certifiedPrice,
-                    'urgency_type' => $applyUrgency ? $bestScenario['urgency_type'] : 'none',
-                    'urgency_add'  => $applyUrgency ? $bestScenario['urgency_add'] : 0,
+                    'total'        => $bestScenario['total'],
+                    'urgency_type' => $bestScenario['urgency_type'],
+                    'urgency_add'  => $bestScenario['urgency_add'],
                     'base_price'   => $certifiedPrice,
                 ]];
+                $bestDistance = $bestDist;
             }
-        } elseif ($filterType === 'standard' && $standardProduct && $standardPrice > 0) {
-            $bestScenario = null;
-            $bestDistance = PHP_FLOAT_MAX;
 
-            $basePages = ceil($invoiceAmount / $standardPrice);
+        } elseif ($filterType === 'standard' && $standardProduct && $standardPrice > 0) {
+
+            $basePages  = ceil($invoiceAmount / $standardPrice);
             $pagesToTry = range(max(250, $basePages - 50), $basePages + 500);
 
-            $urgencyTypesToTry = array_merge(['none'], $stdUrgencyTypes);
-
+            // Step 1: try none-urgency first
+            $noneScenario = null;
+            $noneDist     = PHP_FLOAT_MAX;
             foreach ($pagesToTry as $pages) {
                 if ($pages < 250) continue;
-                foreach ($urgencyTypesToTry as $urgType) {
-                    $urgencyAdd = $this->computeUrgencyAmount($site, 'words', $pages, $urgType);
-                    $total = ($pages * $standardPrice) + $urgencyAdd;
-                    $distance = abs($total - $invoiceAmount);
+                $total    = $pages * $standardPrice;
+                $distance = abs($total - $invoiceAmount);
+                if ($distance < $noneDist) {
+                    $noneDist     = $distance;
+                    $noneScenario = ['pages' => $pages, 'total' => $total,
+                                     'urgency_type' => 'none', 'urgency_add' => 0];
+                }
+            }
 
-                    if ($distance < $bestDistance) {
-                        $bestDistance = $distance;
-                        $bestScenario = [
-                            'pages'        => $pages,
-                            'total'        => $total,
-                            'urgency_type' => $urgType,
-                            'urgency_add'  => $urgencyAdd,
-                        ];
+            // Step 2: only try urgency if gap > tolerance
+            $bestScenario = $noneScenario;
+            $bestDist     = $noneDist;
+
+            if ($noneDist > $urgencyTolerance && !empty($stdUrgencyTypes)) {
+                foreach ($pagesToTry as $pages) {
+                    if ($pages < 250) continue;
+                    foreach ($stdUrgencyTypes as $urgType) {
+                        $urgencyAdd = $this->computeUrgencyAmount($site, 'words', $pages, $urgType);
+                        $total      = ($pages * $standardPrice) + $urgencyAdd;
+                        $distance   = abs($total - $invoiceAmount);
+                        if ($distance < $bestDist) {
+                            $bestDist     = $distance;
+                            $bestScenario = ['pages' => $pages, 'total' => $total,
+                                             'urgency_type' => $urgType, 'urgency_add' => $urgencyAdd];
+                        }
                     }
                 }
             }
 
             if ($bestScenario) {
-                $applyUrgency = $bestScenario['urgency_type'] !== 'none' && (rand(1, 100) <= $urgencyChance);
-                $bestMatch = [[
+                $bestMatch    = [[
                     'product'      => $standardProduct,
                     'pages'        => $bestScenario['pages'],
-                    'total'        => $applyUrgency ? $bestScenario['total'] : $bestScenario['pages'] * $standardPrice,
-                    'urgency_type' => $applyUrgency ? $bestScenario['urgency_type'] : 'none',
-                    'urgency_add'  => $applyUrgency ? $bestScenario['urgency_add'] : 0,
+                    'total'        => $bestScenario['total'],
+                    'urgency_type' => $bestScenario['urgency_type'],
+                    'urgency_add'  => $bestScenario['urgency_add'],
                     'base_price'   => $standardPrice,
                 ]];
+                $bestDistance = $bestDist;
             }
+
         } elseif ($certifiedProduct && $standardProduct && $certifiedPrice > 0 && $standardPrice > 0) {
-
-            $certUrgencyTypesToTry = array_merge(['none'], $certUrgencyTypes);
-            $stdUrgencyTypesToTry  = array_merge(['none'], $stdUrgencyTypes);
-
-            $urgencyScenarios = [];
-            foreach ($certUrgencyTypesToTry as $cType) {
-                foreach ($stdUrgencyTypesToTry as $sType) {
-                    $urgencyScenarios[] = ['cert_urgency' => $cType, 'std_urgency' => $sType];
-                }
-            }
 
             $ratios = [
                 ['cert_ratio' => 0.3, 'std_ratio' => 0.7],
@@ -300,170 +315,214 @@ class WordPressController extends Controller
                 ['cert_ratio' => 0.6, 'std_ratio' => 0.4],
             ];
 
-            $results = collect($urgencyScenarios)->map(function ($urgencyScenario) use (
-                $ratios, $certifiedPrice, $standardPrice,
-                $site, $invoiceAmount, $certifiedProduct, $standardProduct, $urgencyChance
-            ) {
-                $localBest     = null;
-                $localDistance = PHP_FLOAT_MAX;
+            // Step 1: find best none+none scenario across all ratios
+            $noneResult   = null;
+            $noneDistance = PHP_FLOAT_MAX;
 
-                foreach ($ratios as $ratio) {
-                    $certAmount = $invoiceAmount * $ratio['cert_ratio'];
-                    $stdAmount  = $invoiceAmount * $ratio['std_ratio'];
+            foreach ($ratios as $ratio) {
+                $certAmount = $invoiceAmount * $ratio['cert_ratio'];
+                $stdAmount  = $invoiceAmount * $ratio['std_ratio'];
 
-                    $certUrgencyAdd = $this->computeUrgencyAmount($site, 'pages', 1, $urgencyScenario['cert_urgency']);
-                    $stdUrgencyAdd  = $this->computeUrgencyAmount($site, 'words', 1, $urgencyScenario['std_urgency']);
+                $baseCertPages  = ceil($certAmount / max($certifiedPrice, 0.01));
+                $baseStdPages   = max(250, ceil($stdAmount / max($standardPrice, 0.01)));
+                $certPagesToTry = range(max(1, $baseCertPages - 1), $baseCertPages + 2);
+                $stdPagesToTry  = range(max(250, $baseStdPages - 50), $baseStdPages + 100);
 
-                    $certEffectivePrice = $certifiedPrice + $certUrgencyAdd;
-                    $stdEffectivePrice  = $standardPrice + $stdUrgencyAdd;
+                foreach ($certPagesToTry as $certPages) {
+                    foreach ($stdPagesToTry as $stdPages) {
+                        if ($stdPages < 250) continue;
+                        $certTotal = $certPages * $certifiedPrice;
+                        $stdTotal  = $stdPages  * $standardPrice;
+                        $total     = $certTotal + $stdTotal;
+                        if ($total < $invoiceAmount * 0.95) continue;
+                        $distance     = abs($total - $invoiceAmount);
+                        $balanceScore = abs(($certTotal / $total) - 0.5);
+                        if ($distance < $noneDistance || ($distance === $noneDistance && $balanceScore < 0.3)) {
+                            $noneDistance = $distance;
+                            $noneResult   = [
+                                'match' => [
+                                    ['product' => $certifiedProduct, 'pages' => $certPages,
+                                     'total' => $certTotal, 'urgency_type' => 'none',
+                                     'urgency_add' => 0, 'base_price' => $certifiedPrice],
+                                    ['product' => $standardProduct,  'pages' => $stdPages,
+                                     'total' => $stdTotal,  'urgency_type' => 'none',
+                                     'urgency_add' => 0, 'base_price' => $standardPrice],
+                                ],
+                                'distance' => $distance,
+                            ];
+                        }
+                    }
+                }
+            }
 
-                    $baseCertPages = ceil($certAmount / max($certEffectivePrice, 0.01));
-                    $baseStdPages  = max(250, ceil($stdAmount / max($stdEffectivePrice, 0.01)));
+            // Step 2: only search urgency combos when none+none gap > tolerance
+            if ($noneDistance <= $urgencyTolerance || empty($certUrgencyTypes) && empty($stdUrgencyTypes)) {
+                if ($noneResult) {
+                    $bestMatch    = $noneResult['match'];
+                    $bestDistance = $noneResult['distance'];
+                }
+            } else {
+                // Build urgency scenarios excluding none+none (already tried)
+                $certUrgencyTypesToTry = array_merge(['none'], $certUrgencyTypes);
+                $stdUrgencyTypesToTry  = array_merge(['none'], $stdUrgencyTypes);
+                $urgencyScenarios      = [];
+                foreach ($certUrgencyTypesToTry as $cType) {
+                    foreach ($stdUrgencyTypesToTry as $sType) {
+                        if ($cType === 'none' && $sType === 'none') continue;
+                        $urgencyScenarios[] = ['cert_urgency' => $cType, 'std_urgency' => $sType];
+                    }
+                }
 
-                    $certPagesToTry = range(max(1, $baseCertPages - 1), $baseCertPages + 2);
-                    $stdPagesToTry  = range(max(250, $baseStdPages - 50), $baseStdPages + 100);
+                $urgResult   = null;
+                $urgDistance = PHP_FLOAT_MAX;
 
-                    foreach ($certPagesToTry as $certPages) {
-                        foreach ($stdPagesToTry as $stdPages) {
-                            if ($stdPages < 250) continue;
+                foreach ($urgencyScenarios as $urgencyScenario) {
+                    foreach ($ratios as $ratio) {
+                        $certAmount = $invoiceAmount * $ratio['cert_ratio'];
+                        $stdAmount  = $invoiceAmount * $ratio['std_ratio'];
 
-                            $certUrgTotal = $this->computeUrgencyAmount($site, 'pages', $certPages, $urgencyScenario['cert_urgency']);
-                            $stdUrgTotal  = $this->computeUrgencyAmount($site, 'words', $stdPages, $urgencyScenario['std_urgency']);
+                        $certUrgencyAdd     = $this->computeUrgencyAmount($site, 'pages', 1, $urgencyScenario['cert_urgency']);
+                        $stdUrgencyAdd      = $this->computeUrgencyAmount($site, 'words', 1, $urgencyScenario['std_urgency']);
+                        $certEffectivePrice = $certifiedPrice + $certUrgencyAdd;
+                        $stdEffectivePrice  = $standardPrice  + $stdUrgencyAdd;
 
-                            $certTotal = ($certPages * $certifiedPrice) + $certUrgTotal;
-                            $stdTotal  = ($stdPages * $standardPrice) + $stdUrgTotal;
-                            $total     = $certTotal + $stdTotal;
+                        $baseCertPages  = ceil($certAmount / max($certEffectivePrice, 0.01));
+                        $baseStdPages   = max(250, ceil($stdAmount / max($stdEffectivePrice, 0.01)));
+                        $certPagesToTry = range(max(1, $baseCertPages - 1), $baseCertPages + 2);
+                        $stdPagesToTry  = range(max(250, $baseStdPages - 50), $baseStdPages + 100);
 
-                            if ($total >= $invoiceAmount * 0.95) {
+                        foreach ($certPagesToTry as $certPages) {
+                            foreach ($stdPagesToTry as $stdPages) {
+                                if ($stdPages < 250) continue;
+
+                                $certUrgTotal = $this->computeUrgencyAmount($site, 'pages', $certPages, $urgencyScenario['cert_urgency']);
+                                $stdUrgTotal  = $this->computeUrgencyAmount($site, 'words', $stdPages,  $urgencyScenario['std_urgency']);
+                                $certTotal    = ($certPages * $certifiedPrice) + $certUrgTotal;
+                                $stdTotal     = ($stdPages  * $standardPrice)  + $stdUrgTotal;
+                                $total        = $certTotal + $stdTotal;
+
+                                if ($total < $invoiceAmount * 0.95) continue;
                                 $distance     = abs($total - $invoiceAmount);
                                 $balanceScore = abs(($certTotal / $total) - 0.5);
 
-                                if ($distance < $localDistance || ($distance === $localDistance && $balanceScore < 0.3)) {
-                                    $applyUrgCert = $urgencyScenario['cert_urgency'] !== 'none' && (rand(1, 100) <= $urgencyChance);
-                                    $applyUrgStd  = $urgencyScenario['std_urgency'] !== 'none' && (rand(1, 100) <= $urgencyChance);
-
-                                    $finalCertUrg   = $applyUrgCert ? $urgencyScenario['cert_urgency'] : 'none';
-                                    $finalStdUrg    = $applyUrgStd  ? $urgencyScenario['std_urgency']  : 'none';
-                                    $finalCertUrgAmt = $applyUrgCert ? $certUrgTotal : 0;
-                                    $finalStdUrgAmt  = $applyUrgStd  ? $stdUrgTotal  : 0;
-
-                                    $finalCertTotal = ($certPages * $certifiedPrice) + $finalCertUrgAmt;
-                                    $finalStdTotal  = ($stdPages  * $standardPrice)  + $finalStdUrgAmt;
-
-                                    $localBest = [
+                                if ($distance < $urgDistance || ($distance === $urgDistance && $balanceScore < 0.3)) {
+                                    $urgDistance = $distance;
+                                    $urgResult   = [
                                         'match' => [
-                                            [
-                                                'product'      => $certifiedProduct,
-                                                'pages'        => $certPages,
-                                                'total'        => $finalCertTotal,
-                                                'urgency_type' => $finalCertUrg,
-                                                'urgency_add'  => $finalCertUrgAmt,
-                                                'base_price'   => $certifiedPrice,
-                                            ],
-                                            [
-                                                'product'      => $standardProduct,
-                                                'pages'        => $stdPages,
-                                                'total'        => $finalStdTotal,
-                                                'urgency_type' => $finalStdUrg,
-                                                'urgency_add'  => $finalStdUrgAmt,
-                                                'base_price'   => $standardPrice,
-                                            ],
+                                            ['product' => $certifiedProduct, 'pages' => $certPages,
+                                             'total' => $certTotal, 'urgency_type' => $urgencyScenario['cert_urgency'],
+                                             'urgency_add' => $certUrgTotal, 'base_price' => $certifiedPrice],
+                                            ['product' => $standardProduct,  'pages' => $stdPages,
+                                             'total' => $stdTotal,  'urgency_type' => $urgencyScenario['std_urgency'],
+                                             'urgency_add' => $stdUrgTotal,  'base_price' => $standardPrice],
                                         ],
                                         'distance' => $distance,
                                     ];
-                                    $localDistance = $distance;
                                 }
                             }
                         }
                     }
                 }
 
-                return $localBest;
-            })->filter()->sortBy('distance')->first();
+                // Pick urgency result only if it is meaningfully better than none
+                $chosenResult = $noneResult;
+                if ($urgResult && $urgDistance < ($noneDistance - $urgencyTolerance)) {
+                    $chosenResult = $urgResult;
+                }
 
-            if ($results) {
-                $bestMatch    = $results['match'];
-                $bestDistance = $results['distance'];
+                if ($chosenResult) {
+                    $bestMatch    = $chosenResult['match'];
+                    $bestDistance = $chosenResult['distance'];
+                }
             }
         }
 
         if (!$bestMatch) {
+            // Fallback: try certified alone (none first, urgency only if needed)
             if ($certifiedProduct && $certifiedPrice > 0) {
-                $bestScenario = null;
-                $bestDistance = PHP_FLOAT_MAX;
-
                 $basePages      = ceil($invoiceAmount / $certifiedPrice);
                 $pagesToTry     = range(max(1, $basePages - 3), $basePages + 8);
-                $urgencyTypesToTry = array_merge(['none'], $certUrgencyTypes);
 
+                $noneScenario = null;
+                $noneDist     = PHP_FLOAT_MAX;
                 foreach ($pagesToTry as $pages) {
-                    foreach ($urgencyTypesToTry as $urgType) {
-                        $urgencyAdd = $this->computeUrgencyAmount($site, 'pages', $pages, $urgType);
-                        $total      = ($pages * $certifiedPrice) + $urgencyAdd;
-                        $distance   = abs($total - $invoiceAmount);
+                    $total    = $pages * $certifiedPrice;
+                    $distance = abs($total - $invoiceAmount);
+                    if ($distance < $noneDist) {
+                        $noneDist     = $distance;
+                        $noneScenario = ['product' => $certifiedProduct, 'pages' => $pages,
+                                         'total' => $total, 'urgency_type' => 'none',
+                                         'urgency_add' => 0, 'base_price' => $certifiedPrice];
+                    }
+                }
 
-                        if ($distance < $bestDistance) {
-                            $bestDistance = $distance;
-                            $bestScenario = [
-                                'product'      => $certifiedProduct,
-                                'pages'        => $pages,
-                                'total'        => $total,
-                                'urgency_type' => $urgType,
-                                'urgency_add'  => $urgencyAdd,
-                                'base_price'   => $certifiedPrice,
-                            ];
+                $bestScenario = $noneScenario;
+                $bestDist     = $noneDist;
+
+                if ($noneDist > $urgencyTolerance && !empty($certUrgencyTypes)) {
+                    foreach ($pagesToTry as $pages) {
+                        foreach ($certUrgencyTypes as $urgType) {
+                            $urgencyAdd = $this->computeUrgencyAmount($site, 'pages', $pages, $urgType);
+                            $total      = ($pages * $certifiedPrice) + $urgencyAdd;
+                            $distance   = abs($total - $invoiceAmount);
+                            if ($distance < $bestDist) {
+                                $bestDist     = $distance;
+                                $bestScenario = ['product' => $certifiedProduct, 'pages' => $pages,
+                                                 'total' => $total, 'urgency_type' => $urgType,
+                                                 'urgency_add' => $urgencyAdd, 'base_price' => $certifiedPrice];
+                            }
                         }
                     }
                 }
 
                 if ($bestScenario) {
-                    $applyUrgency = $bestScenario['urgency_type'] !== 'none' && (rand(1, 100) <= $urgencyChance);
-                    if (!$applyUrgency) {
-                        $bestScenario['urgency_type'] = 'none';
-                        $bestScenario['urgency_add']  = 0;
-                        $bestScenario['total']        = $bestScenario['pages'] * $certifiedPrice;
-                    }
-                    $bestMatch = [[$bestScenario]];
+                    $bestMatch    = [[$bestScenario]];
+                    $bestDistance = $bestDist;
                 }
             }
 
+            // Fallback: try standard alone if still no good match
             if ($standardProduct && $standardPrice > 0 && (!$bestMatch || $bestDistance > 50)) {
-                $bestScenario        = null;
-                $currentBestDistance = $bestMatch ? $bestDistance : PHP_FLOAT_MAX;
-                $urgencyTypesToTry   = array_merge(['none'], $stdUrgencyTypes);
-
                 $basePages  = max(250, ceil($invoiceAmount / $standardPrice));
                 $pagesToTry = range(max(250, $basePages - 100), $basePages + 500);
 
+                $noneScenario    = null;
+                $noneDist        = PHP_FLOAT_MAX;
                 foreach ($pagesToTry as $pages) {
                     if ($pages < 250) continue;
-                    foreach ($urgencyTypesToTry as $urgType) {
-                        $urgencyAdd = $this->computeUrgencyAmount($site, 'words', $pages, $urgType);
-                        $total      = ($pages * $standardPrice) + $urgencyAdd;
-                        $distance   = abs($total - $invoiceAmount);
+                    $total    = $pages * $standardPrice;
+                    $distance = abs($total - $invoiceAmount);
+                    if ($distance < $noneDist) {
+                        $noneDist     = $distance;
+                        $noneScenario = ['product' => $standardProduct, 'pages' => $pages,
+                                         'total' => $total, 'urgency_type' => 'none',
+                                         'urgency_add' => 0, 'base_price' => $standardPrice];
+                    }
+                }
 
-                        if ($distance < $currentBestDistance) {
-                            $currentBestDistance = $distance;
-                            $bestScenario = [
-                                'product'      => $standardProduct,
-                                'pages'        => $pages,
-                                'total'        => $total,
-                                'urgency_type' => $urgType,
-                                'urgency_add'  => $urgencyAdd,
-                                'base_price'   => $standardPrice,
-                            ];
+                $fallbackScenario = $noneScenario;
+                $fallbackDist     = $noneDist;
+
+                if ($noneDist > $urgencyTolerance && !empty($stdUrgencyTypes)) {
+                    foreach ($pagesToTry as $pages) {
+                        if ($pages < 250) continue;
+                        foreach ($stdUrgencyTypes as $urgType) {
+                            $urgencyAdd = $this->computeUrgencyAmount($site, 'words', $pages, $urgType);
+                            $total      = ($pages * $standardPrice) + $urgencyAdd;
+                            $distance   = abs($total - $invoiceAmount);
+                            if ($distance < $fallbackDist) {
+                                $fallbackDist     = $distance;
+                                $fallbackScenario = ['product' => $standardProduct, 'pages' => $pages,
+                                                     'total' => $total, 'urgency_type' => $urgType,
+                                                     'urgency_add' => $urgencyAdd, 'base_price' => $standardPrice];
+                            }
                         }
                     }
                 }
 
-                if ($bestScenario && $currentBestDistance < $bestDistance) {
-                    $applyUrgency = $bestScenario['urgency_type'] !== 'none' && (rand(1, 100) <= $urgencyChance);
-                    if (!$applyUrgency) {
-                        $bestScenario['urgency_type'] = 'none';
-                        $bestScenario['urgency_add']  = 0;
-                        $bestScenario['total']        = $bestScenario['pages'] * $standardPrice;
-                    }
-                    $bestMatch = [[$bestScenario]];
+                if ($fallbackScenario && $fallbackDist < $bestDistance) {
+                    $bestMatch    = [[$fallbackScenario]];
+                    $bestDistance = $fallbackDist;
                 }
             }
         }
