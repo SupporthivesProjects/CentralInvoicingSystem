@@ -283,7 +283,7 @@
             const src = ctx.createBufferSource();
             src.buffer = buf;
             const gain = ctx.createGain();
-            gain.gain.setValueAtTime(0.6, ctx.currentTime);
+            gain.gain.setValueAtTime(0.15, ctx.currentTime);
             gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.04);
             src.connect(gain);
             gain.connect(ctx.destination);
