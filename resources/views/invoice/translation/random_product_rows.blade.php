@@ -45,13 +45,7 @@
         <td class="text-center">
             <div class="input-group">
                 <input form="generate-invoice-form" type="number" class="form-control product-pages text-center" name="products[{{ $product->id }}][pages]" value="{{ $product->pages }}" min="1" data-product-id="{{ $product->id }}" data-unit-type="{{ $product->unit_type ?? 'pages' }}" aria-label="Number of pages or words" />
-                <span class="input-group-text fw-bold text-primary px-2"
-                    data-bs-toggle="tooltip"
-                    data-bs-placement="right"
-                    title="{{ ucfirst($product->unit_type ?? 'pages') }}"
-                    style="font-size:11px;cursor:default;background:#f8f9fa;">
-                    {{ strtoupper(substr($product->unit_type ?? 'pages', 0, 1)) }}
-                </span>
+                <span class="input-group-text">{{ $product->unit_type ?? 'pages' }}</span>
             </div>
         </td>
 
