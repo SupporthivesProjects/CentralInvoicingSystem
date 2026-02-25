@@ -915,6 +915,26 @@ class WordPressController extends Controller
                 if ($updateResponse->successful()) {
                     Log::info("Updated price for product ID {$product_id} from {$current_price} to {$new_price}");
 
+
+                    $productName = strtolower(trim($product->name));
+
+                    $isCertified = $productName === 'certified translation';
+
+                    $isStandard = str_contains($productName, 'standard professional translation') ||
+                                str_contains($productName, 'standard translation') ||
+                                str_contains($productName, 'business translation');
+
+                    if ($isCertified) {
+                        $site->urgency_12h_per_page = $new_price;
+                        $site->urgency_24h_per_page = round($new_price / 2, 2);
+                    } elseif ($isStandard) {
+                        $site->urgency_12h_per_word = $new_price;
+                        $site->urgency_24h_per_word = round($new_price / 2, 2);
+                    }
+
+                    $site->save();
+
+
                     if ($shouldUpdateHistory) {
                         ProductPriceHistory::create([
                             'site_id'            => $site_id,
