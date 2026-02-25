@@ -163,7 +163,7 @@ function refreshTooltipsForGroup($group, pages) {
         } else {
             var rate     = parseFloat($radio.data('rate')) || 0;
             var urgTotal = (urgencyType === 'flat') ? rate : (rate * pages);
-            tipText = '+' + siteCurrency + urgTotal.toFixed(2);
+            tipText = '+ ' + siteCurrency + urgTotal.toFixed(2);
         }
 
         var existing = bootstrap.Tooltip.getInstance($radio[0]);
