@@ -213,9 +213,10 @@ class WordPressController extends Controller
             //     'standard'  => $hasUrgency && rand(0, 1) === 1,
             // ];
 
+            // ~25% chance each
             $preSelectedUrgency = [
-                'certified' => $hasUrgency && rand(1, 10) <= 4,
-                'standard'  => $hasUrgency && rand(1, 10) <= 4,
+                'certified' => $hasUrgency && rand(0, 3) === 0,
+                'standard'  => $hasUrgency && rand(0, 3) === 0,
             ];
             // Deduct urgency cost from invoice amount first
             $urgentCost = 0;
