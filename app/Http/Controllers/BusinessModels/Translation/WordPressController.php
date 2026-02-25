@@ -189,11 +189,10 @@ class WordPressController extends Controller
             ]);
         }
 
-        // Flat urgency options (same as LaravelController)
-        $urgencyOptions = $this->getAvailableUrgencyOptions($site, 'pages'); // flat only, same for all
-        $hasUrgency     = !empty($urgencyOptions);
+        $certUrgencyOptions = $this->getAvailableUrgencyOptions($site, 'pages');
+        $stdUrgencyOptions  = $this->getAvailableUrgencyOptions($site, 'words');
+        $hasUrgency         = !empty($certUrgencyOptions) || !empty($stdUrgencyOptions);
 
-        // Last-params deduplication (same pattern as LaravelController)
         $lastParamsRaw = session()->get('last_wp_translation_params', []);
         $lastParams = [
             'certified_pages'   => $lastParamsRaw['certified_pages']   ?? null,
@@ -216,11 +215,15 @@ class WordPressController extends Controller
 
             // Deduct urgency cost from invoice amount first
             $urgentCost = 0;
-            if ($preSelectedUrgency['certified'] && $certifiedProduct) {
-                $urgentCost += $this->computeUrgencyAmount($site, 'pages', 1, 'flat');
+            if ($preSelectedUrgency['certified'] && $certifiedProduct && !empty($certUrgencyOptions)) {
+                $keys        = array_keys($certUrgencyOptions);
+                $randomKey   = $keys[array_rand($keys)];
+                $urgentCost += $this->computeUrgencyAmount($site, 'pages', 1, $randomKey);
             }
-            if ($preSelectedUrgency['standard'] && $standardProduct) {
-                $urgentCost += $this->computeUrgencyAmount($site, 'words', 1, 'flat');
+            if ($preSelectedUrgency['standard'] && $standardProduct && !empty($stdUrgencyOptions)) {
+                $keys        = array_keys($stdUrgencyOptions);
+                $randomKey   = $keys[array_rand($keys)];
+                $urgentCost += $this->computeUrgencyAmount($site, 'words', 1, $randomKey);
             }
 
             $adjustedAmount = $invoiceAmount - $urgentCost;
@@ -346,25 +349,25 @@ class WordPressController extends Controller
 
                 if ($isWordBased && $pages < 250) continue;
 
-                $urgencyType = 'none';
-                $urgencyAdd  = 0;
+                $unitType           = $isCertified ? 'pages' : 'words';
+                $availableUrgency   = $isCertified ? $certUrgencyOptions : $stdUrgencyOptions;
+                $shouldApplyUrgency = $isCertified ? $preSelectedUrgency['certified'] : $preSelectedUrgency['standard'];
+                $urgencyType        = 'none';
+                $urgencyAdd         = 0;
 
-                if ($isCertified && $preSelectedUrgency['certified']) {
-                    $urgencyType = 'flat';
-                    $urgencyAdd  = $this->computeUrgencyAmount($site, 'pages', $pages, 'flat');
-                } elseif (!$isCertified && $preSelectedUrgency['standard']) {
-                    $urgencyType = 'flat';
-                    $urgencyAdd  = $this->computeUrgencyAmount($site, 'words', $pages, 'flat');
+                if ($shouldApplyUrgency && !empty($availableUrgency)) {
+                    $keys        = array_keys($availableUrgency);
+                    $urgencyType = $keys[array_rand($keys)];
+                    $urgencyAdd  = $this->computeUrgencyAmount($site, $unitType, $pages, $urgencyType);
                 }
 
                 $product->unit_price      = $basePrice;
                 $product->pages           = $pages;
-                $product->unit_type       = $isCertified ? 'pages' : 'words';
+                $product->unit_type       = $unitType;
                 $product->urgency_type    = $urgencyType;
                 $product->urgency_add     = $urgencyAdd;
-                $product->urgency_options = $this->getAvailableUrgencyOptions($site, $isCertified ? 'pages' : 'words');
+                $product->urgency_options = $availableUrgency;
                 $product->line_total      = ($basePrice * $pages) + $urgencyAdd;
-
                 if ($isCertified) {
                     $product->product_url               = $site->certified_translation_url ?? $site->site_link;
                     $currentParams['certified_pages']   = $pages;
