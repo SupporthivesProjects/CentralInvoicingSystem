@@ -924,12 +924,13 @@ class WordPressController extends Controller
                                 str_contains($productName, 'standard translation') ||
                                 str_contains($productName, 'business translation');
 
+                                
                     if ($isCertified) {
                         $site->urgency_12h_per_page = $new_price;
-                        $site->urgency_24h_per_page = round($new_price / 2, 2);
+                        $site->urgency_24h_per_page = round($new_price / 2, 4);
                     } elseif ($isStandard) {
                         $site->urgency_12h_per_word = $new_price;
-                        $site->urgency_24h_per_word = round($new_price / 2, 2);
+                        $site->urgency_24h_per_word = round($new_price / 2, 4);
                     }
 
                     $site->save();
