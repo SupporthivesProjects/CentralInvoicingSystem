@@ -45,14 +45,14 @@ class WordPressController extends Controller
         if ($unitType === 'pages') {
             if (!empty($site->urgency_24h_per_page) && floatval($site->urgency_24h_per_page) > 0) {
                 $options['24h_per_page'] = [
-                    'label' => '24h Urgent',
+                    'label' => '24h hours',
                     'rate'  => floatval($site->urgency_24h_per_page),
                     'key'   => '24h_per_page',
                 ];
             }
             if (!empty($site->urgency_12h_per_page) && floatval($site->urgency_12h_per_page) > 0) {
                 $options['12h_per_page'] = [
-                    'label' => '12h Urgent',
+                    'label' => '12h hours',
                     'rate'  => floatval($site->urgency_12h_per_page),
                     'key'   => '12h_per_page',
                 ];
@@ -60,14 +60,14 @@ class WordPressController extends Controller
         } else {
             if (!empty($site->urgency_24h_per_word) && floatval($site->urgency_24h_per_word) > 0) {
                 $options['24h_per_word'] = [
-                    'label' => '24h Urgent',
+                    'label' => '24h hours',
                     'rate'  => floatval($site->urgency_24h_per_word),
                     'key'   => '24h_per_word',
                 ];
             }
             if (!empty($site->urgency_12h_per_word) && floatval($site->urgency_12h_per_word) > 0) {
                 $options['12h_per_word'] = [
-                    'label' => '12h Urgent',
+                    'label' => '12h hours',
                     'rate'  => floatval($site->urgency_12h_per_word),
                     'key'   => '12h_per_word',
                 ];
@@ -76,7 +76,7 @@ class WordPressController extends Controller
 
         if (!empty($site->urgency_amount) && floatval($site->urgency_amount) > 0) {
             $options['flat'] = [
-                'label' => 'Urgent (Flat)',
+                'label' => 'Urgent',
                 'rate'  => floatval($site->urgency_amount),
                 'key'   => 'flat',
             ];
