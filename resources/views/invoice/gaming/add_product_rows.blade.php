@@ -3,24 +3,18 @@
         $captureFields = json_decode($product->game_need_to_capture ?? '{}', true);
     @endphp
 
-    {{-- Main Row --}}
     <tr class="align-middle product-row" id="customize-product-row-{{ $product->id }}">
-        <!-- 1️⃣ SR. NO. -->
         <td class="text-center">{{ $index + 1 }}</td>
 
-        <!-- 2️⃣ GAME NAME -->
         <td>
             {{ $product->name }}
             @if($site->site_link && $product->slug)
-                <!-- <a href="{{ $site->site_link }}games" target="_blank" title="View Product">🔗</a> -->
-                 <a href="{{ $site->site_link.'games/'.$product->slug }}" target="_blank" title="View Product"><i class="bi bi-box-arrow-up-right ms-1"></i></a>
+                <a href="{{ $site->site_link.'games/'.$product->slug }}" target="_blank" title="View Product"><i class="bi bi-box-arrow-up-right ms-1"></i></a>
             @endif
         </td>
 
-        <!-- 3️⃣ GAME CURRENCY -->
         <td>{{ $product->game_currency }}</td>
 
-        <!-- 4️⃣ GAME CURRENCY AMOUNT -->
         <td class="text-center">
             <div class="input-group">
                 <span class="input-group-text">{{ $product->game_currency }}</span>
@@ -29,15 +23,13 @@
             </div>
         </td>
 
-        <!-- 5️⃣ UNIT PRICE -->
         <td>
             <div class="input-group">
-                <span class="input-group-text"  data-bs-toggle="tooltip" title="{{ site_currency_code() }}">{{ site_currency() }}</span>
+                <span class="input-group-text" data-bs-toggle="tooltip" title="{{ site_currency_code() }}">{{ site_currency() }}</span>
                 <input type="text" class="form-control add-product-price text-center dynamic-input" value="0.00" data-product-id="{{ $product->id }}">
             </div>
         </td>
 
-        <!-- 6️⃣ SELECT -->
         <td class="text-center">
             <div class="form-check d-flex justify-content-center align-items-center m-0">
                 <input class="form-check-input border border-primary narayan-checkbox" type="checkbox" name="add_product_ids[]" value="{{ $product->id }}">
@@ -89,70 +81,32 @@
         });
     });
 </script>
+
 <script>
     $(document).on('keyup change', '.add-product-price', function () {
         const $priceInput = $(this);
         const productId = $priceInput.data('product-id');
 
-        if (!productId) return;
-
-        if ($priceInput.prop('readonly')) return;
+        if (!productId || $priceInput.prop('readonly')) return;
 
         const $hiddenAmountInput = $(`input[name="custom_products[${productId}][bundle_first_amount]"]`);
-        let rawAmount = $hiddenAmountInput.val().toString().trim();
+        const rawAmount = $hiddenAmountInput.val().toString().trim();
 
-        let numericAmount = parseFloat(rawAmount.replace(/[^0-9.]/g, '')) || 0;
-
-        if (/l$/i.test(rawAmount)) {
-            numericAmount *= 100000;
-        } else if (/mill/i.test(rawAmount)) {
-            numericAmount *= 1000000;
-        }
+        const lastChar = rawAmount.slice(-1);
+        const hasSuffix = isNaN(lastChar);
+        const modifiedStr = hasSuffix ? rawAmount.slice(0, -1) : rawAmount;
+        const baseAmount = parseFloat(modifiedStr) || 0;
 
         const unitPrice = parseFloat($priceInput.val()) || 0;
+        const currencyFactor = parseFloat(@json($currencyFactor ?? 1.0));
 
-        const totalAmount = Math.round(numericAmount * unitPrice);
+        const calculated = Math.floor(unitPrice * baseAmount * currencyFactor);
+        const displayValue = hasSuffix ? calculated + lastChar : calculated.toString();
 
-        const $currencyInput = $(`input[data-product-id="${productId}"]`).filter(function () {
-            return $(this).prop('readonly');
-        });
-
-        $currencyInput.val(totalAmount);
+        $(`.add-currency-amount[data-product-id="${productId}"]`).val(displayValue);
     });
 </script>
 
-<script>
-    $(document).ready(function () {
-        let originalAmount = parseFloat(@json(session('current_amount', 0)));
-
-        function updateTempTotal() {
-            let selectedTotal = 0;
-
-            $('input[name="add_product_ids[]"]:checked').each(function () {
-                let productId = $(this).val();
-                let priceInput = $('.add-product-price[data-product-id="' + productId + '"]');
-                let price = parseFloat(priceInput.val()) || 0;
-                selectedTotal += price;
-            });
-
-            let tempTotal = originalAmount + selectedTotal;
-            let invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
-            let discountAmount = 0;
-
-            if (tempTotal > invoiceAmount) {
-                discountAmount = tempTotal - invoiceAmount;
-            }
-
-            $('#temp_current_amount_text').text(tempTotal.toFixed(2));
-            $('#temp_discount_amount_text').text(discountAmount.toFixed(2));
-            $('#temp_invoice_amount_text').text(invoiceAmount.toFixed(2));
-        }
-
-        $(document).on('input change', 'input[name="add_product_ids[]"], .add-product-price, #invoice_amount', function () {
-            updateTempTotal();
-        });
-    });
-</script>
 <script>
     $(document).ready(function () {
         $('#add-custom-products').off('click').on('click', function () {
@@ -172,15 +126,10 @@
                     return false;
                 }
 
-                let bundleFirstAmount = parseFloat($row.find('input[name$="[bundle_first_amount]"]').val()) || 0;
-                let currencyAmount = (bundleFirstAmount * unitPrice) + '0';
-
                 let gameName = $row.find('td:nth-child(2)').clone().children().remove().end().text().trim();
                 let gameCurrency = $row.find('td:nth-child(3)').text().trim();
 
                 let selectedPlatform = $collapseRow.find('.select-platform').val();
-
-                let platformRequired = $collapseRow.find('.platform-section').length > 0;
 
                 let platformFields = {};
                 let missingFields = false;
@@ -205,11 +154,6 @@
                         return false;
                     }
                 }
-
-                let userInputFields = {
-                    selected_platform: selectedPlatform,
-                    platform_fields: platformFields
-                };
 
                 selectedProducts.push({
                     id: productId,
@@ -275,17 +219,6 @@
                 toastr.error('Please select product(s) to add.');
             }
         });
-
-        $('.add-product-price:not([readonly])').on('input', function () {
-            let productId = $(this).data('product-id');
-            let unitPrice = parseFloat($(this).val()) || 0;
-            let $row = $('#customize-product-row-' + productId);
-
-            let bundleFirstAmount = parseFloat($row.find('input[name$="[bundle_first_amount]"]').val()) || 0;
-            let calculatedAmount = bundleFirstAmount;
-
-            $row.find('.add-product-price[readonly]').val(calculatedAmount.toFixed(2));
-        });
     });
 </script>
 
@@ -330,7 +263,6 @@
 </script>
 
 <script>
-    // Checkbox Validation Function
     function validateSelectedProducts() {
         const selected = document.querySelectorAll('input[name="add_product_ids[]"]:checked');
         if (selected.length === 0) {
@@ -339,14 +271,12 @@
         return true;
     }
 
-    // Example: Hook to a button (replace #your-submit-button with your actual button ID)
     document.getElementById('add-custom-products')?.addEventListener('click', function(e) {
         if (!validateSelectedProducts()) {
             e.preventDefault();
         }
     });
 
-    // Optional: Prevent row click toggles (since we removed collapse)
     document.querySelectorAll('.product-row').forEach(row => {
         row.addEventListener('click', function(e) {
             if (e.target.closest('input, select, label')) {
@@ -354,4 +284,4 @@
             }
         });
     });
-    </script>
+</script>

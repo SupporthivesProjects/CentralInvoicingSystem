@@ -37,6 +37,18 @@ class LaravelController extends Controller
         $this->bundleTable = 'game_sever_based_cost';
     }
 
+    private function getCurrencyFactor(string $code): float
+    {
+        return match(strtoupper($code)) {
+            'USD' => 1.00,
+            'EUR' => 1.08,
+            'GBP' => 1.29,
+            'CAD' => 0.70,
+            'AUD' => 0.63,
+            default => 1.00,
+        };
+    }
+
     public function getPriceRange(Request $request)
     {
         $site_id = session('customer.site_id');
@@ -46,35 +58,35 @@ class LaravelController extends Controller
         $max_unit_price = DB::connection($this->connectionType)->table($this->productTable)->where('published', 1)->max('unit_price');
         return response()->json(['minProductPrice' => $min_unit_price, 'maxProductPrice' => $max_unit_price]);
     }
-    
+
     public function randomProducts(Request $request)
     {
         Session::forget('selected_products');
-    
+
         $site_id = $request->get('site_id');
         $invoiceAmount = floatval($request->get('invoice_amount'));
         $priceFrom = $request->get('price_from');
         $priceTo = $request->get('price_to');
-    
+
         if ($site_id == 233) {
             $priceFrom = 10;
             $priceTo = 100;
         }
-    
+
         $productCount = intval($request->get('product_count'));
         $searchQuery = $request->get('search_query');
-    
+
         $minTotal = $invoiceAmount;
         $maxTotal = $invoiceAmount * 1.05;
-    
+
         $site = Website::findOrFail($site_id);
         DynamicDatabaseService::connect($site);
-    
+
         $productsQuery = DB::connection($this->connectionType)
             ->table('products as p')
             ->join('game_sever_based_cost as c', 'p.id', '=', 'c.game_id')
             ->where('p.published', 1);
-    
+
         if ($searchQuery) {
             $productsQuery->where(function($query) use ($searchQuery) {
                 $query->where('p.name', 'like', '%' . $searchQuery . '%')
@@ -83,7 +95,7 @@ class LaravelController extends Controller
                     ->orWhere('p.game_server_region', 'like', '%' . $searchQuery . '%');
             });
         }
-    
+
         $products = $productsQuery->select(
             'p.id',
             'p.name',
@@ -96,31 +108,31 @@ class LaravelController extends Controller
             'c.game_id',
             'c.costs',
         )->get();
-    
+
         $allProducts = collect();
         $alreadyAdded = [];
-    
+
         foreach ($products as $product) {
             $costs = json_decode($product->costs, true);
-    
+
             if (isset($costs['bundles']) && is_array($costs['bundles'])) {
                 foreach ($costs['bundles'] as $bundleAmount => $unitPrice) {
                     $unitPrice = floatval($unitPrice);
-    
+
                     $uniqueKey = $product->id . '-' . $bundleAmount;
-    
+
                     if (isset($alreadyAdded[$uniqueKey])) {
                         continue;
                     }
-    
+
                     if ($priceFrom && $priceTo) {
                         if ($unitPrice < $priceFrom || $unitPrice > $priceTo) {
                             continue;
                         }
                     }
-    
+
                     $alreadyAdded[$uniqueKey] = true;
-    
+
                     $allProducts->push((object)[
                         'id' => $product->id,
                         'bundle_id' => $product->bundle_id,
@@ -139,57 +151,50 @@ class LaravelController extends Controller
                 }
             }
         }
-    
+
         if ($searchQuery && !$request->has('randomize')) {
             $results = $allProducts->sortBy('unit_price');
-    
+
             if ($productCount > 0) {
                 $results = $results->take($productCount);
             } else {
                 $results = $results->take(60);
             }
-    
+
             $totalPrice = $results->sum('unit_price');
             session(['current_amount' => $totalPrice]);
-    
-            $currency = DB::connection($this->connectionType)
-                ->table('currencies')
-                ->where('status', 1)
-                ->first();
-    
+
             $modelType = $site->businessModel->model_type;
-    
+
             $tableRows = view("invoice.{$modelType}.random_product_rows", [
                 'products' => $results,
-                'currency' => $currency,
                 'site' => $site
             ])->render();
-    
+
             return response()->json([
                 'tableRows' => $tableRows,
                 'total' => $totalPrice,
-                'currency' => $currency,
                 'is_random' => false
             ]);
         }
-    
+
         $allProducts = $allProducts->sortByDesc('unit_price')->shuffle()->take(60);
-    
+
         $bestMatch = null;
         $bestTotal = 0;
-    
+
         for ($i = 0; $i < 10; $i++) {
             $shuffled = $allProducts->shuffle();
             $selected = [];
             $currentTotal = 0;
-    
+
             foreach ($shuffled as $product) {
                 $price = floatval($product->unit_price);
-    
+
                 if (($currentTotal + $price) <= $maxTotal) {
                     $selected[] = $product;
                     $currentTotal += $price;
-    
+
                     if ($productCount > 0) {
                         if (count($selected) == $productCount && $currentTotal >= $minTotal) {
                             $bestMatch = $selected;
@@ -206,21 +211,21 @@ class LaravelController extends Controller
                 }
             }
         }
-    
+
         if (!$bestMatch) {
             session()->forget('selected_games');
             session()->forget('current_amount');
-    
+
             return response()->json([
                 'tableRows' => '',
                 'total' => 0,
                 'message' => 'No matching combination found, try again please'
             ]);
         }
-    
+
         session()->forget('selected_games');
         $selected_games = [];
-    
+
         foreach ($bestMatch as $game) {
             $selected_games[] = [
                 'id' => $game->id,
@@ -230,27 +235,20 @@ class LaravelController extends Controller
                 'bundle' => 'Random',
             ];
         }
-    
+
         session(['selected_games' => $selected_games]);
-    
-        $currency = DB::connection($this->connectionType)
-            ->table('currencies')
-            ->where('status', 1)
-            ->first();
-    
+
         $modelType = $site->businessModel->model_type;
         session(['current_amount' => $bestTotal]);
-    
+
         $tableRows = view("invoice.{$modelType}.random_product_rows", [
             'products' => $bestMatch,
-            'currency' => $currency,
             'site' => $site
         ])->render();
-    
+
         return response()->json([
             'tableRows' => $tableRows,
             'total' => $bestTotal,
-            'currency' => $currency,
             'is_random' => true
         ]);
     }
@@ -262,18 +260,14 @@ class LaravelController extends Controller
         $site_id = $request->get('site_id');
 
         $selectedGames = session('selected_games', []);
-        //dd($selectedGames);
 
-        // Remove matching bundle (id + unit_price)
         $updatedGames = array_filter($selectedGames, function ($game) use ($id, $unitPrice) {
             return !($game['id'] == $id && floatval($game['unit_price']) == floatval($unitPrice));
         });
 
         $updatedGames = array_values($updatedGames);
 
-        // Update session
         session(['selected_games' => $updatedGames]);
-        //dd($updatedGames);
 
         if (empty($updatedGames)) {
             session()->forget('current_amount');
@@ -288,12 +282,7 @@ class LaravelController extends Controller
         $site = Website::findOrFail($site_id);
         DynamicDatabaseService::connect($site);
 
-        $currency = DB::connection($this->connectionType)
-            ->table('currencies')->where('status', 1)->first();
-
         $modelType = $site->businessModel->model_type;
-
-        $productIds = array_column($updatedGames, 'id');
 
         $finalProducts = collect();
 
@@ -315,7 +304,6 @@ class LaravelController extends Controller
                 )
                 ->first();
 
-                //dd($product);
             if ($product) {
                 $finalProducts->push((object)[
                     'id'             => $product->id,
@@ -327,20 +315,19 @@ class LaravelController extends Controller
                     'can_edit_price' => 0,
                     'remaining_days' => 0,
                     'game_currency'  => $product->game_currency,
-                    'game_currency_amount' => $sessionGame['game_currency_amount'] ?? '',
+                    'game_currency_amount' => (string)($sessionGame['game_currency_amount'] ?? ''),
                     'game_platform'  => $product->game_platform,
                     'game_region'    => $product->game_server_region,
                     'game_need_to_capture' => $product->game_need_to_capture
                 ]);
             }
         }
+
         $bestTotal = $finalProducts->sum('unit_price');
         session(['current_amount' => $bestTotal]);
-        //dd($finalProducts);
 
         $tableRows = view("invoice.{$modelType}.random_product_rows", [
             'products' => $finalProducts,
-            'currency' => $currency,
             'site'     => $site
         ])->render();
 
@@ -349,10 +336,8 @@ class LaravelController extends Controller
         return response()->json([
             'tableRows' => $tableRows,
             'total'     => $total,
-            'currency'  => $currency
         ]);
     }
-
 
     public function filterProducts(Request $request)
     {
@@ -361,13 +346,14 @@ class LaravelController extends Controller
         DynamicDatabaseService::connect($site);
 
         $hasKeyword = $request->filled('keyword');
+
         $costSubquery = DB::connection($this->connectionType)
-        ->table('game_sever_based_cost')
-        ->select(
-            'game_id',
-            DB::raw('MAX(COALESCE(bundle_first_amount, avg_amount)) as bundle_first_amount')
-        )
-        ->groupBy('game_id');
+            ->table('game_sever_based_cost')
+            ->select(
+                'game_id',
+                DB::raw('MAX(COALESCE(bundle_first_amount, avg_amount)) as bundle_first_amount')
+            )
+            ->groupBy('game_id');
 
         $products = DB::connection($this->connectionType)
             ->table('products as p')
@@ -397,24 +383,20 @@ class LaravelController extends Controller
             ]);
         }
 
-        $currency = DB::connection($this->connectionType)
-            ->table('currencies')
-            ->where('status', 1)
-            ->first();
+        $currencyFactor = $this->getCurrencyFactor(site_currency_code());
+        $modelType = optional($site->businessModel)->model_type ?? 'default';
 
-        $modelType = $site->businessModel->model_type;
-        //dd(session('current_amount'));
         $tableRows = view("invoice.{$modelType}.add_product_rows", [
-            'products' => $products,
-            'currency' => $currency,
-            'site'     => $site,
+            'products'       => $products,
+            'site'           => $site,
             'current_amount' => session('current_amount'),
+            'currencyFactor' => $currencyFactor,
         ])->render();
 
         return response()->json([
-            'tableRows' => $tableRows,
-            'currency'  => $currency,
-            'is_random' => false
+            'tableRows'      => $tableRows,
+            'currencyFactor' => $currencyFactor,
+            'is_random'      => false
         ]);
     }
 
@@ -427,61 +409,49 @@ class LaravelController extends Controller
         $selected = $request->input('selected_games');
         $existing = session('selected_games', []);
 
-        // Normalize existing into an assoc array
         $existingAssoc = [];
         $seenKeys = [];
 
-        // Merge existing session games with the new selected games
         foreach ($existing as $item) {
             $game_id = $item['id'];
-            $bundle_amount = (float) $item['game_currency_amount'];
+            $bundle_amount = (string)$item['game_currency_amount'];
             $key = "{$game_id}-{$bundle_amount}-custom";
 
-            // Only add unique keys from existing session data
             if (!in_array($key, $seenKeys)) {
                 $existingAssoc[] = [
                     'id'                   => (int)$game_id,
                     'unit_price'           => number_format((float) $item['unit_price'], 2, '.', ''),
-                    'game_currency_amount' => (string)$bundle_amount,
+                    'game_currency_amount' => $bundle_amount,
                     'bundle'               => 'custom',
                 ];
                 $seenKeys[] = $key;
             }
         }
 
-        // Add the selected games to existing session data if they are not already added
         foreach ($selected as $gameData) {
             $game_id = $gameData['product_id'] ?? $gameData['id'];
-            $bundle_amount = (float) $gameData['game_currency_amount'];
-
-            // Create a unique key for the selected game based on game_id and bundle_amount
+            $bundle_amount = (string)$gameData['game_currency_amount'];
             $key = "{$game_id}-{$bundle_amount}-custom";
 
-            // Only add the game if it's not already in the session data
             if (!in_array($key, $seenKeys)) {
                 $existingAssoc[] = [
                     'id'                   => (int)$game_id,
                     'unit_price'           => number_format((float) $gameData['unit_price'], 2, '.', ''),
-                    'game_currency_amount' => (string)$bundle_amount,
+                    'game_currency_amount' => $bundle_amount,
                     'bundle'               => 'custom',
                 ];
                 $seenKeys[] = $key;
             }
         }
 
-        // Update session with merged data
         session(['selected_games' => $existingAssoc]);
 
-        // Pass the updated games to getGameDetails function
         $finalProducts = $this->getGameDetails($existingAssoc);
         $bestTotal = $finalProducts->sum('unit_price');
         session(['current_amount' => $bestTotal]);
-        //dd($finalProducts);
-
 
         $modelType = $site->businessModel->model_type;
 
-        // Generate table row HTML
         $tableRows = view("invoice.{$modelType}.random_product_rows", [
             'products' => $finalProducts,
             'site'     => $site,
@@ -495,7 +465,6 @@ class LaravelController extends Controller
             'products'  => $finalProducts,
         ]);
     }
-
 
     public function generateInvoice(Request $request)
     {
@@ -513,12 +482,12 @@ class LaravelController extends Controller
             $invoice_data['company_address']     = $request->input('remote_company_address') ?? '';
             $invoice_data['registration_number'] = $request->input('remote_registration_number') ?? '';
             $invoice_data['license_number']      = $request->input('remote_license_number') ?? '';
-        
+
             $remote_database = DB::connection($this->connectionType)
                 ->table('general_settings')
                 ->orderByDesc('updated_at')
                 ->first();
-        
+
             if ($remote_database) {
                 DB::connection($this->connectionType)
                     ->table('general_settings')
@@ -531,9 +500,9 @@ class LaravelController extends Controller
                         'updated_at' => now(),
                     ]);
             }
-        
+
         } else {
-        
+
             $invoice_data['site_name']           = $request->input('local_site_name') ?? '';
             $invoice_data['company_name']        = $request->input('local_company_name') ?? '';
             $invoice_data['company_email']       = $request->input('local_company_email') ?? '';
@@ -541,7 +510,7 @@ class LaravelController extends Controller
             $invoice_data['company_address']     = $request->input('local_company_address') ?? '';
             $invoice_data['registration_number'] = $request->input('local_registration_number') ?? '';
             $invoice_data['license_number']      = $request->input('local_license_number') ?? '';
-        
+
             $site->site_name            = $invoice_data['site_name'];
             $site->company_name         = $invoice_data['company_name'];
             $site->company_email        = $invoice_data['company_email'];
@@ -551,7 +520,7 @@ class LaravelController extends Controller
             $site->license_number       = $invoice_data['license_number'];
             $site->save();
         }
-        
+
         $invoice_data = array_merge($invoice_data, [
             'site'                 => $site,
             'invoice_number'       => $request->input('invoice_number'),
@@ -596,6 +565,7 @@ class LaravelController extends Controller
         $this->updateProductPrice($products);
 
         InvoiceController::createInvoiceHistory($invoice_data, $processedProducts);
+
         if ($request->filled('invoice_file_name')) {
             $filename = $request->input('invoice_file_name') . '.pdf';
         } else {
@@ -604,9 +574,7 @@ class LaravelController extends Controller
 
         try {
             return $this->generateWithApi2Pdf($site, $viewPath, $invoice_data, $filename);
-
         } catch (\Exception $e) {
-            // Fallback to Dompdf if API2PDF fails
             return $this->generateWithDompdf($site, $viewPath, $invoice_data, $filename);
         }
     }
@@ -660,7 +628,6 @@ class LaravelController extends Controller
         }, $filename);
     }
 
-
     protected function updateProductPrice($productDataArray)
     {
         $site_id = session('customer.site_id');
@@ -674,7 +641,7 @@ class LaravelController extends Controller
         $updatedProducts = [];
         $blockedProducts = [];
         $errors = [];
-        $debugData = []; // Add a debug array to collect all relevant information
+        $debugData = [];
 
         foreach ($productDataArray as $index => $data) {
             $debugData[$index] = [
@@ -706,7 +673,6 @@ class LaravelController extends Controller
                     'unit_price' => $unit_price
                 ]);
 
-                // Establish dynamic DB connection
                 try {
                     DynamicDatabaseService::connect($site);
                     $debugData[$index]['processing_steps'][] = [
@@ -726,7 +692,6 @@ class LaravelController extends Controller
                     continue;
                 }
 
-                // Fetch row from game_sever_based_cost using bundle_id
                 try {
                     $costData = DB::connection($this->connectionType)
                         ->table('game_sever_based_cost')
@@ -762,7 +727,6 @@ class LaravelController extends Controller
                     continue;
                 }
 
-                // Parse JSON costs
                 try {
                     $costs = json_decode($costData->costs, true);
                     if (!isset($costs['bundles']) || !is_array($costs['bundles'])) {
@@ -798,7 +762,6 @@ class LaravelController extends Controller
                     continue;
                 }
 
-                // Find currency key
                 $currencyKey = null;
                 $keyFound = false;
 
@@ -849,7 +812,6 @@ class LaravelController extends Controller
                     'difference' => abs($currentPrice - $unit_price)
                 ]);
 
-                // Skip if price hasn't changed
                 if (abs($currentPrice - $unit_price) < 0.01) {
                     $debugData[$index]['processing_steps'][] = [
                         'step' => 'price_check',
@@ -860,7 +822,6 @@ class LaravelController extends Controller
                     continue;
                 }
 
-                // Check last price update history
                 try {
                     $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
                         ->where('product_id', $bundle_id)
@@ -894,7 +855,6 @@ class LaravelController extends Controller
                     continue;
                 }
 
-                // Only update if never updated OR 3+ months old
                 if (!$lastUpdate || Carbon::parse($lastUpdate->last_price_changed)->diffInDays(now()) >= 90) {
                     $debugData[$index]['processing_steps'][] = [
                         'step' => 'update_allowed',
@@ -902,11 +862,9 @@ class LaravelController extends Controller
                     ];
                     \Log::info("Update allowed - proceeding with update");
 
-                    // THIS IS THE KEY CHANGE - Update the price in the JSON structure
                     try {
                         $costs['bundles'][$currencyKey] = strval($unit_price);
 
-                        // Update the entire costs JSON in the database
                         $updated = DB::connection($this->connectionType)
                             ->table('game_sever_based_cost')
                             ->where('id', $bundle_id)
@@ -938,7 +896,6 @@ class LaravelController extends Controller
                         continue;
                     }
 
-                    // Create price history record
                     try {
                         \Log::info("Creating price history with:", [
                             'site_id' => $site_id,
@@ -980,7 +937,6 @@ class LaravelController extends Controller
                         ];
                         \Log::error("Error creating price history: " . $e->getMessage() . "\n" . $e->getTraceAsString());
                         $errors[] = "Error creating price history: " . $e->getMessage();
-                        // Don't continue here, we already updated the price in database
                     }
                 } else {
                     $daysRemaining = 90 - Carbon::parse($lastUpdate->last_price_changed)->diffInDays(now());
@@ -1026,30 +982,26 @@ class LaravelController extends Controller
             'errors_count' => count($errors)
         ]);
 
-        // Save the debug data to a file for inspection
         \Storage::disk('local')->put('price_update_debug_' . now()->format('Y-m-d_H-i-s') . '.json', json_encode($debugData, JSON_PRETTY_PRINT));
-        //dd($debugData);
+
         return [
             'db_prices' => $dbPrices,
             'user_prices' => $userPrices,
             'updated_products' => $updatedProducts,
             'blocked_products' => $blockedProducts,
             'errors' => $errors,
-            'debug_data' => $debugData // Include debug data in the response
+            'debug_data' => $debugData
         ];
     }
-
-
 
     private function getGameDetails(array $sessongames)
     {
         $site_id = session('customer.site_id');
         $site = Website::findOrFail($site_id);
         DynamicDatabaseService::connect($site);
-        // Extract unique product IDs from session data
+
         $ids = collect($sessongames)->pluck('id')->unique();
 
-        // Fetch product details from the database
         $productsData = DB::connection($this->connectionType)
             ->table('products')
             ->whereIn('id', $ids)
@@ -1065,28 +1017,25 @@ class LaravelController extends Controller
             ->get()
             ->keyBy('id');
 
-        // Combine session data with DB data
         $finalProducts = collect($sessongames)->map(function ($game) use ($productsData) {
             $product = $productsData[$game['id']] ?? null;
 
             return (object)[
-                'id' => $game['id'],
-                'unit_price' => number_format((float) $game['unit_price'], 2, '.', ''),
-                'game_currency_amount' => $game['game_currency_amount'],
-                //'bundle' => $game['bundle'],
-                'bundle_id' => rand(1000, 9999),
-                'source' => 'Custom',
-                'can_edit_price' => 1,
-                'remaining_days' => 1,
-                'name' => $product->name ?? 'Unknown',
-                'slug' => $product->slug ?? null,
-                'game_currency' => $product->game_currency ?? null,
-                'game_platform' => $product->game_platform ?? null,
-                'game_region' => $product->game_server_region ?? null,
+                'id'                   => $game['id'],
+                'unit_price'           => number_format((float) $game['unit_price'], 2, '.', ''),
+                'game_currency_amount' => (string)$game['game_currency_amount'],
+                'bundle_id'            => rand(1000, 9999),
+                'source'               => 'Custom',
+                'can_edit_price'       => 1,
+                'remaining_days'       => 1,
+                'name'                 => $product->name ?? 'Unknown',
+                'slug'                 => $product->slug ?? null,
+                'game_currency'        => $product->game_currency ?? null,
+                'game_platform'        => $product->game_platform ?? null,
+                'game_region'          => $product->game_server_region ?? null,
                 'game_need_to_capture' => $product->game_need_to_capture ?? null,
             ];
         });
-
 
         return $finalProducts;
     }
@@ -1106,8 +1055,6 @@ class LaravelController extends Controller
     public function updateProduct(Request $request)
     {
         $current_amount = $request->get('current_amount');
-
-
         session(['current_amount' => $current_amount]);
 
         return response()->json([
