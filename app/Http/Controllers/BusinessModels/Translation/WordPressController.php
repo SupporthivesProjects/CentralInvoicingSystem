@@ -208,11 +208,15 @@ class WordPressController extends Controller
         for ($attempt = 0; $attempt < $maxAttempts; $attempt++) {
 
             // Randomly pre-select urgency per product (same as LaravelController)
-            $preSelectedUrgency = [
-                'certified' => $hasUrgency && rand(0, 1) === 1,
-                'standard'  => $hasUrgency && rand(0, 1) === 1,
-            ];
+            // $preSelectedUrgency = [
+            //     'certified' => $hasUrgency && rand(0, 1) === 1,
+            //     'standard'  => $hasUrgency && rand(0, 1) === 1,
+            // ];
 
+            $preSelectedUrgency = [
+                'certified' => $hasUrgency && rand(1, 10) <= 4,
+                'standard'  => $hasUrgency && rand(1, 10) <= 4,
+            ];
             // Deduct urgency cost from invoice amount first
             $urgentCost = 0;
             if ($preSelectedUrgency['certified'] && $certifiedProduct && !empty($certUrgencyOptions)) {

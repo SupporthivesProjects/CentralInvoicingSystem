@@ -140,9 +140,13 @@ class LaravelController extends Controller
 
         for ($attempt = 0; $attempt < $maxAttempts; $attempt++) {
 
+            // $preSelectedUrgency = [
+            //     'certified' => $hasUrgency && rand(0, 1) === 1,
+            //     'standard'  => $hasUrgency && rand(0, 1) === 1,
+            // ];
             $preSelectedUrgency = [
-                'certified' => $hasUrgency && rand(0, 1) === 1,
-                'standard'  => $hasUrgency && rand(0, 1) === 1,
+                'certified' => $hasUrgency && rand(1, 10) <= 4,
+                'standard'  => $hasUrgency && rand(1, 10) <= 4,
             ];
 
             $urgentCost = 0;
