@@ -37,11 +37,32 @@ class LaravelController extends Controller
         $this->connectionType = 'dynamic';
     }
 
-    private function getUrgentAmount($site)
+    private function getAvailableUrgencyOptions($site)
     {
-        return (!empty($site->urgency_amount) && floatval($site->urgency_amount) > 0)
-            ? floatval($site->urgency_amount)
-            : 0;
+        $options = [];
+
+        if (!empty($site->urgency_amount) && floatval($site->urgency_amount) > 0) {
+            $options['flat'] = [
+                'label' => 'Urgent',
+                'rate'  => floatval($site->urgency_amount),
+                'key'   => 'flat',
+            ];
+        }
+
+        return $options;
+    }
+
+    private function computeUrgencyAmount($site, $urgencyType = null)
+    {
+        if (empty($urgencyType) || $urgencyType === 'none') {
+            return 0;
+        }
+
+        if ($urgencyType === 'flat') {
+            return floatval($site->urgency_amount ?? 0);
+        }
+
+        return 0;
     }
 
     public function randomProducts(Request $request)
@@ -102,14 +123,14 @@ class LaravelController extends Controller
         $standardPrice  = $standardTranslation  ? floatval($standardTranslation->unit_price)  : null;
 
         $lastParams = session()->get('last_translation_params', [
-            'certified_pages'  => null,
-            'standard_words'   => null,
-            'certified_urgent' => null,
-            'standard_urgent'  => null,
+            'certified_pages'   => null,
+            'standard_words'    => null,
+            'certified_urgency' => null,
+            'standard_urgency'  => null,
         ]);
 
-        $urgentAmount = $this->getUrgentAmount($site);
-        $hasUrgency   = $urgentAmount > 0;
+        $urgencyOptions = $this->getAvailableUrgencyOptions($site);
+        $hasUrgency     = !empty($urgencyOptions);
 
         $bestMatch        = null;
         $selectedProducts = null;
@@ -125,10 +146,10 @@ class LaravelController extends Controller
 
             $urgentCost = 0;
             if ($preSelectedUrgency['certified']) {
-                $urgentCost += $urgentAmount;
+                $urgentCost += $this->computeUrgencyAmount($site, 'flat');
             }
             if ($preSelectedUrgency['standard']) {
-                $urgentCost += $urgentAmount;
+                $urgentCost += $this->computeUrgencyAmount($site, 'flat');
             }
 
             $adjustedInvoiceAmount = $invoiceAmount - $urgentCost;
@@ -149,10 +170,10 @@ class LaravelController extends Controller
 
             $tempProducts = [];
             $currentParams = [
-                'certified_pages'  => null,
-                'standard_words'   => null,
-                'certified_urgent' => null,
-                'standard_urgent'  => null,
+                'certified_pages'   => null,
+                'standard_words'    => null,
+                'certified_urgency' => null,
+                'standard_urgency'  => null,
             ];
 
             foreach ($result['products'] as $item) {
@@ -171,31 +192,32 @@ class LaravelController extends Controller
                 }
 
                 $isCertified = Str::contains($productName, 'certified');
+                $urgencyType = 'none';
+                $urgencyAdd  = 0;
 
-                $product->pages        = $quantity;
-                $product->line_total   = $quantity * floatval($product->unit_price);
-                $product->urgent_amount = $urgentAmount;
-                $product->is_urgent    = 0;
-                $product->unit_type    = $isCertified ? 'pages' : 'words';
+                if ($isCertified && $preSelectedUrgency['certified']) {
+                    $urgencyType = 'flat';
+                    $urgencyAdd  = $this->computeUrgencyAmount($site, 'flat');
+                } elseif (!$isCertified && $preSelectedUrgency['standard']) {
+                    $urgencyType = 'flat';
+                    $urgencyAdd  = $this->computeUrgencyAmount($site, 'flat');
+                }
+
+                $product->pages           = $quantity;
+                $product->unit_type       = $isCertified ? 'pages' : 'words';
+                $product->urgency_type    = $urgencyType;
+                $product->urgency_add     = $urgencyAdd;
+                $product->urgency_options = $urgencyOptions;
+                $product->line_total      = ($quantity * floatval($product->unit_price)) + $urgencyAdd;
 
                 if ($isCertified) {
-                    $product->product_url              = $site->certified_translation_url ?? $site->site_link;
-                    $currentParams['certified_pages']  = $quantity;
-
-                    if ($preSelectedUrgency['certified']) {
-                        $product->is_urgent = 1;
-                        $product->line_total += $urgentAmount;
-                        $currentParams['certified_urgent'] = 1;
-                    }
+                    $product->product_url               = $site->certified_translation_url ?? $site->site_link;
+                    $currentParams['certified_pages']   = $quantity;
+                    $currentParams['certified_urgency'] = $urgencyType;
                 } else {
-                    $product->product_url             = $site->standard_translation_url ?? $site->site_link;
-                    $currentParams['standard_words']  = $quantity;
-
-                    if ($preSelectedUrgency['standard']) {
-                        $product->is_urgent = 1;
-                        $product->line_total += $urgentAmount;
-                        $currentParams['standard_urgent'] = 1;
-                    }
+                    $product->product_url              = $site->standard_translation_url ?? $site->site_link;
+                    $currentParams['standard_words']   = $quantity;
+                    $currentParams['standard_urgency'] = $urgencyType;
                 }
 
                 $tempProducts[] = $product;
@@ -217,12 +239,12 @@ class LaravelController extends Controller
                       $lastParams['standard_words'] !== null &&
                       $currentParams['standard_words'] == $lastParams['standard_words']) {
                 $isDifferent = false;
-            } elseif ($currentParams['certified_urgent'] !== null &&
-                      $lastParams['certified_urgent'] !== null &&
-                      $currentParams['certified_urgent'] == $lastParams['certified_urgent'] &&
-                      $currentParams['standard_urgent'] !== null &&
-                      $lastParams['standard_urgent'] !== null &&
-                      $currentParams['standard_urgent'] == $lastParams['standard_urgent']) {
+            } elseif ($currentParams['certified_urgency'] !== null &&
+                      $lastParams['certified_urgency'] !== null &&
+                      $currentParams['certified_urgency'] == $lastParams['certified_urgency'] &&
+                      $currentParams['standard_urgency'] !== null &&
+                      $lastParams['standard_urgency'] !== null &&
+                      $currentParams['standard_urgency'] == $lastParams['standard_urgency']) {
                 $isDifferent = false;
             } else {
                 $isDifferent = true;
@@ -269,13 +291,13 @@ class LaravelController extends Controller
 
         $productList = collect($selectedProducts)->map(function ($product) {
             return [
-                'id'            => $product->id,
-                'unit_price'    => $product->unit_price,
-                'pages'         => $product->pages,
-                'is_urgent'     => $product->is_urgent,
-                'urgent_amount' => $product->urgent_amount,
-                'unit_type'     => $product->unit_type,
-                'product_url'   => $product->product_url,
+                'id'           => $product->id,
+                'unit_price'   => $product->unit_price,
+                'pages'        => $product->pages,
+                'urgency_type' => $product->urgency_type,
+                'urgency_add'  => $product->urgency_add,
+                'unit_type'    => $product->unit_type,
+                'product_url'  => $product->product_url,
             ];
         })->toArray();
 
@@ -331,8 +353,8 @@ class LaravelController extends Controller
             return null;
         }
 
-        $targetBase            = $invoiceAmount;
-        $tolerancePercentages  = [0, 1, 2, 3, 4, 5, 6, 8, 10];
+        $targetBase           = $invoiceAmount;
+        $tolerancePercentages = [0, 1, 2, 3, 4, 5, 6, 8, 10];
         shuffle($tolerancePercentages);
 
         foreach ($tolerancePercentages as $percentage) {
@@ -673,9 +695,10 @@ class LaravelController extends Controller
 
     public function updateProduct(Request $request)
     {
-        $productId = $request->get('product_id');
-        $pages     = intval($request->get('pages'));
-        $siteId    = $request->get('site_id');
+        $productId   = $request->get('product_id');
+        $pages       = intval($request->get('pages'));
+        $siteId      = $request->get('site_id');
+        $urgencyType = $request->get('urgency_type', 'none');
 
         if ($pages <= 0) {
             return response()->json([
@@ -684,10 +707,14 @@ class LaravelController extends Controller
             ], 400);
         }
 
+        $site = Website::findOrFail($siteId);
+
         $readyProducts = session('ready_products', []);
         foreach ($readyProducts as &$product) {
             if ($product['id'] == $productId) {
-                $product['pages'] = $pages;
+                $product['pages']        = $pages;
+                $product['urgency_type'] = $urgencyType;
+                $product['urgency_add']  = $this->computeUrgencyAmount($site, $urgencyType);
                 break;
             }
         }
@@ -696,8 +723,7 @@ class LaravelController extends Controller
 
         $totalAmount = 0;
         foreach ($readyProducts as $product) {
-            $urgentAdd    = ($product['is_urgent'] ?? 0) ? floatval($product['urgent_amount'] ?? 0) : 0;
-            $totalAmount += ($product['unit_price'] * ($product['pages'] ?? 1)) + $urgentAdd;
+            $totalAmount += ($product['unit_price'] * ($product['pages'] ?? 1)) + ($product['urgency_add'] ?? 0);
         }
 
         session(['current_amount' => $totalAmount]);
@@ -714,7 +740,7 @@ class LaravelController extends Controller
         $site_id      = $request->get('site_id');
         $productsData = $request->get('products');
 
-        $site         = Website::findOrFail($site_id);
+        $site          = Website::findOrFail($site_id);
         $productstable = getProductTable($site->technology);
         DynamicDatabaseService::connect($site);
 
@@ -735,10 +761,10 @@ class LaravelController extends Controller
 
             if (!$exists) {
                 $readyProducts[] = [
-                    'id'            => $productId,
-                    'unit_price'    => $unitPrice,
-                    'is_urgent'     => 0,
-                    'urgent_amount' => 0,
+                    'id'           => $productId,
+                    'unit_price'   => $unitPrice,
+                    'urgency_type' => 'none',
+                    'urgency_add'  => 0,
                 ];
             }
         }
@@ -829,20 +855,23 @@ class LaravelController extends Controller
             ->whereIn('id', $productIds)
             ->get();
 
-        $products = $products->map(function ($product) use ($updatedProducts, $site_id, $site) {
+        $urgencyOptions = $this->getAvailableUrgencyOptions($site);
+
+        $products = $products->map(function ($product) use ($updatedProducts, $site_id, $site, $urgencyOptions) {
             $sessionProduct = collect($updatedProducts)->firstWhere('id', $product->id);
 
-            $pages         = $sessionProduct['pages'] ?? 1;
-            $unit_price    = floatval($sessionProduct['unit_price']);
-            $isUrgent      = ($sessionProduct['is_urgent'] ?? 0) ? 1 : 0;
-            $urgentAmount  = floatval($sessionProduct['urgent_amount'] ?? 0);
+            $pages       = $sessionProduct['pages'] ?? 1;
+            $unit_price  = floatval($sessionProduct['unit_price']);
+            $urgencyType = $sessionProduct['urgency_type'] ?? 'none';
+            $urgencyAdd  = $this->computeUrgencyAmount($site, $urgencyType);
 
-            $product->unit_price    = $unit_price;
-            $product->pages         = $pages;
-            $product->is_urgent     = $isUrgent;
-            $product->urgent_amount = $urgentAmount;
-            $product->line_total    = ($unit_price * $pages) + ($isUrgent ? $urgentAmount : 0);
-            $product->unit_type     = Str::contains(Str::lower($product->name), 'certified translation') ? 'pages' : 'words';
+            $product->unit_price      = $unit_price;
+            $product->pages           = $pages;
+            $product->line_total      = ($unit_price * $pages) + $urgencyAdd;
+            $product->urgency_type    = $urgencyType;
+            $product->urgency_add     = $urgencyAdd;
+            $product->urgency_options = $urgencyOptions;
+            $product->unit_type       = Str::contains(Str::lower($product->name), 'certified translation') ? 'pages' : 'words';
 
             $product->category_name = DB::connection($this->connectionType)->table('categories')
                 ->where('id', $product->category_id)
@@ -903,11 +932,11 @@ class LaravelController extends Controller
 
     public function filterProducts(Request $request)
     {
-        $site_id      = session('customer.site_id');
+        $site_id       = session('customer.site_id');
         $hasPriceRange = $request->filled('price_from') && $request->filled('price_to');
-        $search_type  = $request->input('search_type');
-        $keyword      = $request->input('keyword');
-        $site         = Website::findOrFail($site_id);
+        $search_type   = $request->input('search_type');
+        $keyword       = $request->input('keyword');
+        $site          = Website::findOrFail($site_id);
         DynamicDatabaseService::connect($site);
 
         if (!$hasPriceRange) {
@@ -942,8 +971,8 @@ class LaravelController extends Controller
             });
         }
 
-        $readyProducts    = session('ready_products', []);
-        $readyProductIds  = collect($readyProducts)->pluck('id')->toArray();
+        $readyProducts   = session('ready_products', []);
+        $readyProductIds = collect($readyProducts)->pluck('id')->toArray();
 
         if (count($readyProductIds) > 0) {
             $query->whereNotIn('products.id', $readyProductIds);
@@ -1115,15 +1144,20 @@ class LaravelController extends Controller
                 return array_search($product->id, $productIds);
             })
             ->values()
-            ->map(function ($product) use ($productsInput) {
+            ->map(function ($product) use ($productsInput, $site) {
                 $input = $productsInput[$product->id];
+
+                $urgencyType = $input['urgency_type'] ?? 'none';
+                $urgencyAdd  = $this->computeUrgencyAmount($site, $urgencyType);
 
                 $product->name          = $input['name'] ?? 'Unknown';
                 $product->unit_price    = (float) ($input['price'] ?? $product->unit_price);
                 $product->line_total    = (float) ($input['line_total'] ?? 0);
                 $product->pages         = (int) ($input['pages'] ?? 1);
-                $product->is_urgent     = isset($input['is_urgent']) ? 1 : 0;
-                $product->urgent_amount = (float) ($input['urgent_amount'] ?? 0);
+                $product->urgency_type  = $urgencyType;
+                $product->urgency_add   = $urgencyAdd;
+                $product->is_urgent     = ($urgencyType !== 'none') ? 1 : 0;
+                $product->urgent_amount = $urgencyAdd;
                 $product->from_language = $input['from_language'] ?? null;
                 $product->to_language   = $input['to_language'] ?? null;
                 $product->selected      = isset($input['selected']) ? 1 : 0;
