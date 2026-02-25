@@ -80,7 +80,7 @@
                             data-bs-placement="right"
                             title="No urgency"
                         >
-                        <label class="form-check-label" for="urg_none_{{ $product->id }}" style="cursor:pointer;font-size:11px;white-space:nowrap;color:#6c757d;">No Urgency</label>
+                        <label class="form-check-label" for="urg_none_{{ $product->id }}" style="cursor:pointer;font-size:11px;white-space:nowrap;color:#6c757d;">Normal</label>
                     </div>
 
                     @foreach($urgencyOptions as $key => $opt)
