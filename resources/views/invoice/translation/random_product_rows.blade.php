@@ -1,6 +1,8 @@
 @forelse($products as $index => $product)
     @php
         $languages = site_languages();
+        $urgencyOptions = $product->urgency_options ?? [];
+        $currentUrgencyType = $product->urgency_type ?? 'none';
     @endphp
     <tr class="product-row">
         <td class="text-center">{{ $product->id }}</td>
@@ -47,8 +49,34 @@
             </div>
         </td>
         <td class="text-center">
-            <input form="generate-invoice-form" class="form-check-input urgency-checkbox border-primary" type="checkbox" name="products[{{ $product->id }}][is_urgent]" value="1" data-product-id="{{ $product->id }}" data-urgent_amount="{{ number_format($product->urgent_amount ?? 99.75, 2, '.', '') }}" {{ isset($product->is_urgent) && $product->is_urgent ? 'checked' : '' }} />
-            <input form="generate-invoice-form" type="hidden" name="products[{{ $product->id }}][urgent_amount]" value="{{ number_format($product->urgent_amount ?? 99.75, 2, '.', '') }}">
+            @if(count($urgencyOptions) > 0)
+                <select
+                    form="generate-invoice-form"
+                    class="form-select form-select-sm urgency-select"
+                    name="products[{{ $product->id }}][urgency_type]"
+                    data-product-id="{{ $product->id }}"
+                    data-unit-type="{{ $product->unit_type ?? 'pages' }}"
+                    data-unit-price="{{ number_format($product->unit_price, 2, '.', '') }}"
+                    data-pages="{{ $product->pages }}"
+                    @foreach($urgencyOptions as $key => $opt)
+                        data-rate-{{ $key }}="{{ $opt['rate'] }}"
+                    @endforeach
+                >
+                    <option value="none" {{ $currentUrgencyType === 'none' ? 'selected' : '' }}>No Urgency</option>
+                    @foreach($urgencyOptions as $key => $opt)
+                        <option value="{{ $key }}" {{ $currentUrgencyType === $key ? 'selected' : '' }}>
+                            {{ $opt['label'] }} ({{ site_currency() }}{{ number_format($opt['rate'], 2) }}/{{ $product->unit_type ?? 'pg' }})
+                        </option>
+                    @endforeach
+                </select>
+                <input form="generate-invoice-form" type="hidden" class="urgency-add-hidden" name="products[{{ $product->id }}][urgency_add]" value="{{ number_format($product->urgency_add ?? 0, 2, '.', '') }}">
+                <input form="generate-invoice-form" type="hidden" name="products[{{ $product->id }}][urgent_amount]" value="{{ number_format($product->urgency_add ?? 0, 2, '.', '') }}">
+            @else
+                <span class="text-muted small">N/A</span>
+                <input form="generate-invoice-form" type="hidden" name="products[{{ $product->id }}][urgency_type]" value="none">
+                <input form="generate-invoice-form" type="hidden" class="urgency-add-hidden" name="products[{{ $product->id }}][urgency_add]" value="0">
+                <input form="generate-invoice-form" type="hidden" name="products[{{ $product->id }}][urgent_amount]" value="0">
+            @endif
         </td>
         <td class="text-center line-total" data-product-id="{{ $product->id }}">
             {{ site_currency() }}{{ number_format($product->line_total, 2) }}
@@ -71,86 +99,113 @@
 <script>
 const siteCurrency = @json(site_currency());
 
-function bindUrgencyCheckbox() {
-    $('.urgency-checkbox').off('change').on('change', function() {
-        var $checkbox = $(this);
-        var productId = $checkbox.data('product-id');
-        var urgentAmount = parseFloat($checkbox.data('urgent_amount')) || 0;
-        var $row = $checkbox.closest('tr');
-        var pages = parseInt($row.find('.product-pages').val()) || 1;
-        var unitPrice = parseFloat($row.find('.product-price').val()) || 0;
-        var lineTotal = pages * unitPrice;
-        if ($checkbox.is(':checked')) lineTotal += urgentAmount;
-        var $lineTotal = $row.find('.line-total');
-        var $hiddenInput = $lineTotal.find('input[type="hidden"]');
-        if ($hiddenInput.length === 0) {
-            $hiddenInput = $('<input>').attr('type', 'hidden').attr('form', 'generate-invoice-form').attr('name', 'products[' + productId + '][line_total]');
-            $lineTotal.append($hiddenInput);
-        }
-        $lineTotal.text(siteCurrency + lineTotal.toFixed(2));
-        $hiddenInput.val(lineTotal.toFixed(2));
-        calculateTotalPrice();
-        if (typeof ensureHiddenInputs === 'function') ensureHiddenInputs();
-    });
+function getUrgencyRate($select, urgencyType) {
+    if (!urgencyType || urgencyType === 'none') return 0;
+    var rate = parseFloat($select.data('rate-' + urgencyType)) || 0;
+    return rate;
 }
 
-function updateLineTotal(productId) {
-    var $priceInput = $('input.product-price[data-product-id="' + productId + '"]');
-    var $pagesInput = $('input.product-pages[data-product-id="' + productId + '"]');
-    var $urgencyCheckbox = $('.urgency-checkbox[data-product-id="' + productId + '"]');
-    var $totalCell = $('.line-total[data-product-id="' + productId + '"]');
-    var unitPrice = parseFloat($priceInput.val()) || 0;
-    var pages = parseInt($pagesInput.val()) || 1;
-    var urgentAmount = 0;
-    if ($urgencyCheckbox.length && $urgencyCheckbox.is(':checked')) urgentAmount = parseFloat($urgencyCheckbox.data('urgent_amount')) || 0;
-    var lineTotal = (unitPrice * pages) + urgentAmount;
-    var $hiddenInput = $totalCell.find('input[type="hidden"]');
-    if ($hiddenInput.length === 0) $hiddenInput = $('<input>').attr('type', 'hidden').attr('form', 'generate-invoice-form').attr('name', 'products[' + productId + '][line_total]').appendTo($totalCell);
+function computeUrgencyAdd($select, urgencyType, pages) {
+    var rate = getUrgencyRate($select, urgencyType);
+    if (rate <= 0 || !urgencyType || urgencyType === 'none') return 0;
+    if (urgencyType === 'flat') return rate;
+    return rate * pages;
+}
+
+function updateLineTotalFromRow($row) {
+    var productId   = $row.find('.product-pages').data('product-id');
+    var unitPrice   = parseFloat($row.find('.product-price').val()) || 0;
+    var pages       = parseInt($row.find('.product-pages').val()) || 1;
+    var $urgSelect  = $row.find('.urgency-select');
+    var urgencyType = $urgSelect.length ? $urgSelect.val() : 'none';
+    var urgencyAdd  = $urgSelect.length ? computeUrgencyAdd($urgSelect, urgencyType, pages) : 0;
+
+    var lineTotal = (unitPrice * pages) + urgencyAdd;
+
+    var $totalCell   = $row.find('.line-total');
+    var $hiddenTotal = $totalCell.find('input[type="hidden"]');
     $totalCell.text(siteCurrency + lineTotal.toFixed(2));
-    $hiddenInput.val(lineTotal.toFixed(2));
+    $hiddenTotal.val(lineTotal.toFixed(2));
+
+    var $hiddenUrgencyAdd = $row.find('.urgency-add-hidden');
+    $hiddenUrgencyAdd.val(urgencyAdd.toFixed(2));
+    $row.find('input[name*="[urgent_amount]"]').val(urgencyAdd.toFixed(2));
 }
 
-$(document).ready(function() {
-    $(document).off('keyup change', '.product-price').on('keyup change', '.product-price', function() {
-        var productId = $(this).data('product-id');
-        updateLineTotal(productId);
-        calculateTotalPrice();
-    });
+function bindUrgencySelect() {
+    $(document).off('change', '.urgency-select').on('change', '.urgency-select', function () {
+        var $select     = $(this);
+        var $row        = $select.closest('tr');
+        var productId   = $select.data('product-id');
+        var urgencyType = $select.val();
+        var pages       = parseInt($row.find('.product-pages').val()) || 1;
 
-    $(document).off('change', '.product-pages').on('change', '.product-pages', function() {
-        var $input = $(this);
-        var productId = $input.data('product-id');
-        var unitType = $input.data('unit-type');
-        var pages = parseInt($input.val()) || 1;
-        if (pages < 1) pages = 1;
-        $input.val(pages);
-        updateLineTotal(productId);
+        updateLineTotalFromRow($row);
+        calculateTotalPrice();
+
         $.ajax({
             url: "{{ route('update.product') }}",
             method: 'POST',
-            data: { product_id: productId, pages: pages, site_id: "{{ session('customer.site_id') }}", _token: '{{ csrf_token() }}' },
-            success: function(response) {
-                $('#randomize-product-table-body').html(response.tableRows);
-                if (typeof ensureHiddenInputs === 'function') ensureHiddenInputs();
-                bindUrgencyCheckbox();
-                $('#randomize-product-table-body tr').each(function() {
-                    var $row = $(this);
-                    var productId = $row.find('.product-pages').data('product-id');
-                    updateLineTotal(productId);
-                });
-                setTimeout(() => { calculateTotalPrice(); }, 100);
+            data: {
+                product_id:   productId,
+                pages:        pages,
+                urgency_type: urgencyType,
+                site_id:      "{{ session('customer.site_id') }}",
+                _token:       '{{ csrf_token() }}'
             },
-            error: function() { toastr.error('Error updating pages. Please try again.'); }
+            error: function () {
+                toastr.error('Error updating urgency. Please try again.');
+            }
+        });
+    });
+}
+
+$(document).ready(function () {
+    $(document).off('keyup change', '.product-price').on('keyup change', '.product-price', function () {
+        updateLineTotalFromRow($(this).closest('tr'));
+        calculateTotalPrice();
+    });
+
+    $(document).off('change', '.product-pages').on('change', '.product-pages', function () {
+        var $input      = $(this);
+        var productId   = $input.data('product-id');
+        var pages       = parseInt($input.val()) || 1;
+        var $row        = $input.closest('tr');
+        var $urgSelect  = $row.find('.urgency-select');
+        var urgencyType = $urgSelect.length ? $urgSelect.val() : 'none';
+
+        if (pages < 1) { pages = 1; $input.val(pages); }
+
+        updateLineTotalFromRow($row);
+
+        $.ajax({
+            url: "{{ route('update.product') }}",
+            method: 'POST',
+            data: {
+                product_id:   productId,
+                pages:        pages,
+                urgency_type: urgencyType,
+                site_id:      "{{ session('customer.site_id') }}",
+                _token:       '{{ csrf_token() }}'
+            },
+            success: function (response) {
+                calculateTotalPrice();
+            },
+            error: function () {
+                toastr.error('Error updating pages. Please try again.');
+            }
         });
     });
 
-    bindUrgencyCheckbox();
+    bindUrgencySelect();
+
     if (typeof ensureHiddenInputs === 'function') ensureHiddenInputs();
 
-    $(document).off('click', '.remove-product').on('click', '.remove-product', function() {
-        var $button = $(this);
-        var productId = $button.data('product-id');
+    $(document).off('click', '.remove-product').on('click', '.remove-product', function () {
+        var $button     = $(this);
+        var productId   = $button.data('product-id');
         var productName = $button.data('product-name');
+
         Swal.fire({
             title: 'Remove Product?',
             text: `Are you sure you want to remove '${productName}' product?`,
@@ -158,7 +213,12 @@ $(document).ready(function() {
             showCancelButton: true,
             confirmButtonText: 'Yes, Remove',
             cancelButtonText: 'Cancel',
-            customClass: { popup: 'p-2 text-sm', title: 'text-base', confirmButtonClass: 'btn btn-sm btn-success', cancelButtonClass: 'btn btn-sm btn-danger' },
+            customClass: {
+                popup: 'p-2 text-sm',
+                title: 'text-base',
+                confirmButtonClass: 'btn btn-sm btn-success',
+                cancelButtonClass: 'btn btn-sm btn-danger'
+            },
             width: '350px',
             padding: '1em'
         }).then((result) => {
@@ -166,37 +226,47 @@ $(document).ready(function() {
                 $('.remove-product').prop('disabled', true);
                 $button.html('<i class="fas fa-spinner fa-spin"></i>');
                 $('#current_amount').val('Recalculating...');
-                $('#discount_amount').prop('type','text').val('Recalculating...').prop('readonly', true);
+                $('#discount_amount').prop('type', 'text').val('Recalculating...').prop('readonly', true);
                 $('#current_amount').removeClass('text-danger text-success');
                 $('#discount_amount').removeClass('text-danger text-success');
                 $('#invoice_amount').removeClass('text-danger text-success');
+
                 $.ajax({
                     url: "{{ route('remove.product') }}",
                     method: 'POST',
-                    data: { product_id: productId, site_id: "{{ session('customer.site_id') }}", _token: '{{ csrf_token() }}' },
-                    success: function(response) {
+                    data: {
+                        product_id: productId,
+                        site_id:    "{{ session('customer.site_id') }}",
+                        _token:     '{{ csrf_token() }}'
+                    },
+                    success: function (response) {
                         $button.html('<i class="fas fa-check-square"></i>');
                         $button.removeClass('btn-danger').addClass('btn-success');
                         $('#randomize-product-table-body').html(response.tableRows);
-                        toastr.success('Product has been removed successfully.','Product Removed');
-                        $('#discount_amount').prop('readonly', false).prop('type','number');
+                        toastr.success('Product has been removed successfully.', 'Product Removed');
+                        $('#discount_amount').prop('readonly', false).prop('type', 'number');
                         calculateTotalPrice();
-                        setTimeout(() => { $button.html('<i class="fas fa-trash-alt"></i>'); $button.removeClass('btn-success').addClass('btn-danger'); }, 2000);
+                        setTimeout(() => {
+                            $button.html('<i class="fas fa-trash-alt"></i>');
+                            $button.removeClass('btn-success').addClass('btn-danger');
+                        }, 2000);
                     },
-                    error: function() {
+                    error: function () {
                         $('.remove-product').prop('disabled', false);
                         $button.html('<i class="fas fa-trash-alt"></i>');
                         $button.removeClass('btn-success').addClass('btn-danger');
                         calculateTotalPrice();
                         toastr.error('Error removing product. Please try again.');
                     },
-                    complete: function() { $('.remove-product').prop('disabled', false); }
+                    complete: function () {
+                        $('.remove-product').prop('disabled', false);
+                    }
                 });
             }
         });
     });
 
     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    tooltipTriggerList.map(function(tooltipTriggerEl) { return new bootstrap.Tooltip(tooltipTriggerEl); });
+    tooltipTriggerList.map(function (tooltipTriggerEl) { return new bootstrap.Tooltip(tooltipTriggerEl); });
 });
 </script>
