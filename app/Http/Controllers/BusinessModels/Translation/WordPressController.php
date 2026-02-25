@@ -779,7 +779,7 @@ class WordPressController extends Controller
         $viewPath      = "websites.{$modelType}.{$siteIdInWords}";
 
         if (!empty($productsInput)) {
-            $this->updateProductPrice($productsInput);
+            $this->updateProductPrice($productsInput, $site);
         }
 
         InvoiceController::createInvoiceHistory($invoice_data);
