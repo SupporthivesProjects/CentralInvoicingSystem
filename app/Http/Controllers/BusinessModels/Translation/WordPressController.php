@@ -195,9 +195,6 @@ class WordPressController extends Controller
         $certUrgencyTypes = array_keys($certUrgencyOptions);
         $stdUrgencyTypes  = array_keys($stdUrgencyOptions);
 
-        // Urgency is only pre-selected when no-urgency cannot get within this
-        // tolerance of the invoice amount. Expressed as a fraction of the invoice.
-        // E.g. 0.01 = within 1% → urgency stays off most of the time.
         $urgencyTolerance = $invoiceAmount * 0.01;
 
         $bestMatch    = null;
@@ -208,7 +205,6 @@ class WordPressController extends Controller
             $basePages  = ceil($invoiceAmount / $certifiedPrice);
             $pagesToTry = range(max(1, $basePages - 2), $basePages + 5);
 
-            // Step 1: try none-urgency first
             $noneScenario = null;
             $noneDist     = PHP_FLOAT_MAX;
             foreach ($pagesToTry as $pages) {
@@ -221,7 +217,6 @@ class WordPressController extends Controller
                 }
             }
 
-            // Step 2: only try urgency options if none-urgency gap > tolerance
             $bestScenario = $noneScenario;
             $bestDist     = $noneDist;
 
@@ -257,7 +252,6 @@ class WordPressController extends Controller
             $basePages  = ceil($invoiceAmount / $standardPrice);
             $pagesToTry = range(max(250, $basePages - 50), $basePages + 500);
 
-            // Step 1: try none-urgency first
             $noneScenario = null;
             $noneDist     = PHP_FLOAT_MAX;
             foreach ($pagesToTry as $pages) {
@@ -271,7 +265,6 @@ class WordPressController extends Controller
                 }
             }
 
-            // Step 2: only try urgency if gap > tolerance
             $bestScenario = $noneScenario;
             $bestDist     = $noneDist;
 
@@ -315,7 +308,6 @@ class WordPressController extends Controller
                 ['cert_ratio' => 0.6, 'std_ratio' => 0.4],
             ];
 
-            // Step 1: find best none+none scenario across all ratios
             $noneResult   = null;
             $noneDistance = PHP_FLOAT_MAX;
 
@@ -355,14 +347,12 @@ class WordPressController extends Controller
                 }
             }
 
-            // Step 2: only search urgency combos when none+none gap > tolerance
             if ($noneDistance <= $urgencyTolerance || empty($certUrgencyTypes) && empty($stdUrgencyTypes)) {
                 if ($noneResult) {
                     $bestMatch    = $noneResult['match'];
                     $bestDistance = $noneResult['distance'];
                 }
             } else {
-                // Build urgency scenarios excluding none+none (already tried)
                 $certUrgencyTypesToTry = array_merge(['none'], $certUrgencyTypes);
                 $stdUrgencyTypesToTry  = array_merge(['none'], $stdUrgencyTypes);
                 $urgencyScenarios      = [];
@@ -424,7 +414,6 @@ class WordPressController extends Controller
                     }
                 }
 
-                // Pick urgency result only if it is meaningfully better than none
                 $chosenResult = $noneResult;
                 if ($urgResult && $urgDistance < ($noneDistance - $urgencyTolerance)) {
                     $chosenResult = $urgResult;
@@ -438,7 +427,6 @@ class WordPressController extends Controller
         }
 
         if (!$bestMatch) {
-            // Fallback: try certified alone (none first, urgency only if needed)
             if ($certifiedProduct && $certifiedPrice > 0) {
                 $basePages      = ceil($invoiceAmount / $certifiedPrice);
                 $pagesToTry     = range(max(1, $basePages - 3), $basePages + 8);
@@ -481,13 +469,12 @@ class WordPressController extends Controller
                 }
             }
 
-            // Fallback: try standard alone if still no good match
             if ($standardProduct && $standardPrice > 0 && (!$bestMatch || $bestDistance > 50)) {
                 $basePages  = max(250, ceil($invoiceAmount / $standardPrice));
                 $pagesToTry = range(max(250, $basePages - 100), $basePages + 500);
 
-                $noneScenario    = null;
-                $noneDist        = PHP_FLOAT_MAX;
+                $noneScenario = null;
+                $noneDist     = PHP_FLOAT_MAX;
                 foreach ($pagesToTry as $pages) {
                     if ($pages < 250) continue;
                     $total    = $pages * $standardPrice;
@@ -557,9 +544,9 @@ class WordPressController extends Controller
                 ->first();
 
             if ($lastUpdate) {
-                $lastPriceChanged   = Carbon::parse($lastUpdate->last_price_changed);
+                $lastPriceChanged    = Carbon::parse($lastUpdate->last_price_changed);
                 $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
-                $remainingDays      = now()->diffInDays($nextPriceChangeDate, false);
+                $remainingDays       = now()->diffInDays($nextPriceChangeDate, false);
                 $product->remaining_days = round(max($remainingDays, 0));
                 $product->can_edit_price = now()->greaterThanOrEqualTo($nextPriceChangeDate) ? 1 : 0;
             } else {
@@ -570,10 +557,10 @@ class WordPressController extends Controller
             $product->line_total = ($product->unit_price * $product->pages) + $product->urgency_add;
 
             if ($certifiedProduct && $productName === strtolower(trim($certifiedProduct['name']))) {
-                $product->unit_type  = 'pages';
+                $product->unit_type   = 'pages';
                 $product->product_url = $site->certified_translation_url ?? $site->site_link;
             } else {
-                $product->unit_type  = 'words';
+                $product->unit_type   = 'words';
                 $product->product_url = $site->standard_translation_url ?? $site->site_link;
             }
 
@@ -631,10 +618,9 @@ class WordPressController extends Controller
         $readyProducts = session('ready_products', []);
         foreach ($readyProducts as &$product) {
             if ($product['id'] == $productId) {
-                $product['pages']       = $pages;
+                $product['pages']        = $pages;
                 $product['urgency_type'] = $urgencyType;
-                $urgencyAdd = $this->computeUrgencyAmount($site, $product['unit_type'] ?? 'pages', $pages, $urgencyType);
-                $product['urgency_add'] = $urgencyAdd;
+                $product['urgency_add']  = $this->computeUrgencyAmount($site, $product['unit_type'] ?? 'pages', $pages, $urgencyType);
                 break;
             }
         }
@@ -684,7 +670,7 @@ class WordPressController extends Controller
         $siteUrl        = $site->site_link;
         $auth           = base64_encode($consumerKey . ':' . $consumerSecret);
 
-        $productIds      = collect($updatedProducts)->pluck('id')->all();
+        $productIds       = collect($updatedProducts)->pluck('id')->all();
         $selectedProducts = [];
 
         foreach ($productIds as $id) {
@@ -699,21 +685,21 @@ class WordPressController extends Controller
             $apiProduct     = (object) $response->json();
             $sessionProduct = collect($updatedProducts)->firstWhere('id', $id);
 
-            $unitType    = $sessionProduct['unit_type'] ?? 'words';
+            $unitType    = $sessionProduct['unit_type']    ?? 'words';
             $urgencyType = $sessionProduct['urgency_type'] ?? 'none';
             $pages       = intval($sessionProduct['pages']);
             $unitPrice   = floatval($sessionProduct['unit_price']);
 
             $urgencyAdd = $this->computeUrgencyAmount($site, $unitType, $pages, $urgencyType);
 
-            $apiProduct->unit_price   = $unitPrice;
-            $apiProduct->pages        = $pages;
-            $apiProduct->urgency_type = $urgencyType;
-            $apiProduct->urgency_add  = $urgencyAdd;
-            $apiProduct->line_total   = ($pages * $unitPrice) + $urgencyAdd;
-            $apiProduct->can_edit_price = 1;
-            $apiProduct->remaining_days = 0;
-            $apiProduct->unit_type    = $unitType;
+            $apiProduct->unit_price      = $unitPrice;
+            $apiProduct->pages           = $pages;
+            $apiProduct->urgency_type    = $urgencyType;
+            $apiProduct->urgency_add     = $urgencyAdd;
+            $apiProduct->line_total      = ($pages * $unitPrice) + $urgencyAdd;
+            $apiProduct->can_edit_price  = 1;
+            $apiProduct->remaining_days  = 0;
+            $apiProduct->unit_type       = $unitType;
             $apiProduct->urgency_options = $this->getAvailableUrgencyOptions($site, $unitType);
 
             $selectedProducts[] = $apiProduct;
@@ -883,26 +869,35 @@ class WordPressController extends Controller
             }
         }
 
-        $certifiedProduct = collect($productsInput)->first(function ($product) {
+        $certifiedProductInput = collect($productsInput)->first(function ($product) {
             return strtolower(trim($product['name'])) === 'certified translation';
         });
 
-        $apiProducts = $apiProducts->map(function ($product) use ($productsInput, $certifiedProduct, $site) {
+        $apiProducts = $apiProducts->map(function ($product) use ($productsInput, $certifiedProductInput, $site) {
             if (!isset($productsInput[$product->id])) return $product;
             $input = $productsInput[$product->id];
 
-            $product->name        = $input['name'] ?? 'Unknown';
-            $product->unit_price  = (float) ($input['price'] ?? $product->price ?? 0);
-            $product->line_total  = (float) ($input['line_total'] ?? 0);
-            $product->pages       = (int) ($input['pages'] ?? 1);
-            $product->urgency_type = $input['urgency_type'] ?? 'none';
-            $product->urgency_add  = (float) ($input['urgency_add'] ?? 0);
+            $unitType    = ($certifiedProductInput && strtolower(trim($product->name)) === strtolower(trim($certifiedProductInput['name'])))
+                           ? 'pages'
+                           : 'words';
+            $urgencyType = $input['urgency_type'] ?? 'none';
+            $pages       = (int) ($input['pages'] ?? 1);
+            $unitPrice   = (float) ($input['price'] ?? $product->price ?? 0);
+            $urgencyAdd  = $this->computeUrgencyAmount($site, $unitType, $pages, $urgencyType);
+
+            $product->name          = $input['name'] ?? 'Unknown';
+            $product->unit_price    = $unitPrice;
+            $product->pages         = $pages;
+            $product->urgency_type  = $urgencyType;
+            $product->urgency_add   = $urgencyAdd;
+            $product->is_urgent     = ($urgencyType !== 'none') ? 1 : 0;
+            $product->urgent_amount = $urgencyAdd;
+            $product->line_total    = ($unitPrice * $pages) + $urgencyAdd;
             $product->from_language = $input['from_language'] ?? null;
             $product->to_language   = $input['to_language'] ?? null;
-            $product->selected     = isset($input['selected']) ? 1 : 0;
-            $product->unit_type    = ($certifiedProduct && strtolower(trim($product->name)) === strtolower(trim($certifiedProduct['name'])))
-                                   ? 'Pages'
-                                   : 'Words';
+            $product->selected      = isset($input['selected']) ? 1 : 0;
+            $product->unit_type     = $unitType;
+
             return $product;
         });
 
@@ -954,14 +949,14 @@ class WordPressController extends Controller
             'html'     => $html,
             'fileName' => $filename,
             'options'  => [
-                'format'               => $site->pdf_size ?? 'A4',
-                'landscape'            => ($site->pdf_orientation ?? 'portrait') === 'landscape',
-                'marginTop'            => '0mm',
-                'marginBottom'         => '0mm',
-                'marginLeft'           => '0mm',
-                'marginRight'          => '0mm',
+                'format'                => $site->pdf_size ?? 'A4',
+                'landscape'             => ($site->pdf_orientation ?? 'portrait') === 'landscape',
+                'marginTop'             => '0mm',
+                'marginBottom'          => '0mm',
+                'marginLeft'            => '0mm',
+                'marginRight'           => '0mm',
                 'disableSmartShrinking' => true,
-                'zoom'                 => 1,
+                'zoom'                  => 1,
             ]
         ]);
 
@@ -1047,9 +1042,9 @@ class WordPressController extends Controller
 
                     if ($shouldUpdateHistory) {
                         ProductPriceHistory::create([
-                            'site_id'           => $site_id,
-                            'product_id'        => $product_id,
-                            'unit_price'        => $new_price,
+                            'site_id'            => $site_id,
+                            'product_id'         => $product_id,
+                            'unit_price'         => $new_price,
                             'last_price_changed' => now(),
                         ]);
                     }
