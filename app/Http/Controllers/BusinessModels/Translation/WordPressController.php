@@ -843,10 +843,10 @@ class WordPressController extends Controller
     }
 
 
-    protected function updateProductPrice($productDataArray)
+    protected function updateProductPrice($productDataArray, $site = null)
     {
-        $site_id = session('customer.site_id');
-        $site    = Website::findOrFail($site_id);
+        $site_id = $site ? $site->id : session('customer.site_id');
+        $site    = $site ?? Website::findOrFail($site_id);
         $auth    = base64_encode($site->consumer_key . ':' . $site->consumer_secret);
         $siteUrl = rtrim($site->site_link, '/');
 
@@ -889,12 +889,21 @@ class WordPressController extends Controller
                     $shouldUpdateHistory = true;
                 }
 
+                Log::info("Attempting price update", [
+                    'product_id'    => $product_id,
+                    'current_price' => $current_price,
+                    'new_price'     => $new_price,
+                    'site_id'       => $site_id,
+                    'siteUrl'       => $siteUrl,
+                ]);
+
                 $updateResponse = Http::withHeaders([
                     'Authorization' => 'Basic ' . $auth,
                     'Content-Type'  => 'application/json',
                     'User-Agent'    => 'LaravelApp/1.0'
                 ])->put("{$siteUrl}/wp-json/wc/v3/products/{$product_id}", [
-                    'regular_price' => strval($new_price)
+                    'regular_price' => strval($new_price),
+                    'sale_price'    => '',
                 ]);
 
                 if ($updateResponse->successful()) {
