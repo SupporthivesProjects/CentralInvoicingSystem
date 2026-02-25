@@ -70,10 +70,10 @@ class Website extends Model
 
     protected $casts = [
         'urgency_amount'       => 'decimal:2',
-        'urgency_24h_per_page' => 'decimal:2',
-        'urgency_12h_per_page' => 'decimal:2',
-        'urgency_24h_per_word' => 'decimal:2',
-        'urgency_12h_per_word' => 'decimal:2',
+        'urgency_24h_per_page' => 'decimal:4',
+        'urgency_12h_per_page' => 'decimal:4',
+        'urgency_24h_per_word' => 'decimal:4',
+        'urgency_12h_per_word' => 'decimal:4',
     ];
 
     public function businessModel()
