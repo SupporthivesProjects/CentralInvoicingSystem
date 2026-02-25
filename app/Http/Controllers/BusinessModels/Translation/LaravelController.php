@@ -43,7 +43,7 @@ class LaravelController extends Controller
 
         if (!empty($site->urgency_amount) && floatval($site->urgency_amount) > 0) {
             $options['flat'] = [
-                'label' => 'Urgent',
+                'label' => '36-48 Hours',
                 'rate'  => floatval($site->urgency_amount),
                 'key'   => 'flat',
             ];
