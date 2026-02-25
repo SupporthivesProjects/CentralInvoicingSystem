@@ -1153,12 +1153,12 @@ class LaravelController extends Controller
 
                 $product->name          = $input['name'] ?? 'Unknown';
                 $product->unit_price    = (float) ($input['price'] ?? $product->unit_price);
-                $product->line_total    = (float) ($input['line_total'] ?? 0);
                 $product->pages         = (int) ($input['pages'] ?? 1);
                 $product->urgency_type  = $urgencyType;
                 $product->urgency_add   = $urgencyAdd;
                 $product->is_urgent     = ($urgencyType !== 'none') ? 1 : 0;
                 $product->urgent_amount = $urgencyAdd;
+                $product->line_total    = ($product->unit_price * $product->pages) + $urgencyAdd;
                 $product->from_language = $input['from_language'] ?? null;
                 $product->to_language   = $input['to_language'] ?? null;
                 $product->selected      = isset($input['selected']) ? 1 : 0;
