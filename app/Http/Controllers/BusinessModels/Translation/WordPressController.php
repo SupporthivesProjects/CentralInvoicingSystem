@@ -854,8 +854,14 @@ class WordPressController extends Controller
             $data = is_string($item) ? json_decode($item, true) : $item;
 
             if (!empty($data['id']) && isset($data['price'])) {
-                $product_id = intval($data['id']);
-                $new_price  = floatval($data['price']);
+                $product_id     = intval($data['id']);
+                $new_price      = floatval($data['price']);
+                $can_edit_price = intval($data['can_edit_price'] ?? 1);
+
+                if ($can_edit_price == 0) {
+                    Log::info("Price edit not allowed for product ID {$product_id}, skipping.");
+                    continue;
+                }
 
                 $response = Http::withHeaders([
                     'Authorization' => 'Basic ' . $auth,
@@ -869,7 +875,7 @@ class WordPressController extends Controller
                 }
 
                 $product       = (object) $response->json();
-                $current_price = floatval($product->price);
+                $current_price = floatval($product->regular_price ?? $product->price);
 
                 if ($current_price == $new_price) {
                     Log::info("No price change for product ID {$product_id}. Current price: {$current_price}");
@@ -888,14 +894,6 @@ class WordPressController extends Controller
                 } elseif (Carbon::parse($lastUpdate->last_price_changed)->diffInMonths(now()) >= 3) {
                     $shouldUpdateHistory = true;
                 }
-
-                Log::info("Attempting price update", [
-                    'product_id'    => $product_id,
-                    'current_price' => $current_price,
-                    'new_price'     => $new_price,
-                    'site_id'       => $site_id,
-                    'siteUrl'       => $siteUrl,
-                ]);
 
                 $updateResponse = Http::withHeaders([
                     'Authorization' => 'Basic ' . $auth,
