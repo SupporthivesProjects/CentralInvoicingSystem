@@ -48,27 +48,69 @@
                 <span class="input-group-text">{{ $product->unit_type ?? 'pages' }}</span>
             </div>
         </td>
-        <td class="text-center">
+
+        {{-- URGENCY COLUMN --}}
+        <td class="text-center p-1">
             @if(count($urgencyOptions) > 0)
-                <select
-                    form="generate-invoice-form"
-                    class="form-select form-select-sm urgency-select"
-                    name="products[{{ $product->id }}][urgency_type]"
+                <div class="urgency-radio-group d-flex flex-column align-items-start gap-1"
                     data-product-id="{{ $product->id }}"
                     data-unit-type="{{ $product->unit_type ?? 'pages' }}"
-                    data-unit-price="{{ number_format($product->unit_price, 2, '.', '') }}"
                     data-pages="{{ $product->pages }}"
                     @foreach($urgencyOptions as $key => $opt)
                         data-rate-{{ $key }}="{{ $opt['rate'] }}"
                     @endforeach
-                >
-                    <option value="none" {{ $currentUrgencyType === 'none' ? 'selected' : '' }}>No Urgency</option>
+                    style="padding-left:2px;">
+
+                    {{-- No Urgency --}}
+                    <div class="form-check mb-0" style="min-height:0;">
+                        <input
+                            class="form-check-input urgency-radio"
+                            type="radio"
+                            form="generate-invoice-form"
+                            name="products[{{ $product->id }}][urgency_type]"
+                            id="urg_none_{{ $product->id }}"
+                            value="none"
+                            data-product-id="{{ $product->id }}"
+                            data-rate="0"
+                            data-urgkey="none"
+                            {{ $currentUrgencyType === 'none' ? 'checked' : '' }}
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="right"
+                            title="No urgency surcharge"
+                        >
+                        <label class="form-check-label" for="urg_none_{{ $product->id }}" style="cursor:pointer;font-size:11px;white-space:nowrap;color:#6c757d;">None</label>
+                    </div>
+
+                    {{-- Dynamic urgency options --}}
                     @foreach($urgencyOptions as $key => $opt)
-                        <option value="{{ $key }}" {{ $currentUrgencyType === $key ? 'selected' : '' }}>
-                            {{ $opt['label'] }} ({{ site_currency() }}{{ number_format($opt['rate'], 2) }}/{{ $product->unit_type ?? 'pg' }})
-                        </option>
+                        @php
+                            $qty      = $product->pages;
+                            $rate     = floatval($opt['rate']);
+                            $urgTotal = ($key === 'flat') ? $rate : ($rate * $qty);
+                        @endphp
+                        <div class="form-check mb-0" style="min-height:0;">
+                            <input
+                                class="form-check-input urgency-radio"
+                                type="radio"
+                                form="generate-invoice-form"
+                                name="products[{{ $product->id }}][urgency_type]"
+                                id="urg_{{ $key }}_{{ $product->id }}"
+                                value="{{ $key }}"
+                                data-product-id="{{ $product->id }}"
+                                data-rate="{{ $rate }}"
+                                data-urgkey="{{ $key }}"
+                                {{ $currentUrgencyType === $key ? 'checked' : '' }}
+                                data-bs-toggle="tooltip"
+                                data-bs-placement="right"
+                                title="+{{ site_currency() }}{{ number_format($urgTotal, 2) }} added to total"
+                            >
+                            <label class="form-check-label fw-semibold" for="urg_{{ $key }}_{{ $product->id }}" style="cursor:pointer;font-size:11px;white-space:nowrap;">
+                                {{ $opt['label'] }}
+                            </label>
+                        </div>
                     @endforeach
-                </select>
+                </div>
+
                 <input form="generate-invoice-form" type="hidden" class="urgency-add-hidden" name="products[{{ $product->id }}][urgency_add]" value="{{ number_format($product->urgency_add ?? 0, 2, '.', '') }}">
                 <input form="generate-invoice-form" type="hidden" name="products[{{ $product->id }}][urgent_amount]" value="{{ number_format($product->urgency_add ?? 0, 2, '.', '') }}">
             @else
@@ -78,6 +120,7 @@
                 <input form="generate-invoice-form" type="hidden" name="products[{{ $product->id }}][urgent_amount]" value="0">
             @endif
         </td>
+
         <td class="text-center line-total" data-product-id="{{ $product->id }}">
             {{ site_currency() }}{{ number_format($product->line_total, 2) }}
             <input form="generate-invoice-form" type="hidden" name="products[{{ $product->id }}][line_total]" value="{{ $product->line_total }}">
@@ -99,45 +142,62 @@
 <script>
 const siteCurrency = @json(site_currency());
 
-function getUrgencyRate($select, urgencyType) {
+function computeUrgencyAddFromGroup($group, pages) {
+    var $checked = $group.find('.urgency-radio:checked');
+    if (!$checked.length) return 0;
+    var urgencyType = $checked.val();
     if (!urgencyType || urgencyType === 'none') return 0;
-    var rate = parseFloat($select.data('rate-' + urgencyType)) || 0;
-    return rate;
+    var rate = parseFloat($checked.data('rate')) || 0;
+    if (rate <= 0) return 0;
+    return (urgencyType === 'flat') ? rate : (rate * pages);
 }
 
-function computeUrgencyAdd($select, urgencyType, pages) {
-    var rate = getUrgencyRate($select, urgencyType);
-    if (rate <= 0 || !urgencyType || urgencyType === 'none') return 0;
-    if (urgencyType === 'flat') return rate;
-    return rate * pages;
+function refreshTooltipsForGroup($group, pages) {
+    $group.find('.urgency-radio').each(function () {
+        var $radio      = $(this);
+        var urgencyType = $radio.val();
+        var tipText;
+
+        if (!urgencyType || urgencyType === 'none') {
+            tipText = 'No urgency surcharge';
+        } else {
+            var rate     = parseFloat($radio.data('rate')) || 0;
+            var urgTotal = (urgencyType === 'flat') ? rate : (rate * pages);
+            tipText = '+' + siteCurrency + urgTotal.toFixed(2) + ' added to total';
+        }
+
+        var existing = bootstrap.Tooltip.getInstance($radio[0]);
+        if (existing) existing.dispose();
+        $radio.attr('title', tipText);
+        new bootstrap.Tooltip($radio[0], { placement: 'right', trigger: 'hover' });
+    });
 }
 
 function updateLineTotalFromRow($row) {
-    var productId   = $row.find('.product-pages').data('product-id');
-    var unitPrice   = parseFloat($row.find('.product-price').val()) || 0;
-    var pages       = parseInt($row.find('.product-pages').val()) || 1;
-    var $urgSelect  = $row.find('.urgency-select');
-    var urgencyType = $urgSelect.length ? $urgSelect.val() : 'none';
-    var urgencyAdd  = $urgSelect.length ? computeUrgencyAdd($urgSelect, urgencyType, pages) : 0;
-
-    var lineTotal = (unitPrice * pages) + urgencyAdd;
+    var $group     = $row.find('.urgency-radio-group');
+    var pages      = parseInt($row.find('.product-pages').val()) || 1;
+    var unitPrice  = parseFloat($row.find('.product-price').val()) || 0;
+    var urgencyAdd = $group.length ? computeUrgencyAddFromGroup($group, pages) : 0;
+    var lineTotal  = (unitPrice * pages) + urgencyAdd;
 
     var $totalCell   = $row.find('.line-total');
     var $hiddenTotal = $totalCell.find('input[type="hidden"]');
     $totalCell.text(siteCurrency + lineTotal.toFixed(2));
     $hiddenTotal.val(lineTotal.toFixed(2));
 
-    var $hiddenUrgencyAdd = $row.find('.urgency-add-hidden');
-    $hiddenUrgencyAdd.val(urgencyAdd.toFixed(2));
+    $row.find('.urgency-add-hidden').val(urgencyAdd.toFixed(2));
     $row.find('input[name*="[urgent_amount]"]').val(urgencyAdd.toFixed(2));
+
+    if ($group.length) refreshTooltipsForGroup($group, pages);
 }
 
-function bindUrgencySelect() {
-    $(document).off('change', '.urgency-select').on('change', '.urgency-select', function () {
-        var $select     = $(this);
-        var $row        = $select.closest('tr');
-        var productId   = $select.data('product-id');
-        var urgencyType = $select.val();
+$(document).ready(function () {
+
+    $(document).off('change', '.urgency-radio').on('change', '.urgency-radio', function () {
+        var $radio      = $(this);
+        var $row        = $radio.closest('tr');
+        var productId   = $radio.data('product-id');
+        var urgencyType = $radio.val();
         var pages       = parseInt($row.find('.product-pages').val()) || 1;
 
         updateLineTotalFromRow($row);
@@ -158,9 +218,7 @@ function bindUrgencySelect() {
             }
         });
     });
-}
 
-$(document).ready(function () {
     $(document).off('keyup change', '.product-price').on('keyup change', '.product-price', function () {
         updateLineTotalFromRow($(this).closest('tr'));
         calculateTotalPrice();
@@ -171,8 +229,8 @@ $(document).ready(function () {
         var productId   = $input.data('product-id');
         var pages       = parseInt($input.val()) || 1;
         var $row        = $input.closest('tr');
-        var $urgSelect  = $row.find('.urgency-select');
-        var urgencyType = $urgSelect.length ? $urgSelect.val() : 'none';
+        var $group      = $row.find('.urgency-radio-group');
+        var urgencyType = $group.length ? ($group.find('.urgency-radio:checked').val() || 'none') : 'none';
 
         if (pages < 1) { pages = 1; $input.val(pages); }
 
@@ -188,7 +246,7 @@ $(document).ready(function () {
                 site_id:      "{{ session('customer.site_id') }}",
                 _token:       '{{ csrf_token() }}'
             },
-            success: function (response) {
+            success: function () {
                 calculateTotalPrice();
             },
             error: function () {
@@ -197,7 +255,11 @@ $(document).ready(function () {
         });
     });
 
-    bindUrgencySelect();
+    $('.urgency-radio-group').each(function () {
+        var $group = $(this);
+        var pages  = parseInt($group.closest('tr').find('.product-pages').val()) || 1;
+        refreshTooltipsForGroup($group, pages);
+    });
 
     if (typeof ensureHiddenInputs === 'function') ensureHiddenInputs();
 
@@ -266,7 +328,7 @@ $(document).ready(function () {
         });
     });
 
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    tooltipTriggerList.map(function (tooltipTriggerEl) { return new bootstrap.Tooltip(tooltipTriggerEl); });
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]:not(.urgency-radio)'));
+    tooltipTriggerList.map(function (el) { return new bootstrap.Tooltip(el); });
 });
 </script>

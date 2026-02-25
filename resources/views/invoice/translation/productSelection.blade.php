@@ -1135,28 +1135,23 @@
             var total = 0;
 
             $('.product-row').each(function () {
-                var $row = $(this);
-                var unitPrice   = parseFloat($row.find('.product-price').val()) || 0;
-                var pages       = parseInt($row.find('.product-pages').val()) || 1;
-                var urgencyAdd  = 0;
+                var $row      = $(this);
+                var unitPrice = parseFloat($row.find('.product-price').val()) || 0;
+                var pages     = parseInt($row.find('.product-pages').val()) || 1;
+                var urgencyAdd = 0;
 
-                var $urgSelect = $row.find('.urgency-select');
-                if ($urgSelect.length) {
-                    var urgencyType = $urgSelect.val();
+                var $group = $row.find('.urgency-radio-group');
+                if ($group.length) {
+                    var $checked    = $group.find('.urgency-radio:checked');
+                    var urgencyType = $checked.length ? $checked.val() : 'none';
                     if (urgencyType && urgencyType !== 'none') {
-                        var rate = parseFloat($urgSelect.data('rate-' + urgencyType)) || 0;
-                        if (urgencyType === 'flat') {
-                            urgencyAdd = rate;
-                        } else {
-                            urgencyAdd = rate * pages;
-                        }
+                        var rate = parseFloat($checked.data('rate')) || 0;
+                        urgencyAdd = (urgencyType === 'flat') ? rate : (rate * pages);
                     }
                 }
 
                 var rowTotal = (unitPrice * pages) + urgencyAdd;
                 total += rowTotal;
-
-                $row.find('.product-total').text('$' + rowTotal.toFixed(2));
 
                 var $totalCell   = $row.find('.line-total');
                 var $hiddenTotal = $totalCell.find('input[type="hidden"]');
@@ -1201,7 +1196,7 @@
                 calculateTotalPrice();
             });
 
-            $(document).on('change', '.urgency-select', function() {
+            $(document).on('change', '.urgency-radio', function() {
                 calculateTotalPrice();
             });
         });
