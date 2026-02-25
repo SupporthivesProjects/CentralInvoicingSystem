@@ -338,7 +338,7 @@
                         </div>
 
                         <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
-                            <button type="button" class="btn btn-outline-success d-flex align-items-center gap-1"
+                            <button type="button" class="btn btn-outline-success d-flex align-items-center gap-1 me-1"
                                 onclick="randomizeProducts('semi_random')">
                                 <i class="fas fa-random"></i> Randomize
                             </button>
