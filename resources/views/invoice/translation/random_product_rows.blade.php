@@ -76,7 +76,7 @@
                             {{ $currentUrgencyType === 'none' ? 'checked' : '' }}
                             data-bs-toggle="tooltip"
                             data-bs-placement="right"
-                            title="No urgency surcharge"
+                            title="No urgency"
                         >
                         <label class="form-check-label" for="urg_none_{{ $product->id }}" style="cursor:pointer;font-size:11px;white-space:nowrap;color:#6c757d;">None</label>
                     </div>
@@ -102,7 +102,7 @@
                                 {{ $currentUrgencyType === $key ? 'checked' : '' }}
                                 data-bs-toggle="tooltip"
                                 data-bs-placement="right"
-                                title="+{{ site_currency() }}{{ number_format($urgTotal, 2) }} added to total"
+                                title="+ {{ site_currency() }}{{ number_format($urgTotal, 2) }}"
                             >
                             <label class="form-check-label fw-semibold" for="urg_{{ $key }}_{{ $product->id }}" style="cursor:pointer;font-size:11px;white-space:nowrap;">
                                 {{ $opt['label'] }}
@@ -159,11 +159,11 @@ function refreshTooltipsForGroup($group, pages) {
         var tipText;
 
         if (!urgencyType || urgencyType === 'none') {
-            tipText = 'No urgency surcharge';
+            tipText = 'No urgency';
         } else {
             var rate     = parseFloat($radio.data('rate')) || 0;
             var urgTotal = (urgencyType === 'flat') ? rate : (rate * pages);
-            tipText = '+' + siteCurrency + urgTotal.toFixed(2) + ' added to total';
+            tipText = '+' + siteCurrency + urgTotal.toFixed(2);
         }
 
         var existing = bootstrap.Tooltip.getInstance($radio[0]);
