@@ -955,7 +955,7 @@ class WordPressController extends Controller
     
             $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
                 ->where('product_id', $api_product_id)
-                ->where('variation_id', $variation_id)
+                ->where('bundle', $variation_id)
                 ->orderByDesc('last_price_changed')
                 ->first();
     
@@ -1053,7 +1053,7 @@ class WordPressController extends Controller
     
             $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
                 ->where('product_id', $api_product_id)
-                ->where('variation_id', $variation_id)
+                ->where('bundle', $variation_id)
                 ->orderByDesc('last_price_changed')
                 ->first();
     
@@ -1179,8 +1179,16 @@ class WordPressController extends Controller
             ]);
         }
 
-        $products = $products->map(function ($product) use ($site_id, $connection) {
+        $products = $products->map(function ($product) use ($site_id, $connection, $postsTable) {
             $product->category_name = '-';
+
+            // Resolve actual variation_id (first published variation for this product)
+            $product->variation_id = DB::connection($connection)
+                ->table($postsTable)
+                ->where('post_parent', $product->id)
+                ->where('post_type', 'product_variation')
+                ->where('post_status', 'publish')
+                ->value('ID') ?? 0;
 
             $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
                 ->where('product_id', $product->id)
