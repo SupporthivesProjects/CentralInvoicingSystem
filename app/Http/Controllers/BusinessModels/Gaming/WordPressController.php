@@ -348,6 +348,8 @@ class WordPressController extends Controller
                 $var_http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
                 $maxPrice = 0;
+                $maxAmount = '0';
+                $maxVariationId = null;
 
                 if ($var_http_code == 200 && $var_response) {
                     $variations = json_decode($var_response, true);
@@ -360,6 +362,9 @@ class WordPressController extends Controller
                             $price = floatval($var['price'] ?? 0);
                             if ($price > $maxPrice) {
                                 $maxPrice = $price;
+                                $maxVariationId = $var['id'];
+                                $attrs = collect($var['attributes'])->pluck('option', 'name')->toArray();
+                                $maxAmount = $attrs['Amount'] ?? '0';
                             }
                         }
 
@@ -372,7 +377,9 @@ class WordPressController extends Controller
                                 'game_platform'        => $p['categories'][0]['name'] ?? '',
                                 'game_server_region'   => '',
                                 'game_need_to_capture' => '',
-                                'bundle_first_amount'  => $maxPrice
+                                'bundle_first_amount'  => $maxPrice,
+                                'game_currency_amount' => $maxAmount,
+                                'bundle_id'            => $maxVariationId,
                             ]);
                         }
                     }
