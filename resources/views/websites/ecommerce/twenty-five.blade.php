@@ -46,7 +46,9 @@
                                         <br>
                                         <p style="font-family: arial;font-size: 10px;margin-bottom: 5px;">BILLED FROM:</p>
                                         <p style="font-family: Courier New;font-size: 10px;margin: 0px;font-weight: 600;">
-                                        {{ $site_name }}<br><a href="https://www.logikalcoding.com/" style="text-decoration: none;color: #000">www.logikalcoding.com</a></p>
+                                        {{ $site_name }}<br>
+                                        <!-- <a href="https://www.logikalcoding.com/" style="text-decoration: none;color: #000">www.logikalcoding.com</a> -->
+                                        </p>
                                         <br>
                                         <p style="font-family: arial;font-size: 10px;margin-bottom: 5px;font-weight: 400;">
                                             BILLED TO
@@ -80,7 +82,7 @@
                                             <b>QUANTITY</b>
                                         </td>
                                         <td style="width: 100px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;">
-                                            <b>UNITY PRICE</b>
+                                            <b>UNIT PRICE</b>
                                         </td>
                                         <td style="width: 100px;text-align:left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
                                             <b>TOTAL</b>
