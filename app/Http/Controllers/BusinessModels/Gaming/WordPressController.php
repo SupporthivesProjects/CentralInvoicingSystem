@@ -432,7 +432,8 @@ class WordPressController extends Controller
         // Keep existing products in session (normalize all data structures)
         foreach ($existing as $item) {
             $game_id = $item['id'];
-            $bundle_amount = (float) ($item['game_currency_amount'] ?? 0);
+            $bundle_amount = $item['game_currency_amount'] ?? '0';
+            $key = "{$game_id}-" . preg_replace('/\D/', '', $bundle_amount) . "-{$source}";
 
             // Normalize source to lowercase to avoid key mismatch
             $source = strtolower($item['source'] ?? ($item['bundle'] ?? 'random'));
@@ -445,7 +446,7 @@ class WordPressController extends Controller
                         'id' => (int) $game_id,
                         'name' => $item['name'] ?? 'Product',
                         'unit_price' => (float) $item['unit_price'],
-                        'game_currency_amount' => (string) $bundle_amount,
+                        'game_currency_amount' => $item['game_currency_amount'] ?? '0',
                         'game_currency' => $item['game_currency'] ?? '',
                         'bundle_id' => $item['bundle_id'] ?? null,
                         'source' => 'Random',
@@ -480,8 +481,9 @@ class WordPressController extends Controller
         // Fetch and add new products with complete data
         foreach ($selected as $gameData) {
             $game_id = $gameData['product_id'] ?? $gameData['id'];
-            $bundle_amount = (float) $gameData['game_currency_amount'];
-            $key = "{$game_id}-{$bundle_amount}-custom";
+            $bundle_amount = $gameData['game_currency_amount'] ?? '0';
+            $numeric_amount = preg_replace('/\D/', '', $bundle_amount); // for key only
+            $key = "{$game_id}-{$numeric_amount}-custom";
 
             if (!in_array($key, $seenKeys)) {
                 // Fetch product details from WooCommerce
@@ -496,7 +498,7 @@ class WordPressController extends Controller
                     $existingAssoc[] = [
                         'id' => (int) $game_id,
                         'unit_price' => (float) $gameData['unit_price'],
-                        'game_currency_amount' => (string) $bundle_amount,
+                        'game_currency_amount' => $gameData['game_currency_amount'] ?? '0',
                         'bundle_id' => $getMeta('bundle_id'),
                         'source' => 'Custom',
                         'can_edit_price' => 1,
