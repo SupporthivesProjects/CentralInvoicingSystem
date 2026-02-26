@@ -97,7 +97,8 @@ class WordPressController extends Controller
 
             foreach ($variationRes->json() as $var) {
                 $attrs = collect($var['attributes'])->pluck('option', 'name')->toArray();
-                $bundleAmount = preg_replace('/\D/', '', $attrs['Amount'] ?? '0');
+                // $bundleAmount = preg_replace('/\D/', '', $attrs['Amount'] ?? '0');
+                $bundleAmount = $attrs['Amount'] ?? '0';
                 $unitPrice = floatval($var['price']);
 
                 if ($priceFrom && $priceTo && ($unitPrice < $priceFrom || $unitPrice > $priceTo)) continue;
