@@ -310,122 +310,123 @@ class WordPressController extends Controller
     {
         $site_id = session('customer.site_id');
         $site = Website::findOrFail($site_id);
-    
+
         $hasKeyword = $request->filled('keyword');
         $keyword = strtolower($request->keyword);
-    
+
         $wp_api_url = rtrim($site->site_link, '/') . '/wp-json/wc/v3/products';
         $consumer_key = $site->consumer_key;
         $consumer_secret = $site->consumer_secret;
-    
+
         $api_url = $wp_api_url . '?per_page=100&status=publish&type=variable';
         if ($hasKeyword) {
             $api_url .= '&search=' . urlencode($keyword);
         }
-    
+
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $api_url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_USERPWD, $consumer_key . ':' . $consumer_secret);
         curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
         curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-    
+
         $response = curl_exec($ch);
         $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
-    
+
         $products = collect();
-        
+
         if ($http_code == 200 && $response) {
             $wp_products = json_decode($response, true);
-            
+
             $mh = curl_multi_init();
             $curl_handles = [];
-            
+
             foreach ($wp_products as $index => $p) {
                 $variation_url = $wp_api_url . '/' . $p['id'] . '/variations?per_page=100';
-                
+
                 $ch = curl_init();
                 curl_setopt($ch, CURLOPT_URL, $variation_url);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                 curl_setopt($ch, CURLOPT_USERPWD, $consumer_key . ':' . $consumer_secret);
                 curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
                 curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-                
+
                 curl_multi_add_handle($mh, $ch);
                 $curl_handles[$index] = ['handle' => $ch, 'product' => $p];
             }
-            
+
             $running = null;
             do {
                 curl_multi_exec($mh, $running);
                 curl_multi_select($mh);
             } while ($running > 0);
-            
+
             foreach ($curl_handles as $index => $data) {
                 $ch = $data['handle'];
                 $p = $data['product'];
-                
+
                 $var_response = curl_multi_getcontent($ch);
                 $var_http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-                
+
                 $maxPrice = 0;
-                
+
                 if ($var_http_code == 200 && $var_response) {
-                $variations = json_decode($var_response, true);
-                
-                if (!empty($variations)) {
-                    foreach ($variations as $var) {
-                        // Skip unpublished or out of stock variations
-                        if (($var['status'] ?? 'publish') !== 'publish') continue;
-                        if (($var['stock_status'] ?? 'instock') === 'outofstock') continue;
-                        
-                        $price = floatval($var['price'] ?? 0);
-                        if ($price > $maxPrice) {
-                            $maxPrice = $price;
+                    $variations = json_decode($var_response, true);
+
+                    if (!empty($variations)) {
+                        foreach ($variations as $var) {
+                            // Skip unpublished or out of stock variations
+                            if (($var['status'] ?? 'publish') !== 'publish') continue;
+                            if (($var['stock_status'] ?? 'instock') === 'outofstock') continue;
+
+                            $price = floatval($var['price'] ?? 0);
+                            if ($price > $maxPrice) {
+                                $maxPrice = $price;
+                            }
+                        }
+
+                        // Only add if has valid published variations
+                        if ($maxPrice > 0) {
+                            $products->push((object)[
+                                'id'                 => $p['id'],
+                                'name'               => $p['name'],
+                                'slug'               => $p['slug'],
+                                'game_currency'      => $p['sku'] ?? '',
+                                'game_platform'      => $p['categories'][0]['name'] ?? '',
+                                'game_server_region' => '',
+                                'game_need_to_capture' => '',
+                                'bundle_first_amount' => $maxPrice
+                            ]);
                         }
                     }
-                    
-                    // Only add if has valid published variations
-                    if ($maxPrice > 0) {
-                        $products->push((object)[
-                            'id' => $p['id'],
-                            'name' => $p['name'],
-                            'slug' => $p['slug'],
-                            'game_currency' => $p['sku'] ?? '',
-                            'game_platform' => $p['categories'][0]['name'] ?? '',
-                            'game_server_region' => '',
-                            'game_need_to_capture' => '',
-                            'bundle_first_amount' => $maxPrice
-                        ]);
-                    }
                 }
+
+                // Always cleanup curl handles
+                curl_multi_remove_handle($mh, $ch);
+                curl_close($ch);
             }
 
-            curl_multi_remove_handle($mh, $ch);
-            curl_close($ch);
-            }
-            
             curl_multi_close($mh);
         }
-    
+
         if ($products->isEmpty()) {
             return response()->json([
                 'tableRows' => '<tr><td colspan="7" class="text-center text-muted">No results found. Try randomizing or use a different keyword.</td></tr>'
             ]);
         }
-    
+
         $modelType = $site->businessModel->model_type;
         $tableRows = view("invoice.{$modelType}.add_product_rows", [
-            'products' => $products,
-            'currency' => site_currency(),
-            'site' => $site,
+            'products'       => $products,
+            'currency'       => site_currency(),
+            'site'           => $site,
             'current_amount' => session('current_amount'),
         ])->render();
-    
+
         return response()->json([
             'tableRows' => $tableRows,
-            'currency' => site_currency(),
+            'currency'  => site_currency(),
             'is_random' => false
         ]);
     }
@@ -449,9 +450,6 @@ class WordPressController extends Controller
         foreach ($existing as $item) {
             $game_id = $item['id'];
             $bundle_amount = $item['game_currency_amount'] ?? '0';
-            $key = "{$game_id}-" . preg_replace('/\D/', '', $bundle_amount) . "-{$source}";
-
-            // Normalize source to lowercase to avoid key mismatch
             $source = strtolower($item['source'] ?? ($item['bundle'] ?? 'random'));
             $key = "{$game_id}-{$bundle_amount}-{$source}";
 
