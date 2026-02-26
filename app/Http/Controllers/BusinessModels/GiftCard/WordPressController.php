@@ -72,7 +72,7 @@ class WordPressController extends Controller
             $value = trim($value);
             if (empty($value)) continue;
             $value = str_replace(['-', '_'], ' ', $value);
-            $value = ucwords(strtolower($value));
+            $value = ucwords($value);
             $variationParts[] = $value;
         }
 
