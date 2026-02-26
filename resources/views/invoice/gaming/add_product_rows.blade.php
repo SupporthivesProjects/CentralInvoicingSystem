@@ -19,7 +19,7 @@
             <div class="input-group">
                 <span class="input-group-text">{{ $product->game_currency }}</span>
                 <input type="text" class="form-control add-currency-amount text-center" value="0.00" data-product-id="{{ $product->id }}" readonly>
-                <input type="hidden" name="custom_products[{{ $product->id }}][bundle_first_amount]" value="{{ $product->bundle_first_amount }}">
+                <input type="hidden" name="custom_products[{{ $product->id }}][bundle_first_amount]" value="{{ $product->game_currency_amount ?? $product->bundle_first_amount }}">
             </div>
         </td>
 
