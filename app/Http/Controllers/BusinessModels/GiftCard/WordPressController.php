@@ -75,11 +75,6 @@ class WordPressController extends Controller
         return $productName . ' - ' . implode(' ', $variationParts);
     }
 
-    // private function getVariationName($connection, $variationId, $productName)
-    // {
-    //     return $productName;
-    // }
-
 
     public function randomProducts(Request $request)
     {
@@ -847,10 +842,9 @@ class WordPressController extends Controller
             $product->category_name = '-';
             $product->variation_id = $variation_id;
     
-            $lastUpdate = DB::table('product_price_histories')
-                ->where('site_id', $site_id)
+            $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
                 ->where('product_id', $api_product_id)
-                ->where('variation_id', $variation_id)
+                ->where('bundle', $variation_id)
                 ->orderByDesc('last_price_changed')
                 ->first();
     
@@ -956,7 +950,7 @@ class WordPressController extends Controller
     
             $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
                 ->where('product_id', $api_product_id)
-                ->where('variation_id', $variation_id)
+                ->where('bundle', $variation_id)
                 ->orderByDesc('last_price_changed')
                 ->first();
     
@@ -1054,7 +1048,7 @@ class WordPressController extends Controller
     
             $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
                 ->where('product_id', $api_product_id)
-                ->where('variation_id', $variation_id)
+                ->where('bundle', $variation_id)
                 ->orderByDesc('last_price_changed')
                 ->first();
     
@@ -1302,12 +1296,9 @@ class WordPressController extends Controller
                 DB::connection($this->connectionType)->table('general_settings')->where('id', $remote_database->id)
                     ->update([
                         'site_name'            => $request->input('remote_site_name') ?? '',
-                        //'company_name'        => $request->input('remote_company_name') ?? '',
                         'email'                => $request->input('remote_company_email') ?? '',
                         'phone'                => $request->input('remote_company_mobile') ?? '',
                         'address'              => $request->input('remote_company_address') ?? '',
-                       // 'registration_number'  => $request->input('remote_registration_number') ?? '',
-                       // 'license_number'       => $request->input('remote_license_number') ?? '',
                         'updated_at'           => now(),
                     ]);
             }
@@ -1382,12 +1373,10 @@ class WordPressController extends Controller
         })
         ->values()
         ->map(function ($product) use ($customPrices, $connection, $postsTable) {
-            // Determine variation_id properly
             if ($product->post_type === 'product_variation') {
                 $product->variation_id = $product->id;
                 $product->id = $product->parent_id;
             } else {
-                // Get the variation ID from session's ready_products
                 $readyProducts = session('ready_products', []);
                 $sessionProduct = collect($readyProducts)->firstWhere('id', $product->id);
                 $product->variation_id = $sessionProduct['variation_id'] ?? 0;
@@ -1413,18 +1402,12 @@ class WordPressController extends Controller
         $filename = $request->filled('invoice_file_name')
             ? $request->input('invoice_file_name') . '.pdf'
             : $invoice_data['invoice_number'] . '.pdf';
-    
-            $filename = $request->filled('invoice_file_name')
-            ? $request->input('invoice_file_name') . '.pdf'
-            : $invoice_data['invoice_number'] . '.pdf';
             
-            try {
-                return $this->generateWithApi2Pdf($site, $viewPath, $invoice_data, $filename);
-
-            } catch (\Exception $e) {
-                // Fallback to Dompdf if API2PDF fails
-                return $this->generateWithDompdf($site, $viewPath, $invoice_data, $filename);
-            }
+        try {
+            return $this->generateWithApi2Pdf($site, $viewPath, $invoice_data, $filename);
+        } catch (\Exception $e) {
+            return $this->generateWithDompdf($site, $viewPath, $invoice_data, $filename);
+        }
     
     }
 
