@@ -894,19 +894,16 @@ class WordPressController extends Controller
         $variationId = (int) ($request->get('variation_id') ?? 0);
         $site_id = $request->get('site_id');
         $site = Website::findOrFail($site_id);
-    
-        $postsTable = $this->productTable;
-        $priceTable = $this->productPriceTable;
-        $connection = $this->connectionType;
-    
+
         $readyProducts = session('ready_products', []);
-    
+
+        // Remove from session only — never touch the DB
         $updatedProducts = collect($readyProducts)->reject(function ($product) use ($productId, $variationId) {
             return $product['id'] == $productId && $product['variation_id'] == $variationId;
         })->values()->toArray();
-    
+
         session()->put('ready_products', $updatedProducts);
-    
+
         if (empty($updatedProducts)) {
             session()->forget('current_amount');
             return response()->json([
@@ -914,83 +911,53 @@ class WordPressController extends Controller
                 'total' => 0,
             ]);
         }
-    
-        DynamicDatabaseService::connect($site);
-    
-        $productIds = array_column($updatedProducts, 'id');
-    
-        $products = DB::connection($connection)
-            ->table($postsTable)
-            ->join($priceTable, "$postsTable.ID", '=', "$priceTable.product_id")
-            ->select(
-                "$postsTable.ID as id",
-                "$postsTable.post_parent as parent_id",
-                "$postsTable.post_type as post_type",
-                "$postsTable.post_title as name",
-                "$postsTable.post_excerpt as description",
-                "$postsTable.post_name as slug",
-                "$priceTable.min_price as unit_price"
-            )
-            ->whereIn("$postsTable.ID", $productIds)
-            ->where("$postsTable.post_status", 'publish')
-            ->get()
-            ->keyBy('id');
-    
-        $products = collect($productIds)->map(fn($id) => $products[$id] ?? null)->filter();
-    
-        $products = $products->map(function ($product) use ($updatedProducts, $site_id, $connection) {
-            $sessionProduct = collect($updatedProducts)->firstWhere('id', $product->id);
-    
-            if ($product->post_type === 'product_variation') {
-                $api_product_id = $product->parent_id;
-                $variation_id = $product->id;
-            } else {
-                $api_product_id = $product->id;
-                $variation_id = $sessionProduct['variation_id'] ?? 0;
-            }
-    
-            $product->unit_price = $sessionProduct['unit_price'] ?? $product->unit_price;
-            $product->category_name = '-';
-            $product->variation_id = $variation_id;
-    
+
+        // Build display list purely from session data — no DB query needed
+        $products = collect($updatedProducts)->map(function ($item) use ($site_id) {
+            $product = (object) [
+                'id'            => $item['id'],
+                'variation_id'  => $item['variation_id'] ?? 0,
+                'unit_price'    => $item['unit_price'],
+                'name'          => $item['name'] ?? '',
+                'description'   => $item['description'] ?? '',
+                'slug'          => $item['slug'] ?? '',
+                'category_name' => '-',
+                'rrp'           => $item['unit_price'],
+                'discount'      => 0,
+            ];
+
             $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
-                ->where('product_id', $api_product_id)
-                ->where('bundle', $variation_id)
+                ->where('product_id', $product->id)
+                ->where('bundle', $product->variation_id)
                 ->orderByDesc('last_price_changed')
                 ->first();
-    
+
             if ($lastUpdate) {
                 $nextDate = Carbon::parse($lastUpdate->last_price_changed)->addMonths(3);
                 $remaining = now()->diffInDays($nextDate, false);
                 $product->remaining_days = round(max($remaining, 0));
                 $product->can_edit_price = now()->gte($nextDate) ? 1 : 0;
-                $product->rrp = $product->unit_price;
-                $product->discount = 0;
             } else {
-                $product->can_edit_price = 1;
                 $product->remaining_days = 0;
-                $product->rrp = $product->unit_price;
-                $product->discount = 0;
+                $product->can_edit_price = 1;
             }
 
-            $product->name = $this->getVariationName($connection, $product->variation_id, $product->name);
-    
             return $product;
         });
-    
+
         $total = $products->sum('unit_price');
         session(['current_amount' => $total]);
-    
+
         $modelType = $site->businessModel->model_type;
         $tableRows = view("invoice.{$modelType}.random_product_rows", [
             'products' => $products,
-            'site' => $site,
-            'total' => $total
+            'site'     => $site,
+            'total'    => $total
         ])->render();
-    
+
         return response()->json([
             'tableRows' => $tableRows,
-            'total' => $total
+            'total'     => $total
         ]);
     }
     
