@@ -45,6 +45,7 @@ class LaravelController extends Controller
             'GBP' => 1.29,
             'CAD' => 0.70,
             'AUD' => 0.63,
+            'AED' => 0.27,
             default => 1.00,
         };
     }
