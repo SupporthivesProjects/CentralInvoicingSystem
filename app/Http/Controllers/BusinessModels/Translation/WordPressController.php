@@ -43,13 +43,6 @@ class WordPressController extends Controller
         $options = [];
 
         if ($unitType === 'pages') {
-            if (!empty($site->urgency_24h_per_page) && floatval($site->urgency_24h_per_page) > 0) {
-                $options['24h_per_page'] = [
-                    'label' => '24 Hours',
-                    'rate'  => floatval($site->urgency_24h_per_page),
-                    'key'   => '24h_per_page',
-                ];
-            }
             if (!empty($site->urgency_12h_per_page) && floatval($site->urgency_12h_per_page) > 0) {
                 $options['12h_per_page'] = [
                     'label' => '12 Hours',
@@ -57,14 +50,21 @@ class WordPressController extends Controller
                     'key'   => '12h_per_page',
                 ];
             }
-        } else {
-            if (!empty($site->urgency_24h_per_word) && floatval($site->urgency_24h_per_word) > 0) {
-                $options['24h_per_word'] = [
+            if (!empty($site->urgency_24h_per_page) && floatval($site->urgency_24h_per_page) > 0) {
+                $options['24h_per_page'] = [
                     'label' => '24 Hours',
-                    'rate'  => floatval($site->urgency_24h_per_word),
-                    'key'   => '24h_per_word',
+                    'rate'  => floatval($site->urgency_24h_per_page),
+                    'key'   => '24h_per_page',
                 ];
             }
+            if (!empty($site->urgency_36_48h_per_page) && floatval($site->urgency_36_48h_per_page) > 0) {
+                $options['36_48h_per_page'] = [
+                    'label' => '36-48 Hours',
+                    'rate'  => floatval($site->urgency_36_48h_per_page),
+                    'key'   => '36_48h_per_page',
+                ];
+            }
+        } else {
             if (!empty($site->urgency_12h_per_word) && floatval($site->urgency_12h_per_word) > 0) {
                 $options['12h_per_word'] = [
                     'label' => '12 Hours',
@@ -72,14 +72,20 @@ class WordPressController extends Controller
                     'key'   => '12h_per_word',
                 ];
             }
-        }
-
-        if (!empty($site->urgency_amount) && floatval($site->urgency_amount) > 0) {
-            $options['flat'] = [
-                'label' => '36-48 Hours',
-                'rate'  => floatval($site->urgency_amount),
-                'key'   => 'flat',
-            ];
+            if (!empty($site->urgency_24h_per_word) && floatval($site->urgency_24h_per_word) > 0) {
+                $options['24h_per_word'] = [
+                    'label' => '24 Hours',
+                    'rate'  => floatval($site->urgency_24h_per_word),
+                    'key'   => '24h_per_word',
+                ];
+            }
+            if (!empty($site->urgency_36_48h_per_word) && floatval($site->urgency_36_48h_per_word) > 0) {
+                $options['36_48h_per_word'] = [
+                    'label' => '36-48 Hours',
+                    'rate'  => floatval($site->urgency_36_48h_per_word),
+                    'key'   => '36_48h_per_word',
+                ];
+            }
         }
 
         return $options;
@@ -91,27 +97,25 @@ class WordPressController extends Controller
             return 0;
         }
 
-        if ($urgencyType === 'flat') {
-            return floatval($site->urgency_amount ?? 0);
-        }
-
         if ($unitType === 'pages') {
-            if ($urgencyType === '24h_per_page') {
-                $rate = floatval($site->urgency_24h_per_page ?? 0);
-                return $rate * $quantity;
-            }
             if ($urgencyType === '12h_per_page') {
-                $rate = floatval($site->urgency_12h_per_page ?? 0);
-                return $rate * $quantity;
+                return floatval($site->urgency_12h_per_page ?? 0) * $quantity;
+            }
+            if ($urgencyType === '24h_per_page') {
+                return floatval($site->urgency_24h_per_page ?? 0) * $quantity;
+            }
+            if ($urgencyType === '36_48h_per_page') {
+                return floatval($site->urgency_36_48h_per_page ?? 0) * $quantity;
             }
         } else {
-            if ($urgencyType === '24h_per_word') {
-                $rate = floatval($site->urgency_24h_per_word ?? 0);
-                return $rate * $quantity;
-            }
             if ($urgencyType === '12h_per_word') {
-                $rate = floatval($site->urgency_12h_per_word ?? 0);
-                return $rate * $quantity;
+                return floatval($site->urgency_12h_per_word ?? 0) * $quantity;
+            }
+            if ($urgencyType === '24h_per_word') {
+                return floatval($site->urgency_24h_per_word ?? 0) * $quantity;
+            }
+            if ($urgencyType === '36_48h_per_word') {
+                return floatval($site->urgency_36_48h_per_word ?? 0) * $quantity;
             }
         }
 
