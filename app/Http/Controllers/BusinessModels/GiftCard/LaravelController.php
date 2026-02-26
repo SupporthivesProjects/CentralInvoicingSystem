@@ -1489,29 +1489,6 @@ class LaravelController extends Controller
 
             $current_name     = $product->name ?? '';
             $new_name         = $data['product_name'] ?? $current_name;
-            
-            preg_match('/([A-Z]{3})\s*(\d+(\.\d+)?)/i', $current_name, $oldNameMatch);
-            $oldNamePrice = isset($oldNameMatch[2]) ? (float)$oldNameMatch[2] : null;
-
-            preg_match('/([A-Z]{3})\s*(\d+(\.\d+)?)/i', $new_name, $newNameMatch);
-            $newNamePrice    = isset($newNameMatch[2]) ? (float)$newNameMatch[2] : null;
-            $newNameCurrency = isset($newNameMatch[1]) ? strtoupper($newNameMatch[1]) : null;
-
-            $priceInNameChanged  = false;
-            $newOurPriceFromName = null;
-
-            if ($oldNamePrice && $newNamePrice && abs($oldNamePrice - $newNamePrice) > 0.01) {
-                $priceInNameChanged  = true;
-                $newOurPriceFromName = $newNamePrice;
-
-                Log::info('Price in product name changed', [
-                    'product_id'       => $product_id,
-                    'old_name_price'   => $oldNamePrice,
-                    'new_name_price'   => $newNamePrice,
-                    'currency'         => $newNameCurrency,
-                    'target_our_price' => $newOurPriceFromName
-                ]);
-            }
 
             $current_price    = floatval($product->unit_price);
             $current_rrp      = floatval($product->rrp ?? 0);
@@ -1521,30 +1498,8 @@ class LaravelController extends Controller
             $new_discount = floatval($data['unit_discount'] ?? 0);
             $new_rrp      = round($siteRRP / $rate, 2);
 
-            if ($priceInNameChanged && $newOurPriceFromName) {
-                if ($new_discount > 0 && $new_discount < 100) {
-                    $calculatedSiteRRP = round($newOurPriceFromName / (1 - $new_discount / 100), 2);
-                } else {
-                    $calculatedSiteRRP = $newOurPriceFromName;
-                }
-                $new_rrp = round($calculatedSiteRRP / $rate, 2);
-
-                Log::info('Calculated RRP from name price', [
-                    'product_id'                  => $product_id,
-                    'our_price_target'            => $newOurPriceFromName,
-                    'discount'                    => $new_discount,
-                    'calculated_rrp_site_currency' => $calculatedSiteRRP,
-                    'calculated_rrp_product_currency' => $new_rrp
-                ]);
-            }
-
             $discountChanged = abs($current_discount - $new_discount) > 0.01;
             $rrpChanged      = abs($current_rrp - $new_rrp) > 0.01;
-            $nameChanged     = $current_name !== $new_name;
-
-            if (!$rrpChanged && !$discountChanged && !$nameChanged) {
-                continue;
-            }
 
             $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
                 ->where('product_id', $product_id)
@@ -1553,7 +1508,7 @@ class LaravelController extends Controller
 
             $canUpdatePrice = !$lastUpdate || Carbon::parse($lastUpdate->last_price_changed)->diffInMonths(now()) >= 3;
 
-            if ($nameChanged && !$rrpChanged && !$discountChanged && !$priceInNameChanged) {
+            if (!$rrpChanged && !$discountChanged) {
                 DB::connection($this->connectionType)
                     ->table($this->productTable)
                     ->where('id', $product_id)
@@ -1569,9 +1524,9 @@ class LaravelController extends Controller
 
             if (!$canUpdatePrice) {
                 Log::warning('Price update blocked by 90-day lock', [
-                    'product_id'      => $product_id,
-                    'last_update'     => $lastUpdate->last_price_changed ?? 'none',
-                    'days_remaining'  => $lastUpdate ? now()->diffInDays(Carbon::parse($lastUpdate->last_price_changed)->addMonths(3)) : 0
+                    'product_id'     => $product_id,
+                    'last_update'    => $lastUpdate->last_price_changed ?? 'none',
+                    'days_remaining' => $lastUpdate ? now()->diffInDays(Carbon::parse($lastUpdate->last_price_changed)->addMonths(3)) : 0
                 ]);
                 continue;
             }
@@ -1581,15 +1536,10 @@ class LaravelController extends Controller
                     ? round($new_rrp * (1 - $current_discount / 100), 2)
                     : $new_rrp;
 
-                $finalNamePrice = round($new_price * $rate, 2);
-                if ($newNamePrice && abs($newNamePrice - $finalNamePrice) > 0.01) {
-                    $new_name = preg_replace('/([A-Z]{3})\s*(\d+(\.\d+)?)/i', '$1 ' . $finalNamePrice, $new_name);
-                }
-
                 DB::connection($this->connectionType)->table($this->productTable)->where('id', $product_id)->update([
                     'name'       => $new_name,
                     'rrp'        => $new_rrp,
-                    'unit_price' => $new_price
+                    'unit_price' => $new_price,
                 ]);
 
                 ProductPriceHistory::create([
@@ -1613,15 +1563,10 @@ class LaravelController extends Controller
                     ? round($current_rrp * (1 - $new_discount / 100), 2)
                     : $current_rrp;
 
-                $finalNamePrice = round($new_price * $rate, 2);
-                if ($newNamePrice && abs($newNamePrice - $finalNamePrice) > 0.01) {
-                    $new_name = preg_replace('/([A-Z]{3})\s*(\d+(\.\d+)?)/i', '$1 ' . $finalNamePrice, $new_name);
-                }
-
                 DB::connection($this->connectionType)->table($this->productTable)->where('id', $product_id)->update([
                     'name'       => $new_name,
                     'discount'   => $new_discount,
-                    'unit_price' => $new_price
+                    'unit_price' => $new_price,
                 ]);
 
                 ProductPriceHistory::create([
@@ -1645,16 +1590,11 @@ class LaravelController extends Controller
                     ? round($new_rrp * (1 - $new_discount / 100), 2)
                     : $new_rrp;
 
-                $finalNamePrice = round($new_price * $rate, 2);
-                if ($newNamePrice && abs($newNamePrice - $finalNamePrice) > 0.01) {
-                    $new_name = preg_replace('/([A-Z]{3})\s*(\d+(\.\d+)?)/i', '$1 ' . $finalNamePrice, $new_name);
-                }
-
                 DB::connection($this->connectionType)->table($this->productTable)->where('id', $product_id)->update([
                     'name'       => $new_name,
                     'rrp'        => $new_rrp,
                     'discount'   => $new_discount,
-                    'unit_price' => $new_price
+                    'unit_price' => $new_price,
                 ]);
 
                 ProductPriceHistory::create([

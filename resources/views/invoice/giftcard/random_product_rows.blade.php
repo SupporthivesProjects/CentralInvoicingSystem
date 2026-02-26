@@ -30,8 +30,7 @@
             class="form-control product-name" 
             value="{{ $product->name }}" 
             data-product-id="{{ $product->id }}" 
-            aria-label="name" 
-            {{ $product->can_edit_price == 0 ? 'readonly' : '' }}>
+            aria-label="name">
 
 
         <span 
