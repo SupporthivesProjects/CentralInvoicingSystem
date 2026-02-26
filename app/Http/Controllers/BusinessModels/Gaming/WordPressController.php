@@ -96,9 +96,20 @@ class WordPressController extends Controller
             $variations = [];
 
             foreach ($variationRes->json() as $var) {
+                // Skip unpublished or out of stock variations
+                if (($var['status'] ?? 'publish') !== 'publish') continue;
+                if (($var['stock_status'] ?? 'instock') === 'outofstock') continue;
+
                 $attrs = collect($var['attributes'])->pluck('option', 'name')->toArray();
-                // $bundleAmount = preg_replace('/\D/', '', $attrs['Amount'] ?? '0');
-                $bundleAmount = $attrs['Amount'] ?? '0';
+                
+                \Log::info('ATTRS DEBUG - ' . $product['name'], ['attrs' => $attrs]);
+                
+                // Try all possible attribute name formats
+                $bundleAmount = $attrs['Amount'] ?? $attrs['amount'] ?? 
+                                $attrs['Gold'] ?? $attrs['gold'] ?? 
+                                $attrs['Currency'] ?? $attrs['currency'] ??
+                                $attrs['Package'] ?? $attrs['package'] ?? '0';
+                
                 $unitPrice = floatval($var['price']);
 
                 if ($priceFrom && $priceTo && ($unitPrice < $priceFrom || $unitPrice > $priceTo)) continue;
@@ -363,16 +374,22 @@ class WordPressController extends Controller
                 $maxPrice = 0;
                 
                 if ($var_http_code == 200 && $var_response) {
-                    $variations = json_decode($var_response, true);
-                    
-                    if (!empty($variations)) {
-                        foreach ($variations as $var) {
-                            $price = floatval($var['price'] ?? 0);
-                            if ($price > $maxPrice) {
-                                $maxPrice = $price;
-                            }
-                        }
+                $variations = json_decode($var_response, true);
+                
+                if (!empty($variations)) {
+                    foreach ($variations as $var) {
+                        // Skip unpublished or out of stock variations
+                        if (($var['status'] ?? 'publish') !== 'publish') continue;
+                        if (($var['stock_status'] ?? 'instock') === 'outofstock') continue;
                         
+                        $price = floatval($var['price'] ?? 0);
+                        if ($price > $maxPrice) {
+                            $maxPrice = $price;
+                        }
+                    }
+                    
+                    // Only add if has valid published variations
+                    if ($maxPrice > 0) {
                         $products->push((object)[
                             'id' => $p['id'],
                             'name' => $p['name'],
@@ -385,9 +402,10 @@ class WordPressController extends Controller
                         ]);
                     }
                 }
-                
-                curl_multi_remove_handle($mh, $ch);
-                curl_close($ch);
+            }
+
+            curl_multi_remove_handle($mh, $ch);
+            curl_close($ch);
             }
             
             curl_multi_close($mh);
