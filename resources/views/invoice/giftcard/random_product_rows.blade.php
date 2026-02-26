@@ -37,12 +37,8 @@
             class="input-group-text d-flex align-items-center"
             data-bs-toggle="tooltip"
             data-bs-placement="top"
-            title="{{ $product->can_edit_price == 0 ? 'Name update allowed after ' . $product->remaining_days . ' days.' : 'Editable' }}">
-            @if($product->can_edit_price == 0)
-                <i class="fas fa-lock text-muted"></i>
-            @else
-                <i class="fas fa-edit"></i>
-            @endif
+            title="Edit product name">
+            <i class="fas fa-edit"></i>
         </span>
     </div>
 
