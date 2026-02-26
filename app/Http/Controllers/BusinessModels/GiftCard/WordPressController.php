@@ -75,12 +75,6 @@ class WordPressController extends Controller
         return $productName . ' - ' . implode(' ', $variationParts);
     }
 
-    // private function getVariationName($connection, $variationId, $productName)
-    // {
-    //     return $productName;
-    // }
-
-
     public function randomProducts(Request $request)
     {
         $site_id = $request->get('site_id') ?? session('customer.site_id');
@@ -201,7 +195,10 @@ class WordPressController extends Controller
         $productList = $bestMatch->map(fn($p) => [
             'id' => $p->id,
             'variation_id' => $p->variation_id,
-            'unit_price' => $p->unit_price
+            'unit_price' => $p->unit_price,
+            'name' => $p->name,
+            'description' => $p->description ?? '',
+            'slug' => $p->slug ?? '',
         ])->toArray();
     
         session()->forget('ready_products');
@@ -868,7 +865,22 @@ class WordPressController extends Controller
                 $product->discount = 0;
             }
             $product->name = $this->getVariationName($connection, $product->variation_id, $product->name);
-    
+
+            $sessionProduct['name'] = $product->name;
+            $sessionProduct['description'] = $product->description ?? '';
+            $sessionProduct['slug'] = $product->slug ?? '';
+
+            $updatedReadyProducts = session()->get('ready_products', []);
+            foreach ($updatedReadyProducts as &$sp) {
+                if ($sp['id'] == $product->id && $sp['variation_id'] == $variation_id) {
+                    $sp['name'] = $product->name;
+                    $sp['description'] = $product->description ?? '';
+                    $sp['slug'] = $product->slug ?? '';
+                    break;
+                }
+            }
+            session()->put('ready_products', $updatedReadyProducts);
+
             return $product;
         });
     
@@ -897,7 +909,6 @@ class WordPressController extends Controller
 
         $readyProducts = session('ready_products', []);
 
-        // Remove from session only — never touch the DB
         $updatedProducts = collect($readyProducts)->reject(function ($product) use ($productId, $variationId) {
             return $product['id'] == $productId && $product['variation_id'] == $variationId;
         })->values()->toArray();
@@ -912,19 +923,49 @@ class WordPressController extends Controller
             ]);
         }
 
-        // Build display list purely from session data — no DB query needed
-        $products = collect($updatedProducts)->map(function ($item) use ($site_id) {
+        DynamicDatabaseService::connect($site);
+
+        $postsTable = $this->productTable;
+        $priceTable = $this->productPriceTable;
+        $connection = $this->connectionType;
+
+        $productIds = collect($updatedProducts)->pluck('id')->toArray();
+
+        $dbProducts = DB::connection($connection)
+            ->table($postsTable)
+            ->join($priceTable, "$postsTable.ID", '=', "$priceTable.product_id")
+            ->select(
+                "$postsTable.ID as id",
+                "$postsTable.post_parent as parent_id",
+                "$postsTable.post_type as post_type",
+                "$postsTable.post_title as name",
+                "$postsTable.post_excerpt as description",
+                "$postsTable.post_name as slug",
+                "$priceTable.min_price as unit_price"
+            )
+            ->whereIn("$postsTable.ID", $productIds)
+            ->where("$postsTable.post_status", 'publish')
+            ->get()
+            ->keyBy('id');
+
+        $products = collect($updatedProducts)->map(function ($item) use ($dbProducts, $site_id, $connection) {
+            $dbProduct = $dbProducts[$item['id']] ?? null;
+
             $product = (object) [
                 'id'            => $item['id'],
                 'variation_id'  => $item['variation_id'] ?? 0,
                 'unit_price'    => $item['unit_price'],
-                'name'          => $item['name'] ?? '',
-                'description'   => $item['description'] ?? '',
-                'slug'          => $item['slug'] ?? '',
+                'name'          => $item['name'] ?? ($dbProduct ? $dbProduct->post_title ?? $dbProduct->name ?? '' : ''),
+                'description'   => $item['description'] ?? ($dbProduct ? $dbProduct->description ?? '' : ''),
+                'slug'          => $item['slug'] ?? ($dbProduct ? $dbProduct->slug ?? '' : ''),
                 'category_name' => '-',
                 'rrp'           => $item['unit_price'],
                 'discount'      => 0,
             ];
+
+            if ($dbProduct) {
+                $product->name = $this->getVariationName($connection, $product->variation_id, $dbProduct->name ?? $dbProduct->post_title ?? $product->name);
+            }
 
             $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
                 ->where('product_id', $product->id)
@@ -1149,7 +1190,6 @@ class WordPressController extends Controller
         $products = $products->map(function ($product) use ($site_id, $connection, $postsTable) {
             $product->category_name = '-';
 
-            // Resolve actual variation_id (first published variation for this product)
             $product->variation_id = DB::connection($connection)
                 ->table($postsTable)
                 ->where('post_parent', $product->id)
@@ -1276,12 +1316,9 @@ class WordPressController extends Controller
                 DB::connection($this->connectionType)->table('general_settings')->where('id', $remote_database->id)
                     ->update([
                         'site_name'            => $request->input('remote_site_name') ?? '',
-                        //'company_name'        => $request->input('remote_company_name') ?? '',
                         'email'                => $request->input('remote_company_email') ?? '',
                         'phone'                => $request->input('remote_company_mobile') ?? '',
                         'address'              => $request->input('remote_company_address') ?? '',
-                       // 'registration_number'  => $request->input('remote_registration_number') ?? '',
-                       // 'license_number'       => $request->input('remote_license_number') ?? '',
                         'updated_at'           => now(),
                     ]);
             }
@@ -1356,12 +1393,10 @@ class WordPressController extends Controller
         })
         ->values()
         ->map(function ($product) use ($customPrices, $connection, $postsTable) {
-            // Determine variation_id properly
             if ($product->post_type === 'product_variation') {
                 $product->variation_id = $product->id;
                 $product->id = $product->parent_id;
             } else {
-                // Get the variation ID from session's ready_products
                 $readyProducts = session('ready_products', []);
                 $sessionProduct = collect($readyProducts)->firstWhere('id', $product->id);
                 $product->variation_id = $sessionProduct['variation_id'] ?? 0;
@@ -1388,17 +1423,15 @@ class WordPressController extends Controller
             ? $request->input('invoice_file_name') . '.pdf'
             : $invoice_data['invoice_number'] . '.pdf';
     
-            $filename = $request->filled('invoice_file_name')
+        $filename = $request->filled('invoice_file_name')
             ? $request->input('invoice_file_name') . '.pdf'
             : $invoice_data['invoice_number'] . '.pdf';
             
-            try {
-                return $this->generateWithApi2Pdf($site, $viewPath, $invoice_data, $filename);
-
-            } catch (\Exception $e) {
-                // Fallback to Dompdf if API2PDF fails
-                return $this->generateWithDompdf($site, $viewPath, $invoice_data, $filename);
-            }
+        try {
+            return $this->generateWithApi2Pdf($site, $viewPath, $invoice_data, $filename);
+        } catch (\Exception $e) {
+            return $this->generateWithDompdf($site, $viewPath, $invoice_data, $filename);
+        }
     
     }
 
