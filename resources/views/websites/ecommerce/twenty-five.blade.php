@@ -37,7 +37,7 @@
                         <td style="padding:20px 100px;">
                             <table style="background: url('{{ $invoice_image1 }}') no-repeat;background-position: center;height:141px; width: 100%;border-collapse: collapse;">
                                 <tr>
-                                    <td style="width:60%;vertical-align:top;">
+                                    <td style="width:40%;vertical-align:top;">
                                          <p style="font-family: arial;font-size:28px;margin-bottom: 5px;font-weight: 400;">
                                            <b>INVOICE</b> 
                                         </p>
