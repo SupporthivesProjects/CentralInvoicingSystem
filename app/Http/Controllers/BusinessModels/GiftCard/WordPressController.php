@@ -193,12 +193,12 @@ class WordPressController extends Controller
         });
     
         $productList = $bestMatch->map(fn($p) => [
-            'id' => $p->id,
+            'id'           => $p->id,
             'variation_id' => $p->variation_id,
-            'unit_price' => $p->unit_price,
-            'name' => $p->name,
-            'description' => $p->description ?? '',
-            'slug' => $p->slug ?? '',
+            'unit_price'   => $p->unit_price,
+            'name'         => $p->name,
+            'description'  => $p->description ?? '',
+            'slug'         => $p->slug ?? '',
         ])->toArray();
     
         session()->forget('ready_products');
@@ -208,13 +208,13 @@ class WordPressController extends Controller
         $modelType = $site->businessModel->model_type;
         $tableRows = view("invoice.{$modelType}.random_product_rows", [
             'products' => $bestMatch,
-            'site' => $site,
-            'total' => $bestTotal
+            'site'     => $site,
+            'total'    => $bestTotal
         ])->render();
     
         return response()->json([
             'tableRows' => $tableRows,
-            'total' => $bestTotal
+            'total'     => $bestTotal
         ]);
     }
     
@@ -323,7 +323,7 @@ class WordPressController extends Controller
     
                         return [
                             'products' => [$products[$bestPair[0]], $products[$bestPair[1]]],
-                            'total' => $bestTotal
+                            'total'    => $bestTotal
                         ];
                     }
                 }
@@ -342,7 +342,6 @@ class WordPressController extends Controller
             }
         }
     
-        $avgPrice = $target / $count;
         $maxTotal = $target * 1.20;
         $bestMatch = null;
         $bestTotal = 0;
@@ -764,8 +763,6 @@ class WordPressController extends Controller
     
         return null;
     }
-    
-
 
     public function addProducts(Request $request)
     {
@@ -782,9 +779,9 @@ class WordPressController extends Controller
         $readyProducts = session()->get('ready_products', []);
     
         foreach ($productsData as $productData) {
-            $productId = $productData['product_id'];
+            $productId   = $productData['product_id'];
             $variationId = (int) ($productData['variation_id'] ?? 0);
-            $unitPrice = floatval($productData['unit_price']);
+            $unitPrice   = floatval($productData['unit_price']);
     
             $exists = false;
             foreach ($readyProducts as &$item) {
@@ -797,9 +794,12 @@ class WordPressController extends Controller
     
             if (!$exists) {
                 $readyProducts[] = [
-                    'id' => $productId,
+                    'id'           => $productId,
                     'variation_id' => $variationId,
-                    'unit_price' => $unitPrice,
+                    'unit_price'   => $unitPrice,
+                    'name'         => '',
+                    'description'  => '',
+                    'slug'         => '',
                 ];
             }
         }
@@ -808,129 +808,6 @@ class WordPressController extends Controller
     
         $productIds = collect($readyProducts)->pluck('id')->reverse()->values()->toArray();
     
-        $products = DB::connection($connection)
-            ->table($postsTable)
-            ->join($priceTable, "$postsTable.ID", '=', "$priceTable.product_id")
-            ->select(
-                "$postsTable.ID as id",
-                "$postsTable.post_parent as parent_id",
-                "$postsTable.post_type as post_type",
-                "$postsTable.post_title as name",
-                "$postsTable.post_excerpt as description",
-                "$postsTable.post_name as slug",
-                "$priceTable.min_price as unit_price"
-            )
-            ->whereIn("$postsTable.ID", $productIds)
-            ->where("$postsTable.post_status", 'publish')
-            ->get()
-            ->keyBy('id');
-    
-        $products = collect($productIds)->map(function ($id) use ($products) {
-            return $products[$id] ?? null;
-        })->filter();
-    
-        $products = $products->map(function ($product) use ($readyProducts, $site_id, $connection) {
-            $sessionProduct = collect($readyProducts)->firstWhere('id', $product->id);
-    
-            if ($product->post_type === 'product_variation') {
-                $api_product_id = $product->parent_id;
-                $variation_id = $product->id;
-            } else {
-                $api_product_id = $product->id;
-                $variation_id = $sessionProduct['variation_id'] ?? 0;
-            }
-    
-            $product->unit_price = $sessionProduct['unit_price'] ?? $product->unit_price;
-            $product->category_name = '-';
-            $product->variation_id = $variation_id;
-    
-            $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
-                ->where('product_id', $api_product_id)
-                ->where('bundle', $variation_id)
-                ->orderByDesc('last_price_changed')
-                ->first();
-    
-            if ($lastUpdate) {
-                $lastPriceChanged = Carbon::parse($lastUpdate->last_price_changed);
-                $nextChange = $lastPriceChanged->copy()->addMonths(3);
-                $remaining = now()->diffInDays($nextChange, false);
-                $product->remaining_days = round(max($remaining, 0));
-                $product->can_edit_price = now()->greaterThanOrEqualTo($nextChange) ? 1 : 0;
-                $product->rrp = $product->unit_price;
-                $product->discount = 0;
-            } else {
-                $product->can_edit_price = 1;
-                $product->remaining_days = 0;
-                $product->rrp = $product->unit_price;
-                $product->discount = 0;
-            }
-            $product->name = $this->getVariationName($connection, $product->variation_id, $product->name);
-
-            $sessionProduct['name'] = $product->name;
-            $sessionProduct['description'] = $product->description ?? '';
-            $sessionProduct['slug'] = $product->slug ?? '';
-
-            $updatedReadyProducts = session()->get('ready_products', []);
-            foreach ($updatedReadyProducts as &$sp) {
-                if ($sp['id'] == $product->id && $sp['variation_id'] == $variation_id) {
-                    $sp['name'] = $product->name;
-                    $sp['description'] = $product->description ?? '';
-                    $sp['slug'] = $product->slug ?? '';
-                    break;
-                }
-            }
-            session()->put('ready_products', $updatedReadyProducts);
-
-            return $product;
-        });
-    
-        $total = $products->sum('unit_price');
-        session(['current_amount' => $total]);
-    
-        $modelType = $site->businessModel->model_type;
-        $tableRows = view("invoice.{$modelType}.random_product_rows", [
-            'products' => $products,
-            'site' => $site,
-            'total' => $total
-        ])->render();
-    
-        return response()->json([
-            'tableRows' => $tableRows,
-            'total' => $total
-        ]);
-    }
-    
-    public function removeProduct(Request $request)
-    {
-        $productId = $request->get('product_id');
-        $variationId = (int) ($request->get('variation_id') ?? 0);
-        $site_id = $request->get('site_id');
-        $site = Website::findOrFail($site_id);
-
-        $readyProducts = session('ready_products', []);
-
-        $updatedProducts = collect($readyProducts)->reject(function ($product) use ($productId, $variationId) {
-            return $product['id'] == $productId && $product['variation_id'] == $variationId;
-        })->values()->toArray();
-
-        session()->put('ready_products', $updatedProducts);
-
-        if (empty($updatedProducts)) {
-            session()->forget('current_amount');
-            return response()->json([
-                'tableRows' => '',
-                'total' => 0,
-            ]);
-        }
-
-        DynamicDatabaseService::connect($site);
-
-        $postsTable = $this->productTable;
-        $priceTable = $this->productPriceTable;
-        $connection = $this->connectionType;
-
-        $productIds = collect($updatedProducts)->pluck('id')->toArray();
-
         $dbProducts = DB::connection($connection)
             ->table($postsTable)
             ->join($priceTable, "$postsTable.ID", '=', "$priceTable.product_id")
@@ -947,25 +824,140 @@ class WordPressController extends Controller
             ->where("$postsTable.post_status", 'publish')
             ->get()
             ->keyBy('id');
+    
+        $products = collect($productIds)->map(function ($id) use ($dbProducts) {
+            return $dbProducts[$id] ?? null;
+        })->filter();
+    
+        $updatedSession = $readyProducts;
+
+        $products = $products->map(function ($product) use ($readyProducts, $site_id, $connection, &$updatedSession) {
+            $sessionProduct = collect($readyProducts)->firstWhere('id', $product->id);
+    
+            if ($product->post_type === 'product_variation') {
+                $api_product_id = $product->parent_id;
+                $variation_id   = $product->id;
+            } else {
+                $api_product_id = $product->id;
+                $variation_id   = $sessionProduct['variation_id'] ?? 0;
+            }
+    
+            $product->unit_price    = $sessionProduct['unit_price'] ?? $product->unit_price;
+            $product->category_name = '-';
+            $product->variation_id  = $variation_id;
+            $product->name          = $this->getVariationName($connection, $variation_id, $product->name);
+
+            foreach ($updatedSession as &$sp) {
+                if ($sp['id'] == $product->id && $sp['variation_id'] == $variation_id) {
+                    $sp['name']        = $product->name;
+                    $sp['description'] = $product->description ?? '';
+                    $sp['slug']        = $product->slug ?? '';
+                    break;
+                }
+            }
+    
+            $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
+                ->where('product_id', $api_product_id)
+                ->where('bundle', $variation_id)
+                ->orderByDesc('last_price_changed')
+                ->first();
+    
+            if ($lastUpdate) {
+                $lastPriceChanged        = Carbon::parse($lastUpdate->last_price_changed);
+                $nextChange              = $lastPriceChanged->copy()->addMonths(3);
+                $remaining               = now()->diffInDays($nextChange, false);
+                $product->remaining_days = round(max($remaining, 0));
+                $product->can_edit_price = now()->greaterThanOrEqualTo($nextChange) ? 1 : 0;
+                $product->rrp            = $product->unit_price;
+                $product->discount       = 0;
+            } else {
+                $product->can_edit_price = 1;
+                $product->remaining_days = 0;
+                $product->rrp            = $product->unit_price;
+                $product->discount       = 0;
+            }
+    
+            return $product;
+        });
+
+        session()->put('ready_products', $updatedSession);
+    
+        $total = $products->sum('unit_price');
+        session(['current_amount' => $total]);
+    
+        $modelType = $site->businessModel->model_type;
+        $tableRows = view("invoice.{$modelType}.random_product_rows", [
+            'products' => $products,
+            'site'     => $site,
+            'total'    => $total
+        ])->render();
+    
+        return response()->json([
+            'tableRows' => $tableRows,
+            'total'     => $total
+        ]);
+    }
+    
+    public function removeProduct(Request $request)
+    {
+        $productId   = $request->get('product_id');
+        $variationId = (int) ($request->get('variation_id') ?? 0);
+        $site_id     = $request->get('site_id');
+        $site        = Website::findOrFail($site_id);
+
+        $readyProducts = session('ready_products', []);
+
+        $updatedProducts = collect($readyProducts)->reject(function ($product) use ($productId, $variationId) {
+            return (string) $product['id'] === (string) $productId
+                && (int) $product['variation_id'] === $variationId;
+        })->values()->toArray();
+
+        session()->put('ready_products', $updatedProducts);
+
+        if (empty($updatedProducts)) {
+            session()->forget('current_amount');
+            return response()->json([
+                'tableRows' => '',
+                'total'     => 0,
+            ]);
+        }
+
+        DynamicDatabaseService::connect($site);
+
+        $postsTable = $this->productTable;
+        $priceTable = $this->productPriceTable;
+        $connection = $this->connectionType;
+        $productIds = collect($updatedProducts)->pluck('id')->toArray();
+
+        $dbProducts = DB::connection($connection)
+            ->table($postsTable)
+            ->join($priceTable, "$postsTable.ID", '=', "$priceTable.product_id")
+            ->select(
+                "$postsTable.ID as id",
+                "$postsTable.post_title as name",
+                "$postsTable.post_excerpt as description",
+                "$postsTable.post_name as slug"
+            )
+            ->whereIn("$postsTable.ID", $productIds)
+            ->get()
+            ->keyBy('id');
 
         $products = collect($updatedProducts)->map(function ($item) use ($dbProducts, $site_id, $connection) {
-            $dbProduct = $dbProducts[$item['id']] ?? null;
+            $dbRow        = $dbProducts[$item['id']] ?? null;
+            $baseName     = $dbRow ? $dbRow->name : ($item['name'] ?? '');
+            $resolvedName = $this->getVariationName($connection, $item['variation_id'] ?? 0, $baseName);
 
             $product = (object) [
-                'id'            => $item['id'],
-                'variation_id'  => $item['variation_id'] ?? 0,
-                'unit_price'    => $item['unit_price'],
-                'name'          => $item['name'] ?? ($dbProduct ? $dbProduct->post_title ?? $dbProduct->name ?? '' : ''),
-                'description'   => $item['description'] ?? ($dbProduct ? $dbProduct->description ?? '' : ''),
-                'slug'          => $item['slug'] ?? ($dbProduct ? $dbProduct->slug ?? '' : ''),
-                'category_name' => '-',
-                'rrp'           => $item['unit_price'],
-                'discount'      => 0,
+                'id'             => $item['id'],
+                'variation_id'   => $item['variation_id'] ?? 0,
+                'unit_price'     => $item['unit_price'],
+                'name'           => $resolvedName,
+                'description'    => $item['description'] ?? ($dbRow->description ?? ''),
+                'slug'           => $item['slug'] ?? ($dbRow->slug ?? ''),
+                'category_name'  => '-',
+                'rrp'            => $item['unit_price'],
+                'discount'       => 0,
             ];
-
-            if ($dbProduct) {
-                $product->name = $this->getVariationName($connection, $product->variation_id, $dbProduct->name ?? $dbProduct->post_title ?? $product->name);
-            }
 
             $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
                 ->where('product_id', $product->id)
@@ -974,8 +966,8 @@ class WordPressController extends Controller
                 ->first();
 
             if ($lastUpdate) {
-                $nextDate = Carbon::parse($lastUpdate->last_price_changed)->addMonths(3);
-                $remaining = now()->diffInDays($nextDate, false);
+                $nextDate                = Carbon::parse($lastUpdate->last_price_changed)->addMonths(3);
+                $remaining               = now()->diffInDays($nextDate, false);
                 $product->remaining_days = round(max($remaining, 0));
                 $product->can_edit_price = now()->gte($nextDate) ? 1 : 0;
             } else {
@@ -1004,10 +996,10 @@ class WordPressController extends Controller
     
     public function updateProduct(Request $request)
     {
-        $productId = $request->get('product_id');
+        $productId   = $request->get('product_id');
         $variationId = (int) ($request->get('variation_id') ?? 0);
-        $quantity = $request->get('quantity');
-        $site_id = $request->get('site_id');
+        $quantity    = $request->get('quantity');
+        $site_id     = $request->get('site_id');
     
         $site = Website::findOrFail($site_id);
         DynamicDatabaseService::connect($site);
@@ -1048,16 +1040,17 @@ class WordPressController extends Controller
     
             if ($product->post_type === 'product_variation') {
                 $api_product_id = $product->parent_id;
-                $variation_id = $product->id;
+                $variation_id   = $product->id;
             } else {
                 $api_product_id = $product->id;
-                $variation_id = $sessionProduct['variation_id'] ?? 0;
+                $variation_id   = $sessionProduct['variation_id'] ?? 0;
             }
     
-            $product->unit_price = $sessionProduct['unit_price'] ?? $product->unit_price;
-            $product->quantity = $sessionProduct['quantity'] ?? 1;
+            $product->unit_price    = $sessionProduct['unit_price'] ?? $product->unit_price;
+            $product->quantity      = $sessionProduct['quantity'] ?? 1;
             $product->category_name = '-';
-            $product->variation_id = $variation_id;
+            $product->variation_id  = $variation_id;
+            $product->name          = $this->getVariationName($connection, $variation_id, $product->name);
     
             $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
                 ->where('product_id', $api_product_id)
@@ -1066,26 +1059,22 @@ class WordPressController extends Controller
                 ->first();
     
             if ($lastUpdate) {
-                $lastPriceChanged = Carbon::parse($lastUpdate->last_price_changed);
-                $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
-                $remainingDays = now()->diffInDays($nextPriceChangeDate, false);
+                $lastPriceChanged        = Carbon::parse($lastUpdate->last_price_changed);
+                $nextPriceChangeDate     = $lastPriceChanged->copy()->addMonths(3);
+                $remainingDays           = now()->diffInDays($nextPriceChangeDate, false);
                 $product->remaining_days = round(max($remainingDays, 0));
                 $product->can_edit_price = now()->greaterThanOrEqualTo($nextPriceChangeDate) ? 1 : 0;
-                $product->rrp = $product->unit_price;
-                $product->discount = 0;
+                $product->rrp            = $product->unit_price;
+                $product->discount       = 0;
             } else {
                 $product->can_edit_price = 1;
                 $product->remaining_days = 0;
-                $product->rrp = $product->unit_price;
-                $product->discount = 0;
+                $product->rrp            = $product->unit_price;
+                $product->discount       = 0;
             }
-
-            $product->name = $this->getVariationName($connection, $product->variation_id, $product->name);
-
+    
             return $product;
         });
-    
-        $modelType = $site->businessModel->model_type;
     
         $total = $products->sum(function ($product) {
             return $product->unit_price * ($product->quantity ?? 1);
@@ -1093,36 +1082,36 @@ class WordPressController extends Controller
     
         session(['current_amount' => $total]);
     
+        $modelType = $site->businessModel->model_type;
         $tableRows = view("invoice.{$modelType}.random_product_rows", [
             'products' => $products,
-            'site' => $site,
-            'total' => $total
+            'site'     => $site,
+            'total'    => $total
         ])->render();
     
         return response()->json([
             'tableRows' => $tableRows,
-            'total' => $total
+            'total'     => $total
         ]);
     }
-
 
     public function clearProducts(Request $request)
     {
         session()->forget('ready_products');
         session()->forget('current_amount');
         return response()->json([
-            'success' => true,
+            'success'   => true,
             'tableRows' => '',
-            'currency' => null,
-            'total' => 0
+            'currency'  => null,
+            'total'     => 0
         ]);
     }
 
     public function filterProducts(Request $request)
     {
-        $site_id = session('customer.site_id');
+        $site_id       = session('customer.site_id');
         $hasPriceRange = $request->filled('price_from') && $request->filled('price_to');
-        $keyword = $request->input('keyword');
+        $keyword       = $request->input('keyword');
         $sortUnitPrice = $request->input('sort_unit_price', 'asc');
 
         $site = Website::findOrFail($site_id);
@@ -1167,7 +1156,7 @@ class WordPressController extends Controller
             $query->whereRaw("LOWER(REPLACE(REPLACE(REPLACE($postsTable.post_title, '-', ''), '_', ''), ' ', '')) LIKE ?", ["%{$normalizedSearch}%"]);
         }
 
-        $readyProducts = session('ready_products', []);
+        $readyProducts   = session('ready_products', []);
         $readyProductIds = collect($readyProducts)->pluck('id')->toArray();
 
         if (!empty($readyProductIds)) {
@@ -1175,9 +1164,9 @@ class WordPressController extends Controller
         }
 
         $totalCount = $query->count();
-        $page = $request->input('page', 1);
-        $perPage = 10;
-        $offset = ($page - 1) * $perPage;
+        $page       = $request->input('page', 1);
+        $perPage    = 10;
+        $offset     = ($page - 1) * $perPage;
 
         $products = $query->skip($offset)->take($perPage)->get();
 
@@ -1203,18 +1192,18 @@ class WordPressController extends Controller
                 ->first();
 
             if ($lastUpdate) {
-                $lastPriceChanged = Carbon::parse($lastUpdate->last_price_changed);
-                $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
-                $remainingDays = now()->diffInDays($nextPriceChangeDate, false);
+                $lastPriceChanged        = Carbon::parse($lastUpdate->last_price_changed);
+                $nextPriceChangeDate     = $lastPriceChanged->copy()->addMonths(3);
+                $remainingDays           = now()->diffInDays($nextPriceChangeDate, false);
                 $product->remaining_days = round(max($remainingDays, 0));
                 $product->can_edit_price = now()->gte($nextPriceChangeDate) ? 1 : 0;
-                $product->rrp = $product->unit_price;
-                $product->discount = 0;
+                $product->rrp            = $product->unit_price;
+                $product->discount       = 0;
             } else {
                 $product->can_edit_price = 1;
                 $product->remaining_days = 0;
-                $product->rrp = $product->unit_price;
-                $product->discount = 0;
+                $product->rrp            = $product->unit_price;
+                $product->discount       = 0;
             }
 
             $product->name = $this->getVariationName($connection, $product->variation_id, $product->name);
@@ -1222,36 +1211,34 @@ class WordPressController extends Controller
             return $product;
         });
 
-        $totalPages = ceil($totalCount / $perPage);
+        $totalPages      = ceil($totalCount / $perPage);
         $paginationPages = $this->smartPagination($page, $totalPages);
-        $modelType = $site->businessModel->model_type;
-        $random_amount = session('current_amount', 0);
+        $modelType       = $site->businessModel->model_type;
+        $random_amount   = session('current_amount', 0);
 
         $tableRows = view("invoice.{$modelType}.add_product_rows", [
-            'products' => $products,
-            'site' => $site,
+            'products'      => $products,
+            'site'          => $site,
             'random_amount' => $random_amount
         ])->render();
 
         $paginationHtml = view("invoice.{$modelType}.pagination", [
-            'totalPages' => $totalPages,
+            'totalPages'      => $totalPages,
             'paginationPages' => $paginationPages,
-            'currentPage' => $page
+            'currentPage'     => $page
         ])->render();
 
         return response()->json([
-            'tableRows' => $tableRows,
+            'tableRows'      => $tableRows,
             'paginationHtml' => $paginationHtml,
-            'random_amount' => $random_amount,
-            'currentPage' => $page
+            'random_amount'  => $random_amount,
+            'currentPage'    => $page
         ]);
     }
 
-    
-
     private function smartPagination($currentPage, $totalPages)
     {
-        $pages = [];
+        $pages   = [];
         $pages[] = 1;
 
         if ($currentPage > 4) {
@@ -1259,7 +1246,7 @@ class WordPressController extends Controller
         }
 
         $start = max(2, $currentPage - 3);
-        $end = min($totalPages - 1, $currentPage + 3);
+        $end   = min($totalPages - 1, $currentPage + 3);
 
         for ($i = $start; $i <= $end; $i++) {
             $pages[] = $i;
@@ -1276,37 +1263,34 @@ class WordPressController extends Controller
         return array_values(array_unique($pages));
     }
 
-
-
     public function generateInvoice(Request $request)
     {
         $site_id = $request->input('site_id');
-        $site = Website::findOrFail($site_id);
+        $site    = Website::findOrFail($site_id);
         DynamicDatabaseService::connect($site);
     
-        $invoice_data['site'] = $site;
-        $invoice_data['site_id'] = $site->id;
-        $invoice_data['invoice_number'] = $request->input('invoice_number');
-        $invoice_data['invoice_date'] = Carbon::parse($request->input('invoice_date'))->format('F d, Y');
-        $invoice_data['customer_name'] = $request->input('customer_name');
-        $invoice_data['customer_mobile'] = $request->input('customer_mobile');
-        $invoice_data['customer_email'] = $request->input('customer_email');
-        $invoice_data['invoice_amount'] = $request->input('invoice_amount');
-        $invoice_data['current_amount'] = $request->input('current_amount');
-        $invoice_data['discount_amount'] = $request->input('discount_amount');
-        $invoice_data['currency'] = site_currency();
+        $invoice_data['site']             = $site;
+        $invoice_data['site_id']          = $site->id;
+        $invoice_data['invoice_number']   = $request->input('invoice_number');
+        $invoice_data['invoice_date']     = Carbon::parse($request->input('invoice_date'))->format('F d, Y');
+        $invoice_data['customer_name']    = $request->input('customer_name');
+        $invoice_data['customer_mobile']  = $request->input('customer_mobile');
+        $invoice_data['customer_email']   = $request->input('customer_email');
+        $invoice_data['invoice_amount']   = $request->input('invoice_amount');
+        $invoice_data['current_amount']   = $request->input('current_amount');
+        $invoice_data['discount_amount']  = $request->input('discount_amount');
+        $invoice_data['currency']         = site_currency();
         $invoice_data['invoice_template'] = $site->invoice_template;
-        $invoice_data['model_type'] = $site->businessModel->model_type;
+        $invoice_data['model_type']       = $site->businessModel->model_type;
     
         $company_detail_type = $request->input('company_detail_type');
     
         if ($company_detail_type === 'remote') {
-
-            $invoice_data['site_name']          = $request->input('remote_site_name') ?? '';
-            $invoice_data['company_name']       = $request->input('remote_company_name') ?? '';
-            $invoice_data['company_email']      = $request->input('remote_company_email') ?? '';
-            $invoice_data['company_mobile']     = $request->input('remote_company_mobile') ?? '';
-            $invoice_data['company_address']    = $request->input('remote_company_address') ?? '';
+            $invoice_data['site_name']           = $request->input('remote_site_name') ?? '';
+            $invoice_data['company_name']        = $request->input('remote_company_name') ?? '';
+            $invoice_data['company_email']       = $request->input('remote_company_email') ?? '';
+            $invoice_data['company_mobile']      = $request->input('remote_company_mobile') ?? '';
+            $invoice_data['company_address']     = $request->input('remote_company_address') ?? '';
             $invoice_data['registration_number'] = $request->input('remote_registration_number') ?? '';
             $invoice_data['license_number']      = $request->input('remote_license_number') ?? '';
         
@@ -1315,29 +1299,27 @@ class WordPressController extends Controller
             if ($remote_database) {
                 DB::connection($this->connectionType)->table('general_settings')->where('id', $remote_database->id)
                     ->update([
-                        'site_name'            => $request->input('remote_site_name') ?? '',
-                        'email'                => $request->input('remote_company_email') ?? '',
-                        'phone'                => $request->input('remote_company_mobile') ?? '',
-                        'address'              => $request->input('remote_company_address') ?? '',
-                        'updated_at'           => now(),
+                        'site_name'  => $request->input('remote_site_name') ?? '',
+                        'email'      => $request->input('remote_company_email') ?? '',
+                        'phone'      => $request->input('remote_company_mobile') ?? '',
+                        'address'    => $request->input('remote_company_address') ?? '',
+                        'updated_at' => now(),
                     ]);
             }
-        
         } else {
-        
-            $invoice_data['site_name']          = $request->input('local_site_name') ?? '';
-            $invoice_data['company_name']       = $request->input('local_company_name') ?? '';
-            $invoice_data['company_email']      = $request->input('local_company_email') ?? '';
-            $invoice_data['company_mobile']     = $request->input('local_company_mobile') ?? '';
-            $invoice_data['company_address']    = $request->input('local_company_address') ?? '';
+            $invoice_data['site_name']           = $request->input('local_site_name') ?? '';
+            $invoice_data['company_name']        = $request->input('local_company_name') ?? '';
+            $invoice_data['company_email']       = $request->input('local_company_email') ?? '';
+            $invoice_data['company_mobile']      = $request->input('local_company_mobile') ?? '';
+            $invoice_data['company_address']     = $request->input('local_company_address') ?? '';
             $invoice_data['registration_number'] = $request->input('registration_number') ?? '';
             $invoice_data['license_number']      = $request->input('license_number') ?? '';
         
-            $site->site_name          = $invoice_data['site_name'];
-            $site->company_name       = $invoice_data['company_name'];
-            $site->company_email      = $invoice_data['company_email'];
-            $site->company_mobile     = $invoice_data['company_mobile'];
-            $site->company_address    = $invoice_data['company_address'];
+            $site->site_name           = $invoice_data['site_name'];
+            $site->company_name        = $invoice_data['company_name'];
+            $site->company_email       = $invoice_data['company_email'];
+            $site->company_mobile      = $invoice_data['company_mobile'];
+            $site->company_address     = $invoice_data['company_address'];
             $site->registration_number = $invoice_data['registration_number'];
             $site->license_number      = $invoice_data['license_number'];
         
@@ -1346,26 +1328,26 @@ class WordPressController extends Controller
         
         $invoice_data['invoice_header_image'] = base64EncodeImage($site->invoice_header_image);
         $invoice_data['invoice_footer_image'] = base64EncodeImage($site->invoice_footer_image);
-        $invoice_data['invoice_signature'] = base64EncodeImage($site->invoice_signature);
-        $invoice_data['company_logo'] = base64EncodeImage($site->company_logo);
-        $invoice_data['invoice_image1'] = base64EncodeImage($site->invoice_image1);
-        $invoice_data['invoice_image2'] = base64EncodeImage($site->invoice_image2);
-        $invoice_data['invoice_image3'] = base64EncodeImage($site->invoice_image3);
-        $invoice_data['invoice_image4'] = base64EncodeImage($site->invoice_image4);
-        $invoice_data['invoice_image5'] = base64EncodeImage($site->invoice_image5);
-        $invoice_data['invoice_image6'] = base64EncodeImage($site->invoice_image6);
-        $invoice_data['invoice_image7'] = base64EncodeImage($site->invoice_image7);
-        $invoice_data['invoice_image8'] = base64EncodeImage($site->invoice_image8);
-        $invoice_data['invoice_image9'] = base64EncodeImage($site->invoice_image9);
+        $invoice_data['invoice_signature']    = base64EncodeImage($site->invoice_signature);
+        $invoice_data['company_logo']         = base64EncodeImage($site->company_logo);
+        $invoice_data['invoice_image1']       = base64EncodeImage($site->invoice_image1);
+        $invoice_data['invoice_image2']       = base64EncodeImage($site->invoice_image2);
+        $invoice_data['invoice_image3']       = base64EncodeImage($site->invoice_image3);
+        $invoice_data['invoice_image4']       = base64EncodeImage($site->invoice_image4);
+        $invoice_data['invoice_image5']       = base64EncodeImage($site->invoice_image5);
+        $invoice_data['invoice_image6']       = base64EncodeImage($site->invoice_image6);
+        $invoice_data['invoice_image7']       = base64EncodeImage($site->invoice_image7);
+        $invoice_data['invoice_image8']       = base64EncodeImage($site->invoice_image8);
+        $invoice_data['invoice_image9']       = base64EncodeImage($site->invoice_image9);
     
         $productDataArray = $request->input('product_data', []);
-        $productIds = [];
-        $customPrices = [];
+        $productIds       = [];
+        $customPrices     = [];
     
         foreach ($productDataArray as $item) {
             $data = json_decode($item, true);
             if (!empty($data['product_id'])) {
-                $productIds[] = $data['product_id'];
+                $productIds[]                      = $data['product_id'];
                 $customPrices[$data['product_id']] = $data['unit_price'];
             }
         }
@@ -1375,53 +1357,50 @@ class WordPressController extends Controller
         $connection = $this->connectionType;
 
         $products = DB::connection($connection)
-        ->table($postsTable)
-        ->join($priceTable, "$postsTable.ID", '=', "$priceTable.product_id")
-        ->whereIn("$postsTable.ID", $productIds)
-        ->select([
-            "$postsTable.ID as id",
-            "$postsTable.post_parent as parent_id",
-            "$postsTable.post_type as post_type",
-            "$postsTable.post_title as name",
-            "$postsTable.post_excerpt as description",
-            "$postsTable.post_name as slug",
-            "$priceTable.min_price as unit_price"
-        ])
-        ->get()
-        ->sortBy(function ($product) use ($productIds) {
-            return array_search($product->id, $productIds);
-        })
-        ->values()
-        ->map(function ($product) use ($customPrices, $connection, $postsTable) {
-            if ($product->post_type === 'product_variation') {
-                $product->variation_id = $product->id;
-                $product->id = $product->parent_id;
-            } else {
-                $readyProducts = session('ready_products', []);
-                $sessionProduct = collect($readyProducts)->firstWhere('id', $product->id);
-                $product->variation_id = $sessionProduct['variation_id'] ?? 0;
-            }
-            
-            $product->unit_price = $customPrices[$product->id] ?? $product->unit_price;
-            $product->category_name = '-';
-            $product->rrp = $product->unit_price;
-            $product->discount = 0;
-            $product->name = $this->getVariationName($connection, $product->variation_id, $product->name);
-            return $product;
-        });
-        $invoice_data['products'] = $products;
+            ->table($postsTable)
+            ->join($priceTable, "$postsTable.ID", '=', "$priceTable.product_id")
+            ->whereIn("$postsTable.ID", $productIds)
+            ->select([
+                "$postsTable.ID as id",
+                "$postsTable.post_parent as parent_id",
+                "$postsTable.post_type as post_type",
+                "$postsTable.post_title as name",
+                "$postsTable.post_excerpt as description",
+                "$postsTable.post_name as slug",
+                "$priceTable.min_price as unit_price"
+            ])
+            ->get()
+            ->sortBy(function ($product) use ($productIds) {
+                return array_search($product->id, $productIds);
+            })
+            ->values()
+            ->map(function ($product) use ($customPrices, $connection, $postsTable) {
+                if ($product->post_type === 'product_variation') {
+                    $product->variation_id = $product->id;
+                    $product->id           = $product->parent_id;
+                } else {
+                    $readyProducts         = session('ready_products', []);
+                    $sessionProduct        = collect($readyProducts)->firstWhere('id', $product->id);
+                    $product->variation_id = $sessionProduct['variation_id'] ?? 0;
+                }
+                
+                $product->unit_price    = $customPrices[$product->id] ?? $product->unit_price;
+                $product->category_name = '-';
+                $product->rrp           = $product->unit_price;
+                $product->discount      = 0;
+                $product->name          = $this->getVariationName($connection, $product->variation_id, $product->name);
+                return $product;
+            });
+
+        $invoice_data['products']    = $products;
         $invoice_data['product_ids'] = $productIds;
     
         $this->updateProductPrice($productDataArray);
         InvoiceController::createInvoiceHistory($invoice_data);
     
-        $modelType = strtolower($site->businessModel->model_type);
+        $modelType     = strtolower($site->businessModel->model_type);
         $siteIdInWords = numberToWords($site->id);
-        $viewPath = "websites.{$modelType}.{$siteIdInWords}";
-    
-        $filename = $request->filled('invoice_file_name')
-            ? $request->input('invoice_file_name') . '.pdf'
-            : $invoice_data['invoice_number'] . '.pdf';
+        $viewPath      = "websites.{$modelType}.{$siteIdInWords}";
     
         $filename = $request->filled('invoice_file_name')
             ? $request->input('invoice_file_name') . '.pdf'
@@ -1432,7 +1411,6 @@ class WordPressController extends Controller
         } catch (\Exception $e) {
             return $this->generateWithDompdf($site, $viewPath, $invoice_data, $filename);
         }
-    
     }
 
     protected function generateWithApi2Pdf($site, $viewPath, $invoice_data, $filename)
@@ -1442,17 +1420,17 @@ class WordPressController extends Controller
         $response = Http::withHeaders([
             'Authorization' => env('API2PDF_KEY')
         ])->post('https://v2.api2pdf.com/chrome/html', [
-            'html' => $html,
+            'html'     => $html,
             'fileName' => $filename,
-            'options' => [
-                'format' => $site->pdf_size ?? 'A4',
-                'landscape' => ($site->pdf_orientation ?? 'portrait') === 'landscape',
-                'marginTop' => '0mm',
-                'marginBottom' => '0mm',
-                'marginLeft' => '0mm',
-                'marginRight' => '0mm',
+            'options'  => [
+                'format'                => $site->pdf_size ?? 'A4',
+                'landscape'             => ($site->pdf_orientation ?? 'portrait') === 'landscape',
+                'marginTop'             => '0mm',
+                'marginBottom'          => '0mm',
+                'marginLeft'            => '0mm',
+                'marginRight'           => '0mm',
                 'disableSmartShrinking' => true,
-                'zoom' => 1,
+                'zoom'                  => 1,
             ]
         ]);
 
@@ -1487,22 +1465,22 @@ class WordPressController extends Controller
     protected function updateProductPrice(array $productDataArray)
     {
         $site_id = session('customer.site_id');
-        $site = Website::findOrFail($site_id);
+        $site    = Website::findOrFail($site_id);
     
         $connection = $this->connectionType;
         $priceTable = $this->productPriceTable;
     
-        $consumerKey = $site->consumer_key;
+        $consumerKey    = $site->consumer_key;
         $consumerSecret = $site->consumer_secret;
-        $baseUrl = rtrim($site->site_link, '/');
-        $endpoint = $baseUrl . '/wp-json/wc/v3/products';
+        $baseUrl        = rtrim($site->site_link, '/');
+        $endpoint       = $baseUrl . '/wp-json/wc/v3/products';
     
         if (!$consumerKey || !$consumerSecret) {
             throw new \Exception('WooCommerce API credentials not configured');
         }
     
         $updatedProducts = [];
-        $errors = [];
+        $errors          = [];
     
         foreach ($productDataArray as $item) {
             try {
@@ -1513,9 +1491,9 @@ class WordPressController extends Controller
                     continue;
                 }
     
-                $product_id = (int) $data['product_id'];
+                $product_id   = (int) $data['product_id'];
                 $variation_id = (int) ($data['variation_id'] ?? 0);
-                $salePrice = (float) $data['unit_price'];
+                $salePrice    = (float) $data['unit_price'];
     
                 if ($product_id <= 0) {
                     $errors[] = ['product_id' => $product_id, 'reason' => 'Invalid product ID'];
@@ -1536,18 +1514,18 @@ class WordPressController extends Controller
                     continue;
                 }
     
-                $currentData = $currentResponse->json();
+                $currentData  = $currentResponse->json();
                 $regularPrice = (float) ($currentData['regular_price'] ?? 0);
     
                 if ($regularPrice <= 0 || $salePrice >= $regularPrice) {
                     $updatePayload = [
                         'regular_price' => number_format($salePrice, 2, '.', ''),
-                        'sale_price' => ''
+                        'sale_price'    => ''
                     ];
                 } else {
                     $updatePayload = [
                         'regular_price' => number_format($regularPrice, 2, '.', ''),
-                        'sale_price' => number_format($salePrice, 2, '.', '')
+                        'sale_price'    => number_format($salePrice, 2, '.', '')
                     ];
                 }
     
@@ -1561,9 +1539,9 @@ class WordPressController extends Controller
                     continue;
                 }
     
-                $prefix = explode('_', $priceTable)[0] ?? 'wp';
+                $prefix        = explode('_', $priceTable)[0] ?? 'wp';
                 $postMetaTable = $prefix . '_postmeta';
-                $optionsTable = $prefix . '_options';
+                $optionsTable  = $prefix . '_options';
     
                 DB::connection($connection)->table($optionsTable)
                     ->where('option_name', 'LIKE', '%_transient_%')
@@ -1584,36 +1562,35 @@ class WordPressController extends Controller
                     ->delete();
     
                 ProductPriceHistory::create([
-                    'site_id' => $site_id,
-                    'product_id' => $product_id,
-                    'bundle' => $variation_id,
-                    'unit_price' => $salePrice,
+                    'site_id'            => $site_id,
+                    'product_id'         => $product_id,
+                    'bundle'             => $variation_id,
+                    'unit_price'         => $salePrice,
                     'last_price_changed' => now(),
                 ]);
     
                 $updatedProducts[] = [
-                    'product_id' => $product_id,
+                    'product_id'   => $product_id,
                     'variation_id' => $variation_id,
-                    'new_price' => $salePrice
+                    'new_price'    => $salePrice
                 ];
     
             } catch (\Exception $e) {
                 $errors[] = [
                     'product_id' => $data['product_id'] ?? 0,
-                    'error' => $e->getMessage()
+                    'error'      => $e->getMessage()
                 ];
             }
         }
     
         return [
-            'success' => count($errors) === 0,
+            'success'          => count($errors) === 0,
             'updated_products' => $updatedProducts,
-            'errors' => $errors,
-            'summary' => [
+            'errors'           => $errors,
+            'summary'          => [
                 'updated' => count($updatedProducts),
-                'failed' => count($errors)
+                'failed'  => count($errors)
             ]
         ];
     }
-    
 }
