@@ -39,6 +39,8 @@ class Website extends Model
         'urgency_12h_per_page',
         'urgency_24h_per_word',
         'urgency_12h_per_word',
+        'urgency_36_48h_per_page',
+        'urgency_36_48h_per_word',
         'remark',
         'company_name',
         'company_email',
@@ -69,11 +71,13 @@ class Website extends Model
     ];
 
     protected $casts = [
-        'urgency_amount' => 'decimal:4',
-        'urgency_24h_per_page' => 'decimal:4',
-        'urgency_12h_per_page' => 'decimal:4',
-        'urgency_24h_per_word' => 'decimal:4',
-        'urgency_12h_per_word' => 'decimal:4',
+        'urgency_amount'          => 'decimal:4',
+        'urgency_24h_per_page'    => 'decimal:4',
+        'urgency_12h_per_page'    => 'decimal:4',
+        'urgency_24h_per_word'    => 'decimal:4',
+        'urgency_12h_per_word'    => 'decimal:4',
+        'urgency_36_48h_per_page' => 'decimal:4',
+        'urgency_36_48h_per_word' => 'decimal:4',
     ];
 
     public function businessModel()
