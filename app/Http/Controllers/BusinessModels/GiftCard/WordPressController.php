@@ -821,7 +821,6 @@ class WordPressController extends Controller
                 "$priceTable.min_price as unit_price"
             )
             ->whereIn("$postsTable.ID", $productIds)
-            ->where("$postsTable.post_status", 'publish')
             ->get()
             ->keyBy('id');
     
