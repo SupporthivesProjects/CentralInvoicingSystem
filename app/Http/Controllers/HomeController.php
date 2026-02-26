@@ -38,7 +38,8 @@ class HomeController extends Controller
             $invoices = InvoiceGenerationHistory::orderBy('id', 'desc')->take(10)->get();
         } else {
             $invoices = Cache::remember('invoices.all', 300, function () {
-                return InvoiceGenerationHistory::orderBy('id', 'desc')->get();
+                // return InvoiceGenerationHistory::orderBy('id', 'desc')->get();
+                return InvoiceGenerationHistory::orderBy('id', 'desc')->take(10)->get();
             });
         }
 
