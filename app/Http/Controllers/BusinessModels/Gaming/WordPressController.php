@@ -102,8 +102,6 @@ class WordPressController extends Controller
 
                 $attrs = collect($var['attributes'])->pluck('option', 'name')->toArray();
                 
-                \Log::info('ATTRS DEBUG - ' . $product['name'], ['attrs' => $attrs]);
-                
                 // Try all possible attribute name formats
                 $bundleAmount = $attrs['Amount'] ?? $attrs['amount'] ?? 
                                 $attrs['Gold'] ?? $attrs['gold'] ?? 
@@ -736,11 +734,6 @@ class WordPressController extends Controller
         $consumerSecret = $site->consumer_secret;
         $base = rtrim($site->site_link, '/') . '/wp-json/wc/v3/products';
     
-        \Log::info('Starting product price update', [
-            'site_id' => $site_id,
-            'total_products' => count($productDataArray)
-        ]);
-    
         foreach ($productDataArray as $data) {
     
             if (!isset($data['bundle_id'], $data['unit_price'])) {
@@ -782,22 +775,9 @@ class WordPressController extends Controller
                 $currentPrice = (float) ($currentData['price'] ?? 0);
     
                 if (abs($currentPrice - $unit_price) < 0.01) {
-                    \Log::info('Price unchanged, skipping', [
-                        'product_id' => $product_id,
-                        'variation_id' => $variation_id,
-                        'current_price' => $currentPrice,
-                        'new_price' => $unit_price
-                    ]);
+                   
                     continue;
                 }
-    
-                \Log::info('Updating price via WooCommerce API', [
-                    'endpoint' => $endpoint,
-                    'product_id' => $product_id,
-                    'variation_id' => $variation_id,
-                    'old_price' => $currentPrice,
-                    'new_price' => $unit_price
-                ]);
     
                 $updateResponse = Http::withBasicAuth($consumerKey, $consumerSecret)
                     ->timeout(30)
@@ -834,12 +814,6 @@ class WordPressController extends Controller
                     'new_price' => $unit_price
                 ];
     
-                \Log::info('Price updated successfully', [
-                    'product_id' => $product_id,
-                    'variation_id' => $variation_id,
-                    'new_price' => $unit_price
-                ]);
-    
             } catch (\Exception $e) {
                 $errorMsg = "Exception: Variation {$variation_id} - {$e->getMessage()}";
                 \Log::error('Exception during price update', [
@@ -849,11 +823,7 @@ class WordPressController extends Controller
                 $errors[] = $errorMsg;
             }
         }
-    
-        \Log::info('Product price update completed', [
-            'updated_count' => count($updatedProducts),
-            'error_count' => count($errors)
-        ]);
+
     
         return [
             'updated_products' => $updatedProducts,
