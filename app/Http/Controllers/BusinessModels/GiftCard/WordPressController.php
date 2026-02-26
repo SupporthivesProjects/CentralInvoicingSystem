@@ -26,7 +26,7 @@ use Illuminate\Support\Facades\Http;
 
 class WordPressController extends Controller
 {
-   
+
     private $productTable;
     private $productPriceTable;
     private $tagsTable;
@@ -47,34 +47,21 @@ class WordPressController extends Controller
         $this->connectionType = 'dynamic';
     }
 
-    private function getVariationName($connection, $variationId, $productName)
+    private function formatProductName($productName, $unitPrice)
     {
-        if ($variationId <= 0) {
-            return $productName;
-        }
-
-        $prefix = explode('_', $this->productTable)[0] ?? 'wp';
-        $postMetaTable = $prefix . '_postmeta';
-
-        $attributes = DB::connection($connection)
-            ->table($postMetaTable)
-            ->where('post_id', $variationId)
-            ->where('meta_key', 'LIKE', 'attribute_%')
-            ->pluck('meta_value', 'meta_key')
-            ->toArray();
-
-        if (empty($attributes)) {
-            return $productName;
-        }
-
-        $variationParts = [];
-        foreach ($attributes as $key => $value) {
-            $variationParts[] = ucfirst(str_replace(['attribute_', 'pa_', '-', '_'], [' ', '', ' ', ' '], $value));
-        }
-
-        return $productName . ' - ' . implode(' ', $variationParts);
+        $currency = site_currency();
+        return $productName . ' - ' . $currency . ' ' . number_format($unitPrice, 2);
     }
 
+    private function getSessionProductByIdAndVariation(array $sessionProducts, $productId, $variationId)
+    {
+        foreach ($sessionProducts as $item) {
+            if ($item['id'] == $productId && $item['variation_id'] == $variationId) {
+                return $item;
+            }
+        }
+        return null;
+    }
 
     public function randomProducts(Request $request)
     {
@@ -84,14 +71,14 @@ class WordPressController extends Controller
         $priceTo = $request->get('price_to');
         $noOfProducts = intval($request->get('noOfProducts'));
         $categoryId = $request->get('category_name');
-    
+
         $site = Website::findOrFail($site_id);
         DynamicDatabaseService::connect($site);
         $connection = $this->connectionType;
-    
+
         $postsTable = $this->productTable;
         $priceTable = $this->productPriceTable;
-    
+
         $query = DB::connection($connection)
             ->table($postsTable)
             ->join($priceTable, "$postsTable.ID", '=', "$priceTable.product_id")
@@ -107,33 +94,33 @@ class WordPressController extends Controller
             ->where("$postsTable.post_status", 'publish')
             ->where("$postsTable.post_type", 'product')
             ->where("$priceTable.min_price", '>', 0);
-    
+
         if ($priceFrom && $priceTo) {
             $query->whereBetween("$priceTable.min_price", [$priceFrom, $priceTo]);
         }
-    
+
         if (!empty($categoryId)) {
             $query->join($this->tagsTable . ' as tr', "$postsTable.ID", '=', 'tr.object_id')
                   ->join($this->termTaxonomyTable . ' as tt', 'tr.term_taxonomy_id', '=', 'tt.term_taxonomy_id')
                   ->where('tt.taxonomy', 'product_cat')
                   ->where('tt.term_id', $categoryId);
         }
-    
+
         $fetchLimit = $noOfProducts ? ($noOfProducts * 50) : 500;
         $allProducts = $query->orderByDesc("$priceTable.min_price")->limit($fetchLimit)->get();
-    
+
         if ($allProducts->isEmpty()) {
             session()->forget('ready_products');
             session()->forget('current_amount');
             session()->forget('last_used_combinations');
-    
+
             return response()->json([
                 'tableRows' => '',
                 'total' => 0,
                 'message' => 'No products found in this range or category.'
             ]);
         }
-    
+
         $allProducts->transform(function ($product) use ($connection, $postsTable) {
             if ($product->post_type === 'product_variation') {
                 $product->variation_id = $product->id;
@@ -148,11 +135,11 @@ class WordPressController extends Controller
             }
             return $product;
         });
-    
+
         $lastUsedCombinations = session()->get('last_used_combinations', []);
-    
+
         $bestMatch = $this->findBestProductCombination($allProducts, $invoiceAmount, $noOfProducts, $lastUsedCombinations);
-    
+
         if (!$bestMatch || empty($bestMatch['products'])) {
             session()->forget('ready_products');
             session()->forget('current_amount');
@@ -162,21 +149,21 @@ class WordPressController extends Controller
                 'message' => 'No matching combination found, try again please'
             ]);
         }
-    
+
         $bestMatch = collect($bestMatch['products']);
         $bestTotal = $bestMatch->sum('unit_price');
-    
+
         $combinationKey = $bestMatch->pluck('id')->sort()->join('-');
         $lastUsedCombinations[] = $combinationKey;
         $lastUsedCombinations = array_slice($lastUsedCombinations, -5);
         session()->put('last_used_combinations', $lastUsedCombinations);
-    
-        $bestMatch->each(function ($product) use ($site_id, $connection) {
+
+        $bestMatch->each(function ($product) use ($site_id) {
             $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
                 ->where('product_id', $product->id)
                 ->orderByDesc('last_price_changed')
                 ->first();
-    
+
             if ($lastUpdate) {
                 $lastChanged = Carbon::parse($lastUpdate->last_price_changed);
                 $nextChange = $lastChanged->copy()->addMonths(3);
@@ -187,76 +174,76 @@ class WordPressController extends Controller
                 $product->remaining_days = 0;
                 $product->can_edit_price = 1;
             }
-    
+
             $product->rrp = $product->unit_price;
             $product->discount = 0;
-            $product->name = $this->getVariationName($connection, $product->variation_id, $product->name);
+            $product->name = $this->formatProductName($product->name, $product->unit_price);
         });
-    
+
         $productList = $bestMatch->map(fn($p) => [
             'id' => $p->id,
             'variation_id' => $p->variation_id,
             'unit_price' => $p->unit_price
         ])->toArray();
-    
+
         session()->forget('ready_products');
         session()->put('ready_products', $productList);
         session(['current_amount' => $bestTotal]);
-    
+
         $modelType = $site->businessModel->model_type;
         $tableRows = view("invoice.{$modelType}.random_product_rows", [
             'products' => $bestMatch,
             'site' => $site,
             'total' => $bestTotal
         ])->render();
-    
+
         return response()->json([
             'tableRows' => $tableRows,
             'total' => $bestTotal
         ]);
     }
-    
+
     private function findBestProductCombination($products, $targetAmount, $requiredCount = null, $lastUsedCombinations = [])
     {
         $productArray = $products->shuffle()->values()->all();
         $productCount = count($productArray);
-    
+
         if ($requiredCount) {
             return $this->findExactCountOptimized($productArray, $targetAmount, $requiredCount, $productCount, $lastUsedCombinations);
         } else {
             return $this->findFlexibleOptimized($productArray, $targetAmount, $productCount, $lastUsedCombinations);
         }
     }
-    
+
     private function findExactCountOptimized($products, $target, $count, $totalProducts, $lastUsedCombinations = [])
     {
         shuffle($products);
-    
+
         if ($totalProducts < $count) {
             return ['products' => $products, 'total' => array_sum(array_column($products, 'unit_price'))];
         }
-    
+
         $priceMap = [];
         foreach ($products as $idx => $product) {
             $priceMap[$idx] = floatval($product->unit_price);
         }
-    
+
         asort($priceMap);
         $sortedIndices = array_keys($priceMap);
         shuffle($sortedIndices);
-    
+
         if ($count <= 2) {
             $percentages = [0, 2, 5, 8, 10, 15, 20, 25, 30, 35, 40, 50];
             shuffle($percentages);
-    
+
             foreach ($percentages as $percentage) {
                 $minTarget = $target;
                 $maxTarget = $target * (1 + $percentage / 100);
-    
+
                 if ($count == 1) {
                     $bestIdx = null;
                     $bestDiff = PHP_INT_MAX;
-    
+
                     foreach ($sortedIndices as $idx) {
                         $price = $priceMap[$idx];
                         if ($price >= $minTarget && $price <= $maxTarget) {
@@ -267,7 +254,7 @@ class WordPressController extends Controller
                             }
                         }
                     }
-    
+
                     if ($bestIdx !== null) {
                         if (!empty($lastUsedCombinations)) {
                             $currentCombo = (string)$products[$bestIdx]->id;
@@ -275,7 +262,7 @@ class WordPressController extends Controller
                                 continue;
                             }
                         }
-    
+
                         return ['products' => [$products[$bestIdx]], 'total' => $priceMap[$bestIdx]];
                     }
                 } else if ($count == 2) {
@@ -285,19 +272,19 @@ class WordPressController extends Controller
                     $bestPair = null;
                     $bestTotal = 0;
                     $bestDiff = PHP_INT_MAX;
-    
+
                     for ($i = 0; $i < $totalProducts - 1; $i++) {
                         for ($j = $i + 1; $j < $totalProducts; $j++) {
                             $idx1 = $sortedIndices[$i];
                             $idx2 = $sortedIndices[$j];
-    
+
                             $price1 = $priceMap[$idx1];
                             $price2 = $priceMap[$idx2];
-    
+
                             if ($price1 == $price2) continue;
-    
+
                             $total = $price1 + $price2;
-    
+
                             if ($total >= $minTarget && $total <= $maxTarget) {
                                 $diff = abs($total - $target);
                                 if ($diff < $bestDiff) {
@@ -308,7 +295,7 @@ class WordPressController extends Controller
                             }
                         }
                     }
-    
+
                     if ($bestPair !== null) {
                         if (!empty($lastUsedCombinations)) {
                             $comboIds = array_map(fn($i) => $products[$i]->id, $bestPair);
@@ -318,7 +305,7 @@ class WordPressController extends Controller
                                 continue;
                             }
                         }
-    
+
                         return [
                             'products' => [$products[$bestPair[0]], $products[$bestPair[1]]],
                             'total' => $bestTotal
@@ -327,63 +314,62 @@ class WordPressController extends Controller
                 }
             }
         }
-    
+
         $percentages = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30];
-    
+
         foreach ($percentages as $percentage) {
             $minTarget = $target;
             $maxTarget = $target * (1 + $percentage / 100);
             $result = $this->tryFindExactCount($products, $priceMap, $sortedIndices, $minTarget, $maxTarget, $count, $totalProducts);
-    
+
             if ($result !== null && $result['total'] >= $target && count($result['products']) === $count) {
                 return $result;
             }
         }
-    
-        $avgPrice = $target / $count;
+
         $maxTotal = $target * 1.20;
         $bestMatch = null;
         $bestTotal = 0;
         $bestDiff = PHP_INT_MAX;
-    
+
         for ($attempt = 0; $attempt < 200; $attempt++) {
             $shuffledIndices = $sortedIndices;
             shuffle($sortedIndices);
-    
+
             $selected = [];
             $usedPrices = [];
             $total = 0;
-    
+
             $startIdx = rand(0, max(0, $totalProducts - $count * 3));
             $searchWindow = array_slice($shuffledIndices, $startIdx, min($count * 5, $totalProducts));
-    
+
             foreach ($searchWindow as $idx) {
                 if (count($selected) >= $count) break;
-    
+
                 $price = $priceMap[$idx];
                 if (isset($usedPrices[$price])) continue;
-    
+
                 if ($total + $price <= $maxTotal) {
                     $selected[] = $idx;
                     $usedPrices[$price] = true;
                     $total += $price;
                 }
             }
-    
+
             if (count($selected) === $count && $total >= $target && $total <= $maxTotal) {
                 $diff = abs($total - $target);
                 if ($diff < $bestDiff) {
                     $bestMatch = $selected;
                     $bestTotal = $total;
                     $bestDiff = $diff;
-    
+
                     if ($diff <= $target * 0.02) {
                         break;
                     }
                 }
             }
         }
-    
+
         if ($bestMatch && count($bestMatch) === $count && $bestTotal >= $target) {
             $result = [];
             foreach ($bestMatch as $idx) {
@@ -391,55 +377,55 @@ class WordPressController extends Controller
             }
             return ['products' => $result, 'total' => $bestTotal];
         }
-    
+
         $selected = [];
         $usedPrices = [];
         $remaining = $target;
-    
+
         for ($i = 0; $i < $count; $i++) {
             $remainingSlots = $count - $i;
             $idealPrice = $remaining / $remainingSlots;
             $closestIdx = null;
             $closestDiff = PHP_INT_MAX;
-    
+
             foreach ($sortedIndices as $idx) {
                 if (in_array($idx, $selected)) continue;
-    
+
                 $price = $priceMap[$idx];
                 if (isset($usedPrices[$price])) continue;
-    
+
                 $diff = abs($price - $idealPrice);
                 if ($diff < $closestDiff) {
                     $closestDiff = $diff;
                     $closestIdx = $idx;
                 }
             }
-    
+
             if ($closestIdx !== null) {
                 $selected[] = $closestIdx;
                 $usedPrices[$priceMap[$closestIdx]] = true;
                 $remaining -= $priceMap[$closestIdx];
             }
         }
-    
+
         if (count($selected) === $count) {
             $total = array_sum(array_map(fn($idx) => $priceMap[$idx], $selected));
-    
+
             if ($total < $target) {
                 $reverseIndices = array_reverse($sortedIndices);
-    
+
                 foreach ($reverseIndices as $replaceIdx) {
                     if (in_array($replaceIdx, $selected)) continue;
-    
+
                     $replacePrice = $priceMap[$replaceIdx];
                     if (isset($usedPrices[$replacePrice])) continue;
-    
+
                     for ($i = 0; $i < $count; $i++) {
                         $currentIdx = $selected[$i];
                         $currentPrice = $priceMap[$currentIdx];
-    
+
                         $newTotal = $total - $currentPrice + $replacePrice;
-    
+
                         if ($newTotal >= $target && $newTotal <= $maxTotal) {
                             $selected[$i] = $replaceIdx;
                             unset($usedPrices[$currentPrice]);
@@ -451,19 +437,19 @@ class WordPressController extends Controller
                 }
             }
         }
-    
+
         $result = [];
         foreach ($selected as $idx) {
             $result[] = $products[$idx];
         }
-    
+
         return ['products' => $result, 'total' => array_sum(array_column($result, 'unit_price'))];
     }
-    
+
     private function tryFindExactCount($products, $priceMap, $sortedIndices, $minTarget, $maxTarget, $count, $totalProducts)
     {
         $avgPrice = ($minTarget + $maxTarget) / 2 / $count;
-    
+
         $midPoint = 0;
         foreach ($sortedIndices as $pos => $idx) {
             if ($priceMap[$idx] >= $avgPrice) {
@@ -471,57 +457,57 @@ class WordPressController extends Controller
                 break;
             }
         }
-    
+
         $windowSize = min($count * 4, $totalProducts - $midPoint);
         $searchWindow = array_slice($sortedIndices, $midPoint, $windowSize);
-    
+
         if (count($searchWindow) < $count) {
             $searchWindow = $sortedIndices;
         }
-    
+
         $attempts = min(100, count($searchWindow) * 3);
         $bestMatch = null;
         $bestTotal = 0;
         $bestDiff = PHP_INT_MAX;
-    
+
         for ($i = 0; $i < $attempts; $i++) {
             $windowCopy = $searchWindow;
             shuffle($searchWindow);
             $candidatePool = array_slice($searchWindow, 0, min(count($searchWindow), $count * 3));
-    
+
             $selectedIndices = [];
             $seenPrices = [];
-    
+
             foreach ($candidatePool as $idx) {
                 if (count($selectedIndices) >= $count) break;
-    
+
                 $price = $priceMap[$idx];
                 if (!isset($seenPrices[$price])) {
                     $selectedIndices[] = $idx;
                     $seenPrices[$price] = true;
                 }
             }
-    
+
             if (count($selectedIndices) !== $count) {
                 continue;
             }
-    
+
             $total = array_sum(array_map(fn($idx) => $priceMap[$idx], $selectedIndices));
-    
+
             if ($total >= $minTarget && $total <= $maxTarget) {
                 $diff = abs($total - $minTarget);
                 if ($diff < $bestDiff) {
                     $bestMatch = $selectedIndices;
                     $bestTotal = $total;
                     $bestDiff = $diff;
-    
+
                     if ($total >= $minTarget && $total <= $minTarget * 1.02) {
                         break;
                     }
                 }
             }
         }
-    
+
         if ($bestMatch && count($bestMatch) === $count) {
             $result = [];
             foreach ($bestMatch as $idx) {
@@ -529,44 +515,44 @@ class WordPressController extends Controller
             }
             return ['products' => $result, 'total' => $bestTotal];
         }
-    
+
         $result = $this->greedySelection($products, $priceMap, $sortedIndices, $minTarget, $maxTarget, $count, $searchWindow);
         if ($result !== null && count($result['products']) === $count) {
             return $result;
         }
-    
+
         return null;
     }
-    
+
     private function greedySelection($products, $priceMap, $sortedIndices, $minTarget, $maxTarget, $count, $searchWindow)
     {
         $windowSize = min(count($searchWindow), $count * 5);
         $expandedWindow = array_slice($sortedIndices, 0, max($windowSize, $count * 2));
-    
+
         $remaining = $minTarget;
         $selected = [];
         $usedIndices = [];
         $usedPrices = [];
-    
+
         for ($i = 0; $i < $count; $i++) {
             $remainingSlots = $count - $i;
             $idealPrice = $remaining / $remainingSlots;
             $closestIdx = null;
             $closestDiff = PHP_INT_MAX;
-    
+
             foreach ($expandedWindow as $idx) {
                 if (in_array($idx, $usedIndices)) continue;
-    
+
                 $price = $priceMap[$idx];
                 if (isset($usedPrices[$price])) continue;
-    
+
                 $diff = abs($price - $idealPrice);
                 if ($diff < $closestDiff) {
                     $closestDiff = $diff;
                     $closestIdx = $idx;
                 }
             }
-    
+
             if ($closestIdx !== null) {
                 $selected[] = $closestIdx;
                 $usedIndices[] = $closestIdx;
@@ -576,10 +562,10 @@ class WordPressController extends Controller
                 break;
             }
         }
-    
+
         if (count($selected) === $count) {
             $total = array_sum(array_map(fn($idx) => $priceMap[$idx], $selected));
-    
+
             if ($total >= $minTarget && $total <= $maxTarget) {
                 $result = [];
                 foreach ($selected as $idx) {
@@ -588,32 +574,32 @@ class WordPressController extends Controller
                 return ['products' => $result, 'total' => $total];
             }
         }
-    
+
         return null;
     }
-    
+
     private function findFlexibleOptimized($products, $target, $totalProducts, $lastUsedCombinations = [])
     {
         $priceMap = [];
         foreach ($products as $idx => $product) {
             $price = floatval($product->unit_price);
             $priceMap[$idx] = $price;
-    
+
             if (abs($price - $target) < 0.01) {
                 return ['products' => [$product], 'total' => $price];
             }
         }
-    
+
         asort($priceMap);
         $sortedIndices = array_keys($priceMap);
         shuffle($sortedIndices);
-    
+
         $percentages = [0, 2, 4, 6, 8, 10, 12, 14, 16];
-    
+
         foreach ($percentages as $percentage) {
             $currentMax = $target * (1 + $percentage / 100);
             $result = $this->tryFindFlexible($products, $priceMap, $sortedIndices, $target, $currentMax, $totalProducts);
-    
+
             if ($result !== null && $result['total'] >= $target) {
                 if (!empty($lastUsedCombinations)) {
                     $resultIds = array_map(fn($p) => $p->id, $result['products']);
@@ -623,43 +609,43 @@ class WordPressController extends Controller
                         continue;
                     }
                 }
-    
+
                 return $result;
             }
         }
-    
+
         $maxTotal = $target * 1.15;
         $bestMatch = null;
         $bestTotal = 0;
-    
+
         for ($attempt = 0; $attempt < 20; $attempt++) {
             $shuffledIndices = $sortedIndices;
             shuffle($shuffledIndices);
             $startIdx = rand(0, max(0, $totalProducts - 30));
             $subset = array_slice($sortedIndices, $startIdx, 30);
             shuffle($subset);
-    
+
             $selected = [];
             $total = 0;
             $usedPrices = [];
-    
+
             foreach ($subset as $idx) {
                 $price = $priceMap[$idx];
-    
+
                 if (isset($usedPrices[$price])) continue;
                 if ($total + $price > $maxTotal) continue;
-    
+
                 $selected[] = $idx;
                 $usedPrices[$price] = true;
                 $total += $price;
             }
-    
+
             if ($total >= $target && $total <= $maxTotal && $total > $bestTotal) {
                 $bestMatch = $selected;
                 $bestTotal = $total;
             }
         }
-    
+
         if ($bestMatch && $bestTotal >= $target) {
             $result = [];
             foreach ($bestMatch as $idx) {
@@ -667,26 +653,26 @@ class WordPressController extends Controller
             }
             return ['products' => $result, 'total' => $bestTotal];
         }
-    
+
         $selected = [];
         $usedPrices = [];
         $total = 0;
-    
+
         foreach (array_reverse($sortedIndices) as $idx) {
             $price = $priceMap[$idx];
-    
+
             if (isset($usedPrices[$price])) continue;
             if ($total + $price > $maxTotal) continue;
-    
+
             $selected[] = $idx;
             $usedPrices[$price] = true;
             $total += $price;
-    
+
             if ($total >= $target) {
                 break;
             }
         }
-    
+
         if ($total >= $target && $total <= $maxTotal) {
             $result = [];
             foreach ($selected as $idx) {
@@ -694,44 +680,44 @@ class WordPressController extends Controller
             }
             return ['products' => $result, 'total' => $total];
         }
-    
+
         if (!$bestMatch) {
             $bestMatch = [$sortedIndices[count($sortedIndices) - 1]];
             $bestTotal = $priceMap[$sortedIndices[count($sortedIndices) - 1]];
         }
-    
+
         $result = [];
         foreach ($bestMatch as $idx) {
             $result[] = $products[$idx];
         }
         return ['products' => $result, 'total' => $bestTotal];
     }
-    
+
     private function tryFindFlexible($products, $priceMap, $sortedIndices, $minTarget, $maxTarget, $totalProducts)
     {
         $bestMatch = null;
         $bestTotal = 0;
         $bestDiff = PHP_INT_MAX;
-    
+
         for ($attempt = 0; $attempt < 25; $attempt++) {
             $startIdx = rand(0, max(0, $totalProducts - 25));
             $subset = array_slice($sortedIndices, $startIdx, 25);
             shuffle($subset);
-    
+
             $selected = [];
             $total = 0;
             $usedPrices = [];
-    
+
             foreach ($subset as $idx) {
                 $price = $priceMap[$idx];
-    
+
                 if (isset($usedPrices[$price])) continue;
                 if ($total + $price > $maxTarget) continue;
-    
+
                 $selected[] = $idx;
                 $usedPrices[$price] = true;
                 $total += $price;
-    
+
                 if ($total >= $minTarget && $total <= $maxTarget) {
                     $diff = abs($total - $minTarget);
                     if ($diff < $bestDiff) {
@@ -741,7 +727,7 @@ class WordPressController extends Controller
                     }
                 }
             }
-    
+
             if ($total >= $minTarget && $total <= $maxTarget) {
                 $diff = abs($total - $minTarget);
                 if ($diff < $bestDiff) {
@@ -751,7 +737,7 @@ class WordPressController extends Controller
                 }
             }
         }
-    
+
         if ($bestMatch && $bestTotal >= $minTarget) {
             $result = [];
             foreach ($bestMatch as $idx) {
@@ -759,31 +745,30 @@ class WordPressController extends Controller
             }
             return ['products' => $result, 'total' => $bestTotal];
         }
-    
+
         return null;
     }
-    
 
 
     public function addProducts(Request $request)
     {
         $site_id = $request->get('site_id') ?? session('customer.site_id');
         $productsData = $request->get('products', []);
-    
+
         $site = Website::findOrFail($site_id);
         DynamicDatabaseService::connect($site);
-    
+
         $postsTable = $this->productTable;
         $priceTable = $this->productPriceTable;
         $connection = $this->connectionType;
-    
+
         $readyProducts = session()->get('ready_products', []);
-    
+
         foreach ($productsData as $productData) {
             $productId = $productData['product_id'];
             $variationId = (int) ($productData['variation_id'] ?? 0);
             $unitPrice = floatval($productData['unit_price']);
-    
+
             $exists = false;
             foreach ($readyProducts as &$item) {
                 if ($item['id'] == $productId && $item['variation_id'] == $variationId) {
@@ -792,7 +777,8 @@ class WordPressController extends Controller
                     break;
                 }
             }
-    
+            unset($item);
+
             if (!$exists) {
                 $readyProducts[] = [
                     'id' => $productId,
@@ -801,12 +787,12 @@ class WordPressController extends Controller
                 ];
             }
         }
-    
+
         session()->put('ready_products', $readyProducts);
-    
+
         $productIds = collect($readyProducts)->pluck('id')->reverse()->values()->toArray();
-    
-        $products = DB::connection($connection)
+
+        $dbProducts = DB::connection($connection)
             ->table($postsTable)
             ->join($priceTable, "$postsTable.ID", '=', "$priceTable.product_id")
             ->select(
@@ -822,86 +808,82 @@ class WordPressController extends Controller
             ->where("$postsTable.post_status", 'publish')
             ->get()
             ->keyBy('id');
-    
-        $products = collect($productIds)->map(function ($id) use ($products) {
-            return $products[$id] ?? null;
-        })->filter();
-    
-        $products = $products->map(function ($product) use ($readyProducts, $site_id, $connection) {
-            $sessionProduct = collect($readyProducts)->firstWhere('id', $product->id);
-    
+
+        $result = collect($readyProducts)->reverse()->values()->map(function ($sessionItem) use ($dbProducts, $site_id) {
+            $product = isset($dbProducts[$sessionItem['id']]) ? clone $dbProducts[$sessionItem['id']] : null;
+            if (!$product) return null;
+
             if ($product->post_type === 'product_variation') {
                 $api_product_id = $product->parent_id;
                 $variation_id = $product->id;
             } else {
                 $api_product_id = $product->id;
-                $variation_id = $sessionProduct['variation_id'] ?? 0;
+                $variation_id = (int) ($sessionItem['variation_id'] ?? 0);
             }
-    
-            $product->unit_price = $sessionProduct['unit_price'] ?? $product->unit_price;
+
+            $product->unit_price = $sessionItem['unit_price'] ?? $product->unit_price;
             $product->category_name = '-';
             $product->variation_id = $variation_id;
-    
+
             $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
                 ->where('product_id', $api_product_id)
                 ->where('bundle', $variation_id)
                 ->orderByDesc('last_price_changed')
                 ->first();
-    
+
             if ($lastUpdate) {
                 $lastPriceChanged = Carbon::parse($lastUpdate->last_price_changed);
                 $nextChange = $lastPriceChanged->copy()->addMonths(3);
                 $remaining = now()->diffInDays($nextChange, false);
                 $product->remaining_days = round(max($remaining, 0));
                 $product->can_edit_price = now()->greaterThanOrEqualTo($nextChange) ? 1 : 0;
-                $product->rrp = $product->unit_price;
-                $product->discount = 0;
             } else {
                 $product->can_edit_price = 1;
                 $product->remaining_days = 0;
-                $product->rrp = $product->unit_price;
-                $product->discount = 0;
             }
-            $product->name = $this->getVariationName($connection, $product->variation_id, $product->name);
-    
+
+            $product->rrp = $product->unit_price;
+            $product->discount = 0;
+            $product->name = $this->formatProductName($product->name, $product->unit_price);
+
             return $product;
-        });
-    
-        $total = $products->sum('unit_price');
+        })->filter()->values();
+
+        $total = $result->sum('unit_price');
         session(['current_amount' => $total]);
-    
+
         $modelType = $site->businessModel->model_type;
         $tableRows = view("invoice.{$modelType}.random_product_rows", [
-            'products' => $products,
+            'products' => $result,
             'site' => $site,
             'total' => $total
         ])->render();
-    
+
         return response()->json([
             'tableRows' => $tableRows,
             'total' => $total
         ]);
     }
-    
+
     public function removeProduct(Request $request)
     {
         $productId = $request->get('product_id');
         $variationId = (int) ($request->get('variation_id') ?? 0);
         $site_id = $request->get('site_id');
         $site = Website::findOrFail($site_id);
-    
+
         $postsTable = $this->productTable;
         $priceTable = $this->productPriceTable;
         $connection = $this->connectionType;
-    
+
         $readyProducts = session('ready_products', []);
-    
+
         $updatedProducts = collect($readyProducts)->reject(function ($product) use ($productId, $variationId) {
             return $product['id'] == $productId && $product['variation_id'] == $variationId;
         })->values()->toArray();
-    
+
         session()->put('ready_products', $updatedProducts);
-    
+
         if (empty($updatedProducts)) {
             session()->forget('current_amount');
             return response()->json([
@@ -909,12 +891,12 @@ class WordPressController extends Controller
                 'total' => 0,
             ]);
         }
-    
+
         DynamicDatabaseService::connect($site);
-    
-        $productIds = array_column($updatedProducts, 'id');
-    
-        $products = DB::connection($connection)
+
+        $productIds = collect($updatedProducts)->pluck('id')->unique()->toArray();
+
+        $dbProducts = DB::connection($connection)
             ->table($postsTable)
             ->join($priceTable, "$postsTable.ID", '=', "$priceTable.product_id")
             ->select(
@@ -930,92 +912,94 @@ class WordPressController extends Controller
             ->where("$postsTable.post_status", 'publish')
             ->get()
             ->keyBy('id');
-    
-        $products = collect($productIds)->map(fn($id) => $products[$id] ?? null)->filter();
-    
-        $products = $products->map(function ($product) use ($updatedProducts, $site_id, $connection) {
-            $sessionProduct = collect($updatedProducts)->firstWhere('id', $product->id);
-    
+
+        $result = collect($updatedProducts)->map(function ($sessionItem) use ($dbProducts, $site_id) {
+            $product = isset($dbProducts[$sessionItem['id']]) ? clone $dbProducts[$sessionItem['id']] : null;
+            if (!$product) return null;
+
             if ($product->post_type === 'product_variation') {
                 $api_product_id = $product->parent_id;
                 $variation_id = $product->id;
             } else {
                 $api_product_id = $product->id;
-                $variation_id = $sessionProduct['variation_id'] ?? 0;
+                $variation_id = (int) ($sessionItem['variation_id'] ?? 0);
             }
-    
-            $product->unit_price = $sessionProduct['unit_price'] ?? $product->unit_price;
+
+            $product->unit_price = $sessionItem['unit_price'] ?? $product->unit_price;
             $product->category_name = '-';
             $product->variation_id = $variation_id;
-    
+
             $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
                 ->where('product_id', $api_product_id)
                 ->where('bundle', $variation_id)
                 ->orderByDesc('last_price_changed')
                 ->first();
-    
+
             if ($lastUpdate) {
                 $nextDate = Carbon::parse($lastUpdate->last_price_changed)->addMonths(3);
                 $remaining = now()->diffInDays($nextDate, false);
                 $product->remaining_days = round(max($remaining, 0));
                 $product->can_edit_price = now()->gte($nextDate) ? 1 : 0;
-                $product->rrp = $product->unit_price;
-                $product->discount = 0;
             } else {
                 $product->can_edit_price = 1;
                 $product->remaining_days = 0;
-                $product->rrp = $product->unit_price;
-                $product->discount = 0;
             }
 
-            $product->name = $this->getVariationName($connection, $product->variation_id, $product->name);
-    
+            $product->rrp = $product->unit_price;
+            $product->discount = 0;
+            $product->name = $this->formatProductName($product->name, $product->unit_price);
+
             return $product;
-        });
-    
-        $total = $products->sum('unit_price');
+        })->filter()->values();
+
+        $total = $result->sum('unit_price');
         session(['current_amount' => $total]);
-    
+
         $modelType = $site->businessModel->model_type;
         $tableRows = view("invoice.{$modelType}.random_product_rows", [
-            'products' => $products,
+            'products' => $result,
             'site' => $site,
             'total' => $total
         ])->render();
-    
+
         return response()->json([
             'tableRows' => $tableRows,
             'total' => $total
         ]);
     }
-    
+
     public function updateProduct(Request $request)
     {
-        $productId = $request->get('product_id');
+        $productId = (int) $request->get('product_id');
         $variationId = (int) ($request->get('variation_id') ?? 0);
-        $quantity = $request->get('quantity');
+        $quantity = (int) $request->get('quantity');
+        $unitPrice = $request->has('unit_price') ? floatval($request->get('unit_price')) : null;
         $site_id = $request->get('site_id');
-    
+
         $site = Website::findOrFail($site_id);
         DynamicDatabaseService::connect($site);
-    
+
         $readyProducts = session()->get('ready_products', []);
-    
-        foreach ($readyProducts as &$product) {
-            if ($product['id'] == $productId && $product['variation_id'] == $variationId) {
-                $product['quantity'] = $quantity;
+
+        foreach ($readyProducts as &$item) {
+            if ((int)$item['id'] == $productId && (int)$item['variation_id'] == $variationId) {
+                $item['quantity'] = $quantity;
+                if ($unitPrice !== null) {
+                    $item['unit_price'] = $unitPrice;
+                }
                 break;
             }
         }
+        unset($item);
         session()->put('ready_products', $readyProducts);
-    
-        $productIds = collect($readyProducts)->pluck('id')->toArray();
-    
+
         $postsTable = $this->productTable;
         $priceTable = $this->productPriceTable;
         $connection = $this->connectionType;
-    
-        $products = DB::connection($connection)
+
+        $productIds = collect($readyProducts)->pluck('id')->unique()->toArray();
+
+        $dbProducts = DB::connection($connection)
             ->table($postsTable)
             ->join($priceTable, "$postsTable.ID", '=', "$priceTable.product_id")
             ->whereIn("$postsTable.ID", $productIds)
@@ -1028,64 +1012,63 @@ class WordPressController extends Controller
                 "$postsTable.post_name as slug",
                 "$priceTable.min_price as unit_price"
             ])
-            ->get();
-    
-        $products = $products->map(function ($product) use ($readyProducts, $site_id, $connection) {
-            $sessionProduct = collect($readyProducts)->firstWhere('id', $product->id);
-    
+            ->get()
+            ->keyBy('id');
+
+        $products = collect($readyProducts)->map(function ($sessionItem) use ($dbProducts, $site_id) {
+            $product = isset($dbProducts[$sessionItem['id']]) ? clone $dbProducts[$sessionItem['id']] : null;
+            if (!$product) return null;
+
             if ($product->post_type === 'product_variation') {
                 $api_product_id = $product->parent_id;
                 $variation_id = $product->id;
             } else {
                 $api_product_id = $product->id;
-                $variation_id = $sessionProduct['variation_id'] ?? 0;
+                $variation_id = (int) ($sessionItem['variation_id'] ?? 0);
             }
-    
-            $product->unit_price = $sessionProduct['unit_price'] ?? $product->unit_price;
-            $product->quantity = $sessionProduct['quantity'] ?? 1;
+
+            $product->unit_price = $sessionItem['unit_price'] ?? $product->unit_price;
+            $product->quantity = (int) ($sessionItem['quantity'] ?? 1);
             $product->category_name = '-';
             $product->variation_id = $variation_id;
-    
+
             $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
                 ->where('product_id', $api_product_id)
                 ->where('bundle', $variation_id)
                 ->orderByDesc('last_price_changed')
                 ->first();
-    
+
             if ($lastUpdate) {
                 $lastPriceChanged = Carbon::parse($lastUpdate->last_price_changed);
                 $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
                 $remainingDays = now()->diffInDays($nextPriceChangeDate, false);
                 $product->remaining_days = round(max($remainingDays, 0));
                 $product->can_edit_price = now()->greaterThanOrEqualTo($nextPriceChangeDate) ? 1 : 0;
-                $product->rrp = $product->unit_price;
-                $product->discount = 0;
             } else {
                 $product->can_edit_price = 1;
                 $product->remaining_days = 0;
-                $product->rrp = $product->unit_price;
-                $product->discount = 0;
             }
 
-            $product->name = $this->getVariationName($connection, $product->variation_id, $product->name);
+            $product->rrp = $product->unit_price;
+            $product->discount = 0;
+            $product->name = $this->formatProductName($product->name, $product->unit_price);
 
             return $product;
-        });
-    
-        $modelType = $site->businessModel->model_type;
-    
+        })->filter()->values();
+
         $total = $products->sum(function ($product) {
             return $product->unit_price * ($product->quantity ?? 1);
         });
-    
+
         session(['current_amount' => $total]);
-    
+
+        $modelType = $site->businessModel->model_type;
         $tableRows = view("invoice.{$modelType}.random_product_rows", [
             'products' => $products,
             'site' => $site,
             'total' => $total
         ])->render();
-    
+
         return response()->json([
             'tableRows' => $tableRows,
             'total' => $total
@@ -1174,7 +1157,7 @@ class WordPressController extends Controller
             ]);
         }
 
-        $products = $products->map(function ($product) use ($site_id, $connection) {
+        $products = $products->map(function ($product) use ($site_id) {
             $product->category_name = '-';
 
             $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
@@ -1188,16 +1171,14 @@ class WordPressController extends Controller
                 $remainingDays = now()->diffInDays($nextPriceChangeDate, false);
                 $product->remaining_days = round(max($remainingDays, 0));
                 $product->can_edit_price = now()->gte($nextPriceChangeDate) ? 1 : 0;
-                $product->rrp = $product->unit_price;
-                $product->discount = 0;
             } else {
                 $product->can_edit_price = 1;
                 $product->remaining_days = 0;
-                $product->rrp = $product->unit_price;
-                $product->discount = 0;
             }
 
-            $product->name = $this->getVariationName($connection, $product->variation_id, $product->name);
+            $product->rrp = $product->unit_price;
+            $product->discount = 0;
+            $product->name = $this->formatProductName($product->name, $product->unit_price);
 
             return $product;
         });
@@ -1227,7 +1208,6 @@ class WordPressController extends Controller
         ]);
     }
 
-    
 
     private function smartPagination($currentPage, $totalPages)
     {
@@ -1257,13 +1237,12 @@ class WordPressController extends Controller
     }
 
 
-
     public function generateInvoice(Request $request)
     {
         $site_id = $request->input('site_id');
         $site = Website::findOrFail($site_id);
         DynamicDatabaseService::connect($site);
-    
+
         $invoice_data['site'] = $site;
         $invoice_data['site_id'] = $site->id;
         $invoice_data['invoice_number'] = $request->input('invoice_number');
@@ -1277,71 +1256,71 @@ class WordPressController extends Controller
         $invoice_data['currency'] = site_currency();
         $invoice_data['invoice_template'] = $site->invoice_template;
         $invoice_data['model_type'] = $site->businessModel->model_type;
-    
+
         $company_detail_type = $request->input('company_detail_type');
-    
+
         if ($company_detail_type === 'remote') {
 
-            $invoice_data['site_name']          = $request->input('remote_site_name') ?? '';
-            $invoice_data['company_name']       = $request->input('remote_company_name') ?? '';
-            $invoice_data['company_email']      = $request->input('remote_company_email') ?? '';
-            $invoice_data['company_mobile']     = $request->input('remote_company_mobile') ?? '';
-            $invoice_data['company_address']    = $request->input('remote_company_address') ?? '';
+            $invoice_data['site_name']           = $request->input('remote_site_name') ?? '';
+            $invoice_data['company_name']        = $request->input('remote_company_name') ?? '';
+            $invoice_data['company_email']       = $request->input('remote_company_email') ?? '';
+            $invoice_data['company_mobile']      = $request->input('remote_company_mobile') ?? '';
+            $invoice_data['company_address']     = $request->input('remote_company_address') ?? '';
             $invoice_data['registration_number'] = $request->input('remote_registration_number') ?? '';
             $invoice_data['license_number']      = $request->input('remote_license_number') ?? '';
-        
+
             $remote_database = DB::connection($this->connectionType)->table('general_settings')->orderByDesc('updated_at')->first();
-        
+
             if ($remote_database) {
                 DB::connection($this->connectionType)->table('general_settings')->where('id', $remote_database->id)
                     ->update([
-                        'site_name'            => $request->input('remote_site_name') ?? '',
-                        'email'                => $request->input('remote_company_email') ?? '',
-                        'phone'                => $request->input('remote_company_mobile') ?? '',
-                        'address'              => $request->input('remote_company_address') ?? '',
-                        'updated_at'           => now(),
+                        'site_name'  => $request->input('remote_site_name') ?? '',
+                        'email'      => $request->input('remote_company_email') ?? '',
+                        'phone'      => $request->input('remote_company_mobile') ?? '',
+                        'address'    => $request->input('remote_company_address') ?? '',
+                        'updated_at' => now(),
                     ]);
             }
-        
+
         } else {
-        
-            $invoice_data['site_name']          = $request->input('local_site_name') ?? '';
-            $invoice_data['company_name']       = $request->input('local_company_name') ?? '';
-            $invoice_data['company_email']      = $request->input('local_company_email') ?? '';
-            $invoice_data['company_mobile']     = $request->input('local_company_mobile') ?? '';
-            $invoice_data['company_address']    = $request->input('local_company_address') ?? '';
+
+            $invoice_data['site_name']           = $request->input('local_site_name') ?? '';
+            $invoice_data['company_name']        = $request->input('local_company_name') ?? '';
+            $invoice_data['company_email']       = $request->input('local_company_email') ?? '';
+            $invoice_data['company_mobile']      = $request->input('local_company_mobile') ?? '';
+            $invoice_data['company_address']     = $request->input('local_company_address') ?? '';
             $invoice_data['registration_number'] = $request->input('registration_number') ?? '';
             $invoice_data['license_number']      = $request->input('license_number') ?? '';
-        
-            $site->site_name          = $invoice_data['site_name'];
-            $site->company_name       = $invoice_data['company_name'];
-            $site->company_email      = $invoice_data['company_email'];
-            $site->company_mobile     = $invoice_data['company_mobile'];
-            $site->company_address    = $invoice_data['company_address'];
+
+            $site->site_name           = $invoice_data['site_name'];
+            $site->company_name        = $invoice_data['company_name'];
+            $site->company_email       = $invoice_data['company_email'];
+            $site->company_mobile      = $invoice_data['company_mobile'];
+            $site->company_address     = $invoice_data['company_address'];
             $site->registration_number = $invoice_data['registration_number'];
             $site->license_number      = $invoice_data['license_number'];
-        
+
             $site->save();
         }
-        
+
         $invoice_data['invoice_header_image'] = base64EncodeImage($site->invoice_header_image);
         $invoice_data['invoice_footer_image'] = base64EncodeImage($site->invoice_footer_image);
-        $invoice_data['invoice_signature'] = base64EncodeImage($site->invoice_signature);
-        $invoice_data['company_logo'] = base64EncodeImage($site->company_logo);
-        $invoice_data['invoice_image1'] = base64EncodeImage($site->invoice_image1);
-        $invoice_data['invoice_image2'] = base64EncodeImage($site->invoice_image2);
-        $invoice_data['invoice_image3'] = base64EncodeImage($site->invoice_image3);
-        $invoice_data['invoice_image4'] = base64EncodeImage($site->invoice_image4);
-        $invoice_data['invoice_image5'] = base64EncodeImage($site->invoice_image5);
-        $invoice_data['invoice_image6'] = base64EncodeImage($site->invoice_image6);
-        $invoice_data['invoice_image7'] = base64EncodeImage($site->invoice_image7);
-        $invoice_data['invoice_image8'] = base64EncodeImage($site->invoice_image8);
-        $invoice_data['invoice_image9'] = base64EncodeImage($site->invoice_image9);
-    
+        $invoice_data['invoice_signature']    = base64EncodeImage($site->invoice_signature);
+        $invoice_data['company_logo']         = base64EncodeImage($site->company_logo);
+        $invoice_data['invoice_image1']       = base64EncodeImage($site->invoice_image1);
+        $invoice_data['invoice_image2']       = base64EncodeImage($site->invoice_image2);
+        $invoice_data['invoice_image3']       = base64EncodeImage($site->invoice_image3);
+        $invoice_data['invoice_image4']       = base64EncodeImage($site->invoice_image4);
+        $invoice_data['invoice_image5']       = base64EncodeImage($site->invoice_image5);
+        $invoice_data['invoice_image6']       = base64EncodeImage($site->invoice_image6);
+        $invoice_data['invoice_image7']       = base64EncodeImage($site->invoice_image7);
+        $invoice_data['invoice_image8']       = base64EncodeImage($site->invoice_image8);
+        $invoice_data['invoice_image9']       = base64EncodeImage($site->invoice_image9);
+
         $productDataArray = $request->input('product_data', []);
         $productIds = [];
         $customPrices = [];
-    
+
         foreach ($productDataArray as $item) {
             $data = json_decode($item, true);
             if (!empty($data['product_id'])) {
@@ -1354,61 +1333,68 @@ class WordPressController extends Controller
         $priceTable = $this->productPriceTable;
         $connection = $this->connectionType;
 
+        $readyProducts = session('ready_products', []);
+
         $products = DB::connection($connection)
-        ->table($postsTable)
-        ->join($priceTable, "$postsTable.ID", '=', "$priceTable.product_id")
-        ->whereIn("$postsTable.ID", $productIds)
-        ->select([
-            "$postsTable.ID as id",
-            "$postsTable.post_parent as parent_id",
-            "$postsTable.post_type as post_type",
-            "$postsTable.post_title as name",
-            "$postsTable.post_excerpt as description",
-            "$postsTable.post_name as slug",
-            "$priceTable.min_price as unit_price"
-        ])
-        ->get()
-        ->sortBy(function ($product) use ($productIds) {
-            return array_search($product->id, $productIds);
-        })
-        ->values()
-        ->map(function ($product) use ($customPrices, $connection, $postsTable) {
-            if ($product->post_type === 'product_variation') {
-                $product->variation_id = $product->id;
-                $product->id = $product->parent_id;
-            } else {
-                $readyProducts = session('ready_products', []);
-                $sessionProduct = collect($readyProducts)->firstWhere('id', $product->id);
-                $product->variation_id = $sessionProduct['variation_id'] ?? 0;
-            }
-            
-            $product->unit_price = $customPrices[$product->id] ?? $product->unit_price;
-            $product->category_name = '-';
-            $product->rrp = $product->unit_price;
-            $product->discount = 0;
-            $product->name = $this->getVariationName($connection, $product->variation_id, $product->name);
-            return $product;
-        });
+            ->table($postsTable)
+            ->join($priceTable, "$postsTable.ID", '=', "$priceTable.product_id")
+            ->whereIn("$postsTable.ID", $productIds)
+            ->select([
+                "$postsTable.ID as id",
+                "$postsTable.post_parent as parent_id",
+                "$postsTable.post_type as post_type",
+                "$postsTable.post_title as name",
+                "$postsTable.post_excerpt as description",
+                "$postsTable.post_name as slug",
+                "$priceTable.min_price as unit_price"
+            ])
+            ->get()
+            ->sortBy(function ($product) use ($productIds) {
+                return array_search($product->id, $productIds);
+            })
+            ->values()
+            ->map(function ($product) use ($customPrices, $readyProducts) {
+                if ($product->post_type === 'product_variation') {
+                    $product->variation_id = $product->id;
+                    $product->id = $product->parent_id;
+                } else {
+                    $variation_id = 0;
+                    foreach ($readyProducts as $item) {
+                        if ($item['id'] == $product->id) {
+                            $variation_id = $item['variation_id'] ?? 0;
+                            break;
+                        }
+                    }
+                    $product->variation_id = $variation_id;
+                }
+
+                $product->unit_price = $customPrices[$product->id] ?? $product->unit_price;
+                $product->category_name = '-';
+                $product->rrp = $product->unit_price;
+                $product->discount = 0;
+                $product->name = $this->formatProductName($product->name, $product->unit_price);
+                return $product;
+            });
+
         $invoice_data['products'] = $products;
         $invoice_data['product_ids'] = $productIds;
-    
+
         $this->updateProductPrice($productDataArray);
         InvoiceController::createInvoiceHistory($invoice_data);
-    
+
         $modelType = strtolower($site->businessModel->model_type);
         $siteIdInWords = numberToWords($site->id);
         $viewPath = "websites.{$modelType}.{$siteIdInWords}";
-    
+
         $filename = $request->filled('invoice_file_name')
             ? $request->input('invoice_file_name') . '.pdf'
             : $invoice_data['invoice_number'] . '.pdf';
-            
+
         try {
             return $this->generateWithApi2Pdf($site, $viewPath, $invoice_data, $filename);
         } catch (\Exception $e) {
             return $this->generateWithDompdf($site, $viewPath, $invoice_data, $filename);
         }
-    
     }
 
     protected function generateWithApi2Pdf($site, $viewPath, $invoice_data, $filename)
@@ -1464,57 +1450,57 @@ class WordPressController extends Controller
     {
         $site_id = session('customer.site_id');
         $site = Website::findOrFail($site_id);
-    
+
         $connection = $this->connectionType;
         $priceTable = $this->productPriceTable;
-    
+
         $consumerKey = $site->consumer_key;
         $consumerSecret = $site->consumer_secret;
         $baseUrl = rtrim($site->site_link, '/');
         $endpoint = $baseUrl . '/wp-json/wc/v3/products';
-    
+
         if (!$consumerKey || !$consumerSecret) {
             throw new \Exception('WooCommerce API credentials not configured');
         }
-    
+
         $updatedProducts = [];
         $errors = [];
-    
+
         foreach ($productDataArray as $item) {
             try {
                 $data = json_decode($item, true);
-    
+
                 if (!isset($data['product_id'], $data['unit_price'])) {
                     $errors[] = ['reason' => 'Missing product_id or unit_price'];
                     continue;
                 }
-    
+
                 $product_id = (int) $data['product_id'];
                 $variation_id = (int) ($data['variation_id'] ?? 0);
                 $salePrice = (float) $data['unit_price'];
-    
+
                 if ($product_id <= 0) {
                     $errors[] = ['product_id' => $product_id, 'reason' => 'Invalid product ID'];
                     continue;
                 }
-    
+
                 $productEndpoint = $endpoint . '/' . $product_id;
                 if ($variation_id > 0) {
                     $productEndpoint .= '/variations/' . $variation_id;
                 }
-    
+
                 $currentResponse = Http::withBasicAuth($consumerKey, $consumerSecret)
                     ->timeout(30)
                     ->get($productEndpoint);
-    
+
                 if ($currentResponse->failed()) {
                     $errors[] = ['product_id' => $product_id, 'reason' => 'Fetch failed'];
                     continue;
                 }
-    
+
                 $currentData = $currentResponse->json();
                 $regularPrice = (float) ($currentData['regular_price'] ?? 0);
-    
+
                 if ($regularPrice <= 0 || $salePrice >= $regularPrice) {
                     $updatePayload = [
                         'regular_price' => number_format($salePrice, 2, '.', ''),
@@ -1526,29 +1512,29 @@ class WordPressController extends Controller
                         'sale_price' => number_format($salePrice, 2, '.', '')
                     ];
                 }
-    
+
                 $updateResponse = Http::withBasicAuth($consumerKey, $consumerSecret)
                     ->timeout(30)
                     ->retry(2, 100)
                     ->put($productEndpoint, $updatePayload);
-    
+
                 if ($updateResponse->failed()) {
                     $errors[] = ['product_id' => $product_id, 'reason' => 'Update failed'];
                     continue;
                 }
-    
+
                 $prefix = explode('_', $priceTable)[0] ?? 'wp';
                 $postMetaTable = $prefix . '_postmeta';
                 $optionsTable = $prefix . '_options';
-    
+
                 DB::connection($connection)->table($optionsTable)
                     ->where('option_name', 'LIKE', '%_transient_%')
                     ->delete();
-    
+
                 DB::connection($connection)->table($optionsTable)
                     ->where('option_name', 'LIKE', '%_site_transient_%')
                     ->delete();
-    
+
                 DB::connection($connection)->table($postMetaTable)
                     ->where('post_id', $product_id)
                     ->whereIn('meta_key', [
@@ -1558,7 +1544,7 @@ class WordPressController extends Controller
                         '_product_version'
                     ])
                     ->delete();
-    
+
                 ProductPriceHistory::create([
                     'site_id' => $site_id,
                     'product_id' => $product_id,
@@ -1566,13 +1552,13 @@ class WordPressController extends Controller
                     'unit_price' => $salePrice,
                     'last_price_changed' => now(),
                 ]);
-    
+
                 $updatedProducts[] = [
                     'product_id' => $product_id,
                     'variation_id' => $variation_id,
                     'new_price' => $salePrice
                 ];
-    
+
             } catch (\Exception $e) {
                 $errors[] = [
                     'product_id' => $data['product_id'] ?? 0,
@@ -1580,7 +1566,7 @@ class WordPressController extends Controller
                 ];
             }
         }
-    
+
         return [
             'success' => count($errors) === 0,
             'updated_products' => $updatedProducts,
@@ -1591,5 +1577,5 @@ class WordPressController extends Controller
             ]
         ];
     }
-    
+
 }
