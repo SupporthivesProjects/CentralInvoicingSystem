@@ -69,10 +69,18 @@ class WordPressController extends Controller
 
         $variationParts = [];
         foreach ($attributes as $key => $value) {
-            $variationParts[] = ucfirst(str_replace(['attribute_', 'pa_', '-', '_'], [' ', '', ' ', ' '], $value));
+            $value = trim($value);
+            if (empty($value)) continue;
+            $value = str_replace(['-', '_'], ' ', $value);
+            $value = ucwords(strtolower($value));
+            $variationParts[] = $value;
         }
 
-        return $productName . ' - ' . implode(' ', $variationParts);
+        if (empty($variationParts)) {
+            return $productName;
+        }
+
+        return $productName . ' - ' . implode(', ', $variationParts);
     }
 
     public function randomProducts(Request $request)
@@ -831,16 +839,24 @@ class WordPressController extends Controller
         $updatedSession = $readyProducts;
 
         $products = $products->map(function ($product) use ($readyProducts, $site_id, $connection, &$updatedSession) {
-            $sessionProduct = collect($readyProducts)->firstWhere('id', $product->id);
-    
             if ($product->post_type === 'product_variation') {
                 $api_product_id = $product->parent_id;
                 $variation_id   = $product->id;
             } else {
                 $api_product_id = $product->id;
-                $variation_id   = $sessionProduct['variation_id'] ?? 0;
+                $variation_id   = 0;
             }
-    
+
+            $sessionProduct = collect($readyProducts)->first(function ($item) use ($product, $variation_id) {
+                return (string) $item['id'] === (string) $product->id
+                    && (int) ($item['variation_id'] ?? 0) === (int) $variation_id;
+            }) ?? collect($readyProducts)->firstWhere('id', $product->id);
+
+            if ($product->post_type !== 'product_variation') {
+                $variation_id   = (int) ($sessionProduct['variation_id'] ?? 0);
+                $api_product_id = $product->id;
+            }
+
             $product->unit_price    = $sessionProduct['unit_price'] ?? $product->unit_price;
             $product->category_name = '-';
             $product->variation_id  = $variation_id;
