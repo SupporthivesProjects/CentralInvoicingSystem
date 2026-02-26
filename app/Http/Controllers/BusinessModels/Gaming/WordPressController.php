@@ -376,7 +376,6 @@ class WordPressController extends Controller
 
                     if (!empty($variations)) {
                         foreach ($variations as $var) {
-                            // Skip unpublished or out of stock variations
                             if (($var['status'] ?? 'publish') !== 'publish') continue;
                             if (($var['stock_status'] ?? 'instock') === 'outofstock') continue;
 
@@ -386,23 +385,21 @@ class WordPressController extends Controller
                             }
                         }
 
-                        // Only add if has valid published variations
                         if ($maxPrice > 0) {
                             $products->push((object)[
-                                'id'                 => $p['id'],
-                                'name'               => $p['name'],
-                                'slug'               => $p['slug'],
-                                'game_currency'      => $p['sku'] ?? '',
-                                'game_platform'      => $p['categories'][0]['name'] ?? '',
-                                'game_server_region' => '',
+                                'id'                   => $p['id'],
+                                'name'                 => $p['name'],
+                                'slug'                 => $p['slug'],
+                                'game_currency'        => $p['sku'] ?? '',
+                                'game_platform'        => $p['categories'][0]['name'] ?? '',
+                                'game_server_region'   => '',
                                 'game_need_to_capture' => '',
-                                'bundle_first_amount' => $maxPrice
+                                'bundle_first_amount'  => $maxPrice
                             ]);
                         }
                     }
                 }
 
-                // Always cleanup curl handles
                 curl_multi_remove_handle($mh, $ch);
                 curl_close($ch);
             }
@@ -430,7 +427,6 @@ class WordPressController extends Controller
             'is_random' => false
         ]);
     }
-
     public function addProducts(Request $request)
     {
         $site_id = session('customer.site_id');
@@ -446,7 +442,6 @@ class WordPressController extends Controller
         $existingAssoc = [];
         $seenKeys = [];
 
-        // Keep existing products in session (normalize all data structures)
         foreach ($existing as $item) {
             $game_id = $item['id'];
             $bundle_amount = $item['game_currency_amount'] ?? '0';
@@ -454,37 +449,36 @@ class WordPressController extends Controller
             $key = "{$game_id}-{$bundle_amount}-{$source}";
 
             if (!in_array($key, $seenKeys)) {
-                // Normalize the data structure for both Random and Custom products
                 if ($source === 'random') {
                     $existingAssoc[] = [
-                        'id' => (int) $game_id,
-                        'name' => $item['name'] ?? 'Product',
-                        'unit_price' => (float) $item['unit_price'],
+                        'id'                   => (int) $game_id,
+                        'name'                 => $item['name'] ?? 'Product',
+                        'unit_price'           => (float) $item['unit_price'],
                         'game_currency_amount' => $item['game_currency_amount'] ?? '0',
-                        'game_currency' => $item['game_currency'] ?? '',
-                        'bundle_id' => $item['bundle_id'] ?? null,
-                        'source' => 'Random',
-                        'can_edit_price' => 0,
-                        'remaining_days' => 0,
-                        'slug' => $item['slug'] ?? '',
-                        'game_platform' => $item['game_platform'] ?? '',
-                        'game_region' => $item['game_region'] ?? '',
+                        'game_currency'        => $item['game_currency'] ?? '',
+                        'bundle_id'            => $item['bundle_id'] ?? null,
+                        'source'               => 'Random',
+                        'can_edit_price'       => 0,
+                        'remaining_days'       => 0,
+                        'slug'                 => $item['slug'] ?? '',
+                        'game_platform'        => $item['game_platform'] ?? '',
+                        'game_region'          => $item['game_region'] ?? '',
                         'game_need_to_capture' => $item['game_need_to_capture'] ?? '{}',
                     ];
                 } else {
                     $existingAssoc[] = [
-                        'id' => (int) $game_id,
-                        'unit_price' => (float) $item['unit_price'],
-                        'game_currency_amount' => (string) $bundle_amount,
-                        'bundle_id' => $item['bundle_id'] ?? null,
-                        'source' => 'Custom',
-                        'can_edit_price' => $item['can_edit_price'] ?? 1,
-                        'remaining_days' => $item['remaining_days'] ?? 1,
-                        'name' => $item['name'] ?? 'Unknown',
-                        'slug' => $item['slug'] ?? '',
-                        'game_currency' => $item['game_currency'] ?? '',
-                        'game_platform' => $item['game_platform'] ?? '',
-                        'game_region' => $item['game_region'] ?? '',
+                        'id'                   => (int) $game_id,
+                        'unit_price'           => (float) $item['unit_price'],
+                        'game_currency_amount' => $bundle_amount,
+                        'bundle_id'            => $item['bundle_id'] ?? null,
+                        'source'               => 'Custom',
+                        'can_edit_price'       => $item['can_edit_price'] ?? 1,
+                        'remaining_days'       => $item['remaining_days'] ?? 1,
+                        'name'                 => $item['name'] ?? 'Unknown',
+                        'slug'                 => $item['slug'] ?? '',
+                        'game_currency'        => $item['game_currency'] ?? '',
+                        'game_platform'        => $item['game_platform'] ?? '',
+                        'game_region'          => $item['game_region'] ?? '',
                         'game_need_to_capture' => $item['game_need_to_capture'] ?? '{}',
                     ];
                 }
@@ -492,15 +486,13 @@ class WordPressController extends Controller
             }
         }
 
-        // Fetch and add new products with complete data
         foreach ($selected as $gameData) {
             $game_id = $gameData['product_id'] ?? $gameData['id'];
             $bundle_amount = $gameData['game_currency_amount'] ?? '0';
-            $numeric_amount = preg_replace('/\D/', '', $bundle_amount); // for key only
+            $numeric_amount = preg_replace('/\D/', '', $bundle_amount);
             $key = "{$game_id}-{$numeric_amount}-custom";
 
             if (!in_array($key, $seenKeys)) {
-                // Fetch product details from WooCommerce
                 $productResponse = Http::withBasicAuth($consumerKey, $consumerSecret)
                     ->get($woocommerceBaseUrl . $game_id);
 
@@ -510,18 +502,18 @@ class WordPressController extends Controller
                     $getMeta = fn($key) => $meta->firstWhere('key', $key)['value'] ?? null;
 
                     $existingAssoc[] = [
-                        'id' => (int) $game_id,
-                        'unit_price' => (float) $gameData['unit_price'],
-                        'game_currency_amount' => $gameData['game_currency_amount'] ?? '0',
-                        'bundle_id' => $getMeta('bundle_id'),
-                        'source' => 'Custom',
-                        'can_edit_price' => 1,
-                        'remaining_days' => 1,
-                        'name' => $product['name'] ?? 'Unknown',
-                        'slug' => $product['slug'] ?? '',
-                        'game_currency' => $product['sku'] ?? '',
-                        'game_platform' => $product['categories'][0]['name'] ?? '',
-                        'game_region' => $getMeta('game_region') ?? '',
+                        'id'                   => (int) $game_id,
+                        'unit_price'           => (float) $gameData['unit_price'],
+                        'game_currency_amount' => $bundle_amount,
+                        'bundle_id'            => $getMeta('bundle_id'),
+                        'source'               => 'Custom',
+                        'can_edit_price'       => 1,
+                        'remaining_days'       => 1,
+                        'name'                 => $product['name'] ?? 'Unknown',
+                        'slug'                 => $product['slug'] ?? '',
+                        'game_currency'        => $product['sku'] ?? '',
+                        'game_platform'        => $product['categories'][0]['name'] ?? '',
+                        'game_region'          => $getMeta('game_region') ?? '',
                         'game_need_to_capture' => $getMeta('game_need_to_capture') ?? '{}',
                     ];
                     $seenKeys[] = $key;
@@ -529,10 +521,8 @@ class WordPressController extends Controller
             }
         }
 
-        // Update session with complete product data
         session(['selected_games' => $existingAssoc]);
 
-        // Build display products (same as session data now)
         $finalProducts = collect($existingAssoc)->map(function ($item) {
             return (object) $item;
         });
@@ -548,15 +538,13 @@ class WordPressController extends Controller
         ])->render();
 
         return response()->json([
-            'success' => true,
+            'success'   => true,
             'tableRows' => $tableRows,
-            'total' => $bestTotal,
+            'total'     => $bestTotal,
             'is_random' => false,
-            'products' => $finalProducts,
+            'products'  => $finalProducts,
         ]);
     }
-
-
 
 
     public function generateInvoice(Request $request)
