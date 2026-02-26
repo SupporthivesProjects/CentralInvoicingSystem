@@ -56,7 +56,7 @@
                                         <p style="font-family: Courier New;font-size: 10px;margin-bottom: 5px;font-weight: 600;">
                                         {{ $customer_name }}</p>
                                     </td>
-                                    <td style="width:40%;padding:0px 40px;text-align:left;vertical-align:top;">
+                                    <td style="width:60%;padding:0px 40px;text-align:left;vertical-align:top;">
                                         <p style="font-family: Courier New;font-size: 10px;margin: 0px;font-weight: 400;">
                                             <b style="font-size: 12px;text-transform:uppercase;">Date:</b> {{ $invoice_date }}
                                         </p>
@@ -67,7 +67,7 @@
                                             <strong style="font-size: 12px;text-transform:uppercase;">Email:</strong> {{ $company_email}}
                                         </p>
                                           <p style="font-family: Courier New;font-size: 10px;margin: 0px;font-weight: 400;">
-                                            <b style="font-size: 12px;text-transform:uppercase;">Address</b> {!! $company_address !!}</p>
+                                            <b style="font-size: 12px;text-transform:uppercase;">Address<br></b> {!! $company_address !!}</p>
                                     </td>
                                 </tr>
                             </table>
