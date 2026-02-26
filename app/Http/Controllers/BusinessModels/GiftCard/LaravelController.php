@@ -67,7 +67,7 @@ class LaravelController extends Controller
                 'p.card_currency',
                 DB::raw('ROUND(p.rrp * IFNULL(cr.rate, 1), 2) as rrp'),
                 'p.discount',
-                DB::raw('ROUND(p.unit_price * IFNULL(cr.rate, 1), 2) as unit_price'),
+                DB::raw('ROUND(ROUND(p.rrp * IFNULL(cr.rate, 1), 2) * (1 - p.discount / 100), 2) as unit_price'),
                 'p.current_stock',
                 DB::raw('ROUND(1 / IFNULL(cr.rate, 1), 5) as reverse_rate')
             )
@@ -700,7 +700,7 @@ class LaravelController extends Controller
                 'p.card_currency',
                 DB::raw('ROUND(p.rrp * IFNULL(cr.rate, 1), 2) as rrp'),
                 'p.discount',
-                DB::raw('ROUND(p.unit_price * IFNULL(cr.rate, 1), 2) as unit_price'),
+                DB::raw('ROUND(ROUND(p.rrp * IFNULL(cr.rate, 1), 2) * (1 - p.discount / 100), 2) as unit_price'),
                 'p.current_stock',
                 DB::raw('ROUND(1 / IFNULL(cr.rate, 1), 5) as reverse_rate')
             )
@@ -819,7 +819,7 @@ class LaravelController extends Controller
                 'p.card_currency',
                 DB::raw('ROUND(p.rrp * IFNULL(cr.rate, 1), 2) as rrp'),
                 'p.discount',
-                DB::raw('ROUND(p.unit_price * IFNULL(cr.rate, 1), 2) as unit_price'),
+                DB::raw('ROUND(ROUND(p.rrp * IFNULL(cr.rate, 1), 2) * (1 - p.discount / 100), 2) as unit_price'),
                 'p.current_stock',
                 DB::raw('ROUND(1 / IFNULL(cr.rate, 1), 5) as reverse_rate')
             )
@@ -936,7 +936,7 @@ class LaravelController extends Controller
                 'p.card_currency',
                 DB::raw('ROUND(p.rrp * IFNULL(cr.rate, 1), 2) as rrp'),
                 'p.discount',
-                DB::raw('ROUND(p.unit_price * IFNULL(cr.rate, 1), 2) as unit_price'),
+                DB::raw('ROUND(ROUND(p.rrp * IFNULL(cr.rate, 1), 2) * (1 - p.discount / 100), 2) as unit_price'),
                 'p.current_stock',
                 DB::raw('ROUND(1 / IFNULL(cr.rate, 1), 5) as reverse_rate')
             )
@@ -1052,7 +1052,7 @@ class LaravelController extends Controller
                 'p.card_currency',
                 DB::raw('ROUND(p.rrp * IFNULL(cr.rate, 1), 2) as rrp'),
                 'p.discount',
-                DB::raw('ROUND(p.unit_price * IFNULL(cr.rate, 1), 2) as unit_price'),
+                DB::raw('ROUND(ROUND(p.rrp * IFNULL(cr.rate, 1), 2) * (1 - p.discount / 100), 2) as unit_price'),
                 'p.current_stock',
                 DB::raw('ROUND(1 / IFNULL(cr.rate, 1), 5) as reverse_rate'),
                 'c.name as category_name'
@@ -1360,7 +1360,7 @@ class LaravelController extends Controller
                 'p.card_currency',
                 DB::raw('ROUND(p.rrp * IFNULL(cr.rate, 1), 2) as rrp'),
                 'p.discount',
-                DB::raw('ROUND(p.unit_price * IFNULL(cr.rate, 1), 2) as unit_price'),
+                DB::raw('ROUND(ROUND(p.rrp * IFNULL(cr.rate, 1), 2) * (1 - p.discount / 100), 2) as unit_price'),
                 'p.current_stock',
                 DB::raw('ROUND(1 / IFNULL(cr.rate, 1), 5) as reverse_rate')
             )
