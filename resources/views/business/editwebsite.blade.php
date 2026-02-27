@@ -129,6 +129,45 @@
                                             </div>
                                         </div>
 
+                                        @if(isset($website->technology) && strtolower($website->technology) === 'laravel')
+                                        <div class="p-3 rounded-3 mb-4" style="background: linear-gradient(135deg, #e8f4fd, #f0f9ff); border: 1px solid #b8daff;">
+                                            <div class="d-flex align-items-center justify-content-between mb-3">
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <div class="rounded-circle d-flex align-items-center justify-content-center" style="width:32px;height:32px;background:#0d6efd20;">
+                                                        <i class="bi bi-lightning-charge-fill text-primary fs-6"></i>
+                                                    </div>
+                                                    <div>
+                                                        <span class="fw-semibold text-primary">Urgency Flat Fee</span>
+                                                        <div><small class="text-muted">Fixed surcharge added for urgent 2-3 day delivery on invoice products</small></div>
+                                                    </div>
+                                                </div>
+                                                <span class="badge" style="background:#cfe2ff;color:#084298;font-size:11px;"><i class="bi bi-cpu me-1"></i>Laravel Sites Only</span>
+                                            </div>
+                                            <div class="row g-3 align-items-end">
+                                                <div class="col-md-4">
+                                                    <label class="form-label fw-semibold text-dark" style="font-size:13px;">
+                                                        <i class="bi bi-alarm-fill text-primary me-1"></i> Urgent 2-3 Days – Flat Fee
+                                                    </label>
+                                                    <div class="input-group shadow-sm">
+                                                        <span class="input-group-text bg-primary text-white" style="min-width:44px;">{{ get_site_currency_by_id($website->id) }}</span>
+                                                        <input type="number" name="urgency_amount" class="form-control fw-semibold" placeholder="e.g. 35.00" min="0" step="0.01" value="{{ old('urgency_amount', $website->urgency_amount ?? '') }}">
+                                                        <span class="input-group-text bg-light text-muted" style="font-size:11px;">per product</span>
+                                                    </div>
+                                                    <div class="form-text mt-1"><i class="bi bi-info-circle text-primary me-1"></i>Leave empty or <code>0</code> to disable urgency fee on invoices.</div>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <div class="rounded-3 p-3 d-flex align-items-start gap-3" style="background:#fff;border:1px dashed #b8daff;">
+                                                        <i class="bi bi-receipt text-primary fs-4 mt-1"></i>
+                                                        <div>
+                                                            <div class="fw-semibold text-dark mb-1" style="font-size:13px;">How this works on the Invoice Builder</div>
+                                                            <div class="text-muted" style="font-size:12px;line-height:1.6;">When a product is set to <span class="badge bg-warning text-dark">Urgent 2-3 days</span> in the invoice builder, this flat fee is automatically added to the product price. The system will auto-suggest urgent delivery when the gap between the product total and invoice amount can be covered by this fee.</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @endif
+
                                         <div class="p-3 rounded-3" style="background:#fff8f0; border: 1px solid #fde8cc;">
                                             <div class="d-flex align-items-center justify-content-between mb-3">
                                                 <div class="d-flex align-items-center gap-2">
