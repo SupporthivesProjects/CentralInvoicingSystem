@@ -149,7 +149,7 @@
                                                         <i class="bi bi-alarm-fill text-primary me-1"></i> Urgent 2-3 Days – Flat Fee
                                                     </label>
                                                     <div class="input-group shadow-sm">
-                                                        <span class="input-group-text bg-primary text-white" style="min-width:44px;">{{ get_site_currency_by_id($website->id) }}</span>
+                                                        <span class="input-group-text bg-primary text-white">{{ get_site_currency_by_id($website->id) }}</span>
                                                         <input type="number" name="urgency_amount" class="form-control fw-semibold" placeholder="e.g. 35.00" min="0" step="0.01" value="{{ old('urgency_amount', $website->urgency_amount ?? '') }}">
                                                         <span class="input-group-text bg-light text-muted" style="font-size:11px;">per product</span>
                                                     </div>
