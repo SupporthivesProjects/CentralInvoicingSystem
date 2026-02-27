@@ -141,7 +141,7 @@
                                                         <div><small class="text-muted">Fixed add-on price per product for urgent 2-3 day delivery on invoices</small></div>
                                                     </div>
                                                 </div>
-                                                <span class="badge" style="background:#cfe2ff;color:#084298;font-size:11px;"><i class="bi bi-cpu me-1"></i>Laravel Sites Only</span>
+                                                <span class="badge bg-warning text-dark" style="font-size:11px;">Laravel - Leave empty to disable urgency</span>
                                             </div>
                                             <div class="row g-3 align-items-center">
                                                 <div class="col-md-4">
@@ -150,10 +150,9 @@
                                                     </label>
                                                     <div class="input-group shadow-sm">
                                                         <span class="input-group-text bg-primary text-white">{{ get_site_currency_by_id($website->id) }}</span>
-                                                        <input type="number" name="urgency_amount" class="form-control fw-semibold" placeholder="e.g. 35.00" min="0" step="0.01" value="{{ old('urgency_amount', $website->urgency_amount ?? '') }}">
+                                                        <input type="number" name="urgency_amount" class="form-control fw-semibold" placeholder="e.g. 35.00" min="0" step="0.0001" value="{{ old('urgency_amount', $website->urgency_amount ?? '') }}">
                                                         <span class="input-group-text bg-light text-muted" style="font-size:11px;">per product</span>
                                                     </div>
-                                                    <div class="form-text mt-1"><i class="bi bi-info-circle text-primary me-1"></i>Leave empty to disable urgency option from product selection.</div>
                                                 </div>
                                                 <div class="col-md-8">
                                                     <div class="row g-2 ps-2">
@@ -190,7 +189,7 @@
                                                     <i class="bi bi-clock-history text-warning fs-5"></i>
                                                     <span class="fw-semibold text-warning-emphasis">Urgent Delivery Add-On Pricing</span>
                                                 </div>
-                                                <span class="badge bg-warning text-dark" style="font-size:11px;">Leave empty to disable tier</span>
+                                                <span class="badge bg-warning text-dark" style="font-size:11px;">Wordpress - Leave empty to disable urgency</span>
                                             </div>
 
                                             <div class="mb-4">
