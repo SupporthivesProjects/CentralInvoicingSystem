@@ -191,7 +191,7 @@
                     {{-- Row 2: Main Stat Cards (tall vertical) --}}
                     <div class="row row-sm g-3 mt-1">
 
-                        <div class="col-sm-12 col-md-6 col-lg-6 col-xl-4">
+                        <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4">
                             <div class="card stat-card shadow-sm h-100">
                                 <div class="card-body p-4">
                                     <div class="d-flex align-items-start justify-content-between mb-3">
@@ -207,7 +207,7 @@
                             </div>
                         </div>
 
-                        <div class="col-sm-12 col-md-6 col-lg-6 col-xl-4">
+                        <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4">
                             <div class="card stat-card shadow-sm h-100">
                                 <div class="card-body p-4">
                                     <div class="d-flex align-items-start justify-content-between mb-3">
@@ -223,7 +223,7 @@
                             </div>
                         </div>
 
-                        <div class="col-sm-12 col-md-6 col-lg-6 col-xl-4">
+                        <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4">
                             <div class="card stat-card shadow-sm h-100">
                                 <div class="card-body p-4">
                                     <div class="d-flex align-items-start justify-content-between mb-3">
