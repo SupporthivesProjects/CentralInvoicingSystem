@@ -376,80 +376,64 @@
                     </div>
 
                     <div class="rounded shadow-sm p-2">
-                        @php
-                        $connectionType = 'dynamic';
-                        $productTable = 'pricing_packs';
-                        $allProducts = DB::connection($connectionType)->table($productTable)
-                            ->select('id', 'name', 'credits', 'price')->get();
-                        $exactPriceProduct = $allProducts->where('price', $invoice['invoice_amount'])->first();
-                        $showCustomPack = !$exactPriceProduct;
-                    @endphp
-
-                    @if($showCustomPack)
-                    <table class="table table-bordered table-hover align-middle mb-0 table-responsive" style="width:100% !important;">
-                        <tr>
-                            <td colspan="5" class="text-center">
-                                <h5 class="fw-semibold text-dark mb-0">Select Custom Pack</h5>
-                            </td>
-                        </tr>
-                        <tr id="customize-product-row-0">
-                            <td class="text-center">#</td>
-                            <td>
-                                Custom Pack
-                            </td>
-                            <td>
-                                <span class="badge bg-secondary" id="customcredit">No Credits</span>
-                            </td>
-                            <td class="text-center">
-                                {{ site_currency() }}
-                                <input type="hidden"
-                                    class="add-product-price form-control d-inline-block"
-                                    data-product-id="0"
-                                    value="{{ number_format($invoice['invoice_amount'], 2, '.', '') }}"
-                                    step="0.01"
-                                    min="0"
-                                    style="width: 80px;">
-                                    {{ number_format($invoice['invoice_amount'], 2, '.', '') }}
-                            </td>
-                            <td class="text-center align-middle">
-                                <div class="form-check d-flex justify-content-center align-items-center m-0">
-                                    <input
-                                        class="form-check-input border narayan-checkbox border-1 border-primary"
-                                        type="radio"
-                                        name="add_product_ids[]"
+                        <table class="table table-bordered table-hover align-middle mb-0 table-responsive" style="width:100% !important;">
+                            <tr>
+                                <td colspan="5" class="text-center">
+                                    <h5 class="fw-semibold text-dark mb-0">Select Custom Pack</h5>
+                                </td>
+                            </tr>
+                            <tr id="customize-product-row-0">
+                                <td class="text-center">#</td>
+                                <td>Custom Pack</td>
+                                <td>
+                                    <span class="badge bg-secondary" id="customcredit">No Credits</span>
+                                </td>
+                                <td class="text-center">
+                                    {{ site_currency() }}
+                                    <input type="hidden"
+                                        class="add-product-price form-control d-inline-block"
                                         data-product-id="0"
-                                        value="0"
-                                    >
-                                </div>
-                            </td>
-                        </tr>
-                    </table>
-                    @else
-                    <div class="alert alert-info text-center mb-3">
-                        <i class="fas fa-info-circle me-2"></i>
-                        A product with the exact invoice amount ({{ site_currency() }}{{ number_format($invoice['invoice_amount'], 2) }}) already exists in the system.
-                    </div>
-                    @endif
+                                        id="custom-pack-price-input"
+                                        value="{{ number_format($invoice['invoice_amount'], 2, '.', '') }}"
+                                        step="0.01"
+                                        min="0"
+                                        style="width: 80px;">
+                                    <span id="custom-pack-price-display">{{ number_format($invoice['invoice_amount'], 2, '.', '') }}</span>
+                                </td>
+                                <td class="text-center align-middle">
+                                    <div class="form-check d-flex justify-content-center align-items-center m-0">
+                                        <input
+                                            class="form-check-input border narayan-checkbox border-1 border-primary"
+                                            type="radio"
+                                            name="add_product_ids[]"
+                                            data-product-id="0"
+                                            value="0"
+                                        >
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+
                         <table id="customize-products-table" class="table table-bordered table-hover align-middle mb-0 table-responsive" style="width:100% !important;">
                             <thead class="table-dark text-center">
                                 <tr>
-                                <th style="width: 10%;">PID</th>
-                                <th style="width: 35%;">Product Name</th>
-                                <th>Credits</th>
-                                <th class="text-center unit-price-header" style="width: 20%;"  data-column="3" data-order="desc">
-                                    <span class="d-inline-flex align-items-center justify-content-center gap-1">
-                                        Unit Price <i class="bi bi-caret-down-fill"></i>
-                                    </span>
-                                </th>
-                                <th style="width: 10%;">Select</th>
-                            </tr>
+                                    <th style="width: 10%;">PID</th>
+                                    <th style="width: 35%;">Product Name</th>
+                                    <th>Credits</th>
+                                    <th class="text-center unit-price-header" style="width: 20%;" data-column="3" data-order="desc">
+                                        <span class="d-inline-flex align-items-center justify-content-center gap-1">
+                                            Unit Price <i class="bi bi-caret-down-fill"></i>
+                                        </span>
+                                    </th>
+                                    <th style="width: 10%;">Select</th>
+                                </tr>
                             </thead>
                             <tbody id="customize-product-table-body">
                             </tbody>
                         </table>
                     </div>
                 </div>
-                </div>
+            </div>
 
             <div class="modal-footer bg-light border-top">
                 <div class="d-flex flex-wrap gap-2">
@@ -603,18 +587,22 @@
         const invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
         const credits = Math.round((invoiceAmount / 5.75) * 10) / 10;
         const final_credit = enforceStep(credits);
-        $('#customcredit').text(final_credit + ' Credits');
+        $('#customcredit').text(final_credit > 0 ? final_credit + ' Credits' : 'No Credits');
+
+        $('#custom-pack-price-input').val(invoiceAmount.toFixed(2));
+        $('#custom-pack-price-display').text(invoiceAmount.toFixed(2));
 
         let btn = $('#add-custom-products');
-        btn.prop('disabled', false).html('Add Selected to Cart');
+        btn.prop('disabled', false).html('<i class="bi bi-cart-plus me-1"></i> Add Selected to Cart');
 
         let current_amount = parseFloat($('#current_amount').val()) || 0;
+        let discountAmount = current_amount > invoiceAmount ? current_amount - invoiceAmount : 0;
 
         $('#temp_current_amount_text').text(current_amount.toFixed(2));
         $('#temp_invoice_amount_text').text(invoiceAmount.toFixed(2));
-
-        let discountAmount = current_amount > invoiceAmount ? current_amount - invoiceAmount : 0;
         $('#temp_discount_amount_text').text(discountAmount.toFixed(2));
+
+        $('input[name="add_product_ids[]"]').prop('checked', false);
 
         $('#customize-product-table-body').html(getProductsSearchRowHTML());
 
@@ -634,9 +622,11 @@
 
                 $('#customize-product-table-body').html(response.tableRows);
                 $('#current_page_number').val(response.currentPage);
+                calculateTotalPrice();
             },
             error: function (xhr, textStatus) {
                 if (textStatus !== 'abort') {
+                    console.error('AJAX Error:', textStatus);
                     $('#customize-product-table-body').html(getErrorRowHTML('Something went wrong while filtering.'));
                     toastr.error('Something went wrong while filtering.', 'Oops!');
                 }
