@@ -600,23 +600,20 @@
     }
 
     function customizeProducts(search_type = 'search', page = 1) {
-        console.log("Triggered with type:", search_type);
-        console.log("customizeRequest:", customizeRequest);
-
         const invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
         const credits = Math.round((invoiceAmount / 5.75) * 10) / 10;
         const final_credit = enforceStep(credits);
         $('#customcredit').text(final_credit + ' Credits');
 
         let btn = $('#add-custom-products');
-        btn.prop('disabled', false).html('Add Selected to List');
+        btn.prop('disabled', false).html('Add Selected to Cart');
 
-        let invoice_amount = parseFloat($('#invoice_amount').val()) || 0;
         let current_amount = parseFloat($('#current_amount').val()) || 0;
-        let discountAmount = Math.max(current_amount - invoice_amount, 0);
 
         $('#temp_current_amount_text').text(current_amount.toFixed(2));
-        $('#temp_invoice_amount_text').text(invoice_amount.toFixed(2));
+        $('#temp_invoice_amount_text').text(invoiceAmount.toFixed(2));
+
+        let discountAmount = current_amount > invoiceAmount ? current_amount - invoiceAmount : 0;
         $('#temp_discount_amount_text').text(discountAmount.toFixed(2));
 
         $('#customize-product-table-body').html(getProductsSearchRowHTML());
@@ -637,17 +634,14 @@
 
                 $('#customize-product-table-body').html(response.tableRows);
                 $('#current_page_number').val(response.currentPage);
-                calculateTotalPrice();
             },
             error: function (xhr, textStatus) {
                 if (textStatus !== 'abort') {
-                    console.error('AJAX Error:', textStatus);
                     $('#customize-product-table-body').html(getErrorRowHTML('Something went wrong while filtering.'));
                     toastr.error('Something went wrong while filtering.', 'Oops!');
                 }
             },
             complete: function () {
-                console.log("Request complete");
                 customizeRequest = null;
             }
         });
