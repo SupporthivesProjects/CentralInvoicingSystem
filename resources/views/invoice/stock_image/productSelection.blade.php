@@ -374,73 +374,79 @@
                             </div>
                         </div>
                     </div>
+                        <div class="rounded shadow-sm p-2">
 
-                   <div class="rounded shadow-sm p-2">
-
-            {{-- Custom Pack Table - Always Visible --}}
-            <table class="table table-bordered table-hover align-middle mb-0 table-responsive" style="width:100% !important;">
-                <thead class="table-dark text-center">
-                    <tr>
-                        <th colspan="5">Select Custom Pack</th>
-                    </tr>
-                    <tr>
-                        <th style="width: 10%;">PID</th>
-                        <th style="width: 35%;">Product Name</th>
-                        <th>Credits</th>
-                        <th style="width: 20%;">Unit Price</th>
-                        <th style="width: 10%;">Select</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr id="customize-product-row-0">
-                        <td class="text-center">#</td>
-                        <td>Custom Pack</td>
-                        <td class="text-center">
-                            <span class="badge bg-secondary" id="customcredit">No Credits</span>
-                        </td>
-                        <td class="text-center">
-                            {{ site_currency() }}
-                            <input type="hidden"
-                                class="add-product-price"
-                                data-product-id="0"
-                                id="custom-pack-price-input"
-                                value="{{ number_format($invoice['invoice_amount'], 2, '.', '') }}">
-                            <span id="custom-pack-price-display">{{ number_format($invoice['invoice_amount'], 2, '.', '') }}</span>
-                        </td>
-                        <td class="text-center align-middle">
-                            <div class="form-check d-flex justify-content-center align-items-center m-0">
-                                <input
-                                    class="form-check-input border narayan-checkbox border-1 border-primary"
-                                    type="radio"
-                                    name="add_product_ids[]"
-                                    data-product-id="0"
-                                    value="0"
-                                    id="custom-pack-radio">
+                            {{-- Custom Pack - Separate Card Style, NOT inside the products table --}}
+                            <div class="mb-2 border rounded">
+                                <div class="bg-dark text-white text-center py-2 fw-semibold">
+                                    Select Custom Pack
+                                </div>
+                                <table class="table table-bordered align-middle mb-0" style="width:100% !important;">
+                                    <thead class="bg-secondary text-white text-center">
+                                        <tr>
+                                            <th style="width: 10%;">PID</th>
+                                            <th style="width: 35%;">Product Name</th>
+                                            <th>Credits</th>
+                                            <th style="width: 20%;">Unit Price</th>
+                                            <th style="width: 10%;">Select</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr id="customize-product-row-0" class="bg-light">
+                                            <td class="text-center fw-bold">#</td>
+                                            <td class="fw-semibold">Custom Pack</td>
+                                            <td class="text-center">
+                                                <span class="badge bg-secondary" id="customcredit">No Credits</span>
+                                            </td>
+                                            <td class="text-center fw-bold text-primary">
+                                                {{ site_currency() }}
+                                                <input type="hidden"
+                                                    class="add-product-price"
+                                                    data-product-id="0"
+                                                    id="custom-pack-price-input"
+                                                    value="{{ number_format($invoice['invoice_amount'], 2, '.', '') }}">
+                                                <span id="custom-pack-price-display">{{ number_format($invoice['invoice_amount'], 2, '.', '') }}</span>
+                                            </td>
+                                            <td class="text-center align-middle">
+                                                <div class="form-check d-flex justify-content-center align-items-center m-0">
+                                                    <input
+                                                        class="form-check-input border border-primary border-2"
+                                                        type="radio"
+                                                        name="add_product_ids[]"
+                                                        data-product-id="0"
+                                                        value="0"
+                                                        id="custom-pack-radio"
+                                                        style="width: 20px; height: 20px; cursor: pointer;">
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
 
-            {{-- All Products Table --}}
-            <table id="customize-products-table" class="table table-bordered table-hover align-middle mb-0 table-responsive mt-2" style="width:100% !important;">
-                <thead class="table-dark text-center">
-                    <tr>
-                        <th style="width: 10%;">PID</th>
-                        <th style="width: 35%;">Product Name</th>
-                        <th>Credits</th>
-                        <th class="text-center unit-price-header" style="width: 20%;" data-column="3" data-order="desc">
-                            <span class="d-inline-flex align-items-center justify-content-center gap-1">
-                                Unit Price <i class="bi bi-caret-down-fill"></i>
-                            </span>
-                        </th>
-                        <th style="width: 10%;">Select</th>
-                    </tr>
-                </thead>
-                <tbody id="customize-product-table-body">
-                </tbody>
-            </table>
-</div>
+                            {{-- All Products Table --}}
+                            <div class="border rounded">
+                                <table id="customize-products-table" class="table table-bordered table-hover align-middle mb-0" style="width:100% !important;">
+                                    <thead class="table-dark text-center">
+                                        <tr>
+                                            <th style="width: 10%;">PID</th>
+                                            <th style="width: 35%;">Product Name</th>
+                                            <th>Credits</th>
+                                            <th class="text-center unit-price-header" style="width: 20%;" data-column="3" data-order="desc">
+                                                <span class="d-inline-flex align-items-center justify-content-center gap-1">
+                                                    Unit Price <i class="bi bi-caret-down-fill"></i>
+                                                </span>
+                                            </th>
+                                            <th style="width: 10%;">Select</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="customize-product-table-body">
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                   
                 </div>
             </div>
 
