@@ -148,6 +148,41 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                <div class="card stat-card shadow-sm h-100" style="border-left: 4px solid #f59e0b;">
+                                    <div class="card-body p-4">
+                                        <div class="d-flex align-items-start justify-content-between mb-3">
+                                            <div class="icon-box bg-warning bg-opacity-10">
+                                                <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 0 24 24" fill="#f59e0b">
+                                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                                                </svg>
+                                            </div>
+                                            <span class="badge rounded-pill bg-warning bg-opacity-10 text-warning pulse-badge pulse-badge-amber" style="font-size:11px;">Temp Down</span>
+                                        </div>
+                                        <div class="stat-number text-warning counter-num" data-target="{{ $tempDownCount }}">0</div>
+                                        <p class="text-muted small mb-3 mt-1">Temporary Down Websites</p>
+                                        <a href="{{ route('connectedwebsites') }}?status=temp_down" class="view-btn bg-warning bg-opacity-10 text-warning">View All <i class="bi bi-arrow-right"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                <div class="card stat-card shadow-sm h-100" style="border-left: 4px solid #ef4444;">
+                                    <div class="card-body p-4">
+                                        <div class="d-flex align-items-start justify-content-between mb-3">
+                                            <div class="icon-box bg-danger bg-opacity-10">
+                                                <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 0 24 24" fill="#ef4444">
+                                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                                                </svg>
+                                            </div>
+                                            <span class="badge rounded-pill bg-danger bg-opacity-10 text-danger pulse-badge pulse-badge-red" style="font-size:11px;">Perm Down</span>
+                                        </div>
+                                        <div class="stat-number text-danger counter-num" data-target="{{ $permDownCount }}">0</div>
+                                        <p class="text-muted small mb-3 mt-1">Permanently Down Websites</p>
+                                        <a href="{{ route('connectedwebsites') }}?status=perm_down" class="view-btn bg-danger bg-opacity-10 text-danger">View All <i class="bi bi-arrow-right"></i></a>
+                                    </div>
+                                </div>
+                            </div>
 
                             <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
                                 <div class="card stat-card shadow-sm h-100">
