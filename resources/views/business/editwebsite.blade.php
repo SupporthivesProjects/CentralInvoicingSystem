@@ -189,7 +189,7 @@
                                                     <i class="bi bi-clock-history text-warning fs-5"></i>
                                                     <span class="fw-semibold text-warning-emphasis">Urgent Delivery Add-On Pricing</span>
                                                 </div>
-                                                <span class="badge bg-warning text-dark" style="font-size:11px;">Wordpress - Leave empty to disable urgency</span>
+                                                <span class="badge bg-warning text-dark" style="font-size:11px;">WordPress - Leave empty to disable urgency</span>
                                             </div>
 
                                             <div class="mb-4">
