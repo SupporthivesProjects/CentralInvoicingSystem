@@ -142,8 +142,8 @@
                                         </div>
                                         <span class="badge rounded-pill bg-primary bg-opacity-10 text-primary pulse-badge pulse-badge-purple" style="font-size:11px;">Live</span>
                                     </div>
-                                    <div class="stat-number text-primary counter-num" data-target="{{ getAllWebsites() }}">0</div>
-                                    <p class="text-muted small mb-3 mt-1">Available Websites</p>
+                                    <div class="stat-number text-primary counter-num" data-target="{{ getLiveWebsites() }}">0</div>
+                                    <p class="text-muted small mb-3 mt-1">Live Websites</p>
                                     <a href="{{ route('connectedwebsites') }}" class="view-btn bg-primary bg-opacity-10 text-primary">View All <i class="bi bi-arrow-right"></i></a>
                                 </div>
                             </div>
