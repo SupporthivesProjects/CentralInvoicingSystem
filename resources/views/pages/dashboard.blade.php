@@ -163,7 +163,7 @@
                                     <h4 class="fw-bold mb-0 counter-num text-warning" data-target="{{ $tempDownCount }}">0</h4>
                                     <small style="font-size:11px;"><a href="{{ route('connectedwebsites') }}?status=tdown" class="text-warning text-decoration-none">View all <i class="bi bi-arrow-right"></i></a></small>
                                 </div>
-                                <span class="badge rounded-pill bg-warning bg-opacity-10 text-warning pulse-badge pulse-badge-amber align-self-start" style="font-size:11px;">Temp Down</span>
+                                <span class="badge rounded-pill bg-warning bg-opacity-10 text-warning pulse-badge pulse-badge-amber align-self-start" style="font-size:11px;">Down</span>
                             </div>
                         </div>
                     </div>
@@ -181,7 +181,7 @@
                                     <h4 class="fw-bold mb-0 counter-num text-danger" data-target="{{ $permDownCount }}">0</h4>
                                     <small style="font-size:11px;"><a href="{{ route('connectedwebsites') }}?status=pdown" class="text-danger text-decoration-none">View all <i class="bi bi-arrow-right"></i></a></small>
                                 </div>
-                                <span class="badge rounded-pill bg-danger bg-opacity-10 text-danger pulse-badge pulse-badge-red align-self-start" style="font-size:11px;">Perm Down</span>
+                                <span class="badge rounded-pill bg-danger bg-opacity-10 text-danger pulse-badge pulse-badge-red align-self-start" style="font-size:11px;">Down</span>
                             </div>
                         </div>
                     </div>
@@ -213,7 +213,7 @@
                                     <h4 class="fw-bold mb-0 counter-num text-success" data-target="{{ invoiceCount() }}">0</h4>
                                     <small style="font-size:11px;"><a href="#listinvoices" class="text-success text-decoration-none">View all <i class="bi bi-arrow-right"></i></a></small>
                                 </div>
-                                <span class="badge rounded-pill bg-success bg-opacity-10 text-success pulse-badge pulse-badge-green align-self-start" style="font-size:11px;">Total</span>
+                                <span class="badge rounded-pill bg-success bg-opacity-10 text-success pulse-badge pulse-badge-green align-self-start" style="font-size:11px;">Invoices</span>
                             </div>
                         </div>
                     </div>
