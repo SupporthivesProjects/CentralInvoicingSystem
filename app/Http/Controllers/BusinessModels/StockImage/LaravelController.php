@@ -36,21 +36,20 @@ class LaravelController extends Controller
         $this->productTable = "pricing_packs";
         $this->connectionType = 'dynamic';
     }
-    
+
     public function randomProducts(Request $request)
     {
         $site_id = $request->get('site_id');
         $invoiceAmount = floatval($request->get('invoice_amount'));
 
-        $percentageStep = 2;
-        $maxPercentage  = 50;
-        $trackLastN     = 2;
+        $trackLastN = 2;
+        
 
         $tiers = [
-            ['min' => 0,   'max' => 0,   'exact' => true],  // exact match only
-            ['min' => 0,   'max' => 2,   'exact' => false],  // current ±2%
-            ['min' => 2,   'max' => 40,  'exact' => false],  // mid range
-            ['min' => 40,  'max' => 50,  'exact' => false],  // high range
+            ['label' => 'exact', 'exact' => true],
+            ['label' => 'low',   'exact' => false, 'min' => 0.001, 'max' => 0.20],
+            ['label' => 'mid',   'exact' => false, 'min' => 0.20,  'max' => 0.35],
+            ['label' => 'high',  'exact' => false, 'min' => 0.35,  'max' => 0.50],
         ];
 
         $site = Website::findOrFail($site_id);
@@ -65,8 +64,6 @@ class LaravelController extends Controller
 
         $filteredProducts = collect();
         $matchedAtPercentage = 0;
-        $foundInTier = false;
-
         $totalTiers = count($tiers);
 
         for ($attempt = 0; $attempt < $totalTiers; $attempt++) {
@@ -78,50 +75,26 @@ class LaravelController extends Controller
                     return abs($product->price - $invoiceAmount) < 0.01;
                 });
             } else {
-                $minPrice = $invoiceAmount * (1 + $tier['min'] / 100);
-                $maxPrice = $invoiceAmount * (1 + $tier['max'] / 100);
+                $minPrice = $invoiceAmount + ($invoiceAmount * $tier['min']);
+                $maxPrice = $invoiceAmount + ($invoiceAmount * $tier['max']);
                 $candidates = $allProducts->filter(function ($product) use ($minPrice, $maxPrice) {
-                    return $product->price >= $minPrice && $product->price <= $maxPrice;
+                    return $product->price > $minPrice && $product->price <= $maxPrice;
                 });
             }
 
-            if ($candidates->isNotEmpty()) {
-                $preferred = $candidates->filter(function ($product) use ($lastUsedIds) {
-                    return !in_array($product->id, $lastUsedIds);
-                });
+            // Remove last used products from candidates
+            $preferred = $candidates->filter(function ($product) use ($lastUsedIds) {
+                return !in_array($product->id, $lastUsedIds);
+            });
 
-                $pool = $preferred->isNotEmpty() ? $preferred : $candidates;
+            $pool = $preferred->isNotEmpty() ? $preferred : $candidates;
+
+            if ($pool->isNotEmpty()) {
                 $chosenProduct = $pool->random();
                 $filteredProducts = collect([$chosenProduct]);
-                $matchedAtPercentage = $tier['min'];
-
+                $matchedAtPercentage = $tier['exact'] ? 0 : round($tier['min'] * 100);
                 session(['current_tier_index' => ($tierIndex + 1) % $totalTiers]);
-                $foundInTier = true;
                 break;
-            }
-        }
-
-        if (!$foundInTier) {
-            for ($pct = $percentageStep; $pct <= $maxPercentage; $pct += $percentageStep) {
-                $minPrice = $invoiceAmount;
-                $maxPrice = $invoiceAmount * (1 + $pct / 100);
-
-                $candidates = $allProducts->filter(function ($product) use ($minPrice, $maxPrice) {
-                    return $product->price >= $minPrice && $product->price <= $maxPrice;
-                });
-
-                if ($candidates->isNotEmpty()) {
-                    $preferred = $candidates->filter(function ($product) use ($lastUsedIds) {
-                        return !in_array($product->id, $lastUsedIds);
-                    });
-
-                    $pool = $preferred->isNotEmpty() ? $preferred : $candidates;
-                    $chosenProduct = $pool->random();
-                    $filteredProducts = collect([$chosenProduct]);
-                    $matchedAtPercentage = $pct;
-                    session(['current_tier_index' => 1]);
-                    break;
-                }
             }
         }
 
@@ -132,7 +105,7 @@ class LaravelController extends Controller
                 'tableRows' => '
                     <tr>
                         <td colspan="6" class="text-center text-muted py-3">
-                            No products found within ' . $maxPercentage . '% of invoice amount
+                            No products found within 50% of invoice amount
                             (<strong>' . site_currency() . number_format($invoiceAmount, 2) . '</strong>).<br>
                             <button class="btn btn-primary btn-sm mt-2"
                                 data-bs-toggle="modal"
@@ -173,7 +146,6 @@ class LaravelController extends Controller
             'matchedAtPercentage' => $matchedAtPercentage
         ]);
     }
-
     public function addProducts(Request $request)
     {
         $site_id = $request->get('site_id');
