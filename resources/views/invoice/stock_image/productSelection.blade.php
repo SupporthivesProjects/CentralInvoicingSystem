@@ -375,46 +375,55 @@
                         </div>
                     </div>
 
-                    <div class="rounded shadow-sm p-2">
+                   <div class="rounded shadow-sm p-2">
                         <table class="table table-bordered table-hover align-middle mb-0 table-responsive" style="width:100% !important;">
-                            <tr>
-                                <td colspan="5" class="text-center">
-                                    <h5 class="fw-semibold text-dark mb-0">Select Custom Pack</h5>
-                                </td>
-                            </tr>
-                            <tr id="customize-product-row-0">
-                                <td class="text-center">#</td>
-                                <td>Custom Pack</td>
-                                <td>
-                                    <span class="badge bg-secondary" id="customcredit">No Credits</span>
-                                </td>
-                                <td class="text-center">
-                                    {{ site_currency() }}
-                                    <input type="hidden"
-                                        class="add-product-price form-control d-inline-block"
-                                        data-product-id="0"
-                                        id="custom-pack-price-input"
-                                        value="{{ number_format($invoice['invoice_amount'], 2, '.', '') }}"
-                                        step="0.01"
-                                        min="0"
-                                        style="width: 80px;">
-                                    <span id="custom-pack-price-display">{{ number_format($invoice['invoice_amount'], 2, '.', '') }}</span>
-                                </td>
-                                <td class="text-center align-middle">
-                                    <div class="form-check d-flex justify-content-center align-items-center m-0">
-                                        <input
-                                            class="form-check-input border narayan-checkbox border-1 border-primary"
-                                            type="radio"
-                                            name="add_product_ids[]"
+                            <thead class="table-dark text-center">
+                                <tr>
+                                    <th colspan="5">Select Custom Pack</th>
+                                </tr>
+                                <tr>
+                                    <th style="width: 10%;">PID</th>
+                                    <th style="width: 35%;">Product Name</th>
+                                    <th>Credits</th>
+                                    <th style="width: 20%;">Unit Price</th>
+                                    <th style="width: 10%;">Select</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr id="customize-product-row-0">
+                                    <td class="text-center">#</td>
+                                    <td>Custom Pack</td>
+                                    <td>
+                                        <span class="badge bg-secondary" id="customcredit">No Credits</span>
+                                    </td>
+                                    <td class="text-center">
+                                        {{ site_currency() }}
+                                        <input type="hidden"
+                                            class="add-product-price form-control d-inline-block"
                                             data-product-id="0"
-                                            value="0"
-                                        >
-                                    </div>
-                                </td>
-                            </tr>
+                                            id="custom-pack-price-input"
+                                            value="{{ number_format($invoice['invoice_amount'], 2, '.', '') }}"
+                                            step="0.01"
+                                            min="0"
+                                            style="width: 80px;">
+                                        <span id="custom-pack-price-display">{{ number_format($invoice['invoice_amount'], 2, '.', '') }}</span>
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        <div class="form-check d-flex justify-content-center align-items-center m-0">
+                                            <input
+                                                class="form-check-input border narayan-checkbox border-1 border-primary"
+                                                type="radio"
+                                                name="add_product_ids[]"
+                                                data-product-id="0"
+                                                value="0"
+                                            >
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
                         </table>
 
-                        <table id="customize-products-table" class="table table-bordered table-hover align-middle mb-0 table-responsive" style="width:100% !important;">
+                        <table id="customize-products-table" class="table table-bordered table-hover align-middle mb-0 table-responsive mt-2" style="width:100% !important;">
                             <thead class="table-dark text-center">
                                 <tr>
                                     <th style="width: 10%;">PID</th>
