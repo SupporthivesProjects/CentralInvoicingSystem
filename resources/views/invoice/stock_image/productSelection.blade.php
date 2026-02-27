@@ -376,23 +376,23 @@
                     </div>
                         <div class="rounded shadow-sm p-2">
 
-                            {{-- Custom Pack - Separate Card Style, NOT inside the products table --}}
-                            <div class="mb-2 border rounded">
-                                <div class="bg-dark text-white text-center py-2 fw-semibold">
+                            {{-- CUSTOM PACK: Completely separate div, never touched by AJAX --}}
+                            <div id="custom-pack-wrapper" class="mb-3 border rounded overflow-hidden">
+                                <div class="bg-dark text-white text-center py-2 fw-semibold fs-6">
                                     Select Custom Pack
                                 </div>
                                 <table class="table table-bordered align-middle mb-0" style="width:100% !important;">
-                                    <thead class="bg-secondary text-white text-center">
+                                    <thead class="text-center" style="background-color:#f0f0f0;">
                                         <tr>
-                                            <th style="width: 10%;">PID</th>
-                                            <th style="width: 35%;">Product Name</th>
+                                            <th style="width:8%;">PID</th>
+                                            <th style="width:35%;">Product Name</th>
                                             <th>Credits</th>
-                                            <th style="width: 20%;">Unit Price</th>
-                                            <th style="width: 10%;">Select</th>
+                                            <th style="width:20%;">Unit Price</th>
+                                            <th style="width:10%;">Select</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr id="customize-product-row-0" class="bg-light">
+                                        <tr class="bg-light">
                                             <td class="text-center fw-bold">#</td>
                                             <td class="fw-semibold">Custom Pack</td>
                                             <td class="text-center">
@@ -408,36 +408,34 @@
                                                 <span id="custom-pack-price-display">{{ number_format($invoice['invoice_amount'], 2, '.', '') }}</span>
                                             </td>
                                             <td class="text-center align-middle">
-                                                <div class="form-check d-flex justify-content-center align-items-center m-0">
-                                                    <input
-                                                        class="form-check-input border border-primary border-2"
-                                                        type="radio"
-                                                        name="add_product_ids[]"
-                                                        data-product-id="0"
-                                                        value="0"
-                                                        id="custom-pack-radio"
-                                                        style="width: 20px; height: 20px; cursor: pointer;">
-                                                </div>
+                                                <input
+                                                    class="form-check-input border border-primary border-2"
+                                                    type="radio"
+                                                    name="add_product_ids[]"
+                                                    data-product-id="0"
+                                                    value="0"
+                                                    id="custom-pack-radio"
+                                                    style="width:20px; height:20px; cursor:pointer;">
                                             </td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
 
-                            {{-- All Products Table --}}
-                            <div class="border rounded">
+                            {{-- PRODUCTS TABLE: AJAX loads into tbody only --}}
+                            <div id="products-table-wrapper" class="border rounded">
                                 <table id="customize-products-table" class="table table-bordered table-hover align-middle mb-0" style="width:100% !important;">
                                     <thead class="table-dark text-center">
                                         <tr>
-                                            <th style="width: 10%;">PID</th>
-                                            <th style="width: 35%;">Product Name</th>
+                                            <th style="width:8%;">PID</th>
+                                            <th style="width:35%;">Product Name</th>
                                             <th>Credits</th>
-                                            <th class="text-center unit-price-header" style="width: 20%;" data-column="3" data-order="desc">
+                                            <th class="text-center unit-price-header" style="width:20%;" data-column="3" data-order="desc">
                                                 <span class="d-inline-flex align-items-center justify-content-center gap-1">
                                                     Unit Price <i class="bi bi-caret-down-fill"></i>
                                                 </span>
                                             </th>
-                                            <th style="width: 10%;">Select</th>
+                                            <th style="width:10%;">Select</th>
                                         </tr>
                                     </thead>
                                     <tbody id="customize-product-table-body">
@@ -619,22 +617,10 @@
 
         $('input[name="add_product_ids[]"]').prop('checked', false);
 
-        // Detect already added products in main table
         let alreadyAddedIds = [];
         $('input[name="product_ids[]"]').each(function () {
             alreadyAddedIds.push(String($(this).val()));
         });
-
-        // Check if only one product exists in main table - auto detect and highlight it
-        if (alreadyAddedIds.length === 1) {
-            let existingId = alreadyAddedIds[0];
-            let existingPrice = parseFloat($('input.product-unit-price[data-product-id="' + existingId + '"]').val()) || 0;
-            let existingName = $('#randomize-product-table-body').find('tr').first().find('td:eq(1)').text().trim();
-
-            $('#temp_current_amount_text').text(existingPrice.toFixed(2));
-            let existingDiscount = existingPrice > invoiceAmount ? existingPrice - invoiceAmount : 0;
-            $('#temp_discount_amount_text').text(existingDiscount.toFixed(2));
-        }
 
         $('#customize-product-table-body').html(getProductsSearchRowHTML());
 
@@ -655,7 +641,24 @@
                 $('#customize-product-table-body').html(response.tableRows);
                 $('#current_page_number').val(response.currentPage);
 
-                // After rows loaded, highlight/check already added product radio
+                // Check if any loaded product exactly matches invoice amount
+                let exactMatchFound = false;
+                $('#customize-product-table-body tr').each(function () {
+                    let priceText = $(this).find('.add-product-price').val();
+                    let price = parseFloat(priceText) || 0;
+                    if (Math.abs(price - invoiceAmount) < 0.01) {
+                        exactMatchFound = true;
+                    }
+                });
+
+                // Hide entire custom pack wrapper if exact match product exists in list
+                if (exactMatchFound) {
+                    $('#custom-pack-wrapper').hide();
+                } else {
+                    $('#custom-pack-wrapper').show();
+                }
+
+                // Auto detect and highlight already added product
                 if (alreadyAddedIds.length === 1) {
                     let existingId = alreadyAddedIds[0];
                     let matchingRadio = $('input[name="add_product_ids[]"][value="' + existingId + '"]');
@@ -663,20 +666,15 @@
                         matchingRadio.prop('checked', true);
                         matchingRadio.closest('tr').addClass('table-success');
 
-                        // Update temp total to that product's price
                         let price = parseFloat($('.add-product-price[data-product-id="' + existingId + '"]').val()) || 0;
-                        let inv = parseFloat($('#invoice_amount').val()) || 0;
-                        let disc = price > inv ? price - inv : 0;
+                        let disc = price > invoiceAmount ? price - invoiceAmount : 0;
                         $('#temp_current_amount_text').text(price.toFixed(2));
                         $('#temp_discount_amount_text').text(disc.toFixed(2));
                     }
                 }
-
-                calculateTotalPrice();
             },
             error: function (xhr, textStatus) {
                 if (textStatus !== 'abort') {
-                    console.error('AJAX Error:', textStatus);
                     $('#customize-product-table-body').html(getErrorRowHTML('Something went wrong while filtering.'));
                     toastr.error('Something went wrong while filtering.', 'Oops!');
                 }
