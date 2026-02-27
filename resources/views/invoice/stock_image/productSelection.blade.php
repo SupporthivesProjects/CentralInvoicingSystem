@@ -583,33 +583,31 @@
 
     function customizeProducts(search_type = 'search', page = 1) {
         const invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
+        const currentAmount = parseFloat($('#current_amount').val()) || 0;
         const credits = Math.round((invoiceAmount / 5.75) * 10) / 10;
         const final_credit = enforceStep(credits);
-        $('#customcredit').text(final_credit > 0 ? final_credit + ' Credits' : 'No Credits');
 
+        $('#customcredit').text(final_credit > 0 ? final_credit + ' Credits' : 'No Credits');
         $('#custom-pack-price-input').val(invoiceAmount.toFixed(2));
         $('#custom-pack-price-display').text(invoiceAmount.toFixed(2));
 
         let btn = $('#add-custom-products');
         btn.prop('disabled', false).html('<i class="bi bi-cart-plus me-1"></i> Add Selected to Cart');
 
-        let current_amount = parseFloat($('#current_amount').val()) || 0;
-        let discountAmount = current_amount > invoiceAmount ? current_amount - invoiceAmount : 0;
+        let discountAmount = currentAmount > invoiceAmount ? currentAmount - invoiceAmount : 0;
 
-        $('#temp_current_amount_text').text(current_amount.toFixed(2));
+        $('#temp_current_amount_text').text(currentAmount.toFixed(2));
         $('#temp_invoice_amount_text').text(invoiceAmount.toFixed(2));
         $('#temp_discount_amount_text').text(discountAmount.toFixed(2));
 
         $('input[name="add_product_ids[]"]').prop('checked', false);
 
-        // Collect already added product IDs from main randomized table
         let alreadyAddedIds = [];
         $('input[name="product_ids[]"]').each(function () {
             alreadyAddedIds.push(String($(this).val()));
         });
 
-        // Hide custom pack wrapper ONLY if custom pack (id=0) is already added in main table
-        if (alreadyAddedIds.includes('0')) {
+        if (alreadyAddedIds.includes('0') || Math.abs(currentAmount - invoiceAmount) < 0.01) {
             $('#custom-pack-wrapper').hide();
         } else {
             $('#custom-pack-wrapper').show();
@@ -634,10 +632,9 @@
                 $('#customize-product-table-body').html(response.tableRows);
                 $('#current_page_number').val(response.currentPage);
 
-                // Auto detect and highlight already added product in list
                 if (alreadyAddedIds.length > 0) {
                     alreadyAddedIds.forEach(function(existingId) {
-                        if (existingId === '0') return; // skip custom pack, handled separately
+                        if (existingId === '0') return;
                         let matchingRadio = $('input[name="add_product_ids[]"][value="' + existingId + '"]');
                         if (matchingRadio.length > 0) {
                             matchingRadio.prop('checked', true);
