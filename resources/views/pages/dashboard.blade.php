@@ -135,7 +135,7 @@
                 <div class="row row-sm g-3">
 
                     <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4">
-                        <div class="card stat-card shadow-sm h-100">
+                        <div class="card stat-card shadow-sm h-100" style="border-left: 4px solid #0dbe26;">
                             <div class="card-body p-3 d-flex align-items-center gap-3">
                                 <div class="icon-box bg-primary bg-opacity-10">
                                     <svg xmlns="http://www.w3.org/2000/svg" height="22" width="22" viewBox="0 0 24 24" fill="#6366f1"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5.93 6h-3.02c-.2-1.73-.8-3.3-1.64-4.47C16.37 4.28 18.05 5.87 17.93 8zM12 4.04c.84 1.07 1.44 2.64 1.64 4.47h-3.28c.2-1.83.8-3.4 1.64-4.47zM6.07 8c.12-2.13 1.8-3.72 3.66-4.47C8.8 4.7 8.2 6.27 8 8H6.07zM4.43 10h3.45c-.09.98-.14 1.98-.14 3s.05 2.02.14 3H4.43a8.056 8.056 0 0 1 0-6zm1.64 8h2.79c.31 1.19.76 2.27 1.33 3.18C7.16 20.9 5.65 19.6 6.07 18zM12 20c-.84-1.07-1.44-2.64-1.64-4.47h3.28c-.2 1.83-.8 3.4-1.64 4.47zm1.86-.82c.57-.91 1.02-1.99 1.33-3.18h2.79c.42 1.6-1.09 2.9-4.12 3.18zM16.12 16c.09-.98.14-1.98.14-3s-.05-2.02-.14-3h3.45a8.056 8.056 0 0 1 0 6h-3.45z"/></svg>
@@ -197,7 +197,7 @@
                                     <h4 class="fw-bold mb-0 counter-num text-warning" data-target="{{ getModelsCount() }}">0</h4>
                                     <small style="font-size:11px;"><a href="{{ route('businessmodels') }}" class="text-warning text-decoration-none">View all <i class="bi bi-arrow-right"></i></a></small>
                                 </div>
-                                <span class="badge rounded-pill bg-warning bg-opacity-10 text-warning pulse-badge pulse-badge-amber align-self-start" style="font-size:11px;">Active</span>
+                                <span class="badge rounded-pill bg-warning bg-opacity-10 text-warning pulse-badge pulse-badge-amber align-self-start" style="font-size:11px;">Models</span>
                             </div>
                         </div>
                     </div>
