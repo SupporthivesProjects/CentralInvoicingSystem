@@ -131,106 +131,107 @@
                 <div class="row row-sm">
                     <div class="col-sm-12 col-lg-12 col-xl-12">
 
-                        <div class="row row-sm g-3">
+                    <div class="row row-sm g-3">
 
-                            <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
-                                <div class="card stat-card shadow-sm h-100">
-                                    <div class="card-body p-4">
-                                        <div class="d-flex align-items-start justify-content-between mb-3">
-                                            <div class="icon-box bg-primary bg-opacity-10">
-                                                <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 0 24 24" fill="#6366f1"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5.93 6h-3.02c-.2-1.73-.8-3.3-1.64-4.47C16.37 4.28 18.05 5.87 17.93 8zM12 4.04c.84 1.07 1.44 2.64 1.64 4.47h-3.28c.2-1.83.8-3.4 1.64-4.47zM6.07 8c.12-2.13 1.8-3.72 3.66-4.47C8.8 4.7 8.2 6.27 8 8H6.07zM4.43 10h3.45c-.09.98-.14 1.98-.14 3s.05 2.02.14 3H4.43a8.056 8.056 0 0 1 0-6zm1.64 8h2.79c.31 1.19.76 2.27 1.33 3.18C7.16 20.9 5.65 19.6 6.07 18zM12 20c-.84-1.07-1.44-2.64-1.64-4.47h3.28c-.2 1.83-.8 3.4-1.64 4.47zm1.86-.82c.57-.91 1.02-1.99 1.33-3.18h2.79c.42 1.6-1.09 2.9-4.12 3.18zM16.12 16c.09-.98.14-1.98.14-3s-.05-2.02-.14-3h3.45a8.056 8.056 0 0 1 0 6h-3.45z"/></svg>
-                                            </div>
-                                            <span class="badge rounded-pill bg-primary bg-opacity-10 text-primary pulse-badge pulse-badge-purple" style="font-size:11px;">Live</span>
+                        <div class="col-sm-12 col-md-6 col-lg-6 col-xl-4">
+                            <div class="card stat-card shadow-sm h-100">
+                                <div class="card-body p-4">
+                                    <div class="d-flex align-items-start justify-content-between mb-3">
+                                        <div class="icon-box bg-primary bg-opacity-10">
+                                            <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 0 24 24" fill="#6366f1"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5.93 6h-3.02c-.2-1.73-.8-3.3-1.64-4.47C16.37 4.28 18.05 5.87 17.93 8zM12 4.04c.84 1.07 1.44 2.64 1.64 4.47h-3.28c.2-1.83.8-3.4 1.64-4.47zM6.07 8c.12-2.13 1.8-3.72 3.66-4.47C8.8 4.7 8.2 6.27 8 8H6.07zM4.43 10h3.45c-.09.98-.14 1.98-.14 3s.05 2.02.14 3H4.43a8.056 8.056 0 0 1 0-6zm1.64 8h2.79c.31 1.19.76 2.27 1.33 3.18C7.16 20.9 5.65 19.6 6.07 18zM12 20c-.84-1.07-1.44-2.64-1.64-4.47h3.28c-.2 1.83-.8 3.4-1.64 4.47zm1.86-.82c.57-.91 1.02-1.99 1.33-3.18h2.79c.42 1.6-1.09 2.9-4.12 3.18zM16.12 16c.09-.98.14-1.98.14-3s-.05-2.02-.14-3h3.45a8.056 8.056 0 0 1 0 6h-3.45z"/></svg>
                                         </div>
-                                        <div class="stat-number text-primary counter-num" data-target="{{ getAllWebsites() }}">0</div>
-                                        <p class="text-muted small mb-3 mt-1">Available Websites</p>
-                                        <a href="{{ route('connectedwebsites') }}" class="view-btn bg-primary bg-opacity-10 text-primary">View All <i class="bi bi-arrow-right"></i></a>
+                                        <span class="badge rounded-pill bg-primary bg-opacity-10 text-primary pulse-badge pulse-badge-purple" style="font-size:11px;">Live</span>
                                     </div>
+                                    <div class="stat-number text-primary counter-num" data-target="{{ getAllWebsites() }}">0</div>
+                                    <p class="text-muted small mb-3 mt-1">Available Websites</p>
+                                    <a href="{{ route('connectedwebsites') }}" class="view-btn bg-primary bg-opacity-10 text-primary">View All <i class="bi bi-arrow-right"></i></a>
                                 </div>
                             </div>
-                            <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                <div class="card stat-card shadow-sm h-100" style="border-left: 4px solid #f59e0b;">
-                                    <div class="card-body p-4">
-                                        <div class="d-flex align-items-start justify-content-between mb-3">
-                                            <div class="icon-box bg-warning bg-opacity-10">
-                                                <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 0 24 24" fill="#f59e0b">
-                                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
-                                                </svg>
-                                            </div>
-                                            <span class="badge rounded-pill bg-warning bg-opacity-10 text-warning pulse-badge pulse-badge-amber" style="font-size:11px;">Temp Down</span>
-                                        </div>
-                                        <div class="stat-number text-warning counter-num" data-target="{{ $tempDownCount }}">0</div>
-                                        <p class="text-muted small mb-3 mt-1">Temporary Down Websites</p>
-                                        <a href="{{ route('connectedwebsites') }}?status=temp_down" class="view-btn bg-warning bg-opacity-10 text-warning">View All <i class="bi bi-arrow-right"></i></a>
-                                    </div>
-                                </div>
-                            </div>
+                        </div>
 
-                            <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                <div class="card stat-card shadow-sm h-100" style="border-left: 4px solid #ef4444;">
-                                    <div class="card-body p-4">
-                                        <div class="d-flex align-items-start justify-content-between mb-3">
-                                            <div class="icon-box bg-danger bg-opacity-10">
-                                                <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 0 24 24" fill="#ef4444">
-                                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
-                                                </svg>
-                                            </div>
-                                            <span class="badge rounded-pill bg-danger bg-opacity-10 text-danger pulse-badge pulse-badge-red" style="font-size:11px;">Perm Down</span>
+                        <div class="col-sm-12 col-md-6 col-lg-6 col-xl-4">
+                            <div class="card stat-card shadow-sm h-100" style="border-left: 4px solid #f59e0b;">
+                                <div class="card-body p-4">
+                                    <div class="d-flex align-items-start justify-content-between mb-3">
+                                        <div class="icon-box bg-warning bg-opacity-10">
+                                            <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 0 24 24" fill="#f59e0b">
+                                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                                            </svg>
                                         </div>
-                                        <div class="stat-number text-danger counter-num" data-target="{{ $permDownCount }}">0</div>
-                                        <p class="text-muted small mb-3 mt-1">Permanently Down Websites</p>
-                                        <a href="{{ route('connectedwebsites') }}?status=perm_down" class="view-btn bg-danger bg-opacity-10 text-danger">View All <i class="bi bi-arrow-right"></i></a>
+                                        <span class="badge rounded-pill bg-warning bg-opacity-10 text-warning pulse-badge pulse-badge-amber" style="font-size:11px;">Temp Down</span>
                                     </div>
+                                    <div class="stat-number text-warning counter-num" data-target="{{ $tempDownCount }}">0</div>
+                                    <p class="text-muted small mb-3 mt-1">Temporary Down Websites</p>
+                                    <a href="{{ route('connectedwebsites') }}?status=tdown" class="view-btn bg-warning bg-opacity-10 text-warning">View All <i class="bi bi-arrow-right"></i></a>
                                 </div>
                             </div>
+                        </div>
 
-                            <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
-                                <div class="card stat-card shadow-sm h-100">
-                                    <div class="card-body p-4">
-                                        <div class="d-flex align-items-start justify-content-between mb-3">
-                                            <div class="icon-box bg-warning bg-opacity-10">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24" width="24"><g><rect fill="none" height="24" width="24"/><g><path fill="#f59e0b" d="M20,6h-3V4c0-1.1-0.9-2-2-2h-6C7.9,2,7,2.9,7,4v2H4C2.9,6,2,6.9,2,8v12c0,1.1,0.9,2,2,2h16c1.1,0,2-0.9,2-2V8C22,6.9,21.1,6,20,6z M9,4h6v2H9V4z M20,20H4V8h16V20z"/></g></g></svg>
-                                            </div>
-                                            <span class="badge rounded-pill bg-warning bg-opacity-10 text-warning pulse-badge pulse-badge-amber" style="font-size:11px;">Active</span>
+                        <div class="col-sm-12 col-md-6 col-lg-6 col-xl-4">
+                            <div class="card stat-card shadow-sm h-100" style="border-left: 4px solid #ef4444;">
+                                <div class="card-body p-4">
+                                    <div class="d-flex align-items-start justify-content-between mb-3">
+                                        <div class="icon-box bg-danger bg-opacity-10">
+                                            <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 0 24 24" fill="#ef4444">
+                                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                                            </svg>
                                         </div>
-                                        <div class="stat-number text-warning counter-num" data-target="{{ getModelsCount() }}">0</div>
-                                        <p class="text-muted small mb-3 mt-1">Business Models</p>
-                                        <a href="{{ route('businessmodels') }}" class="view-btn bg-warning bg-opacity-10 text-warning">View All <i class="bi bi-arrow-right"></i></a>
+                                        <span class="badge rounded-pill bg-danger bg-opacity-10 text-danger pulse-badge pulse-badge-red" style="font-size:11px;">Perm Down</span>
                                     </div>
+                                    <div class="stat-number text-danger counter-num" data-target="{{ $permDownCount }}">0</div>
+                                    <p class="text-muted small mb-3 mt-1">Permanently Down Websites</p>
+                                    <a href="{{ route('connectedwebsites') }}?status=pdown" class="view-btn bg-danger bg-opacity-10 text-danger">View All <i class="bi bi-arrow-right"></i></a>
                                 </div>
                             </div>
+                        </div>
 
-                            <div class="col-sm-12 col-md-12 col-lg-12 col-xl-3">
-                                <div class="card stat-card shadow-sm h-100">
-                                    <div class="card-body p-4">
-                                        <div class="d-flex align-items-start justify-content-between mb-3">
-                                            <div class="icon-box bg-success bg-opacity-10">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24" width="24"><g><rect fill="none" height="24" width="24"/><g><path fill="#10b981" d="M17,3H7C5.9,3,5,3.9,5,5v16l2-1.5L9,21l2-1.5L13,21l2-1.5L17,21l2-1.5l2,1.5V5C21,3.9,20.1,3,19,3H17z M17,9H7V7h10V9z M17,13H7v-2h10V13z M13,17H7v-2h6V17z"/></g></g></svg>
-                                            </div>
-                                            <span class="badge rounded-pill bg-success bg-opacity-10 text-success pulse-badge pulse-badge-green" style="font-size:11px;">Total</span>
+                        <div class="col-sm-12 col-md-6 col-lg-6 col-xl-4">
+                            <div class="card stat-card shadow-sm h-100">
+                                <div class="card-body p-4">
+                                    <div class="d-flex align-items-start justify-content-between mb-3">
+                                        <div class="icon-box bg-warning bg-opacity-10">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24" width="24"><g><rect fill="none" height="24" width="24"/><g><path fill="#f59e0b" d="M20,6h-3V4c0-1.1-0.9-2-2-2h-6C7.9,2,7,2.9,7,4v2H4C2.9,6,2,6.9,2,8v12c0,1.1,0.9,2,2,2h16c1.1,0,2-0.9,2-2V8C22,6.9,21.1,6,20,6z M9,4h6v2H9V4z M20,20H4V8h16V20z"/></g></g></svg>
                                         </div>
-                                        <div class="stat-number text-success counter-num" data-target="{{ invoiceCount() }}">0</div>
-                                        <p class="text-muted small mb-3 mt-1">Invoices Created</p>
-                                        <a href="#listinvoices" class="view-btn bg-success bg-opacity-10 text-success">View All <i class="bi bi-arrow-right"></i></a>
+                                        <span class="badge rounded-pill bg-warning bg-opacity-10 text-warning pulse-badge pulse-badge-amber" style="font-size:11px;">Active</span>
                                     </div>
+                                    <div class="stat-number text-warning counter-num" data-target="{{ getModelsCount() }}">0</div>
+                                    <p class="text-muted small mb-3 mt-1">Business Models</p>
+                                    <a href="{{ route('businessmodels') }}" class="view-btn bg-warning bg-opacity-10 text-warning">View All <i class="bi bi-arrow-right"></i></a>
                                 </div>
                             </div>
+                        </div>
 
-                            <div class="col-sm-12 col-md-12 col-lg-12 col-xl-3">
-                                <div class="card stat-card shadow-sm h-100">
-                                    <div class="card-body p-4">
-                                        <div class="d-flex align-items-start justify-content-between mb-3">
-                                            <div class="icon-box bg-danger bg-opacity-10">
-                                                <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 0 640 512" fill="#ef4444"><path d="M96 128a80 80 0 1 0 160 0A80 80 0 1 0 96 128zm224 0a80 80 0 1 0 160 0A80 80 0 1 0 320 128zM32 384c0-53 43-96 96-96h64c53 0 96 43 96 96v16c0 8.8-7.2 16-16 16H48c-8.8 0-16-7.2-16-16v-16zm288 0c0-35.3 28.7-64 64-64h96c35.3 0 64 28.7 64 64v32c0 8.8-7.2 16-16 16H336c-8.8 0-16-7.2-16-16v-32z"/></svg>
-                                            </div>
-                                            <span class="badge rounded-pill bg-danger bg-opacity-10 text-danger pulse-badge pulse-badge-red" style="font-size:11px;">Users</span>
+                        <div class="col-sm-12 col-md-6 col-lg-6 col-xl-4">
+                            <div class="card stat-card shadow-sm h-100">
+                                <div class="card-body p-4">
+                                    <div class="d-flex align-items-start justify-content-between mb-3">
+                                        <div class="icon-box bg-success bg-opacity-10">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24" width="24"><g><rect fill="none" height="24" width="24"/><g><path fill="#10b981" d="M17,3H7C5.9,3,5,3.9,5,5v16l2-1.5L9,21l2-1.5L13,21l2-1.5L17,21l2-1.5l2,1.5V5C21,3.9,20.1,3,19,3H17z M17,9H7V7h10V9z M17,13H7v-2h10V13z M13,17H7v-2h6V17z"/></g></g></svg>
                                         </div>
-                                        <div class="stat-number text-danger counter-num" data-target="{{ userCount() }}">0</div>
-                                        <p class="text-muted small mb-3 mt-1">Admin & Staff Users</p>
-                                        <a href="{{ route('users.index') }}" class="view-btn bg-danger bg-opacity-10 text-danger">View All <i class="bi bi-arrow-right"></i></a>
+                                        <span class="badge rounded-pill bg-success bg-opacity-10 text-success pulse-badge pulse-badge-green" style="font-size:11px;">Total</span>
                                     </div>
+                                    <div class="stat-number text-success counter-num" data-target="{{ invoiceCount() }}">0</div>
+                                    <p class="text-muted small mb-3 mt-1">Invoices Created</p>
+                                    <a href="#listinvoices" class="view-btn bg-success bg-opacity-10 text-success">View All <i class="bi bi-arrow-right"></i></a>
                                 </div>
                             </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-6 col-lg-6 col-xl-4">
+                            <div class="card stat-card shadow-sm h-100">
+                                <div class="card-body p-4">
+                                    <div class="d-flex align-items-start justify-content-between mb-3">
+                                        <div class="icon-box bg-danger bg-opacity-10">
+                                            <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 0 640 512" fill="#ef4444"><path d="M96 128a80 80 0 1 0 160 0A80 80 0 1 0 96 128zm224 0a80 80 0 1 0 160 0A80 80 0 1 0 320 128zM32 384c0-53 43-96 96-96h64c53 0 96 43 96 96v16c0 8.8-7.2 16-16 16H48c-8.8 0-16-7.2-16-16v-16zm288 0c0-35.3 28.7-64 64-64h96c35.3 0 64 28.7 64 64v32c0 8.8-7.2 16-16 16H336c-8.8 0-16-7.2-16-16v-32z"/></svg>
+                                        </div>
+                                        <span class="badge rounded-pill bg-danger bg-opacity-10 text-danger pulse-badge pulse-badge-red" style="font-size:11px;">Users</span>
+                                    </div>
+                                    <div class="stat-number text-danger counter-num" data-target="{{ userCount() }}">0</div>
+                                    <p class="text-muted small mb-3 mt-1">Admin & Staff Users</p>
+                                    <a href="{{ route('users.index') }}" class="view-btn bg-danger bg-opacity-10 text-danger">View All <i class="bi bi-arrow-right"></i></a>
+                                </div>
+                            </div>
+                        </div>
 
                         </div>
 
