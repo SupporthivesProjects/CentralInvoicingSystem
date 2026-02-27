@@ -159,7 +159,7 @@
                                     </svg>
                                 </div>
                                 <div class="flex-grow-1">
-                                    <p class="text-muted mb-0 small">Temp Down Websites</p>
+                                    <p class="text-muted mb-0 small">Temporary Down Websites</p>
                                     <h4 class="fw-bold mb-0 counter-num text-warning" data-target="{{ $tempDownCount }}">0</h4>
                                     <small style="font-size:11px;"><a href="{{ route('connectedwebsites') }}?status=tdown" class="text-warning text-decoration-none">View all <i class="bi bi-arrow-right"></i></a></small>
                                 </div>
@@ -177,7 +177,7 @@
                                     </svg>
                                 </div>
                                 <div class="flex-grow-1">
-                                    <p class="text-muted mb-0 small">Perm Down Websites</p>
+                                    <p class="text-muted mb-0 small">Permanent Down Websites</p>
                                     <h4 class="fw-bold mb-0 counter-num text-danger" data-target="{{ $permDownCount }}">0</h4>
                                     <small style="font-size:11px;"><a href="{{ route('connectedwebsites') }}?status=pdown" class="text-danger text-decoration-none">View all <i class="bi bi-arrow-right"></i></a></small>
                                 </div>
