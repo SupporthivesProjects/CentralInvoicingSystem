@@ -36,15 +36,14 @@ class LaravelController extends Controller
         $this->productTable = "pricing_packs";
         $this->connectionType = 'dynamic';
     }
-
-  public function randomProducts(Request $request)
+public function randomProducts(Request $request)
 {
     $site_id = $request->get('site_id');
     $invoiceAmount = floatval($request->get('invoice_amount'));
 
     $percentageStep = 2;
     $maxPercentage  = 50;
-    $trackLastN     = 2;
+    $trackLastN     = 2;   // track last N used products
 
     $site = Website::findOrFail($site_id);
     DynamicDatabaseService::connect($site);
@@ -115,23 +114,22 @@ class LaravelController extends Controller
         ], 200);
     }
 
-    $readyProducts = json_decode(json_encode($filteredProducts->values()), true);
-
-    $chosenId = $readyProducts[0]['id'];
+    $chosenId = $filteredProducts->first()->id;
     $lastUsedIds[] = $chosenId;
     if (count($lastUsedIds) > $trackLastN) {
         $lastUsedIds = array_slice($lastUsedIds, -$trackLastN);
     }
     session(['last_used_product_ids' => $lastUsedIds]);
 
+    $readyProducts = json_decode(json_encode($filteredProducts->values()), true);
     session()->put('ready_products', $readyProducts);
 
     $modelType = $site->businessModel->model_type;
-    $total = collect($readyProducts)->sum('price');
+    $total = $filteredProducts->sum('price');
     session(['current_amount' => $total]);
 
     $tableRows = view("invoice.{$modelType}.random_product_rows", [
-        'products' => collect($readyProducts),
+        'products' => $filteredProducts->values(),
         'site'     => $site,
         'total'    => $total
     ])->render();
