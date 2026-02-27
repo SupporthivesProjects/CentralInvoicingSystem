@@ -145,7 +145,7 @@
                                     <h4 class="fw-bold mb-0 counter-num text-sucess" data-target="{{ getLiveWebsites() }}">0</h4>
                                     <small style="font-size:11px;"><a href="{{ route('connectedwebsites') }}?status=live" class="text-primary text-decoration-none">View all <i class="bi bi-arrow-right"></i></a></small>
                                 </div>
-                                <span class="badge rounded-pill bg-primary bg-opacity-10 text-primary pulse-badge pulse-badge-purple align-self-start" style="font-size:11px;">Live</span>
+                                <span class="badge rounded-pill bg-primary bg-opacity-10 text-success pulse-badge pulse-badge-success align-self-start" style="font-size:11px;">Live</span>
                             </div>
                         </div>
                     </div>
