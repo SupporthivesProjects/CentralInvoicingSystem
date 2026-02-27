@@ -183,7 +183,7 @@
                                             </div>
                                         </div>
                                         @endif
-
+                                        @if(isset($website->technology) && strtolower($website->technology) === 'wordpress')
                                         <div class="p-3 rounded-3" style="background:#fff8f0; border: 1px solid #fde8cc;">
                                             <div class="d-flex align-items-center justify-content-between mb-3">
                                                 <div class="d-flex align-items-center gap-2">
@@ -266,6 +266,7 @@
                                             </div>
 
                                         </div>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
