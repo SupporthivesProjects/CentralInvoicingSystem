@@ -50,7 +50,7 @@
                                 <tr>
                                     <td style="padding:0px">
                                         <p
-                                            style="margin: 0px;font-family: Arial;font-size: 10px;line-height: 18px;">
+                                            style="margin: 0px;font-family: Arial;font-size: 10px;line-height: 18px;font-weight:500;">
                                            <b> Billed From : <b> Websites Ur Way
                                         </p>
                                         <!-- <p style="margin: 0px;font-family: Arial;font-size: 10px;line-height: 18px;">
