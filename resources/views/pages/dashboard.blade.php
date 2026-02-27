@@ -333,7 +333,7 @@
                     <div class="col-lg-12 mt-3" id="listinvoices">
                         <div class="card chart-card shadow-sm">
                             <div class="card-body p-4">
-                                <h5 class="fw-bold mb-4">Invoice Generation History (Latest 10 )</h5>
+                                <h5 class="fw-bold mb-4">Invoice Generation History (Latest 10)</h5>
                                 <div class="table-responsive">
                                     <table id="invoice-history" class="table table-bordered text-nowrap" style="width:100%">
                                         <thead>
