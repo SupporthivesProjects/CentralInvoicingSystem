@@ -511,9 +511,17 @@ class WebsiteController extends Controller
     }
 
 
-    public function connectedwebsites(Request $request){
+    public function connectedwebsites(Request $request)
+    {
         try {
-            $websites = Website::all();
+            $query = Website::query();
+
+            if ($request->has('status') && in_array($request->status, ['live', 'tdown', 'pdown'])) {
+                $query->where('site_status', $request->status);
+            }
+
+            $websites = $query->get();
+
             return view('business.websites', compact('websites'));
         } catch (\Exception $e) {
             Log::error('Error fetching connected websites: ' . $e->getMessage());

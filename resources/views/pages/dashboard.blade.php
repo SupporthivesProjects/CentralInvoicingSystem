@@ -143,7 +143,7 @@
                                 <div class="flex-grow-1">
                                     <p class="text-muted mb-0 small">Live Websites</p>
                                     <h4 class="fw-bold mb-0 counter-num text-primary" data-target="{{ getLiveWebsites() }}">0</h4>
-                                    <small style="font-size:11px;"><a href="{{ route('connectedwebsites') }}" class="text-primary text-decoration-none">View all <i class="bi bi-arrow-right"></i></a></small>
+                                    <small style="font-size:11px;"><a href="{{ route('connectedwebsites') }}?status=live" class="text-primary text-decoration-none">View all <i class="bi bi-arrow-right"></i></a></small>
                                 </div>
                                 <span class="badge rounded-pill bg-primary bg-opacity-10 text-primary pulse-badge pulse-badge-purple align-self-start" style="font-size:11px;">Live</span>
                             </div>
