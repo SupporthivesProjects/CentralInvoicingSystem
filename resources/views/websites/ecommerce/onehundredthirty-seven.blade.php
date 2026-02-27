@@ -48,7 +48,7 @@
                                 </tr>
                                 <tr style="height: 10px;"></tr>
                                 <tr>
-                                    <td style="padding:0px">
+                                    <td style="padding:0px;width:50%;">
                                         <p
                                             style="margin: 0px;font-family: Arial;font-size: 10px;line-height: 10px;font-weight:400;">
                                            <b> Billed From : </b> Websites Ur Way
@@ -57,7 +57,7 @@
                                             Websites Ur Way
                                         </p> -->
                                     </td>
-                                    <td align="right" style="padding:0px">
+                                    <td align="right" style="padding:0px;width:50%;">
                                         <p
                                             style="margin: 0px;font-family: Arial;font-size: 10px;line-height: 18px;font-weight: 700;">
                                             Billed To :
