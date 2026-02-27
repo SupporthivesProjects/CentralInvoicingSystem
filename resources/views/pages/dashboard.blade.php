@@ -276,7 +276,7 @@
                                     <svg xmlns="http://www.w3.org/2000/svg" height="22" width="22" fill="#10b981" viewBox="0 0 24 24"><path d="M17,3H7C5.9,3,5,3.9,5,5v16l2-1.5L9,21l2-1.5L13,21l2-1.5L17,21l2-1.5l2,1.5V5C21,3.9,20.1,3,19,3H17z M17,9H7V7h10V9z M17,13H7v-2h10V13z M13,17H7v-2h6V17z"/></svg>
                                 </div>
                                 <div>
-                                    <p class="text-muted mb-0 small">My Invoices</p>
+                                    <p class="text-muted mb-0 small">Invoices</p>
                                     <h5 class="fw-bold mb-0 counter-num" data-target="{{ myinvoices() }}">0</h5>
                                     <small class="text-muted" style="font-size:11px;">Created by you</small>
                                 </div>
