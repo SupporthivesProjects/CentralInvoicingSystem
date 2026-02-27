@@ -67,7 +67,7 @@
                                         </p>
                                     </td>
                                 </tr>
-                                <tr style="height: 10px;"></tr>
+                                
                                 <tr>
                                     <td colspan="2">
                                         <p style="margin: 0px;font-family: Arial;font-size: 10px;line-height: 18px;">
