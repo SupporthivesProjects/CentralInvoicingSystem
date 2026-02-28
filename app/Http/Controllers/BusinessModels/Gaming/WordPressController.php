@@ -75,7 +75,7 @@ class WordPressController extends Controller
         'diablo'                => 'Gold',
         'league-of-legends'     => 'RP',
         'valorant'              => 'VP',
-        'apex'                  => 'Apex Coins',
+        'apex' => 'Gold',
         'genshin'               => 'Primogems',
         'honkai'                => 'Stellar Jade',
         'black-desert'          => 'Silver',
