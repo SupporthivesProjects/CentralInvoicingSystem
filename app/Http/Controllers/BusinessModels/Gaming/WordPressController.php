@@ -62,7 +62,7 @@ class WordPressController extends Controller
         'fortnite'              => 'V-Bucks',
         'warframe'              => 'Platinum',
         'rocket-league'         => 'Credits',
-        'fallout'               => 'Caps',
+        'fallout'               => 'Bottlecaps',
         'revelation'            => 'Silver',
         'swords-of-legends'     => 'Gold',
         'tera'                  => 'Gold',
