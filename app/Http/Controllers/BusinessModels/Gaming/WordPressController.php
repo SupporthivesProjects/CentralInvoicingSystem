@@ -95,6 +95,7 @@ class WordPressController extends Controller
         'marvel' => 'Gold',
         'runeterra'         => 'Gold',
         'legendsofruneterra' => 'Gold',
+        'squadbusters' => 'Coins',
     ];
 
     private function resolveGameCurrency(array $product): string
