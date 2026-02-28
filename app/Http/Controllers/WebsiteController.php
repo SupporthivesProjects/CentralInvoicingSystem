@@ -50,7 +50,6 @@ class WebsiteController extends Controller
 
         $products = $response->json();
 
-        // Fetch variations for each product
         $mh      = curl_multi_init();
         $handles = [];
 
@@ -80,7 +79,6 @@ class WebsiteController extends Controller
             $code    = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             curl_multi_remove_handle($mh, $ch);
             curl_close($ch);
-
             $variationsMap[$product['id']] = ($code === 200 && $body) ? json_decode($body, true) : [];
         }
         curl_multi_close($mh);
@@ -91,30 +89,33 @@ class WebsiteController extends Controller
             <title>Product Debug - Site ' . $site_id . '</title>
             <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
             <style>
-                pre  { font-size: 11px; max-height: 200px; overflow: auto; background: #f8f9fa; padding: 8px; }
+                pre  { font-size: 11px; max-height: 300px; overflow: auto; background: #f8f9fa; padding: 8px; border-radius:4px; }
                 .meta-table { font-size: 12px; }
                 .var-table  { font-size: 12px; }
                 .badge      { font-size: 11px; }
+                .copy-btn   { cursor: pointer; font-size: 11px; }
+                .rate-badge { background: #198754; color: white; padding: 2px 6px; border-radius: 4px; font-size: 11px; }
             </style>
         </head>
         <body class="p-3">
         <div class="container-fluid">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <div>
-                    <h4 class="mb-0">Product Debug Panel</h4>
+                    <h4 class="mb-0">🎮 Product Debug Panel</h4>
                     <small class="text-muted">
                         Site: <strong>' . $site->site_name . '</strong> |
                         URL: <a href="' . $site->site_link . '" target="_blank">' . $site->site_link . '</a> |
                         Site ID: <strong>' . $site_id . '</strong> |
-                        Total Products: <strong>' . count($products) . '</strong>
+                        Total: <strong>' . count($products) . ' products</strong>
                     </small>
                 </div>
             </div>';
 
         foreach ($products as $product) {
-            $variations  = $variationsMap[$product['id']] ?? [];
-            $varCount    = count($variations);
+            $variations = $variationsMap[$product['id']] ?? [];
+            $varCount   = count($variations);
 
+            // --- ATTRIBUTES ---
             $attributes = '';
             foreach ($product['attributes'] ?? [] as $attr) {
                 $attributes .= '<tr>
@@ -124,22 +125,38 @@ class WebsiteController extends Controller
                 </tr>';
             }
 
-            $metaRows = '';
+            // --- META DATA ---
+            $metaRows     = '';
+            $rateMetaRows = '';
             foreach ($product['meta_data'] ?? [] as $meta) {
                 if (empty($meta['value']) || str_starts_with($meta['key'], '_')) continue;
                 $value = is_array($meta['value'])
                     ? '<pre>' . json_encode($meta['value'], JSON_PRETTY_PRINT) . '</pre>'
                     : htmlspecialchars($meta['value']);
                 $metaRows .= '<tr><td>' . htmlspecialchars($meta['key']) . '</td><td>' . $value . '</td></tr>';
+
+                $keyLower = strtolower($meta['key']);
+                if (str_contains($keyLower, 'rate')    ||
+                    str_contains($keyLower, 'price')   ||
+                    str_contains($keyLower, 'amount')  ||
+                    str_contains($keyLower, 'factor')  ||
+                    str_contains($keyLower, 'convert') ||
+                    str_contains($keyLower, 'custom')) {
+                    $rateMetaRows .= '<tr class="table-warning">
+                        <td><strong>' . htmlspecialchars($meta['key']) . '</strong></td>
+                        <td>' . $value . '</td>
+                    </tr>';
+                }
             }
 
+            // --- VARIATIONS ---
             $varRows = '';
             foreach ($variations as $var) {
                 $varAttrs = collect($var['attributes'])->pluck('option', 'name')->toArray();
                 $varRows .= '<tr>
                     <td>' . $var['id'] . '</td>
                     <td>' . ($var['sku'] ?? '-') . '</td>
-                    <td>' . ($var['price'] ?? '-') . '</td>
+                    <td><strong>' . ($var['price'] ?? '-') . '</strong></td>
                     <td>' . ($var['regular_price'] ?? '-') . '</td>
                     <td>' . ($var['sale_price'] ?? '-') . '</td>
                     <td>' . ($var['stock_status'] ?? '-') . '</td>
@@ -148,6 +165,69 @@ class WebsiteController extends Controller
                     <td>' . ($var['name'] ?? '-') . '</td>
                 </tr>';
             }
+
+            // --- RATE ANALYSIS ---
+            $rateRows = '';
+            foreach ($variations as $var) {
+                $price = floatval($var['price'] ?? 0);
+                if ($price <= 0) continue;
+
+                $varAttrs = collect($var['attributes'])->pluck('option', 'name')->toArray();
+                $amount   = $varAttrs['Amount'] ?? null;
+                if (!$amount) continue;
+
+                $lastChar    = strtoupper(substr(trim($amount), -1));
+                $hasSuffix   = in_array($lastChar, ['M', 'K', 'G', 'B']);
+                $numericPart = $hasSuffix ? substr($amount, 0, -1) : $amount;
+                $numericPart = str_replace(',', '', $numericPart);
+                $suffix      = $hasSuffix ? $lastChar : '';
+
+                $numericAmount = floatval($numericPart);
+                if ($numericAmount <= 0) continue;
+
+                $multiplier = match($suffix) {
+                    'K'     => 1000,
+                    'M'     => 1000000,
+                    'B'     => 1000000000,
+                    default => 1,
+                };
+
+                $actualAmount = $numericAmount * $multiplier;
+                $ratePerUnit  = $actualAmount / $price;
+                $platform     = $varAttrs['Platform'] ?? $varAttrs['Server'] ?? '-';
+
+                $rateRows .= '<tr>
+                    <td>' . $var['id'] . '</td>
+                    <td>' . $platform . '</td>
+                    <td>' . $amount . '</td>
+                    <td><strong>' . $price . '</strong></td>
+                    <td><span class="rate-badge">' . number_format($ratePerUnit, 2) . ' per €1</span></td>
+                    <td>' . number_format($actualAmount) . '</td>
+                </tr>';
+            }
+
+            // --- COPY TEXT (for sharing/debugging) ---
+            $copyText = '=== ' . $product['name'] . ' ===
+    ID: ' . $product['id'] . '
+    Slug: ' . $product['slug'] . '
+    SKU: ' . ($product['sku'] ?? '-') . '
+    Type: ' . $product['type'] . '
+
+    ATTRIBUTES:
+    ' . implode("\n", array_map(fn($a) => '  - ' . $a['name'] . ': ' . implode(', ', $a['options'] ?? []), $product['attributes'] ?? [])) . '
+
+    META (non-private):
+    ' . implode("\n", array_filter(array_map(function($m) {
+        if (empty($m['value']) || str_starts_with($m['key'], '_')) return null;
+        $val = is_array($m['value']) ? json_encode($m['value']) : $m['value'];
+        return '  - ' . $m['key'] . ': ' . $val;
+    }, $product['meta_data'] ?? []))) . '
+
+    VARIATIONS (' . $varCount . '):
+    ' . implode("\n", array_map(function($var) {
+        $attrs = collect($var['attributes'])->pluck('option', 'name')->toArray();
+        return '  - ID:' . $var['id'] . ' | Price:' . ($var['price'] ?? '-') . ' | Attrs:' . json_encode($attrs) . ' | Name:' . ($var['name'] ?? '-');
+    }, $variations));
 
             $html .= '
             <div class="card mb-3 shadow-sm">
@@ -172,7 +252,7 @@ class WebsiteController extends Controller
                 <div class="collapse" id="product-' . $product['id'] . '">
                     <div class="card-body">
 
-                        <ul class="nav nav-tabs mb-3" id="tabs-' . $product['id'] . '">
+                        <ul class="nav nav-tabs mb-3">
                             <li class="nav-item">
                                 <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#attrs-' . $product['id'] . '">Attributes</button>
                             </li>
@@ -183,7 +263,13 @@ class WebsiteController extends Controller
                                 <button class="nav-link" data-bs-toggle="tab" data-bs-target="#vars-' . $product['id'] . '">Variations (' . $varCount . ')</button>
                             </li>
                             <li class="nav-item">
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#rate-' . $product['id'] . '">💰 Rate Analysis</button>
+                            </li>
+                            <li class="nav-item">
                                 <button class="nav-link" data-bs-toggle="tab" data-bs-target="#raw-' . $product['id'] . '">Raw JSON</button>
+                            </li>
+                            <li class="nav-item">
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#copy-' . $product['id'] . '">📋 Copy Text</button>
                             </li>
                         </ul>
 
@@ -197,6 +283,12 @@ class WebsiteController extends Controller
                             </div>
 
                             <div class="tab-pane fade" id="meta-' . $product['id'] . '">
+                                ' . ($rateMetaRows ? '<h6 class="text-warning">⚠️ Rate-Related Keys Found</h6>
+                                <table class="table table-bordered table-sm meta-table mb-3">
+                                    <thead class="table-light"><tr><th>Key</th><th>Value</th></tr></thead>
+                                    <tbody>' . $rateMetaRows . '</tbody>
+                                </table>
+                                <h6>All Meta</h6>' : '') . '
                                 <table class="table table-bordered table-sm meta-table">
                                     <thead class="table-light"><tr><th>Key</th><th>Value</th></tr></thead>
                                     <tbody>' . ($metaRows ?: '<tr><td colspan="2" class="text-muted">No meta data</td></tr>') . '</tbody>
@@ -208,15 +300,8 @@ class WebsiteController extends Controller
                                     <table class="table table-bordered table-sm var-table">
                                         <thead class="table-light">
                                             <tr>
-                                                <th>Var ID</th>
-                                                <th>SKU</th>
-                                                <th>Price</th>
-                                                <th>Regular</th>
-                                                <th>Sale</th>
-                                                <th>Stock</th>
-                                                <th>Status</th>
-                                                <th>Attributes</th>
-                                                <th>Name</th>
+                                                <th>Var ID</th><th>SKU</th><th>Price</th><th>Regular</th>
+                                                <th>Sale</th><th>Stock</th><th>Status</th><th>Attributes</th><th>Name</th>
                                             </tr>
                                         </thead>
                                         <tbody>' . ($varRows ?: '<tr><td colspan="9" class="text-muted">No variations</td></tr>') . '</tbody>
@@ -224,8 +309,29 @@ class WebsiteController extends Controller
                                 </div>
                             </div>
 
+                            <div class="tab-pane fade" id="rate-' . $product['id'] . '">
+                                ' . ($rateMetaRows ? '<div class="alert alert-warning py-2">⚠️ Rate-related meta keys found — check Meta Data tab</div>' : '') . '
+                                <table class="table table-bordered table-sm">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Var ID</th><th>Platform/Server</th><th>Amount</th>
+                                            <th>Price (€)</th><th>Rate</th><th>Actual Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>' . ($rateRows ?: '<tr><td colspan="6" class="text-muted">Could not calculate — Amount attribute may be missing or 0</td></tr>') . '</tbody>
+                                </table>
+                            </div>
+
                             <div class="tab-pane fade" id="raw-' . $product['id'] . '">
                                 <pre>' . json_encode($product, JSON_PRETTY_PRINT) . '</pre>
+                            </div>
+
+                            <div class="tab-pane fade" id="copy-' . $product['id'] . '">
+                                <button class="btn btn-sm btn-success mb-2 copy-btn"
+                                    onclick="navigator.clipboard.writeText(document.getElementById(\'copytext-' . $product['id'] . '\').innerText).then(() => alert(\'Copied!\'))">
+                                    📋 Copy to Clipboard
+                                </button>
+                                <pre id="copytext-' . $product['id'] . '">' . htmlspecialchars($copyText) . '</pre>
                             </div>
 
                         </div>
