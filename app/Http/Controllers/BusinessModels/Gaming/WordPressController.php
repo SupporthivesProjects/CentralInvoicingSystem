@@ -34,6 +34,8 @@ class WordPressController extends Controller
     const MAX_ATTEMPTS   = 25;
     const HISTORY_LIMIT  = 2;
 
+
+
     public function __construct()
     {
         ini_set('max_execution_time', 300);
@@ -44,13 +46,57 @@ class WordPressController extends Controller
         $this->bundleTable = 'game_sever_based_cost';
     }
 
+    private array $gameCurrencyMap = [
+        'currencies' => [
+            'nba-2k22'                      => 'MT',
+            'swords-of-legends-online'      => 'Gold',
+            'warframe'                      => 'Platinum',
+            'final-fantasy-xiv'             => 'FF14 Gil',
+            'guild-wars-2'                  => 'Gold',
+            'star-wars-the-old-republic'    => 'Credits',
+            'elder-scrolls-online'          => 'ESO Gold',
+            'aion'                          => 'Kinah',
+            'fortnite'                      => 'V-Bucks',
+            'revelation-online'             => 'Silver',
+            'tera'                          => 'Gold',
+            'lord-of-the-rings-online'      => 'Gold',
+            'dc-universe-online'            => 'DCUO Cash',
+            'fallout-76'                    => 'Caps',
+            'world-of-warcraft'             => 'WOW Gold',
+            'rocket-league'                 => 'Credits',
+        ],
+        'amount_keys' => [
+            'default' => ['Amount'],
+        ],
+    ];
+
     private function resolveGameCurrency(array $product): string
     {
-        $sku = trim($product['sku'] ?? '');
+        $sku  = trim($product['sku'] ?? '');
+        $slug = $product['slug'] ?? '';
+
+        if (isset($this->gameCurrencyMap['currencies'][$slug])) {
+            return $this->gameCurrencyMap['currencies'][$slug];
+        }
+
+        if ($sku !== '' && isset($this->gameCurrencyMap['currencies'][$sku])) {
+            return $this->gameCurrencyMap['currencies'][$sku];
+        }
+
         if ($sku !== '') {
             return $sku;
         }
+
         return strtoupper(Str::slug($product['name'] ?? 'CURRENCY', '_'));
+    }
+
+    private function resolveGameAmount(array $attrs, array $product): string
+    {
+        if (!empty($attrs['Amount'])) {
+            return $attrs['Amount'];
+        }
+
+        return !empty($attrs) ? array_values($attrs)[0] : '0';
     }
 
     public function getPriceRange(Request $request)
@@ -113,7 +159,7 @@ class WordPressController extends Controller
                 if ($priceFrom && $priceTo && ($unitPrice < floatval($priceFrom) || $unitPrice > floatval($priceTo))) continue;
 
                 $attrs        = collect($var['attributes'])->pluck('option', 'name')->toArray();
-                $bundleAmount = $attrs['Amount'] ?? (!empty($attrs) ? array_values($attrs)[0] : '0');
+                $bundleAmount = $this->resolveGameAmount($attrs, $product);
 
                 $allProducts->push((object)[
                     'id'                   => $product['id'],
@@ -444,7 +490,7 @@ class WordPressController extends Controller
                                 $maxPrice       = $price;
                                 $maxVariationId = $var['id'];
                                 $attrs          = collect($var['attributes'])->pluck('option', 'name')->toArray();
-                                $maxAmount      = $attrs['Amount'] ?? '0';
+                                $maxAmount = $this->resolveGameAmount($attrs, $p);
                             }
                         }
 
