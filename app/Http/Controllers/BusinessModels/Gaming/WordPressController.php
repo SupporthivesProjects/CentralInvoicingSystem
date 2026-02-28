@@ -87,6 +87,13 @@ class WordPressController extends Controller
         'lineage'               => 'Adena',
         'metin'                 => 'Yang',
         'mu-online'             => 'Zen',
+        'arena-of-valor'   => 'Vouchers',
+        'arenaofvalor'     => 'Vouchers',
+        'valor'            => 'Vouchers',
+        'aov'              => 'Vouchers',
+        'marvel' => 'Lattice',
+        'runeterra'         => 'Coins',
+        'legendsofruneterra' => 'Coins',
     ];
 
     private function resolveGameCurrency(array $product): string
