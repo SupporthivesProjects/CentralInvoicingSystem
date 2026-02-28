@@ -49,8 +49,8 @@ class WordPressController extends Controller
     private array $gameCurrencyMap = [
         'nba'                   => 'Gold',
         'warcraft'              => 'WOW Gold',
-        'final-fantasy'         => 'FF14 Gil',
-        'ffxiv'                 => 'FF14 Gil',
+        'final-fantasy'         => 'Gil',
+        'ffxiv'                 => 'Gil',
         'dc-universe'           => 'DCUO Cash',
         'dcuo'                  => 'DCUO Cash',
         'elder-scrolls'         => 'ESO Gold',
