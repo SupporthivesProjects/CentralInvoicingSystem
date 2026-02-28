@@ -564,9 +564,9 @@ class WordPressController extends Controller
                 $var_response  = curl_multi_getcontent($ch);
                 $var_http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
-                $maxPrice       = 0;
-                $maxAmount      = '0';
-                $maxVariationId = null;
+                $minPrice       = PHP_FLOAT_MAX;
+                $minAmount      = '0';
+                $minVariationId = null;
 
                 if ($var_http_code == 200 && $var_response) {
                     $variations = json_decode($var_response, true);
@@ -577,15 +577,17 @@ class WordPressController extends Controller
                             if (($var['stock_status'] ?? 'instock') === 'outofstock') continue;
 
                             $price = floatval($var['price'] ?? 0);
-                            if ($price > $maxPrice) {
-                                $maxPrice       = $price;
-                                $maxVariationId = $var['id'];
+                            if ($price <= 0) continue;
+
+                            if ($price < $minPrice) {
+                                $minPrice       = $price;
+                                $minVariationId = $var['id'];
                                 $attrs          = collect($var['attributes'])->pluck('option', 'name')->toArray();
-                                $maxAmount      = $this->resolveGameAmount($attrs, $p, $var);
+                                $minAmount      = $this->resolveGameAmount($attrs, $p, $var);
                             }
                         }
 
-                        if ($maxPrice > 0 && !in_array($p['id'], $seenIds)) {
+                        if ($minPrice < PHP_FLOAT_MAX && !in_array($p['id'], $seenIds)) {
                             $seenIds[] = $p['id'];
                             $products->push((object)[
                                 'id'                   => $p['id'],
@@ -595,9 +597,10 @@ class WordPressController extends Controller
                                 'game_platform'        => $p['categories'][0]['name'] ?? '',
                                 'game_server_region'   => '',
                                 'game_need_to_capture' => '',
-                                'bundle_first_amount'  => $maxAmount,
-                                'game_currency_amount' => $maxAmount,
-                                'bundle_id'            => $maxVariationId,
+                                'bundle_first_amount'  => $minAmount,
+                                'game_currency_amount' => $minAmount,
+                                'bundle_id'            => $minVariationId,
+                                'unit_price'           => $minPrice,
                             ]);
                         }
                     }
