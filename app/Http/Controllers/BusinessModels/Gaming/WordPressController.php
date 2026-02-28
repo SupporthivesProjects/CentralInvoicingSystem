@@ -64,7 +64,7 @@ class WordPressController extends Controller
         $maxTotal = $invoiceAmount * 1.05;
 
         $site = Website::findOrFail($site_id);
-        DynamicDatabaseService::connect($site); 
+        DynamicDatabaseService::connect($site);
 
         $consumerKey = $site->consumer_key;
         $consumerSecret = $site->consumer_secret;
@@ -130,13 +130,13 @@ class WordPressController extends Controller
         }
 
         if ($searchQuery && !$request->has('randomize')) {
-            $results = $allProducts->sortBy('unit_price');
-            $results = $productCount > 0 ? $results->take($productCount) : $results->take(60);
-            $totalPrice = $results->sum('unit_price');
+            $products = $allProducts->sortBy('unit_price');
+            $products = $productCount > 0 ? $products->take($productCount) : $products->take(60);
+            $totalPrice = $products->sum('unit_price');
             $currency = site_currency();
             session(['current_amount' => $totalPrice]);
             $modelType = $site->businessModel->model_type;
-            $tableRows = view("invoice.{$modelType}.random_product_rows", compact('results', 'currency', 'site'))->render();
+            $tableRows = view("invoice.{$modelType}.random_product_rows", compact('products', 'currency', 'site'))->render();
 
             return response()->json([
                 'tableRows' => $tableRows,
