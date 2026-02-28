@@ -516,6 +516,18 @@
     <script>
         const SITE_ID = {{ session('customer.site_id') ?? 0 }};
     </script>
+    
+     <script>
+        let filterTimer;
+
+        $('#keywordInput, #hidden_price_from_input_id, #hidden_price_to_input_id').on('input change', function() {
+            clearTimeout(filterTimer);
+            filterTimer = setTimeout(() => {
+                generateRandomProducts('random');
+            }, 1500);
+        });
+    </script>
+
     <script>
        $(document).ready(function() {
         let sessionAmount = parseFloat("{{ session('invoice_amount') ?? 0 }}");
@@ -683,15 +695,6 @@
 
     $(document).ready(function() {
         generateRandomProducts('initial');
-    });
-
-    let filterTimer;
-
-    $('#keywordInput').on('input', function() {
-        clearTimeout(filterTimer);
-        filterTimer = setTimeout(() => {
-            generateRandomProducts('random');
-        }, 1500);
     });
     </script>
 
@@ -1040,16 +1043,7 @@
             });
         }
     </script>
-    <script>
-        let filterTimer;
-
-        $('#keywordInput, #hidden_price_from_input_id, #hidden_price_to_input_id').on('input change', function() {
-            clearTimeout(filterTimer);
-            filterTimer = setTimeout(() => {
-                generateRandomProducts('random');
-            }, 1500);
-        });
-    </script>
+   
 
 
     <script>
