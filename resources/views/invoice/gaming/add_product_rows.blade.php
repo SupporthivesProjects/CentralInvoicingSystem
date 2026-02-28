@@ -105,8 +105,9 @@
         const currencyFactor = parseFloat(@json($currencyFactor ?? 1.0));
         const bundleRate     = parseFloat($(`input[name="custom_products[${productId}][bundle_rate]"]`).val()) || 0;
 
+        const raw = unitPrice * bundleRate;
         const calculated = bundleRate > 0
-            ? Math.floor(unitPrice * bundleRate)
+            ? Math.round(raw / 100) * 100
             : Math.floor(unitPrice * baseAmount * currencyFactor);
 
         const displayValue = hasSuffix ? calculated + lastChar : calculated.toString();
