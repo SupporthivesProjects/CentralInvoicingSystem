@@ -53,57 +53,88 @@ class WordPressController extends Controller
     {
         Session::forget('selected_products');
 
-        $site_id = $request->get('site_id');
-        $invoiceAmount = floatval($request->get('invoice_amount'));
-        $priceFrom = $request->get('price_from');
-        $priceTo = $request->get('price_to');
-        $productCount = intval($request->get('product_count'));
-        $searchQuery = $request->get('search_query');
+        define('RANDOMIZE_TOLERANCE_STEP', 1);
+        define('RANDOMIZE_MAX_TOLERANCE', 20);
+        define('RANDOMIZE_MIN_BUFFER', 0.98);
+        define('RANDOMIZE_MAX_ATTEMPTS', 20);
+        define('RANDOMIZE_HISTORY_LIMIT', 2);
 
-        $minTotal = $invoiceAmount;
-        $maxTotal = $invoiceAmount * 1.05;
+        $site_id        = $request->get('site_id');
+        $invoiceAmount  = floatval($request->get('invoice_amount'));
+        $priceFrom      = $request->get('price_from');
+        $priceTo        = $request->get('price_to');
+        $productCount   = intval($request->get('product_count'));
+        $searchQuery    = $request->get('search_query');
 
         $site = Website::findOrFail($site_id);
         DynamicDatabaseService::connect($site);
 
-        $consumerKey = $site->consumer_key;
+        $consumerKey    = $site->consumer_key;
         $consumerSecret = $site->consumer_secret;
-        $base = rtrim($site->site_link, '/') . '/wp-json/wc/v3/products';
+        $base           = rtrim($site->site_link, '/') . '/wp-json/wc/v3/products';
 
         $response = Http::withBasicAuth($consumerKey, $consumerSecret)
             ->get($base, [
-                'type' => 'variable',
+                'type'     => 'variable',
                 'per_page' => 100,
-                'search' => $searchQuery,
-                'status' => 'publish'
+                'search'   => $searchQuery,
+                'status'   => 'publish'
             ]);
 
         if ($response->failed()) {
             return response()->json(['tableRows' => '', 'total' => 0, 'message' => 'Failed to fetch products']);
         }
 
+        $wpProducts = $response->json();
         $allProducts = collect();
-        $targetUnitPrice = $productCount > 0 ? ($invoiceAmount / $productCount) : $invoiceAmount;
+        $mh = curl_multi_init();
+        $handles = [];
 
-        foreach ($response->json() as $product) {
-            $variationRes = Http::withBasicAuth($consumerKey, $consumerSecret)
-                ->get($base . '/' . $product['id'] . '/variations');
+        foreach ($wpProducts as $index => $product) {
+            $url = $base . '/' . $product['id'] . '/variations?per_page=100&status=publish';
+            $ch  = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_USERPWD, $consumerKey . ':' . $consumerSecret);
+            curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+            curl_multi_add_handle($mh, $ch);
+            $handles[$index] = ['handle' => $ch, 'product' => $product];
+        }
 
-            if ($variationRes->failed()) continue;
+        $running = null;
+        do {
+            curl_multi_exec($mh, $running);
+            curl_multi_select($mh);
+        } while ($running > 0);
 
-            $variations = [];
+        foreach ($handles as $index => $data) {
+            $ch      = $data['handle'];
+            $product = $data['product'];
 
-            foreach ($variationRes->json() as $var) {
+            $varBody = curl_multi_getcontent($ch);
+            $varCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_multi_remove_handle($mh, $ch);
+            curl_close($ch);
+
+            if ($varCode !== 200 || !$varBody) continue;
+
+            $variations = json_decode($varBody, true);
+            if (empty($variations)) continue;
+
+            foreach ($variations as $var) {
                 if (($var['status'] ?? 'publish') !== 'publish') continue;
                 if (($var['stock_status'] ?? 'instock') === 'outofstock') continue;
 
-                $attrs = collect($var['attributes'])->pluck('option', 'name')->toArray();
+                $unitPrice = floatval($var['price'] ?? 0);
+                if ($unitPrice <= 0) continue;
+
+                if ($priceFrom && $priceTo && ($unitPrice < floatval($priceFrom) || $unitPrice > floatval($priceTo))) continue;
+
+                $attrs        = collect($var['attributes'])->pluck('option', 'name')->toArray();
                 $bundleAmount = $attrs['Amount'] ?? '0';
-                $unitPrice = floatval($var['price']);
 
-                if ($priceFrom && $priceTo && ($unitPrice < $priceFrom || $unitPrice > $priceTo)) continue;
-
-                $variations[] = (object)[
+                $allProducts->push((object)[
                     'id'                   => $product['id'],
                     'bundle_id'            => $var['id'],
                     'name'                 => $product['name'],
@@ -117,24 +148,20 @@ class WordPressController extends Controller
                     'game_platform'        => $attrs['Platform'] ?? '',
                     'game_region'          => null,
                     'game_need_to_capture' => null,
-                ];
-            }
-
-            if (!empty($variations)) {
-                $selectedVariation = collect($variations)->sortBy(function ($v) use ($targetUnitPrice) {
-                    return abs($v->unit_price - $targetUnitPrice);
-                })->first();
-
-                $allProducts->push($selectedVariation);
+                ]);
             }
         }
 
+        curl_multi_close($mh);
+
         if ($searchQuery && !$request->has('randomize')) {
-            $products = $allProducts->sortBy('unit_price');
-            $products = $productCount > 0 ? $products->take($productCount) : $products->take(60);
+            $products   = $allProducts->sortBy('unit_price');
+            $products   = $productCount > 0 ? $products->take($productCount) : $products->take(60);
             $totalPrice = $products->sum('unit_price');
-            $currency = site_currency();
+            $currency   = site_currency();
+
             session(['current_amount' => $totalPrice]);
+
             $modelType = $site->businessModel->model_type;
             $tableRows = view("invoice.{$modelType}.random_product_rows", compact('products', 'currency', 'site'))->render();
 
@@ -146,35 +173,57 @@ class WordPressController extends Controller
             ]);
         }
 
-        $bestMatch = null;
-        $bestTotal = 0;
+        $lastCombinations = session('last_combinations', []);
+        $bestMatch        = null;
+        $bestTotal        = 0;
+        $discountPct      = 0;
 
-        for ($i = 0; $i < 10; $i++) {
-            $shuffled = $allProducts->shuffle();
-            $sel = [];
-            $cur = 0;
+        for ($tolerance = 0; $tolerance <= RANDOMIZE_MAX_TOLERANCE; $tolerance += RANDOMIZE_TOLERANCE_STEP) {
+            $maxTotal = $invoiceAmount * (1 + ($tolerance / 100));
+            $minTotal = $invoiceAmount * RANDOMIZE_MIN_BUFFER;
 
-            foreach ($shuffled as $p) {
-                $price = floatval($p->unit_price);
-                if ($cur + $price <= $maxTotal) {
-                    $sel[] = $p;
-                    $cur += $price;
+            $found = false;
 
-                    if ($productCount > 0) {
-                        if (count($sel) == $productCount && $cur >= $minTotal) {
-                            $bestMatch = $sel;
-                            $bestTotal = $cur;
-                            break 2;
-                        }
-                    } else {
-                        if ($cur >= $minTotal && $cur <= $maxTotal) {
-                            $bestMatch = $sel;
-                            $bestTotal = $cur;
-                            break 2;
-                        }
-                    }
+            for ($attempt = 0; $attempt < RANDOMIZE_MAX_ATTEMPTS; $attempt++) {
+                $shuffled = $allProducts->shuffle();
+                $sel      = [];
+                $cur      = 0.0;
+                $usedKeys = [];
+
+                foreach ($shuffled as $p) {
+                    $key = $p->id . '-' . $p->bundle_id;
+                    if (in_array($key, $usedKeys)) continue;
+
+                    $price = floatval($p->unit_price);
+                    if ($cur + $price > $maxTotal) continue;
+
+                    $sel[]      = $p;
+                    $cur       += $price;
+                    $usedKeys[] = $key;
+
+                    if ($productCount > 0 && count($sel) === $productCount) break;
                 }
+
+                if (empty($sel)) continue;
+
+                $reachedTarget = $productCount > 0
+                    ? (count($sel) === $productCount && $cur >= $minTotal)
+                    : ($cur >= $minTotal && $cur <= $maxTotal);
+
+                if (!$reachedTarget) continue;
+
+                $fingerprint = collect($sel)->pluck('bundle_id')->sort()->values()->implode('-');
+
+                if (in_array($fingerprint, $lastCombinations)) continue;
+
+                $bestMatch   = $sel;
+                $bestTotal   = $cur;
+                $discountPct = $tolerance;
+                $found       = true;
+                break;
             }
+
+            if ($found) break;
         }
 
         if (!$bestMatch) {
@@ -188,6 +237,14 @@ class WordPressController extends Controller
             ]);
         }
 
+        $fingerprint        = collect($bestMatch)->pluck('bundle_id')->sort()->values()->implode('-');
+        $lastCombinations[] = $fingerprint;
+
+        if (count($lastCombinations) > RANDOMIZE_HISTORY_LIMIT) {
+            array_shift($lastCombinations);
+        }
+
+        session(['last_combinations' => $lastCombinations]);
         session()->forget('selected_games');
 
         $selected_games = array_map(function ($g) {
@@ -197,6 +254,14 @@ class WordPressController extends Controller
                 'unit_price'           => $g->unit_price,
                 'game_currency_amount' => $g->game_currency_amount,
                 'game_currency'        => $g->game_currency,
+                'bundle_id'            => $g->bundle_id,
+                'slug'                 => $g->slug,
+                'source'               => 'Random',
+                'game_platform'        => $g->game_platform,
+                'game_region'          => $g->game_region,
+                'game_need_to_capture' => $g->game_need_to_capture,
+                'can_edit_price'       => 0,
+                'remaining_days'       => 0,
                 'bundle'               => 'Random'
             ];
         }, $bestMatch);
@@ -204,18 +269,21 @@ class WordPressController extends Controller
         session(['selected_games' => $selected_games, 'current_amount' => $bestTotal]);
 
         $modelType = $site->businessModel->model_type;
+        $currency  = site_currency();
 
         $tableRows = view("invoice.{$modelType}.random_product_rows", [
-            'products' => $bestMatch,
-            'currency' => site_currency(),
-            'site'     => $site
+            'products'     => $bestMatch,
+            'currency'     => $currency,
+            'site'         => $site,
+            'discount_pct' => $discountPct,
         ])->render();
 
         return response()->json([
-            'tableRows' => $tableRows,
-            'total'     => $bestTotal,
-            'currency'  => site_currency(),
-            'is_random' => true
+            'tableRows'    => $tableRows,
+            'total'        => $bestTotal,
+            'currency'     => $currency,
+            'discount_pct' => $discountPct,
+            'is_random'    => true
         ]);
     }
 
