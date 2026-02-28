@@ -58,15 +58,8 @@
 
             let tempTotal = originalAmount + selectedTotal;
             let invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
-            let discountAmount = 0;
 
-            if (tempTotal > invoiceAmount) {
-                discountAmount = tempTotal - invoiceAmount;
-            }
-
-            $('#temp_current_amount_text').text(tempTotal.toFixed(2));
-            $('#temp_discount_amount_text').text(discountAmount.toFixed(2));
-            $('#temp_invoice_amount_text').text(invoiceAmount.toFixed(2));
+            syncAllAmountDisplays(tempTotal, invoiceAmount);
         }
 
         $(document).on('input change keyup', 'input[name="add_product_ids[]"], .add-product-price, #invoice_amount', function () {
@@ -127,10 +120,8 @@
                 }
 
                 let gameName = $row.find('td:nth-child(2)').clone().children().remove().end().text().trim();
-                let gameCurrency = $row.find('td:nth-child(3)').text().trim();
 
                 let selectedPlatform = $collapseRow.find('.select-platform').val();
-
                 let platformFields = {};
                 let missingFields = false;
 
@@ -163,9 +154,7 @@
                 });
             });
 
-            if (!hasValidData) {
-                return;
-            }
+            if (!hasValidData) return;
 
             if (selectedProducts.length > 0) {
                 let btn = $('#add-custom-products');
@@ -184,22 +173,13 @@
                     success: function (response) {
                         $('input[name="products[]"]:checked').prop('disabled', true);
 
-                        let discountAmount = 0;
-                        let current_amount = response.total;
                         let invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
-
-                        if (current_amount > invoiceAmount) {
-                            discountAmount = current_amount - invoiceAmount;
-                        }
 
                         $('#addgames').modal('hide');
                         $('#discount_amount').prop('readonly', false).prop('type', 'number');
                         $('#product-table-body').html(response.tableRows);
-                        $('#current_amount').val(current_amount.toFixed(2));
-                        $('#temp_current_amount_text').text(current_amount.toFixed(2));
-                        $('#discount_amount').val(discountAmount.toFixed(2));
-                        $('#temp_discount_amount_text').text(discountAmount.toFixed(2));
-                        $('#invoice_amount').val(invoiceAmount.toFixed(2));
+
+                        syncAllAmountDisplays(response.total, invoiceAmount);
 
                         toastr.success('Products added successfully!');
 
@@ -212,7 +192,7 @@
                         toastr.error('Failed to add products. Please try again.');
                     },
                     complete: function () {
-                        btn.prop('disabled', false).html('Add Selected to Cart');
+                        btn.prop('disabled', false).html('<i class="bi bi-cart-plus me-1"></i> Add to list');
                     }
                 });
             } else {

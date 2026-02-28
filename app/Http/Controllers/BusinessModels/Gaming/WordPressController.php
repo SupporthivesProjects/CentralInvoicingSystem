@@ -102,7 +102,7 @@ class WordPressController extends Controller
                 if ($priceFrom && $priceTo && ($unitPrice < floatval($priceFrom) || $unitPrice > floatval($priceTo))) continue;
 
                 $attrs        = collect($var['attributes'])->pluck('option', 'name')->toArray();
-                $bundleAmount = $attrs['Amount'] ?? '0';
+                $bundleAmount = !empty($attrs) ? array_values($attrs)[0] : '0';
 
                 $allProducts->push((object)[
                     'id'                   => $product['id'],
@@ -472,6 +472,7 @@ class WordPressController extends Controller
             'currency'       => site_currency(),
             'site'           => $site,
             'current_amount' => session('current_amount'),
+            'currencyFactor'  => $site->currency_factor ?? 1.0,
         ])->render();
 
         return response()->json([
