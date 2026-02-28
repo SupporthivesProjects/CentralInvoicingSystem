@@ -133,7 +133,7 @@ class WordPressController extends Controller
             $results = $allProducts->sortBy('unit_price');
             $results = $productCount > 0 ? $results->take($productCount) : $results->take(60);
             $totalPrice = $results->sum('unit_price');
-
+            $currency = site_currency();
             session(['current_amount' => $totalPrice]);
             $modelType = $site->businessModel->model_type;
             $tableRows = view("invoice.{$modelType}.random_product_rows", compact('results', 'currency', 'site'))->render();
@@ -141,7 +141,7 @@ class WordPressController extends Controller
             return response()->json([
                 'tableRows' => $tableRows,
                 'total'     => $totalPrice,
-                'currency'  => site_currency(),
+                'currency'  => $currency,
                 'is_random' => false
             ]);
         }
