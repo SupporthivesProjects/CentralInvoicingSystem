@@ -426,7 +426,8 @@ class WordPressController extends Controller
                             $price = floatval($var['price'] ?? 0);
                             if ($price <= 0) continue;
 
-                            $attrs = collect($var['attributes'])->pluck('option', 'name')->toArray();
+                            $attrs               = collect($var['attributes'])->pluck('option', 'name')->toArray();
+                            $game_currency_amount = !empty($attrs) ? array_values($attrs)[0] : '0';
 
                             $products->push((object)[
                                 'id'                   => $p['id'],
@@ -437,7 +438,7 @@ class WordPressController extends Controller
                                 'game_server_region'   => '',
                                 'game_need_to_capture' => '',
                                 'bundle_first_amount'  => $price,
-                                'game_currency_amount' => $attrs['Amount'] ?? '0',
+                                'game_currency_amount' => $game_currency_amount,
                                 'bundle_id'            => $var['id'],
                             ]);
                         }
