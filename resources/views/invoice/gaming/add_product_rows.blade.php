@@ -26,6 +26,9 @@
                 <input type="hidden"
                     name="custom_products[{{ $product->id }}][bundle_first_amount]"
                     value="{{ $product->game_currency_amount ?? $product->bundle_first_amount ?? '0' }}">
+                <input type="hidden"
+                    name="custom_products[{{ $product->id }}][bundle_rate]"
+                    value="{{ $product->bundle_rate ?? '' }}">
             </div>
         </td>
 
@@ -100,8 +103,12 @@
 
         const unitPrice      = parseFloat($priceInput.val()) || 0;
         const currencyFactor = parseFloat(@json($currencyFactor ?? 1.0));
+        const bundleRate     = parseFloat($(`input[name="custom_products[${productId}][bundle_rate]"]`).val()) || 0;
 
-        const calculated   = Math.floor(unitPrice * baseAmount * currencyFactor);
+        const calculated = bundleRate > 0
+            ? Math.floor(unitPrice * bundleRate)
+            : Math.floor(unitPrice * baseAmount * currencyFactor);
+
         const displayValue = hasSuffix ? calculated + lastChar : calculated.toString();
 
         $(`.add-currency-amount[data-product-id="${productId}"]`).val(displayValue);

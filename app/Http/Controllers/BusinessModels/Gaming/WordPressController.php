@@ -588,6 +588,9 @@ class WordPressController extends Controller
                         }
 
                         if ($minPrice < PHP_FLOAT_MAX && !in_array($p['id'], $seenIds)) {
+                            $numericAmount = floatval(preg_replace('/[^0-9.]/', '', $minAmount));
+                            $bundleRate    = ($minPrice > 0 && $numericAmount > 0) ? round($numericAmount / $minPrice, 6) : 0;
+
                             $seenIds[] = $p['id'];
                             $products->push((object)[
                                 'id'                   => $p['id'],
@@ -601,6 +604,7 @@ class WordPressController extends Controller
                                 'game_currency_amount' => $minAmount,
                                 'bundle_id'            => $minVariationId,
                                 'unit_price'           => $minPrice,
+                                'bundle_rate'          => $bundleRate,
                             ]);
                         }
                     }
