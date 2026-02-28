@@ -29,6 +29,11 @@ class WordPressController extends Controller
     private $connectionType;
     private $bundleTable;
 
+    const TOLERANCE_STEP    = 1;
+    const MAX_TOLERANCE     = 30;
+    const MAX_ATTEMPTS      = 25;
+    const HISTORY_LIMIT     = 2;
+
     public function __construct()
     {
         ini_set('max_execution_time', 300);
@@ -49,43 +54,8 @@ class WordPressController extends Controller
         return response()->json(['minProductPrice' => $min_unit_price, 'maxProductPrice' => $max_unit_price]);
     }
 
-    public function randomProducts(Request $request)
+    private function fetchAllVariationsParallel(array $wpProducts, string $base, string $consumerKey, string $consumerSecret, $priceFrom = null, $priceTo = null): \Illuminate\Support\Collection
     {
-        Session::forget('selected_products');
-
-        define('RANDOMIZE_TOLERANCE_STEP', 1);
-        define('RANDOMIZE_MAX_TOLERANCE', 20);
-        define('RANDOMIZE_MIN_BUFFER', 0.98);
-        define('RANDOMIZE_MAX_ATTEMPTS', 20);
-        define('RANDOMIZE_HISTORY_LIMIT', 2);
-
-        $site_id        = $request->get('site_id');
-        $invoiceAmount  = floatval($request->get('invoice_amount'));
-        $priceFrom      = $request->get('price_from');
-        $priceTo        = $request->get('price_to');
-        $productCount   = intval($request->get('product_count'));
-        $searchQuery    = $request->get('search_query');
-
-        $site = Website::findOrFail($site_id);
-        DynamicDatabaseService::connect($site);
-
-        $consumerKey    = $site->consumer_key;
-        $consumerSecret = $site->consumer_secret;
-        $base           = rtrim($site->site_link, '/') . '/wp-json/wc/v3/products';
-
-        $response = Http::withBasicAuth($consumerKey, $consumerSecret)
-            ->get($base, [
-                'type'     => 'variable',
-                'per_page' => 100,
-                'search'   => $searchQuery,
-                'status'   => 'publish'
-            ]);
-
-        if ($response->failed()) {
-            return response()->json(['tableRows' => '', 'total' => 0, 'message' => 'Failed to fetch products']);
-        }
-
-        $wpProducts = $response->json();
         $allProducts = collect();
         $mh = curl_multi_init();
         $handles = [];
@@ -154,37 +124,17 @@ class WordPressController extends Controller
 
         curl_multi_close($mh);
 
-        if ($searchQuery && !$request->has('randomize')) {
-            $products   = $allProducts->sortBy('unit_price');
-            $products   = $productCount > 0 ? $products->take($productCount) : $products->take(60);
-            $totalPrice = $products->sum('unit_price');
-            $currency   = site_currency();
+        return $allProducts;
+    }
 
-            session(['current_amount' => $totalPrice]);
+    private function findBestCombination(\Illuminate\Support\Collection $allProducts, float $invoiceAmount, int $productCount, array $lastCombinations): ?array
+    {
+        for ($tolerance = 0; $tolerance <= self::MAX_TOLERANCE; $tolerance += self::TOLERANCE_STEP) {
 
-            $modelType = $site->businessModel->model_type;
-            $tableRows = view("invoice.{$modelType}.random_product_rows", compact('products', 'currency', 'site'))->render();
-
-            return response()->json([
-                'tableRows' => $tableRows,
-                'total'     => $totalPrice,
-                'currency'  => $currency,
-                'is_random' => false
-            ]);
-        }
-
-        $lastCombinations = session('last_combinations', []);
-        $bestMatch        = null;
-        $bestTotal        = 0;
-        $discountPct      = 0;
-
-        for ($tolerance = 0; $tolerance <= RANDOMIZE_MAX_TOLERANCE; $tolerance += RANDOMIZE_TOLERANCE_STEP) {
             $maxTotal = $invoiceAmount * (1 + ($tolerance / 100));
-            $minTotal = $invoiceAmount * RANDOMIZE_MIN_BUFFER;
+            $minTotal = $invoiceAmount;
 
-            $found = false;
-
-            for ($attempt = 0; $attempt < RANDOMIZE_MAX_ATTEMPTS; $attempt++) {
+            for ($attempt = 0; $attempt < self::MAX_ATTEMPTS; $attempt++) {
                 $shuffled = $allProducts->shuffle();
                 $sel      = [];
                 $cur      = 0.0;
@@ -192,23 +142,26 @@ class WordPressController extends Controller
 
                 foreach ($shuffled as $p) {
                     $key = $p->id . '-' . $p->bundle_id;
-                    if (in_array($key, $usedKeys)) continue;
+                    if (isset($usedKeys[$key])) continue;
 
                     $price = floatval($p->unit_price);
+
                     if ($cur + $price > $maxTotal) continue;
 
-                    $sel[]      = $p;
-                    $cur       += $price;
-                    $usedKeys[] = $key;
+                    $sel[]          = $p;
+                    $cur           += $price;
+                    $usedKeys[$key] = true;
 
                     if ($productCount > 0 && count($sel) === $productCount) break;
                 }
 
                 if (empty($sel)) continue;
 
-                $reachedTarget = $productCount > 0
-                    ? (count($sel) === $productCount && $cur >= $minTotal)
-                    : ($cur >= $minTotal && $cur <= $maxTotal);
+                if ($productCount > 0) {
+                    $reachedTarget = (count($sel) === $productCount && $cur >= $minTotal && $cur <= $maxTotal);
+                } else {
+                    $reachedTarget = ($cur >= $minTotal && $cur <= $maxTotal);
+                }
 
                 if (!$reachedTarget) continue;
 
@@ -216,17 +169,87 @@ class WordPressController extends Controller
 
                 if (in_array($fingerprint, $lastCombinations)) continue;
 
-                $bestMatch   = $sel;
-                $bestTotal   = $cur;
-                $discountPct = $tolerance;
-                $found       = true;
-                break;
+                return [
+                    'match'       => $sel,
+                    'total'       => $cur,
+                    'tolerance'   => $tolerance,
+                    'fingerprint' => $fingerprint,
+                ];
             }
-
-            if ($found) break;
         }
 
-        if (!$bestMatch) {
+        return null;
+    }
+
+    public function randomProducts(Request $request)
+    {
+        Session::forget('selected_products');
+
+        $site_id       = $request->get('site_id');
+        $invoiceAmount = floatval($request->get('invoice_amount'));
+        $priceFrom     = $request->get('price_from');
+        $priceTo       = $request->get('price_to');
+        $productCount  = intval($request->get('product_count'));
+        $searchQuery   = $request->get('search_query');
+
+        $site = Website::findOrFail($site_id);
+        DynamicDatabaseService::connect($site);
+
+        $consumerKey    = $site->consumer_key;
+        $consumerSecret = $site->consumer_secret;
+        $base           = rtrim($site->site_link, '/') . '/wp-json/wc/v3/products';
+
+        $response = Http::withBasicAuth($consumerKey, $consumerSecret)
+            ->get($base, [
+                'type'     => 'variable',
+                'per_page' => 100,
+                'search'   => $searchQuery,
+                'status'   => 'publish'
+            ]);
+
+        if ($response->failed()) {
+            return response()->json(['tableRows' => '', 'total' => 0, 'message' => 'Failed to fetch products']);
+        }
+
+        $allProducts = $this->fetchAllVariationsParallel(
+            $response->json(),
+            $base,
+            $consumerKey,
+            $consumerSecret,
+            $priceFrom,
+            $priceTo
+        );
+
+        if ($allProducts->isEmpty()) {
+            return response()->json(['tableRows' => '', 'total' => 0, 'message' => 'No products available']);
+        }
+
+        $modelType = $site->businessModel->model_type;
+        $currency  = site_currency();
+
+        if ($searchQuery && !$request->has('randomize')) {
+            $products   = $allProducts->sortBy('unit_price')->values();
+            $products   = $productCount > 0 ? $products->take($productCount) : $products->take(60);
+            $totalPrice = $products->sum('unit_price');
+
+            session(['current_amount' => $totalPrice]);
+
+            $tableRows = view("invoice.{$modelType}.random_product_rows", compact('products', 'currency', 'site'))->render();
+
+            return response()->json([
+                'tableRows'    => $tableRows,
+                'total'        => $totalPrice,
+                'currency'     => $currency,
+                'discount_pct' => 0,
+                'is_random'    => false
+            ]);
+        }
+
+        $lastCombinations = session('last_combinations', []);
+
+        $result = $this->findBestCombination($allProducts, $invoiceAmount, $productCount, $lastCombinations);
+
+        if (!$result) {
             session()->forget('ready_products');
             session()->forget('current_amount');
 
@@ -237,14 +260,20 @@ class WordPressController extends Controller
             ]);
         }
 
-        $fingerprint        = collect($bestMatch)->pluck('bundle_id')->sort()->values()->implode('-');
-        $lastCombinations[] = $fingerprint;
+        $bestMatch   = $result['match'];
+        $bestTotal   = $result['total'];
+        $tolerance   = $result['tolerance'];
+        $fingerprint = $result['fingerprint'];
 
-        if (count($lastCombinations) > RANDOMIZE_HISTORY_LIMIT) {
+        $discountAmount = round($bestTotal - $invoiceAmount, 2);
+        $discountPct    = $tolerance;
+
+        $lastCombinations[] = $fingerprint;
+        if (count($lastCombinations) > self::HISTORY_LIMIT) {
             array_shift($lastCombinations);
         }
-
         session(['last_combinations' => $lastCombinations]);
+
         session()->forget('selected_games');
 
         $selected_games = array_map(function ($g) {
@@ -262,44 +291,42 @@ class WordPressController extends Controller
                 'game_need_to_capture' => $g->game_need_to_capture,
                 'can_edit_price'       => 0,
                 'remaining_days'       => 0,
-                'bundle'               => 'Random'
+                'bundle'               => 'Random',
             ];
         }, $bestMatch);
 
         session(['selected_games' => $selected_games, 'current_amount' => $bestTotal]);
 
-        $modelType = $site->businessModel->model_type;
-        $currency  = site_currency();
-
         $tableRows = view("invoice.{$modelType}.random_product_rows", [
-            'products'     => $bestMatch,
-            'currency'     => $currency,
-            'site'         => $site,
-            'discount_pct' => $discountPct,
+            'products'       => $bestMatch,
+            'currency'       => $currency,
+            'site'           => $site,
+            'discount_pct'   => $discountPct,
+            'discount_amount' => $discountAmount,
         ])->render();
 
         return response()->json([
-            'tableRows'    => $tableRows,
-            'total'        => $bestTotal,
-            'currency'     => $currency,
-            'discount_pct' => $discountPct,
-            'is_random'    => true
+            'tableRows'       => $tableRows,
+            'total'           => $bestTotal,
+            'invoice_amount'  => $invoiceAmount,
+            'discount_amount' => $discountAmount,
+            'currency'        => $currency,
+            'discount_pct'    => $discountPct,
+            'is_random'       => true
         ]);
     }
 
     public function removeProduct(Request $request)
     {
-        $id = $request->get('product_id');
+        $id        = $request->get('product_id');
         $unitPrice = $request->get('unit_price');
-        $site_id = $request->get('site_id');
+        $site_id   = $request->get('site_id');
 
         $selectedGames = session('selected_games', []);
 
-        $updatedGames = array_filter($selectedGames, function ($game) use ($id, $unitPrice) {
+        $updatedGames = array_values(array_filter($selectedGames, function ($game) use ($id, $unitPrice) {
             return !($game['id'] == $id && floatval($game['unit_price']) == floatval($unitPrice));
-        });
-
-        $updatedGames = array_values($updatedGames);
+        }));
 
         session(['selected_games' => $updatedGames]);
 
@@ -313,13 +340,11 @@ class WordPressController extends Controller
             ]);
         }
 
-        $site = Website::findOrFail($site_id);
+        $site      = Website::findOrFail($site_id);
         $modelType = $site->businessModel->model_type;
 
-        $finalProducts = collect();
-
-        foreach ($updatedGames as $sessionGame) {
-            $finalProducts->push((object)[
+        $finalProducts = collect($updatedGames)->map(function ($sessionGame) {
+            return (object)[
                 'id'                   => $sessionGame['id'],
                 'name'                 => $sessionGame['name'] ?? 'Product',
                 'bundle_id'            => $sessionGame['bundle_id'] ?? null,
@@ -333,8 +358,8 @@ class WordPressController extends Controller
                 'game_platform'        => $sessionGame['game_platform'] ?? '',
                 'game_region'          => $sessionGame['game_region'] ?? '',
                 'game_need_to_capture' => $sessionGame['game_need_to_capture'] ?? '{}'
-            ]);
-        }
+            ];
+        });
 
         $total = $finalProducts->sum('unit_price');
         session(['current_amount' => $total]);
@@ -355,13 +380,13 @@ class WordPressController extends Controller
     public function filterProducts(Request $request)
     {
         $site_id = session('customer.site_id');
-        $site = Website::findOrFail($site_id);
+        $site    = Website::findOrFail($site_id);
 
         $hasKeyword = $request->filled('keyword');
-        $keyword = strtolower($request->keyword);
+        $keyword    = strtolower($request->keyword);
 
-        $wp_api_url = rtrim($site->site_link, '/') . '/wp-json/wc/v3/products';
-        $consumer_key = $site->consumer_key;
+        $wp_api_url      = rtrim($site->site_link, '/') . '/wp-json/wc/v3/products';
+        $consumer_key    = $site->consumer_key;
         $consumer_secret = $site->consumer_secret;
 
         $api_url = $wp_api_url . '?per_page=100&status=publish&type=variable';
@@ -376,28 +401,25 @@ class WordPressController extends Controller
         curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
         curl_setopt($ch, CURLOPT_TIMEOUT, 30);
 
-        $response = curl_exec($ch);
+        $response  = curl_exec($ch);
         $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
 
         $products = collect();
 
         if ($http_code == 200 && $response) {
-            $wp_products = json_decode($response, true);
-
-            $mh = curl_multi_init();
+            $wp_products  = json_decode($response, true);
+            $mh           = curl_multi_init();
             $curl_handles = [];
 
             foreach ($wp_products as $index => $p) {
                 $variation_url = $wp_api_url . '/' . $p['id'] . '/variations?per_page=100';
-
                 $ch = curl_init();
                 curl_setopt($ch, CURLOPT_URL, $variation_url);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                 curl_setopt($ch, CURLOPT_USERPWD, $consumer_key . ':' . $consumer_secret);
                 curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
                 curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-
                 curl_multi_add_handle($mh, $ch);
                 $curl_handles[$index] = ['handle' => $ch, 'product' => $p];
             }
@@ -409,14 +431,13 @@ class WordPressController extends Controller
             } while ($running > 0);
 
             foreach ($curl_handles as $index => $data) {
-                $ch = $data['handle'];
-                $p = $data['product'];
-
-                $var_response = curl_multi_getcontent($ch);
+                $ch            = $data['handle'];
+                $p             = $data['product'];
+                $var_response  = curl_multi_getcontent($ch);
                 $var_http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
-                $maxPrice = 0;
-                $maxAmount = '0';
+                $maxPrice      = 0;
+                $maxAmount     = '0';
                 $maxVariationId = null;
 
                 if ($var_http_code == 200 && $var_response) {
@@ -429,10 +450,10 @@ class WordPressController extends Controller
 
                             $price = floatval($var['price'] ?? 0);
                             if ($price > $maxPrice) {
-                                $maxPrice = $price;
+                                $maxPrice       = $price;
                                 $maxVariationId = $var['id'];
-                                $attrs = collect($var['attributes'])->pluck('option', 'name')->toArray();
-                                $maxAmount = $attrs['Amount'] ?? '0';
+                                $attrs          = collect($var['attributes'])->pluck('option', 'name')->toArray();
+                                $maxAmount      = $attrs['Amount'] ?? '0';
                             }
                         }
 
@@ -484,23 +505,23 @@ class WordPressController extends Controller
     public function addProducts(Request $request)
     {
         $site_id = session('customer.site_id');
-        $site = Website::findOrFail($site_id);
+        $site    = Website::findOrFail($site_id);
 
         $woocommerceBaseUrl = rtrim($site->site_link, '/') . '/wp-json/wc/v3/products/';
-        $consumerKey = $site->consumer_key;
-        $consumerSecret = $site->consumer_secret;
+        $consumerKey        = $site->consumer_key;
+        $consumerSecret     = $site->consumer_secret;
 
-        $selected = $request->input('selected_games');
-        $existing = session('selected_games', []);
+        $selected  = $request->input('selected_games');
+        $existing  = session('selected_games', []);
 
         $existingAssoc = [];
-        $seenKeys = [];
+        $seenKeys      = [];
 
         foreach ($existing as $item) {
-            $game_id = $item['id'];
+            $game_id       = $item['id'];
             $bundle_amount = $item['game_currency_amount'] ?? '0';
-            $source = strtolower($item['source'] ?? ($item['bundle'] ?? 'random'));
-            $key = "{$game_id}-{$bundle_amount}-{$source}";
+            $source        = strtolower($item['source'] ?? ($item['bundle'] ?? 'random'));
+            $key           = "{$game_id}-{$bundle_amount}-{$source}";
 
             if (!in_array($key, $seenKeys)) {
                 if ($source === 'random') {
@@ -541,19 +562,19 @@ class WordPressController extends Controller
         }
 
         foreach ($selected as $gameData) {
-            $game_id = $gameData['product_id'] ?? $gameData['id'];
-            $bundle_amount = $gameData['game_currency_amount'] ?? '0';
+            $game_id        = $gameData['product_id'] ?? $gameData['id'];
+            $bundle_amount  = $gameData['game_currency_amount'] ?? '0';
             $numeric_amount = preg_replace('/\D/', '', $bundle_amount);
-            $key = "{$game_id}-{$numeric_amount}-custom";
+            $key            = "{$game_id}-{$numeric_amount}-custom";
 
             if (!in_array($key, $seenKeys)) {
                 $productResponse = Http::withBasicAuth($consumerKey, $consumerSecret)
                     ->get($woocommerceBaseUrl . $game_id);
 
                 if ($productResponse->successful()) {
-                    $product = $productResponse->json();
-                    $meta = collect($product['meta_data'] ?? []);
-                    $getMeta = fn($key) => $meta->firstWhere('key', $key)['value'] ?? null;
+                    $product  = $productResponse->json();
+                    $meta     = collect($product['meta_data'] ?? []);
+                    $getMeta  = fn($key) => $meta->firstWhere('key', $key)['value'] ?? null;
 
                     $existingAssoc[] = [
                         'id'                   => (int) $game_id,
@@ -577,11 +598,9 @@ class WordPressController extends Controller
 
         session(['selected_games' => $existingAssoc]);
 
-        $finalProducts = collect($existingAssoc)->map(function ($item) {
-            return (object) $item;
-        });
+        $finalProducts = collect($existingAssoc)->map(fn($item) => (object) $item);
+        $bestTotal     = $finalProducts->sum('unit_price');
 
-        $bestTotal = $finalProducts->sum('unit_price');
         session(['current_amount' => $bestTotal]);
 
         $modelType = $site->businessModel->model_type;
@@ -752,11 +771,9 @@ class WordPressController extends Controller
 
         return response()->streamDownload(function () use ($pdfUrl) {
             $pdfResponse = Http::timeout(60)->get($pdfUrl);
-
             if ($pdfResponse->failed()) {
                 throw new \Exception("Failed to download PDF file from Api2Pdf.");
             }
-
             echo $pdfResponse->body();
         }, $filename);
     }
@@ -764,14 +781,14 @@ class WordPressController extends Controller
     protected function updateProductPrice(array $productDataArray)
     {
         $site_id = session('customer.site_id');
-        $site = Website::findOrFail($site_id);
+        $site    = Website::findOrFail($site_id);
 
         $updatedProducts = [];
-        $errors = [];
+        $errors          = [];
 
-        $consumerKey = $site->consumer_key;
+        $consumerKey    = $site->consumer_key;
         $consumerSecret = $site->consumer_secret;
-        $base = rtrim($site->site_link, '/') . '/wp-json/wc/v3/products';
+        $base           = rtrim($site->site_link, '/') . '/wp-json/wc/v3/products';
 
         foreach ($productDataArray as $data) {
             if (!isset($data['bundle_id'], $data['unit_price'])) {
@@ -852,7 +869,7 @@ class WordPressController extends Controller
     private function getGameDetails(array $sessongames)
     {
         $site_id = session('customer.site_id');
-        $site = Website::findOrFail($site_id);
+        $site    = Website::findOrFail($site_id);
         DynamicDatabaseService::connect($site);
 
         $ids = collect($sessongames)->pluck('id')->unique();
