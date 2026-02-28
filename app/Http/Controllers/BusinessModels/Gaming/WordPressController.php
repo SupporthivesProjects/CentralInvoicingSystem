@@ -53,7 +53,7 @@ class WordPressController extends Controller
         'ffxiv'                 => 'Gil',
         'dc-universe'           => 'DCUO Cash',
         'dcuo'                  => 'DCUO Cash',
-        'elder-scrolls'         => 'ESO Gold',
+        'elder-scrolls'         => 'Gold',
         'clash' => 'Gold',
         'guild-wars'            => 'Gold',
         'star-wars'             => 'SWTO Credits',
