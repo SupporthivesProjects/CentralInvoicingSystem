@@ -358,11 +358,11 @@ class WordPressController extends Controller
 
     public function filterProducts(Request $request)
     {
-        $site_id = session('customer.site_id');
+        $site_id = $request->get('site_id') ?? session('customer.site_id');
         $site    = Website::findOrFail($site_id);
 
         $hasKeyword = $request->filled('keyword');
-        $keyword    = strtolower($request->keyword);
+        $keyword    = strtolower($request->get('keyword', ''));
 
         $wp_api_url      = rtrim($site->site_link, '/') . '/wp-json/wc/v3/products';
         $consumer_key    = $site->consumer_key;
@@ -415,6 +415,10 @@ class WordPressController extends Controller
                 $var_response  = curl_multi_getcontent($ch);
                 $var_http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
+                $maxPrice       = 0;
+                $maxAmount      = '0';
+                $maxVariationId = null;
+
                 if ($var_http_code == 200 && $var_response) {
                     $variations = json_decode($var_response, true);
 
@@ -424,11 +428,15 @@ class WordPressController extends Controller
                             if (($var['stock_status'] ?? 'instock') === 'outofstock') continue;
 
                             $price = floatval($var['price'] ?? 0);
-                            if ($price <= 0) continue;
+                            if ($price > $maxPrice) {
+                                $maxPrice       = $price;
+                                $maxVariationId = $var['id'];
+                                $attrs          = collect($var['attributes'])->pluck('option', 'name')->toArray();
+                                $maxAmount      = !empty($attrs) ? array_values($attrs)[0] : '0';
+                            }
+                        }
 
-                            $attrs               = collect($var['attributes'])->pluck('option', 'name')->toArray();
-                            $game_currency_amount = !empty($attrs) ? array_values($attrs)[0] : '0';
-
+                        if ($maxPrice > 0) {
                             $products->push((object)[
                                 'id'                   => $p['id'],
                                 'name'                 => $p['name'],
@@ -437,9 +445,9 @@ class WordPressController extends Controller
                                 'game_platform'        => $p['categories'][0]['name'] ?? '',
                                 'game_server_region'   => '',
                                 'game_need_to_capture' => '',
-                                'bundle_first_amount'  => $price,
-                                'game_currency_amount' => $game_currency_amount,
-                                'bundle_id'            => $var['id'],
+                                'bundle_first_amount'  => $maxPrice,
+                                'game_currency_amount' => $maxAmount,
+                                'bundle_id'            => $maxVariationId,
                             ]);
                         }
                     }
