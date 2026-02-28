@@ -224,27 +224,8 @@ class WordPressController extends Controller
             return response()->json(['tableRows' => '', 'total' => 0, 'message' => 'No products available']);
         }
 
-        $modelType = $site->businessModel->model_type;
-        $currency  = site_currency();
-
-        if ($searchQuery && !$request->has('randomize')) {
-            $products   = $allProducts->sortBy('unit_price')->values();
-            $products   = $productCount > 0 ? $products->take($productCount) : $products->take(60);
-            $totalPrice = $products->sum('unit_price');
-
-            session(['current_amount' => $totalPrice]);
-
-            $tableRows = view("invoice.{$modelType}.random_product_rows", compact('products', 'currency', 'site'))->render();
-
-            return response()->json([
-                'tableRows'    => $tableRows,
-                'total'        => $totalPrice,
-                'currency'     => $currency,
-                'discount_pct' => 0,
-                'is_random'    => false
-            ]);
-        }
-
+        $modelType        = $site->businessModel->model_type;
+        $currency         = site_currency();
         $lastCombinations = session('last_combinations', []);
 
         $result = $this->findBestCombination($allProducts, $invoiceAmount, $productCount, $lastCombinations);
@@ -260,13 +241,11 @@ class WordPressController extends Controller
             ]);
         }
 
-        $bestMatch   = $result['match'];
-        $bestTotal   = $result['total'];
-        $tolerance   = $result['tolerance'];
-        $fingerprint = $result['fingerprint'];
-
+        $bestMatch      = $result['match'];
+        $bestTotal      = $result['total'];
         $discountAmount = round($bestTotal - $invoiceAmount, 2);
-        $discountPct    = $tolerance;
+        $discountPct    = $result['tolerance'];
+        $fingerprint    = $result['fingerprint'];
 
         $lastCombinations[] = $fingerprint;
         if (count($lastCombinations) > self::HISTORY_LIMIT) {
@@ -298,10 +277,10 @@ class WordPressController extends Controller
         session(['selected_games' => $selected_games, 'current_amount' => $bestTotal]);
 
         $tableRows = view("invoice.{$modelType}.random_product_rows", [
-            'products'       => $bestMatch,
-            'currency'       => $currency,
-            'site'           => $site,
-            'discount_pct'   => $discountPct,
+            'products'        => $bestMatch,
+            'currency'        => $currency,
+            'site'            => $site,
+            'discount_pct'    => $discountPct,
             'discount_amount' => $discountAmount,
         ])->render();
 
@@ -312,7 +291,7 @@ class WordPressController extends Controller
             'discount_amount' => $discountAmount,
             'currency'        => $currency,
             'discount_pct'    => $discountPct,
-            'is_random'       => true
+            'is_random'       => $searchQuery ? false : true
         ]);
     }
 
