@@ -75,7 +75,7 @@ class WordPressController extends Controller
         $running = null;
         do {
             curl_multi_exec($mh, $running);
-            curl_multi_select($mh);
+            curl_multi_select($mh, 5.0);
         } while ($running > 0);
 
         foreach ($handles as $index => $data) {
@@ -406,7 +406,7 @@ class WordPressController extends Controller
             $running = null;
             do {
                 curl_multi_exec($mh, $running);
-                curl_multi_select($mh);
+                curl_multi_select($mh, 5.0);
             } while ($running > 0);
 
             foreach ($curl_handles as $index => $data) {
