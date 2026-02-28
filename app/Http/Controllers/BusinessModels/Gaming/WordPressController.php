@@ -107,10 +107,17 @@ class WordPressController extends Controller
         return strtoupper(Str::slug($product['name'] ?? 'CURRENCY', '_'));
     }    
     
-    private function resolveGameAmount(array $attrs, array $product): string
+    private function resolveGameAmount(array $attrs, array $product, array $variation = []): string
     {
         if (!empty($attrs['Amount'])) {
             return $attrs['Amount'];
+        }
+
+        $varName = $variation['name'] ?? '';
+        if ($varName !== '') {
+            if (preg_match('/[\d,]+[MKGBmkgb]?\b/', $varName, $matches)) {
+                return $matches[0];
+            }
         }
 
         return !empty($attrs) ? array_values($attrs)[0] : '0';
@@ -176,7 +183,7 @@ class WordPressController extends Controller
                 if ($priceFrom && $priceTo && ($unitPrice < floatval($priceFrom) || $unitPrice > floatval($priceTo))) continue;
 
                 $attrs        = collect($var['attributes'])->pluck('option', 'name')->toArray();
-                $bundleAmount = $this->resolveGameAmount($attrs, $product);
+                $bundleAmount = $this->resolveGameAmount($attrs, $product, $var);
 
                 $allProducts->push((object)[
                     'id'                   => $product['id'],
@@ -510,7 +517,7 @@ class WordPressController extends Controller
                                 $maxPrice       = $price;
                                 $maxVariationId = $var['id'];
                                 $attrs          = collect($var['attributes'])->pluck('option', 'name')->toArray();
-                                $maxAmount = $this->resolveGameAmount($attrs, $p);
+                                $maxAmount = $this->resolveGameAmount($attrs, $p, $var);
                             }
                         }
 
