@@ -47,27 +47,46 @@ class WordPressController extends Controller
     }
 
     private array $gameCurrencyMap = [
-        'currencies' => [
-            'nba-2k22'                      => 'MT',
-            'swords-of-legends-online'      => 'Gold',
-            'warframe'                      => 'Platinum',
-            'final-fantasy-xiv'             => 'FF14 Gil',
-            'guild-wars-2'                  => 'Gold',
-            'star-wars-the-old-republic'    => 'Credits',
-            'elder-scrolls-online'          => 'ESO Gold',
-            'aion'                          => 'Kinah',
-            'fortnite'                      => 'V-Bucks',
-            'revelation-online'             => 'Silver',
-            'tera'                          => 'Gold',
-            'lord-of-the-rings-online'      => 'Gold',
-            'dc-universe-online'            => 'DCUO Cash',
-            'fallout-76'                    => 'Caps',
-            'world-of-warcraft'             => 'WOW Gold',
-            'rocket-league'                 => 'Credits',
-        ],
-        'amount_keys' => [
-            'default' => ['Amount'],
-        ],
+        'nba'                   => 'MT',
+        'warcraft'              => 'WOW Gold',
+        'final-fantasy'         => 'FF14 Gil',
+        'ffxiv'                 => 'FF14 Gil',
+        'dc-universe'           => 'DCUO Cash',
+        'dcuo'                  => 'DCUO Cash',
+        'elder-scrolls'         => 'ESO Gold',
+        'guild-wars'            => 'GW2 Gold',
+        'star-wars'             => 'SWTOR Credits',
+        'swtor'                 => 'SWTOR Credits',
+        'aion'                  => 'Kinah',
+        'fortnite'              => 'V-Bucks',
+        'warframe'              => 'Platinum',
+        'rocket-league'         => 'Credits',
+        'fallout'               => 'Caps',
+        'revelation'            => 'Silver',
+        'swords-of-legends'     => 'Gold',
+        'tera'                  => 'Gold',
+        'lord-of-the-rings'     => 'Gold',
+        'lotro'                 => 'Gold',
+        'runescape'             => 'RS Gold',
+        'osrs'                  => 'OSRS Gold',
+        'lost-ark'              => 'Gold',
+        'new-world'             => 'Gold',
+        'path-of-exile'         => 'Chaos Orbs',
+        'diablo'                => 'Gold',
+        'league-of-legends'     => 'RP',
+        'valorant'              => 'VP',
+        'apex'                  => 'Apex Coins',
+        'genshin'               => 'Primogems',
+        'honkai'                => 'Stellar Jade',
+        'black-desert'          => 'Silver',
+        'eve'                   => 'ISK',
+        'albion'                => 'Silver',
+        'tibia'                 => 'Gold Coins',
+        'maple'                 => 'Mesos',
+        'blade'                 => 'Gold',
+        'lineage'               => 'Adena',
+        'metin'                 => 'Yang',
+        'mu-online'             => 'Zen',
     ];
 
     private function resolveGameCurrency(array $product): string
@@ -75,12 +94,10 @@ class WordPressController extends Controller
         $sku  = trim($product['sku'] ?? '');
         $slug = $product['slug'] ?? '';
 
-        if (isset($this->gameCurrencyMap['currencies'][$slug])) {
-            return $this->gameCurrencyMap['currencies'][$slug];
-        }
-
-        if ($sku !== '' && isset($this->gameCurrencyMap['currencies'][$sku])) {
-            return $this->gameCurrencyMap['currencies'][$sku];
+        foreach ($this->gameCurrencyMap as $keyword => $currency) {
+            if (str_contains($slug, $keyword)) {
+                return $currency;
+            }
         }
 
         if ($sku !== '') {
@@ -88,8 +105,8 @@ class WordPressController extends Controller
         }
 
         return strtoupper(Str::slug($product['name'] ?? 'CURRENCY', '_'));
-    }
-
+    }    
+    
     private function resolveGameAmount(array $attrs, array $product): string
     {
         if (!empty($attrs['Amount'])) {
@@ -192,22 +209,25 @@ class WordPressController extends Controller
             $minTotal = $invoiceAmount;
 
             for ($attempt = 0; $attempt < self::MAX_ATTEMPTS; $attempt++) {
-                $shuffled = $allProducts->shuffle();
-                $sel      = [];
-                $cur      = 0.0;
-                $usedKeys = [];
+                $shuffled    = $allProducts->shuffle();
+                $sel         = [];
+                $cur         = 0.0;
+                $usedKeys    = [];
+                $usedGameIds = []; 
 
                 foreach ($shuffled as $p) {
                     $key = $p->id . '-' . $p->bundle_id;
                     if (isset($usedKeys[$key])) continue;
+                    if (in_array($p->id, $usedGameIds)) continue; 
 
                     $price = floatval($p->unit_price);
 
                     if ($cur + $price > $maxTotal) continue;
 
-                    $sel[]          = $p;
-                    $cur           += $price;
-                    $usedKeys[$key] = true;
+                    $sel[]              = $p;
+                    $cur               += $price;
+                    $usedKeys[$key]     = true;
+                    $usedGameIds[]      = $p->id; 
 
                     if ($productCount > 0 && count($sel) === $productCount) break;
                 }
