@@ -64,6 +64,7 @@ class WordPressController extends Controller
         $maxTotal = $invoiceAmount * 1.05;
 
         $site = Website::findOrFail($site_id);
+        DynamicDatabaseService::connect($site); 
 
         $consumerKey = $site->consumer_key;
         $consumerSecret = $site->consumer_secret;
@@ -134,14 +135,13 @@ class WordPressController extends Controller
             $totalPrice = $results->sum('unit_price');
 
             session(['current_amount' => $totalPrice]);
-            $currency = DB::connection($this->connectionType)->table('currencies')->where('status', 1)->first();
             $modelType = $site->businessModel->model_type;
             $tableRows = view("invoice.{$modelType}.random_product_rows", compact('results', 'currency', 'site'))->render();
 
             return response()->json([
                 'tableRows' => $tableRows,
                 'total'     => $totalPrice,
-                'currency'  => $currency,
+                'currency'  => site_currency(),
                 'is_random' => false
             ]);
         }
