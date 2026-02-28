@@ -29,10 +29,10 @@ class WordPressController extends Controller
     private $connectionType;
     private $bundleTable;
 
-    const TOLERANCE_STEP    = 1;
-    const MAX_TOLERANCE     = 30;
-    const MAX_ATTEMPTS      = 25;
-    const HISTORY_LIMIT     = 2;
+    const TOLERANCE_STEP = 1;
+    const MAX_TOLERANCE  = 30;
+    const MAX_ATTEMPTS   = 25;
+    const HISTORY_LIMIT  = 2;
 
     public function __construct()
     {
@@ -42,6 +42,15 @@ class WordPressController extends Controller
         $this->productTable = getProductTable($site->technology);
         $this->connectionType = 'dynamic';
         $this->bundleTable = 'game_sever_based_cost';
+    }
+
+    private function resolveGameCurrency(array $product): string
+    {
+        $sku = trim($product['sku'] ?? '');
+        if ($sku !== '') {
+            return $sku;
+        }
+        return strtoupper(Str::slug($product['name'] ?? 'CURRENCY', '_'));
     }
 
     public function getPriceRange(Request $request)
@@ -92,6 +101,8 @@ class WordPressController extends Controller
             $variations = json_decode($varBody, true);
             if (empty($variations)) continue;
 
+            $gameCurrency = $this->resolveGameCurrency($product);
+
             foreach ($variations as $var) {
                 if (($var['status'] ?? 'publish') !== 'publish') continue;
                 if (($var['stock_status'] ?? 'instock') === 'outofstock') continue;
@@ -102,7 +113,7 @@ class WordPressController extends Controller
                 if ($priceFrom && $priceTo && ($unitPrice < floatval($priceFrom) || $unitPrice > floatval($priceTo))) continue;
 
                 $attrs        = collect($var['attributes'])->pluck('option', 'name')->toArray();
-                $bundleAmount = !empty($attrs) ? array_values($attrs)[0] : '0';
+                $bundleAmount = $attrs['Amount'] ?? (!empty($attrs) ? array_values($attrs)[0] : '0');
 
                 $allProducts->push((object)[
                     'id'                   => $product['id'],
@@ -113,7 +124,7 @@ class WordPressController extends Controller
                     'source'               => 'Random',
                     'can_edit_price'       => 0,
                     'remaining_days'       => 0,
-                    'game_currency'        => $product['sku'] ?? '',
+                    'game_currency'        => $gameCurrency,
                     'game_currency_amount' => $bundleAmount,
                     'game_platform'        => $attrs['Platform'] ?? '',
                     'game_region'          => null,
@@ -384,7 +395,8 @@ class WordPressController extends Controller
         $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
 
-        $products = collect();
+        $products   = collect();
+        $seenIds    = [];
 
         if ($http_code == 200 && $response) {
             $wp_products  = json_decode($response, true);
@@ -432,16 +444,17 @@ class WordPressController extends Controller
                                 $maxPrice       = $price;
                                 $maxVariationId = $var['id'];
                                 $attrs          = collect($var['attributes'])->pluck('option', 'name')->toArray();
-                                $maxAmount      = !empty($attrs) ? array_values($attrs)[0] : '0';
+                                $maxAmount      = $attrs['Amount'] ?? '0';
                             }
                         }
 
-                        if ($maxPrice > 0) {
+                        if ($maxPrice > 0 && !in_array($p['id'], $seenIds)) {
+                            $seenIds[] = $p['id'];
                             $products->push((object)[
                                 'id'                   => $p['id'],
                                 'name'                 => $p['name'],
                                 'slug'                 => $p['slug'],
-                                'game_currency'        => $p['sku'] ?? '',
+                                'game_currency'        => $this->resolveGameCurrency($p),
                                 'game_platform'        => $p['categories'][0]['name'] ?? '',
                                 'game_server_region'   => '',
                                 'game_need_to_capture' => '',
@@ -472,7 +485,7 @@ class WordPressController extends Controller
             'currency'       => site_currency(),
             'site'           => $site,
             'current_amount' => session('current_amount'),
-            'currencyFactor'  => $site->currency_factor ?? 1.0,
+            'currencyFactor' => $site->currency_factor ?? 1.0,
         ])->render();
 
         return response()->json([
@@ -491,8 +504,8 @@ class WordPressController extends Controller
         $consumerKey        = $site->consumer_key;
         $consumerSecret     = $site->consumer_secret;
 
-        $selected  = $request->input('selected_games');
-        $existing  = session('selected_games', []);
+        $selected = $request->input('selected_games');
+        $existing = session('selected_games', []);
 
         $existingAssoc = [];
         $seenKeys      = [];
@@ -552,9 +565,9 @@ class WordPressController extends Controller
                     ->get($woocommerceBaseUrl . $game_id);
 
                 if ($productResponse->successful()) {
-                    $product  = $productResponse->json();
-                    $meta     = collect($product['meta_data'] ?? []);
-                    $getMeta  = fn($key) => $meta->firstWhere('key', $key)['value'] ?? null;
+                    $product = $productResponse->json();
+                    $meta    = collect($product['meta_data'] ?? []);
+                    $getMeta = fn($key) => $meta->firstWhere('key', $key)['value'] ?? null;
 
                     $existingAssoc[] = [
                         'id'                   => (int) $game_id,
@@ -566,7 +579,7 @@ class WordPressController extends Controller
                         'remaining_days'       => 1,
                         'name'                 => $product['name'] ?? 'Unknown',
                         'slug'                 => $product['slug'] ?? '',
-                        'game_currency'        => $product['sku'] ?? '',
+                        'game_currency'        => $this->resolveGameCurrency($product),
                         'game_platform'        => $product['categories'][0]['name'] ?? '',
                         'game_region'          => $getMeta('game_region') ?? '',
                         'game_need_to_capture' => $getMeta('game_need_to_capture') ?? '{}',

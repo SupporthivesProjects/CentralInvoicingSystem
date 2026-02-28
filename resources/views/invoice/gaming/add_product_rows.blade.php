@@ -20,9 +20,8 @@
                 <span class="input-group-text">{{ $product->game_currency ?? '-' }}</span>
                 <input type="text"
                     class="form-control add-currency-amount text-center"
-                    value="{{ $product->game_currency_amount ?? $product->bundle_first_amount ?? '0' }}"
+                    value="0.00"
                     data-product-id="{{ $product->id }}"
-                    data-base-amount="{{ $product->game_currency_amount ?? $product->bundle_first_amount ?? '0' }}"
                     readonly>
                 <input type="hidden"
                     name="custom_products[{{ $product->id }}][bundle_first_amount]"
@@ -35,7 +34,7 @@
                 <span class="input-group-text" data-bs-toggle="tooltip" title="{{ site_currency_code() }}">{{ site_currency() }}</span>
                 <input type="text"
                     class="form-control add-product-price text-center dynamic-input"
-                    value="{{ number_format((float)($product->bundle_first_amount ?? 0), 2) }}"
+                    value="0.00"
                     data-product-id="{{ $product->id }}">
             </div>
         </td>
@@ -61,13 +60,11 @@
 
         function updateTempTotal() {
             let selectedTotal = 0;
-
             $('input[name="add_product_ids[]"]:checked').each(function () {
                 let productId = $(this).val();
                 let price = parseFloat($('.add-product-price[data-product-id="' + productId + '"]').val()) || 0;
                 selectedTotal += price;
             });
-
             let tempTotal = originalAmount + selectedTotal;
             let invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
             syncAllAmountDisplays(tempTotal, invoiceAmount);
@@ -89,14 +86,25 @@
 <script>
     $(document).on('keyup change input', '.add-product-price', function () {
         const $priceInput = $(this);
-        const productId = $priceInput.data('product-id');
+        const productId   = $priceInput.data('product-id');
 
         if (!productId || $priceInput.prop('readonly')) return;
 
-        const $currencyAmountInput = $(`.add-currency-amount[data-product-id="${productId}"]`);
-        const baseAmount = $currencyAmountInput.data('base-amount') || '0';
+        const $hiddenAmountInput = $(`input[name="custom_products[${productId}][bundle_first_amount]"]`);
+        const rawAmount          = $hiddenAmountInput.val().toString().trim();
 
-        $currencyAmountInput.val(baseAmount);
+        const lastChar    = rawAmount.slice(-1);
+        const hasSuffix   = isNaN(lastChar);
+        const modifiedStr = hasSuffix ? rawAmount.slice(0, -1) : rawAmount;
+        const baseAmount  = parseFloat(modifiedStr) || 0;
+
+        const unitPrice      = parseFloat($priceInput.val()) || 0;
+        const currencyFactor = parseFloat(@json($currencyFactor ?? 1.0));
+
+        const calculated   = Math.floor(unitPrice * baseAmount * currencyFactor);
+        const displayValue = hasSuffix ? calculated + lastChar : calculated.toString();
+
+        $(`.add-currency-amount[data-product-id="${productId}"]`).val(displayValue);
     });
 </script>
 
@@ -104,11 +112,11 @@
     $(document).ready(function () {
         $('#add-custom-products').off('click').on('click', function () {
             let selectedProducts = [];
-            let hasValidData = true;
+            let hasValidData     = true;
 
             $('input[name="add_product_ids[]"]:checked').each(function () {
-                let productId = $(this).val();
-                let $row = $('#customize-product-row-' + productId);
+                let productId   = $(this).val();
+                let $row        = $('#customize-product-row-' + productId);
                 let $collapseRow = $('#product-collapse-row-' + productId);
 
                 let unitPrice = parseFloat($row.find('.add-product-price:not([readonly])').val());
@@ -119,15 +127,14 @@
                     return false;
                 }
 
-                let gameName = $row.find('td:nth-child(2)').clone().children().remove().end().text().trim();
-
+                let gameName       = $row.find('td:nth-child(2)').clone().children().remove().end().text().trim();
                 let selectedPlatform = $collapseRow.find('.select-platform').val();
-                let platformFields = {};
-                let missingFields = false;
+                let platformFields   = {};
+                let missingFields    = false;
 
                 if (selectedPlatform) {
                     $collapseRow.find(`.platform-section[data-platform="${selectedPlatform}"] input`).each(function () {
-                        let fieldName = $(this).attr('name');
+                        let fieldName  = $(this).attr('name');
                         let fieldValue = $(this).val();
 
                         if ($(this).prop('required') && (!fieldValue || fieldValue.trim() === '')) {
@@ -147,10 +154,10 @@
                 }
 
                 selectedProducts.push({
-                    id: productId,
+                    id:                   productId,
                     game_currency_amount: document.querySelector(`.add-currency-amount[data-product-id="${productId}"]`).value,
-                    unit_price: unitPrice,
-                    bundle: 'custom'
+                    unit_price:           unitPrice,
+                    bundle:               'custom'
                 });
             });
 
@@ -163,12 +170,12 @@
                 $('#discount_amount').prop('type', 'text').val('Calculating...').prop('readonly', true);
 
                 $.ajax({
-                    url: "{{ route('add.products') }}",
+                    url:  "{{ route('add.products') }}",
                     type: 'POST',
                     data: {
-                        _token: "{{ csrf_token() }}",
+                        _token:        "{{ csrf_token() }}",
                         selected_games: selectedProducts,
-                        site_id: "{{ $site->id ?? '' }}"
+                        site_id:       "{{ $site->id ?? '' }}"
                     },
                     success: function (response) {
                         $('input[name="products[]"]:checked').prop('disabled', true);
@@ -180,7 +187,6 @@
                         $('#product-table-body').html(response.tableRows);
 
                         syncAllAmountDisplays(response.total, invoiceAmount);
-
                         toastr.success('Products added successfully!');
 
                         if (!response.is_random) {
@@ -212,11 +218,11 @@
             return;
         }
 
-        inputField.value = '';
+        inputField.value       = '';
         inputField.placeholder = "Listening to your voice search...";
 
-        const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-        recognition.lang = "en-US";
+        const recognition          = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        recognition.lang           = "en-US";
         recognition.interimResults = false;
 
         recognition.start();
@@ -230,7 +236,7 @@
 
         recognition.onerror = function (event) {
             toastr.error("Voice recognition error: " + event.error);
-            inputField.value = '';
+            inputField.value       = '';
             inputField.style.color = '';
             inputField.placeholder = "Enter or Speak product or category name...";
         };
@@ -244,18 +250,17 @@
 
 <script>
     function validateSelectedProducts() {
-        const selected = document.querySelectorAll('input[name="add_product_ids[]"]:checked');
-        return selected.length > 0;
+        return document.querySelectorAll('input[name="add_product_ids[]"]:checked').length > 0;
     }
 
-    document.getElementById('add-custom-products')?.addEventListener('click', function(e) {
+    document.getElementById('add-custom-products')?.addEventListener('click', function (e) {
         if (!validateSelectedProducts()) {
             e.preventDefault();
         }
     });
 
     document.querySelectorAll('.product-row').forEach(row => {
-        row.addEventListener('click', function(e) {
+        row.addEventListener('click', function (e) {
             if (e.target.closest('input, select, label')) {
                 e.stopPropagation();
             }
