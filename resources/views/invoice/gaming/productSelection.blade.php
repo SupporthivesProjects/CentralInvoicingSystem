@@ -1187,6 +1187,10 @@
                 $('#customize-products-table').DataTable().clear().destroy();
             }
             $('#customize-product-table-body').empty();
+
+            let preservedAmount = parseFloat($('#current_amount').val()) || 0;
+            let invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
+            syncAllAmountDisplays(preservedAmount, invoiceAmount);
         });
     </script>
 
@@ -1226,20 +1230,16 @@
         });
 
         function closeFilters() {
-            let originalAmount = parseFloat(@json(session('current_amount', 0)));
             $('input[name="add_product_ids[]"]').prop('checked', false);
             $('.add-product-price').val('');
-            $('#keywordInput').val('');
-            syncAllAmountDisplays(originalAmount, parseFloat($('#invoice_amount').val()));
+            $('#modalkeywordInput').val('');
         }
 
         function clearFilters() {
-            let originalAmount = parseFloat(@json(session('current_amount', 0)));
             $('input[name="add_product_ids[]"]').prop('checked', false);
             $('.add-product-price').val('');
-            $('#manual_keyword').val('');
+            $('#modalkeywordInput').val('');
             $('#customize-product-table-body').html(getErrorRowHTML('No results found. Try randomizing or use a different keyword.'));
-            syncAllAmountDisplays(originalAmount, parseFloat($('#invoice_amount').val()));
             toastr.info('Filters have been reset.');
         }
     </script>
