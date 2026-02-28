@@ -468,8 +468,8 @@ class WordPressController extends Controller
         $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
 
-        $products   = collect();
-        $seenIds    = [];
+        $products = collect();
+        $seenIds  = [];
 
         if ($http_code == 200 && $response) {
             $wp_products  = json_decode($response, true);
@@ -517,7 +517,7 @@ class WordPressController extends Controller
                                 $maxPrice       = $price;
                                 $maxVariationId = $var['id'];
                                 $attrs          = collect($var['attributes'])->pluck('option', 'name')->toArray();
-                                $maxAmount = $this->resolveGameAmount($attrs, $p, $var);
+                                $maxAmount      = $this->resolveGameAmount($attrs, $p, $var);
                             }
                         }
 
@@ -531,7 +531,7 @@ class WordPressController extends Controller
                                 'game_platform'        => $p['categories'][0]['name'] ?? '',
                                 'game_server_region'   => '',
                                 'game_need_to_capture' => '',
-                                'bundle_first_amount'  => $maxPrice,
+                                'bundle_first_amount'  => $maxAmount,
                                 'game_currency_amount' => $maxAmount,
                                 'bundle_id'            => $maxVariationId,
                             ]);
