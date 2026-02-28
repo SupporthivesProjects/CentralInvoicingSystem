@@ -52,6 +52,8 @@ Route::middleware(['auth', 'role:admin,staff,developer'])->group(function () {
     Route::patch('/businessmodel/{id}', [WebsiteController::class, 'updateBusinessModel'])->name('businessmodel.update');
     Route::delete('/businessmodel/{id}', [WebsiteController::class, 'deleteBusinessModel'])->name('businessmodel.delete');
 
+
+    Route::get('/game-api/{site_id}', [WebsiteController::class, 'gameSiteAPI'])->name('test.game.api');
     Route::get('/website/create', [WebsiteController::class, 'addwebsite'])->name('website.create');
     Route::post('/website', [WebsiteController::class, 'createWebsite'])->name('website.store');
     Route::get('/available-websites', [WebsiteController::class, 'connectedwebsites'])->name('connectedwebsites');

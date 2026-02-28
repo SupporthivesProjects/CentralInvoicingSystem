@@ -32,6 +32,216 @@ class WebsiteController extends Controller
     }
 
 
+    public function gameSiteAPI($site_id)
+    {
+        $site           = Website::findOrFail($site_id);
+        $consumerKey    = $site->consumer_key;
+        $consumerSecret = $site->consumer_secret;
+        $baseUrl        = rtrim($site->site_link, '/') . '/wp-json/wc/v3/products';
+        $url            = $baseUrl . '?per_page=100&status=publish&type=variable';
+
+        $response = Http::withBasicAuth($consumerKey, $consumerSecret)->get($url);
+
+        if ($response->failed()) {
+            return response()->json(['error' => 'Failed to fetch products'], 500);
+        }
+
+        $products = $response->json();
+
+        // Fetch variations for each product
+        $mh      = curl_multi_init();
+        $handles = [];
+
+        foreach ($products as $index => $product) {
+            $varUrl = $baseUrl . '/' . $product['id'] . '/variations?per_page=100&status=publish';
+            $ch     = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $varUrl);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_USERPWD, $consumerKey . ':' . $consumerSecret);
+            curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+            curl_multi_add_handle($mh, $ch);
+            $handles[$index] = ['handle' => $ch, 'product' => $product];
+        }
+
+        $running = null;
+        do {
+            curl_multi_exec($mh, $running);
+            curl_multi_select($mh, 5.0);
+        } while ($running > 0);
+
+        $variationsMap = [];
+        foreach ($handles as $index => $data) {
+            $ch      = $data['handle'];
+            $product = $data['product'];
+            $body    = curl_multi_getcontent($ch);
+            $code    = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_multi_remove_handle($mh, $ch);
+            curl_close($ch);
+
+            $variationsMap[$product['id']] = ($code === 200 && $body) ? json_decode($body, true) : [];
+        }
+        curl_multi_close($mh);
+
+        $html = '<!DOCTYPE html>
+        <html>
+        <head>
+            <title>Product Debug - Site ' . $site_id . '</title>
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+            <style>
+                pre  { font-size: 11px; max-height: 200px; overflow: auto; background: #f8f9fa; padding: 8px; }
+                .meta-table { font-size: 12px; }
+                .var-table  { font-size: 12px; }
+                .badge      { font-size: 11px; }
+            </style>
+        </head>
+        <body class="p-3">
+        <div class="container-fluid">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <h4 class="mb-0">Product Debug Panel</h4>
+                    <small class="text-muted">
+                        Site: <strong>' . $site->site_name . '</strong> |
+                        URL: <a href="' . $site->site_link . '" target="_blank">' . $site->site_link . '</a> |
+                        Site ID: <strong>' . $site_id . '</strong> |
+                        Total Products: <strong>' . count($products) . '</strong>
+                    </small>
+                </div>
+            </div>';
+
+        foreach ($products as $product) {
+            $variations  = $variationsMap[$product['id']] ?? [];
+            $varCount    = count($variations);
+
+            $attributes = '';
+            foreach ($product['attributes'] ?? [] as $attr) {
+                $attributes .= '<tr>
+                    <td>' . $attr['name'] . '</td>
+                    <td>' . ($attr['variation'] ? '<span class="badge bg-success">Yes</span>' : '<span class="badge bg-secondary">No</span>') . '</td>
+                    <td>' . implode(', ', $attr['options'] ?? []) . '</td>
+                </tr>';
+            }
+
+            $metaRows = '';
+            foreach ($product['meta_data'] ?? [] as $meta) {
+                if (empty($meta['value']) || str_starts_with($meta['key'], '_')) continue;
+                $value = is_array($meta['value'])
+                    ? '<pre>' . json_encode($meta['value'], JSON_PRETTY_PRINT) . '</pre>'
+                    : htmlspecialchars($meta['value']);
+                $metaRows .= '<tr><td>' . htmlspecialchars($meta['key']) . '</td><td>' . $value . '</td></tr>';
+            }
+
+            $varRows = '';
+            foreach ($variations as $var) {
+                $varAttrs = collect($var['attributes'])->pluck('option', 'name')->toArray();
+                $varRows .= '<tr>
+                    <td>' . $var['id'] . '</td>
+                    <td>' . ($var['sku'] ?? '-') . '</td>
+                    <td>' . ($var['price'] ?? '-') . '</td>
+                    <td>' . ($var['regular_price'] ?? '-') . '</td>
+                    <td>' . ($var['sale_price'] ?? '-') . '</td>
+                    <td>' . ($var['stock_status'] ?? '-') . '</td>
+                    <td>' . ($var['status'] ?? '-') . '</td>
+                    <td><pre>' . json_encode($varAttrs, JSON_PRETTY_PRINT) . '</pre></td>
+                    <td>' . ($var['name'] ?? '-') . '</td>
+                </tr>';
+            }
+
+            $html .= '
+            <div class="card mb-3 shadow-sm">
+                <div class="card-header d-flex justify-content-between align-items-center py-2">
+                    <strong>' . htmlspecialchars($product['name']) . '</strong>
+                    <div class="d-flex gap-1 flex-wrap justify-content-end">
+                        <span class="badge bg-secondary">ID: ' . $product['id'] . '</span>
+                        <span class="badge bg-info text-dark">Slug: ' . $product['slug'] . '</span>
+                        <span class="badge bg-dark">SKU: ' . ($product['sku'] ?? '-') . '</span>
+                        <span class="badge bg-primary">Type: ' . $product['type'] . '</span>
+                        <span class="badge bg-warning text-dark">Status: ' . $product['status'] . '</span>
+                        <span class="badge bg-success">Variations: ' . $varCount . '</span>
+                        <span class="badge bg-danger">Price: ' . ($product['price'] ?? '-') . '</span>
+                        <button class="btn btn-sm btn-outline-secondary py-0"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#product-' . $product['id'] . '">
+                            + Details
+                        </button>
+                    </div>
+                </div>
+
+                <div class="collapse" id="product-' . $product['id'] . '">
+                    <div class="card-body">
+
+                        <ul class="nav nav-tabs mb-3" id="tabs-' . $product['id'] . '">
+                            <li class="nav-item">
+                                <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#attrs-' . $product['id'] . '">Attributes</button>
+                            </li>
+                            <li class="nav-item">
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#meta-' . $product['id'] . '">Meta Data</button>
+                            </li>
+                            <li class="nav-item">
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#vars-' . $product['id'] . '">Variations (' . $varCount . ')</button>
+                            </li>
+                            <li class="nav-item">
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#raw-' . $product['id'] . '">Raw JSON</button>
+                            </li>
+                        </ul>
+
+                        <div class="tab-content">
+
+                            <div class="tab-pane fade show active" id="attrs-' . $product['id'] . '">
+                                <table class="table table-bordered table-sm meta-table">
+                                    <thead class="table-light"><tr><th>Name</th><th>Variation</th><th>Values</th></tr></thead>
+                                    <tbody>' . ($attributes ?: '<tr><td colspan="3" class="text-muted">No attributes</td></tr>') . '</tbody>
+                                </table>
+                            </div>
+
+                            <div class="tab-pane fade" id="meta-' . $product['id'] . '">
+                                <table class="table table-bordered table-sm meta-table">
+                                    <thead class="table-light"><tr><th>Key</th><th>Value</th></tr></thead>
+                                    <tbody>' . ($metaRows ?: '<tr><td colspan="2" class="text-muted">No meta data</td></tr>') . '</tbody>
+                                </table>
+                            </div>
+
+                            <div class="tab-pane fade" id="vars-' . $product['id'] . '">
+                                <div style="overflow-x:auto">
+                                    <table class="table table-bordered table-sm var-table">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Var ID</th>
+                                                <th>SKU</th>
+                                                <th>Price</th>
+                                                <th>Regular</th>
+                                                <th>Sale</th>
+                                                <th>Stock</th>
+                                                <th>Status</th>
+                                                <th>Attributes</th>
+                                                <th>Name</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>' . ($varRows ?: '<tr><td colspan="9" class="text-muted">No variations</td></tr>') . '</tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="raw-' . $product['id'] . '">
+                                <pre>' . json_encode($product, JSON_PRETTY_PRINT) . '</pre>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>';
+        }
+
+        $html .= '
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        </body>
+        </html>';
+
+        return response($html)->header('Content-Type', 'text/html');
+    }
+
+
 
     public function addBusinessModel()
     {
