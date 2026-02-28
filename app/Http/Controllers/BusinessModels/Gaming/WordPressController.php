@@ -48,12 +48,13 @@ class WordPressController extends Controller
 
     private array $gameCurrencyMap = [
         'nba'                   => 'Gold',
-        'warcraft'              => 'WOW Gold',
+        'warcraft'              => 'Gold',
         'final-fantasy'         => 'Gil',
         'ffxiv'                 => 'Gil',
         'dc-universe'           => 'DCUO Cash',
         'dcuo'                  => 'DCUO Cash',
         'elder-scrolls'         => 'ESO Gold',
+        'clash' => 'Gold',
         'guild-wars'            => 'Gold',
         'star-wars'             => 'SWTO Credits',
         'swtor'                 => 'SWTO Credits',
@@ -81,7 +82,7 @@ class WordPressController extends Controller
         'black-desert'          => 'Silver',
         'eve'                   => 'ISK',
         'albion'                => 'Silver',
-        'tibia'                 => 'Gold Coins',
+        'tibia'                 => 'Gold',
         'maple'                 => 'Mesos',
         'blade'                 => 'Gold',
         'lineage'               => 'Adena',
@@ -91,9 +92,9 @@ class WordPressController extends Controller
         'arenaofvalor'     => 'Vouchers',
         'valor'            => 'Vouchers',
         'aov'              => 'Vouchers',
-        'marvel' => 'Lattice',
-        'runeterra'         => 'Coins',
-        'legendsofruneterra' => 'Coins',
+        'marvel' => 'Gold',
+        'runeterra'         => 'Gold',
+        'legendsofruneterra' => 'Gold',
     ];
 
     private function resolveGameCurrency(array $product): string
