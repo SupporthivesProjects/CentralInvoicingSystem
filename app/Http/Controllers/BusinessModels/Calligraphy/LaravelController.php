@@ -1072,24 +1072,24 @@ class LaravelController extends Controller
         $sortUnitPrice = $request->input('sort_unit_price', 'asc');
         $site = Website::findOrFail($site_id);
         DynamicDatabaseService::connect($site);
-
+    
         if (!$hasPriceRange) {
             return response()->json([
                 'tableRows' => '<tr><td colspan="6" class="text-center text-muted">Please enter a price range to search.</td></tr>'
             ]);
         }
-
+    
         $query = DB::connection($this->connectionType)
             ->table($this->productTable)
             ->select('products.id', 'products.category_id', 'products.name', 'products.slug')
             ->where('products.published', 1);
-
+    
         if (!empty($keyword)) {
             $normalizedSearch = strtolower(str_replace(['-', '_', ' '], '', $keyword));
-
+    
             $query->where(function ($q) use ($normalizedSearch) {
                 $q->whereRaw("LOWER(REPLACE(REPLACE(REPLACE(products.name, '-', ''), '_', ''), ' ', '')) LIKE ?", ["%{$normalizedSearch}%"]);
-
+    
                 $q->orWhereIn('products.category_id', function ($sub) use ($normalizedSearch) {
                     $sub->select('id')
                         ->from('categories')
@@ -1097,81 +1097,95 @@ class LaravelController extends Controller
                 });
             });
         }
-
+    
         $readyProducts = session('ready_products', []);
         $readyProductIds = collect($readyProducts)->pluck('id')->toArray();
-
+    
         if (count($readyProductIds) > 0) {
             $query->whereNotIn('products.id', $readyProductIds);
         }
-
+    
         $allProductIds = (clone $query)->pluck('products.id')->toArray();
-
+    
         $personalizationOptions = DB::connection($this->connectionType)->table('personalization_options')
             ->whereIn('product_id', $allProductIds)
             ->get()
             ->groupBy('product_id');
-
+    
         $filteredProductIds = collect($allProductIds)->filter(function ($id) use ($personalizationOptions, $request) {
             if (!isset($personalizationOptions[$id]) || $personalizationOptions[$id]->isEmpty()) {
                 return false;
             }
-            $price = floatval($personalizationOptions[$id]->first()->price);
-            return $price >= floatval($request->price_from) && $price <= floatval($request->price_to);
+            return $personalizationOptions[$id]->contains(function ($opt) use ($request) {
+                $price = floatval($opt->price);
+                return $price >= floatval($request->price_from) && $price <= floatval($request->price_to);
+            });
         });
-
-        if ($sortUnitPrice === 'desc') {
-            $filteredProductIds = $filteredProductIds->sortByDesc(function ($id) use ($personalizationOptions) {
-                return floatval($personalizationOptions[$id]->first()->price);
-            });
-        } else {
-            $filteredProductIds = $filteredProductIds->sortBy(function ($id) use ($personalizationOptions) {
-                return floatval($personalizationOptions[$id]->first()->price);
-            });
+    
+        $flatItems = [];
+        foreach ($filteredProductIds as $id) {
+            foreach ($personalizationOptions[$id] as $option) {
+                $price = floatval($option->price);
+                if ($price >= floatval($request->price_from) && $price <= floatval($request->price_to)) {
+                    $flatItems[] = ['product_id' => $id, 'option' => $option];
+                }
+            }
         }
-
-        $filteredProductIds = $filteredProductIds->values();
-        $totalCount = $filteredProductIds->count();
-
+    
+        $flatItems = collect($flatItems);
+    
+        if ($sortUnitPrice === 'desc') {
+            $flatItems = $flatItems->sortByDesc(fn($item) => floatval($item['option']->price));
+        } else {
+            $flatItems = $flatItems->sortBy(fn($item) => floatval($item['option']->price));
+        }
+    
+        $flatItems = $flatItems->values();
+        $totalCount = $flatItems->count();
+    
         $page = $request->input('page', 1);
         $perPage = 10;
         $offset = ($page - 1) * $perPage;
-        $pagedIds = $filteredProductIds->slice($offset, $perPage)->values()->toArray();
-
-        if (empty($pagedIds)) {
+        $pagedItems = $flatItems->slice($offset, $perPage)->values();
+    
+        if ($pagedItems->isEmpty()) {
             return response()->json([
                 'tableRows' => '<tr><td colspan="7" class="text-center text-muted"> No results found. Try randomizing or use a different keyword.</td></tr>'
             ]);
         }
-
+    
+        $pagedProductIds = $pagedItems->pluck('product_id')->unique()->toArray();
+    
         $rawProducts = DB::connection($this->connectionType)
             ->table($this->productTable)
             ->select('products.id', 'products.category_id', 'products.name', 'products.slug')
-            ->whereIn('products.id', $pagedIds)
+            ->whereIn('products.id', $pagedProductIds)
             ->get()
             ->keyBy('id');
-
-        $products = collect($pagedIds)->map(function ($id) use ($rawProducts) {
-            return $rawProducts[$id] ?? null;
+    
+        $products = $pagedItems->map(function ($item) use ($rawProducts) {
+            $product = clone ($rawProducts[$item['product_id']] ?? null);
+            if (!$product) return null;
+            $option = $item['option'];
+            $product->unit_price = floatval($option->price);
+            $product->personalization_label = $option->label;
+            $product->personalization_option_id = $option->id;
+            return $product;
         })->filter();
-
+    
         $totalPages = ceil($totalCount / $perPage);
         $paginationPages = $this->smartPagination($page, $totalPages);
-
-        $products->each(function ($product) use ($personalizationOptions) {
-            $option = isset($personalizationOptions[$product->id]) ? $personalizationOptions[$product->id]->first() : null;
-            $product->unit_price = $option ? floatval($option->price) : 0;
-            $product->personalization_label = $option ? $option->label : null;
-            $product->personalization_option_id = $option ? $option->id : null;
+    
+        $products->each(function ($product) {
             $product->category_name = DB::connection($this->connectionType)->table('categories')->where('id', $product->category_id)->value('name') ?? 'unknown';
         });
-
+    
         $products->each(function ($product) use ($site_id) {
             $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
                 ->where('product_id', $product->id)
                 ->orderByDesc('last_price_changed')
                 ->first();
-
+    
             if ($lastUpdate) {
                 $lastPriceChanged = Carbon::parse($lastUpdate->last_price_changed);
                 $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
@@ -1183,13 +1197,13 @@ class LaravelController extends Controller
                 $product->remaining_days = 0;
             }
         });
-
+    
         $modelType = $site->businessModel->model_type;
         $random_amount = session('current_amount', 0);
-
+    
         $tableRows = view("invoice.{$modelType}.add_product_rows", ['products' => $products, 'site' => $site, 'random_amount' => $random_amount])->render();
         $paginationHtml = view("invoice.{$modelType}.pagination", ['totalPages' => $totalPages, 'paginationPages' => $paginationPages, 'currentPage' => $page])->render();
-
+    
         return response()->json(['tableRows' => $tableRows, 'paginationHtml' => $paginationHtml, 'random_amount' => $random_amount, 'currentPage' => $page]);
     }
 
