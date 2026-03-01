@@ -1176,11 +1176,15 @@ class LaravelController extends Controller
         $totalPages = ceil($totalCount / $perPage);
         $paginationPages = $this->smartPagination($page, $totalPages);
     
-        $products->each(function ($product) {
+        $products->each(function (&$product) use ($personalizationOptions) {
+            $product->all_personalization_options = $personalizationOptions[$product->id] ?? collect();
+        });
+    
+        $products->each(function (&$product) {
             $product->category_name = DB::connection($this->connectionType)->table('categories')->where('id', $product->category_id)->value('name') ?? 'unknown';
         });
     
-        $products->each(function ($product) use ($site_id) {
+        $products->each(function (&$product) use ($site_id) {
             $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
                 ->where('product_id', $product->id)
                 ->orderByDesc('last_price_changed')
@@ -1206,31 +1210,31 @@ class LaravelController extends Controller
     
         return response()->json(['tableRows' => $tableRows, 'paginationHtml' => $paginationHtml, 'random_amount' => $random_amount, 'currentPage' => $page]);
     }
-
+    
     private function smartPagination($currentPage, $totalPages)
     {
         $pages = [];
         $pages[] = 1;
-
+    
         if ($currentPage > 4) {
             $pages[] = '...';
         }
-
+    
         $start = max(2, $currentPage - 3);
         $end = min($totalPages - 1, $currentPage + 3);
-
+    
         for ($i = $start; $i <= $end; $i++) {
             $pages[] = $i;
         }
-
+    
         if ($currentPage < $totalPages - 3) {
             $pages[] = '...';
         }
-
+    
         if ($totalPages > 1) {
             $pages[] = $totalPages;
         }
-
+    
         return array_values(array_unique($pages));
     }
 

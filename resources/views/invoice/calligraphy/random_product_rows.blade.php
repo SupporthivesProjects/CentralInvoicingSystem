@@ -1,5 +1,6 @@
 @forelse($products as $index => $product)
-    <tr class="product-row">
+    <tr class="product-row" 
+        data-personalization-option-id="{{ $product->personalization_option_id }}">
         <td class="text-center">{{ $product->id }}</td>
         <td>
             {{ $product->name }}
@@ -30,7 +31,9 @@
                     title="{{ site_currency_code() }}">{{ site_currency() }}</span>
                 <input style="display: none;" class="form-check-input border narayan-checkbox border-1 border-primary"
                     type="checkbox" name="product_ids[]"
-                    data-unit_price="{{ number_format($product->unit_price, 2, '.', '') }}" value="{{ $product->id }}"
+                    data-unit_price="{{ number_format($product->unit_price, 2, '.', '') }}" 
+                    data-personalization-option-id="{{ $product->personalization_option_id }}"
+                    value="{{ $product->id }}"
                     checked>
                 <input type="text" class="form-control product-price text-center"
                     value="{{ number_format($product->unit_price, 2, '.', '') }}"
@@ -79,12 +82,18 @@
             var $select = $(this);
             var selectedOption = $select.find('option:selected');
             var newPrice = parseFloat(selectedOption.data('price'));
+            var newOptionId = $select.val();
 
             var $row = $select.closest('tr.product-row');
             var $priceInput = $row.find('.product-price');
+            var $checkbox = $row.find('.narayan-checkbox');
             var $unitPriceCell = $row.find('td').eq(2);
             var $urgencySelect = $row.find('.urgency-select');
             var currencySymbol = @json(site_currency());
+
+            $row.data('personalization-option-id', newOptionId);
+            $checkbox.data('personalization-option-id', newOptionId);
+            $checkbox.attr('data-personalization-option-id', newOptionId);
 
             $urgencySelect.data('base-price', newPrice.toFixed(2));
             $urgencySelect.val('standard');
@@ -234,7 +243,6 @@
 
     $('.urgency-select').each(function() {
         var autoUrgent = $(this).data('auto-urgent');
-        var val = $(this).find('option[selected]').val() || $(this).val();
         if (autoUrgent === 'true') {
             applyUrgency($(this), 'urgent');
         }
