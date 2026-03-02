@@ -105,7 +105,7 @@
         const currencyFactor = parseFloat(@json($currencyFactor ?? 1.0));
         const bundleRate     = parseFloat($(`input[name="custom_products[${productId}][bundle_rate]"]`).val()) || 0;
 
-        const raw = unitPrice * bundleRate;
+        const raw = parseFloat((unitPrice * bundleRate).toFixed(2));
 
         function smartRound(value) {
             if (value >= 1_000_000) return Math.round(value / 1_000_000) * 1_000_000;
