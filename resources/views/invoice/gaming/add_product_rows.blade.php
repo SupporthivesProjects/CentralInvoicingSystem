@@ -106,9 +106,21 @@
         const bundleRate     = parseFloat($(`input[name="custom_products[${productId}][bundle_rate]"]`).val()) || 0;
 
         const raw = unitPrice * bundleRate;
+
+        function smartRound(value) {
+            if (value >= 1_000_000) return Math.round(value / 1_000_000) * 1_000_000;
+            if (value >= 100_000)   return Math.round(value / 100_000) * 100_000;
+            if (value >= 10_000)    return Math.round(value / 10_000) * 10_000;
+            if (value >= 1_000)     return Math.round(value / 1_000) * 1_000;
+            if (value >= 100)       return Math.round(value / 100) * 100;
+            return Math.round(value);
+        }
+
+        // WordPress
         const calculated = bundleRate > 0
-        ? Math.round(raw / 100) * 100        // WordPress calculation to round to nearest 100
-        : Math.floor(unitPrice * baseAmount * currencyFactor);  // Laravel calculation
+            ? smartRound(raw)
+            // Laravel
+            : Math.floor(unitPrice * baseAmount * currencyFactor);
 
         const displayValue = hasSuffix ? calculated + lastChar : calculated.toString();
 
