@@ -1135,15 +1135,13 @@ class LaravelController extends Controller
         $flatItems = collect($flatItems);
     
         if ($sortUnitPrice === 'desc') {
-            $flatItems = $flatItems->sortBy([
-                fn($a, $b) => $a['product_id'] <=> $b['product_id'],
-                fn($a, $b) => $b['option']->price <=> $a['option']->price,
-            ]);
+            $filteredProductIds = $filteredProductIds->sortByDesc(function ($id) use ($personalizationOptions) {
+                return floatval($personalizationOptions[$id]->first()->price);
+            });
         } else {
-            $flatItems = $flatItems->sortBy([
-                fn($a, $b) => $a['product_id'] <=> $b['product_id'],
-                fn($a, $b) => $a['option']->price <=> $b['option']->price,
-            ]);
+            $filteredProductIds = $filteredProductIds->sortBy(function ($id) use ($personalizationOptions) {
+                return floatval($personalizationOptions[$id]->first()->price);
+            });
         }
     
         $flatItems = $flatItems->values();
