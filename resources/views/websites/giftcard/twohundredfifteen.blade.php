@@ -77,7 +77,7 @@
                                 style="border-collapse: collapse; color: white;">
                                 <!-- Table Header -->
                                 <tr
-                                    style="color: #FFD700; font-weight: bold; text-align: left; border-bottom: 2px solid #FFD700; font-size: 11px;">
+                                    style="color: #FFD700; font-weight: bold; text-align: left; border-bottom: 2px solid #FFD700; font-size: 15px;">
                                     <td>ITEM DESCRIPTION</td>
                                     <td style="text-align: right; width: 90px;">UNIT PRICE</td>
                                     <td style="text-align: center;">QTY</td>
@@ -86,7 +86,7 @@
 
                                 <!-- Table Rows -->
                                 @foreach($products as $product)
-                                <tr style="font-size: 10px;">
+                                <tr style="font-size: 14px;">
                                     <td>{{ $product->name }}</td>
                                     <td style="text-align: right;">{{ site_currency() . number_format($product->unit_price, 2) }}</td>
                                     <td style="text-align: center;">1</td>
@@ -98,7 +98,7 @@
                             </table>
                             <!-- Subtotal, Discount, Total -->
                             <table width="30%" align="right" cellspacing="0" cellpadding="2"
-                                style="color: #ffffff; font-size: 10px;">
+                                style="color: #ffffff; font-size: 14px;">
 
                                 <tr>
                                     <td
