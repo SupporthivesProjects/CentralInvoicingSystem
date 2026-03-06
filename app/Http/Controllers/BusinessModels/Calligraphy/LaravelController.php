@@ -150,14 +150,14 @@ class LaravelController extends Controller
         $bestMatch = collect($result['products']);
         $bestTotal = $bestMatch->sum('unit_price');
         $gap = $invoiceAmount - $bestTotal;
-        // $autoUrgent = $bestTotal > 0
-        //     && $invoiceAmount > 0
-        //     && $gap > 0
-        //     && ($gap / $invoiceAmount) <= 0.40
-        //     && $gap <= ($bestMatch->count() * $urgencyFee)
-        //     && ($bestTotal + ($bestMatch->count() * $urgencyFee)) >= $invoiceAmount;
-        
+
         $autoUrgent = false;
+
+        $discountAmount = 0;
+        if ($bestTotal > $invoiceAmount) {
+            $discountAmount = round($bestTotal - $invoiceAmount, 2);
+        }
+
         $combinationKey = $bestMatch->pluck('id')->sort()->join('-');
         $lastUsedCombinations[] = $combinationKey;
         $lastUsedCombinations = array_slice($lastUsedCombinations, -5);
@@ -211,7 +211,8 @@ class LaravelController extends Controller
 
         return response()->json([
             'tableRows' => $tableRows,
-            'total' => $bestTotal
+            'total' => $bestTotal,
+            'discount' => $discountAmount,
         ]);
     }
 
@@ -335,6 +336,14 @@ class LaravelController extends Controller
             $result = $this->tryFindExactCount($products, $priceMap, $sortedIndices, $minTarget, $maxTarget, $count, $totalProducts);
 
             if ($result !== null && $result['total'] >= $target && count($result['products']) === $count) {
+                if (!empty($lastUsedCombinations)) {
+                    $comboIds = array_map(fn($p) => $p->id, $result['products']);
+                    sort($comboIds);
+                    $currentCombo = implode('-', $comboIds);
+                    if (in_array($currentCombo, $lastUsedCombinations)) {
+                        continue;
+                    }
+                }
                 return $result;
             }
         }
