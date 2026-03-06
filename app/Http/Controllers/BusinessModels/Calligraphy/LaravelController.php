@@ -275,7 +275,6 @@ class LaravelController extends Controller
                                 continue;
                             }
                         }
-
                         return ['products' => [$products[$bestIdx]], 'total' => $priceMap[$bestIdx]];
                     }
                 } else if ($count == 2) {
@@ -318,13 +317,28 @@ class LaravelController extends Controller
                                 continue;
                             }
                         }
-
                         return [
                             'products' => [$products[$bestPair[0]], $products[$bestPair[1]]],
                             'total' => $bestTotal
                         ];
                     }
                 }
+            }
+
+            if ($count == 1) {
+                foreach ($sortedIndices as $idx) {
+                    $currentCombo = (string)$products[$idx]->id;
+                    if (!in_array($currentCombo, $lastUsedCombinations)) {
+                        return ['products' => [$products[$idx]], 'total' => $priceMap[$idx]];
+                    }
+                }
+                $lastUsed = end($lastUsedCombinations);
+                foreach ($sortedIndices as $idx) {
+                    if ((string)$products[$idx]->id != $lastUsed) {
+                        return ['products' => [$products[$idx]], 'total' => $priceMap[$idx]];
+                    }
+                }
+                return ['products' => [$products[$sortedIndices[0]]], 'total' => $priceMap[$sortedIndices[0]]];
             }
         }
 
