@@ -278,9 +278,7 @@ class LaravelController extends Controller
                         return ['products' => [$products[$bestIdx]], 'total' => $priceMap[$bestIdx]];
                     }
                 } else if ($count == 2) {
-                    if ($percentage > 0 && rand(0, 1) == 1) {
-                        continue;
-                    }
+                    
                     $bestPair = null;
                     $bestTotal = 0;
                     $bestDiff = PHP_INT_MAX;
