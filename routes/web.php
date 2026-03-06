@@ -54,6 +54,8 @@ Route::middleware(['auth', 'role:admin,staff,developer'])->group(function () {
 
 
     Route::get('/game-api/{site_id}', [WebsiteController::class, 'gameSiteAPI'])->name('test.game.api');
+    Route::post('/giftcard-api/{site_id}', [WebsiteController::class, 'giftCardAPI'])->name('test.giftcard.api');
+
     Route::get('/website/create', [WebsiteController::class, 'addwebsite'])->name('website.create');
     Route::post('/website', [WebsiteController::class, 'createWebsite'])->name('website.store');
     Route::get('/available-websites', [WebsiteController::class, 'connectedwebsites'])->name('connectedwebsites');
