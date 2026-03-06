@@ -61,8 +61,7 @@ class WordPressController extends Controller
             return $variationTitle;
         }
 
-        $prefix = explode('_', $this->productTable)[0] ?? 'wp';
-        $postMetaTable = $prefix . '_postmeta';
+        $postMetaTable = str_replace('posts', 'postmeta', $this->productTable);
 
         $attributes = DB::connection($connection)
             ->table($postMetaTable)
