@@ -1169,18 +1169,23 @@ class WordPressController extends Controller
         $connection = $this->connectionType;
 
         $query = DB::connection($connection)
-            ->table($postsTable)
-            ->join($priceTable, "$postsTable.ID", '=', "$priceTable.product_id")
+            ->table("$postsTable as parent")
+            ->join("$postsTable as variation", function ($join) {
+                $join->on('variation.post_parent', '=', 'parent.ID')
+                    ->where('variation.post_type', '=', 'product_variation')
+                    ->where('variation.post_status', '=', 'publish');
+            })
+            ->join($priceTable, "$priceTable.product_id", '=', 'variation.ID')
             ->select([
-                "$postsTable.ID as id",
-                "$priceTable.product_id as variation_id",
-                "$postsTable.post_title as name",
-                "$postsTable.post_excerpt as description",
-                "$postsTable.post_name as slug",
+                'parent.ID as id',
+                'variation.ID as variation_id',
+                'parent.post_title as name',
+                'parent.post_excerpt as description',
+                'parent.post_name as slug',
                 "$priceTable.min_price as unit_price"
             ])
-            ->where("$postsTable.post_status", 'publish')
-            ->where("$postsTable.post_type", 'product')
+            ->where('parent.post_status', 'publish')
+            ->where('parent.post_type', 'product')
             ->where("$priceTable.min_price", '>', 0);
 
         $query->whereBetween("$priceTable.min_price", [
@@ -1194,14 +1199,14 @@ class WordPressController extends Controller
 
         if (!empty($keyword)) {
             $normalizedSearch = strtolower(str_replace(['-', '_', ' '], '', $keyword));
-            $query->whereRaw("LOWER(REPLACE(REPLACE(REPLACE($postsTable.post_title, '-', ''), '_', ''), ' ', '')) LIKE ?", ["%{$normalizedSearch}%"]);
+            $query->whereRaw("LOWER(REPLACE(REPLACE(REPLACE(parent.post_title, '-', ''), '_', ''), ' ', '')) LIKE ?", ["%{$normalizedSearch}%"]);
         }
 
         $readyProducts   = session('ready_products', []);
         $readyProductIds = collect($readyProducts)->pluck('id')->toArray();
 
         if (!empty($readyProductIds)) {
-            $query->whereNotIn("$postsTable.ID", $readyProductIds);
+            $query->whereNotIn('variation.ID', $readyProductIds);
         }
 
         $totalCount = $query->count();
@@ -1219,13 +1224,6 @@ class WordPressController extends Controller
 
         $products = $products->map(function ($product) use ($site_id, $connection, $postsTable) {
             $product->category_name = '-';
-
-            $product->variation_id = DB::connection($connection)
-                ->table($postsTable)
-                ->where('post_parent', $product->id)
-                ->where('post_type', 'product_variation')
-                ->where('post_status', 'publish')
-                ->value('ID') ?? 0;
 
             $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
                 ->where('product_id', $product->id)
