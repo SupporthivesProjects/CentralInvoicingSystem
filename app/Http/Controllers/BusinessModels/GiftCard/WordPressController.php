@@ -1510,8 +1510,10 @@ class WordPressController extends Controller
         $site_id = session('customer.site_id');
         $site    = Website::findOrFail($site_id);
 
-        $connection = $this->connectionType;
-        $priceTable = $this->productPriceTable;
+        $connection    = $this->connectionType;
+        $priceTable    = $this->productPriceTable;
+        $postMetaTable = str_replace('posts', 'postmeta', $this->productTable);
+        $optionsTable  = str_replace('posts', 'options', $this->productTable);
 
         $consumerKey    = $site->consumer_key;
         $consumerSecret = $site->consumer_secret;
@@ -1582,10 +1584,6 @@ class WordPressController extends Controller
                     continue;
                 }
 
-                $prefix        = explode('_', $priceTable)[0] ?? 'wp';
-                $postMetaTable = $prefix . '_postmeta';
-                $optionsTable  = $prefix . '_options';
-
                 DB::connection($connection)->table($optionsTable)
                     ->where('option_name', 'LIKE', '%_transient_%')
                     ->delete();
@@ -1602,6 +1600,14 @@ class WordPressController extends Controller
                         '_wc_review_count',
                         '_product_version'
                     ])
+                    ->delete();
+
+                DB::connection($connection)->table($postMetaTable)
+                    ->where('post_id', $variation_id > 0 ? $variation_id : $product_id)
+                    ->where('meta_key', '_price')
+                    ->orderBy('meta_id', 'asc')
+                    ->skip(1)
+                    ->take(PHP_INT_MAX)
                     ->delete();
 
                 ProductPriceHistory::create([
