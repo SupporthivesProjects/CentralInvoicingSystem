@@ -61,8 +61,7 @@ class WordPressController extends Controller
             return $variationTitle;
         }
 
-        $prefix = explode('_', $this->productTable)[0] ?? 'wp';
-        $postMetaTable = $prefix . '_postmeta';
+        $postMetaTable = str_replace('posts', 'postmeta', $this->productTable);
 
         $attributes = DB::connection($connection)
             ->table($postMetaTable)
@@ -1148,7 +1147,7 @@ class WordPressController extends Controller
         ]);
     }
 
-     public function filterProducts(Request $request)
+    public function filterProducts(Request $request)
     {
         $site_id       = session('customer.site_id');
         $hasPriceRange = $request->filled('price_from') && $request->filled('price_to');
@@ -1517,8 +1516,10 @@ class WordPressController extends Controller
         $site_id = session('customer.site_id');
         $site    = Website::findOrFail($site_id);
 
-        $connection = $this->connectionType;
-        $priceTable = $this->productPriceTable;
+        $connection    = $this->connectionType;
+        $priceTable    = $this->productPriceTable;
+        $postMetaTable = str_replace('posts', 'postmeta', $this->productTable);
+        $optionsTable  = str_replace('posts', 'options', $this->productTable);
 
         $consumerKey    = $site->consumer_key;
         $consumerSecret = $site->consumer_secret;
@@ -1589,10 +1590,6 @@ class WordPressController extends Controller
                     continue;
                 }
 
-                $prefix        = explode('_', $priceTable)[0] ?? 'wp';
-                $postMetaTable = $prefix . '_postmeta';
-                $optionsTable  = $prefix . '_options';
-
                 DB::connection($connection)->table($optionsTable)
                     ->where('option_name', 'LIKE', '%_transient_%')
                     ->delete();
@@ -1610,6 +1607,22 @@ class WordPressController extends Controller
                         '_product_version'
                     ])
                     ->delete();
+
+                $pricePostId = $variation_id > 0 ? $variation_id : $product_id;
+
+                $keepId = DB::connection($connection)->table($postMetaTable)
+                    ->where('post_id', $pricePostId)
+                    ->where('meta_key', '_price')
+                    ->orderBy('meta_id', 'desc')
+                    ->value('meta_id');
+
+                if ($keepId) {
+                    DB::connection($connection)->table($postMetaTable)
+                        ->where('post_id', $pricePostId)
+                        ->where('meta_key', '_price')
+                        ->where('meta_id', '!=', $keepId)
+                        ->delete();
+                }
 
                 ProductPriceHistory::create([
                     'site_id'            => $site_id,
