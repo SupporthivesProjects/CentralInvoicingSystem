@@ -1186,19 +1186,26 @@ class WordPressController extends Controller
                 'parent.post_title as name',
                 'parent.post_excerpt as description',
                 'parent.post_name as slug',
-                DB::raw('CAST(price_meta.meta_value AS DECIMAL(10,2)) as unit_price')
+                DB::raw('CAST(MIN(price_meta.meta_value) AS DECIMAL(10,2)) as unit_price')
             ])
             ->where('parent.post_status', 'publish')
             ->where('parent.post_type', 'product')
-            ->whereRaw('CAST(price_meta.meta_value AS DECIMAL(10,2)) > 0');
+            ->groupBy([
+                'parent.ID',
+                'variation.ID',
+                'parent.post_title',
+                'parent.post_excerpt',
+                'parent.post_name'
+            ])
+            ->havingRaw('CAST(MIN(price_meta.meta_value) AS DECIMAL(10,2)) > 0');
 
-        $query->whereRaw('CAST(price_meta.meta_value AS DECIMAL(10,2)) BETWEEN ? AND ?', [
+        $query->havingRaw('CAST(MIN(price_meta.meta_value) AS DECIMAL(10,2)) BETWEEN ? AND ?', [
             (float) $request->price_from,
             (float) $request->price_to
         ]);
 
         if (in_array($sortUnitPrice, ['asc', 'desc'])) {
-            $query->orderByRaw("CAST(price_meta.meta_value AS DECIMAL(10,2)) $sortUnitPrice");
+            $query->orderByRaw("CAST(MIN(price_meta.meta_value) AS DECIMAL(10,2)) $sortUnitPrice");
         }
 
         if (!empty($keyword)) {
@@ -1602,13 +1609,21 @@ class WordPressController extends Controller
                     ])
                     ->delete();
 
-                DB::connection($connection)->table($postMetaTable)
-                    ->where('post_id', $variation_id > 0 ? $variation_id : $product_id)
+                $pricePostId = $variation_id > 0 ? $variation_id : $product_id;
+
+                $keepId = DB::connection($connection)->table($postMetaTable)
+                    ->where('post_id', $pricePostId)
                     ->where('meta_key', '_price')
-                    ->orderBy('meta_id', 'asc')
-                    ->skip(1)
-                    ->take(PHP_INT_MAX)
-                    ->delete();
+                    ->orderBy('meta_id', 'desc')
+                    ->value('meta_id');
+
+                if ($keepId) {
+                    DB::connection($connection)->table($postMetaTable)
+                        ->where('post_id', $pricePostId)
+                        ->where('meta_key', '_price')
+                        ->where('meta_id', '!=', $keepId)
+                        ->delete();
+                }
 
                 ProductPriceHistory::create([
                     'site_id'            => $site_id,
