@@ -158,7 +158,7 @@ class LaravelController extends Controller
             $discountAmount = round($bestTotal - $invoiceAmount, 2);
         }
 
-        $combinationKey = $bestMatch->pluck('id')->sort()->join('-');
+        $combinationKey = $bestMatch->pluck('personalization_option_id')->sort()->join('-');
         $lastUsedCombinations[] = $combinationKey;
         $lastUsedCombinations = array_slice($lastUsedCombinations, -5);
         session()->put('last_used_combinations', $lastUsedCombinations);
@@ -270,7 +270,7 @@ class LaravelController extends Controller
 
                     if ($bestIdx !== null) {
                         if (!empty($lastUsedCombinations)) {
-                            $currentCombo = (string)$products[$bestIdx]->id;
+                            $currentCombo = (string)$products[$bestIdx]->personalization_option_id;
                             if (in_array($currentCombo, $lastUsedCombinations)) {
                                 continue;
                             }
@@ -310,7 +310,7 @@ class LaravelController extends Controller
 
                     if ($bestPair !== null) {
                         if (!empty($lastUsedCombinations)) {
-                            $comboIds = array_map(fn($i) => $products[$i]->id, $bestPair);
+                            $comboIds = array_map(fn($i) => $products[$i]->personalization_option_id, $bestPair);
                             sort($comboIds);
                             $currentCombo = implode('-', $comboIds);
                             if (in_array($currentCombo, $lastUsedCombinations)) {
@@ -327,14 +327,14 @@ class LaravelController extends Controller
 
             if ($count == 1) {
                 foreach ($sortedIndices as $idx) {
-                    $currentCombo = (string)$products[$idx]->id;
+                    $currentCombo = (string)$products[$idx]->personalization_option_id;
                     if (!in_array($currentCombo, $lastUsedCombinations)) {
                         return ['products' => [$products[$idx]], 'total' => $priceMap[$idx]];
                     }
                 }
                 $lastUsed = end($lastUsedCombinations);
                 foreach ($sortedIndices as $idx) {
-                    if ((string)$products[$idx]->id != $lastUsed) {
+                    if ((string)$products[$idx]->personalization_option_id != $lastUsed) {
                         return ['products' => [$products[$idx]], 'total' => $priceMap[$idx]];
                     }
                 }
@@ -351,7 +351,7 @@ class LaravelController extends Controller
 
             if ($result !== null && $result['total'] >= $target && count($result['products']) === $count) {
                 if (!empty($lastUsedCombinations)) {
-                    $comboIds = array_map(fn($p) => $p->id, $result['products']);
+                    $comboIds = array_map(fn($p) => $p->personalization_option_id, $result['products']);
                     sort($comboIds);
                     $currentCombo = implode('-', $comboIds);
                     if (in_array($currentCombo, $lastUsedCombinations)) {
@@ -620,7 +620,7 @@ class LaravelController extends Controller
             $priceMap[$idx] = $price;
 
             if (abs($price - $target) < 0.01) {
-                $currentCombo = (string)$product->id;
+                $currentCombo = (string)$product->personalization_option_id;
                 if (empty($lastUsedCombinations) || !in_array($currentCombo, $lastUsedCombinations)) {
                     return ['products' => [$product], 'total' => $price];
                 }
@@ -639,7 +639,7 @@ class LaravelController extends Controller
 
             if ($result !== null && $result['total'] >= $target) {
                 if (!empty($lastUsedCombinations)) {
-                    $resultIds = array_map(fn($p) => $p->id, $result['products']);
+                    $resultIds = array_map(fn($p) => $p->personalization_option_id, $result['products']);
                     sort($resultIds);
                     $currentCombo = implode('-', $resultIds);
                     if (in_array($currentCombo, $lastUsedCombinations)) {
