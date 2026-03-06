@@ -97,6 +97,9 @@ class LaravelController extends Controller
         $categoryId = $request->get('category_id');
         $noOfProducts = intval($request->get('noOfProducts'));
 
+        $maxOvershootPercent = 30;
+        $stepPercent = 2;
+
         $site = Website::findOrFail($site_id);
         DynamicDatabaseService::connect($site);
 
@@ -114,6 +117,7 @@ class LaravelController extends Controller
             session()->forget('ready_products');
             session()->forget('current_amount');
             session()->forget('last_used_combinations');
+            session()->forget('randomize_step');
 
             return response()->json([
                 'tableRows' => '',
@@ -135,6 +139,7 @@ class LaravelController extends Controller
             session()->forget('ready_products');
             session()->forget('current_amount');
             session()->forget('last_used_combinations');
+            session()->forget('randomize_step');
 
             return response()->json([
                 'tableRows' => '',
@@ -145,11 +150,18 @@ class LaravelController extends Controller
 
         $urgencyFee = 35;
         $lastUsedCombinations = session()->get('last_used_combinations', []);
-        $result = $this->findBestProductCombination($products, $invoiceAmount, $noOfProducts, $lastUsedCombinations);
+        $currentStep = session()->get('randomize_step', 0);
+
+        $result = $this->findBestProductCombination($products, $invoiceAmount, $noOfProducts, $lastUsedCombinations, $currentStep, $stepPercent, $maxOvershootPercent);
+
+        $nextStep = $currentStep + $stepPercent;
+        if ($nextStep > $maxOvershootPercent) {
+            $nextStep = 0;
+        }
+        session()->put('randomize_step', $nextStep);
 
         $bestMatch = collect($result['products']);
         $bestTotal = $bestMatch->sum('unit_price');
-        $gap = $invoiceAmount - $bestTotal;
 
         $autoUrgent = false;
 
@@ -216,19 +228,19 @@ class LaravelController extends Controller
         ]);
     }
 
-    private function findBestProductCombination($products, $targetAmount, $requiredCount = null, $lastUsedCombinations = [])
+    private function findBestProductCombination($products, $targetAmount, $requiredCount = null, $lastUsedCombinations = [], $currentStep = 0, $stepPercent = 2, $maxOvershootPercent = 30)
     {
         $productArray = $products->shuffle()->values()->all();
         $productCount = count($productArray);
 
         if ($requiredCount) {
-            return $this->findExactCountOptimized($productArray, $targetAmount, $requiredCount, $productCount, $lastUsedCombinations);
+            return $this->findExactCountOptimized($productArray, $targetAmount, $requiredCount, $productCount, $lastUsedCombinations, $currentStep, $stepPercent, $maxOvershootPercent);
         } else {
-            return $this->findFlexibleOptimized($productArray, $targetAmount, $productCount, $lastUsedCombinations);
+            return $this->findFlexibleOptimized($productArray, $targetAmount, $productCount, $lastUsedCombinations, $currentStep, $stepPercent, $maxOvershootPercent);
         }
     }
 
-    private function findExactCountOptimized($products, $target, $count, $totalProducts, $lastUsedCombinations = [])
+    private function findExactCountOptimized($products, $target, $count, $totalProducts, $lastUsedCombinations = [], $currentStep = 0, $stepPercent = 2, $maxOvershootPercent = 30)
     {
         shuffle($products);
 
@@ -245,8 +257,10 @@ class LaravelController extends Controller
         $sortedIndices = array_keys($priceMap);
         shuffle($sortedIndices);
 
+        $maxTotal = $target * (1 + $maxOvershootPercent / 100);
+
         if ($count <= 2) {
-            $percentages = [0, 2, 5, 8, 10, 15, 20, 25, 30, 35, 40, 50];
+            $percentages = range(0, $currentStep > 0 ? $currentStep : $maxOvershootPercent, $stepPercent);
             shuffle($percentages);
 
             foreach ($percentages as $percentage) {
@@ -278,7 +292,6 @@ class LaravelController extends Controller
                         return ['products' => [$products[$bestIdx]], 'total' => $priceMap[$bestIdx]];
                     }
                 } else if ($count == 2) {
-                    
                     $bestPair = null;
                     $bestTotal = 0;
                     $bestDiff = PHP_INT_MAX;
@@ -340,7 +353,7 @@ class LaravelController extends Controller
             }
         }
 
-        $percentages = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30];
+        $percentages = range(0, $currentStep > 0 ? $currentStep : $maxOvershootPercent, $stepPercent);
 
         foreach ($percentages as $percentage) {
             $minTarget = $target;
@@ -360,7 +373,6 @@ class LaravelController extends Controller
             }
         }
 
-        $maxTotal = $target * 1.20;
         $bestMatch = null;
         $bestTotal = 0;
         $bestDiff = PHP_INT_MAX;
@@ -610,7 +622,7 @@ class LaravelController extends Controller
         return null;
     }
 
-    private function findFlexibleOptimized($products, $target, $totalProducts, $lastUsedCombinations = [])
+    private function findFlexibleOptimized($products, $target, $totalProducts, $lastUsedCombinations = [], $currentStep = 0, $stepPercent = 2, $maxOvershootPercent = 30)
     {
         $priceMap = [];
         foreach ($products as $idx => $product) {
@@ -629,7 +641,8 @@ class LaravelController extends Controller
         $sortedIndices = array_keys($priceMap);
         shuffle($sortedIndices);
 
-        $percentages = [0, 2, 4, 6, 8, 10];
+        $maxTotal = $target * (1 + $maxOvershootPercent / 100);
+        $percentages = range(0, $currentStep > 0 ? $currentStep : $maxOvershootPercent, $stepPercent);
 
         foreach ($percentages as $percentage) {
             $currentMax = $target * (1 + $percentage / 100);
@@ -649,7 +662,6 @@ class LaravelController extends Controller
             }
         }
 
-        $maxTotal = $target * 1.10;
         $bestMatch = null;
         $bestTotal = 0;
 
@@ -1079,6 +1091,7 @@ class LaravelController extends Controller
     {
         session()->forget('ready_products');
         session()->forget('current_amount');
+        session()->forget('randomize_step');
         return response()->json([
             'success' => true,
             'tableRows' => '',
