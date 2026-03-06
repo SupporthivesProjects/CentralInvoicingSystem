@@ -1212,11 +1212,11 @@ class WordPressController extends Controller
             $query->whereRaw("LOWER(REPLACE(REPLACE(REPLACE(parent.post_title, '-', ''), '_', ''), ' ', '')) LIKE ?", ["%{$normalizedSearch}%"]);
         }
 
-        $readyProducts   = session('ready_products', []);
-        $readyProductIds = collect($readyProducts)->pluck('id')->toArray();
+        $readyProducts    = session('ready_products', []);
+        $readyVariationIds = collect($readyProducts)->pluck('variation_id')->filter()->toArray();
 
-        if (!empty($readyProductIds)) {
-            $query->whereNotIn('variation.ID', $readyProductIds);
+        if (!empty($readyVariationIds)) {
+            $query->whereNotIn('variation.ID', $readyVariationIds);
         }
 
         $totalCount = $query->count();
