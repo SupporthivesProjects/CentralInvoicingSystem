@@ -57,6 +57,10 @@ class WordPressController extends Controller
             ->where('ID', $variationId)
             ->value('post_title');
 
+        if (!empty($variationTitle)) {
+            return $variationTitle;
+        }
+
         $postMetaTable = str_replace('posts', 'postmeta', $this->productTable);
 
         $attributes = DB::connection($connection)
@@ -65,6 +69,10 @@ class WordPressController extends Controller
             ->where('meta_key', 'LIKE', 'attribute_%')
             ->pluck('meta_value', 'meta_key')
             ->toArray();
+
+        if (empty($attributes)) {
+            return $productName;
+        }
 
         $variationParts = [];
         foreach ($attributes as $key => $value) {
@@ -75,18 +83,11 @@ class WordPressController extends Controller
             $variationParts[] = $value;
         }
 
-        $newName = !empty($variationParts)
-            ? $productName . ' - ' . implode(', ', $variationParts)
-            : $productName;
-
-        if ($variationTitle !== $newName) {
-            DB::connection($connection)
-                ->table($this->productTable)
-                ->where('ID', $variationId)
-                ->update(['post_title' => $newName]);
+        if (empty($variationParts)) {
+            return $productName;
         }
 
-        return $newName;
+        return $productName . ' - ' . implode(', ', $variationParts);
     }
 
     public function randomProducts(Request $request)
@@ -875,7 +876,16 @@ class WordPressController extends Controller
             $product->category_name = '-';
             $product->variation_id  = $variation_id;
 
-            $product->name = $this->getVariationName($connection, $variation_id, $product->name);
+            $variationName = null;
+            if ($variation_id > 0) {
+                $variationName = DB::connection($connection)
+                    ->table($this->productTable)
+                    ->where('ID', $variation_id)
+                    ->value('post_title');
+            }
+            $product->name = !empty($variationName)
+                ? $variationName
+                : $this->getVariationName($connection, $variation_id, $product->name);
 
             foreach ($updatedSession as &$sp) {
                 if ($sp['id'] == $product->id && $sp['variation_id'] == $variation_id) {
@@ -1175,19 +1185,26 @@ class WordPressController extends Controller
                 'parent.post_title as name',
                 'parent.post_excerpt as description',
                 'parent.post_name as slug',
-                DB::raw('CAST(price_meta.meta_value AS DECIMAL(10,2)) as unit_price')
+                DB::raw('CAST(MIN(price_meta.meta_value) AS DECIMAL(10,2)) as unit_price')
             ])
             ->where('parent.post_status', 'publish')
             ->where('parent.post_type', 'product')
-            ->whereRaw('CAST(price_meta.meta_value AS DECIMAL(10,2)) > 0');
+            ->groupBy([
+                'parent.ID',
+                'variation.ID',
+                'parent.post_title',
+                'parent.post_excerpt',
+                'parent.post_name'
+            ])
+            ->havingRaw('CAST(MIN(price_meta.meta_value) AS DECIMAL(10,2)) > 0');
 
-        $query->whereBetween(DB::raw('CAST(price_meta.meta_value AS DECIMAL(10,2))'), [
+        $query->havingRaw('CAST(MIN(price_meta.meta_value) AS DECIMAL(10,2)) BETWEEN ? AND ?', [
             (float) $request->price_from,
             (float) $request->price_to
         ]);
 
         if (in_array($sortUnitPrice, ['asc', 'desc'])) {
-            $query->orderByRaw("CAST(price_meta.meta_value AS DECIMAL(10,2)) $sortUnitPrice");
+            $query->orderByRaw("CAST(MIN(price_meta.meta_value) AS DECIMAL(10,2)) $sortUnitPrice");
         }
 
         if (!empty($keyword)) {
@@ -1195,7 +1212,7 @@ class WordPressController extends Controller
             $query->whereRaw("LOWER(REPLACE(REPLACE(REPLACE(parent.post_title, '-', ''), '_', ''), ' ', '')) LIKE ?", ["%{$normalizedSearch}%"]);
         }
 
-        $readyProducts     = session('ready_products', []);
+        $readyProducts    = session('ready_products', []);
         $readyVariationIds = collect($readyProducts)->pluck('variation_id')->filter()->toArray();
 
         if (!empty($readyVariationIds)) {
