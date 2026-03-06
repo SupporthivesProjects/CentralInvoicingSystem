@@ -1544,6 +1544,7 @@ class WordPressController extends Controller
                 $product_id   = (int) $data['product_id'];
                 $variation_id = (int) ($data['variation_id'] ?? 0);
                 $salePrice    = (float) $data['unit_price'];
+                $productName  = $data['product_name'] ?? null;
 
                 if ($product_id <= 0) {
                     $errors[] = ['product_id' => $product_id, 'reason' => 'Invalid product ID'];
@@ -1592,6 +1593,7 @@ class WordPressController extends Controller
                 $prefix        = explode('_', $priceTable)[0] ?? 'wp';
                 $postMetaTable = $prefix . '_postmeta';
                 $optionsTable  = $prefix . '_options';
+                $postsTable    = $prefix . '_posts';
 
                 DB::connection($connection)->table($optionsTable)
                     ->where('option_name', 'LIKE', '%_transient_%')
@@ -1610,6 +1612,21 @@ class WordPressController extends Controller
                         '_product_version'
                     ])
                     ->delete();
+
+                if (!empty($productName)) {
+                    $targetId      = $variation_id > 0 ? $variation_id : $product_id;
+                    $existingTitle = DB::connection($connection)
+                        ->table($postsTable)
+                        ->where('ID', $targetId)
+                        ->value('post_title');
+
+                    if ($existingTitle !== $productName) {
+                        DB::connection($connection)
+                            ->table($postsTable)
+                            ->where('ID', $targetId)
+                            ->update(['post_title' => $productName]);
+                    }
+                }
 
                 ProductPriceHistory::create([
                     'site_id'            => $site_id,
