@@ -1167,6 +1167,7 @@ class WordPressController extends Controller
         $postsTable = $this->productTable;
         $priceTable = $this->productPriceTable;
         $connection = $this->connectionType;
+        $metaTable  = str_replace('posts', 'postmeta', $postsTable);
 
         $query = DB::connection($connection)
             ->table("$postsTable as parent")
@@ -1175,26 +1176,29 @@ class WordPressController extends Controller
                     ->where('variation.post_type', '=', 'product_variation')
                     ->where('variation.post_status', '=', 'publish');
             })
-            ->join($priceTable, "$priceTable.product_id", '=', 'variation.ID')
+            ->join("$metaTable as price_meta", function ($join) {
+                $join->on('price_meta.post_id', '=', 'variation.ID')
+                    ->where('price_meta.meta_key', '=', '_price');
+            })
             ->select([
                 'parent.ID as id',
                 'variation.ID as variation_id',
                 'parent.post_title as name',
                 'parent.post_excerpt as description',
                 'parent.post_name as slug',
-                "$priceTable.min_price as unit_price"
+                DB::raw('CAST(price_meta.meta_value AS DECIMAL(10,2)) as unit_price')
             ])
             ->where('parent.post_status', 'publish')
             ->where('parent.post_type', 'product')
-            ->where("$priceTable.min_price", '>', 0);
+            ->whereRaw('CAST(price_meta.meta_value AS DECIMAL(10,2)) > 0');
 
-        $query->whereBetween("$priceTable.min_price", [
+        $query->whereRaw('CAST(price_meta.meta_value AS DECIMAL(10,2)) BETWEEN ? AND ?', [
             (float) $request->price_from,
             (float) $request->price_to
         ]);
 
         if (in_array($sortUnitPrice, ['asc', 'desc'])) {
-            $query->orderBy("$priceTable.min_price", $sortUnitPrice);
+            $query->orderByRaw("CAST(price_meta.meta_value AS DECIMAL(10,2)) $sortUnitPrice");
         }
 
         if (!empty($keyword)) {
