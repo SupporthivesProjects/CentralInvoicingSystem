@@ -101,35 +101,18 @@ class LaravelController extends Controller
         DynamicDatabaseService::connect($site);
 
         $query = DB::connection($this->connectionType)->table($this->productTable)
-            ->select('id', 'category_id', 'name', 'slug')
+            ->select('id', 'category_id', 'name', 'unit_price', 'slug')
             ->where('published', 1);
+
+        if ($priceFrom && $priceTo) {
+            $query->whereBetween('unit_price', [$priceFrom, $priceTo]);
+        }
 
         if ($categoryId) {
             $query->where('category_id', $categoryId);
         }
 
-        $rawProducts = $query->get();
-
-        if ($rawProducts->isEmpty()) {
-            session()->forget('ready_products');
-            session()->forget('current_amount');
-            session()->forget('last_used_combinations');
-
-            return response()->json([
-                'tableRows' => '',
-                'total' => 0,
-                'message' => 'No products found in this range or category.'
-            ]);
-        }
-
-        $targetPerProduct = $noOfProducts > 0 ? ($invoiceAmount / $noOfProducts) : $invoiceAmount;
-        $products = $this->buildProductsFromPersonalization($rawProducts, $targetPerProduct);
-
-        if ($priceFrom && $priceTo) {
-            $products = $products->filter(function ($p) use ($priceFrom, $priceTo) {
-                return $p->unit_price >= floatval($priceFrom) && $p->unit_price <= floatval($priceTo);
-            })->values();
-        }
+        $products = $query->get();
 
         if ($products->isEmpty()) {
             session()->forget('ready_products');
@@ -143,21 +126,17 @@ class LaravelController extends Controller
             ]);
         }
 
-        $urgencyFee = 35;
         $lastUsedCombinations = session()->get('last_used_combinations', []);
-        $result = $this->findBestProductCombination($products, $invoiceAmount, $noOfProducts, $lastUsedCombinations);
+        $bestMatch = $this->findBestProductCombination($products, $invoiceAmount, $noOfProducts, $lastUsedCombinations);
 
-        $bestMatch = collect($result['products']);
+        $bestMatch = collect($bestMatch['products']);
         $bestTotal = $bestMatch->sum('unit_price');
-        $gap = $invoiceAmount - $bestTotal;
-        // $autoUrgent = $bestTotal > 0
-        //     && $invoiceAmount > 0
-        //     && $gap > 0
-        //     && ($gap / $invoiceAmount) <= 0.40
-        //     && $gap <= ($bestMatch->count() * $urgencyFee)
-        //     && ($bestTotal + ($bestMatch->count() * $urgencyFee)) >= $invoiceAmount;
-        
-        $autoUrgent = false;
+
+        $discountAmount = 0;
+        if ($bestTotal > $invoiceAmount) {
+            $discountAmount = round($bestTotal - $invoiceAmount, 2);
+        }
+
         $combinationKey = $bestMatch->pluck('id')->sort()->join('-');
         $lastUsedCombinations[] = $combinationKey;
         $lastUsedCombinations = array_slice($lastUsedCombinations, -5);
@@ -187,7 +166,7 @@ class LaravelController extends Controller
                 $lastChanged = Carbon::parse($history->last_price_changed);
                 $nextChange = $lastChanged->copy()->addMonths(3);
                 $daysLeft = $now->diffInDays($nextChange, false);
-                $product->remaining_days = (int) max(ceil($daysLeft), 0);
+                $product->remaining_days = max($daysLeft, 0);
                 $product->can_edit_price = $now->greaterThanOrEqualTo($nextChange) ? 1 : 0;
             } else {
                 $product->remaining_days = 0;
@@ -204,16 +183,17 @@ class LaravelController extends Controller
         $tableRows = view("invoice.{$modelType}.random_product_rows", [
             'products' => $bestMatch,
             'site' => $site,
-            'total' => $bestTotal,
-            'urgency_fee' => $urgencyFee,
-            'auto_urgent' => $autoUrgent,
+            'total' => $bestTotal
         ])->render();
 
         return response()->json([
             'tableRows' => $tableRows,
-            'total' => $bestTotal
+            'total' => $bestTotal,
+            'discount' => $discountAmount,
         ]);
     }
+
+
 
     private function findBestProductCombination($products, $targetAmount, $requiredCount = null, $lastUsedCombinations = [])
     {
@@ -274,7 +254,6 @@ class LaravelController extends Controller
                                 continue;
                             }
                         }
-
                         return ['products' => [$products[$bestIdx]], 'total' => $priceMap[$bestIdx]];
                     }
                 } else if ($count == 2) {
@@ -317,7 +296,6 @@ class LaravelController extends Controller
                                 continue;
                             }
                         }
-
                         return [
                             'products' => [$products[$bestPair[0]], $products[$bestPair[1]]],
                             'total' => $bestTotal
@@ -335,6 +313,14 @@ class LaravelController extends Controller
             $result = $this->tryFindExactCount($products, $priceMap, $sortedIndices, $minTarget, $maxTarget, $count, $totalProducts);
 
             if ($result !== null && $result['total'] >= $target && count($result['products']) === $count) {
+                if (!empty($lastUsedCombinations)) {
+                    $comboIds = array_map(fn($p) => $p->id, $result['products']);
+                    sort($comboIds);
+                    $currentCombo = implode('-', $comboIds);
+                    if (in_array($currentCombo, $lastUsedCombinations)) {
+                        continue;
+                    }
+                }
                 return $result;
             }
         }
