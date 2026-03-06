@@ -620,7 +620,10 @@ class LaravelController extends Controller
             $priceMap[$idx] = $price;
 
             if (abs($price - $target) < 0.01) {
-                return ['products' => [$product], 'total' => $price];
+                $currentCombo = (string)$product->id;
+                if (empty($lastUsedCombinations) || !in_array($currentCombo, $lastUsedCombinations)) {
+                    return ['products' => [$product], 'total' => $price];
+                }
             }
         }
 
