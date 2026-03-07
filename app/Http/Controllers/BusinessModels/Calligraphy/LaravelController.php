@@ -97,6 +97,9 @@ class LaravelController extends Controller
         $categoryId = $request->get('category_id');
         $noOfProducts = intval($request->get('noOfProducts'));
 
+        $maxOvershootPercent = 30;
+        $stepPercent = 2;
+
         $site = Website::findOrFail($site_id);
         DynamicDatabaseService::connect($site);
 
@@ -114,6 +117,7 @@ class LaravelController extends Controller
             session()->forget('ready_products');
             session()->forget('current_amount');
             session()->forget('last_used_combinations');
+            session()->forget('randomize_step');
 
             return response()->json([
                 'tableRows' => '',
@@ -135,6 +139,7 @@ class LaravelController extends Controller
             session()->forget('ready_products');
             session()->forget('current_amount');
             session()->forget('last_used_combinations');
+            session()->forget('randomize_step');
 
             return response()->json([
                 'tableRows' => '',
@@ -145,20 +150,27 @@ class LaravelController extends Controller
 
         $urgencyFee = 35;
         $lastUsedCombinations = session()->get('last_used_combinations', []);
-        $result = $this->findBestProductCombination($products, $invoiceAmount, $noOfProducts, $lastUsedCombinations);
+        $currentStep = session()->get('randomize_step', 0);
+
+        $result = $this->findBestProductCombination($products, $invoiceAmount, $noOfProducts, $lastUsedCombinations, $currentStep, $stepPercent, $maxOvershootPercent);
+
+        $nextStep = $currentStep + $stepPercent;
+        if ($nextStep > $maxOvershootPercent) {
+            $nextStep = 0;
+        }
+        session()->put('randomize_step', $nextStep);
 
         $bestMatch = collect($result['products']);
         $bestTotal = $bestMatch->sum('unit_price');
-        $gap = $invoiceAmount - $bestTotal;
-        // $autoUrgent = $bestTotal > 0
-        //     && $invoiceAmount > 0
-        //     && $gap > 0
-        //     && ($gap / $invoiceAmount) <= 0.40
-        //     && $gap <= ($bestMatch->count() * $urgencyFee)
-        //     && ($bestTotal + ($bestMatch->count() * $urgencyFee)) >= $invoiceAmount;
-        
+
         $autoUrgent = false;
-        $combinationKey = $bestMatch->pluck('id')->sort()->join('-');
+
+        $discountAmount = 0;
+        if ($bestTotal > $invoiceAmount) {
+            $discountAmount = round($bestTotal - $invoiceAmount, 2);
+        }
+
+        $combinationKey = $bestMatch->pluck('personalization_option_id')->sort()->join('-');
         $lastUsedCombinations[] = $combinationKey;
         $lastUsedCombinations = array_slice($lastUsedCombinations, -5);
         session()->put('last_used_combinations', $lastUsedCombinations);
@@ -211,23 +223,24 @@ class LaravelController extends Controller
 
         return response()->json([
             'tableRows' => $tableRows,
-            'total' => $bestTotal
+            'total' => $bestTotal,
+            'discount' => $discountAmount,
         ]);
     }
 
-    private function findBestProductCombination($products, $targetAmount, $requiredCount = null, $lastUsedCombinations = [])
+    private function findBestProductCombination($products, $targetAmount, $requiredCount = null, $lastUsedCombinations = [], $currentStep = 0, $stepPercent = 2, $maxOvershootPercent = 30)
     {
         $productArray = $products->shuffle()->values()->all();
         $productCount = count($productArray);
 
         if ($requiredCount) {
-            return $this->findExactCountOptimized($productArray, $targetAmount, $requiredCount, $productCount, $lastUsedCombinations);
+            return $this->findExactCountOptimized($productArray, $targetAmount, $requiredCount, $productCount, $lastUsedCombinations, $currentStep, $stepPercent, $maxOvershootPercent);
         } else {
-            return $this->findFlexibleOptimized($productArray, $targetAmount, $productCount, $lastUsedCombinations);
+            return $this->findFlexibleOptimized($productArray, $targetAmount, $productCount, $lastUsedCombinations, $currentStep, $stepPercent, $maxOvershootPercent);
         }
     }
 
-    private function findExactCountOptimized($products, $target, $count, $totalProducts, $lastUsedCombinations = [])
+    private function findExactCountOptimized($products, $target, $count, $totalProducts, $lastUsedCombinations = [], $currentStep = 0, $stepPercent = 2, $maxOvershootPercent = 30)
     {
         shuffle($products);
 
@@ -244,8 +257,10 @@ class LaravelController extends Controller
         $sortedIndices = array_keys($priceMap);
         shuffle($sortedIndices);
 
+        $maxTotal = $target * (1 + $maxOvershootPercent / 100);
+
         if ($count <= 2) {
-            $percentages = [0, 2, 5, 8, 10, 15, 20, 25, 30, 35, 40, 50];
+            $percentages = range(0, $currentStep > 0 ? $currentStep : $maxOvershootPercent, $stepPercent);
             shuffle($percentages);
 
             foreach ($percentages as $percentage) {
@@ -269,18 +284,14 @@ class LaravelController extends Controller
 
                     if ($bestIdx !== null) {
                         if (!empty($lastUsedCombinations)) {
-                            $currentCombo = (string)$products[$bestIdx]->id;
+                            $currentCombo = (string)$products[$bestIdx]->personalization_option_id;
                             if (in_array($currentCombo, $lastUsedCombinations)) {
                                 continue;
                             }
                         }
-
                         return ['products' => [$products[$bestIdx]], 'total' => $priceMap[$bestIdx]];
                     }
                 } else if ($count == 2) {
-                    if ($percentage > 0 && rand(0, 1) == 1) {
-                        continue;
-                    }
                     $bestPair = null;
                     $bestTotal = 0;
                     $bestDiff = PHP_INT_MAX;
@@ -310,14 +321,13 @@ class LaravelController extends Controller
 
                     if ($bestPair !== null) {
                         if (!empty($lastUsedCombinations)) {
-                            $comboIds = array_map(fn($i) => $products[$i]->id, $bestPair);
+                            $comboIds = array_map(fn($i) => $products[$i]->personalization_option_id, $bestPair);
                             sort($comboIds);
                             $currentCombo = implode('-', $comboIds);
                             if (in_array($currentCombo, $lastUsedCombinations)) {
                                 continue;
                             }
                         }
-
                         return [
                             'products' => [$products[$bestPair[0]], $products[$bestPair[1]]],
                             'total' => $bestTotal
@@ -325,9 +335,25 @@ class LaravelController extends Controller
                     }
                 }
             }
+
+            if ($count == 1) {
+                foreach ($sortedIndices as $idx) {
+                    $currentCombo = (string)$products[$idx]->personalization_option_id;
+                    if (!in_array($currentCombo, $lastUsedCombinations)) {
+                        return ['products' => [$products[$idx]], 'total' => $priceMap[$idx]];
+                    }
+                }
+                $lastUsed = end($lastUsedCombinations);
+                foreach ($sortedIndices as $idx) {
+                    if ((string)$products[$idx]->personalization_option_id != $lastUsed) {
+                        return ['products' => [$products[$idx]], 'total' => $priceMap[$idx]];
+                    }
+                }
+                return ['products' => [$products[$sortedIndices[0]]], 'total' => $priceMap[$sortedIndices[0]]];
+            }
         }
 
-        $percentages = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30];
+        $percentages = range(0, $currentStep > 0 ? $currentStep : $maxOvershootPercent, $stepPercent);
 
         foreach ($percentages as $percentage) {
             $minTarget = $target;
@@ -335,11 +361,18 @@ class LaravelController extends Controller
             $result = $this->tryFindExactCount($products, $priceMap, $sortedIndices, $minTarget, $maxTarget, $count, $totalProducts);
 
             if ($result !== null && $result['total'] >= $target && count($result['products']) === $count) {
+                if (!empty($lastUsedCombinations)) {
+                    $comboIds = array_map(fn($p) => $p->personalization_option_id, $result['products']);
+                    sort($comboIds);
+                    $currentCombo = implode('-', $comboIds);
+                    if (in_array($currentCombo, $lastUsedCombinations)) {
+                        continue;
+                    }
+                }
                 return $result;
             }
         }
 
-        $maxTotal = $target * 1.20;
         $bestMatch = null;
         $bestTotal = 0;
         $bestDiff = PHP_INT_MAX;
@@ -589,7 +622,7 @@ class LaravelController extends Controller
         return null;
     }
 
-    private function findFlexibleOptimized($products, $target, $totalProducts, $lastUsedCombinations = [])
+    private function findFlexibleOptimized($products, $target, $totalProducts, $lastUsedCombinations = [], $currentStep = 0, $stepPercent = 2, $maxOvershootPercent = 30)
     {
         $priceMap = [];
         foreach ($products as $idx => $product) {
@@ -597,7 +630,10 @@ class LaravelController extends Controller
             $priceMap[$idx] = $price;
 
             if (abs($price - $target) < 0.01) {
-                return ['products' => [$product], 'total' => $price];
+                $currentCombo = (string)$product->personalization_option_id;
+                if (empty($lastUsedCombinations) || !in_array($currentCombo, $lastUsedCombinations)) {
+                    return ['products' => [$product], 'total' => $price];
+                }
             }
         }
 
@@ -605,7 +641,8 @@ class LaravelController extends Controller
         $sortedIndices = array_keys($priceMap);
         shuffle($sortedIndices);
 
-        $percentages = [0, 2, 4, 6, 8, 10];
+        $maxTotal = $target * (1 + $maxOvershootPercent / 100);
+        $percentages = range(0, $currentStep > 0 ? $currentStep : $maxOvershootPercent, $stepPercent);
 
         foreach ($percentages as $percentage) {
             $currentMax = $target * (1 + $percentage / 100);
@@ -613,7 +650,7 @@ class LaravelController extends Controller
 
             if ($result !== null && $result['total'] >= $target) {
                 if (!empty($lastUsedCombinations)) {
-                    $resultIds = array_map(fn($p) => $p->id, $result['products']);
+                    $resultIds = array_map(fn($p) => $p->personalization_option_id, $result['products']);
                     sort($resultIds);
                     $currentCombo = implode('-', $resultIds);
                     if (in_array($currentCombo, $lastUsedCombinations)) {
@@ -625,7 +662,6 @@ class LaravelController extends Controller
             }
         }
 
-        $maxTotal = $target * 1.10;
         $bestMatch = null;
         $bestTotal = 0;
 
@@ -1055,6 +1091,7 @@ class LaravelController extends Controller
     {
         session()->forget('ready_products');
         session()->forget('current_amount');
+        session()->forget('randomize_step');
         return response()->json([
             'success' => true,
             'tableRows' => '',
@@ -1112,61 +1149,72 @@ class LaravelController extends Controller
             ->get()
             ->groupBy('product_id');
 
-        $filteredProductIds = collect($allProductIds)->filter(function ($id) use ($personalizationOptions, $request) {
+        $flatItems = [];
+        foreach ($allProductIds as $id) {
             if (!isset($personalizationOptions[$id]) || $personalizationOptions[$id]->isEmpty()) {
-                return false;
+                continue;
             }
-            $price = floatval($personalizationOptions[$id]->first()->price);
-            return $price >= floatval($request->price_from) && $price <= floatval($request->price_to);
-        });
-
-        if ($sortUnitPrice === 'desc') {
-            $filteredProductIds = $filteredProductIds->sortByDesc(function ($id) use ($personalizationOptions) {
-                return floatval($personalizationOptions[$id]->first()->price);
-            });
-        } else {
-            $filteredProductIds = $filteredProductIds->sortBy(function ($id) use ($personalizationOptions) {
-                return floatval($personalizationOptions[$id]->first()->price);
-            });
+            foreach ($personalizationOptions[$id] as $option) {
+                $price = floatval($option->price);
+                if ($price >= floatval($request->price_from) && $price <= floatval($request->price_to)) {
+                    $flatItems[] = ['product_id' => $id, 'option' => $option];
+                }
+            }
         }
 
-        $filteredProductIds = $filteredProductIds->values();
-        $totalCount = $filteredProductIds->count();
+        $flatItems = collect($flatItems);
+
+        if ($sortUnitPrice === 'desc') {
+            $flatItems = $flatItems->sortByDesc(fn($item) => floatval($item['option']->price));
+        } else {
+            $flatItems = $flatItems->sortBy(fn($item) => floatval($item['option']->price));
+        }
+
+        $flatItems = $flatItems->values();
+        $totalCount = $flatItems->count();
 
         $page = $request->input('page', 1);
         $perPage = 10;
         $offset = ($page - 1) * $perPage;
-        $pagedIds = $filteredProductIds->slice($offset, $perPage)->values()->toArray();
+        $pagedItems = $flatItems->slice($offset, $perPage)->values();
 
-        if (empty($pagedIds)) {
+        if ($pagedItems->isEmpty()) {
             return response()->json([
                 'tableRows' => '<tr><td colspan="7" class="text-center text-muted"> No results found. Try randomizing or use a different keyword.</td></tr>'
             ]);
         }
 
+        $pagedProductIds = $pagedItems->pluck('product_id')->unique()->toArray();
+
         $rawProducts = DB::connection($this->connectionType)
             ->table($this->productTable)
             ->select('products.id', 'products.category_id', 'products.name', 'products.slug')
-            ->whereIn('products.id', $pagedIds)
+            ->whereIn('products.id', $pagedProductIds)
             ->get()
             ->keyBy('id');
 
-        $products = collect($pagedIds)->map(function ($id) use ($rawProducts) {
-            return $rawProducts[$id] ?? null;
+        $products = $pagedItems->map(function ($item) use ($rawProducts) {
+            $product = clone ($rawProducts[$item['product_id']] ?? null);
+            if (!$product) return null;
+            $option = $item['option'];
+            $product->unit_price = floatval($option->price);
+            $product->personalization_label = $option->label;
+            $product->personalization_option_id = $option->id;
+            return $product;
         })->filter();
 
         $totalPages = ceil($totalCount / $perPage);
         $paginationPages = $this->smartPagination($page, $totalPages);
 
-        $products->each(function ($product) use ($personalizationOptions) {
-            $option = isset($personalizationOptions[$product->id]) ? $personalizationOptions[$product->id]->first() : null;
-            $product->unit_price = $option ? floatval($option->price) : 0;
-            $product->personalization_label = $option ? $option->label : null;
-            $product->personalization_option_id = $option ? $option->id : null;
+        $products->each(function (&$product) use ($personalizationOptions) {
+            $product->all_personalization_options = $personalizationOptions[$product->id] ?? collect();
+        });
+
+        $products->each(function (&$product) {
             $product->category_name = DB::connection($this->connectionType)->table('categories')->where('id', $product->category_id)->value('name') ?? 'unknown';
         });
 
-        $products->each(function ($product) use ($site_id) {
+        $products->each(function (&$product) use ($site_id) {
             $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
                 ->where('product_id', $product->id)
                 ->orderByDesc('last_price_changed')

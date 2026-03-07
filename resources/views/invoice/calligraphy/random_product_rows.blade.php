@@ -1,5 +1,15 @@
 @forelse($products as $index => $product)
-    <tr class="product-row">
+    @php
+        $displayPrice = $product->unit_price;
+        if (!empty($product->all_personalization_options) && $product->all_personalization_options->count() > 0) {
+            $selectedOpt = $product->all_personalization_options->firstWhere('id', $product->personalization_option_id);
+            if ($selectedOpt) {
+                $displayPrice = floatval($selectedOpt->price);
+            }
+        }
+    @endphp
+    <tr class="product-row" 
+        data-personalization-option-id="{{ $product->personalization_option_id }}">
         <td class="text-center">{{ $product->id }}</td>
         <td>
             {{ $product->name }}
@@ -23,17 +33,19 @@
                 <br><small class="text-muted" style="font-size:11px;">{{ $product->personalization_label }}</small>
             @endif
         </td>
-        <td class="text-center">{{ site_currency() }}{{ number_format($product->unit_price, 2) }}</td>
+        <td class="text-center">{{ site_currency() }}{{ number_format($displayPrice, 2) }}</td>
         <td>
             <div class="input-group d-flex">
                 <span class="input-group-text" data-bs-toggle="tooltip"
                     title="{{ site_currency_code() }}">{{ site_currency() }}</span>
                 <input style="display: none;" class="form-check-input border narayan-checkbox border-1 border-primary"
                     type="checkbox" name="product_ids[]"
-                    data-unit_price="{{ number_format($product->unit_price, 2, '.', '') }}" value="{{ $product->id }}"
+                    data-unit_price="{{ number_format($displayPrice, 2, '.', '') }}" 
+                    data-personalization-option-id="{{ $product->personalization_option_id }}"
+                    value="{{ $product->id }}"
                     checked>
                 <input type="text" class="form-control product-price text-center"
-                    value="{{ number_format($product->unit_price, 2, '.', '') }}"
+                    value="{{ number_format($displayPrice, 2, '.', '') }}"
                     data-product-id="{{ $product->id }}" {{ $product->can_edit_price == 0 ? 'readonly' : '' }}
                     aria-label="Amount (to the nearest dollar)">
                 <span class="input-group-text d-flex align-items-center">
@@ -49,7 +61,7 @@
         <td class="text-center">
             <select class="form-select form-select-sm urgency-select" aria-label="Urgency"
                 data-product-id="{{ $product->id }}"
-                data-base-price="{{ number_format($product->unit_price, 2, '.', '') }}"
+                data-base-price="{{ number_format($displayPrice, 2, '.', '') }}"
                 data-auto-urgent="{{ isset($auto_urgent) && $auto_urgent ? 'true' : 'false' }}">
                 <option value="standard" {{ !isset($auto_urgent) || !$auto_urgent ? 'selected' : '' }}>Standard 5-7 days</option>
                 <option value="urgent" {{ isset($auto_urgent) && $auto_urgent ? 'selected' : '' }}>Urgent 2-3 days (+{{ site_currency() }}{{ $urgency_fee }})</option>
@@ -79,12 +91,18 @@
             var $select = $(this);
             var selectedOption = $select.find('option:selected');
             var newPrice = parseFloat(selectedOption.data('price'));
+            var newOptionId = $select.val();
 
             var $row = $select.closest('tr.product-row');
             var $priceInput = $row.find('.product-price');
+            var $checkbox = $row.find('.narayan-checkbox');
             var $unitPriceCell = $row.find('td').eq(2);
             var $urgencySelect = $row.find('.urgency-select');
             var currencySymbol = @json(site_currency());
+
+            $row.data('personalization-option-id', newOptionId);
+            $checkbox.data('personalization-option-id', newOptionId);
+            $checkbox.attr('data-personalization-option-id', newOptionId);
 
             $urgencySelect.data('base-price', newPrice.toFixed(2));
             $urgencySelect.val('standard');
@@ -234,7 +252,6 @@
 
     $('.urgency-select').each(function() {
         var autoUrgent = $(this).data('auto-urgent');
-        var val = $(this).find('option[selected]').val() || $(this).val();
         if (autoUrgent === 'true') {
             applyUrgency($(this), 'urgent');
         }

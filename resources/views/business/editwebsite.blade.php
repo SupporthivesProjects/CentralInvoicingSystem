@@ -129,13 +129,67 @@
                                             </div>
                                         </div>
 
+                                        @if(isset($website->technology) && strtolower($website->technology) === 'laravel')
+                                        <div class="p-3 rounded-3 mb-4" style="background: linear-gradient(135deg, #e8f4fd, #f0f9ff); border: 1px solid #b8daff;">
+                                            <div class="d-flex align-items-center justify-content-between mb-3">
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <div class="rounded-circle d-flex align-items-center justify-content-center" style="width:32px;height:32px;background:#0d6efd20;">
+                                                        <i class="bi bi-lightning-charge-fill text-primary fs-6"></i>
+                                                    </div>
+                                                    <div>
+                                                        <span class="fw-semibold text-primary">Urgency Flat Fee</span>
+                                                        <div><small class="text-muted">Fixed add-on price per product for urgent 2-3 day delivery on invoices</small></div>
+                                                    </div>
+                                                </div>
+                                                <span class="badge bg-warning text-dark" style="font-size:11px;">Laravel - Leave empty to disable urgency</span>
+                                            </div>
+                                            <div class="row g-3 align-items-center">
+                                                <div class="col-md-4">
+                                                    <label class="form-label fw-semibold text-dark mb-1" style="font-size:13px;">
+                                                        <i class="bi bi-alarm-fill text-primary me-1"></i> Urgent 2-3 Days – Flat Fee
+                                                    </label>
+                                                    <div class="input-group shadow-sm">
+                                                        <span class="input-group-text bg-primary text-white">{{ get_site_currency_by_id($website->id) }}</span>
+                                                        <input type="number" name="urgency_amount" class="form-control fw-semibold" placeholder="e.g. 35.00" min="0" step="0.0001" value="{{ old('urgency_amount', $website->urgency_amount ?? '') }}">
+                                                        <span class="input-group-text bg-light text-muted" style="font-size:11px;">per product</span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <div class="row g-2 ps-2">
+                                                        <div class="col-4">
+                                                            <div class="rounded-3 p-2 text-center h-100" style="background:#fff;border:1px solid #b8daff;">
+                                                                <i class="bi bi-plus-circle-fill text-primary mb-1 d-block fs-5"></i>
+                                                                <div class="fw-semibold text-dark" style="font-size:12px;">Added to Product Price</div>
+                                                                <small class="text-muted" style="font-size:11px;">Fee stacks on top of the base unit price</small>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <div class="rounded-3 p-2 text-center h-100" style="background:#fff;border:1px solid #b8daff;">
+                                                                <i class="bi bi-magic text-primary mb-1 d-block fs-5"></i>
+                                                                <div class="fw-semibold text-dark" style="font-size:12px;">Auto-Suggested</div>
+                                                                <small class="text-muted" style="font-size:11px;">System suggests urgent when gap matches this fee</small>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <div class="rounded-3 p-2 text-center h-100" style="background:#fff;border:1px solid #b8daff;">
+                                                                <i class="bi bi-toggle-off text-primary mb-1 d-block fs-5"></i>
+                                                                <div class="fw-semibold text-dark" style="font-size:12px;">Optional Toggle</div>
+                                                                <small class="text-muted" style="font-size:11px;">Leave empty to hide urgency from invoice builder</small>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @endif
+                                        @if(isset($website->technology) && strtolower($website->technology) === 'wordpress')
                                         <div class="p-3 rounded-3" style="background:#fff8f0; border: 1px solid #fde8cc;">
                                             <div class="d-flex align-items-center justify-content-between mb-3">
                                                 <div class="d-flex align-items-center gap-2">
                                                     <i class="bi bi-clock-history text-warning fs-5"></i>
                                                     <span class="fw-semibold text-warning-emphasis">Urgent Delivery Add-On Pricing</span>
                                                 </div>
-                                                <span class="badge bg-warning text-dark" style="font-size:11px;">Leave empty to disable tier</span>
+                                                <span class="badge bg-warning text-dark" style="font-size:11px;">WordPress - Leave empty to disable urgency</span>
                                             </div>
 
                                             <div class="mb-4">
@@ -211,6 +265,7 @@
                                             </div>
 
                                         </div>
+                                        @endif
                                     </div>
                                 </div>
                             </div>

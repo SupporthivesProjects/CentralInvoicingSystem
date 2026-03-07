@@ -235,13 +235,13 @@
                                 <tr style="border-collapse: collapse;">
                                     <td
                                         style="width: 300px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;color: #5E5E5E;padding-left: 40px;padding-bottom: 5px; padding-top:300px">
-                                        <b>{{ $site_name }}</b>
+                                        <!-- <b>{{ $site_name }}</b> -->
                                     </td>
                                 </tr>
                                 <tr style="border-collapse: collapse;">
                                     <td
                                         style="width: 300px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;color: #5E5E5E;padding-left: 40px;padding-top: 5px;">
-                                        {{ $company_address }}
+                                        <!-- {{ $company_address }} -->
                                     </td>
                                 </tr>
                                 <!-- <tr style="border-collapse: collapse;">

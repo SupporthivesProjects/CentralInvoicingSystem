@@ -13,26 +13,41 @@
             @endif
         </td>
 
-        <td>{{ $product->game_currency }}</td>
+        <td>{{ $product->game_currency ?? '-' }}</td>
 
         <td class="text-center">
             <div class="input-group">
-                <span class="input-group-text">{{ $product->game_currency }}</span>
-                <input type="text" class="form-control add-currency-amount text-center" value="0.00" data-product-id="{{ $product->id }}" readonly>
-                <input type="hidden" name="custom_products[{{ $product->id }}][bundle_first_amount]" value="{{ $product->bundle_first_amount }}">
+                <span class="input-group-text">{{ $product->game_currency ?? '-' }}</span>
+                <input type="text"
+                    class="form-control add-currency-amount text-center"
+                    value="0.00"
+                    data-product-id="{{ $product->id }}"
+                    readonly>
+                <input type="hidden"
+                    name="custom_products[{{ $product->id }}][bundle_first_amount]"
+                    value="{{ $product->game_currency_amount ?? $product->bundle_first_amount ?? '0' }}">
+                <input type="hidden"
+                    name="custom_products[{{ $product->id }}][bundle_rate]"
+                    value="{{ $product->bundle_rate ?? '' }}">
             </div>
         </td>
 
         <td>
             <div class="input-group">
                 <span class="input-group-text" data-bs-toggle="tooltip" title="{{ site_currency_code() }}">{{ site_currency() }}</span>
-                <input type="text" class="form-control add-product-price text-center dynamic-input" value="0.00" data-product-id="{{ $product->id }}">
+                <input type="text"
+                    class="form-control add-product-price text-center dynamic-input"
+                    value="0.00"
+                    data-product-id="{{ $product->id }}">
             </div>
         </td>
 
         <td class="text-center">
             <div class="form-check d-flex justify-content-center align-items-center m-0">
-                <input class="form-check-input border border-primary narayan-checkbox" type="checkbox" name="add_product_ids[]" value="{{ $product->id }}">
+                <input class="form-check-input border border-primary narayan-checkbox"
+                    type="checkbox"
+                    name="add_product_ids[]"
+                    value="{{ $product->id }}">
             </div>
         </td>
     </tr>
@@ -43,30 +58,19 @@
 @endforelse
 
 <script>
-    $(document).ready(function () {
+    (function () {
         let originalAmount = parseFloat(@json(session('current_amount', 0)));
 
         function updateTempTotal() {
             let selectedTotal = 0;
-
             $('input[name="add_product_ids[]"]:checked').each(function () {
                 let productId = $(this).val();
-                let priceInput = $('.add-product-price[data-product-id="' + productId + '"]');
-                let price = parseFloat(priceInput.val()) || 0;
+                let price = parseFloat($('.add-product-price[data-product-id="' + productId + '"]').val()) || 0;
                 selectedTotal += price;
             });
-
             let tempTotal = originalAmount + selectedTotal;
             let invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
-            let discountAmount = 0;
-
-            if (tempTotal > invoiceAmount) {
-                discountAmount = tempTotal - invoiceAmount;
-            }
-
-            $('#temp_current_amount_text').text(tempTotal.toFixed(2));
-            $('#temp_discount_amount_text').text(discountAmount.toFixed(2));
-            $('#temp_invoice_amount_text').text(invoiceAmount.toFixed(2));
+            syncAllAmountDisplays(tempTotal, invoiceAmount);
         }
 
         $(document).on('input change keyup', 'input[name="add_product_ids[]"], .add-product-price, #invoice_amount', function () {
@@ -79,28 +83,45 @@
                 $(this).val(val.toFixed(2));
             }
         });
-    });
+    })();
 </script>
 
 <script>
-    $(document).on('keyup change', '.add-product-price', function () {
+    $(document).on('keyup change input', '.add-product-price', function () {
         const $priceInput = $(this);
-        const productId = $priceInput.data('product-id');
+        const productId   = $priceInput.data('product-id');
 
         if (!productId || $priceInput.prop('readonly')) return;
 
         const $hiddenAmountInput = $(`input[name="custom_products[${productId}][bundle_first_amount]"]`);
-        const rawAmount = $hiddenAmountInput.val().toString().trim();
+        const rawAmount          = $hiddenAmountInput.val().toString().trim();
 
-        const lastChar = rawAmount.slice(-1);
-        const hasSuffix = isNaN(lastChar);
+        const lastChar    = rawAmount.slice(-1);
+        const hasSuffix   = isNaN(lastChar);
         const modifiedStr = hasSuffix ? rawAmount.slice(0, -1) : rawAmount;
-        const baseAmount = parseFloat(modifiedStr) || 0;
+        const baseAmount  = parseFloat(modifiedStr) || 0;
 
-        const unitPrice = parseFloat($priceInput.val()) || 0;
+        const unitPrice      = parseFloat($priceInput.val()) || 0;
         const currencyFactor = parseFloat(@json($currencyFactor ?? 1.0));
+        const bundleRate     = parseFloat($(`input[name="custom_products[${productId}][bundle_rate]"]`).val()) || 0;
 
-        const calculated = Math.floor(unitPrice * baseAmount * currencyFactor);
+        const raw = parseFloat((unitPrice * bundleRate).toFixed(2));
+
+        function smartRound(value) {
+            if (value >= 1_000_000) return Math.round(value / 1_000_000) * 1_000_000;
+            if (value >= 100_000)   return Math.round(value / 100_000) * 100_000;
+            if (value >= 10_000)    return Math.round(value / 10_000) * 10_000;
+            if (value >= 1_000)     return Math.round(value / 1_000) * 1_000;
+            if (value >= 100)       return Math.round(value / 100) * 100;
+            return Math.round(value);
+        }
+
+        // WordPress
+        const calculated = bundleRate > 0
+            ? smartRound(raw)
+            // Laravel
+            : Math.floor(unitPrice * baseAmount * currencyFactor);
+
         const displayValue = hasSuffix ? calculated + lastChar : calculated.toString();
 
         $(`.add-currency-amount[data-product-id="${productId}"]`).val(displayValue);
@@ -111,11 +132,11 @@
     $(document).ready(function () {
         $('#add-custom-products').off('click').on('click', function () {
             let selectedProducts = [];
-            let hasValidData = true;
+            let hasValidData     = true;
 
             $('input[name="add_product_ids[]"]:checked').each(function () {
-                let productId = $(this).val();
-                let $row = $('#customize-product-row-' + productId);
+                let productId   = $(this).val();
+                let $row        = $('#customize-product-row-' + productId);
                 let $collapseRow = $('#product-collapse-row-' + productId);
 
                 let unitPrice = parseFloat($row.find('.add-product-price:not([readonly])').val());
@@ -126,17 +147,14 @@
                     return false;
                 }
 
-                let gameName = $row.find('td:nth-child(2)').clone().children().remove().end().text().trim();
-                let gameCurrency = $row.find('td:nth-child(3)').text().trim();
-
+                let gameName       = $row.find('td:nth-child(2)').clone().children().remove().end().text().trim();
                 let selectedPlatform = $collapseRow.find('.select-platform').val();
-
-                let platformFields = {};
-                let missingFields = false;
+                let platformFields   = {};
+                let missingFields    = false;
 
                 if (selectedPlatform) {
                     $collapseRow.find(`.platform-section[data-platform="${selectedPlatform}"] input`).each(function () {
-                        let fieldName = $(this).attr('name');
+                        let fieldName  = $(this).attr('name');
                         let fieldValue = $(this).val();
 
                         if ($(this).prop('required') && (!fieldValue || fieldValue.trim() === '')) {
@@ -156,16 +174,14 @@
                 }
 
                 selectedProducts.push({
-                    id: productId,
+                    id:                   productId,
                     game_currency_amount: document.querySelector(`.add-currency-amount[data-product-id="${productId}"]`).value,
-                    unit_price: unitPrice,
-                    bundle: 'custom'
+                    unit_price:           unitPrice,
+                    bundle:               'custom'
                 });
             });
 
-            if (!hasValidData) {
-                return;
-            }
+            if (!hasValidData) return;
 
             if (selectedProducts.length > 0) {
                 let btn = $('#add-custom-products');
@@ -174,33 +190,23 @@
                 $('#discount_amount').prop('type', 'text').val('Calculating...').prop('readonly', true);
 
                 $.ajax({
-                    url: "{{ route('add.products') }}",
+                    url:  "{{ route('add.products') }}",
                     type: 'POST',
                     data: {
-                        _token: "{{ csrf_token() }}",
+                        _token:        "{{ csrf_token() }}",
                         selected_games: selectedProducts,
-                        site_id: "{{ $site->id ?? '' }}"
+                        site_id:       "{{ $site->id ?? '' }}"
                     },
                     success: function (response) {
                         $('input[name="products[]"]:checked').prop('disabled', true);
 
-                        let discountAmount = 0;
-                        let current_amount = response.total;
                         let invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
-
-                        if (current_amount > invoiceAmount) {
-                            discountAmount = current_amount - invoiceAmount;
-                        }
 
                         $('#addgames').modal('hide');
                         $('#discount_amount').prop('readonly', false).prop('type', 'number');
                         $('#product-table-body').html(response.tableRows);
-                        $('#current_amount').val(current_amount.toFixed(2));
-                        $('#temp_current_amount_text').text(current_amount.toFixed(2));
-                        $('#discount_amount').val(discountAmount.toFixed(2));
-                        $('#temp_discount_amount_text').text(discountAmount.toFixed(2));
-                        $('#invoice_amount').val(invoiceAmount.toFixed(2));
 
+                        syncAllAmountDisplays(response.total, invoiceAmount);
                         toastr.success('Products added successfully!');
 
                         if (!response.is_random) {
@@ -212,7 +218,7 @@
                         toastr.error('Failed to add products. Please try again.');
                     },
                     complete: function () {
-                        btn.prop('disabled', false).html('Add Selected to Cart');
+                        btn.prop('disabled', false).html('<i class="bi bi-cart-plus me-1"></i> Add to list');
                     }
                 });
             } else {
@@ -232,11 +238,11 @@
             return;
         }
 
-        inputField.value = '';
+        inputField.value       = '';
         inputField.placeholder = "Listening to your voice search...";
 
-        const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-        recognition.lang = "en-US";
+        const recognition          = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        recognition.lang           = "en-US";
         recognition.interimResults = false;
 
         recognition.start();
@@ -250,7 +256,7 @@
 
         recognition.onerror = function (event) {
             toastr.error("Voice recognition error: " + event.error);
-            inputField.value = '';
+            inputField.value       = '';
             inputField.style.color = '';
             inputField.placeholder = "Enter or Speak product or category name...";
         };
@@ -264,21 +270,17 @@
 
 <script>
     function validateSelectedProducts() {
-        const selected = document.querySelectorAll('input[name="add_product_ids[]"]:checked');
-        if (selected.length === 0) {
-            return false;
-        }
-        return true;
+        return document.querySelectorAll('input[name="add_product_ids[]"]:checked').length > 0;
     }
 
-    document.getElementById('add-custom-products')?.addEventListener('click', function(e) {
+    document.getElementById('add-custom-products')?.addEventListener('click', function (e) {
         if (!validateSelectedProducts()) {
             e.preventDefault();
         }
     });
 
     document.querySelectorAll('.product-row').forEach(row => {
-        row.addEventListener('click', function(e) {
+        row.addEventListener('click', function (e) {
             if (e.target.closest('input, select, label')) {
                 e.stopPropagation();
             }

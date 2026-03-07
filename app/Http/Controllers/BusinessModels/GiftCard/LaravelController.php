@@ -67,7 +67,7 @@ class LaravelController extends Controller
                 'p.card_currency',
                 DB::raw('ROUND(p.rrp * IFNULL(cr.rate, 1), 2) as rrp'),
                 'p.discount',
-                DB::raw('ROUND(p.unit_price * IFNULL(cr.rate, 1), 2) as unit_price'),
+                DB::raw('ROUND(ROUND(p.rrp * IFNULL(cr.rate, 1), 2) * (1 - p.discount / 100), 2) as unit_price'),
                 'p.current_stock',
                 DB::raw('ROUND(1 / IFNULL(cr.rate, 1), 5) as reverse_rate')
             )
@@ -172,7 +172,6 @@ class LaravelController extends Controller
     
         $bestMatch->each(function ($product) use ($categories, $siteLink) {
             $category = $categories[$product->category_id] ?? null;
-    
             $product->category_name = $category->name ?? 'unknown';
             $product->slug = $category ? 'search?category=' . $category->slug : $siteLink;
         });
@@ -198,7 +197,13 @@ class LaravelController extends Controller
             }
         });
     
-        $productList = $bestMatch->map(fn($p) => ['id' => $p->id, 'unit_price' => $p->unit_price])->toArray();
+        $productList = $bestMatch->map(fn($p) => [
+            'id'         => $p->id,
+            'unit_price' => $p->unit_price,
+            'name'       => $p->name,
+            'slug'       => $p->slug ?? '',
+        ])->toArray();
+
         session()->forget('ready_products');
         session()->put('ready_products', $productList);
         session(['current_amount' => $bestTotal]);
@@ -206,13 +211,13 @@ class LaravelController extends Controller
         $modelType = $site->businessModel->model_type;
         $tableRows = view("invoice.{$modelType}.random_product_rows", [
             'products' => $bestMatch,
-            'site' => $site,
-            'total' => $bestTotal
+            'site'     => $site,
+            'total'    => $bestTotal
         ])->render();
     
         return response()->json([
             'tableRows' => $tableRows,
-            'total' => $bestTotal
+            'total'     => $bestTotal
         ]);
     }
     
@@ -306,7 +311,7 @@ class LaravelController extends Controller
     
                         return [
                             'products' => [$productArray[$bestPair[0]], $productArray[$bestPair[1]]],
-                            'total' => $bestTotal
+                            'total'    => $bestTotal
                         ];
                     }
                 }
@@ -649,7 +654,6 @@ class LaravelController extends Controller
         $productsData = $request->get('products');
 
         $site = Website::findOrFail($site_id);
-        $productstable = getProductTable($site->technology);
         DynamicDatabaseService::connect($site);
 
         $readyProducts = session()->get('ready_products', []);
@@ -669,8 +673,10 @@ class LaravelController extends Controller
 
             if (!$exists) {
                 $readyProducts[] = [
-                    'id' => $productId,
+                    'id'         => $productId,
                     'unit_price' => $unitPrice,
+                    'name'       => '',
+                    'slug'       => '',
                 ];
             }
         }
@@ -680,7 +686,7 @@ class LaravelController extends Controller
         $productIds = collect($readyProducts)->pluck('id')->reverse()->values()->toArray();
 
         $siteCurrency = site_currency_code();
-        $products = DB::connection($this->connectionType)
+        $dbProducts = DB::connection($this->connectionType)
             ->table($this->productTable . ' as p')
             ->leftJoin('conversion_rates as cr', function ($join) use ($siteCurrency) {
                 $join->on('p.card_currency', '=', 'cr.from_currency')
@@ -694,7 +700,7 @@ class LaravelController extends Controller
                 'p.card_currency',
                 DB::raw('ROUND(p.rrp * IFNULL(cr.rate, 1), 2) as rrp'),
                 'p.discount',
-                DB::raw('ROUND(p.unit_price * IFNULL(cr.rate, 1), 2) as unit_price'),
+                DB::raw('ROUND(ROUND(p.rrp * IFNULL(cr.rate, 1), 2) * (1 - p.discount / 100), 2) as unit_price'),
                 'p.current_stock',
                 DB::raw('ROUND(1 / IFNULL(cr.rate, 1), 5) as reverse_rate')
             )
@@ -702,24 +708,47 @@ class LaravelController extends Controller
             ->get()
             ->keyBy('id');
 
+        $categoryIds = $dbProducts->pluck('category_id')->unique();
+        $categories = DB::connection($this->connectionType)
+            ->table('categories')
+            ->whereIn('id', $categoryIds)
+            ->select('id', 'name', 'slug')
+            ->get()
+            ->keyBy('id');
 
+        $siteLink = $site->site_link;
 
-        $products = collect($productIds)->map(function ($id) use ($products) {
-            return $products[$id];
-        });
+        $products = collect($productIds)->map(function ($id) use ($dbProducts) {
+            return $dbProducts[$id] ?? null;
+        })->filter();
 
-        $products = $products->map(function ($product) use ($readyProducts, $site_id) {
+        $updatedSession = $readyProducts;
+
+        $products = $products->map(function ($product) use ($readyProducts, $site_id, $categories, $siteLink, &$updatedSession) {
             $sessionProduct = collect($readyProducts)->firstWhere('id', $product->id);
             $product->unit_price = $sessionProduct['unit_price'] ?? $product->unit_price;
+
+            $category = $categories[$product->category_id] ?? null;
+            $product->category_name = $category->name ?? 'unknown';
+            $product->slug = $category ? 'search?category=' . $category->slug : $siteLink;
+
+            foreach ($updatedSession as &$sp) {
+                if ($sp['id'] == $product->id) {
+                    $sp['name'] = $product->name;
+                    $sp['slug'] = $product->slug;
+                    break;
+                }
+            }
+
             $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
                 ->where('product_id', $product->id)
                 ->orderByDesc('last_price_changed')
                 ->first();
 
             if ($lastUpdate) {
-                $lastPriceChanged = Carbon::parse($lastUpdate->last_price_changed);
+                $lastPriceChanged    = Carbon::parse($lastUpdate->last_price_changed);
                 $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
-                $remainingDays = now()->diffInDays($nextPriceChangeDate, false);
+                $remainingDays       = now()->diffInDays($nextPriceChangeDate, false);
                 $product->remaining_days = max(round($remainingDays), 0);
                 $product->can_edit_price = now()->greaterThanOrEqualTo($nextPriceChangeDate) ? 1 : 0;
             } else {
@@ -729,18 +758,22 @@ class LaravelController extends Controller
 
             return $product;
         });
+
+        session()->put('ready_products', $updatedSession);
+
         $modelType = $site->businessModel->model_type;
-        session(['current_amount' => collect($products)->sum('unit_price')]);
+        $total = collect($products)->sum('unit_price');
+        session(['current_amount' => $total]);
 
         $tableRows = view("invoice.{$modelType}.random_product_rows", [
             'products' => $products,
-            'site' => $site,
-            'total' => collect($products)->sum('unit_price')
+            'site'     => $site,
+            'total'    => $total
         ])->render();
 
         return response()->json([
             'tableRows' => $tableRows,
-            'total' => collect($products)->sum('unit_price')
+            'total'     => $total
         ]);
     }
 
@@ -748,30 +781,31 @@ class LaravelController extends Controller
     public function removeProduct(Request $request)
     {
         $productId = $request->get('product_id');
-        $site_id = $request->get('site_id');
-        $site = Website::findOrFail($site_id);
+        $site_id   = $request->get('site_id');
+        $site      = Website::findOrFail($site_id);
 
         $readyProducts = session('ready_products', []);
 
-        $updatedProducts = collect($readyProducts)->filter(function ($product) use ($productId) {
-            return $product['id'] != $productId;
+        $updatedProducts = collect($readyProducts)->reject(function ($product) use ($productId) {
+            return (string) $product['id'] === (string) $productId;
         })->values()->toArray();
 
         session()->put('ready_products', $updatedProducts);
+
         if (empty($updatedProducts)) {
             session()->forget('current_amount');
             return response()->json([
                 'tableRows' => '',
-                'currency' => null,
+                'total'     => 0,
             ]);
         }
 
         DynamicDatabaseService::connect($site);
 
-        $productIds = array_column($updatedProducts, 'id');
-
+        $productIds   = array_column($updatedProducts, 'id');
         $siteCurrency = site_currency_code();
-        $products = DB::connection($this->connectionType)
+
+        $dbProducts = DB::connection($this->connectionType)
             ->table($this->productTable . ' as p')
             ->leftJoin('conversion_rates as cr', function ($join) use ($siteCurrency) {
                 $join->on('p.card_currency', '=', 'cr.from_currency')
@@ -785,70 +819,92 @@ class LaravelController extends Controller
                 'p.card_currency',
                 DB::raw('ROUND(p.rrp * IFNULL(cr.rate, 1), 2) as rrp'),
                 'p.discount',
-                DB::raw('ROUND(p.unit_price * IFNULL(cr.rate, 1), 2) as unit_price'),
+                DB::raw('ROUND(ROUND(p.rrp * IFNULL(cr.rate, 1), 2) * (1 - p.discount / 100), 2) as unit_price'),
                 'p.current_stock',
                 DB::raw('ROUND(1 / IFNULL(cr.rate, 1), 5) as reverse_rate')
             )
             ->whereIn('p.id', $productIds)
-            ->get();
+            ->get()
+            ->keyBy('id');
 
-            $categoryIds = $products->pluck('category_id')->unique();
+        $categoryIds = $dbProducts->pluck('category_id')->unique();
+        $categories  = DB::connection($this->connectionType)
+            ->table('categories')
+            ->whereIn('id', $categoryIds)
+            ->select('id', 'name', 'slug')
+            ->get()
+            ->keyBy('id');
 
-            $categories = DB::connection($this->connectionType)
-                ->table('categories')
-                ->whereIn('id', $categoryIds)
-                ->select('id', 'name', 'slug')
-                ->get()
-                ->keyBy('id');
+        $siteLink = $site->site_link;
 
-            $siteLink = $site->site_link;
-            $products = $products->map(function ($product) use ($updatedProducts, $site_id, $categories, $siteLink) {
-                $sessionProduct = collect($updatedProducts)->firstWhere('id', $product->id);
+        $products = collect($updatedProducts)->map(function ($item) use ($dbProducts, $site_id, $categories, $siteLink) {
+            $dbProduct = $dbProducts[$item['id']] ?? null;
 
-                $product->unit_price = $sessionProduct['unit_price'] ?? $product->unit_price;
-
-                $category = $categories[$product->category_id] ?? null;
-                $product->category_name = $category->name ?? 'unknown';
-                $product->slug = $category ? 'search?category=' . $category->slug : $siteLink;
-
-                $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
-                    ->where('product_id', $product->id)
-                    ->orderByDesc('last_price_changed')
-                    ->first();
-
-                if ($lastUpdate) {
-                    $lastPriceChanged = Carbon::parse($lastUpdate->last_price_changed);
-                    $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
-                    $remainingDays = now()->diffInDays($nextPriceChangeDate, false);
-                    $product->remaining_days = max(round($remainingDays), 0);
-                    $product->can_edit_price = now()->greaterThanOrEqualTo($nextPriceChangeDate) ? 1 : 0;
-                } else {
-                    $product->can_edit_price = 1;
-                    $product->remaining_days = 0;
-                }
-
+            if (!$dbProduct) {
+                $product = (object) [
+                    'id'             => $item['id'],
+                    'name'           => $item['name'] ?? '',
+                    'slug'           => $item['slug'] ?? '',
+                    'category_id'    => null,
+                    'card_currency'  => null,
+                    'rrp'            => $item['unit_price'],
+                    'discount'       => 0,
+                    'unit_price'     => $item['unit_price'],
+                    'current_stock'  => null,
+                    'reverse_rate'   => 1,
+                    'category_name'  => 'unknown',
+                    'remaining_days' => 0,
+                    'can_edit_price' => 1,
+                ];
                 return $product;
-            });
+            }
+
+            $dbProduct->unit_price = $item['unit_price'];
+
+            $category = $categories[$dbProduct->category_id] ?? null;
+            $dbProduct->category_name = $category->name ?? 'unknown';
+            $dbProduct->slug = $category ? 'search?category=' . $category->slug : $siteLink;
+
+            $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
+                ->where('product_id', $dbProduct->id)
+                ->orderByDesc('last_price_changed')
+                ->first();
+
+            if ($lastUpdate) {
+                $lastPriceChanged    = Carbon::parse($lastUpdate->last_price_changed);
+                $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
+                $remainingDays       = now()->diffInDays($nextPriceChangeDate, false);
+                $dbProduct->remaining_days = max(round($remainingDays), 0);
+                $dbProduct->can_edit_price = now()->greaterThanOrEqualTo($nextPriceChangeDate) ? 1 : 0;
+            } else {
+                $dbProduct->can_edit_price = 1;
+                $dbProduct->remaining_days = 0;
+            }
+
+            return $dbProduct;
+        });
 
         $modelType = $site->businessModel->model_type;
-        session(['current_amount' => collect($products)->sum('unit_price')]);
+        $total = collect($products)->sum('unit_price');
+        session(['current_amount' => $total]);
+
         $tableRows = view("invoice.{$modelType}.random_product_rows", [
             'products' => $products,
-            'site' => $site,
-            'total' => collect($products)->sum('unit_price')
+            'site'     => $site,
+            'total'    => $total
         ])->render();
 
         return response()->json([
             'tableRows' => $tableRows,
-            'total' => collect($products)->sum('unit_price')
+            'total'     => $total
         ]);
     }
 
     public function updateProduct(Request $request)
     {
         $productId = $request->get('product_id');
-        $quantity = $request->get('quantity');
-        $site_id = $request->get('site_id');
+        $quantity  = $request->get('quantity');
+        $site_id   = $request->get('site_id');
 
         $site = Website::findOrFail($site_id);
         DynamicDatabaseService::connect($site);
@@ -863,10 +919,10 @@ class LaravelController extends Controller
         }
         session()->put('ready_products', $readyProducts);
 
-        $productIds = collect($readyProducts)->pluck('id')->toArray();
-
+        $productIds   = collect($readyProducts)->pluck('id')->toArray();
         $siteCurrency = site_currency_code();
-        $products = DB::connection($this->connectionType)
+
+        $dbProducts = DB::connection($this->connectionType)
             ->table($this->productTable . ' as p')
             ->leftJoin('conversion_rates as cr', function ($join) use ($siteCurrency) {
                 $join->on('p.card_currency', '=', 'cr.from_currency')
@@ -880,51 +936,56 @@ class LaravelController extends Controller
                 'p.card_currency',
                 DB::raw('ROUND(p.rrp * IFNULL(cr.rate, 1), 2) as rrp'),
                 'p.discount',
-                DB::raw('ROUND(p.unit_price * IFNULL(cr.rate, 1), 2) as unit_price'),
+                DB::raw('ROUND(ROUND(p.rrp * IFNULL(cr.rate, 1), 2) * (1 - p.discount / 100), 2) as unit_price'),
                 'p.current_stock',
                 DB::raw('ROUND(1 / IFNULL(cr.rate, 1), 5) as reverse_rate')
             )
             ->whereIn('p.id', $productIds)
-            ->get();
+            ->get()
+            ->keyBy('id');
 
+        $categoryIds = $dbProducts->pluck('category_id')->unique();
+        $categories  = DB::connection($this->connectionType)
+            ->table('categories')
+            ->whereIn('id', $categoryIds)
+            ->select('id', 'name', 'slug')
+            ->get()
+            ->keyBy('id');
 
-            $categoryIds = $products->pluck('category_id')->unique();
+        $siteLink = $site->site_link;
 
-            $categories = DB::connection($this->connectionType)
-                ->table('categories')
-                ->whereIn('id', $categoryIds)
-                ->select('id', 'name', 'slug')
-                ->get()
-                ->keyBy('id');
+        $products = collect($readyProducts)->map(function ($item) use ($dbProducts, $site_id, $categories, $siteLink) {
+            $product = $dbProducts[$item['id']] ?? null;
 
-            $siteLink = $site->site_link;
-            $products = $products->map(function ($product) use ($updatedProducts, $site_id, $categories, $siteLink) {
-                $sessionProduct = collect($updatedProducts)->firstWhere('id', $product->id);
+            if (!$product) {
+                return null;
+            }
 
-                $product->unit_price = $sessionProduct['unit_price'] ?? $product->unit_price;
+            $product->unit_price = $item['unit_price'];
+            $product->quantity   = $item['quantity'] ?? 1;
 
-                $category = $categories[$product->category_id] ?? null;
-                $product->category_name = $category->name ?? 'unknown';
-                $product->slug = $category ? 'search?category=' . $category->slug : $siteLink;
+            $category = $categories[$product->category_id] ?? null;
+            $product->category_name = $category->name ?? 'unknown';
+            $product->slug = $category ? 'search?category=' . $category->slug : $siteLink;
 
-                $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
-                    ->where('product_id', $product->id)
-                    ->orderByDesc('last_price_changed')
-                    ->first();
+            $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
+                ->where('product_id', $product->id)
+                ->orderByDesc('last_price_changed')
+                ->first();
 
-                if ($lastUpdate) {
-                    $lastPriceChanged = Carbon::parse($lastUpdate->last_price_changed);
-                    $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
-                    $remainingDays = now()->diffInDays($nextPriceChangeDate, false);
-                    $product->remaining_days = max(round($remainingDays), 0);
-                    $product->can_edit_price = now()->greaterThanOrEqualTo($nextPriceChangeDate) ? 1 : 0;
-                } else {
-                    $product->can_edit_price = 1;
-                    $product->remaining_days = 0;
-                }
+            if ($lastUpdate) {
+                $lastPriceChanged    = Carbon::parse($lastUpdate->last_price_changed);
+                $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
+                $remainingDays       = now()->diffInDays($nextPriceChangeDate, false);
+                $product->remaining_days = max(round($remainingDays), 0);
+                $product->can_edit_price = now()->greaterThanOrEqualTo($nextPriceChangeDate) ? 1 : 0;
+            } else {
+                $product->can_edit_price = 1;
+                $product->remaining_days = 0;
+            }
 
-                return $product;
-            });
+            return $product;
+        })->filter();
 
         $modelType = $site->businessModel->model_type;
 
@@ -936,13 +997,13 @@ class LaravelController extends Controller
 
         $tableRows = view("invoice.{$modelType}.random_product_rows", [
             'products' => $products,
-            'site' => $site,
-            'total' => $total
+            'site'     => $site,
+            'total'    => $total
         ])->render();
 
         return response()->json([
             'tableRows' => $tableRows,
-            'total' => $total
+            'total'     => $total
         ]);
     }
 
@@ -952,20 +1013,20 @@ class LaravelController extends Controller
         session()->forget('ready_products');
         session()->forget('current_amount');
         return response()->json([
-            'success' => true,
+            'success'   => true,
             'tableRows' => '',
-            'currency' => null,
-            'total' => 0
+            'currency'  => null,
+            'total'     => 0
         ]);
     }
 
     public function filterProducts(Request $request)
     {
-        $site_id = session('customer.site_id');
+        $site_id       = session('customer.site_id');
         $hasPriceRange = $request->filled('price_from') && $request->filled('price_to');
-        $keyword = $request->input('keyword');
+        $keyword       = $request->input('keyword');
         $sortUnitPrice = $request->input('sort_unit_price', 'asc');
-        $site = Website::findOrFail($site_id);
+        $site          = Website::findOrFail($site_id);
         DynamicDatabaseService::connect($site);
 
         if (!$hasPriceRange) {
@@ -991,7 +1052,7 @@ class LaravelController extends Controller
                 'p.card_currency',
                 DB::raw('ROUND(p.rrp * IFNULL(cr.rate, 1), 2) as rrp'),
                 'p.discount',
-                DB::raw('ROUND(p.unit_price * IFNULL(cr.rate, 1), 2) as unit_price'),
+                DB::raw('ROUND(ROUND(p.rrp * IFNULL(cr.rate, 1), 2) * (1 - p.discount / 100), 2) as unit_price'),
                 'p.current_stock',
                 DB::raw('ROUND(1 / IFNULL(cr.rate, 1), 5) as reverse_rate'),
                 'c.name as category_name'
@@ -1027,7 +1088,7 @@ class LaravelController extends Controller
             });
         }
 
-        $readyProducts = session('ready_products', []);
+        $readyProducts   = session('ready_products', []);
         $readyProductIds = collect($readyProducts)->pluck('id')->toArray();
 
         if (count($readyProductIds) > 0) {
@@ -1035,10 +1096,10 @@ class LaravelController extends Controller
         }
 
         $totalCount = $subQuery->count();
-        $page = $request->input('page', 1);
-        $perPage = 10;
-        $offset = ($page - 1) * $perPage;
-        $products = $subQuery->skip($offset)->take($perPage)->get();
+        $page       = $request->input('page', 1);
+        $perPage    = 10;
+        $offset     = ($page - 1) * $perPage;
+        $products   = $subQuery->skip($offset)->take($perPage)->get();
         $totalPages = ceil($totalCount / $perPage);
         $paginationPages = $this->smartPagination($page, $totalPages);
 
@@ -1048,7 +1109,7 @@ class LaravelController extends Controller
             ]);
         }
 
-        $productIds = $products->pluck('id')->toArray();
+        $productIds  = $products->pluck('id')->toArray();
         $categoryIds = $products->pluck('category_id')->unique()->toArray();
 
         $priceHistories = ProductPriceHistory::where('site_id', $site_id)
@@ -1071,46 +1132,44 @@ class LaravelController extends Controller
 
             $history = $priceHistories->get($product->id);
             if ($history) {
-                $lastPriceChanged = Carbon::parse($history->last_price_changed);
+                $lastPriceChanged    = Carbon::parse($history->last_price_changed);
                 $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
-                $remainingDays = now()->diffInDays($nextPriceChangeDate, false);
+                $remainingDays       = now()->diffInDays($nextPriceChangeDate, false);
                 $product->remaining_days = max(round($remainingDays), 0);
                 $product->can_edit_price = now()->greaterThanOrEqualTo($nextPriceChangeDate) ? 1 : 0;
             } else {
                 $product->can_edit_price = 1;
                 $product->remaining_days = 0;
             }
-            //Test
         }
 
-
-        $modelType = $site->businessModel->model_type;
+        $modelType     = $site->businessModel->model_type;
         $random_amount = session('current_amount', 0);
 
         $tableRows = view("invoice.{$modelType}.add_product_rows", [
-            'products' => $products,
-            'site' => $site,
+            'products'      => $products,
+            'site'          => $site,
             'random_amount' => $random_amount
         ])->render();
 
         $paginationHtml = view("invoice.{$modelType}.pagination", [
-            'totalPages' => $totalPages,
+            'totalPages'      => $totalPages,
             'paginationPages' => $paginationPages,
-            'currentPage' => $page
+            'currentPage'     => $page
         ])->render();
 
         return response()->json([
-            'tableRows' => $tableRows,
+            'tableRows'      => $tableRows,
             'paginationHtml' => $paginationHtml,
-            'random_amount' => $random_amount,
-            'currentPage' => $page
+            'random_amount'  => $random_amount,
+            'currentPage'    => $page
         ]);
     }
 
 
     private function smartPagination($currentPage, $totalPages)
     {
-        $pages = [];
+        $pages   = [];
         $pages[] = 1;
 
         if ($currentPage > 4) {
@@ -1118,7 +1177,7 @@ class LaravelController extends Controller
         }
 
         $start = max(2, $currentPage - 3);
-        $end = min($totalPages - 1, $currentPage + 3);
+        $end   = min($totalPages - 1, $currentPage + 3);
 
         for ($i = $start; $i <= $end; $i++) {
             $pages[] = $i;
@@ -1138,15 +1197,14 @@ class LaravelController extends Controller
     public function getProduct(Request $request)
     {
         $productId = $request->input('product_id');
-        $rrp = $request->input('rrp');
-        $site_id = session('customer.site_id');
-        $site = Website::findOrFail($site_id);
+        $rrp       = $request->input('rrp');
+        $site_id   = session('customer.site_id');
+        $site      = Website::findOrFail($site_id);
         DynamicDatabaseService::connect($site);
 
         if ($site->businessModel && strtolower(trim($site->businessModel->model_type)) !== 'giftcard' && strtolower(trim($site->technology)) !== 'laravel') {
             return response()->json(['success' => true]);
         }
-
 
         if (!$productId || !$rrp) {
             return response()->json(['success' => false], 400);
@@ -1173,7 +1231,7 @@ class LaravelController extends Controller
 
         $convertedAmount = round($rrp * $rate, 2);
 
-        $match = [];
+        $match   = [];
         $nameRRP = null;
         if (preg_match('/([A-Z]{3})\s*(\d+(\.\d+)?)/i', $product->name, $match)) {
             $nameRRP = (float)$match[2];
@@ -1183,7 +1241,7 @@ class LaravelController extends Controller
 
         return response()->json([
             'convertedAmount' => $convertedAmount,
-            'success' => !$hasMismatch
+            'success'         => !$hasMismatch
         ]);
     }
 
@@ -1191,35 +1249,34 @@ class LaravelController extends Controller
     public function generateInvoice(Request $request)
     {
         $site_id = $request->input('site_id');
-        $site = Website::findOrFail($site_id);
+        $site    = Website::findOrFail($site_id);
         DynamicDatabaseService::connect($site);
     
-        $invoice_data['site'] = $site;
-        $invoice_data['invoice_number'] = $request->input('invoice_number');
-        $invoice_data['invoice_date'] = Carbon::parse($request->input('invoice_date'))->format('F d, Y');
-        $invoice_data['customer_name'] = $request->input('customer_name');
-        $invoice_data['customer_mobile'] = $request->input('customer_mobile');
-        $invoice_data['customer_email'] = $request->input('customer_email');
-        $invoice_data['invoice_amount'] = $request->input('invoice_amount');
-        $invoice_data['current_amount'] = $request->input('current_amount');
-        $invoice_data['discount_amount'] = $request->input('discount_amount');
-        $invoice_data['company_name'] = $site->company_name;
-        $invoice_data['company_email'] = $site->company_email;
-        $invoice_data['company_mobile'] = $site->company_mobile;
-        $invoice_data['company_address'] = $site->company_address;
+        $invoice_data['site']             = $site;
+        $invoice_data['invoice_number']   = $request->input('invoice_number');
+        $invoice_data['invoice_date']     = Carbon::parse($request->input('invoice_date'))->format('F d, Y');
+        $invoice_data['customer_name']    = $request->input('customer_name');
+        $invoice_data['customer_mobile']  = $request->input('customer_mobile');
+        $invoice_data['customer_email']   = $request->input('customer_email');
+        $invoice_data['invoice_amount']   = $request->input('invoice_amount');
+        $invoice_data['current_amount']   = $request->input('current_amount');
+        $invoice_data['discount_amount']  = $request->input('discount_amount');
+        $invoice_data['company_name']     = $site->company_name;
+        $invoice_data['company_email']    = $site->company_email;
+        $invoice_data['company_mobile']   = $site->company_mobile;
+        $invoice_data['company_address']  = $site->company_address;
         $invoice_data['invoice_template'] = $site->invoice_template;
-        $invoice_data['model_type'] = $site->businessModel->model_type;
-        $invoice_data['site_id'] = $site->id;
+        $invoice_data['model_type']       = $site->businessModel->model_type;
+        $invoice_data['site_id']          = $site->id;
     
         $company_detail_type = $request->input('company_detail_type');
     
         if ($company_detail_type === 'remote') {
-    
-            $invoice_data['site_name']          = $request->input('remote_site_name') ?? '';
-            $invoice_data['company_name']       = $request->input('remote_company_name') ?? '';
-            $invoice_data['company_email']      = $request->input('remote_company_email') ?? '';
-            $invoice_data['company_mobile']     = $request->input('remote_company_mobile') ?? '';
-            $invoice_data['company_address']    = $request->input('remote_company_address') ?? '';
+            $invoice_data['site_name']           = $request->input('remote_site_name') ?? '';
+            $invoice_data['company_name']        = $request->input('remote_company_name') ?? '';
+            $invoice_data['company_email']       = $request->input('remote_company_email') ?? '';
+            $invoice_data['company_mobile']      = $request->input('remote_company_mobile') ?? '';
+            $invoice_data['company_address']     = $request->input('remote_company_address') ?? '';
             $invoice_data['registration_number'] = $request->input('remote_registration_number') ?? '';
             $invoice_data['license_number']      = $request->input('remote_license_number') ?? '';
     
@@ -1228,29 +1285,27 @@ class LaravelController extends Controller
             if ($remote_database) {
                 DB::connection($this->connectionType)->table('general_settings')->where('id', $remote_database->id)
                     ->update([
-                        'site_name'            => $request->input('remote_site_name') ?? '',
-                        'email'                => $request->input('remote_company_email') ?? '',
-                        'phone'                => $request->input('remote_company_mobile') ?? '',
-                        'address'              => $request->input('remote_company_address') ?? '',
-                        'updated_at'           => now(),
+                        'site_name'  => $request->input('remote_site_name') ?? '',
+                        'email'      => $request->input('remote_company_email') ?? '',
+                        'phone'      => $request->input('remote_company_mobile') ?? '',
+                        'address'    => $request->input('remote_company_address') ?? '',
+                        'updated_at' => now(),
                     ]);
             }
-    
         } else {
-    
-            $invoice_data['site_name']          = $request->input('local_site_name') ?? '';
-            $invoice_data['company_name']       = $request->input('local_company_name') ?? '';
-            $invoice_data['company_email']      = $request->input('local_company_email') ?? '';
-            $invoice_data['company_mobile']     = $request->input('local_company_mobile') ?? '';
-            $invoice_data['company_address']    = $request->input('local_company_address') ?? '';
+            $invoice_data['site_name']           = $request->input('local_site_name') ?? '';
+            $invoice_data['company_name']        = $request->input('local_company_name') ?? '';
+            $invoice_data['company_email']       = $request->input('local_company_email') ?? '';
+            $invoice_data['company_mobile']      = $request->input('local_company_mobile') ?? '';
+            $invoice_data['company_address']     = $request->input('local_company_address') ?? '';
             $invoice_data['registration_number'] = $request->input('registration_number') ?? '';
             $invoice_data['license_number']      = $request->input('license_number') ?? '';
     
-            $site->site_name          = $invoice_data['site_name'];
-            $site->company_name       = $invoice_data['company_name'];
-            $site->company_email      = $invoice_data['company_email'];
-            $site->company_mobile     = $invoice_data['company_mobile'];
-            $site->company_address    = $invoice_data['company_address'];
+            $site->site_name           = $invoice_data['site_name'];
+            $site->company_name        = $invoice_data['company_name'];
+            $site->company_email       = $invoice_data['company_email'];
+            $site->company_mobile      = $invoice_data['company_mobile'];
+            $site->company_address     = $invoice_data['company_address'];
             $site->registration_number = $invoice_data['registration_number'];
             $site->license_number      = $invoice_data['license_number'];
     
@@ -1259,31 +1314,31 @@ class LaravelController extends Controller
     
         $invoice_data['invoice_header_image'] = base64EncodeImage($site->invoice_header_image);
         $invoice_data['invoice_footer_image'] = base64EncodeImage($site->invoice_footer_image);
-        $invoice_data['invoice_signature'] = base64EncodeImage($site->invoice_signature);
-        $invoice_data['company_logo'] = base64EncodeImage($site->company_logo);
-        $invoice_data['invoice_image1'] = base64EncodeImage($site->invoice_image1);
-        $invoice_data['invoice_image2'] = base64EncodeImage($site->invoice_image2);
-        $invoice_data['invoice_image3'] = base64EncodeImage($site->invoice_image3);
-        $invoice_data['invoice_image4'] = base64EncodeImage($site->invoice_image4);
-        $invoice_data['invoice_image5'] = base64EncodeImage($site->invoice_image5);
-        $invoice_data['invoice_image6'] = base64EncodeImage($site->invoice_image6);
-        $invoice_data['invoice_image7'] = base64EncodeImage($site->invoice_image7);
-        $invoice_data['invoice_image8'] = base64EncodeImage($site->invoice_image8);
-        $invoice_data['invoice_image9'] = base64EncodeImage($site->invoice_image9);
+        $invoice_data['invoice_signature']    = base64EncodeImage($site->invoice_signature);
+        $invoice_data['company_logo']         = base64EncodeImage($site->company_logo);
+        $invoice_data['invoice_image1']       = base64EncodeImage($site->invoice_image1);
+        $invoice_data['invoice_image2']       = base64EncodeImage($site->invoice_image2);
+        $invoice_data['invoice_image3']       = base64EncodeImage($site->invoice_image3);
+        $invoice_data['invoice_image4']       = base64EncodeImage($site->invoice_image4);
+        $invoice_data['invoice_image5']       = base64EncodeImage($site->invoice_image5);
+        $invoice_data['invoice_image6']       = base64EncodeImage($site->invoice_image6);
+        $invoice_data['invoice_image7']       = base64EncodeImage($site->invoice_image7);
+        $invoice_data['invoice_image8']       = base64EncodeImage($site->invoice_image8);
+        $invoice_data['invoice_image9']       = base64EncodeImage($site->invoice_image9);
     
         $productDataArray = $request->input('product_data', []);
-        $productIds = [];
-        $customPrices = [];
+        $productIds       = [];
+        $customPrices     = [];
     
         foreach ($productDataArray as $item) {
             $data = json_decode($item, true);
             if (!empty($data['product_id'])) {
                 $productIds[] = $data['product_id'];
                 $customPrices[$data['product_id']] = [
-                    'product_name' => $data['product_name'],
-                    'unit_rrp' => $data['unit_rrp'],
+                    'product_name'  => $data['product_name'],
+                    'unit_rrp'      => $data['unit_rrp'],
                     'unit_discount' => $data['unit_discount'],
-                    'unit_price' => $data['unit_price'],
+                    'unit_price'    => $data['unit_price'],
                 ];
             }
         }
@@ -1305,7 +1360,7 @@ class LaravelController extends Controller
                 'p.card_currency',
                 DB::raw('ROUND(p.rrp * IFNULL(cr.rate, 1), 2) as rrp'),
                 'p.discount',
-                DB::raw('ROUND(p.unit_price * IFNULL(cr.rate, 1), 2) as unit_price'),
+                DB::raw('ROUND(ROUND(p.rrp * IFNULL(cr.rate, 1), 2) * (1 - p.discount / 100), 2) as unit_price'),
                 'p.current_stock',
                 DB::raw('ROUND(1 / IFNULL(cr.rate, 1), 5) as reverse_rate')
             )
@@ -1314,14 +1369,13 @@ class LaravelController extends Controller
             ->values()
             ->map(function ($product) use ($customPrices) {
                 if (isset($customPrices[$product->id])) {
-                    $product->name = $customPrices[$product->id]['product_name'];
-                    $product->rrp = $customPrices[$product->id]['unit_rrp'];
-                    $product->discount = $customPrices[$product->id]['unit_discount'];
+                    $product->name      = $customPrices[$product->id]['product_name'];
+                    $product->rrp       = $customPrices[$product->id]['unit_rrp'];
+                    $product->discount  = $customPrices[$product->id]['unit_discount'];
                     $product->unit_price = $customPrices[$product->id]['unit_price'];
                 }
                 return $product;
             });
-    
     
         $products->each(function ($product) {
             $product->category_name = DB::connection($this->connectionType)
@@ -1330,13 +1384,13 @@ class LaravelController extends Controller
                 ->value('name') ?? 'unknown';
         });
     
-        $invoice_data['currency'] =  site_currency();
-        $invoice_data['products'] = $products;
+        $invoice_data['currency']    = site_currency();
+        $invoice_data['products']    = $products;
         $invoice_data['product_ids'] = $productIds;
     
-        $modelType = strtolower($site->businessModel->model_type);
+        $modelType     = strtolower($site->businessModel->model_type);
         $siteIdInWords = numberToWords($site->id);
-        $viewPath = "websites.{$modelType}.{$siteIdInWords}";
+        $viewPath      = "websites.{$modelType}.{$siteIdInWords}";
     
         $this->updateProductPrice($productDataArray);
         InvoiceController::createInvoiceHistory($invoice_data);
@@ -1344,6 +1398,7 @@ class LaravelController extends Controller
         $filename = $request->filled('invoice_file_name')
             ? $request->input('invoice_file_name') . '.pdf'
             : $invoice_data['invoice_number'] . '.pdf';
+
         try {
             return $this->generateWithApi2Pdf($site, $viewPath, $invoice_data, $filename);
         } catch (\Exception $e) {
@@ -1358,17 +1413,17 @@ class LaravelController extends Controller
         $response = Http::withHeaders([
             'Authorization' => env('API2PDF_KEY')
         ])->post('https://v2.api2pdf.com/chrome/html', [
-            'html' => $html,
+            'html'     => $html,
             'fileName' => $filename,
-            'options' => [
-                'format' => $site->pdf_size ?? 'A4',
-                'landscape' => ($site->pdf_orientation ?? 'portrait') === 'landscape',
-                'marginTop' => '0mm',
-                'marginBottom' => '0mm',
-                'marginLeft' => '0mm',
-                'marginRight' => '0mm',
+            'options'  => [
+                'format'                => $site->pdf_size ?? 'A4',
+                'landscape'             => ($site->pdf_orientation ?? 'portrait') === 'landscape',
+                'marginTop'             => '0mm',
+                'marginBottom'          => '0mm',
+                'marginLeft'            => '0mm',
+                'marginRight'           => '0mm',
                 'disableSmartShrinking' => true,
-                'zoom' => 1,
+                'zoom'                  => 1,
             ]
         ]);
 
@@ -1400,129 +1455,6 @@ class LaravelController extends Controller
         return $pdf->download($filename);
     }
 
-   
-
-    // protected function updateProductPrice(array $productDataArray)
-    // {
-    //     $site_id = session('customer.site_id');
-    
-    //     foreach ($productDataArray as $item) {
-    //         $data = json_decode($item, true);
-    
-    //         if (empty($data['product_id']) || !isset($data['unit_price'])) {
-    //             Log::info('Invalid item data', ['item' => $item]);
-    //             continue;
-    //         }
-    
-    //         $product_id = $data['product_id'];
-    //         $product = DB::connection($this->connectionType)
-    //             ->table($this->productTable)
-    //             ->where('id', $product_id)
-    //             ->first();
-    
-    //         if (!$product) {
-    //             Log::info('Product not found', ['product_id' => $product_id]);
-    //             continue;
-    //         }
-    
-    //         $siteCurrency = site_currency_code();
-    //         $rate = DB::connection($this->connectionType)
-    //             ->table('conversion_rates')
-    //             ->where('from_currency', $siteCurrency)
-    //             ->where('to_currency', $product->card_currency)
-    //             ->value('rate') ?: 1;
-    
-    //         $current_price = floatval($product->unit_price);
-    //         $current_rrp = floatval($product->rrp ?? 0);
-    //         $current_discount = floatval($product->discount ?? 0);
-    
-    //         $siteRRP = floatval($data['unit_rrp'] ?? 0);
-    //         $new_discount = floatval($data['unit_discount'] ?? 0);
-            
-    //         $new_rrp = round($siteRRP * $rate, 2);
-    
-    //         $discountChanged = abs($current_discount - $new_discount) > 0.01;
-    //         $rrpChanged = abs($current_rrp - $new_rrp) > 0.01;
-    
-    //         if (!$rrpChanged && !$discountChanged) {
-    //             continue;
-    //         }
-    
-    //         $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
-    //             ->where('product_id', $product_id)
-    //             ->orderByDesc('last_price_changed')
-    //             ->first();
-    
-    //         $canUpdate = !$lastUpdate || Carbon::parse($lastUpdate->last_price_changed)->diffInMonths(now()) >= 3;
-    
-    //         if (!$canUpdate) {
-    //             continue;
-    //         }
-    
-    //         if ($rrpChanged && !$discountChanged) {
-    //             $new_price = $current_discount > 0 && $new_rrp > 0
-    //                 ? round($new_rrp * (1 - $current_discount / 100), 2)
-    //                 : $new_rrp;
-    
-    //             $updateData = [
-    //                 'rrp' => $new_rrp,
-    //                 'unit_price' => $new_price
-    //             ];
-    
-    //             DB::connection($this->connectionType)
-    //                 ->table($this->productTable)
-    //                 ->where('id', $product_id)
-    //                 ->update($updateData);
-    
-    //             ProductPriceHistory::create([
-    //                 'site_id' => $site_id,
-    //                 'product_id' => $product_id,
-    //                 'unit_price' => $new_price,
-    //                 'last_price_changed' => now(),
-    //             ]);
-    //         }
-    //         elseif ($discountChanged && !$rrpChanged) {
-    //             $updateData = [
-    //                 'discount' => $new_discount
-    //             ];
-    
-    //             DB::connection($this->connectionType)
-    //                 ->table($this->productTable)
-    //                 ->where('id', $product_id)
-    //                 ->update($updateData);
-    
-    //             ProductPriceHistory::create([
-    //                 'site_id' => $site_id,
-    //                 'product_id' => $product_id,
-    //                 'unit_price' => $current_price,
-    //                 'last_price_changed' => now(),
-    //             ]);
-    //         }
-    //         elseif ($rrpChanged && $discountChanged) {
-    //             $new_price = $new_discount > 0 && $new_rrp > 0
-    //                 ? round($new_rrp * (1 - $new_discount / 100), 2)
-    //                 : $new_rrp;
-    
-    //             $updateData = [
-    //                 'rrp' => $new_rrp,
-    //                 'discount' => $new_discount,
-    //                 'unit_price' => $new_price
-    //             ];
-    
-    //             DB::connection($this->connectionType)
-    //                 ->table($this->productTable)
-    //                 ->where('id', $product_id)
-    //                 ->update($updateData);
-    
-    //             ProductPriceHistory::create([
-    //                 'site_id' => $site_id,
-    //                 'product_id' => $product_id,
-    //                 'unit_price' => $new_price,
-    //                 'last_price_changed' => now(),
-    //             ]);
-    //         }
-    //     }
-    // }
     protected function updateProductPrice(array $productDataArray)
     {
         $site_id = session('customer.site_id');
@@ -1530,7 +1462,6 @@ class LaravelController extends Controller
         foreach ($productDataArray as $item) {
             $data = json_decode($item, true);
 
-            // Validate required data
             if (empty($data['product_id']) || !isset($data['unit_price'])) {
                 Log::info('Invalid item data', ['item' => $item]);
                 continue;
@@ -1538,7 +1469,6 @@ class LaravelController extends Controller
 
             $product_id = $data['product_id'];
 
-            // Fetch current product data from database
             $product = DB::connection($this->connectionType)
                 ->table($this->productTable)
                 ->where('id', $product_id)
@@ -1551,320 +1481,138 @@ class LaravelController extends Controller
 
             $siteCurrency = site_currency_code();
 
-            // Get conversion rate from product currency to site currency
-            // This is used to convert prices between currencies
             $rate = DB::connection($this->connectionType)
                 ->table('conversion_rates')
                 ->where('from_currency', $product->card_currency)
                 ->where('to_currency', $siteCurrency)
                 ->value('rate') ?: 1;
 
-            // ========================================
-            // STEP 1: Parse Product Names for Price Changes
-            // ========================================
-            // Product names follow format: "Brand - CURRENCY AMOUNT" (e.g., "Aesop- AUD 30")
-            // ⚠️ CRITICAL: The price in the name is the FINAL CUSTOMER PRICE (Our Price), NOT RRP!
-            // Example: "Aesop- AUD 30" means the customer pays AUD 30 as the final price
-            
-            $current_name = $product->name ?? '';
-            $new_name = $data['product_name'] ?? $current_name;
-            
-            // Extract price from current (old) product name
-            // Pattern matches: "USD 150", "GBP 200", "AUD 30", etc.
-            preg_match('/([A-Z]{3})\s*(\d+(\.\d+)?)/i', $current_name, $oldNameMatch);
-            $oldNamePrice = isset($oldNameMatch[2]) ? (float)$oldNameMatch[2] : null;
-            $oldNameCurrency = isset($oldNameMatch[1]) ? strtoupper($oldNameMatch[1]) : null;
-            
-            // Extract price from new product name
-            preg_match('/([A-Z]{3})\s*(\d+(\.\d+)?)/i', $new_name, $newNameMatch);
-            $newNamePrice = isset($newNameMatch[2]) ? (float)$newNameMatch[2] : null;
-            $newNameCurrency = isset($newNameMatch[1]) ? strtoupper($newNameMatch[1]) : null;
-            
-            // Detect if price embedded in name has changed
-            // Example: "Aesop- AUD 50" → "Aesop- AUD 30" means Our Price changed from 50 to 30
-            $priceInNameChanged = false;
-            $newOurPriceFromName = null;
-            
-            if ($oldNamePrice && $newNamePrice && abs($oldNamePrice - $newNamePrice) > 0.01) {
-                // Price in name changed! This is the target final selling price
-                $priceInNameChanged = true;
-                
-                // The name price is in site currency
-                // This will be the new "Our Price" (unit_price) target
-                if ($newNameCurrency === $siteCurrency) {
-                    $newOurPriceFromName = $newNamePrice;
-                } else {
-                    // If name shows different currency, convert to site currency
-                    // This shouldn't normally happen, but handle it just in case
-                    $newOurPriceFromName = $newNamePrice;
-                }
-                
-                Log::info('Price in product name changed', [
-                    'product_id' => $product_id,
-                    'old_name_price' => $oldNamePrice,
-                    'new_name_price' => $newNamePrice,
-                    'currency' => $newNameCurrency,
-                    'target_our_price' => $newOurPriceFromName
-                ]);
-            }
-            
-            // ========================================
-            // STEP 2: Determine What Changed
-            // ========================================
-            
-            $current_price = floatval($product->unit_price);
-            $current_rrp = floatval($product->rrp ?? 0);
+            $current_name     = $product->name ?? '';
+            $new_name         = $data['product_name'] ?? $current_name;
+
+            $current_price    = floatval($product->unit_price);
+            $current_rrp      = floatval($product->rrp ?? 0);
             $current_discount = floatval($product->discount ?? 0);
 
-            $siteRRP = floatval($data['unit_rrp'] ?? 0);
+            $siteRRP      = floatval($data['unit_rrp'] ?? 0);
             $new_discount = floatval($data['unit_discount'] ?? 0);
+            // $new_rrp      = round($siteRRP / $rate, 2);
+            $new_rrp = ($rate != 0) ? round($siteRRP / $rate, 2) : round($siteRRP, 2);
 
-            // Convert site RRP back to product currency for storage
-            $new_rrp = round($siteRRP / $rate, 2);
-            
-            // ⚠️ CRITICAL LOGIC: If price in name changed, we need to recalculate RRP
-            // Formula: RRP = Our_Price / (1 - Discount%)
-            // Example: If Our Price = 30 and Discount = 9%, then RRP = 30 / 0.91 = 32.97
-            if ($priceInNameChanged && $newOurPriceFromName) {
-                // Calculate what RRP should be to achieve this final price with current discount
-                if ($new_discount > 0 && $new_discount < 100) {
-                    // RRP = Our_Price / (1 - Discount/100)
-                    $calculatedSiteRRP = round($newOurPriceFromName / (1 - $new_discount / 100), 2);
-                } else {
-                    // No discount, so RRP equals Our Price
-                    $calculatedSiteRRP = $newOurPriceFromName;
-                }
-                
-                // Convert calculated RRP to product currency for database storage
-                $new_rrp = round($calculatedSiteRRP / $rate, 2);
-                
-                Log::info('Calculated RRP from name price', [
-                    'product_id' => $product_id,
-                    'our_price_target' => $newOurPriceFromName,
-                    'discount' => $new_discount,
-                    'calculated_rrp_site_currency' => $calculatedSiteRRP,
-                    'calculated_rrp_product_currency' => $new_rrp
-                ]);
-            }
-
-            // Detect what has changed
             $discountChanged = abs($current_discount - $new_discount) > 0.01;
-            $rrpChanged = abs($current_rrp - $new_rrp) > 0.01;
-            $nameChanged = $current_name !== $new_name;
-            
-            // If nothing changed, skip this product
-            if (!$rrpChanged && !$discountChanged && !$nameChanged) {
-                continue;
-            }
+            $rrpChanged      = abs($current_rrp - $new_rrp) > 0.01;
 
-            // ========================================
-            // STEP 3: Check 90-Day Price Lock
-            // ========================================
-            // Price changes are locked for 90 days (3 months) after last update
-            // This prevents frequent price manipulation
-            
             $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
                 ->where('product_id', $product_id)
                 ->orderByDesc('last_price_changed')
                 ->first();
 
-            // Check if price update is allowed (no update in last 3 months)
             $canUpdatePrice = !$lastUpdate || Carbon::parse($lastUpdate->last_price_changed)->diffInMonths(now()) >= 3;
 
-            // ========================================
-            // STEP 4: Handle Pure Cosmetic Name Changes
-            // ========================================
-            // If ONLY the name changed (no price in name, no RRP, no discount changed)
-            // Example: "Aesop- AUD 30" → "Aesop Brand- AUD 30" (only text, same price)
-            // This should update name without triggering price lock
-            
-            if ($nameChanged && !$rrpChanged && !$discountChanged && !$priceInNameChanged) {
+            if (!$rrpChanged && !$discountChanged) {
                 DB::connection($this->connectionType)
                     ->table($this->productTable)
                     ->where('id', $product_id)
-                    ->update([
-                        'name' => $new_name
-                    ]);
-                
+                    ->update(['name' => $new_name]);
+
                 Log::info('Product name updated (cosmetic only)', [
                     'product_id' => $product_id,
-                    'old_name' => $current_name,
-                    'new_name' => $new_name
+                    'old_name'   => $current_name,
+                    'new_name'   => $new_name
                 ]);
                 continue;
             }
 
-            // ========================================
-            // STEP 5: Enforce 90-Day Price Lock
-            // ========================================
-            // For any price-affecting changes (RRP, discount, or price in name),
-            // check the 90-day restriction
-            
             if (!$canUpdatePrice) {
                 Log::warning('Price update blocked by 90-day lock', [
-                    'product_id' => $product_id,
-                    'last_update' => $lastUpdate->last_price_changed ?? 'none',
+                    'product_id'     => $product_id,
+                    'last_update'    => $lastUpdate->last_price_changed ?? 'none',
                     'days_remaining' => $lastUpdate ? now()->diffInDays(Carbon::parse($lastUpdate->last_price_changed)->addMonths(3)) : 0
                 ]);
                 continue;
             }
 
-            // ========================================
-            // STEP 6: Update Product Based on What Changed
-            // ========================================
-            // Three main scenarios:
-            // 1. RRP changed (field or calculated from name price)
-            // 2. Discount changed only
-            // 3. Both RRP and discount changed
-            
-            // SCENARIO 1: RRP Changed, Discount Stayed Same
-            // This includes when price in name changed (which recalculated RRP)
-            // Example A: Admin changes RRP field $150 → $160 with 20% discount
-            //            Result: Our Price = $160 × (1 - 20%) = $128
-            // Example B: Admin changes name "AUD 50" → "AUD 30" with 9% discount
-            //            Calculated RRP = 30 / 0.91 = 32.97
-            //            Result: Our Price = 30 (stays as in name)
             if ($rrpChanged && !$discountChanged) {
-
-                // Recalculate "Our Price" using new RRP and current discount
                 $new_price = $current_discount > 0 && $new_rrp > 0
                     ? round($new_rrp * (1 - $current_discount / 100), 2)
                     : $new_rrp;
 
-                // ⚠️ IMPORTANT: Keep the name price as-is (don't recalculate from RRP)
-                // The name shows what the customer pays, which should match our calculated price
-                // Only update the name if it doesn't already have the correct price
-                $finalNamePrice = round($new_price * $rate, 2); // Convert to site currency
-                if ($newNamePrice && abs($newNamePrice - $finalNamePrice) > 0.01) {
-                    // Sync name to show the final price
-                    $new_name = preg_replace(
-                        '/([A-Z]{3})\s*(\d+(\.\d+)?)/i',
-                        '$1 ' . $finalNamePrice,
-                        $new_name
-                    );
-                }
-
-                DB::connection($this->connectionType)
-                    ->table($this->productTable)
-                    ->where('id', $product_id)
-                    ->update([
-                        'name' => $new_name,
-                        'rrp' => $new_rrp,
-                        'unit_price' => $new_price
-                    ]);
+                DB::connection($this->connectionType)->table($this->productTable)->where('id', $product_id)->update([
+                    'name'       => $new_name,
+                    'rrp'        => $new_rrp,
+                    'unit_price' => $new_price,
+                ]);
 
                 ProductPriceHistory::create([
-                    'site_id' => $site_id,
-                    'product_id' => $product_id,
-                    'unit_price' => $new_price,
+                    'site_id'            => $site_id,
+                    'product_id'         => $product_id,
+                    'unit_price'         => $new_price,
                     'last_price_changed' => now(),
                 ]);
-                
+
                 Log::info('Product RRP and price updated', [
                     'product_id' => $product_id,
-                    'old_rrp' => $current_rrp,
-                    'new_rrp' => $new_rrp,
-                    'old_price' => $current_price,
-                    'new_price' => $new_price,
-                    'discount' => $current_discount,
-                    'price_in_site_currency' => $finalNamePrice
+                    'old_rrp'    => $current_rrp,
+                    'new_rrp'    => $new_rrp,
+                    'old_price'  => $current_price,
+                    'new_price'  => $new_price,
+                    'discount'   => $current_discount
                 ]);
 
-            } 
-            // SCENARIO 2: Discount Changed, RRP Stayed Same
-            // Example: Discount 15% → 20% with RRP $150
-            // Result: Our Price = $150 × (1 - 20%) = $120
-            // ⚠️ CRITICAL FIX: Previously this didn't update unit_price!
-            elseif ($discountChanged && !$rrpChanged) {
-
-                // Recalculate "Our Price" using current RRP and new discount
+            } elseif ($discountChanged && !$rrpChanged) {
                 $new_price = $new_discount > 0 && $current_rrp > 0
                     ? round($current_rrp * (1 - $new_discount / 100), 2)
                     : $current_rrp;
 
-                // Update name to reflect the new final price
-                $finalNamePrice = round($new_price * $rate, 2); // Convert to site currency
-                if ($newNamePrice && abs($newNamePrice - $finalNamePrice) > 0.01) {
-                    $new_name = preg_replace(
-                        '/([A-Z]{3})\s*(\d+(\.\d+)?)/i',
-                        '$1 ' . $finalNamePrice,
-                        $new_name
-                    );
-                }
-
-                DB::connection($this->connectionType)
-                    ->table($this->productTable)
-                    ->where('id', $product_id)
-                    ->update([
-                        'name' => $new_name,
-                        'discount' => $new_discount,
-                        'unit_price' => $new_price  // ✅ CRITICAL FIX: Now updates the actual price!
-                    ]);
+                DB::connection($this->connectionType)->table($this->productTable)->where('id', $product_id)->update([
+                    'name'       => $new_name,
+                    'discount'   => $new_discount,
+                    'unit_price' => $new_price,
+                ]);
 
                 ProductPriceHistory::create([
-                    'site_id' => $site_id,
-                    'product_id' => $product_id,
-                    'unit_price' => $new_price,
+                    'site_id'            => $site_id,
+                    'product_id'         => $product_id,
+                    'unit_price'         => $new_price,
                     'last_price_changed' => now(),
                 ]);
-                
+
                 Log::info('Product discount and price updated', [
-                    'product_id' => $product_id,
+                    'product_id'   => $product_id,
                     'old_discount' => $current_discount,
                     'new_discount' => $new_discount,
-                    'old_price' => $current_price,
-                    'new_price' => $new_price,
-                    'rrp' => $current_rrp,
-                    'price_in_site_currency' => $finalNamePrice
+                    'old_price'    => $current_price,
+                    'new_price'    => $new_price,
+                    'rrp'          => $current_rrp
                 ]);
 
-            } 
-            // SCENARIO 3: Both RRP and Discount Changed
-            // Example: RRP $150 → $160 AND Discount 15% → 20%
-            // Result: Our Price = $160 × (1 - 20%) = $128
-            elseif ($rrpChanged && $discountChanged) {
-
-                // Recalculate "Our Price" using both new RRP and new discount
+            } elseif ($rrpChanged && $discountChanged) {
                 $new_price = $new_discount > 0 && $new_rrp > 0
                     ? round($new_rrp * (1 - $new_discount / 100), 2)
                     : $new_rrp;
 
-                // Update name to reflect the new final price
-                $finalNamePrice = round($new_price * $rate, 2); // Convert to site currency
-                if ($newNamePrice && abs($newNamePrice - $finalNamePrice) > 0.01) {
-                    $new_name = preg_replace(
-                        '/([A-Z]{3})\s*(\d+(\.\d+)?)/i',
-                        '$1 ' . $finalNamePrice,
-                        $new_name
-                    );
-                }
-
-                DB::connection($this->connectionType)
-                    ->table($this->productTable)
-                    ->where('id', $product_id)
-                    ->update([
-                        'name' => $new_name,
-                        'rrp' => $new_rrp,
-                        'discount' => $new_discount,
-                        'unit_price' => $new_price
-                    ]);
+                DB::connection($this->connectionType)->table($this->productTable)->where('id', $product_id)->update([
+                    'name'       => $new_name,
+                    'rrp'        => $new_rrp,
+                    'discount'   => $new_discount,
+                    'unit_price' => $new_price,
+                ]);
 
                 ProductPriceHistory::create([
-                    'site_id' => $site_id,
-                    'product_id' => $product_id,
-                    'unit_price' => $new_price,
+                    'site_id'            => $site_id,
+                    'product_id'         => $product_id,
+                    'unit_price'         => $new_price,
                     'last_price_changed' => now(),
                 ]);
-                
+
                 Log::info('Product RRP, discount, and price updated', [
-                    'product_id' => $product_id,
-                    'old_rrp' => $current_rrp,
-                    'new_rrp' => $new_rrp,
+                    'product_id'   => $product_id,
+                    'old_rrp'      => $current_rrp,
+                    'new_rrp'      => $new_rrp,
                     'old_discount' => $current_discount,
                     'new_discount' => $new_discount,
-                    'old_price' => $current_price,
-                    'new_price' => $new_price,
-                    'price_in_site_currency' => $finalNamePrice
+                    'old_price'    => $current_price,
+                    'new_price'    => $new_price
                 ]);
             }
         }

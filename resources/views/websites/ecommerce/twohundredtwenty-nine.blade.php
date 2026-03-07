@@ -113,7 +113,7 @@
                                         <b>QTY</b>
                                     </td>
                                     <td
-                                        style="width:100px;text-align: center;font-family: 'Montserrat', sans-serif; font-size: 11px;margin: 0px;font-weight: 800;border-collapse: collapse;padding-right: 2px;">
+                                        style="width:100px;text-align: center;font-family: 'Montserrat', sans-serif; font-size: 11px;margin: 0px;font-weight: 800;border-collapse: collapse;padding-right: 2px;text-transform:uppercase;">
                                         <b>Total</b>
                                     </td>
                                 </tr>
