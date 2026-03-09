@@ -285,6 +285,8 @@
                                               <div class="invies-content">
                                                   <h2>INVOICE</h2>
                                                   <h6>Invoice No: #{{ $invoice_number }}</h6>
+                                                  <!-- <h6>Invoice Date: {{ $invoice_date }}</h6> -->
+                                                   <h6>Invoice Date: {{ \Carbon\Carbon::parse($invoice_date)->format('d/m/Y') }}</h6>
                                               </div>
                                           </td>
                                     </tr>

@@ -48,16 +48,16 @@
                                 </tr>
                                 <tr style="height: 10px;"></tr>
                                 <tr>
-                                    <td>
+                                    <td style="padding:0px;width:50%;">
                                         <p
-                                            style="margin: 0px;font-family: Arial;font-size: 10px;line-height: 18px;font-weight: 700;">
-                                            Billed From : Websites Ur Way
+                                            style="margin: 0px;font-family: Arial;font-size: 10px;line-height: 10px;font-weight:400;">
+                                           <b> Billed From : </b> Websites Ur Way
                                         </p>
                                         <!-- <p style="margin: 0px;font-family: Arial;font-size: 10px;line-height: 18px;">
                                             Websites Ur Way
                                         </p> -->
                                     </td>
-                                    <td align="right">
+                                    <td align="right" style="padding:0px;width:50%;">
                                         <p
                                             style="margin: 0px;font-family: Arial;font-size: 10px;line-height: 18px;font-weight: 700;">
                                             Billed To :
@@ -67,7 +67,7 @@
                                         </p>
                                     </td>
                                 </tr>
-                                <tr style="height: 10px;"></tr>
+                                
                                 <tr>
                                     <td colspan="2">
                                         <p style="margin: 0px;font-family: Arial;font-size: 10px;line-height: 18px;">
@@ -98,7 +98,7 @@
                                     </td>
                                 </tr>
                             </table>
-                            <div style="min-height: 565px !important;">
+                            <div style="min-height: 575px !important;">
                                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
                                     style="border-collapse: collapse;margin-top: 40px;">
                                     <tr style="background:#f0ae8f;">

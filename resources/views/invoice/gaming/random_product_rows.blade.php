@@ -9,11 +9,11 @@
         style="cursor: pointer;">
             <div class="form-check m-0 d-flex justify-content-center d-none">
                 <input form="generate-invoice-form" class="form-check-input narayan-checkbox border-primary"
-                    type="checkbox" data-unit_price="{{ $product->unit_price }}"
+                    type="checkbox" data-unit_price="{{ number_format((float)$product->unit_price, 2, '.', '') }}"
                     name="products[{{ $product->id }}][selected_checkbox]" value="1" checked>
                 <input type="hidden" name="products[{{ $product->id }}][selected]" value="1">
             </div>
-        <td class="text-center" >{{ $index + 1 }}</td>
+        <td class="text-center">{{ $index + 1 }}</td>
         <td>
             {{ $product->name }}
             @if ($product->slug)
@@ -22,7 +22,8 @@
             <input form="generate-invoice-form" type="hidden" name="products[{{ $product->id }}][name]"
                 value="{{ $product->name }}">
         </td>
-        <td><span class="badge bg-secondary">{{ $product->game_currency ?? '-' }}</span>
+        <td>
+            <span class="badge bg-secondary">{{ $product->game_currency ?? '-' }}</span>
             <input form="generate-invoice-form" type="hidden" name="products[{{ $product->id }}][game_currency]"
                 value="{{ $product->game_currency }}">
         </td>
@@ -32,10 +33,10 @@
                 value="{{ $product->game_currency_amount }}">
         </td>
         <td>{{ site_currency() }}{{ number_format($product->unit_price, 2) }}
-            <input form="generate-invoice-form" type="hidden" 
+            <input form="generate-invoice-form" type="hidden"
                 name="products[{{ $product->id }}][original_price]"
-                value="{{ $product->unit_price }}">
-            <input form="generate-invoice-form" type="hidden" 
+                value="{{ number_format((float)$product->unit_price, 2, '.', '') }}">
+            <input form="generate-invoice-form" type="hidden"
                 name="products[{{ $product->id }}][bundle_id]"
                 value="{{ $product->bundle_id }}">
         </td>
@@ -64,18 +65,17 @@
             @endphp
 
             <div class="input-group">
-                <span class="input-group-text {{ $bgClass }}" data-bs-toggle="tooltip"
-                    title="{{ $tooltip }}">
+                <span class="input-group-text {{ $bgClass }}" data-bs-toggle="tooltip" title="{{ $tooltip }}">
                     <i class="fa {{ $iconClass }}"></i>
                 </span>
                 <input form="generate-invoice-form" type="number" step="0.01"
                     class="form-control edit-price {{ $isLocked ? 'bg-light' : '' }}"
-                    name="products[{{ $product->id }}][unit_price]" 
-                    value="{{ $product->unit_price }}"
-                    {{ $isLocked ? 'readonly' : '' }} 
-                    data-bs-toggle="tooltip" 
+                    name="products[{{ $product->id }}][unit_price]"
+                    value="{{ number_format((float)$product->unit_price, 2, '.', '') }}"
+                    {{ $isLocked ? 'readonly' : '' }}
+                    data-bs-toggle="tooltip"
                     data-price-status="{{ $lockStatus }}"
-                    data-original-price="{{ $product->unit_price }}"
+                    data-original-price="{{ number_format((float)$product->unit_price, 2, '.', '') }}"
                     data-product-id="{{ $product->id }}"
                     data-bundle-id="{{ $product->bundle_id }}"
                     title="{{ $inputTooltip }}">
@@ -91,14 +91,13 @@
                 <button type="button"
                     class="btn btn-sm btn-outline-danger px-2 py-1 remove-product"
                     data-product-id="{{ $product->id }}"
-                    data-unit-price="{{ $product->unit_price }}"
+                    data-unit-price="{{ number_format((float)$product->unit_price, 2, '.', '') }}"
                     data-product-name="{{ $product->name }}"
                     title="Remove Row">
                     <i class="fa fa-trash"></i>
                 </button>
             </div>
         </td>
-
     </tr>
 
     <tr id="product-collapse-row-{{ $index + 1 }}">
@@ -167,9 +166,7 @@
                 showCancelButton: true,
                 confirmButtonText: 'Yes, Remove',
                 cancelButtonText: 'Cancel',
-                customClass: {
-                    popup: 'p-2'
-                }
+                customClass: { popup: 'p-2' }
             }).then(function(result) {
                 if (result.isConfirmed) {
                     $('#table-blocker').show();
@@ -189,8 +186,8 @@
                         success: function(response) {
                             if (response.tableRows !== undefined) {
                                 $('#product-table-body').html(response.tableRows);
-                                $('#current_amount').val(response.total.toFixed(2));
-                                calculateTotalPrice();
+                                let invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
+                                syncAllAmountDisplays(parseFloat(response.total || 0), invoiceAmount);
                                 toastr.success('Product removed successfully!');
                             }
                         },
@@ -215,7 +212,7 @@
         let sessionAmountTimeout;
         $(document).on('input', '.edit-price', function() {
             calculateTotalPrice();
-            
+
             clearTimeout(sessionAmountTimeout);
             sessionAmountTimeout = setTimeout(function() {
                 updateSessionCurrentAmount();
@@ -228,48 +225,39 @@
             $('#product-table-body tr.product-row').each(function() {
                 const $row = $(this);
                 const editPriceInput = $row.find('.edit-price');
-                
+
                 if (editPriceInput.length) {
                     let editPrice = parseFloat(editPriceInput.val());
-                    
+
                     if (isNaN(editPrice) || editPrice === '') {
                         editPrice = parseFloat(editPriceInput.data('original-price')) || 0;
                     }
-                    
+
                     currentAmount += editPrice;
                 }
             });
-            
-            const invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
-            let discountAmount = 0;
 
-            if (currentAmount > invoiceAmount) {
-                discountAmount = currentAmount - invoiceAmount;
-            }
-
-            $('#current_amount').val(currentAmount.toFixed(2));
-            $('#discount_amount').val(discountAmount.toFixed(2));
-            
-            validateAmounts();
+            let invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
+            syncAllAmountDisplays(currentAmount, invoiceAmount);
         }
 
         function updateSessionCurrentAmount() {
             let currentAmount = parseFloat($('#current_amount').val()) || 0;
-            
+
             let productsData = [];
             $('#product-table-body tr.product-row').each(function() {
                 const $row = $(this);
                 const editPriceInput = $row.find('.edit-price');
-                
+
                 if (editPriceInput.length) {
                     const productId = editPriceInput.data('product-id');
                     const originalPrice = parseFloat(editPriceInput.data('original-price')) || 0;
                     const currentPrice = parseFloat(editPriceInput.val()) || 0;
                     const bundleId = editPriceInput.data('bundle-id');
                     const gameCurrencyAmount = $row.find('input[name="products[' + productId + '][game_currency_amount]"]').val();
-                    
+
                     const priceChanged = Math.abs(originalPrice - currentPrice) > 0.01;
-                    
+
                     productsData.push({
                         product_id: productId,
                         bundle_id: bundleId,
@@ -281,7 +269,7 @@
                     });
                 }
             });
-            
+
             $.ajax({
                 url: "{{ route('update.product') }}",
                 type: 'POST',

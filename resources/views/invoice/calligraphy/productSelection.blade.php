@@ -371,18 +371,17 @@
                         <table class="table table-bordered table-hover align-middle mb-0">
                             <thead class="">
                             <tr>
-                                <th class="text-center" style="width: 6%;">PID</th>
-                                <th class="text-center" style="width: 36%;">Product Name</th>
-                                <th class="text-center unit-price-header" style="width: 20%;" data-column="3" data-order="desc">
+                               <th class="text-center" style="width: 4%;">PID</th>
+                                <th class="text-center" style="width: 42%;">Product Name / Option</th>
+                                <th class="text-center unit-price-header" style="width: 13%;" data-column="3" data-order="desc">
                                     <span class="d-inline-flex align-items-center justify-content-center gap-1">
                                     Unit Price <i class="bi bi-caret-down-fill"></i>
                                     </span>
                                 </th>
-                                <th class="text-center" style="width: 20%;">Editable Price</th>
-                                <th class="text-center" style="width: 20%;">Urgency</th>
-                                <th class="text-center" style="width: 6%;">Remove</th>
-                                </tr>
-
+                                <th class="text-center" style="width: 19%;">Editable Price</th>
+                                <th class="text-center" style="width: 17%;">Urgency</th>
+                                <th class="text-center" style="width: 5%;">Remove</th>
+                            </tr>
                             </thead>
                             <tbody id="randomize-product-table-body">
                             </tbody>
@@ -473,16 +472,16 @@
                         <table id="customize-products-table" class="table table-bordered table-hover align-middle mb-0 table-responsive" style="width:100% !important;">
                             <thead class="text-center">
                                 <tr>
-                                <th style="width: 10%;">PID</th>
-                                <th style="width: 40%;">Product Name</th>
-                                <th class="text-center unit-price-header" style="width: 20%;"  data-column="3" data-order="desc">
-                                    <span class="d-inline-flex align-items-center justify-content-center gap-1">
-                                        Unit Price <i class="bi bi-caret-down-fill"></i>
-                                    </span>
-                                </th>
-                                <th style="width: 25%;">Editable Price</th>
-                                <th style="width: 10%;">Select</th>
-                            </tr>
+                                    <th style="width: 5%;">PID</th>
+                                    <th style="width: 45%;">Product Name / Option</th>
+                                    <th class="text-center unit-price-header" style="width: 15%;"  data-column="3" data-order="desc">
+                                        <span class="d-inline-flex align-items-center justify-content-center gap-1">
+                                            Unit Price <i class="bi bi-caret-down-fill"></i>
+                                        </span>
+                                    </th>
+                                    <th style="width: 25%;">Editable Price</th>
+                                    <th style="width: 10%;">Select</th>
+                                </tr>
                             </thead>
                             <tbody id="customize-product-table-body">
                             </tbody>
@@ -704,6 +703,34 @@
         }, 1000);
     });
 </script>
+<script>
+    function applyUrgency($select, urgencyValue) {
+        var $row = $select.closest('tr.product-row');
+        var originalUnitPrice = parseFloat($select.data('base-price'));
+        var urgencyFee = (urgencyValue === 'urgent') ? 35 : 0;
+        var newPrice = originalUnitPrice + urgencyFee;
+
+        var $unitPriceCell = $row.find('td').eq(2);
+        var $editableInput = $row.find('.product-price');
+
+        $unitPriceCell.html('{{ site_currency() }}' + number_format(newPrice, 2));
+        $row.data('urgency-fee', urgencyFee);
+        $editableInput.data('urgency-price', newPrice);
+
+        if (!$editableInput.prop('readonly')) {
+            $editableInput.val(number_format(newPrice, 2, '.', ''));
+        }
+
+        if (urgencyFee > 0) {
+            $unitPriceCell.addClass('text-warning');
+            $editableInput.addClass('border-warning');
+            setTimeout(function() {
+                $unitPriceCell.removeClass('text-warning');
+                $editableInput.removeClass('border-warning');
+            }, 2000);
+        }
+    }
+</script>
 
 <script>
     let randomizeRequest = null;
@@ -746,6 +773,11 @@
                     $('#randomize-product-table-body').html(response.tableRows);
                     $('#current_amount').val(currentAmount.toFixed(2));
                     $('#discount_amount').prop('readonly', false).prop('type', 'number');
+                    $('#randomize-product-table-body .urgency-select').each(function () {
+                        if ($(this).data('auto-urgent') === 'true') {
+                            applyUrgency($(this), 'urgent');
+                        }
+                    });
                     calculateTotalPrice();
                 }
             },
@@ -975,10 +1007,15 @@ function clearRandomizedFilter(button) {
             const productId = $(this).val();
             const unitPrice = $(`input[data-product-id="${productId}"]`).val();
 
+            const $row = $(`input[data-product-id="${productId}"]`).closest('tr.product-row');
+            const urgencyFee = parseFloat($row.data('urgency-fee')) || 0;
+            const originalPrice = (parseFloat(unitPrice) - urgencyFee).toFixed(2);
+            const personalizationOptionId = $row.find('.personalization-option-select').val() || null;
+
             $('#generate-invoice-form').append($('<input>', {
                 type: 'hidden',
                 name: 'product_data[]',
-                value: JSON.stringify({ product_id: productId, unit_price: unitPrice })
+                value: JSON.stringify({ product_id: productId, unit_price: unitPrice, original_unit_price: originalPrice, personalization_option_id: personalizationOptionId })
             }));
         });
 
@@ -1267,7 +1304,9 @@ $(document).ready(function() {
         initTooltips();
         $('input[name="product_ids[]"]:checked').each(function () {
             const productId = $(this).val();
-            const punitPrice = parseFloat($(`input[data-product-id="${productId}"]`).val()) || 0;
+            const $priceInput = $(`input[data-product-id="${productId}"]`);
+            const urgencyPrice = $priceInput.data('urgency-price');
+            const punitPrice = urgencyPrice ? parseFloat(urgencyPrice) : (parseFloat($priceInput.val()) || 0);
             currentAmount += punitPrice;
         });
 

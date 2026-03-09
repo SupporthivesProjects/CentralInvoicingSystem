@@ -177,7 +177,7 @@
                         </td>
                         <!-- Company Info -->
                         <td style="width: 40%; text-align: right; padding-right: 36px; vertical-align: middle;">
-                            <div style="font-size: 17px; font-weight: bold; color: #111;">{{ $company_name }}</div>
+                            <div style="font-size: 15px; font-weight: bold; color: #111;">{{ $company_name }}</div>
                             <div style="font-size: 15px; color: #222; margin-top: 6px;">{{ $company_address }}</div>
                             <div style="font-size: 15px; color: #222;">{{ $company_mobile }}</div>
                             <div style="font-size: 15px; color: #222;">{{ $company_email }}</div>

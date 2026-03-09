@@ -191,8 +191,7 @@
                                         style="width: 100px;text-align: center;font-family: arial;font-size: 12px;margin: 0px;font-weight: 400;border-collapse: collapse;">
 
                                     </td>
-                                    <td
-                                        style="width: 100px;text-align: right;font-family: arial;font-size: 12px;margin: 0px;font-weight: 400;border-collapse: collapse;">
+                                    <td style="width: 100px;text-align: right;font-family: arial;font-size: 12px;margin: 0px;font-weight: 400;border-collapse: collapse;height:40px;">
                                         <b> INVOICE TOTAL</b>
                                     </td>
                                 </tr>

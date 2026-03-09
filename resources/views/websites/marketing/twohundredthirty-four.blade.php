@@ -51,7 +51,7 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                        <p style="font-size: 11px; font-family: 'Poppins', sans-serif;">Mindcraft Vision Media Applications<br> Development L.L.C</p>
+                                        <p style="font-size: 11px; font-family: 'Poppins', sans-serif;margin-top: -40px;">Mindcraft Vision Media Applications<br> Development L.L.C</p>
                                     </td>
                                     <td style="text-align: right; font-family: 'Poppins', sans-serif;padding-right: 20px;">
                                         <p style="font-size: 11px;margin-top: 0px;"><b style="color: #F15A22;">Invoice No:</b> #{{ $invoice_number }}</p>

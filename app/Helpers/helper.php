@@ -85,6 +85,13 @@ if (!function_exists('getAllWebsites')) {
     }
 }
 
+if (!function_exists('getLiveWebsites')) {
+    function getLiveWebsites()
+    {
+        return Website::where('site_status', 'live')->count();
+    }
+}
+
 if (!function_exists('getallModels')) {
     function getallModels()
     {

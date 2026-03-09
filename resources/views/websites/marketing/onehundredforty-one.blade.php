@@ -3,24 +3,25 @@
     <head>
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
     <style>
-    @page { 
-            margin: 0 !important; 
+        @page {
+          margin:0px;
+          padding:0px;
         }
     </style>
 </head>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
-<body>
+<body style="border-collapse: collapse; margin:0; padding:0; background:#E9E3D3; font-family:Arial, sans-serif;">
     <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse;">
         <tr>
-            <td align="center" bgcolor="#f2f2f2" style="padding: 20px 0;">
-                <table  style="border-collapse: collapse;border: 0px;background-color: white;background-color: #E9E3D3; ">
+            <td align="center" bgcolor="#E9E3D3">
+                <table  style="border-collapse: collapse;border: 0px;background-color: white;background-color: #E9E3D3; height 100vh;">
                     <!--Header-->
                     <tr style="background: url('{{ $invoice_header_image }}') no-repeat;background-position:center;background-size:contain; height: 145px;color: white;border-collapse: collapse;width: 600px;">
-                        <td style="width: 600px;padding-left: 40px;padding-right: 40px;font-family: Arial, sans-serif;">
+                        <td style="width: 100%;padding-left: 40px;padding-right: 40px;font-family: Arial, sans-serif;">
                            <table>
                                 <tr>
                                     <td style="width: 300px;padding-left: 20px;">
-                                        <b style="font-size: 24px;">INVIOCE</b>
+                                        <b style="font-size: 24px;">INVOICE</b>
                                         <div style="font-size: 8px;font-family: CenturyGothic, AppleGothic, sans-serif;display: flex;">
                                             <p style="padding-right: 20px;">{{ $company_name }}<br>{{ $company_email }}</p>
                                             <p style="padding-left: 10px;">{!! $company_address !!}<br> {{ $company_mobile }}</p>
@@ -69,7 +70,7 @@
                                         <b>Duration</b>
                                     </td>
                                     <td style="width: 100px;text-align: center;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;border: 1px solid orange;">
-                                        <b>QTY</b>
+                                        <b>Qty</b>
                                     </td>
                                     <td style="width:100px;text-align: right;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;border: 1px solid orange;padding-right: 20px; ">
                                         <b>Total</b>
@@ -78,7 +79,8 @@
                                 @foreach($products as $product)
                                 <tr style="border-collapse: collapse;height: 40px;background-color: #F4F4F4;border: 1px solid orange;font-family: Arial, sans-serif;">
                                     <td style="width: 300px;text-align: left;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-left: 5px;border: 1px solid orange;padding-left: 20px;">
-                                       <b style="color: black;">{{ $product->name }}</b><br><p style="color: orange;margin-top: 2px;margin-bottom: 1px;">Platinum</p>
+                                       <b style="color: black;">{{ $product->name }}</b><br>
+                                       <!-- <p style="color: orange;margin-top: 2px;margin-bottom: 1px;">Platinum</p> -->
                                     </td>
                                     <td style="width: 100px;text-align: center;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;border: 1px solid orange;">
                                         <p>{{ $product->subscription ?? '-' }}</p>
@@ -127,20 +129,7 @@
                         </td>
                     </tr>
 
-                    <!-----------Footer----------->
-                    <tr>
-                        <td style="height: 100vh;">
-                            <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;"> 
-                                <tr style="background: url() no-repeat;background-position: center;background-size: cover;background-size:cover;width: 100%;">
-                                    <td style="width: 150px;text-align: center;color: white;font-family: Arial, Helvetica, sans-serif;font-size: 10px;"> 
-                                      
-                                    </td> 
-                                          
-                                </tr>
-                                <tr>              
-                            </table>
-                        </td>
-                    </tr> 
+                   
                 </table>
             </td>
         </tr>

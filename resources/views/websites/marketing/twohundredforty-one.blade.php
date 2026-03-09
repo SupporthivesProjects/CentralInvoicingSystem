@@ -3,6 +3,12 @@
 
 <head>
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
+    <style>
+        @page {
+          margin:0px;
+          padding:0px;
+        }
+    </style>
 </head>
 
 <body style="margin:0; padding:0; background:#f5f6f8; font-family:Arial, sans-serif;">
@@ -14,18 +20,26 @@
 
                 <!-- MAIN CONTAINER -->
                 <table width="100%" cellpadding="0" cellspacing="0"
+<<<<<<< HEAD
                     style="background:#FFFCF8; border-radius:6px; overflow:hidden;">
+=======
+                    style="background:red;border-collapse: collapse; ">
+>>>>>>> devteam
 
                     <!-- HEADER -->
                     <tr>
                         <td>
                             <table width="100%" cellpadding="0" cellspacing="0"
+<<<<<<< HEAD
                                 style="padding:60px 50px 10px 50px;position: relative;">
+=======
+                                style="border-collapse: collapse;padding:60px 50px 10px 50px;">
+>>>>>>> devteam
                                 <tr>
                                     <!-- LEFT SIDE -->
                                     <td width="60%" valign="top">
                                         <img src="{{ $company_logo }}" alt="Brand Throttle"
-                                            style="width:140px; height:auto; margin-bottom:10px;">
+                                            style="width:140px; margin-bottom:10px;">
                                         <table cellpadding="0" cellspacing="0"
                                             style="font-size:11px; line-height:18px; font-family:Arial;">
                                             <tr>
@@ -78,7 +92,7 @@
                     <tr>
                         <td>
                             <table width="100%" cellpadding="0" cellspacing="0"
-                                style="padding:10px 50px 5px 50px; position: relative;">
+                                style="border-collapse: collapse;padding:10px 50px 5px 50px; position: relative;">
                                 <tr>
                                     <td style="font-size:14px; line-height:18px;">
                                         <img src="{{ $invoice_image3 }}" alt=""
@@ -103,7 +117,7 @@
                                 <tr>
                                     <th
                                         style="padding:10px 5px; text-align:left; border-bottom:1px solid #3C8F89; color:#3C8F89; font-weight:bold;">
-                                        DESCRIPTION
+                                        DESCRIPTIONnnnnnnn
                                     <!-- </th>
                                     <th
                                         style="padding:10px 5px; text-align:center; border-bottom:2px solid #3C8F89; color:#3C8F89; font-weight:bold;">

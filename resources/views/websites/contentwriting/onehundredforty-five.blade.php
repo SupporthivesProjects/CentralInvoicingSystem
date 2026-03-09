@@ -144,7 +144,7 @@
                                         <h4>BILLED FROM:</h4>
                                         <p>{{ $site_name }}</p>
                                         <p>{!! $company_address !!}</p>
-                                        <p><strong>Email</strong> {{ $company_email }}</p>
+                                        <p><strong>Email : </strong> {{ $company_email }}</p>
                                         <!-- <p><strong>Phone</strong>: {{ $company_mobile }}</p> -->
                                     </td>
                                     <td class="addrss" style="vertical-align: top;">

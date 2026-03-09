@@ -32,9 +32,15 @@ class Website extends Model
         'consumer_secret',
         'site_name',
         'site_link',
-        'std_trans_url',   
+        'std_trans_url',
         'cert_trans_url',
         'urgency_amount',
+        'urgency_24h_per_page',
+        'urgency_12h_per_page',
+        'urgency_24h_per_word',
+        'urgency_12h_per_word',
+        'urgency_36_48h_per_page',
+        'urgency_36_48h_per_word',
         'remark',
         'company_name',
         'company_email',
@@ -65,12 +71,15 @@ class Website extends Model
     ];
 
     protected $casts = [
-        'urgency_amount' => 'decimal:2',
+        'urgency_amount'          => 'decimal:4',
+        'urgency_24h_per_page'    => 'decimal:4',
+        'urgency_12h_per_page'    => 'decimal:4',
+        'urgency_24h_per_word'    => 'decimal:4',
+        'urgency_12h_per_word'    => 'decimal:4',
+        'urgency_36_48h_per_page' => 'decimal:4',
+        'urgency_36_48h_per_word' => 'decimal:4',
     ];
 
-    /**
-     * Get the business model this website belongs to.
-     */
     public function businessModel()
     {
         return $this->belongsTo(BusinessModel::class, 'business_model_id');
@@ -80,13 +89,9 @@ class Website extends Model
     {
         return rtrim($this->site_link, '/') . '/' . ltrim($this->std_trans_url, '/');
     }
-    
+
     public function getCertifiedTranslationUrlAttribute()
     {
         return rtrim($this->site_link, '/') . '/' . ltrim($this->cert_trans_url, '/');
     }
-
-    
-    
-
 }

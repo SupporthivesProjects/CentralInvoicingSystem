@@ -46,7 +46,9 @@
                     </tr>
                     <tr>
                         <td colspan="3" style="padding: 10px; border-bottom: 1px solid #ddd; font-size: 14px">
-                            <strong>Date :</strong>{{ $invoice_date }}<strong>Invoice No :</strong>{{ $invoice_number }}<br>
+                            {{-- <strong>Date :</strong>{{ $invoice_date }}<strong>  --}}
+                            <strong>Date :</strong> {{ \Carbon\Carbon::parse($invoice_date)->format('d/m/Y') }} 
+                            <strong> Invoice No :</strong>{{ $invoice_number }}<br>
                             <strong>Relationship Resource Hub</strong><br />
                             {{ $company_address }}<br />
                             <strong>Phone :</strong> {{ $company_mobile }}<br />

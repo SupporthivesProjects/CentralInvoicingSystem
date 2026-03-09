@@ -23,26 +23,29 @@ class HomeController extends Controller
 
     public function index(Request $request)
     {
-
         list($dates, $invoiceCounts, $priceChanges) = $this->getInvoiceChartData();
         list($invoicedates, $userInvoices) = $this->getUserInvoiceChartData();
         $businessmodels = Cache::rememberForever('businessmodels.all', function () {
             return BusinessModel::latest()->get();
         });
-
+    
         $sites = Cache::rememberForever('websites.all', function () {
             return Website::latest()->get();
         });
+    
+        $tempDownCount = Website::where('site_status', 'tdown')->count();
+        $permDownCount = Website::where('site_status', 'pdown')->count();
+    
         $currentHost = $request->getHost();
         if ($currentHost === '127.0.0.1') {
             $invoices = InvoiceGenerationHistory::orderBy('id', 'desc')->take(10)->get();
         } else {
             $invoices = Cache::remember('invoices.all', 300, function () {
-                return InvoiceGenerationHistory::orderBy('id', 'desc')->get();
+                return InvoiceGenerationHistory::orderBy('id', 'desc')->take(10)->get();
             });
         }
-
-        return view('pages.dashboard', compact('invoices', 'dates', 'invoiceCounts', 'businessmodels', 'sites', 'priceChanges', 'invoicedates', 'userInvoices'));
+    
+        return view('pages.dashboard', compact('invoices', 'dates', 'invoiceCounts', 'businessmodels', 'sites', 'priceChanges', 'invoicedates', 'userInvoices', 'tempDownCount', 'permDownCount'));
     }
 
 
