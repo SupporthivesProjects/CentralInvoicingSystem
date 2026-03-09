@@ -44,11 +44,11 @@
                                             </h1>
                                             <div style="display: flex;gap: 10px;">
                                                 <p class="poppins_regular"
-                                                    style="color: #ffff;font-size:14px;margin: 0px;font-weight:400;">
+                                                    style="color: #ffff;font-size:14px;margin: 0px;">
                                                     {{ $invoice_date }}
                                                 </p>
                                                 <p class="poppins_regular"
-                                                    style="color: #ffff;font-size:14px;margin: 0px;font-weight:400;">
+                                                    style="color: #ffff;font-size:14px;margin: 0px;">
                                                     NO: {{ $invoice_number }}
                                                 </p>
                                             </div>
