@@ -95,7 +95,7 @@
                                             style="font-family:Calibri;font-size: 10px;margin-top: 0px;text-align: right;margin-left: 60px;margin-bottom: 8px;">
                                             Total Amount Due</p>
                                         <p
-                                            style="font-family:Calibri;font-size: 22px;margin-top: 0px;text-align: right;margin-left: 60px;font-weight: 400;margin-bottom: 8px;">
+                                            style="font-family:Calibri;font-size: 22px;margin-top: 0px;text-align: right;margin-left: 60px;font-weight: 700;margin-bottom: 8px;">
                                             {{ site_currency() . number_format($invoice_amount, 2) }}</p>
 
                                     </td>
@@ -103,10 +103,10 @@
                                 </tr>
 
                             </table>
-
+                           <p style="height:10px;"></p>
+                                <p style="border-top:1px solid black;width:100px;height:20px;width:90%;"></p>
                             <div style="min-height: 650px !important;">
-                                <p style="height:10px;"></p>
-                                <p style="border-top:1px solid black;width:100px;height:20px"></p>
+                                
                                 <table style="border-collapse: collapse;border-bottom: 0px;border: 0px;">
                                     <tr
                                         style="border-collapse: collapse;background-color: #09192A; color: white;border-bottom: 0px;border: 0px;">
