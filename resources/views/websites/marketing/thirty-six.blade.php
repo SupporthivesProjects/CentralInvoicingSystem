@@ -104,7 +104,7 @@
 
                             </table>
                            <p style="height:10px;"></p>
-                                <p style="border-top:1px solid black;width:100px;height:20px;width:90%;"></p>
+                                <p style="border-top:1px solid black;width:100px;height:20px;width:100%;"></p>
                             <div style="min-height: 650px !important;">
                                 
                                 <table style="border-collapse: collapse;border-bottom: 0px;border: 0px;">
