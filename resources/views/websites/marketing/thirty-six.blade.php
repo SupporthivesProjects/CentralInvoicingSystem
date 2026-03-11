@@ -53,15 +53,15 @@
                             <table width="100%">
                                 <tr>
                                     <td>
-                                        <p style="font-family: arial;font-size:48px;margin: 0px;font-weight: 400;">
+                                        <p style="font-family:Calibri;font-size:48px;margin: 0px;font-weight:700;color:#858587;">
                                             <b>INVOICE</b>
                                         </p>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td style="padding-top: 8px;padding-bottom:8px;">
-                                        <p style="font-size: 10px;margin-bottom: 8px;">Invoice To</p>
-                                        <p style="font-size: 10px;margin-bottom: 8px;">
+                                        <p style="font-size: 10px;margin-bottom: 8px;font-family:Calibri;font-weight:700;color:#858587;">Invoice To</p>
+                                        <p style="font-size: 12px;margin-bottom: 8px;font-family:Calibri;font-weight:700;">
                                             <b>
                                                 {{ $customer_name }}
                                             </b>
@@ -69,19 +69,21 @@
 
                                     </td>
                                     <td style="padding-right: 45px;padding-top: 8px;padding-bottom:8px;">
-                                        <p style="font-size: 10px;margin-bottom: 8px;">Invoice From</p>
-                                        <p style="font-size: 10px;margin-bottom: 8px;">
+                                        <p style="font-size: 10px;margin-bottom: 8px;font-family:Calibri;font-weight:700;color:#858587;">Invoice From</p>
+                                        <p style="font-size: 12px;margin-bottom: 8px;font-family:Calibri;font-weight:700;">
                                             <b>
                                                 {{ $site_name }}
                                             </b>
-                                            <br>
+                                            
+                                        </p>
+                                        <p style="font-size: 10px;margin-bottom: 8px;font-family:Calibri;font-weight:400;color:#858587;">
                                             www.bluemoonmarketeers.com
                                         </p>
                                     </td>
                                     <td style="text-align: right;padding-top: 8px;padding-bottom:8px;">
-                                        <p style="font-size: 10px;margin-bottom: 8px;">Invoice No: #{{ $invoice_number }}</p>
-                                        <p style="font-size: 10px;margin-bottom: 8px;">Due Date: {{ $invoice_date }}</p>
-                                        <p style="border-bottom: 2px solid black;"></p>
+                                        <p style="font-size: 10px;margin-bottom: 8px;font-family:Calibri;color:#858587;">Invoice No: #{{ $invoice_number }}</p>
+                                        <p style="font-size: 10px;margin-bottom: 8px;font-family:Calibri;color:#858587;">Due Date: {{ $invoice_date }}</p>
+                                        <p style="border-bottom:1px solid black;font-family:Calibri;"></p>
 
                                     </td>
                                 </tr>
@@ -90,10 +92,10 @@
                                     <td></td>
                                     <td>
                                         <p
-                                            style="font-family: arial;font-size: 10px;margin-top: 0px;text-align: right;margin-left: 60px;margin-bottom: 8px;">
+                                            style="font-family:Calibri;font-size: 10px;margin-top: 0px;text-align: right;margin-left: 60px;margin-bottom: 8px;color:#858587;">
                                             Total Amount Due</p>
                                         <p
-                                            style="font-family: arial;font-size: 22px;margin-top: 0px;text-align: right;margin-left: 60px;font-weight: 400;margin-bottom: 8px;">
+                                            style="font-family:Calibri;font-size: 22px;margin-top: 0px;text-align: right;margin-left: 60px;font-weight: 400;margin-bottom: 8px;">
                                             {{ site_currency() . number_format($invoice_amount, 2) }}</p>
 
                                     </td>
@@ -101,20 +103,22 @@
                                 </tr>
 
                             </table>
+
                             <div style="min-height: 650px !important;">
+                                <p style="border-top:1px solid black;width:100px;"></p>
                                 <table style="border-collapse: collapse;border-bottom: 0px;border: 0px;">
                                     <tr
                                         style="border-collapse: collapse;height: 30px;background-color: #09192A; color: white;border-bottom: 0px;border: 0px;">
                                         <td
-                                            style="padding-left: 16px;width: 600px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
+                                            style="padding-left: 16px;width: 600px;text-align: left;font-family:Calibri;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding:16px 20px;">
                                             <b>Product Description</b>
                                         </td>
                                         <td
-                                            style="width: 250px;text-align: center;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
+                                            style="width: 250px;text-align: center;font-family:Calibri;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding:16px 20px;">
                                             <b>#Month</b>
                                         </td>
                                         <td
-                                            style="padding-right: 16px;width: 150px;text-align: right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
+                                            style="padding-right: 16px;width: 150px;text-align: right;font-family:Calibri;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding:16px 20px;">
                                             <b>Price</b>
                                         </td>
 
