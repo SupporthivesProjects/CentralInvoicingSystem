@@ -191,14 +191,14 @@
 
                                 <!-- Company Address -->
                                 <div style="flex: 1; text-align: left;">
-                                    <p style="font-size: 10px; margin: 0;"><b>ADDRESS</b></p>
-                                    <p style="font-size: 10px; margin: 0;">{!! $company_address ?? 'N/A' !!}</p>
+                                    <p style="font-size: 11px; margin: 0;font-family:Calibri;font-weight:700;"><b>ADDRESS</b></p>
+                                    <p style="font-size: 9px; margin: 0;font-family:Calibri;">{!! $company_address ?? 'N/A' !!}</p>
                                 </div>
 
                                 <!-- Company Contact -->
                                 <div style="flex: 1; text-align: left;">
-                                    <p style="font-size: 10px; margin: 0;"><b>CONTACTS</b></p>
-                                    <p style="font-size: 10px; margin: 0;">
+                                    <p style="font-size: 11px; margin: 0;font-family:Calibri;font-weight:700;"><b>CONTACTS</b></p>
+                                    <p style="font-size: 9px; margin: 0;font-family:Calibri;">
                                         {{ $company_email ?? 'support@bluemoonmarketeers.com' }}
                                     </p>
                                 </div>
