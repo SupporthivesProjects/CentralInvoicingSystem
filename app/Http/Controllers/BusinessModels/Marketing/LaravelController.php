@@ -97,6 +97,8 @@ class LaravelController extends Controller
             session()->forget('ready_products');
             session()->forget('current_amount');
             session()->forget('last_used_combinations');
+            session()->forget('randomize_step');
+            session()->forget('randomize_invoice_amount');
 
             return response()->json([
                 'tableRows' => '',
@@ -105,23 +107,72 @@ class LaravelController extends Controller
             ]);
         }
 
+        // Reset step counter if invoice amount changed since last randomize
+        $lastInvoiceAmount = session()->get('randomize_invoice_amount');
+        if ($lastInvoiceAmount !== null && abs(floatval($lastInvoiceAmount) - $invoiceAmount) > 0.001) {
+            session()->forget('randomize_step');
+            session()->forget('last_used_combinations');
+        }
+        session()->put('randomize_invoice_amount', $invoiceAmount);
+
         $lastUsedCombinations = session()->get('last_used_combinations', []);
 
-        $bestMatch = $this->findBestProductCombination($products, $invoiceAmount, $noOfProducts, $lastUsedCombinations);
+        // Step-based 2% tolerance: step 0 = 0%, step 1 = 2%, step 2 = 4% ... max step 14 = 28%
+        $currentStep = intval(session()->get('randomize_step', 0));
+        $maxStep = 14; // 15 steps: 0% to 28%
 
-        if (!$bestMatch || empty($bestMatch['products'])) {
-            session()->forget('ready_products');
-            session()->forget('current_amount');
-            return response()->json([
-                'tableRows' => '',
-                'total' => 0,
-                'message' => 'No matching combination found, try again please'
-            ]);
+        $bestMatch = null;
+        $foundAtStep = $currentStep;
+
+        // Try from currentStep up to maxStep until a new (non-repeated) combo is found
+        for ($step = $currentStep; $step <= $maxStep; $step++) {
+            $tolerance = $step * 0.02; // 0%, 2%, 4%, ... 28%
+            $searchTarget = $invoiceAmount * (1 + $tolerance);
+
+            $candidate = $this->findBestProductCombination($products, $searchTarget, $noOfProducts, $lastUsedCombinations);
+
+            if (!$candidate || empty($candidate['products'])) {
+                continue;
+            }
+
+            $candidateKey = collect($candidate['products'])->pluck('id')->sort()->join('-');
+
+            if (in_array($candidateKey, $lastUsedCombinations)) {
+                continue; // This combo was recently used, try next step
+            }
+
+            $bestMatch = $candidate;
+            $foundAtStep = $step;
+            break;
         }
 
-        $bestMatch = collect($bestMatch['products']);
-        $bestTotal = $bestMatch->sum('unit_price');
+        if (!$bestMatch || empty($bestMatch['products'])) {
+            // All steps exhausted — reset and try from step 0 ignoring history as last resort
+            session()->forget('randomize_step');
+            session()->forget('last_used_combinations');
+            $bestMatch = $this->findBestProductCombination($products, $invoiceAmount, $noOfProducts, []);
 
+            if (!$bestMatch || empty($bestMatch['products'])) {
+                return response()->json([
+                    'tableRows' => '',
+                    'total' => 0,
+                    'message' => 'No matching combination found, try again please'
+                ]);
+            }
+            $foundAtStep = 0;
+        }
+
+        // Advance step for next click (cycle back to 0 after max)
+        $nextStep = ($foundAtStep >= $maxStep) ? 0 : $foundAtStep + 1;
+        session()->put('randomize_step', $nextStep);
+
+        $bestMatch = collect($bestMatch['products']);
+        $bestTotal = round($bestMatch->sum('unit_price'), 2);
+
+        // Auto-calculate discount so invoice total stays at original invoiceAmount
+        $discountAmount = round(max($bestTotal - $invoiceAmount, 0), 2);
+
+        // Store combination key to avoid repeating in next clicks
         $combinationKey = $bestMatch->pluck('id')->sort()->join('-');
         $lastUsedCombinations[] = $combinationKey;
         $lastUsedCombinations = array_slice($lastUsedCombinations, -5);
@@ -169,7 +220,8 @@ class LaravelController extends Controller
 
         return response()->json([
             'tableRows' => $tableRows,
-            'total' => $bestTotal
+            'total' => $bestTotal,
+            'discount_amount' => $discountAmount,
         ]);
     }
 
@@ -1134,6 +1186,9 @@ class LaravelController extends Controller
     {
         session()->forget('ready_products');
         session()->forget('current_amount');
+        session()->forget('last_used_combinations');
+        session()->forget('randomize_step');
+        session()->forget('randomize_invoice_amount');
         return response()->json([
             'success' => true,
             'tableRows' => '',
