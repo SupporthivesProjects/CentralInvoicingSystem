@@ -188,6 +188,17 @@ function replaceFeatherIconsTemporarily() {
 function getLoaderRowHTML(colspan = 6) {
     const css = `
         <style>
+            #loaderRow td {
+                height: 200px;
+                vertical-align: middle;
+            }
+            .hand-loader-wrapper {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 100%;
+                height: 100%;
+            }
             .hand-loader {
                 --skin-color: #E4C560;
                 --tap-speed: 0.6s;
@@ -195,7 +206,6 @@ function getLoaderRowHTML(colspan = 6) {
                 position: relative;
                 width: 80px;
                 height: 60px;
-                margin: 0 auto;
             }
             .hand-loader:before {
                 content: '';
@@ -269,10 +279,10 @@ function getLoaderRowHTML(colspan = 6) {
                 transform: rotate(-60deg);
                 border-radius: 20px;
             }
-            .hand-finger:nth-child(1) { animation-delay: 0s;                            filter: brightness(70%); animation-name: tap-upper-1; }
-            .hand-finger:nth-child(2) { animation-delay: var(--tap-stagger);             filter: brightness(80%); animation-name: tap-upper-2; }
-            .hand-finger:nth-child(3) { animation-delay: calc(var(--tap-stagger) * 2);  filter: brightness(90%); animation-name: tap-upper-3; }
-            .hand-finger:nth-child(4) { animation-delay: calc(var(--tap-stagger) * 3);  filter: brightness(100%); animation-name: tap-upper-4; }
+            .hand-finger:nth-child(1) { animation-delay: 0s;                           filter: brightness(70%);  animation-name: tap-upper-1; }
+            .hand-finger:nth-child(2) { animation-delay: var(--tap-stagger);            filter: brightness(80%);  animation-name: tap-upper-2; }
+            .hand-finger:nth-child(3) { animation-delay: calc(var(--tap-stagger) * 2); filter: brightness(90%);  animation-name: tap-upper-3; }
+            .hand-finger:nth-child(4) { animation-delay: calc(var(--tap-stagger) * 3); filter: brightness(100%); animation-name: tap-upper-4; }
 
             @keyframes tap-upper-1 { 0%,50%,100% { transform: rotate(10deg) scale(0.4); } 40% { transform: rotate(50deg) scale(0.4); } }
             @keyframes tap-upper-2 { 0%,50%,100% { transform: rotate(10deg) scale(0.6); } 40% { transform: rotate(50deg) scale(0.6); } }
@@ -284,14 +294,16 @@ function getLoaderRowHTML(colspan = 6) {
     return `
         ${css}
         <tr id="loaderRow">
-            <td colspan="${colspan}" class="text-center py-4">
-                <div class="hand-loader">
-                    <div class="hand-finger"></div>
-                    <div class="hand-finger"></div>
-                    <div class="hand-finger"></div>
-                    <div class="hand-finger"></div>
-                    <div class="hand-palm"></div>
-                    <div class="hand-thumb"></div>
+            <td colspan="${colspan}">
+                <div class="hand-loader-wrapper">
+                    <div class="hand-loader">
+                        <div class="hand-finger"></div>
+                        <div class="hand-finger"></div>
+                        <div class="hand-finger"></div>
+                        <div class="hand-finger"></div>
+                        <div class="hand-palm"></div>
+                        <div class="hand-thumb"></div>
+                    </div>
                 </div>
             </td>
         </tr>
