@@ -55,7 +55,7 @@
                                         <p style="font-family: Courier New;font-size: 10px;margin-bottom: 5px;font-weight: 600;">
                                         {{ $customer_name }}</p>
                                     </td>
-                                    <td style="width:40%;padding:0px 40px;text-align:left;vertical-align:top;">
+                                    <td style="width:40%;padding:0px 0px;text-align:left;vertical-align:top;">
                                         <p style="font-family: Courier New;font-size: 10px;margin: 0px;font-weight: 400;">
                                             <b style="font-size: 12px;text-transform:uppercase;">Date:</b> {{ $invoice_date }}
                                         </p>
