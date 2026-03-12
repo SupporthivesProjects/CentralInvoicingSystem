@@ -108,7 +108,6 @@ class LaravelController extends Controller
             ]);
         }
 
-        // Reset step counter if invoice amount changed since last randomize
         $lastInvoiceAmount = session()->get('randomize_invoice_amount');
         if ($lastInvoiceAmount !== null && abs(floatval($lastInvoiceAmount) - $invoiceAmount) > 0.001) {
             session()->forget('randomize_step');
@@ -118,16 +117,14 @@ class LaravelController extends Controller
 
         $lastUsedCombinations = session()->get('last_used_combinations', []);
 
-        // Step-based 2% tolerance: step 0 = 0%, step 1 = 2%, step 2 = 4% ... max step 14 = 28%
         $currentStep = intval(session()->get('randomize_step', 0));
-        $maxStep = 14; // 15 steps: 0% to 28%
+        $maxStep = 14;
 
         $bestMatch = null;
         $foundAtStep = $currentStep;
 
-        // Try from currentStep up to maxStep, advancing 2% tolerance each step
         for ($step = $currentStep; $step <= $maxStep; $step++) {
-            $tolerance = $step * 0.02; // 0%, 2%, 4%, ... 28%
+            $tolerance = $step * 0.02;
             $searchTarget = $invoiceAmount * (1 + $tolerance);
 
             $candidate = $this->findBestProductCombination($products, $searchTarget, $noOfProducts, $lastUsedCombinations);
@@ -142,7 +139,6 @@ class LaravelController extends Controller
         }
 
         if (!$bestMatch || empty($bestMatch['products'])) {
-            // All steps exhausted — reset and try from step 0 ignoring history as last resort
             session()->forget('randomize_step');
             session()->forget('last_used_combinations');
             $bestMatch = $this->findBestProductCombination($products, $invoiceAmount, $noOfProducts, []);
@@ -157,17 +153,14 @@ class LaravelController extends Controller
             $foundAtStep = 0;
         }
 
-        // Advance step for next click (cycle back to 0 after max)
         $nextStep = ($foundAtStep >= $maxStep) ? 0 : $foundAtStep + 1;
         session()->put('randomize_step', $nextStep);
 
         $bestMatch = collect($bestMatch['products']);
         $bestTotal = round($bestMatch->sum('unit_price'), 2);
 
-        // Auto-calculate discount so invoice total stays at original invoiceAmount
         $discountAmount = round(max($bestTotal - $invoiceAmount, 0), 2);
 
-        // Store combination key to avoid repeating in next clicks
         $combinationKey = $bestMatch->pluck('id')->sort()->join('-');
         $lastUsedCombinations[] = $combinationKey;
         $lastUsedCombinations = array_slice($lastUsedCombinations, -$this->lastCombinationsLimit);
@@ -247,81 +240,78 @@ class LaravelController extends Controller
 
         asort($priceMap);
         $sortedIndices = array_keys($priceMap);
-        shuffle($sortedIndices);
 
-        if ($count <= 2) {
-            $percentages = [0, 2, 5, 8, 10, 15, 20, 25, 30, 35, 40, 50];
-            shuffle($percentages);
-
-            foreach ($percentages as $percentage) {
-                $minTarget = $target;
-                $maxTarget = $target * (1 + $percentage / 100);
-
-                if ($count == 1) {
-                    // Collect ALL valid candidates in this band, sorted closest to target first
-                    $candidates = [];
-                    foreach ($sortedIndices as $idx) {
-                        $price = $priceMap[$idx];
-                        if ($price >= $minTarget && $price <= $maxTarget) {
-                            $candidates[] = ['idx' => $idx, 'diff' => abs($price - $target)];
-                        }
-                    }
-                    usort($candidates, fn($a, $b) => $a['diff'] <=> $b['diff']);
-
-                    foreach ($candidates as $candidate) {
-                        $comboKey = (string)$products[$candidate['idx']]->id;
-                        if (!empty($lastUsedCombinations) && in_array($comboKey, $lastUsedCombinations)) {
-                            continue; // skip this specific product, try next closest
-                        }
-                        return ['products' => [$products[$candidate['idx']]], 'total' => $priceMap[$candidate['idx']]];
-                    }
-                    // All candidates in this band were used, try next band
-                    continue;
-                } else if ($count == 2) {
-                    if ($percentage > 0 && rand(0, 1) == 1) {
-                        continue;
-                    }
-
-                    // Collect ALL valid pairs in this band
-                    $pairCandidates = [];
-                    for ($i = 0; $i < $totalProducts - 1; $i++) {
-                        for ($j = $i + 1; $j < $totalProducts; $j++) {
-                            $idx1 = $sortedIndices[$i];
-                            $idx2 = $sortedIndices[$j];
-
-                            $price1 = $priceMap[$idx1];
-                            $price2 = $priceMap[$idx2];
-
-                            if ($price1 == $price2) continue;
-
-                            $total = $price1 + $price2;
-
-                            if ($total >= $minTarget && $total <= $maxTarget) {
-                                $comboIds = [$products[$idx1]->id, $products[$idx2]->id];
-                                sort($comboIds);
-                                $pairCandidates[] = [
-                                    'pair' => [$idx1, $idx2],
-                                    'total' => $total,
-                                    'diff' => abs($total - $target),
-                                    'key' => implode('-', $comboIds),
-                                ];
-                            }
-                        }
-                    }
-                    usort($pairCandidates, fn($a, $b) => $a['diff'] <=> $b['diff']);
-
-                    foreach ($pairCandidates as $candidate) {
-                        if (!empty($lastUsedCombinations) && in_array($candidate['key'], $lastUsedCombinations)) {
-                            continue; // skip this pair, try next closest
-                        }
-                        return [
-                            'products' => [$products[$candidate['pair'][0]], $products[$candidate['pair'][1]]],
-                            'total' => $candidate['total']
-                        ];
-                    }
-                    // All pairs in this band were used, try next band
+        if ($count == 1) {
+            $candidates = [];
+            foreach ($sortedIndices as $idx) {
+                $price = $priceMap[$idx];
+                if ($price >= $target) {
+                    $candidates[] = ['idx' => $idx, 'diff' => abs($price - $target)];
                 }
             }
+            usort($candidates, fn($a, $b) => $a['diff'] <=> $b['diff']);
+
+            foreach ($candidates as $candidate) {
+                $comboKey = (string)$products[$candidate['idx']]->id;
+                if (!empty($lastUsedCombinations) && in_array($comboKey, $lastUsedCombinations)) {
+                    continue;
+                }
+                return ['products' => [$products[$candidate['idx']]], 'total' => $priceMap[$candidate['idx']]];
+            }
+
+            if (!empty($candidates)) {
+                $best = $candidates[0];
+                return ['products' => [$products[$best['idx']]], 'total' => $priceMap[$best['idx']]];
+            }
+
+            return null;
+        }
+
+        if ($count == 2) {
+            $pairCandidates = [];
+            for ($i = 0; $i < $totalProducts - 1; $i++) {
+                for ($j = $i + 1; $j < $totalProducts; $j++) {
+                    $idx1 = $sortedIndices[$i];
+                    $idx2 = $sortedIndices[$j];
+                    $price1 = $priceMap[$idx1];
+                    $price2 = $priceMap[$idx2];
+
+                    if ($price1 == $price2) continue;
+
+                    $total = $price1 + $price2;
+                    if ($total >= $target) {
+                        $comboIds = [$products[$idx1]->id, $products[$idx2]->id];
+                        sort($comboIds);
+                        $pairCandidates[] = [
+                            'pair' => [$idx1, $idx2],
+                            'total' => $total,
+                            'diff' => abs($total - $target),
+                            'key' => implode('-', $comboIds),
+                        ];
+                    }
+                }
+            }
+            usort($pairCandidates, fn($a, $b) => $a['diff'] <=> $b['diff']);
+
+            foreach ($pairCandidates as $candidate) {
+                if (!empty($lastUsedCombinations) && in_array($candidate['key'], $lastUsedCombinations)) {
+                    continue;
+                }
+                return [
+                    'products' => [$products[$candidate['pair'][0]], $products[$candidate['pair'][1]]],
+                    'total' => $candidate['total']
+                ];
+            }
+
+            if (!empty($pairCandidates)) {
+                $best = $pairCandidates[0];
+                return [
+                    'products' => [$products[$best['pair'][0]], $products[$best['pair'][1]]],
+                    'total' => $best['total']
+                ];
+            }
+
+            return null;
         }
 
         $percentages = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30];
@@ -343,7 +333,7 @@ class LaravelController extends Controller
 
         for ($attempt = 0; $attempt < 200; $attempt++) {
             $shuffledIndices = $sortedIndices;
-            shuffle($sortedIndices);
+            shuffle($shuffledIndices);
 
             $selected = [];
             $usedPrices = [];
@@ -432,7 +422,6 @@ class LaravelController extends Controller
                     for ($i = 0; $i < $count; $i++) {
                         $currentIdx = $selected[$i];
                         $currentPrice = $priceMap[$currentIdx];
-
                         $newTotal = $total - $currentPrice + $replacePrice;
 
                         if ($newTotal >= $target && $newTotal <= $maxTotal) {
@@ -478,7 +467,6 @@ class LaravelController extends Controller
         $allCandidates = [];
 
         for ($i = 0; $i < $attempts; $i++) {
-            $windowCopy = $searchWindow;
             shuffle($searchWindow);
             $candidatePool = array_slice($searchWindow, 0, min(count($searchWindow), $count * 3));
 
@@ -506,33 +494,23 @@ class LaravelController extends Controller
                 sort($comboIds);
                 $comboKey = implode('-', $comboIds);
 
-                $allCandidates[] = [
+                $allCandidates[$comboKey] = [
                     'indices' => $selectedIndices,
                     'total' => $total,
                     'diff' => abs($total - $minTarget),
                     'key' => $comboKey,
                 ];
 
-                if ($total >= $minTarget && $total <= $minTarget * 1.02) {
+                if ($total <= $minTarget * 1.02) {
                     break;
                 }
             }
         }
 
         if (!empty($allCandidates)) {
-            // Deduplicate
-            $seen = [];
-            $unique = [];
-            foreach ($allCandidates as $c) {
-                if (!isset($seen[$c['key']])) {
-                    $seen[$c['key']] = true;
-                    $unique[] = $c;
-                }
-            }
-            usort($unique, fn($a, $b) => $a['diff'] <=> $b['diff']);
+            usort($allCandidates, fn($a, $b) => $a['diff'] <=> $b['diff']);
 
-            // Return first non-used candidate
-            foreach ($unique as $candidate) {
+            foreach ($allCandidates as $candidate) {
                 if (!empty($lastUsedCombinations) && in_array($candidate['key'], $lastUsedCombinations)) {
                     continue;
                 }
@@ -543,8 +521,7 @@ class LaravelController extends Controller
                 return ['products' => $result, 'total' => $candidate['total']];
             }
 
-            // All were used — return best anyway
-            $best = $unique[0];
+            $best = $allCandidates[0];
             $result = [];
             foreach ($best['indices'] as $idx) {
                 $result[] = $products[$idx];
@@ -577,7 +554,7 @@ class LaravelController extends Controller
             $closestDiff = PHP_INT_MAX;
 
             foreach ($expandedWindow as $idx) {
-                if (in_array($idx, $usedIndices)) continue;
+                if (isset($usedIndices[$idx])) continue;
 
                 $price = $priceMap[$idx];
                 if (isset($usedPrices[$price])) continue;
@@ -591,7 +568,7 @@ class LaravelController extends Controller
 
             if ($closestIdx !== null) {
                 $selected[] = $closestIdx;
-                $usedIndices[] = $closestIdx;
+                $usedIndices[$closestIdx] = true;
                 $usedPrices[$priceMap[$closestIdx]] = true;
                 $remaining -= $priceMap[$closestIdx];
             } else {
@@ -635,7 +612,6 @@ class LaravelController extends Controller
 
         asort($priceMap);
         $sortedIndices = array_keys($priceMap);
-        shuffle($sortedIndices);
 
         $percentages = [0, 2, 4, 6, 8, 10];
 
@@ -649,21 +625,17 @@ class LaravelController extends Controller
         }
 
         $maxTotal = $target * 1.10;
-        $bestMatch = null;
-        $bestTotal = 0;
+        $allCandidates = [];
 
-        for ($attempt = 0; $attempt < 20; $attempt++) {
+        for ($attempt = 0; $attempt < 30; $attempt++) {
             $shuffledIndices = $sortedIndices;
             shuffle($shuffledIndices);
-            $startIdx = rand(0, max(0, $totalProducts - 30));
-            $subset = array_slice($sortedIndices, $startIdx, 30);
-            shuffle($subset);
 
             $selected = [];
             $total = 0;
             $usedPrices = [];
 
-            foreach ($subset as $idx) {
+            foreach ($shuffledIndices as $idx) {
                 $price = $priceMap[$idx];
 
                 if (isset($usedPrices[$price])) continue;
@@ -672,59 +644,46 @@ class LaravelController extends Controller
                 $selected[] = $idx;
                 $usedPrices[$price] = true;
                 $total += $price;
+
+                if ($total >= $target) break;
             }
 
-            if ($total >= $target && $total <= $maxTotal && $total > $bestTotal) {
-                $bestMatch = $selected;
-                $bestTotal = $total;
+            if ($total >= $target && $total <= $maxTotal) {
+                $comboIds = array_map(fn($i) => $products[$i]->id, $selected);
+                sort($comboIds);
+                $comboKey = implode('-', $comboIds);
+                $allCandidates[$comboKey] = ['indices' => $selected, 'total' => $total, 'key' => $comboKey];
             }
         }
 
-        if ($bestMatch && $bestTotal >= $target) {
+        if (!empty($allCandidates)) {
+            usort($allCandidates, fn($a, $b) => $a['total'] <=> $b['total']);
+
+            foreach ($allCandidates as $candidate) {
+                if (!empty($lastUsedCombinations) && in_array($candidate['key'], $lastUsedCombinations)) {
+                    continue;
+                }
+                $result = [];
+                foreach ($candidate['indices'] as $idx) {
+                    $result[] = $products[$idx];
+                }
+                return ['products' => $result, 'total' => $candidate['total']];
+            }
+
+            $best = $allCandidates[0];
             $result = [];
-            foreach ($bestMatch as $idx) {
+            foreach ($best['indices'] as $idx) {
                 $result[] = $products[$idx];
             }
-            return ['products' => $result, 'total' => $bestTotal];
+            return ['products' => $result, 'total' => $best['total']];
         }
 
-        $selected = [];
-        $usedPrices = [];
-        $total = 0;
-
-        foreach (array_reverse($sortedIndices) as $idx) {
-            $price = $priceMap[$idx];
-
-            if (isset($usedPrices[$price])) continue;
-            if ($total + $price > $maxTotal) continue;
-
-            $selected[] = $idx;
-            $usedPrices[$price] = true;
-            $total += $price;
-
-            if ($total >= $target) {
-                break;
-            }
-        }
-
-        if ($total >= $target && $total <= $maxTotal) {
-            $result = [];
-            foreach ($selected as $idx) {
-                $result[] = $products[$idx];
-            }
-            return ['products' => $result, 'total' => $total];
-        }
-
-        if (!$bestMatch) {
-            $bestMatch = [$sortedIndices[count($sortedIndices) - 1]];
-            $bestTotal = $priceMap[$sortedIndices[count($sortedIndices) - 1]];
-        }
-
+        $best = [$sortedIndices[count($sortedIndices) - 1]];
         $result = [];
-        foreach ($bestMatch as $idx) {
+        foreach ($best as $idx) {
             $result[] = $products[$idx];
         }
-        return ['products' => $result, 'total' => $bestTotal];
+        return ['products' => $result, 'total' => $priceMap[$sortedIndices[count($sortedIndices) - 1]]];
     }
 
     private function tryFindFlexible($products, $priceMap, $sortedIndices, $minTarget, $maxTarget, $totalProducts, $lastUsedCombinations = [])
@@ -732,9 +691,9 @@ class LaravelController extends Controller
         $allCandidates = [];
 
         for ($attempt = 0; $attempt < 25; $attempt++) {
-            $startIdx = rand(0, max(0, $totalProducts - 25));
-            $subset = array_slice($sortedIndices, $startIdx, 25);
-            shuffle($subset);
+            $shuffledIndices = $sortedIndices;
+            shuffle($shuffledIndices);
+            $subset = array_slice($shuffledIndices, 0, min(25, $totalProducts));
 
             $selected = [];
             $total = 0;
@@ -749,31 +708,16 @@ class LaravelController extends Controller
                 $selected[] = $idx;
                 $usedPrices[$price] = true;
                 $total += $price;
-
-                if ($total >= $minTarget && $total <= $maxTarget) {
-                    $diff = abs($total - $minTarget);
-                    $resultIds = array_map(fn($i) => $products[$i]->id, $selected);
-                    sort($resultIds);
-                    $comboKey = implode('-', $resultIds);
-
-                    $allCandidates[] = [
-                        'indices' => $selected,
-                        'total' => $total,
-                        'diff' => $diff,
-                        'key' => $comboKey,
-                    ];
-                }
             }
 
             if ($total >= $minTarget && $total <= $maxTarget) {
-                $diff = abs($total - $minTarget);
-                $resultIds = array_map(fn($i) => $products[$i]->id, $selected);
-                sort($resultIds);
-                $comboKey = implode('-', $resultIds);
-                $allCandidates[] = [
+                $comboIds = array_map(fn($i) => $products[$i]->id, $selected);
+                sort($comboIds);
+                $comboKey = implode('-', $comboIds);
+                $allCandidates[$comboKey] = [
                     'indices' => $selected,
                     'total' => $total,
-                    'diff' => $diff,
+                    'diff' => abs($total - $minTarget),
                     'key' => $comboKey,
                 ];
             }
@@ -783,21 +727,9 @@ class LaravelController extends Controller
             return null;
         }
 
-        // Deduplicate by key
-        $seen = [];
-        $unique = [];
-        foreach ($allCandidates as $c) {
-            if (!isset($seen[$c['key']])) {
-                $seen[$c['key']] = true;
-                $unique[] = $c;
-            }
-        }
+        usort($allCandidates, fn($a, $b) => $a['diff'] <=> $b['diff']);
 
-        // Sort by diff ascending (closest to target first)
-        usort($unique, fn($a, $b) => $a['diff'] <=> $b['diff']);
-
-        // Return first candidate not in lastUsedCombinations
-        foreach ($unique as $candidate) {
+        foreach ($allCandidates as $candidate) {
             if (!empty($lastUsedCombinations) && in_array($candidate['key'], $lastUsedCombinations)) {
                 continue;
             }
@@ -808,8 +740,7 @@ class LaravelController extends Controller
             return ['products' => $result, 'total' => $candidate['total']];
         }
 
-        // All candidates were used — return the best one anyway (unavoidable repeat)
-        $best = $unique[0];
+        $best = $allCandidates[0];
         $result = [];
         foreach ($best['indices'] as $idx) {
             $result[] = $products[$idx];
