@@ -27,6 +27,7 @@ class LaravelController extends Controller
 {
     private $productTable;
     private $connectionType;
+    private $lastCombinationsLimit = 3;
 
     public function __construct()
     {
@@ -169,7 +170,7 @@ class LaravelController extends Controller
         // Store combination key to avoid repeating in next clicks
         $combinationKey = $bestMatch->pluck('id')->sort()->join('-');
         $lastUsedCombinations[] = $combinationKey;
-        $lastUsedCombinations = array_slice($lastUsedCombinations, -3); // keep only last 3 combinations to avoid excessive memory growth
+        $lastUsedCombinations = array_slice($lastUsedCombinations, -$this->lastCombinationsLimit);
         session()->put('last_used_combinations', $lastUsedCombinations);
 
         $bestMatch->each(function ($product) use ($site_id) {
