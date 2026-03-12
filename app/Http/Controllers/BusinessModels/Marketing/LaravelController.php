@@ -124,7 +124,7 @@ class LaravelController extends Controller
         $bestMatch = null;
         $foundAtStep = $currentStep;
 
-        // Try from currentStep up to maxStep until a new (non-repeated) combo is found
+        // Try from currentStep up to maxStep, advancing 2% tolerance each step
         for ($step = $currentStep; $step <= $maxStep; $step++) {
             $tolerance = $step * 0.02; // 0%, 2%, 4%, ... 28%
             $searchTarget = $invoiceAmount * (1 + $tolerance);
@@ -133,12 +133,6 @@ class LaravelController extends Controller
 
             if (!$candidate || empty($candidate['products'])) {
                 continue;
-            }
-
-            $candidateKey = collect($candidate['products'])->pluck('id')->sort()->join('-');
-
-            if (in_array($candidateKey, $lastUsedCombinations)) {
-                continue; // This combo was recently used, try next step
             }
 
             $bestMatch = $candidate;
