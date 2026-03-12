@@ -169,7 +169,7 @@ class LaravelController extends Controller
         // Store combination key to avoid repeating in next clicks
         $combinationKey = $bestMatch->pluck('id')->sort()->join('-');
         $lastUsedCombinations[] = $combinationKey;
-        $lastUsedCombinations = array_slice($lastUsedCombinations, -5);
+        $lastUsedCombinations = array_slice($lastUsedCombinations, -3); // keep only last 3 combinations to avoid excessive memory growth
         session()->put('last_used_combinations', $lastUsedCombinations);
 
         $bestMatch->each(function ($product) use ($site_id) {
