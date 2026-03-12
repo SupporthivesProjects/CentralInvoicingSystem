@@ -558,6 +558,207 @@
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
 <script src="https://unpkg.com/feather-icons"></script>
+
+<style>
+@keyframes igRowIn {
+    0%   { opacity: 0; transform: translateY(18px) scale(0.97); }
+    60%  { opacity: 1; transform: translateY(-3px) scale(1.01); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes igTableGlow {
+    0%   { box-shadow: 0 0 0px rgba(13,110,253,0); }
+    40%  { box-shadow: 0 0 22px 6px rgba(13,110,253,0.28); }
+    100% { box-shadow: 0 0 0px rgba(13,110,253,0); }
+}
+@keyframes igParticle {
+    0%   { opacity: 1; transform: translate(0,0) scale(1); }
+    100% { opacity: 0; transform: translate(var(--tx), var(--ty)) scale(0); }
+}
+@keyframes igAmountPop {
+    0%   { transform: scale(1); }
+    45%  { transform: scale(1.13); color: #198754; }
+    100% { transform: scale(1); }
+}
+@keyframes igScanLine {
+    0%   { top: 0%; opacity: 0.7; }
+    100% { top: 100%; opacity: 0; }
+}
+
+.ig-row-animate {
+    animation: igRowIn 0.42s cubic-bezier(.22,.68,0,1.2) both;
+}
+.ig-table-glow {
+    animation: igTableGlow 1.1s ease-out forwards;
+}
+.ig-amount-pop {
+    display: inline-block;
+    animation: igAmountPop 0.5s cubic-bezier(.22,.68,0,1.2) forwards;
+}
+.ig-particle {
+    position: fixed;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 99999;
+    animation: igParticle 0.75s ease-out forwards;
+}
+.ig-scan-wrap {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    border-radius: inherit;
+    z-index: 2;
+}
+.ig-scan-line {
+    position: absolute;
+    left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(13,110,253,0.55), transparent);
+    animation: igScanLine 0.55s ease-in forwards;
+}
+</style>
+
+<script>
+(function () {
+    const COLORS = ['#0d6efd','#198754','#ffc107','#0dcaf0','#6f42c1','#fd7e14'];
+
+    function burst(originEl) {
+        const rect = originEl.getBoundingClientRect();
+        const cx = rect.left + rect.width / 2;
+        const cy = rect.top + rect.height / 2;
+        const count = 22;
+
+        for (let i = 0; i < count; i++) {
+            const p = document.createElement('div');
+            p.className = 'ig-particle';
+            const angle = (i / count) * 2 * Math.PI;
+            const dist = 55 + Math.random() * 55;
+            const tx = Math.cos(angle) * dist + 'px';
+            const ty = Math.sin(angle) * dist + 'px';
+            p.style.cssText = `
+                left:${cx}px; top:${cy}px;
+                background:${COLORS[i % COLORS.length]};
+                --tx:${tx}; --ty:${ty};
+                animation-duration:${0.55 + Math.random() * 0.35}s;
+                animation-delay:${Math.random() * 0.08}s;
+            `;
+            document.body.appendChild(p);
+            p.addEventListener('animationend', () => p.remove());
+        }
+    }
+
+    function scanTable() {
+        const wrap = document.querySelector('.table-responsive.border');
+        if (!wrap) return;
+        const old = wrap.querySelector('.ig-scan-wrap');
+        if (old) old.remove();
+        const sw = document.createElement('div');
+        sw.className = 'ig-scan-wrap';
+        const sl = document.createElement('div');
+        sl.className = 'ig-scan-line';
+        sw.appendChild(sl);
+        wrap.style.position = 'relative';
+        wrap.appendChild(sw);
+        sl.addEventListener('animationend', () => sw.remove());
+    }
+
+    function glowTable() {
+        const wrap = document.querySelector('.table-responsive.border');
+        if (!wrap) return;
+        wrap.classList.remove('ig-table-glow');
+        void wrap.offsetWidth;
+        wrap.classList.add('ig-table-glow');
+        wrap.addEventListener('animationend', () => wrap.classList.remove('ig-table-glow'), { once: true });
+    }
+
+    function animateRows() {
+        const rows = document.querySelectorAll('#randomize-product-table-body tr');
+        rows.forEach((row, i) => {
+            row.classList.remove('ig-row-animate');
+            void row.offsetWidth;
+            row.style.animationDelay = (i * 0.07) + 's';
+            row.classList.add('ig-row-animate');
+            row.addEventListener('animationend', () => {
+                row.style.animationDelay = '';
+                row.classList.remove('ig-row-animate');
+            }, { once: true });
+        });
+    }
+
+    function tickAmount(el, targetVal) {
+        const start = parseFloat(el.value) || 0;
+        const end = parseFloat(targetVal) || 0;
+        const steps = 28;
+        let step = 0;
+        const inc = (end - start) / steps;
+        el.classList.remove('ig-amount-pop');
+        void el.offsetWidth;
+
+        const iv = setInterval(() => {
+            step++;
+            el.value = (start + inc * step).toFixed(2);
+            if (step >= steps) {
+                clearInterval(iv);
+                el.value = end.toFixed(2);
+                el.classList.add('ig-amount-pop');
+                el.addEventListener('animationend', () => el.classList.remove('ig-amount-pop'), { once: true });
+            }
+        }, 18);
+    }
+
+    const _origRandomize = window.randomizeProducts;
+    window.randomizeProducts = function (mode) {
+        const btn = document.querySelector('button[onclick*="randomizeProducts"]');
+        if (btn) burst(btn);
+        _origRandomize.apply(this, arguments);
+    };
+
+    const _origSuccess = XMLHttpRequest.prototype.open;
+
+    const observer = new MutationObserver(function (mutations) {
+        for (const m of mutations) {
+            if (m.type === 'childList' && m.target.id === 'randomize-product-table-body' && m.addedNodes.length) {
+                const hasRealRows = [...m.addedNodes].some(n => n.nodeType === 1 && n.tagName === 'TR');
+                if (hasRealRows) {
+                    scanTable();
+                    setTimeout(glowTable, 60);
+                    setTimeout(animateRows, 80);
+                }
+            }
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const tbody = document.getElementById('randomize-product-table-body');
+        if (tbody) {
+            observer.observe(tbody, { childList: true });
+        }
+
+        const origVal = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value');
+        const amountEl = document.getElementById('current_amount');
+        if (amountEl) {
+            const _set = origVal.set;
+            Object.defineProperty(amountEl, 'value', {
+                set(v) {
+                    const prev = parseFloat(this._igPrev || 0);
+                    const next = parseFloat(v) || 0;
+                    if (!isNaN(next) && next !== prev && next > 0 && document.activeElement !== this) {
+                        tickAmount(this, next);
+                        this._igPrev = next;
+                    } else {
+                        _set.call(this, v);
+                    }
+                },
+                get() { return origVal.get.call(this); },
+                configurable: true
+            });
+        }
+    });
+})();
+</script>
+
 <script>
     feather.replace();
 </script>
