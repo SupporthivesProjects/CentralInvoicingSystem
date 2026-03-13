@@ -50,7 +50,7 @@
                                             <div class="info_left">
                                                 <div class="l_top" style="display: flex;flex-direction: row;">
                                                     <div
-                                                        style="padding: 10px; height: 30px; background-color: #F2F2F2; width: 130px; border: 1px solid grey;">
+                                                        style="padding: 10px; height: 30px; background-color: #F2F2F2; width: 130px; border: 1px solid grey; border-bottom: none; border-right: none;">
                                                         <p
                                                             style="color:#000000; text-align:start;padding:10px;font-family:  Arial;font-size:10px;margin: 0px;font-weight: 400;">
                                                             Invoice No.
@@ -92,8 +92,8 @@
                                                     {{ $customer_name }}
                                                 </p>
                                                
-                                                    {{ $site_name }}<br>{{ $customer_email ? $customer_email : '' }}
-                                                    | {{ $customer_mobile ? $customer_mobile : '' }}
+                                                    {{ $customer_email ? $customer_email : '' }}
+                                                    {{ $customer_mobile ? $customer_mobile : '' }}
                                                 </p>
                                             </div>
                                         </div>
@@ -110,7 +110,7 @@
                                         </td>
                                         <td
                                             style="width: 300px; color: #FFFFFF;border-right: 1px solid #FFFFFF;border-top: 1px solid #FFFFFF; text-align: start; padding: 10px;font-family:  Arial;font-size: 14px;margin: 0px;font-weight: 400;border-collapse: collapse;">
-                                            <b>Service type</b>
+                                            <b>Service Type</b>
                                         </td>
                                         <td
                                             style="width: 80px; color: #FFFFFF;border-right: 1px solid #FFFFFF;border-top: 1px solid #FFFFFF; text-align: center; padding: 10px;font-family:  Arial;font-size: 14px;margin: 0px;font-weight: 400;border-collapse: collapse;">
