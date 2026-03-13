@@ -126,6 +126,7 @@
                                         </td>
                                     </tr>
                                     @foreach ($products as $product)
+                                    {{ dd($products) }}
                                         <tr style="border-collapse: collapse;height: 24px;">
                                             <td
                                                 style="width: 30px; color:#000000; border-left: 1px solid #FFFFFF; border-right: 1px solid #FFFFFF; text-align:center;padding:10px;font-family: Arial;font-size:10px;margin: 0px;font-weight: 400;border-bottom: 1px solid grey;border-collapse: collapse;">
