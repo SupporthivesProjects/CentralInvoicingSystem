@@ -1295,13 +1295,6 @@ $(document).ready(function() {
             $('#discount_amount').val(discountAmount.toFixed(2));
         }
 
-        if (discountAmount === 0) {
-            fireGiftCelebration(
-                'Perfect Match Found!',
-                'Exact combo — no discount needed'
-            );
-        }
-
         $('#current_amount').val(currentAmount.toFixed(2));
         $('#temp_current_amount_text').text(currentAmount.toFixed(2));
         $('#temp_discount_amount_text').text(discountAmount.toFixed(2));
@@ -1317,71 +1310,6 @@ $(document).ready(function() {
     }
 </script>
 
-<style>
-@keyframes igFly{0%{transform:translate(-50%,-50%) scale(1) rotate(0deg);opacity:1}100%{transform:translate(calc(-50% + var(--tx)),calc(-50% + var(--ty))) scale(0) rotate(var(--r));opacity:0}}
-@keyframes igStrip{0%{transform:translate(-50%,-50%) rotate(var(--ri)) scaleY(1);opacity:1}100%{transform:translate(calc(-50% + var(--tx)),calc(-50% + var(--ty))) rotate(var(--r)) scaleY(0);opacity:0}}
-@keyframes igRing{0%{transform:translate(-50%,-50%) scale(0);opacity:1}100%{transform:translate(-50%,-50%) scale(6);opacity:0}}
-@keyframes igMsgIn{0%{opacity:0;transform:translate(-50%,-50%) scale(0.7)}100%{opacity:1;transform:translate(-50%,-50%) scale(1)}}
-</style>
-<script>
-window.fireGiftCelebration = function(msgText, subText) {
-    const COLORS = ['#ef4444','#3b82f6','#f59e0b','#10b981','#8b5cf6','#ec4899','#06b6d4','#84cc16','#f97316','#a78bfa'];
-    function r(a,b){return Math.random()*(b-a)+a;}
-
-    const overlay = document.createElement('div');
-    overlay.style.cssText = 'position:fixed;inset:0;z-index:99998;pointer-events:none';
-    document.body.appendChild(overlay);
-
-    const cx = window.innerWidth/2, cy = window.innerHeight/2;
-
-    function spawn(type, delay){
-        setTimeout(()=>{
-            const el = document.createElement('div');
-            const color = COLORS[Math.floor(r(0,COLORS.length))];
-            const ang = r(0,Math.PI*2);
-            const dist = r(100,340);
-            const tx = Math.cos(ang)*dist, ty = Math.sin(ang)*dist - r(20,160);
-            const dur = r(0.55,1.1);
-            const base = `position:absolute;left:${cx}px;top:${cy}px;pointer-events:none;--tx:${tx}px;--ty:${ty}px;--r:${r(-720,720)}deg;`;
-            if(type==='circle'){
-                const s=r(7,15); el.style.cssText=base+`width:${s}px;height:${s}px;border-radius:50%;background:${color};animation:igFly ${dur}s cubic-bezier(.15,.8,.2,1) forwards`;
-            } else if(type==='square'){
-                const s=r(6,12); el.style.cssText=base+`width:${s}px;height:${s}px;border-radius:2px;background:${color};animation:igFly ${dur}s cubic-bezier(.1,.75,.2,1) forwards`;
-            } else if(type==='strip'){
-                const w=r(3,7),h=r(16,40); el.style.cssText=base+`width:${w}px;height:${h}px;border-radius:2px;background:${color};--ri:${r(-180,180)}deg;animation:igStrip ${dur}s cubic-bezier(.15,.8,.2,1) forwards`;
-            } else if(type==='star'){
-                const s=r(10,18); el.style.cssText=base+`width:${s}px;height:${s}px;background:${color};clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);animation:igFly ${dur}s cubic-bezier(.2,.85,.25,1) forwards`;
-            }
-            overlay.appendChild(el);
-            setTimeout(()=>el.remove(),(dur+0.1)*1000);
-        }, delay);
-    }
-
-    COLORS.slice(0,5).forEach((c,i)=>{
-        const ring=document.createElement('div');
-        ring.style.cssText=`position:absolute;left:${cx}px;top:${cy}px;width:60px;height:60px;border-radius:50%;border:5px solid ${c};pointer-events:none;animation:igRing ${0.65}s ${i*0.06}s cubic-bezier(.2,.8,.3,1) forwards`;
-        overlay.appendChild(ring);
-        setTimeout(()=>ring.remove(),800+i*60);
-    });
-
-    for(let i=0;i<80;i++) spawn('circle', r(0,220));
-    for(let i=0;i<45;i++) spawn('square', r(0,200));
-    for(let i=0;i<40;i++) spawn('strip',  r(0,180));
-    for(let i=0;i<25;i++) spawn('star',   r(50,300));
-
-    if(msgText || subText){
-        setTimeout(()=>{
-            const box=document.createElement('div');
-            box.style.cssText=`position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:99999;text-align:center;pointer-events:none;animation:igMsgIn 0.45s cubic-bezier(.34,1.56,.64,1) forwards`;
-            box.innerHTML=`<div style="font-size:28px;font-weight:500;color:#111;margin-bottom:6px">${msgText||''}</div><div style="font-size:14px;color:#666">${subText||''}</div>`;
-            document.body.appendChild(box);
-            setTimeout(()=>box.remove(),3000);
-        },300);
-    }
-
-    setTimeout(()=>overlay.remove(), 2500);
-};
-</script>
 
 <script>
     function initTooltips() {
