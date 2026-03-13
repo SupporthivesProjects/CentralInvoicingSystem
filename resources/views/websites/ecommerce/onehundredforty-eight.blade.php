@@ -239,7 +239,7 @@
                                               </table>
                                             </div>  
                                           </td>
-                                          <td style="width: 40%;vertical-align: bottom;">
+                                          <td style="width: 70%;vertical-align: bottom;">
                                               <div class="invies-content invies-content-two">
                                                   <h3>INVOICE FROM</h3>
                                                   <table>
