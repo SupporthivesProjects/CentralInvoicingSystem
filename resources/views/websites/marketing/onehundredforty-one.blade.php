@@ -39,7 +39,7 @@
         
                 <!--Body-->
                 
-                    <tr style="width: 600px;">
+                    <tr style="width:100%;">
                         <td style="padding: 40px;padding-bottom: 10px;">
                             <table style="border-collapse: collapse;">
                                 <tr style="font-family: Mazzard M, sans-serif;width: 600px;border-collapse: collapse;display: flex;font-size: 12px;">
@@ -59,11 +59,11 @@
                         </td>
                     </tr>
 
-                    <tr>
-                        <td style="padding: 40px;padding-top: 30px;">
+                    <tr width="100%">
+                        <td style="padding: 40px;padding-top: 30px;" align="center">
                             <table style="border-collapse: collapse;border: 4px solid orange;background-color: #F7F6F2;">
                                 <tr style="border-collapse: collapse;height: 20px;background-color: #F4F4F4;border: 1px solid orange;font-family: Mazzard M, sans-serif;">
-                                    <td style="width: 300px;text-align: left;font-size: 12px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-left: 5px;border: 1px solid orange;padding-left: 20px;">
+                                    <td style="width: 400px;text-align: left;font-size: 12px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-left: 5px;border: 1px solid orange;padding-left: 20px;">
                                        <b>Product</b> 
                                     </td>
                                     <td style="width: 100px;text-align: center;font-size: 12px;margin: 0px;font-weight: 400;border-collapse: collapse;border: 1px solid orange;">
