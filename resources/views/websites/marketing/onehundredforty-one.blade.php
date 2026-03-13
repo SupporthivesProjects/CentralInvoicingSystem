@@ -20,7 +20,7 @@
                         <td style="width: 100%;font-family: Mazzard M, sans-serif;">
                            <table width="100%">
                                 <tr>
-                                    <td style="width:50%;padding-left: 20px;">
+                                    <td style="width:50%;padding-left: 40px;">
                                         <b style="font-size: 24px;">INVOICE</b>
                                         <div style="font-size:10px;font-family:Mazzard M;display: flex;">
                                             <p style="padding-right: 20px;font-size:10px;">{{ $company_name }}<br><br>{{ $company_email }}</p>
@@ -28,7 +28,7 @@
                                         </div>
                                     </td>
 
-                                    <td style="width:50%;text-align: center;">
+                                    <td style="width:50%;text-align: right;padding-right:40px">
                                         <img src="{{ $company_logo }}" style="height: 60px;">
                                     </td>
                                 </tr>
