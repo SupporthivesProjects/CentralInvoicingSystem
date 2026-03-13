@@ -23,8 +23,8 @@
                                     <td style="width:50%;padding-left: 20px;">
                                         <b style="font-size: 24px;">INVOICE</b>
                                         <div style="font-size:10px;font-family:Mazzard M;display: flex;">
-                                            <p style="padding-right: 20px;font-size:10px;">{{ $company_name }}<br>{{ $company_email }}</p>
-                                            <p style="padding-left: 10px;font-size:10px;">{!! $company_address !!}<br> {{ $company_mobile }}</p>
+                                            <p style="padding-right: 20px;font-size:10px;">{{ $company_name }}<br><br>{{ $company_email }}</p>
+                                            <p style="padding-left: 10px;font-size:10px;">{!! $company_address !!}<br><br> {{ $company_mobile }}</p>
                                         </div>
                                     </td>
 
