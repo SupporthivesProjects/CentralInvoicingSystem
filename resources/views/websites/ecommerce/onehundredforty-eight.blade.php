@@ -208,7 +208,7 @@
                             <table style="border-bottom: 0px solid #0000004d;">
                                 <tbody>
                                     <tr>
-                                        <td style="width: 30%;vertical-align: top;">
+                                        <td style="width: 40%;vertical-align: top;">
                                             <div class="invies-content">
                                               <h3>INVOICE TO</h3>
                                               <table>
@@ -273,7 +273,7 @@
                                                             <td>
                                                                 <span> # </span>
                                                             </td>
-                                                            <td>
+                                                            <td >
                                                                 <p>{{ $company_name }} <br> {!! $company_address !!}</p>
                                                             </td>
                                                         </tr>
