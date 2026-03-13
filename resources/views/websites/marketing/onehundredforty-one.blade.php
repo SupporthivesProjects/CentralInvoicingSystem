@@ -43,11 +43,11 @@
                         <td style="padding: 40px;padding-bottom: 10px;">
                             <table style="border-collapse: collapse;">
                                 <tr style="font-family: Mazzard M, sans-serif;width: 600px;border-collapse: collapse;display: flex;font-size: 12px;">
-                                    <td style="width: 200px;">
+                                    <td style="width: 300px;">
                                         <p style="margin: 0px;"><b>Billed To: </b><br>{{ $customer_name }}<br>{{ $customer_email }}</p>
                                     </td>
 
-                                    <td style="width: 200px;text-align: right;">
+                                    <td style="width: 300px;text-align: right;">
                                         <b>Invoice #{{ $invoice_number }}</b>
                                     </td>
 
