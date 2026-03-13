@@ -16,7 +16,7 @@
             <td align="center" bgcolor="#e7e0cf">
                 <table  style="border-collapse: collapse;border: 0px;background-color: white;background-color: #e7e0cf; height100vh !important;padding:0px !important;" width="100%">
                     <!--Header-->
-                    <tr style="background: url('{{ $invoice_header_image }}') no-repeat;background-position:center;background-size:cover; height:180px;color: white;border-collapse: collapse;padding:0px !important;width:100%;">
+                    <tr style="background: url('{{ $invoice_header_image }}') no-repeat;background-position:center;background-size:cover; height:100%;color: white;border-collapse: collapse;padding:0px !important;width:100%;">
                         <td style="width: 100%;font-family: Mazzard M, sans-serif;">
                            <table width="100%">
                                 <tr>
