@@ -63,32 +63,32 @@
                         <td style="padding: 40px;padding-top: 30px;">
                             <table style="border-collapse: collapse;border: 4px solid orange;background-color: #F7F6F2;">
                                 <tr style="border-collapse: collapse;height: 20px;background-color: #F4F4F4;border: 1px solid orange;font-family: Mazzard M, sans-serif;">
-                                    <td style="width: 300px;text-align: left;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-left: 5px;border: 1px solid orange;padding-left: 20px;">
+                                    <td style="width: 300px;text-align: left;font-size: 12px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-left: 5px;border: 1px solid orange;padding-left: 20px;">
                                        <b>Product</b> 
                                     </td>
-                                    <td style="width: 100px;text-align: center;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;border: 1px solid orange;">
+                                    <td style="width: 100px;text-align: center;font-size: 12px;margin: 0px;font-weight: 400;border-collapse: collapse;border: 1px solid orange;">
                                         <b>Duration</b>
                                     </td>
-                                    <td style="width: 100px;text-align: center;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;border: 1px solid orange;">
+                                    <td style="width: 100px;text-align: center;font-size: 12px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;border: 1px solid orange;">
                                         <b>Qty</b>
                                     </td>
-                                    <td style="width:100px;text-align: right;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;border: 1px solid orange;padding-right: 20px; ">
+                                    <td style="width:100px;text-align: right;font-size: 12px;margin: 0px;font-weight: 400;border-collapse: collapse;border: 1px solid orange;padding-right: 20px; ">
                                         <b>Total</b>
                                     </td>
                                 </tr>
                                 @foreach($products as $product)
                                 <tr style="border-collapse: collapse;height: 40px;background-color: #F4F4F4;border: 1px solid orange;font-family: Mazzard M, sans-serif;">
-                                    <td style="width: 300px;text-align: left;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-left: 5px;border: 1px solid orange;padding-left: 20px;">
+                                    <td style="width: 300px;text-align: left;font-size: 12px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-left: 5px;border: 1px solid orange;padding-left: 20px;">
                                        <b style="color: black;">{{ $product->name }}</b><br>
                                        <!-- <p style="color: orange;margin-top: 2px;margin-bottom: 1px;">Platinum</p> -->
                                     </td>
-                                    <td style="width: 100px;text-align: center;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;border: 1px solid orange;">
+                                    <td style="width: 100px;text-align: center;font-size: 12px;margin: 0px;font-weight: 400;border-collapse: collapse;border: 1px solid orange;">
                                         <p>{{ $product->subscription ?? '-' }}</p>
                                     </td>
-                                    <td style="width: 100px;text-align: center;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;border: 1px solid orange;">
+                                    <td style="width: 100px;text-align: center;font-size: 12px;margin: 0px;font-weight: 400; border-collapse: collapse;padding-left: 5px;border: 1px solid orange;">
                                         <p>1</p>
                                     </td>
-                                    <td style="width:100px;text-align: right;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;border: 1px solid orange;padding-right: 20px; ">
+                                    <td style="width:100px;text-align: right;font-size: 12px;margin: 0px;font-weight: 400;border-collapse: collapse;border: 1px solid orange;padding-right: 20px; ">
                                        <p>{{ site_currency() }} {{ number_format($product->unit_price ?? 0, 2) }}</p>
                                     </td>
                                 </tr>
@@ -102,26 +102,26 @@
                         <td style="display: flex;justify-content: flex-end;padding-right: 40px;padding-bottom: 40px;">
                              <table style="border-collapse: collapse;border: 4px solid orange;background-color: #F7F6F2;">
                                 <tr style="border-collapse: collapse;height: 20px;background-color: #F4F4F4;font-family: Mazzard M, sans-serif;">
-                                    <td style="width: 100px;text-align: left;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-left: 5px;padding-left: 20px;">
+                                    <td style="width: 100px;text-align: left;font-size: 12px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-left: 5px;padding-left: 20px;">
                                        <p>Subtotal</p>
                                     </td>
-                                    <td style="width: 100px;text-align: right;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 20px;">
+                                    <td style="width: 100px;text-align: right;font-size: 12px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 20px;">
                                         <p>{{ site_currency() }} {{ number_format(($invoice_amount + $discount_amount) ?? 0, 2) }}</p>
                                     </td>
                                 </tr> 
                                 <tr style="border-collapse: collapse;height: 20px;background-color: #F4F4F4;font-family: Mazzard M, sans-serif;">
-                                    <td style="width: 100px;text-align: left;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-left: 5px;padding-left: 20px;">
+                                    <td style="width: 100px;text-align: left;font-size: 12px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-left: 5px;padding-left: 20px;">
                                        <p>Discount</p>
                                     </td>
-                                    <td style="width: 100px;text-align: right;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 20px;">
+                                    <td style="width: 100px;text-align: right;font-size: 12px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 20px;">
                                         <p>{{ site_currency() }} {{ number_format($discount_amount ?? 0, 2) }}</p>
                                     </td>
                                 </tr>
                                 <tr style="border-collapse: collapse;height: 20px;background-color: orange;font-family: Mazzard M, sans-serif;">
-                                    <td style="width: 100px;text-align: left;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-left: 5px;padding-left: 20px;">
+                                    <td style="width: 100px;text-align: left;font-size: 12px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-left: 5px;padding-left: 20px;">
                                        <b>Grand Total</b>
                                     </td>
-                                    <td style="width: 100px;text-align: right;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 20px;">
+                                    <td style="width: 100px;text-align: right;font-size: 12px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-right: 20px;">
                                         <b>{{ site_currency() }} {{ number_format($invoice_amount ?? 0, 2) }}</b>
                                     </td>
                                 </tr>   
