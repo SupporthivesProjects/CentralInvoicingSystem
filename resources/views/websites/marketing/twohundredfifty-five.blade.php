@@ -92,8 +92,8 @@
                                                     {{ $customer_name }}
                                                 </p>
                                                
-                                                    {{ $customer_email ? $customer_email : '' }}
-                                                    {{ $customer_mobile ? $customer_mobile : '' }}
+                                                    {{ $site_name }}<br>{{ $customer_email ? $customer_email : '' }}
+                                                    | {{ $customer_mobile ? $customer_mobile : '' }}
                                                 </p>
                                             </div>
                                         </div>
@@ -110,7 +110,7 @@
                                         </td>
                                         <td
                                             style="width: 300px; color: #FFFFFF;border-right: 1px solid #FFFFFF;border-top: 1px solid #FFFFFF; text-align: start; padding: 10px;font-family:  Arial;font-size: 14px;margin: 0px;font-weight: 400;border-collapse: collapse;">
-                                            <b>Service Type</b>
+                                            <b>Service type</b>
                                         </td>
                                         <td
                                             style="width: 80px; color: #FFFFFF;border-right: 1px solid #FFFFFF;border-top: 1px solid #FFFFFF; text-align: center; padding: 10px;font-family:  Arial;font-size: 14px;margin: 0px;font-weight: 400;border-collapse: collapse;">
