@@ -37,7 +37,7 @@
                         <td style="padding:20px 100px;">
                             <table style="background: url('{{ $invoice_image1 }}') no-repeat;background-position: center;height:141px; width: 100%;border-collapse: collapse;">
                                 <tr>
-                                    <td style="width:30%;vertical-align:top;">
+                                    <td style="width:60%;vertical-align:top;">
                                          <p style="font-family: arial;font-size:28px;margin-bottom: 5px;font-weight: 400;">
                                            <b>INVOICE</b> 
                                         </p>
@@ -55,7 +55,7 @@
                                         <p style="font-family: Courier New;font-size: 10px;margin-bottom: 5px;font-weight: 600;">
                                         {{ $customer_name }}</p>
                                     </td>
-                                    <td style="width:70%;padding:0px 40px;text-align:left;vertical-align:top;">
+                                    <td style="width:40%;padding:0px 0px;text-align:left;vertical-align:top;">
                                         <p style="font-family: Courier New;font-size: 10px;margin: 0px;font-weight: 400;">
                                             <b style="font-size: 12px;text-transform:uppercase;">Date:</b> {{ $invoice_date }}
                                         </p>
@@ -66,7 +66,7 @@
                                             <strong style="font-size: 12px;text-transform:uppercase;">Email:</strong> {{ $company_email}}
                                         </p>
                                           <p style="font-family: Courier New;font-size: 10px;margin: 0px;font-weight: 400;">
-                                            <b style="font-size: 12px;text-transform:uppercase;">Address<br></b> {!! $company_address !!}</p>
+                                            <b style="font-size: 12px;text-transform:uppercase;">Address:<br></b> {!! $company_address !!}</p>
                                     </td>
                                 </tr>
                             </table>

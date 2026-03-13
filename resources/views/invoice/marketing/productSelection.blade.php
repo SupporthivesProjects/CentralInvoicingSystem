@@ -1310,6 +1310,7 @@ $(document).ready(function() {
     }
 </script>
 
+
 <script>
     function initTooltips() {
         const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
@@ -1332,5 +1333,6 @@ $(document).ready(function() {
         }
     });
 </script>
+
 
 @endpush
