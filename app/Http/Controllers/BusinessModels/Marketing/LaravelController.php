@@ -127,15 +127,22 @@ class LaravelController extends Controller
             $tolerance = $step * 0.02;
             $searchTarget = $invoiceAmount * (1 + $tolerance);
 
-            $candidate = $this->findBestProductCombination($products, $searchTarget, $noOfProducts, $lastUsedCombinations);
+            for ($retry = 0; $retry < 5; $retry++) {
+                $candidate = $this->findBestProductCombination($products, $searchTarget, $noOfProducts, $lastUsedCombinations);
 
-            if (!$candidate || empty($candidate['products'])) {
-                continue;
+                if (!$candidate || empty($candidate['products'])) {
+                    break;
+                }
+
+                $candidateKey = collect($candidate['products'])->pluck('id')->sort()->join('-');
+                if (in_array($candidateKey, $lastUsedCombinations)) {
+                    continue;
+                }
+
+                $bestMatch = $candidate;
+                $foundAtStep = $step;
+                break 2;
             }
-
-            $bestMatch = $candidate;
-            $foundAtStep = $step;
-            break;
         }
 
         if (!$bestMatch || empty($bestMatch['products'])) {
