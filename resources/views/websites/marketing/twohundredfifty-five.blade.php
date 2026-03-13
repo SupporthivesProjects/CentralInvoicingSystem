@@ -102,7 +102,7 @@
                             </table>
                             <br>
                             <div style="min-height: 460px;">
-                                {{ dd($products) }}
+                                
                                 <table style="border-collapse: collapse;">
                                     <tr style="border-collapse: collapse;height: 24px;background-color: #1c2939;">
                                         <td
@@ -127,28 +127,28 @@
                                         </td>
                                     </tr>
                                     @foreach ($products as $product)
-                                    
-                                        <tr style="border-collapse: collapse;height: 24px;">
-                                            <td
-                                                style="width: 30px; color:#000000; border-left: 1px solid #FFFFFF; border-right: 1px solid #FFFFFF; text-align:center;padding:10px;font-family: Arial;font-size:10px;margin: 0px;font-weight: 400;border-bottom: 1px solid grey;border-collapse: collapse;">
-                                                 {{ $loop->iteration }}
-                                            </td>
-                                            <td
-                                                style="width: 300px; color:#000000; border-right: 1px solid #FFFFFF; text-align: start; padding: 10px 10px;font-family:  Arial;font-size: 10px;margin: 0px;font-weight: 400;border-bottom: 1px solid grey;border-collapse: collapse;">
-                                                {{ $product->name }}
-                                            </td>
-                                            <td
-                                                style="width: 80px; color:#000000; border-right: 1px solid #FFFFFF; text-align:center;padding:10px;font-family:  Arial;font-size:10px;margin: 0px;font-weight: 400;border-bottom: 1px solid grey;border-collapse: collapse;">
-                                                1
-                                            </td>
-                                            <td
-                                                style="width:80px; color:#000000; border-right: 1px solid #FFFFFF; text-align:center;padding:10px;font-family:  Arial;font-size: 10px;margin: 0px;font-weight: 400;border-bottom: 1px solid grey;border-collapse: collapse; background-color: #F2F2F2;">
-                                                {{ site_currency() . number_format($product->unit_price ?? 0, 2) }}                                            </td>
-                                            <td
-                                                style="width:80px; color:#000000; border-right: 1px solid #FFFFFF; text-align:right;padding:10px;font-family:  Arial;font-size: 10px;margin: 0px;font-weight: 400;border-bottom: 1px solid grey;border-collapse: collapse; background-color: #F2F2F2;">
-                                                {{ site_currency() . number_format($product->unit_price ?? 0, 2) }}
-                                            </td>
-                                        </tr>
+                                        {{ dd($product) }}
+                                            <tr style="border-collapse: collapse;height: 24px;">
+                                                <td
+                                                    style="width: 30px; color:#000000; border-left: 1px solid #FFFFFF; border-right: 1px solid #FFFFFF; text-align:center;padding:10px;font-family: Arial;font-size:10px;margin: 0px;font-weight: 400;border-bottom: 1px solid grey;border-collapse: collapse;">
+                                                    {{ $loop->iteration }}
+                                                </td>
+                                                <td
+                                                    style="width: 300px; color:#000000; border-right: 1px solid #FFFFFF; text-align: start; padding: 10px 10px;font-family:  Arial;font-size: 10px;margin: 0px;font-weight: 400;border-bottom: 1px solid grey;border-collapse: collapse;">
+                                                    {{ $product->name }}
+                                                </td>
+                                                <td
+                                                    style="width: 80px; color:#000000; border-right: 1px solid #FFFFFF; text-align:center;padding:10px;font-family:  Arial;font-size:10px;margin: 0px;font-weight: 400;border-bottom: 1px solid grey;border-collapse: collapse;">
+                                                    1
+                                                </td>
+                                                <td
+                                                    style="width:80px; color:#000000; border-right: 1px solid #FFFFFF; text-align:center;padding:10px;font-family:  Arial;font-size: 10px;margin: 0px;font-weight: 400;border-bottom: 1px solid grey;border-collapse: collapse; background-color: #F2F2F2;">
+                                                    {{ site_currency() . number_format($product->unit_price ?? 0, 2) }}                                            </td>
+                                                <td
+                                                    style="width:80px; color:#000000; border-right: 1px solid #FFFFFF; text-align:right;padding:10px;font-family:  Arial;font-size: 10px;margin: 0px;font-weight: 400;border-bottom: 1px solid grey;border-collapse: collapse; background-color: #F2F2F2;">
+                                                    {{ site_currency() . number_format($product->unit_price ?? 0, 2) }}
+                                                </td>
+                                            </tr>
                                     @endforeach
 
                                     <tr>
