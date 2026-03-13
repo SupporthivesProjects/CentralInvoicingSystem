@@ -17,7 +17,7 @@
                 <table  style="border-collapse: collapse;border: 0px;background-color: white;background-color: #e7e0cf; height100vh !important;">
                     <!--Header-->
                     <tr style="background: url('{{ $invoice_header_image }}') no-repeat;background-position:center;background-size:contain; height:200px;color: white;border-collapse: collapse;width:100vw;">
-                        <td style="width: 100%;padding-left: 40px;padding-right: 40px;font-family: Mazzard M, sans-serif;">
+                        <td style="width: 100%;font-family: Mazzard M, sans-serif;">
                            <table>
                                 <tr>
                                     <td style="width: 300px;padding-left: 20px;">
