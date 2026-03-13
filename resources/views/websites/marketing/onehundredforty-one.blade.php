@@ -14,13 +14,13 @@
     <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse;">
         <tr>
             <td align="center" bgcolor="#e7e0cf">
-                <table  style="border-collapse: collapse;border: 0px;background-color: white;background-color: #e7e0cf; height100vh !important;">
+                <table  style="border-collapse: collapse;border: 0px;background-color: white;background-color: #e7e0cf; height100vh !important;padding:0px !important;" width="100%">
                     <!--Header-->
-                    <tr style="background: url('{{ $invoice_header_image }}') no-repeat;background-position:center;background-size:contain; height:300px;color: white;border-collapse: collapse;width:100vw;">
-                        <td style="width: 100%;font-family: Mazzard M, sans-serif;padding:0px;">
-                           <table>
+                    <tr style="background: url('{{ $invoice_header_image }}') no-repeat;background-position:center;background-size:cover; height:150px;color: white;border-collapse: collapse;padding:0px !important;width:100%;">
+                        <td style="width: 100%;font-family: Mazzard M, sans-serif;padding:0px 40px;">
+                           <table width="100%">
                                 <tr>
-                                    <td style="width: 300px;padding-left: 20px;">
+                                    <td style="width:50%;padding-left: 20px;">
                                         <b style="font-size: 24px;">INVOICE</b>
                                         <div style="font-size:10px;font-family:Mazzard M;display: flex;">
                                             <p style="padding-right: 20px;font-size:10px;">{{ $company_name }}<br>{{ $company_email }}</p>
@@ -28,7 +28,7 @@
                                         </div>
                                     </td>
 
-                                    <td style="width: 300px;text-align: center;">
+                                    <td style="width:50%;text-align: center;">
                                         <img src="{{ $company_logo }}" style="height: 60px;">
                                     </td>
                                 </tr>
