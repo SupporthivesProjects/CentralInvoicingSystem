@@ -27,7 +27,7 @@ class LaravelController extends Controller
 {
     private $productTable;
     private $connectionType;
-    private $lastCombinationsLimit = 3;
+    private $lastCombinationsLimit = 15;
 
     public function __construct()
     {
@@ -249,18 +249,10 @@ class LaravelController extends Controller
                     $candidates[] = ['idx' => $idx, 'diff' => abs($price - $target)];
                 }
             }
-            usort($candidates, fn($a, $b) => $a['diff'] <=> $b['diff']);
-
-            foreach ($candidates as $candidate) {
-                $comboKey = (string)$products[$candidate['idx']]->id;
-                if (!empty($lastUsedCombinations) && in_array($comboKey, $lastUsedCombinations)) {
-                    continue;
-                }
-                return ['products' => [$products[$candidate['idx']]], 'total' => $priceMap[$candidate['idx']]];
-            }
-
             if (!empty($candidates)) {
-                $best = $candidates[0];
+                usort($candidates, fn($a, $b) => $a['diff'] <=> $b['diff']);
+                $best = $this->pickFromPool($candidates, $lastUsedCombinations, 'idx');
+                if (!$best) $best = $candidates[0];
                 return ['products' => [$products[$best['idx']]], 'total' => $priceMap[$best['idx']]];
             }
 
@@ -291,20 +283,10 @@ class LaravelController extends Controller
                     }
                 }
             }
-            usort($pairCandidates, fn($a, $b) => $a['diff'] <=> $b['diff']);
-
-            foreach ($pairCandidates as $candidate) {
-                if (!empty($lastUsedCombinations) && in_array($candidate['key'], $lastUsedCombinations)) {
-                    continue;
-                }
-                return [
-                    'products' => [$products[$candidate['pair'][0]], $products[$candidate['pair'][1]]],
-                    'total' => $candidate['total']
-                ];
-            }
-
             if (!empty($pairCandidates)) {
-                $best = $pairCandidates[0];
+                usort($pairCandidates, fn($a, $b) => $a['diff'] <=> $b['diff']);
+                $best = $this->pickFromPool($pairCandidates, $lastUsedCombinations);
+                if (!$best) $best = $pairCandidates[0];
                 return [
                     'products' => [$products[$best['pair'][0]], $products[$best['pair'][1]]],
                     'total' => $best['total']
@@ -366,6 +348,15 @@ class LaravelController extends Controller
                         break;
                     }
                 }
+            }
+        }
+
+        if ($bestMatch && count($bestMatch) === $count && $bestTotal >= $target) {
+            $comboIds = array_map(fn($idx) => $products[$idx]->id, $bestMatch);
+            sort($comboIds);
+            $comboKey = implode('-', $comboIds);
+            if (!empty($lastUsedCombinations) && in_array($comboKey, $lastUsedCombinations)) {
+                $bestMatch = null;
             }
         }
 
@@ -444,6 +435,19 @@ class LaravelController extends Controller
         return ['products' => $result, 'total' => array_sum(array_column($result, 'unit_price'))];
     }
 
+
+    private function pickFromPool(array $candidates, array $lastUsedCombinations, string $keyField = 'key'): ?array
+    {
+        $unused = array_values(array_filter($candidates, fn($c) => !in_array($c[$keyField], $lastUsedCombinations)));
+        $pool = !empty($unused) ? $unused : array_values($candidates);
+        if (empty($pool)) return null;
+        $bestDiff = $pool[0]['diff'];
+        $threshold = $bestDiff * 1.5 + 1.0;
+        $goodPool = array_values(array_filter($pool, fn($c) => $c['diff'] <= $threshold));
+        if (empty($goodPool)) $goodPool = $pool;
+        return $goodPool[array_rand($goodPool)];
+    }
+
     private function tryFindExactCount($products, $priceMap, $sortedIndices, $minTarget, $maxTarget, $count, $totalProducts, $lastUsedCombinations = [])
     {
         $avgPrice = ($minTarget + $maxTarget) / 2 / $count;
@@ -456,14 +460,14 @@ class LaravelController extends Controller
             }
         }
 
-        $windowSize = min($count * 4, $totalProducts - $midPoint);
+        $windowSize = min(max($count * 8, 30), $totalProducts);
         $searchWindow = array_slice($sortedIndices, $midPoint, $windowSize);
 
         if (count($searchWindow) < $count) {
             $searchWindow = $sortedIndices;
         }
 
-        $attempts = min(100, count($searchWindow) * 3);
+        $attempts = min(200, max(100, count($searchWindow) * 5));
         $allCandidates = [];
 
         for ($i = 0; $i < $attempts; $i++) {
@@ -509,19 +513,8 @@ class LaravelController extends Controller
 
         if (!empty($allCandidates)) {
             usort($allCandidates, fn($a, $b) => $a['diff'] <=> $b['diff']);
-
-            foreach ($allCandidates as $candidate) {
-                if (!empty($lastUsedCombinations) && in_array($candidate['key'], $lastUsedCombinations)) {
-                    continue;
-                }
-                $result = [];
-                foreach ($candidate['indices'] as $idx) {
-                    $result[] = $products[$idx];
-                }
-                return ['products' => $result, 'total' => $candidate['total']];
-            }
-
-            $best = $allCandidates[0];
+            $best = $this->pickFromPool($allCandidates, $lastUsedCombinations);
+            if (!$best) $best = $allCandidates[0];
             $result = [];
             foreach ($best['indices'] as $idx) {
                 $result[] = $products[$idx];
@@ -627,7 +620,7 @@ class LaravelController extends Controller
         $maxTotal = $target * 1.10;
         $allCandidates = [];
 
-        for ($attempt = 0; $attempt < 30; $attempt++) {
+        for ($attempt = 0; $attempt < 60; $attempt++) {
             $shuffledIndices = $sortedIndices;
             shuffle($shuffledIndices);
 
@@ -657,20 +650,11 @@ class LaravelController extends Controller
         }
 
         if (!empty($allCandidates)) {
-            usort($allCandidates, fn($a, $b) => $a['total'] <=> $b['total']);
-
-            foreach ($allCandidates as $candidate) {
-                if (!empty($lastUsedCombinations) && in_array($candidate['key'], $lastUsedCombinations)) {
-                    continue;
-                }
-                $result = [];
-                foreach ($candidate['indices'] as $idx) {
-                    $result[] = $products[$idx];
-                }
-                return ['products' => $result, 'total' => $candidate['total']];
-            }
-
-            $best = $allCandidates[0];
+            foreach ($allCandidates as &$c) { $c['diff'] = abs($c['total'] - $target); }
+            unset($c);
+            usort($allCandidates, fn($a, $b) => $a['diff'] <=> $b['diff']);
+            $best = $this->pickFromPool($allCandidates, $lastUsedCombinations);
+            if (!$best) $best = $allCandidates[0];
             $result = [];
             foreach ($best['indices'] as $idx) {
                 $result[] = $products[$idx];
@@ -690,10 +674,10 @@ class LaravelController extends Controller
     {
         $allCandidates = [];
 
-        for ($attempt = 0; $attempt < 25; $attempt++) {
+        for ($attempt = 0; $attempt < 60; $attempt++) {
             $shuffledIndices = $sortedIndices;
             shuffle($shuffledIndices);
-            $subset = array_slice($shuffledIndices, 0, min(25, $totalProducts));
+            $subset = array_slice($shuffledIndices, 0, min(60, $totalProducts));
 
             $selected = [];
             $total = 0;
@@ -728,19 +712,8 @@ class LaravelController extends Controller
         }
 
         usort($allCandidates, fn($a, $b) => $a['diff'] <=> $b['diff']);
-
-        foreach ($allCandidates as $candidate) {
-            if (!empty($lastUsedCombinations) && in_array($candidate['key'], $lastUsedCombinations)) {
-                continue;
-            }
-            $result = [];
-            foreach ($candidate['indices'] as $idx) {
-                $result[] = $products[$idx];
-            }
-            return ['products' => $result, 'total' => $candidate['total']];
-        }
-
-        $best = $allCandidates[0];
+        $best = $this->pickFromPool($allCandidates, $lastUsedCombinations);
+        if (!$best) $best = $allCandidates[0];
         $result = [];
         foreach ($best['indices'] as $idx) {
             $result[] = $products[$idx];
