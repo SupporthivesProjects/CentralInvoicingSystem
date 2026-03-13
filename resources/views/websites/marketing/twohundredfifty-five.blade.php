@@ -102,6 +102,7 @@
                             </table>
                             <br>
                             <div style="min-height: 460px;">
+                                {{ dd($products) }}
                                 <table style="border-collapse: collapse;">
                                     <tr style="border-collapse: collapse;height: 24px;background-color: #1c2939;">
                                         <td
