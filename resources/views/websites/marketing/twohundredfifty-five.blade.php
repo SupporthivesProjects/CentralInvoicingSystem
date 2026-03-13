@@ -103,111 +103,41 @@
                             <br>
                             <div style="min-height: 460px;">
                                 <table style="border-collapse: collapse;">
-                                    <tr style="border-collapse: collapse;height: 24px;background-color: #1c2939;">
-                                        <td
-                                            style="width: 30px; color: #FFFFFF;border-left: 1px solid #FFFFFF;border-top: 1px solid #FFFFFF; border-right: 1px solid #FFFFFF; text-align: center; padding: 10px;font-family:  Arial;font-size: 14px;margin: 0px;font-weight: 400;border-collapse: collapse;">
-                                            <b>#</b>
-                                        </td>
-                                        <td
-                                            style="width: 300px; color: #FFFFFF;border-right: 1px solid #FFFFFF;border-top: 1px solid #FFFFFF; text-align: start; padding: 10px;font-family:  Arial;font-size: 14px;margin: 0px;font-weight: 400;border-collapse: collapse;">
-                                            <b>Service Type</b>
-                                        </td>
-                                        <td
-                                            style="width: 80px; color: #FFFFFF;border-right: 1px solid #FFFFFF;border-top: 1px solid #FFFFFF; text-align: center; padding: 10px;font-family:  Arial;font-size: 14px;margin: 0px;font-weight: 400;border-collapse: collapse;">
-                                            <b>Qty</b>
-                                        </td>
-                                        <td
-                                            style="width: 80px; color: #FFFFFF;border-right: 1px solid #FFFFFF;border-top: 1px solid #FFFFFF; text-align: center; padding: 10px; font-family:  Arial;font-size: 14px;margin: 0px;font-weight: 400;border-collapse: collapse;">
-                                            <b>Unit Price</b>
-                                        </td>
-                                        <td
-                                            style="width: 80px; color: #FFFFFF; text-align: end; padding: 10px;border-top: 1px solid #FFFFFF;border-right: 1px solid #FFFFFF; font-family:  Arial;font-size: 14px;margin: 0px;font-weight: 400;border-collapse: collapse;">
-                                            <b>Total</b>
-                                        </td>
-                                    </tr>
-                                    @foreach ($products as $product)
-                                    {{ dd($products) }}
-                                        <tr style="border-collapse: collapse;height: 24px;">
-                                            <td
-                                                style="width: 30px; color:#000000; border-left: 1px solid #FFFFFF; border-right: 1px solid #FFFFFF; text-align:center;padding:10px;font-family: Arial;font-size:10px;margin: 0px;font-weight: 400;border-bottom: 1px solid grey;border-collapse: collapse;">
-                                                 {{ $loop->iteration }}
+                                    <thead>
+                                        <tbody>
+                                            @forelse ($products as $product)
+                                            <tr style="height: 24px;">
+                                                <td style="text-align:center;padding:10px;">
+                                                    {{ $loop->iteration }}
+                                                </td>
+                                            
+                                                <td style="text-align:left;padding:10px;">
+                                                    {{ $product->name }}
+                                                </td>
+                                            
+                                                <td style="text-align:center;padding:10px;">
+                                                    1
+                                                </td>
+                                            
+                                                <td style="text-align:center;padding:10px;background:#F2F2F2;">
+                                                    {{ site_currency() . number_format($product->unit_price ?? 0, 2) }}
+                                                </td>
+                                            
+                                                <td style="text-align:right;padding:10px;background:#F2F2F2;">
+                                                    {{ site_currency() . number_format($product->unit_price ?? 0, 2) }}
+                                                </td>
+                                            </tr>
+                                            @empty
+                                            <tr>
+                                            <td colspan="5" style="text-align:center;padding:10px;">
+                                            No Products Found
                                             </td>
-                                            <td
-                                                style="width: 300px; color:#000000; border-right: 1px solid #FFFFFF; text-align: start; padding: 10px 10px;font-family:  Arial;font-size: 10px;margin: 0px;font-weight: 400;border-bottom: 1px solid grey;border-collapse: collapse;">
-                                                {{ $product->name }}
-                                            </td>
-                                            <td
-                                                style="width: 80px; color:#000000; border-right: 1px solid #FFFFFF; text-align:center;padding:10px;font-family:  Arial;font-size:10px;margin: 0px;font-weight: 400;border-bottom: 1px solid grey;border-collapse: collapse;">
-                                                1
-                                            </td>
-                                            <td
-                                                style="width:80px; color:#000000; border-right: 1px solid #FFFFFF; text-align:center;padding:10px;font-family:  Arial;font-size: 10px;margin: 0px;font-weight: 400;border-bottom: 1px solid grey;border-collapse: collapse; background-color: #F2F2F2;">
-                                                {{ site_currency() . number_format($product->unit_price ?? 0, 2) }}                                            </td>
-                                            <td
-                                                style="width:80px; color:#000000; border-right: 1px solid #FFFFFF; text-align:right;padding:10px;font-family:  Arial;font-size: 10px;margin: 0px;font-weight: 400;border-bottom: 1px solid grey;border-collapse: collapse; background-color: #F2F2F2;">
-                                                {{ site_currency() . number_format($product->unit_price ?? 0, 2) }}
-                                            </td>
-                                        </tr>
-                                    @endforeach
-
-                                    <tr>
-                                        <td style="width: 100px;text-align: right;font-family: Arial;font-size: 10px;margin: 0px;font-weight: 400;padding-right: 10px;"
-                                            colspan="3">
-                                        </td>
-                                        <td style="width: 100px;color: #FFFFFF;text-align: end;font-family: Arial;font-size: 12px;margin: 0px;font-weight: 400; background-color: #a6a6a6; border-bottom: 1px solid #F2F2F2;"
-                                            colspan="1">
-                                            <p style="margin: 0px; padding: 10px;">Sub Total</p>
-                                        </td>
-                                        <td
-                                            style="width:100px;color: #FFFFFF;text-align:center;padding-right:10px;font-family: Arial;font-size: 12px;margin: 0px;font-weight: 400;border-collapse: collapse; background-color: #a6a6a6; border-bottom: 1px solid #F2F2F2;">
-                                            <p style="margin: 0px; padding: 10px;">{{ site_currency() . number_format($invoice_amount + $discount_amount, 2) }}</p>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="width: 100px;text-align: right;font-family: Arial;font-size: 10px;margin: 0px;font-weight: 400;padding-right: 10px; "
-                                            colspan="3">
-                                        </td>
-                                        {{-- <td style="width: 100px;color: #FFFFFF;text-align: end;font-family: Arial;font-size: 12px;margin: 0px;font-weight: 400; background-color: #a6a6a6; border-bottom: 1px solid #F2F2F2;"
-                                            colspan="1">
-                                            <p style="margin: 0px; padding: 10px;">
-                                                Tax
-                                            </p>
-                                        </td>
-                                        <td
-                                            style="width:100px;color: #FFFFFF;text-align:center;padding-right:10px;font-family: Arial;font-size: 12px;margin: 0px;font-weight: 400;border-collapse: collapse; background-color: #a6a6a6; border-bottom: 1px solid #F2F2F2;">
-                                            <p style="margin: 0px; padding: 10px;">$00.00</p>
-                                        </td> --}}
-                                    </tr>
-                                    <tr>
-                                        <td style="width: 100px;text-align: right;font-family: Arial;font-size: 10px;margin: 0px;font-weight: 400;padding-right: 10px; "
-                                            colspan="3">
-                                        </td>
-                                        <td style="width: 100px;color: #FFFFFF;text-align: end;font-family: Arial;font-size: 12px;margin: 0px;font-weight: 400; background-color: #a6a6a6; border-bottom: 1px solid #F2F2F2;"
-                                            colspan="1">
-                                            <p style="margin: 0px; padding: 10px;">
-                                                Discount
-                                            </p>
-                                        </td>
-                                        <td
-                                            style="width:100px;color: #FFFFFF;text-align:center;padding-right:10px;font-family: Arial;font-size: 12px;margin: 0px;font-weight: 400;border-collapse: collapse; background-color: #a6a6a6; border-bottom: 1px solid #F2F2F2;">
-                                            <p style="margin: 0px; padding: 10px;">{{ site_currency() . number_format($discount_amount, 2) }}</p>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="width: 100px;text-align: right;font-family: Arial;font-size: 10px;margin: 0px;font-weight: 400;padding-right: 10px;"
-                                            colspan="3">
-                                        </td>
-                                        <td style="width: 100px;color: #FFFFFF;text-align: end;font-family: Arial;font-size: 16px;margin: 0px;font-weight: 400; background-color: #1c2939;"
-                                            colspan="1">
-                                            <p style="margin: 0px; padding: 10px;">
-                                                <b>Total</b>
-                                            </p>
-                                        </td>
-                                        <td
-                                            style="width:100px;color: #FFFFFF;text-align:center;padding-right:10px;font-family: Arial;font-size: 16px;margin: 0px;font-weight: 400; border-collapse: collapse; background-color: #1c2939;">
-                                            <p style="margin: 0px; padding: 10px;"><b>{{ site_currency() . number_format($invoice_amount, 2) }}</b></p>
-                                        </td>
-                                    </tr>
+                                            </tr>
+                                            @endforelse
+                                            </tbody>
+                                        
+                                    </thead>
+                                    
                                 </table>
                             </div>
                         </td>
