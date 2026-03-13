@@ -27,7 +27,7 @@ class LaravelController extends Controller
 {
     private $productTable;
     private $connectionType;
-    private $lastCombinationsLimit = 15;
+    private $lastCombinationsLimit = 5;
 
     public function __construct()
     {
