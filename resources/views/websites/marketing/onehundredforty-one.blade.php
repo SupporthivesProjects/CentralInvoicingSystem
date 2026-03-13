@@ -62,7 +62,7 @@
                     <tr width="100%">
                         <td style="padding: 40px;padding-top: 30px;" align="center">
                             <table style="border-collapse: collapse;border: 4px solid orange;background-color: #F7F6F2;">
-                                <tr style="border-collapse: collapse;height: 20px;background-color: #F4F4F4;border: 1px solid orange;font-family: Mazzard M, sans-serif;">
+                                <tr style="border-collapse: collapse;height:40px;background-color: #F4F4F4;border: 1px solid orange;font-family: Mazzard M, sans-serif;">
                                     <td style="width: 400px;text-align: left;font-size: 12px;margin: 0px;font-weight: 400;border-collapse: collapse;padding-left: 5px;border: 1px solid orange;padding-left: 20px;">
                                        <b>Product</b> 
                                     </td>
