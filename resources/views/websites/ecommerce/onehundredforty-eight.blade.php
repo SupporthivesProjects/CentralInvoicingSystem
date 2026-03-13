@@ -208,7 +208,7 @@
                             <table style="border-bottom: 0px solid #0000004d;">
                                 <tbody>
                                     <tr>
-                                        <td style="width: 40%;vertical-align: top;">
+                                        <td style="width: 30%;vertical-align: top;">
                                             <div class="invies-content">
                                               <h3>INVOICE TO</h3>
                                               <table>
@@ -239,7 +239,7 @@
                                               </table>
                                             </div>  
                                           </td>
-                                          <td style="width: 30%;vertical-align: bottom;">
+                                          <td style="width: 40%;vertical-align: bottom;">
                                               <div class="invies-content invies-content-two">
                                                   <h3>INVOICE FROM</h3>
                                                   <table>
