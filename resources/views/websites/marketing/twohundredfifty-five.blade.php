@@ -129,23 +129,23 @@
                                     @foreach ($products as $product)
                                         
                                         <tr>
-                                            <td style="width:100px;color: #FFFFFF;text-align:center;padding-right:10px;font-family: Arial;font-size: 12px;margin: 0px;font-weight: 400;border-collapse: collapse; background-color: #a6a6a6; border-bottom: 1px solid #F2F2F2;">
+                                            <td style="width: 30px; color:#000000; border-left: 1px solid #FFFFFF; border-right: 1px solid #FFFFFF; text-align:center;padding:10px;font-family: Arial;font-size:10px;margin: 0px;font-weight: 400;border-bottom: 1px solid grey;border-collapse: collapse;">
                                             {{ $loop->iteration }}
                                             </td>
                                             
-                                            <td style="width:100px;color: #FFFFFF;text-align:center;padding-right:10px;font-family: Arial;font-size: 12px;margin: 0px;font-weight: 400;border-collapse: collapse; background-color: #a6a6a6; border-bottom: 1px solid #F2F2F2;">
+                                            <td style="width: 30px; color:#000000; border-left: 1px solid #FFFFFF; border-right: 1px solid #FFFFFF; text-align:center;padding:10px;font-family: Arial;font-size:10px;margin: 0px;font-weight: 400;border-bottom: 1px solid grey;border-collapse: collapse;">
                                                 {{ $product->name }} ({{ $product->subscription }})
                                             </td>
                                             
-                                            <td style="width:100px;color: #FFFFFF;text-align:center;padding-right:10px;font-family: Arial;font-size: 12px;margin: 0px;font-weight: 400;border-collapse: collapse; background-color: #a6a6a6; border-bottom: 1px solid #F2F2F2;">
+                                            <td style="width: 30px; color:#000000; border-left: 1px solid #FFFFFF; border-right: 1px solid #FFFFFF; text-align:center;padding:10px;font-family: Arial;font-size:10px;margin: 0px;font-weight: 400;border-bottom: 1px solid grey;border-collapse: collapse;">
                                             1
                                             </td>
                                             
-                                            <td style="width:100px;color: #FFFFFF;text-align:center;padding-right:10px;font-family: Arial;font-size: 12px;margin: 0px;font-weight: 400;border-collapse: collapse; background-color: #a6a6a6; border-bottom: 1px solid #F2F2F2;">
+                                            <td style="width: 30px; color:#000000; border-left: 1px solid #FFFFFF; border-right: 1px solid #FFFFFF; text-align:center;padding:10px;font-family: Arial;font-size:10px;margin: 0px;font-weight: 400;border-bottom: 1px solid grey;border-collapse: collapse;">
                                             {{ site_currency() . number_format($product->unit_price ?? 0, 2) }}
                                             </td>
                                             
-                                            <td style="width:100px;color: #FFFFFF;text-align:center;padding-right:10px;font-family: Arial;font-size: 12px;margin: 0px;font-weight: 400;border-collapse: collapse; background-color: #a6a6a6; border-bottom: 1px solid #F2F2F2;">
+                                            <td style="width: 30px; color:#000000; border-left: 1px solid #FFFFFF; border-right: 1px solid #FFFFFF; text-align:center;padding:10px;font-family: Arial;font-size:10px;margin: 0px;font-weight: 400;border-bottom: 1px solid grey;border-collapse: collapse;">
                                             {{ site_currency() . number_format($product->unit_price ?? 0, 2) }}
                                             </td>
                                         </tr>
