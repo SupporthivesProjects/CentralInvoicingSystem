@@ -66,7 +66,7 @@
                                             <strong style="font-size: 12px;text-transform:uppercase;">Email:</strong> {{ $company_email}}
                                         </p>
                                           <p style="font-family: Courier New;font-size: 10px;margin: 0px;font-weight: 400;">
-                                            <b style="font-size: 12px;text-transform:uppercase;">Address:<br></b> {!! $company_address !!}</p>
+                                            <b style="font-size: 12px;text-transform:uppercase;">Address:</b> {!! $company_address !!}</p>
                                     </td>
                                 </tr>
                             </table>
