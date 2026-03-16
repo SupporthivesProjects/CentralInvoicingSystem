@@ -35,16 +35,8 @@ class HomeController extends Controller
     
         $tempDownCount = Website::where('site_status', 'tdown')->count();
         $permDownCount = Website::where('site_status', 'pdown')->count();
-    
-        $currentHost = $request->getHost();
-        if ($currentHost === '127.0.0.1') {
-            $invoices = InvoiceGenerationHistory::orderBy('id', 'desc')->take(10)->get();
-        } else {
-            $invoices = Cache::remember('invoices.all', 300, function () {
-                return InvoiceGenerationHistory::orderBy('id', 'desc')->take(10)->get();
-            });
-        }
-    
+        $invoices = InvoiceGenerationHistory::orderBy('id', 'desc')->take(10)->get();
+        
         return view('pages.dashboard', compact('invoices', 'dates', 'invoiceCounts', 'businessmodels', 'sites', 'priceChanges', 'invoicedates', 'userInvoices', 'tempDownCount', 'permDownCount'));
     }
 
