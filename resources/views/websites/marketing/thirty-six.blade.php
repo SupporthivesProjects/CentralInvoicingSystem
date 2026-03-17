@@ -7,12 +7,12 @@
        @font-face {
             font-family: 'Calibri';
             src: url("{{ asset('fonts/calibri-bold.ttf') }}");
-            font-weight: bold;
+            font-weight:700;
         }
         @font-face {
             font-family: 'Calibri';
             src: url("{{ asset('fonts/calibri-regular.ttf') }}");
-            font-weight: normal;
+            font-weight: 500;
         }
         * {
             margin:0px;
