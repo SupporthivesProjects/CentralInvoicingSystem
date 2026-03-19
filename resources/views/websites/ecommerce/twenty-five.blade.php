@@ -65,8 +65,12 @@
                                         <p style="font-family: Courier New;font-size: 10px;margin-bottom: 5px;font-weight: 400;">
                                             <strong style="font-size: 12px;text-transform:uppercase;">Email:</strong> {{ $company_email}}
                                         </p>
-                                          <p style="font-family: Courier New;font-size: 10px;margin: 0px;font-weight: 400;">
-                                            <b style="font-size: 12px;text-transform:uppercase;">Address:</b> {!! $company_address !!}</p>
+                                        <div style="display: flex">
+                                            <p style="font-family: Courier New;font-size: 10px;margin: 0px;font-weight: 400;">
+                                                <b style="font-size: 12px;text-transform:uppercase;">Address:</b></p>
+                                            <p style="font-family: Courier New;font-size: 10px;margin: 0px;font-weight: 400;">
+                                                {!! $company_address !!}</p>
+                                        </div>     
                                     </td>
                                 </tr>
                             </table>
