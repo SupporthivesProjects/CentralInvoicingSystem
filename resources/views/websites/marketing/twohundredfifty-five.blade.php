@@ -57,7 +57,7 @@
                                                         </p>
                                                     </div>
                                                     <div
-                                                        style="padding: 10px; height: 30px; background-color: #F2F2F2; width: 130px; border: 1px solid grey; border-left: none;">
+                                                        style="padding: 10px; height: 30px; background-color: #F2F2F2; width: 130px; border: 1px solid grey; ">
                                                         <p
                                                             style="color:#000000; text-align:start;padding:10px;font-family:  Arial;font-size:10px;margin: 0px;font-weight: 400;">
                                                             {{ $invoice_number }}
@@ -66,14 +66,14 @@
                                                 </div>
                                                 <div class="l_top" style="display: flex;flex-direction: row;">
                                                     <div
-                                                        style="padding: 10px; height: 30px; background-color: #FFFFFF; width: 130px; border: 1px solid grey; border-top: none;">
+                                                        style="padding: 10px; height: 30px; background-color: #FFFFFF; width: 130px; border: 1px solid grey;">
                                                         <p
                                                             style="color:#000000; text-align:start;padding:10px;font-family:  Arial;font-size:10px;margin: 0px;font-weight: 400;">
                                                             Invoice Date.
                                                         </p>
                                                     </div>
                                                     <div
-                                                        style="padding: 10px; height: 30px; background-color: #FFFFFF; width: 130px; border: 1px solid grey; border-left: none; border-top: none;">
+                                                        style="padding: 10px; height: 30px; background-color: #FFFFFF; width: 130px; border: 1px solid grey;">
                                                         <p
                                                             style="color:#000000; text-align:start;padding:10px;font-family:  Arial;font-size:10px;margin: 0px;font-weight: 400;">
                                                             {{ $invoice_date }}
