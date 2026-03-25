@@ -4,6 +4,16 @@
 <head>
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
     <style>
+       @font-face {
+            font-family: 'Calibri';
+            src: url("{{ asset('fonts/calibri-bold.ttf') }}");
+            font-weight:700;
+        }
+        @font-face {
+            font-family: 'Calibri';
+            src: url("{{ asset('fonts/calibri-regular.ttf') }}");
+            font-weight: 500;
+        }
         * {
             margin:0px;
             padding:0px;
