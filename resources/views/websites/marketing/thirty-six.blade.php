@@ -6,12 +6,12 @@
     <style>
        @font-face {
             font-family: 'Calibri';
-            src: url("{{ asset('public/fonts/calibri-bold.ttf') }}");
+            src: url('/assets/fonts/calibri-bold.ttf') format('truetype');
             font-weight:700;
         }
         @font-face {
             font-family: 'Calibri';
-            src: url("{{ asset('public/fonts/calibri-regular.ttf') }}");
+            src: url('/assets/fonts/calibri-regular.ttf') format('truetype');;
             font-weight: 500;
         }
         * {
