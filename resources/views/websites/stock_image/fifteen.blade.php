@@ -40,15 +40,15 @@
                             <table style="border-collapse: collapse;width: 100%;" border="0">
                                 <td style="padding: 40px;vertical-align: top;"> -->
                                     <div
-                                        style="display: flex;width: 100%;justify-content: space-between;padding:40px; padding-top: 100px">
+                                        style="display: flex;width: 100%;justify-content: space-between; padding-top: 100px">
                                         <img src="{{ $company_logo }}" alt="" style="height: 60px;">
                                         <div>
                                             <h1
-                                                style="margin: 0px;font-family: Poppins;font-size: 16px;text-align: right; margin-right: 0px;margin-left: -45px;">
+                                                style="margin: 0px;font-family: Poppins;font-size: 16px;text-align: right; margin-right: 0px;">
                                                 INVOICE NO: #{{ $invoice_number }}
                                             </h1>
                                             <p
-                                                style="margin: 0px;font-family: Poppins;font-size: 12px;text-align: right; margin-right: 0px;margin-left: -45px;">
+                                                style="margin: 0px;font-family: Poppins;font-size: 12px;text-align: right; margin-right: 0px;">
                                                 {{ \Carbon\Carbon::parse($invoice_date)->format('d M Y') }}
                                             </p>
                                         </div>
