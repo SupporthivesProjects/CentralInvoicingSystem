@@ -111,15 +111,15 @@
                             ITEM DESCRIPTIONS
                         </td>
                         <td
-                            style="border-bottom:2px solid #2eb24b; font-size:10px; color:#222; font-weight:bold; padding:8px 0;text-align:center; width:16%;">
+                            style="border-bottom:2px solid #2eb24b; font-size:10px; color:#222; font-weight:bold; padding:8px 0;text-align:right; width:16%;">
                             PRICE
                         </td>
                         <td
-                            style="border-bottom:2px solid #2eb24b; font-size:10px; color:#222; font-weight:bold; padding:8px 0;text-align:center; width:16%;">
+                            style="border-bottom:2px solid #2eb24b; font-size:10px; color:#222; font-weight:bold; padding:8px 0;text-align:right; width:16%;">
                             QUANTITY
                         </td>
                         <td
-                            style="border-bottom:2px solid #2eb24b; font-size:10px; color:#222; font-weight:bold; padding:8px 20px 8px 0;text-align:center; width:16%;">
+                            style="border-bottom:2px solid #2eb24b; font-size:10px; color:#222; font-weight:bold; padding:8px 20px 8px 0;text-align:right; width:16%;">
                             TOTAL
                         </td>
                     </tr>
@@ -139,13 +139,13 @@
                             </span> -->
                         </td>
                         <td
-                            style="padding:10px 0; font-size:9px; color:#222; border-bottom:1px solid #888; text-align:center;width:16%;">
+                            style="padding:10px 0; font-size:9px; color:#222; border-bottom:1px solid #888; text-align:right;width:16%;">
                             {{ site_currency() }} {{ number_format($product->unit_price, 2) }}</td>
                         <td
-                            style="padding:10px 0; font-size:9px; color:#222; border-bottom:1px solid #888; text-align:center;width:16%;">
+                            style="padding:10px 0; font-size:9px; color:#222; border-bottom:1px solid #888; text-align:right;width:16%;">
                             1</td>
                         <td
-                            style="padding:10px 28px 10px 0; font-size:9px; color:#222; border-bottom:1px solid #888; text-align:center;width:16%;">
+                            style="padding:10px 28px 10px 0; font-size:9px; color:#222; border-bottom:1px solid #888; text-align:right;width:16%;">
                             {{ site_currency() }} {{ number_format($product->unit_price, 2) }}</td>
                     </tr>
                     @endforeach
