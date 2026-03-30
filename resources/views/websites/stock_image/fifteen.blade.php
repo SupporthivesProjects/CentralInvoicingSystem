@@ -40,7 +40,7 @@
                             <table style="border-collapse: collapse;width: 100%;" border="0">
                                 <td style="padding: 40px;vertical-align: top;"> -->
                                     <div
-                                        style="display: flex;width: 100%;justify-content: space-between; padding-top: 100px">
+                                        style="display: flex;width: 100%;justify-content: space-between;padding:40px; padding-top: 100px">
                                         <img src="{{ $company_logo }}" alt="" style="height: 60px;">
                                         <div>
                                             <h1
@@ -189,7 +189,7 @@
                                     </td>
                                     <td style="width:100px;padding: 0px;">
                                         <p
-                                            style="color: #002052;font-size:11px;font-weight:600;font-family: Poppins;margin: 0px;text-align: center;border-bottom:3px solid #7E0E53;height:50px;display: flex;justify-content: center;align-items: center;">
+                                            style="color: #002052;font-size:11px;font-weight:600;font-family: Poppins;margin: 0px;text-align: right;border-bottom:3px solid #7E0E53;height:50px;display: flex;justify-content: center;align-items: center;">
                                             PRICE
                                         </p>
                                     </td>
@@ -214,7 +214,7 @@
                                         </td>
                                         <td style="width:100px;background: #e6e5e5;padding: 10px;">
                                             <p
-                                                style="color: #847E99;font-size:12px;font-weight:400;font-family:Poppins;margin: 0px;text-align: center;">
+                                                style="color: #847E99;font-size:12px;font-weight:400;font-family:Poppins;margin: 0px;text-align: right;">
                                                 {{ site_currency_code() }}{{ number_format($product->price, 2) }}
                                             </p>
                                         </td>
