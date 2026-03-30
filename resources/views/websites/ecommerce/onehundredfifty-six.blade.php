@@ -111,15 +111,15 @@
                             ITEM DESCRIPTIONS
                         </td>
                         <td
-                            style="border-bottom:2px solid #2eb24b; font-size:10px; color:#222; font-weight:bold; padding:8px 0; width:16%;">
+                            style="border-bottom:2px solid #2eb24b; font-size:10px; color:#222; font-weight:bold; padding:8px 0;text-align:center; width:16%;">
                             PRICE
                         </td>
                         <td
-                            style="border-bottom:2px solid #2eb24b; font-size:10px; color:#222; font-weight:bold; padding:8px 0; width:16%;">
+                            style="border-bottom:2px solid #2eb24b; font-size:10px; color:#222; font-weight:bold; padding:8px 0;text-align:center; width:16%;">
                             QUANTITY
                         </td>
                         <td
-                            style="border-bottom:2px solid #2eb24b; font-size:10px; color:#222; font-weight:bold; padding:8px 20px 8px 0; width:16%;">
+                            style="border-bottom:2px solid #2eb24b; font-size:10px; color:#222; font-weight:bold; padding:8px 20px 8px 0;text-align:center; width:16%;">
                             TOTAL
                         </td>
                     </tr>
@@ -132,7 +132,7 @@
                 <table style="width:100%; border-collapse:collapse;">
                     @foreach($products as $product)
                     <tr style="background:#fff;">
-                        <td style="padding:10px 0 4px 28px; font-size:9px; color:#222; border-bottom:1px solid #888; width:52%;">
+                        <td style="padding:10px 0 4px 20px; font-size:9px; color:#222; border-bottom:1px solid #888; width:52%;">
                             <span style="font-weight:bold; font-size:10px;">{{ $product->name }}</span><br>
                             <!-- <span style="display:inline-block; max-width:100%; width:320px; word-break:break-word; white-space:normal; overflow:hidden; text-overflow:ellipsis;">
                                 {!! \Illuminate\Support\Str::limit(strip_tags($product->description), 150) !!}
