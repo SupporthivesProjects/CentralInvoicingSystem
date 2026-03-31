@@ -58,7 +58,7 @@
                                     <td style="width:40%;padding:0px 0px;text-align:left;vertical-align:top;">
                                         <div style="display: flex">
                                             <p style="font-family: Courier New;font-size: 10px;margin: 0px;font-weight: 400;">
-                                                <b style="font-size: 12px;text-transform:uppercase;">Date:</b> 
+                                                <b style="font-size: 12px;text-transform:uppercase;">Date:</b>
                                             </p>
                                             <p style="font-family: Courier New;font-size: 10px;margin: 0px;font-weight: 400; text-align:right;">
                                                 {{ $invoice_date }}
