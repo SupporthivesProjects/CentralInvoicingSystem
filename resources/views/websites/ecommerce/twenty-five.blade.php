@@ -55,20 +55,36 @@
                                         <p style="font-family: Courier New;font-size: 10px;margin-bottom: 5px;font-weight: 600;">
                                         {{ $customer_name }}</p>
                                     </td>
-                                    <td style="width:55%;padding:0px 0px;text-align:right;vertical-align:top;">
-                                        <p style="font-family: Courier New;font-size: 10px;margin: 0px;font-weight: 400;">
-                                            <b style="font-size: 12px;text-transform:uppercase;">Date:</b> {{ $invoice_date }}
-                                        </p>
+                                    <td style="width:55%;padding:0px 0px;text-align:left;vertical-align:top;">
+                                        <div style="display: flex">
+                                            <p style="font-family: Courier New;font-size: 10px;margin: 0px;font-weight: 400;">
+                                                <b style="font-size: 12px;text-transform:uppercase;">Date:</b> {{ $invoice_date }}
+                                            </p>
+                                            <p style="font-family: Courier New;font-size: 10px;margin: 0px;font-weight: 400; text-align:right;">
+                                                {{ $invoice_date }}
+                                            </p>
+                                        </div>
+                                        <div style="display: flex">
                                        <p style="font-family: Courier New;font-size:10px;margin: 0px;font-weight: 400;">
-                                            <b style="font-size: 12px;text-transform:uppercase;">Invoice Number:</b> #{{ $invoice_number}}
-                                        </p><br>
-                                        <p style="font-family: Courier New;font-size: 10px;margin-bottom: 5px;font-weight: 400;">
-                                            <strong style="font-size: 12px;text-transform:uppercase;">Email:</strong> {{ $company_email}}
+                                            <b style="font-size: 12px;text-transform:uppercase;">Invoice Number:</b>
                                         </p>
+                                        <p style="font-family: Courier New;font-size:10px;margin: 0px;font-weight: 400; text-align:right;">
+                                           #{{ $invoice_number}}
+                                        </p>
+                                        <br>
+                                        </div>
+                                        <div style="display: flex">
+                                        <p style="font-family: Courier New;font-size: 10px;margin-bottom: 5px;font-weight: 400;">
+                                            <strong style="font-size: 12px;text-transform:uppercase;">Email:</strong> 
+                                        </p>
+                                        <p style="font-family: Courier New;font-size: 10px;margin-bottom: 5px;font-weight: 400; text-align:right;">
+                                             {{ $company_email}}
+                                        </p>
+                                        </div>
                                         <div style="display: flex">
                                             <p style="font-family: Courier New;font-size: 10px;margin: 0px;font-weight: 400;">
                                                 <b style="font-size: 12px;text-transform:uppercase;">Address:</b></p>
-                                            <p style="font-family: Courier New;font-size: 10px;margin: 0px;font-weight: 400;">
+                                            <p style="font-family: Courier New;font-size: 10px;margin: 0px;font-weight: 400; text-align:right;">
                                                 {!! $company_address !!}</p>
                                         </div>     
                                     </td>
