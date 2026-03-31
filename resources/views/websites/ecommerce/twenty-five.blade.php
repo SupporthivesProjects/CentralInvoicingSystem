@@ -84,7 +84,7 @@
                                         <div style="display: flex">
                                             <p style="font-family: Courier New;font-size: 10px;margin: 0px;font-weight: 400;">
                                                 <b style="font-size: 12px;text-transform:uppercase;">Address:</b></p>
-                                            <p style="font-family: Courier New;font-size: 10px;margin: 0px;font-weight: 400; text-align:right;">
+                                            <p style="font-family: Courier New;font-size: 10px;margin: 0px;font-weight: 400;">
                                                 {!! $company_address !!}</p>
                                         </div>     
                                     </td>
