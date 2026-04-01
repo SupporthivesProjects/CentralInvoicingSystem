@@ -158,12 +158,12 @@
                 <table style="width:100%; border-collapse:collapse; background:transparent;">
                     <tr>
                         <!-- Notes -->
-                        <td style="width:60%; vertical-align:top; padding:18px 0 18px 0;">
+                        <!-- <td style="width:60%; vertical-align:top; padding:18px 0 18px 0;">
                             <span style="color:#2eb24b; font-weight:bold; font-size:10px;">Notes:</span>
                             <span style="font-size:9px; color:#222;">
                                 {{ $invoice_notes ?? 'No additional notes provided!' }}
                             </span>
-                        </td>
+                        </td> -->
                         <!-- Totals -->
                         <td style="width:20%; vertical-align:top; padding:0;">
                         </td>
