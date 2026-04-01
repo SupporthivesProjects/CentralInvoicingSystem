@@ -4,11 +4,22 @@
 <head>
     <meta charset="UTF-8" />
     <title>Web Mechaniks Invoice</title>
+    <style>
+        .footer_bottom {
+            position: fixed;
+            bottom: 0px;
+            left: 0px;
+            right: 0px;
+            width: 100%;
+            
+            
+        }
+        </style>
 </head>
 
 <body style="margin:0; padding:0; background:#fff; font-family:Arial,sans-serif;">
     <table
-        style="width:100%; margin:30px auto; background:#fff; border-radius:8px; box-shadow:0 2px 12px rgba(0,0,0,0.07); border-collapse:separate; border-spacing:0; position: relative;">
+        style="width:100%; margin:30px auto; background:#fff; border-radius:8px; border-collapse:separate; border-spacing:0; position: relative;">
         <!-- Header -->
         <tr>
             <td colspan="4" style="padding:0;">
@@ -62,11 +73,11 @@
                                         <span style="font-size:9px;">Bill To:</span><br>
                                         <span style="font-weight:bold; font-size:10px;">{{ $customer_name }}</span>
                                     </td>
-                                    <td style="font-size:9px; color:#222; vertical-align:top;">
+                                    <!-- <td style="font-size:9px; color:#222; vertical-align:top;">
                                         <span style="font-weight:bold; font-size:10px;">P:</span> {{ $customer_mobile }}<br>
                                         <span style="font-weight:bold; font-size:10px;">E:</span>
                                         {{ $customer_email }}<br>
-                                    </td>
+                                    </td> -->
                                 </tr>
                             </table>
                         </td>
@@ -77,12 +88,12 @@
                                         <span style="font-size:9px;">Bill From:</span><br>
                                         <span style="font-weight:bold; font-size:10px;">{{ $site_name }}</span>
                                     </td>
-                                    <td style="font-size:9px; color:#222; vertical-align:top;">
+                                    <!-- <td style="font-size:9px; color:#222; vertical-align:top;">
                                         <span style="font-weight:bold; font-size:10px;">P:</span> {{ $company_mobile }}<br>
                                         <span style="font-weight:bold; font-size:10px;">E:</span>
                                         {{ $company_email }}<br>
                                         <span style="font-weight:bold; font-size:10px;">A:</span> {{ $company_address }}
-                                    </td>
+                                    </td> -->
                                 </tr>
                             </table>
                         </td>
@@ -96,17 +107,21 @@
                 <table style="width:100%; border-collapse:collapse;">
                     <tr style="border: 2px solid #2eb24b;border-left: 0px;border-right: 0px;">
                         <td
-                            style="border-bottom:2px solid #2eb24b; font-size:10px; color:#222; font-weight:bold; padding:8px 0 8px 20px; width:40%;">
-                            ITEM DESCRIPTIONS</td>
+                            style="border-bottom:2px solid #2eb24b; font-size:10px; color:#222; font-weight:bold; padding:8px 0 8px 20px; width:52%;">
+                            ITEM DESCRIPTIONS
+                        </td>
                         <td
-                            style="border-bottom:2px solid #2eb24b; font-size:10px; color:#222; font-weight:bold; padding:8px 0; width:20%;">
-                            PRICE</td>
+                            style="border-bottom:2px solid #2eb24b; font-size:10px; color:#222; font-weight:bold; padding:8px 0;text-align:right; width:16%;">
+                            PRICE
+                        </td>
                         <td
-                            style="border-bottom:2px solid #2eb24b; font-size:10px; color:#222; font-weight:bold; padding:8px 0; width:20%;">
-                            QUANTITY</td>
+                            style="border-bottom:2px solid #2eb24b; font-size:10px; color:#222; font-weight:bold; padding:8px 0;text-align:right; width:16%;">
+                            QUANTITY
+                        </td>
                         <td
-                            style="border-bottom:2px solid #2eb24b; font-size:10px; color:#222; font-weight:bold; padding:8px 20px 8px 0; width:20%;">
-                            TOTAL</td>
+                            style="border-bottom:2px solid #2eb24b; font-size:10px; color:#222; font-weight:bold; padding:8px 0px 8px 0;text-align:right; width:16%;">
+                            TOTAL
+                        </td>
                     </tr>
                 </table>
             </td>
@@ -117,20 +132,20 @@
                 <table style="width:100%; border-collapse:collapse;">
                     @foreach($products as $product)
                     <tr style="background:#fff;">
-                        <td style="padding:10px 0 4px 28px; font-size:9px; color:#222; border-bottom:1px solid #888;">
+                        <td style="padding:10px 0 4px 20px; font-size:9px; color:#222; border-bottom:1px solid #888; width:52%;">
                             <span style="font-weight:bold; font-size:10px;">{{ $product->name }}</span><br>
-                            <span style="display:inline-block; max-width:100%; width:320px; word-break:break-word; white-space:normal; overflow:hidden; text-overflow:ellipsis;">
+                            <!-- <span style="display:inline-block; max-width:100%; width:320px; word-break:break-word; white-space:normal; overflow:hidden; text-overflow:ellipsis;">
                                 {!! \Illuminate\Support\Str::limit(strip_tags($product->description), 150) !!}
-                            </span>
+                            </span> -->
                         </td>
                         <td
-                            style="padding:10px 0; font-size:9px; color:#222; border-bottom:1px solid #888; text-align:center;">
+                            style="padding:10px 0; font-size:9px; color:#222; border-bottom:1px solid #888; text-align:right;width:16%;">
                             {{ site_currency() }} {{ number_format($product->unit_price, 2) }}</td>
                         <td
-                            style="padding:10px 0; font-size:9px; color:#222; border-bottom:1px solid #888; text-align:center;">
+                            style="padding:10px 0; font-size:9px; color:#222; border-bottom:1px solid #888; text-align:right;width:16%;">
                             1</td>
                         <td
-                            style="padding:10px 28px 10px 0; font-size:9px; color:#222; border-bottom:1px solid #888; text-align:right;">
+                            style="padding:10px 0px 10px 0; font-size:9px; color:#222; border-bottom:1px solid #888; text-align:right;width:16%;">
                             {{ site_currency() }} {{ number_format($product->unit_price, 2) }}</td>
                     </tr>
                     @endforeach
@@ -183,6 +198,7 @@
             </td>
         </tr>
         <!-- Contact Footer -->
+        <table class="footer_bottom">
         <tr>
             <td colspan="4" style="padding:40px 0 20px 0;">
                 <table style="width:100%; border-collapse:separate; border-spacing:0 0;">
@@ -242,6 +258,7 @@
                 </table>
             </td>
         </tr>
+        </table>
     </table>
 </body>
 

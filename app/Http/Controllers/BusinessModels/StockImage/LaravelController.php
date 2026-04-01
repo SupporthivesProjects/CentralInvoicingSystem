@@ -672,7 +672,12 @@ class LaravelController extends Controller
                     'id' => '0',
                     'name' => 'Custom Pack',
                     'price' => floatval($data['price']),
-                    'credits' => round(floatval($data['price']) / 5.75)
+                    'credits' => (float) number_format(
+                        round((floatval($data['price']) / 5.75) * 2) / 2,
+                        1,
+                        '.',
+                        ''
+                    )
                 ];
             } else {
                 // Handle regular products

@@ -4,6 +4,34 @@
 <head>
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
     <style>
+       /* @font-face {
+            font-family: 'Calibri';
+            src: url('/fonts/calibri-bold.ttf') format('truetype');
+            font-weight:700;
+        }
+        @font-face {
+            font-family: 'Calibri';
+            src: url('/fonts/calibri-regular.ttf') format('truetype');;
+            font-weight: 500;
+        } */
+        @font-face {
+font-family: 'Calibri';
+src: url('/fonts/calibri-regular.woff2') format('woff2'),
+url('/fonts/calibri-regular.ttf') format('truetype');
+font-weight: 400;
+font-display: swap;
+}
+
+@font-face {
+font-family: 'Calibri';
+src: url('/fonts/calibri-bold.woff2') format('woff2'),
+url('/fonts/calibri-bold.ttf') format('truetype');
+font-weight: 700;
+font-display: swap;
+}
+body {
+font-family: 'Calibri', sans-serif;
+}
         * {
             margin:0px;
             padding:0px;

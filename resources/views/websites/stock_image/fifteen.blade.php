@@ -40,7 +40,7 @@
                             <table style="border-collapse: collapse;width: 100%;" border="0">
                                 <td style="padding: 40px;vertical-align: top;"> -->
                                     <div
-                                        style="display: flex;width: 100%;justify-content: space-between;">
+                                        style="display: flex;width: 100%;justify-content: space-between; padding-top: 100px">
                                         <img src="{{ $company_logo }}" alt="" style="height: 60px;">
                                         <div>
                                             <h1
@@ -48,7 +48,7 @@
                                                 INVOICE NO: #{{ $invoice_number }}
                                             </h1>
                                             <p
-                                                style="margin: 0px;font-family: Poppins;font-size: 12px;text-align: right; margin-right: 0px">
+                                                style="margin: 0px;font-family: Poppins;font-size: 12px;text-align: right; margin-right: 0px;">
                                                 {{ \Carbon\Carbon::parse($invoice_date)->format('d M Y') }}
                                             </p>
                                         </div>
@@ -63,7 +63,7 @@
 
         <!-- Content -->
         <tr>
-            <td style="padding:40px;vertical-align: top;">
+            <td style="padding:40px;vertical-align: top;padding-top: 80px">
                 <table cellspacing="0" cellpadding="0" border="0" width="100%" style="border-collapse: collapse;">
                     <tr>
                         <td style="vertical-align: top;">
@@ -189,7 +189,7 @@
                                     </td>
                                     <td style="width:100px;padding: 0px;">
                                         <p
-                                            style="color: #002052;font-size:11px;font-weight:600;font-family: Poppins;margin: 0px;text-align: center;border-bottom:3px solid #7E0E53;height:50px;display: flex;justify-content: center;align-items: center;">
+                                            style="color: #002052;font-size:11px;font-weight:600;font-family: Poppins;margin: 0px;text-align: right;border-bottom:3px solid #7E0E53;height:50px;display: flex;justify-content: center;align-items: center;">
                                             PRICE
                                         </p>
                                     </td>
@@ -214,7 +214,7 @@
                                         </td>
                                         <td style="width:100px;background: #e6e5e5;padding: 10px;">
                                             <p
-                                                style="color: #847E99;font-size:12px;font-weight:400;font-family:Roboto Light;margin: 0px;text-align: center;">
+                                                style="color: #847E99;font-size:12px;font-weight:400;font-family:Poppins;margin: 0px;text-align: right;">
                                                 {{ site_currency_code() }}{{ number_format($product->price, 2) }}
                                             </p>
                                         </td>
@@ -229,7 +229,7 @@
                                     </td>
                                     <td style="background: #e6e5e5;padding: 10px;text-align: right;" colspan="2">
                                         <p
-                                            style="color: #77787B;font-size:10px;font-weight:400;font-family:Roboto Light;margin: 0px;padding-right: 10px;">
+                                            style="color: #77787B;font-size:10px;font-weight:400;font-family:Poppins;margin: 0px;padding-right: 10px;">
                                             {{ site_currency_code() }}
                                             {{ number_format($invoice_amount + $discount_amount, 2) }}
                                         </p>
@@ -245,7 +245,7 @@
                                     <td style="background: #e6e5e5;padding: 10px;text-align: right;border-bottom:3px solid #7E0E53;"
                                         colspan="2">
                                         <p
-                                            style="color: #77787B;font-size:10px;font-weight:400;font-family:Roboto Light;margin: 0px;padding-right: 10px;">
+                                            style="color: #77787B;font-size:10px;font-weight:400;font-family:Poppins;margin: 0px;padding-right: 10px;">
                                             {{ site_currency_code() }} {{ number_format($discount_amount, 2) }}
                                         </p>
                                     </td>
@@ -259,7 +259,7 @@
                                     </td>
                                     <td style="padding: 10px;text-align: right;" colspan="2">
                                         <p
-                                            style="color: #7E0E53;font-size:16px;font-weight:700;font-family:Roboto Light;margin: 0px;padding-right: 10px;">
+                                            style="color: #7E0E53;font-size:16px;font-weight:700;font-family:Poppins;margin: 0px;padding-right: 10px;">
                                             {{ site_currency_code() }} {{ number_format($invoice_amount, 2) }}
                                         </p>
                                     </td>
