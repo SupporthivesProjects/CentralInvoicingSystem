@@ -131,7 +131,7 @@
             <td colspan="4" style="padding:0px 20px;">
                 <table style="width:100%; border-collapse:collapse;">
                     @foreach($products as $product)
-                    <tr style="background:#fff;">
+                    <tr style="background: {{ $loop->index % 2 == 0 ? '#fff' : '#f5f5f5' }};">
                         <td style="padding:10px 0 4px 20px; font-size:9px; color:#222; border-bottom:2px solid #888; width:52%;">
                             <span style="font-weight:bold; font-size:16px;">{{ $product->name }}</span><br>
                             <!-- <span style="display:inline-block; max-width:100%; width:320px; word-break:break-word; white-space:normal; overflow:hidden; text-overflow:ellipsis;">
