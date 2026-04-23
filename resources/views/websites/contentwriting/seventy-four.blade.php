@@ -41,7 +41,7 @@
                     <tr>
                         <td
                             style="padding:40px ;padding-top:0px; padding-bottom:00px; background:#ffffff; background-repeat: no-repeat;background-position: center;background-size: cover;height:444px; font-family: 'Calibri';">
-                            <div style="min-height:900px !important;">
+                            <div style="min-height:700px !important;">
                             <table style="width: 100%; font-family: 'Calibri'; border-collapse: collapse;">
                                 <tr>
                                     <td>
