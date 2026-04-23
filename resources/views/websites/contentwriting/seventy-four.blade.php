@@ -5,7 +5,7 @@
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
 </head>
 
-<body>
+<body style="margin: 0px;">
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
             <td align="center" bgcolor="#f2f2f2" style="padding: 0px 0;">
@@ -45,8 +45,7 @@
                             <table style="width: 100%; font-family: 'Calibri'; border-collapse: collapse;">
                                 <tr>
                                     <td>
-                                        <p style="margin: 0; font-weight: bold; text-align: start; font-size: 10px;">DATE</p>
-                                        <p style="margin: 0 0 20px 0; font-size: 8px;">{{ $invoice_date }}</p>
+                                       
                                     </td>
                                     <td>
                                         <p style="text-align: end; font-size: 9px; font-weight: bold;">
@@ -62,7 +61,8 @@
                                         <br>
                                         <br>
                                         
-
+ <p style="margin: 0; font-weight: bold; text-align: start; font-size: 10px;">DATE</p>
+                                        <p style="margin: 0 0 20px 0; font-size: 8px;">{{ $invoice_date }}</p>
                                         <p style="margin: 0; font-weight: bold; border-bottom: 1px solid #ccc; font-size: 10px;">BILLED
                                             TO</p>
                                         <p style="margin: 5px 0; font-size: 8px;"> <span style="font-size: 9px; font-weight: bold;">{{ $customer_name }}</span><br><br>
@@ -90,14 +90,7 @@
 
                                             @foreach($products as $product)
                                             <tr style="background-color: #f2f2f2;">
-                                                <td style="padding: 10px;"><strong>{{ $product->name }}</strong></td>
-                                                <td style="padding: 10px;">{{ site_currency() . number_format($product->unit_price, 2) }}</td>
-                                                <td style="padding: 10px;">{{ $product->quantity }}</td>
-                                                <td style="padding: 10px; text-align: end;">{{ site_currency() . number_format($product->unit_price * $product->quantity, 2) }}</td>
-                                            </tr>
-                                            <tr style="background-color: #ffffff;">
-                                                <td>
-                                                    <p style="width: 133px;">
+                                                <td style="padding: 10px;"><strong>{{ $product->name }}</strong> <p style="width: 150px;">
                                                     @if($product->wordcount)<span class="me-2 badge bg-light text-dark"><strong>Words Count:</strong> {{ $product->wordcount }}</span>@endif
                                                     @if($product->quality)<span class="me-2 badge bg-light text-dark"><strong>Quality:</strong> {{ $product->quality }}</span>@endif
                                                     @if($product->imagecount)<span class="me-2 badge bg-light text-dark"><strong>Image Count:</strong> {{ $product->imagecount }}</span>@endif
@@ -112,7 +105,14 @@
                                                     @if($product->preferred_writing_style)<span class="me-2 badge bg-light text-dark"><strong>Preferred Writing Style:</strong> {{ $product->preferred_writing_style }}</span>@endif
                                                     @if($product->brand_name)<span class="me-2 badge bg-light text-dark"><strong>Brand Name:</strong> {{ $product->brand_name }}</span>@endif
                                                     @if($product->audience)<span class="me-2 badge bg-light text-dark"><strong>Audience:</strong> {{ $product->audience }}</span>@endif
-                                                    </p>
+                                                    </p> </td>
+                                                <td style="padding: 10px; align-content: flex-start; text-align:center;">{{ site_currency() . number_format($product->unit_price, 2) }}</td>
+                                                <td style="padding: 10px; align-content: flex-start; text-align:center;">{{ $product->quantity }}</td>
+                                                <td style="padding: 10px; text-align: end; align-content: flex-start;">{{ site_currency() . number_format($product->unit_price * $product->quantity, 2) }}</td>
+                                            </tr>
+                                            <tr style="background-color: #ffffff;">
+                                                <td>
+                                                    
                                                 </td>
                                             </tr>
                                             @endforeach
@@ -149,7 +149,7 @@
                         </td>
                     </tr>
                    
-                    <tr>
+                    <tr style="height: 15vh;">
                         <td>
                             <table width="100%" cellspacing="0" cellpadding="" border="0px"
                                 style="border-collapse: collapse;">
