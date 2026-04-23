@@ -8,8 +8,8 @@
 <body style="margin: 0px; padding: 0;">
     <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse;">
         <tr>
-            <td align="center" bgcolor="#f2f2f2" style="padding: 0;">
-                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
+            <td align="center" bgcolor="#f2f2f2" style="padding: 0; height:100%;">
+                <table width="100%" height="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
                     style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
 
                     <!-- Header -->
@@ -39,7 +39,7 @@
 
                     <!-- Content -->
                     <tr>
-                        <td style="padding: 40px; padding-top: 0; background: #ffffff; font-family: Calibri, sans-serif; vertical-align: top;">
+                        <td style="padding: 40px; padding-top: 0; background: #ffffff; font-family: Calibri, sans-serif; vertical-align: top; height:100%;">
                             <table style="width: 100%; font-family: Calibri, sans-serif; border-collapse: collapse;" cellspacing="0" cellpadding="0" border="0">
                                 <tr>
                                     <td></td>
@@ -155,7 +155,7 @@
                     </tr>
 
                     <!-- Footer -->
-                    <tr>
+                    <tr style="height:100%;">
                         <td>
                             <table width="100%" cellspacing="0" cellpadding="0" border="0"
                                 style="border-collapse: collapse; background: url('{{ $invoice_footer_image }}') no-repeat center; background-size: cover; height: 100px; font-family: Calibri, sans-serif;">
