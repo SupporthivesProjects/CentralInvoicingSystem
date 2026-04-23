@@ -39,7 +39,7 @@
 
                     <!-- Content -->
                     <tr>
-                        <td style="padding: 40px; padding-top: 0; background: #ffffff; font-family: Calibri, sans-serif; vertical-align: top; height:100%;">
+                        <td style="padding: 40px; padding-top: 0; background: #ffffff; font-family: Calibri, sans-serif; vertical-align: top; height:100vh;">
                             <table style="width: 100%; font-family: Calibri, sans-serif; border-collapse: collapse;" cellspacing="0" cellpadding="0" border="0">
                                 <tr>
                                     <td></td>
