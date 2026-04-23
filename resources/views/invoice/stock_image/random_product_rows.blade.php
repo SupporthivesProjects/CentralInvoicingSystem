@@ -1,25 +1,20 @@
 @forelse($products as $index => $product)
 <tr class="product-row">
-
-
     <td class="text-center">
         <input type="checkbox" name="product_ids[]" value="{{ $product->id }}" style="display: none;" checked>
         {{ $product->id }}
-
     </td>
     <td>
         {{ $product->name }}
         @if($site->site_link)
             <a href="{{ $site->site_link }}pricing-packs/" target="_blank">🔗</a>
         @endif
-        {{-- Hidden input for product data --}}
         <input type="hidden"
                form="generate-invoice-form"
                name="product_data[]"
                value="{{ json_encode(['product_id' => $product->id, 'name' => $product->name, 'price' => number_format($product->price, 2, '.', ''), 'credits' => $product->credits ?? 0]) }}">
     </td>
     <td>
-        {{-- Show credits --}}
         @if(($product->credits ?? 0) > 0)
             <span class="badge bg-success">{{ $product->credits }} Credits</span>
         @else
@@ -27,13 +22,12 @@
         @endif
     </td>
     <td class="text-center">
-    {{ site_currency() }}{{ number_format($product->price, 2) }}
+        {{ site_currency() }}{{ number_format($product->price, 2) }}
         <input type="hidden"
            class="product-unit-price"
            data-product-id="{{ $product->id }}"
            value="{{ number_format($product->price, 2, '.', '') }}">
     </td>
-
     <td class="text-center">
         <button class="remove-product btn btn-danger btn-sm"
                 data-product-name="{{ $product->name }}"
@@ -56,6 +50,7 @@
     </td>
 </tr>
 @endforelse
+
 <script>
     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
     tooltipTriggerList.map(function (tooltipTriggerEl) {
@@ -64,7 +59,6 @@
 </script>
 
 <script>
-
     $(document).ready(function() {
         $(document).off('click', '.remove-product').on('click', '.remove-product', function() {
             var $button = $(this);
@@ -125,17 +119,15 @@
                             toastr.error('Error removing product. Please try again.');
                         },
                         complete: function() {
-
-                        $('.remove-product').prop('disabled', false);
-                        setTimeout(() => {
-                            $button.html('<i class="fas fa-trash-alt"></i>');
-                            $button.removeClass('btn-success').addClass('btn-danger');
-                        }, 1000);
-                    }
+                            $('.remove-product').prop('disabled', false);
+                            setTimeout(() => {
+                                $button.html('<i class="fas fa-trash-alt"></i>');
+                                $button.removeClass('btn-success').addClass('btn-danger');
+                            }, 1000);
+                        }
                     });
                 }
             });
         });
     });
-
 </script>

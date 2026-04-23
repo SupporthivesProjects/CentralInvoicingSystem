@@ -57,7 +57,7 @@
                                                         </p>
                                                     </div>
                                                     <div
-                                                        style="padding: 10px; height: 30px; background-color: #F2F2F2; width: 130px; border: 1px solid grey; border-left: none;">
+                                                        style="padding: 10px; height: 30px; background-color: #F2F2F2; width: 130px; border: 1px solid grey; ">
                                                         <p
                                                             style="color:#000000; text-align:start;padding:10px;font-family:  Arial;font-size:10px;margin: 0px;font-weight: 400;">
                                                             {{ $invoice_number }}
@@ -66,14 +66,14 @@
                                                 </div>
                                                 <div class="l_top" style="display: flex;flex-direction: row;">
                                                     <div
-                                                        style="padding: 10px; height: 30px; background-color: #FFFFFF; width: 130px; border: 1px solid grey; border-top: none;">
+                                                        style="padding: 10px; height: 30px; background-color: #FFFFFF; width: 130px; border: 1px solid grey;">
                                                         <p
                                                             style="color:#000000; text-align:start;padding:10px;font-family:  Arial;font-size:10px;margin: 0px;font-weight: 400;">
                                                             Invoice Date.
                                                         </p>
                                                     </div>
                                                     <div
-                                                        style="padding: 10px; height: 30px; background-color: #FFFFFF; width: 130px; border: 1px solid grey; border-left: none; border-top: none;">
+                                                        style="padding: 10px; height: 30px; background-color: #FFFFFF; width: 130px; border: 1px solid grey;">
                                                         <p
                                                             style="color:#000000; text-align:start;padding:10px;font-family:  Arial;font-size:10px;margin: 0px;font-weight: 400;">
                                                             {{ $invoice_date }}
@@ -92,8 +92,8 @@
                                                     {{ $customer_name }}
                                                 </p>
                                                
-                                                    {{ $site_name }}<br>{{ $customer_email ? $customer_email : '' }}
-                                                    | {{ $customer_mobile ? $customer_mobile : '' }}
+                                                    {{ $customer_email ? $customer_email : '' }}
+                                                    {{ $customer_mobile ? $customer_mobile : '' }}
                                                 </p>
                                             </div>
                                         </div>
@@ -102,6 +102,7 @@
                             </table>
                             <br>
                             <div style="min-height: 460px;">
+                                
                                 <table style="border-collapse: collapse;">
                                     <tr style="border-collapse: collapse;height: 24px;background-color: #1c2939;">
                                         <td
@@ -110,7 +111,7 @@
                                         </td>
                                         <td
                                             style="width: 300px; color: #FFFFFF;border-right: 1px solid #FFFFFF;border-top: 1px solid #FFFFFF; text-align: start; padding: 10px;font-family:  Arial;font-size: 14px;margin: 0px;font-weight: 400;border-collapse: collapse;">
-                                            <b>Service type</b>
+                                            <b>Service Type</b>
                                         </td>
                                         <td
                                             style="width: 80px; color: #FFFFFF;border-right: 1px solid #FFFFFF;border-top: 1px solid #FFFFFF; text-align: center; padding: 10px;font-family:  Arial;font-size: 14px;margin: 0px;font-weight: 400;border-collapse: collapse;">
@@ -126,25 +127,26 @@
                                         </td>
                                     </tr>
                                     @foreach ($products as $product)
-                                        <tr style="border-collapse: collapse;height: 24px;">
-                                            <td
-                                                style="width: 30px; color:#000000; border-left: 1px solid #FFFFFF; border-right: 1px solid #FFFFFF; text-align:center;padding:10px;font-family: Arial;font-size:10px;margin: 0px;font-weight: 400;border-bottom: 1px solid grey;border-collapse: collapse;">
-                                                 {{ $loop->iteration }}
+                                        
+                                        <tr>
+                                            <td style="width: 30px; color:#000000; border-left: 1px solid #FFFFFF; border-right: 1px solid #FFFFFF; text-align:center;padding:10px;font-family: Arial;font-size:10px;margin: 0px;font-weight: 400;border-bottom: 1px solid grey;border-collapse: collapse;">
+                                            {{ $loop->iteration }}
                                             </td>
-                                            <td
-                                                style="width: 300px; color:#000000; border-right: 1px solid #FFFFFF; text-align: start; padding: 10px 10px;font-family:  Arial;font-size: 10px;margin: 0px;font-weight: 400;border-bottom: 1px solid grey;border-collapse: collapse;">
-                                                {{ $product->name }}
+                                            
+                                            <td style="width: 30px; color:#000000; border-left: 1px solid #FFFFFF; border-right: 1px solid #FFFFFF; text-align:center;padding:10px;font-family: Arial;font-size:10px;margin: 0px;font-weight: 400;border-bottom: 1px solid grey;border-collapse: collapse;">
+                                                {{ $product->name }} ({{ $product->subscription }})
                                             </td>
-                                            <td
-                                                style="width: 80px; color:#000000; border-right: 1px solid #FFFFFF; text-align:center;padding:10px;font-family:  Arial;font-size:10px;margin: 0px;font-weight: 400;border-bottom: 1px solid grey;border-collapse: collapse;">
-                                                1
+                                            
+                                            <td style="width: 30px; color:#000000; border-left: 1px solid #FFFFFF; border-right: 1px solid #FFFFFF; text-align:center;padding:10px;font-family: Arial;font-size:10px;margin: 0px;font-weight: 400;border-bottom: 1px solid grey;border-collapse: collapse;">
+                                            1
                                             </td>
-                                            <td
-                                                style="width:80px; color:#000000; border-right: 1px solid #FFFFFF; text-align:center;padding:10px;font-family:  Arial;font-size: 10px;margin: 0px;font-weight: 400;border-bottom: 1px solid grey;border-collapse: collapse; background-color: #F2F2F2;">
-                                                {{ site_currency() . number_format($product->unit_price ?? 0, 2) }}                                            </td>
-                                            <td
-                                                style="width:80px; color:#000000; border-right: 1px solid #FFFFFF; text-align:right;padding:10px;font-family:  Arial;font-size: 10px;margin: 0px;font-weight: 400;border-bottom: 1px solid grey;border-collapse: collapse; background-color: #F2F2F2;">
-                                                {{ site_currency() . number_format($product->unit_price ?? 0, 2) }}
+                                            
+                                            <td style="width: 30px; color:#000000; border-left: 1px solid #FFFFFF; border-right: 1px solid #FFFFFF; text-align:center;padding:10px;font-family: Arial;font-size:10px;margin: 0px;font-weight: 400;border-bottom: 1px solid grey;border-collapse: collapse;">
+                                            {{ site_currency() . number_format($product->unit_price ?? 0, 2) }}
+                                            </td>
+                                            
+                                            <td style="width: 30px; color:#000000; border-left: 1px solid #FFFFFF; border-right: 1px solid #FFFFFF; text-align:center;padding:10px;font-family: Arial;font-size:10px;margin: 0px;font-weight: 400;border-bottom: 1px solid grey;border-collapse: collapse;">
+                                            {{ site_currency() . number_format($product->unit_price ?? 0, 2) }}
                                             </td>
                                         </tr>
                                     @endforeach

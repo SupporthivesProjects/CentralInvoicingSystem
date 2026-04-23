@@ -21,7 +21,6 @@
                 <a href="{{ url()->previous() }}" class="btn btn-outline-secondary btn-sm" >
                     <i class="fas fa-arrow-left"></i> Go Back
                 </a>
-
                 </div>
                 </div>
             </div>
@@ -59,10 +58,8 @@
                                                 <span class="visually-hidden">Toggle Dropdown</span>
                                             </button>
                                             <ul class="dropdown-menu dropdown-menu-end">
-                                                <li><a class="dropdown-item py-1 px-3" href="#" id="generateInvoiceNumber"><i class="fas fa-sync-alt me-2"></i>Generate</a>
-                                                </li>
-                                                <li><a class="dropdown-item py-1 px-3" href="#" id="copyInvoicenumber"><i class="fas fa-copy me-2"></i>Copy</a>
-                                                </li>
+                                                <li><a class="dropdown-item py-1 px-3" href="#" id="generateInvoiceNumber"><i class="fas fa-sync-alt me-2"></i>Generate</a></li>
+                                                <li><a class="dropdown-item py-1 px-3" href="#" id="copyInvoicenumber"><i class="fas fa-copy me-2"></i>Copy</a></li>
                                             </ul>
                                         </div>
                                 </div>
@@ -82,7 +79,7 @@
                                 <label class="form-label">Customer Email</label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="fas fa-envelope"></i></span>
-                                    <input type="email" form="generate-invoice-form" class="form-control" id="customer_email" name="customer_email" value="{{ $customer['customer_email'] ?? '' }}"  placeholder="Enter Customer email">
+                                    <input type="email" form="generate-invoice-form" class="form-control" id="customer_email" name="customer_email" value="{{ $customer['customer_email'] ?? '' }}" placeholder="Enter Customer email">
                                 </div>
                             </div>
                             <div class="col-md-4 mb-3">
@@ -161,7 +158,6 @@
                                                         </div>
                                                     </div>
                                                 </div>
-
                                                 <div class="row g-1 mb-2">
                                                     <div class="col-3">
                                                         <div class="input-group input-group-sm">
@@ -213,7 +209,6 @@
                                                         </div>
                                                     </div>
                                                 </div>
-
                                                 <div class="row g-1 mb-2">
                                                     <div class="col-3">
                                                         <div class="input-group input-group-sm">
@@ -236,7 +231,6 @@
                                                 </div>
                                             </div>
                                         </div>
-
                                     </div>
                                 </div>
                             </div>
@@ -331,12 +325,11 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </div>
 
-<div class="modal fade" id="addmoreproducts" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" >
+<div class="modal fade" id="addmoreproducts" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
     <div class="modal-dialog modal-xl modal-dialog-scrollable">
         <div class="modal-content">
 
@@ -352,8 +345,6 @@
 
             <div class="modal-body bg-white">
                 <div class="container-fluid">
-                    <div class="row g-3 mb-4 align-items-end text-center">
-                    </div>
                     <div class="row g-3 mb-4">
                         <div class="col-md-4">
                             <div class="bg-light rounded border shadow-sm p-1 text-center">
@@ -376,84 +367,81 @@
                     </div>
 
                     <div class="rounded shadow-sm p-2">
-                        @php
-                        $connectionType = 'dynamic';
-                        $productTable = 'pricing_packs';
-                        $allProducts = DB::connection($connectionType)->table($productTable)
-                            ->select('id', 'name', 'credits', 'price')->get();
-                        $exactPriceProduct = $allProducts->where('price', $invoice['invoice_amount'])->first();
-                        $showCustomPack = !$exactPriceProduct;
-                    @endphp
 
-                    @if($showCustomPack)
-                    <table class="table table-bordered table-hover align-middle mb-0 table-responsive" style="width:100% !important;">
-                        <tr>
-                            <td colspan="5" class="text-center">
-                                <h5 class="fw-semibold text-dark mb-0">Select Custom Pack</h5>
-                            </td>
-                        </tr>
-                        <tr id="customize-product-row-0">
-                            <td class="text-center">#</td>
-                            <td>
-                                Custom Pack
-                            </td>
-                            <td>
-                                <span class="badge bg-secondary" id="customcredit">No Credits</span>
-                            </td>
-                            <td class="text-center">
-                                {{ site_currency() }}
-                                <input type="hidden"
-                                    class="add-product-price form-control d-inline-block"
-                                    data-product-id="0"
-                                    value="{{ number_format($invoice['invoice_amount'], 2, '.', '') }}"
-                                    step="0.01"
-                                    min="0"
-                                    style="width: 80px;">
-                                    {{ number_format($invoice['invoice_amount'], 2, '.', '') }}
-                            </td>
-                            <td class="text-center align-middle">
-                                <div class="form-check d-flex justify-content-center align-items-center m-0">
-                                    <input
-                                        class="form-check-input border narayan-checkbox border-1 border-primary"
-                                        type="radio"
-                                        name="add_product_ids[]"
-                                        data-product-id="0"
-                                        value="0"
-                                    >
-                                </div>
-                            </td>
-                        </tr>
-                    </table>
-                    @else
-                    <div class="alert alert-info text-center mb-3">
-                        <i class="fas fa-info-circle me-2"></i>
-                        A product with the exact invoice amount ({{ site_currency() }}{{ number_format($invoice['invoice_amount'], 2) }}) already exists in the system.
-                    </div>
-                    @endif
-                        <table id="customize-products-table" class="table table-bordered table-hover align-middle mb-0 table-responsive" style="width:100% !important;">
-                            <thead class="table-dark text-center">
-                                <tr>
-                                <th style="width: 10%;">PID</th>
-                                <th style="width: 35%;">Product Name</th>
-                                <th>Credits</th>
-                                <th class="text-center unit-price-header" style="width: 20%;"  data-column="3" data-order="desc">
-                                    <span class="d-inline-flex align-items-center justify-content-center gap-1">
-                                        Unit Price <i class="bi bi-caret-down-fill"></i>
-                                    </span>
-                                </th>
-                                <th style="width: 10%;">Select</th>
-                            </tr>
-                            </thead>
-                            <tbody id="customize-product-table-body">
-                            </tbody>
-                        </table>
+                        {{-- CUSTOM PACK: Always visible, never touched by AJAX --}}
+                        <div id="custom-pack-wrapper" class="mb-3 border rounded overflow-hidden">
+                            <div class="bg-dark text-white text-center py-2 fw-semibold fs-6">
+                                Select Custom Pack
+                            </div>
+                            <table class="table table-bordered align-middle mb-0" style="width:100% !important;">
+                                <thead class="text-center" style="background-color:#f0f0f0;">
+                                    <tr>
+                                        <th style="width:8%;">PID</th>
+                                        <th style="width:35%;">Product Name</th>
+                                        <th>Credits</th>
+                                        <th style="width:20%;">Unit Price</th>
+                                        <th style="width:10%;">Select</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="bg-light">
+                                        <td class="text-center fw-bold">#</td>
+                                        <td class="fw-semibold">Custom Pack</td>
+                                        <td class="text-center">
+                                            <span class="badge bg-secondary" id="customcredit">No Credits</span>
+                                        </td>
+                                        <td class="text-center fw-bold text-primary">
+                                            {{ site_currency() }}
+                                            <input type="hidden"
+                                                class="add-product-price product-unit-price"
+                                                data-product-id="0"
+                                                id="custom-pack-price-input"
+                                                value="{{ number_format($invoice['invoice_amount'], 2, '.', '') }}">
+                                            <span id="custom-pack-price-display">{{ number_format($invoice['invoice_amount'], 2, '.', '') }}</span>
+                                        </td>
+                                        <td class="text-center align-middle">
+                                            <input
+                                                class="form-check-input border border-primary border-2"
+                                                type="radio"
+                                                name="add_product_ids[]"
+                                                data-product-id="0"
+                                                value="0"
+                                                id="custom-pack-radio"
+                                                style="width:20px; height:20px; cursor:pointer;">
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        {{-- PRODUCTS TABLE: AJAX loads into tbody only --}}
+                        <div id="products-table-wrapper" class="border rounded">
+                            <table id="customize-products-table" class="table table-bordered table-hover align-middle mb-0" style="width:100% !important;">
+                                <thead class="table-dark text-center">
+                                    <tr>
+                                        <th style="width:8%;">PID</th>
+                                        <th style="width:35%;">Product Name</th>
+                                        <th>Credits</th>
+                                        <th class="text-center unit-price-header" style="width:20%;" data-column="3" data-order="desc">
+                                            <span class="d-inline-flex align-items-center justify-content-center gap-1">
+                                                Unit Price <i class="bi bi-caret-down-fill"></i>
+                                            </span>
+                                        </th>
+                                        <th style="width:10%;">Select</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="customize-product-table-body">
+                                </tbody>
+                            </table>
+                        </div>
+
                     </div>
                 </div>
-                </div>
+            </div>
 
             <div class="modal-footer bg-light border-top">
                 <div class="d-flex flex-wrap gap-2">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" >
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                         <i class="bi bi-x-circle me-1"></i> Close
                     </button>
                     <button type="button" class="btn btn-danger" onclick="customizeProducts('reset')">
@@ -468,16 +456,13 @@
     </div>
 </div>
 
-
 <div class="modal fade" id="sitechangemodel" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 rounded-4 shadow-sm overflow-hidden">
-
             <div class="modal-header bg-primary text-white border-0">
-                <h5 class="modal-title fw-bold" id="siteChangeModalLabel">Want to change website? </h5>
+                <h5 class="modal-title fw-bold" id="siteChangeModalLabel">Want to change website?</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-
             <form method="GET" action="{{ route('product.selection') }}" id="sitechangemodel-form">
                 <div class="modal-body bg-light">
                     <div class="mb-3">
@@ -489,12 +474,10 @@
                             @endforeach
                         </select>
                     </div>
-
                     <div class="alert alert-warning small py-2 px-3" role="alert">
                         Selecting a different site will refresh the page and re-establish the database connection.
                     </div>
                 </div>
-
                 <div class="modal-footer bg-light border-0 rounded-bottom-4 d-flex justify-content-center gap-3">
                     <button type="button" class="btn btn-outline-secondary px-4" data-bs-dismiss="modal">Cancel</button>
                     <button type="submit" class="btn btn-primary px-4">Confirm</button>
@@ -544,36 +527,35 @@
                 $('#invoice_amount').removeClass('text-danger text-success');
             },
             success: function (response) {
-            Swal.close();
+                Swal.close();
 
-            if (response.total === 0) {
+                if (response.total === 0) {
+                    $('#randomize-product-table-body').html(response.tableRows);
+                    $('#current_amount').val('0.00');
+                    $('#discount_amount').prop('type', 'number').val('0.00').prop('readonly', false);
+                    return;
+                }
+
+                const invoiceAmount  = parseFloat($('#invoice_amount').val()) || 0;
+                const currentAmount  = parseFloat(response.total.toFixed(2));
+                const autoDiscount   = parseFloat(Math.max(currentAmount - invoiceAmount, 0).toFixed(2));
+
                 $('#randomize-product-table-body').html(response.tableRows);
-                $('#current_amount').val('0.00');
-                $('#discount_amount').prop('type', 'number').val('0.00').prop('readonly', false);
-                return;
-            }
+                $('#current_amount').val(currentAmount.toFixed(2));
+                $('#discount_amount')
+                    .prop('readonly', false)
+                    .prop('type', 'number')
+                    .val(autoDiscount.toFixed(2));
 
-            const invoiceAmount  = parseFloat($('#invoice_amount').val()) || 0;
-            const currentAmount  = parseFloat(response.total.toFixed(2));
-            const autoDiscount   = parseFloat(Math.max(currentAmount - invoiceAmount, 0).toFixed(2));
+                $('#temp_invoice_amount_text').text(invoiceAmount.toFixed(2));
+                $('#temp_discount_amount_text').text(autoDiscount.toFixed(2));
 
-            $('#randomize-product-table-body').html(response.tableRows);
-            $('#current_amount').val(currentAmount.toFixed(2));
-            $('#discount_amount')
-                .prop('readonly', false)
-                .prop('type', 'number')
-                .val(autoDiscount.toFixed(2));
-
-            $('#temp_invoice_amount_text').text(invoiceAmount.toFixed(2));
-            $('#temp_discount_amount_text').text(autoDiscount.toFixed(2));
-
-            calculateTotalPrice();
-        },
+                calculateTotalPrice();
+            },
             error: function (xhr, textStatus) {
                 if (textStatus !== 'abort') {
                     $('#randomize-product-table-body').html(getErrorRowHTML('Oops! Something went wrong. Please try again.'));
                     toastr.error('Failed to fetch random products.', 'Oops!');
-                    return;
                 }
             },
             complete: function () {
@@ -600,24 +582,36 @@
     }
 
     function customizeProducts(search_type = 'search', page = 1) {
-        console.log("Triggered with type:", search_type);
-        console.log("customizeRequest:", customizeRequest);
-
         const invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
+        const currentAmount = parseFloat($('#current_amount').val()) || 0;
         const credits = Math.round((invoiceAmount / 5.75) * 10) / 10;
         const final_credit = enforceStep(credits);
-        $('#customcredit').text(final_credit + ' Credits');
+
+        $('#customcredit').text(final_credit > 0 ? final_credit + ' Credits' : 'No Credits');
+        $('#custom-pack-price-input').val(invoiceAmount.toFixed(2));
+        $('#custom-pack-price-display').text(invoiceAmount.toFixed(2));
 
         let btn = $('#add-custom-products');
-        btn.prop('disabled', false).html('Add Selected to List');
+        btn.prop('disabled', false).html('<i class="bi bi-cart-plus me-1"></i> Add Selected to Cart');
 
-        let invoice_amount = parseFloat($('#invoice_amount').val()) || 0;
-        let current_amount = parseFloat($('#current_amount').val()) || 0;
-        let discountAmount = Math.max(current_amount - invoice_amount, 0);
+        let discountAmount = currentAmount > invoiceAmount ? currentAmount - invoiceAmount : 0;
 
-        $('#temp_current_amount_text').text(current_amount.toFixed(2));
-        $('#temp_invoice_amount_text').text(invoice_amount.toFixed(2));
+        $('#temp_current_amount_text').text(currentAmount.toFixed(2));
+        $('#temp_invoice_amount_text').text(invoiceAmount.toFixed(2));
         $('#temp_discount_amount_text').text(discountAmount.toFixed(2));
+
+        $('input[name="add_product_ids[]"]').prop('checked', false);
+
+        let alreadyAddedIds = [];
+        $('input[name="product_ids[]"]').each(function () {
+            alreadyAddedIds.push(String($(this).val()));
+        });
+
+        if (alreadyAddedIds.includes('0') || Math.abs(currentAmount - invoiceAmount) < 0.01) {
+            $('#custom-pack-wrapper').hide();
+        } else {
+            $('#custom-pack-wrapper').show();
+        }
 
         $('#customize-product-table-body').html(getProductsSearchRowHTML());
 
@@ -630,24 +624,37 @@
             success: function (response) {
                 if (!response.tableRows) {
                     $('#customize-product-table-body').html(
-                        getErrorRowHTML('No products found for your keyword. Try a different keyword or adjust the range filter.')
+                        getErrorRowHTML('No products found. Try a different keyword.')
                     );
                     return;
                 }
 
                 $('#customize-product-table-body').html(response.tableRows);
                 $('#current_page_number').val(response.currentPage);
-                calculateTotalPrice();
+
+                if (alreadyAddedIds.length > 0) {
+                    alreadyAddedIds.forEach(function(existingId) {
+                        if (existingId === '0') return;
+                        let matchingRadio = $('input[name="add_product_ids[]"][value="' + existingId + '"]');
+                        if (matchingRadio.length > 0) {
+                            matchingRadio.prop('checked', true);
+                            matchingRadio.closest('tr').addClass('table-success');
+
+                            let price = parseFloat($('.add-product-price[data-product-id="' + existingId + '"]').val()) || 0;
+                            let disc = price > invoiceAmount ? price - invoiceAmount : 0;
+                            $('#temp_current_amount_text').text(price.toFixed(2));
+                            $('#temp_discount_amount_text').text(disc.toFixed(2));
+                        }
+                    });
+                }
             },
             error: function (xhr, textStatus) {
                 if (textStatus !== 'abort') {
-                    console.error('AJAX Error:', textStatus);
                     $('#customize-product-table-body').html(getErrorRowHTML('Something went wrong while filtering.'));
                     toastr.error('Something went wrong while filtering.', 'Oops!');
                 }
             },
             complete: function () {
-                console.log("Request complete");
                 customizeRequest = null;
             }
         });
@@ -655,35 +662,35 @@
 </script>
 
 <script>
-function clearRandomizedFilter(button) {
-    const icon = $(button).find('i');
-    const originalIconClass = 'fa-filter-circle-xmark';
-    icon.removeClass(originalIconClass).addClass('fa-spinner fa-spin');
+    function clearRandomizedFilter(button) {
+        const icon = $(button).find('i');
+        const originalIconClass = 'fa-filter-circle-xmark';
+        icon.removeClass(originalIconClass).addClass('fa-spinner fa-spin');
 
-    $.ajax({
-        url: "{{ route('clear.products') }}",
-        type: 'GET',
-        success: function(response) {
-            $('input[name="product_ids[]"]').prop('checked', false);
-            $('.product-price').val('');
-            $('#current_amount').val('0.00');
-            $('#discount_amount').val('0.00');
-            $('#temp_current_amount_text').text('0.00');
-            $('#temp_discount_amount_text').text('0.00');
-            $('#temp_invoice_amount_text').text($('#invoice_amount').val());
-            $('#randomize-product-table-body').html(getErrorRowHTML('Randomize filter cleared. You can now randomize products again or add custom products.'));
-            toastr.success('Randomized products filter has been reset');
-            calculateTotalPrice();
-        },
-        error: function(xhr, status, error) {
-            icon.removeClass('fa-spinner fa-spin').addClass(originalIconClass);
-            toastr.error(error , 'Error clearing randomized products');
-        },
-        complete: function() {
-            icon.removeClass('fa-spinner fa-spin').addClass(originalIconClass);
-        }
-    });
-}
+        $.ajax({
+            url: "{{ route('clear.products') }}",
+            type: 'GET',
+            success: function(response) {
+                $('input[name="product_ids[]"]').prop('checked', false);
+                $('.product-price').val('');
+                $('#current_amount').val('0.00');
+                $('#discount_amount').val('0.00');
+                $('#temp_current_amount_text').text('0.00');
+                $('#temp_discount_amount_text').text('0.00');
+                $('#temp_invoice_amount_text').text($('#invoice_amount').val());
+                $('#randomize-product-table-body').html(getErrorRowHTML('Randomize filter cleared. You can now randomize products again or add custom products.'));
+                toastr.success('Randomized products filter has been reset');
+                calculateTotalPrice();
+            },
+            error: function(xhr, status, error) {
+                icon.removeClass('fa-spinner fa-spin').addClass(originalIconClass);
+                toastr.error(error, 'Error clearing randomized products');
+            },
+            complete: function() {
+                icon.removeClass('fa-spinner fa-spin').addClass(originalIconClass);
+            }
+        });
+    }
 </script>
 
 <script>
@@ -707,17 +714,13 @@ function clearRandomizedFilter(button) {
             toastr.error('Customer name cannot be empty.', 'Missing Customer Name');
             return;
         }
-
         if ($.trim(invoice_date.val()) === '') {
             toastr.error('Invoice date cannot be empty.', 'Missing Invoice Date');
             return;
         }
-
         if (currentAmount < invoiceAmount) {
             $('#current_amount').addClass('border border-danger');
-            setTimeout(() => {
-                $('#current_amount').removeClass('border border-danger');
-            }, 2000);
+            setTimeout(() => $('#current_amount').removeClass('border border-danger'), 2000);
             toastr.error('Total is less than invoice amount.', 'Mismatch');
             return;
         }
@@ -728,12 +731,8 @@ function clearRandomizedFilter(button) {
         if (Math.abs(expectedAmount - invoiceAmount) > epsilon) {
             const diff = currentAmount - invoiceAmount;
             const diffFixed = diff.toFixed(2);
-
             $('#discount_amount').addClass('border border-danger');
-            setTimeout(() => {
-                $('#discount_amount').removeClass('border border-danger');
-            }, 2000);
-
+            setTimeout(() => $('#discount_amount').removeClass('border border-danger'), 2000);
             if (discountAmount > diff) {
                 toastr.error(`The discount amount of $${discountAmount} exceeds the expected discount of $${diffFixed}.`, 'Discount Too High');
             } else {
@@ -744,15 +743,6 @@ function clearRandomizedFilter(button) {
 
         if (!invoiceNumber) {
             toastr.error('Please enter your invoice number or generate one randomly.', 'Invoice Number Missing');
-            let blinkCount = 0;
-            const interval = setInterval(() => {
-                invoiceNumber.toggleClass('border border-danger');
-                blinkCount++;
-                if (blinkCount >= 10) {
-                    clearInterval(interval);
-                    invoiceNumber.removeClass('border border-danger');
-                }
-            }, 200);
             return;
         }
 
@@ -761,9 +751,7 @@ function clearRandomizedFilter(button) {
         let blinkCount = 0;
         const maxBlinkCount = 30;
         const blinkInterval = 500;
-
         $('#discount_amount, #current_amount, #invoice_amount').css('transition', 'border-color 0.3s ease');
-
         (function blinkBorder() {
             $('#discount_amount, #current_amount, #invoice_amount').toggleClass('border border-success');
             blinkCount++;
@@ -783,10 +771,7 @@ function clearRandomizedFilter(button) {
             width: '334px',
             height: '280px',
             background: 'rgba(0, 0, 0, 0.1)',
-            customClass: {
-                popup: 'p-2 text-center',
-                title: 'text-white'
-            }
+            customClass: { popup: 'p-2 text-center', title: 'text-white' }
         });
 
         $('#generate-invoice-form')[0].submit();
@@ -800,28 +785,26 @@ function clearRandomizedFilter(button) {
 
 <script>
     $(document).ready(function() {
-    $('#generateInvoiceNumber').on('click', function() {
-        toastr.info('Generating an invoice number for you...', 'Please wait');
-        $.ajax({
-            url: "{{ route('generate.invoice.number') }}",
-            method: 'GET',
-            data: {
-                site_name : "{{ $customer['site_name'] }}",
-            },
-            success: function(response) {
-                if (response.success && response.new_invoice_number) {
-                    $('#invoice_number').val(response.new_invoice_number);
-                    toastr.success('Invoice number generated successfully.', 'Success');
-                } else {
-                    toastr.error('Failed to generate invoice number.', 'Error');
+        $('#generateInvoiceNumber').on('click', function() {
+            toastr.info('Generating an invoice number for you...', 'Please wait');
+            $.ajax({
+                url: "{{ route('generate.invoice.number') }}",
+                method: 'GET',
+                data: { site_name: "{{ $customer['site_name'] }}" },
+                success: function(response) {
+                    if (response.success && response.new_invoice_number) {
+                        $('#invoice_number').val(response.new_invoice_number);
+                        toastr.success('Invoice number generated successfully.', 'Success');
+                    } else {
+                        toastr.error('Failed to generate invoice number.', 'Error');
+                    }
+                },
+                error: function() {
+                    toastr.error('There was an error generating the invoice number.', 'Error');
                 }
-            },
-            error: function() {
-                toastr.error('There was an error generating the invoice number.', 'Error');
-            }
+            });
         });
     });
-});
 </script>
 
 <script>
@@ -836,142 +819,103 @@ function clearRandomizedFilter(button) {
 </script>
 
 <script>
-$(document).ready(function () {
-    let sessionAmount = parseFloat("{{ session('invoice_amount') ?? 0 }}");
+    $(document).ready(function () {
+        let sessionAmount = parseFloat("{{ session('invoice_amount') ?? 0 }}");
 
-    function setEditIcon() {
-        $('#update_invoice_amount')
-            .removeClass('bg-warning bg-success')
-            .addClass('bg-light')
-            .html('<i data-feather="edit" id="icon" style="color: black;width:20px;"></i>');
-        feather.replace();
-    }
-
-    function setUploadIcon() {
-        $('#update_invoice_amount')
-            .removeClass('bg-light bg-success')
-            .addClass('bg-warning')
-            .html('<i data-feather="upload-cloud" id="icon" style="color: black;width:20px;"></i>');
-        feather.replace();
-    }
-
-    function setLoader() {
-        $('#update_invoice_amount')
-            .removeClass('bg-warning bg-light bg-success')
-            .addClass('bg-warning')
-            .html(
-                '<div class="d-flex align-items-center justify-content-center" style="width:20px;">' +
-                    '<div class="spinner-border text-dark" style="width: 18px; height: 18px;" role="status">' +
-                        '<span class="visually-hidden">Loading...</span>' +
-                    '</div>' +
-                '</div>'
-            );
-    }
-
-    function setSuccessIcon() {
-        $('#update_invoice_amount')
-            .removeClass('bg-warning')
-            .addClass('bg-success')
-            .html('<i data-feather="check-circle" id="icon" style="color: white;width:20px;"></i>');
-        feather.replace();
-    }
-
-    $('#invoice_amount').on('input', function () {
-        let currentVal = parseFloat($(this).val());
-        if (!isNaN(currentVal) && currentVal !== sessionAmount) {
-            setUploadIcon();
-        } else {
-            setEditIcon();
+        function setEditIcon() {
+            $('#update_invoice_amount').removeClass('bg-warning bg-success').addClass('bg-light')
+                .html('<i data-feather="edit" id="icon" style="color: black;width:20px;"></i>');
+            feather.replace();
         }
-    });
-
-    $(document).on('click', '#update_invoice_amount', function () {
-        let currentVal = parseFloat($('#invoice_amount').val());
-        if (isNaN(currentVal) || currentVal === sessionAmount) {
-            return;
+        function setUploadIcon() {
+            $('#update_invoice_amount').removeClass('bg-light bg-success').addClass('bg-warning')
+                .html('<i data-feather="upload-cloud" id="icon" style="color: black;width:20px;"></i>');
+            feather.replace();
+        }
+        function setLoader() {
+            $('#update_invoice_amount').removeClass('bg-warning bg-light bg-success').addClass('bg-warning')
+                .html('<div class="d-flex align-items-center justify-content-center" style="width:20px;"><div class="spinner-border text-dark" style="width: 18px; height: 18px;" role="status"><span class="visually-hidden">Loading...</span></div></div>');
+        }
+        function setSuccessIcon() {
+            $('#update_invoice_amount').removeClass('bg-warning').addClass('bg-success')
+                .html('<i data-feather="check-circle" id="icon" style="color: white;width:20px;"></i>');
+            feather.replace();
         }
 
-        setLoader();
-
-        let invoice_amount = $('#invoice_amount').val();
-        let invoice_date = $('#invoice_date').val();
-        let customer_name = $('#customer_name').val();
-        let customer_email = $('#customer_email').val();
-        let customer_mobile = $('#customer_mobile').val();
-
-        $.ajax({
-            url: "{{ route('update.invoice.amount') }}",
-            type: 'POST',
-            data: {
-                invoice_amount,
-                invoice_date,
-                customer_name,
-                customer_email,
-                customer_mobile,
-                _token: '{{ csrf_token() }}'
-            },
-            success: function (response) {
-                if (response.success) {
-                    sessionAmount = parseFloat(invoice_amount);
-                    setSuccessIcon();
-
-                    $('#invoice_amount').val(response.updated.invoice_amount);
-                    $('#invoice_date').val(response.updated.invoice_date);
-                    $('#customer_name').val(response.updated.customer_name);
-                    $('#customer_email').val(response.updated.customer_email);
-                    $('#customer_mobile').val(response.updated.customer_mobile);
-                    setTimeout(() => {
-                        location.reload();
-                    }, 1000);
-                }
-            },
-            error: function () {
+        $('#invoice_amount').on('input', function () {
+            let currentVal = parseFloat($(this).val());
+            if (!isNaN(currentVal) && currentVal !== sessionAmount) {
+                setUploadIcon();
+            } else {
                 setEditIcon();
             }
         });
+
+        $(document).on('click', '#update_invoice_amount', function () {
+            let currentVal = parseFloat($('#invoice_amount').val());
+            if (isNaN(currentVal) || currentVal === sessionAmount) return;
+
+            setLoader();
+
+            $.ajax({
+                url: "{{ route('update.invoice.amount') }}",
+                type: 'POST',
+                data: {
+                    invoice_amount: $('#invoice_amount').val(),
+                    invoice_date: $('#invoice_date').val(),
+                    customer_name: $('#customer_name').val(),
+                    customer_email: $('#customer_email').val(),
+                    customer_mobile: $('#customer_mobile').val(),
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function (response) {
+                    if (response.success) {
+                        sessionAmount = parseFloat($('#invoice_amount').val());
+                        setSuccessIcon();
+                        $('#invoice_amount').val(response.updated.invoice_amount);
+                        $('#invoice_date').val(response.updated.invoice_date);
+                        $('#customer_name').val(response.updated.customer_name);
+                        $('#customer_email').val(response.updated.customer_email);
+                        $('#customer_mobile').val(response.updated.customer_mobile);
+                        setTimeout(() => location.reload(), 1000);
+                    }
+                },
+                error: function () { setEditIcon(); }
+            });
+        });
     });
-});
 </script>
 
 <script>
-$(document).ready(function() {
-    $('.unit-price-header').click(function() {
-        var $header = $(this);
-        var $table = $header.closest('table');
-        var $tbody = $table.find('tbody');
-        var $rows = $tbody.find('tr').toArray();
-        var column = $header.data('column');
-        var order = $header.data('order');
+    $(document).ready(function() {
+        $(document).on('click', '.unit-price-header', function() {
+            var $header = $(this);
+            var $table = $header.closest('table');
+            var $tbody = $table.find('tbody');
+            var $rows = $tbody.find('tr').toArray();
+            var column = $header.data('column');
+            var order = $header.data('order');
 
-        $rows.sort(function(a, b) {
-            var A = $(a).find('td').eq(column).text().trim();
-            var B = $(b).find('td').eq(column).text().trim();
+            $rows.sort(function(a, b) {
+                var A = parseFloat($(a).find('td').eq(column).text().replace(/[^\d.-]/g, '')) || 0;
+                var B = parseFloat($(b).find('td').eq(column).text().replace(/[^\d.-]/g, '')) || 0;
+                return (order === 'asc') ? (A - B) : (B - A);
+            });
 
-            A = parseFloat(A.replace(/[^\d.-]/g, '')) || 0;
-            B = parseFloat(B.replace(/[^\d.-]/g, '')) || 0;
+            $.each($rows, function(index, row) { $tbody.append(row); });
 
-            return (order === 'asc') ? (A - B) : (B - A);
+            var newOrder = (order === 'asc') ? 'desc' : 'asc';
+            $header.data('order', newOrder);
+            $header.find('i').removeClass('bi-caret-down-fill bi-caret-up-fill')
+                .addClass(newOrder === 'asc' ? 'bi-caret-up-fill' : 'bi-caret-down-fill');
         });
-
-        $.each($rows, function(index, row) {
-            $tbody.append(row);
-        });
-
-        var newOrder = (order === 'asc') ? 'desc' : 'asc';
-        $header.data('order', newOrder);
-
-        $header.find('i')
-            .removeClass('bi-caret-down-fill bi-caret-up-fill')
-            .addClass(newOrder === 'asc' ? 'bi-caret-up-fill' : 'bi-caret-down-fill');
     });
-});
 </script>
 
 <script>
     function startVoiceSearch(inputId, micIconId) {
         const inputField = document.getElementById(inputId);
         const micIcon = document.getElementById(micIconId);
-        inputField.placeholder = "Please speak product name or category";
 
         if (!('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
             toastr.error("Your browser does not support voice recognition. Please try using a modern browser like Chrome.");
@@ -986,15 +930,12 @@ $(document).ready(function() {
         const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
         recognition.lang = "en-US";
         recognition.interimResults = false;
-
         recognition.start();
 
         recognition.onresult = function(event) {
-            const transcript = event.results[0][0].transcript;
             inputField.style.color = "blue";
-            inputField.value = transcript;
+            inputField.value = event.results[0][0].transcript;
         };
-
         recognition.onerror = function(event) {
             toastr.error("Voice recognition error: " + event.error);
             inputField.value = '';
@@ -1003,7 +944,6 @@ $(document).ready(function() {
             micIcon.classList.add("text-primary");
             inputField.placeholder = "Enter or Speak Keyword";
         };
-
         recognition.onend = function() {
             micIcon.classList.remove("text-danger");
             micIcon.classList.add("text-primary");
@@ -1035,8 +975,13 @@ $(document).ready(function() {
 
         $('input[name="product_ids[]"]:checked').each(function () {
             const productId = $(this).val();
-            const punitPrice = parseFloat($(`input[data-product-id="${productId}"]`).val()) || 0;
-            currentAmount += punitPrice;
+            // Check main table first (product-unit-price), then modal (add-product-price)
+            let priceInput = $('input.product-unit-price[data-product-id="' + productId + '"]');
+            if (priceInput.length === 0) {
+                priceInput = $('input.add-product-price[data-product-id="' + productId + '"]');
+            }
+            const price = parseFloat(priceInput.val()) || 0;
+            currentAmount += price;
         });
 
         let invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
@@ -1054,9 +999,7 @@ $(document).ready(function() {
 
         const expectedTotal = invoiceAmount + discountAmount;
         const isMatch = Math.abs(currentAmount - expectedTotal) < 0.01;
-
         const colorClass = isMatch ? 'text-success' : 'text-danger';
-
         $('#current_amount, #discount_amount, #invoice_amount').removeClass('text-success text-danger').addClass(colorClass);
     }
 </script>

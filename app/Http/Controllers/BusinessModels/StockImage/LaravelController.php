@@ -42,10 +42,15 @@ class LaravelController extends Controller
         $site_id = $request->get('site_id');
         $invoiceAmount = floatval($request->get('invoice_amount'));
 
-        // ─── Configurable Settings ─────────────────────────────────────────
-        $percentageStep = 2;   // Each step increases by this % (e.g. 0% → 5% → 10% ...)
-        $maxPercentage  = 30;  // Maximum % above invoice amount to search
-        // ──────────────────────────────────────────────────────────────────
+        $trackLastN = 2;
+        
+
+        $tiers = [
+            ['label' => 'exact', 'exact' => true],
+            ['label' => 'low',   'exact' => false, 'min' => 0.001, 'max' => 0.20],
+            ['label' => 'mid',   'exact' => false, 'min' => 0.20,  'max' => 0.35],
+            ['label' => 'high',  'exact' => false, 'min' => 0.35,  'max' => 0.50],
+        ];
 
         $site = Website::findOrFail($site_id);
         DynamicDatabaseService::connect($site);
@@ -54,20 +59,41 @@ class LaravelController extends Controller
         $allProducts = DB::connection($this->connectionType)->table($this->productTable)
             ->select('id', 'name', 'credits', 'price')->get();
 
+        $lastUsedIds = session('last_used_product_ids', []);
+        $currentTier = session('current_tier_index', 0);
+
         $filteredProducts = collect();
         $matchedAtPercentage = 0;
+        $totalTiers = count($tiers);
 
-        // Step-by-step percentage increase until product found or max reached
-        for ($pct = 0; $pct <= $maxPercentage; $pct += $percentageStep) {
-            $minPrice = $invoiceAmount;
-            $maxPrice = $invoiceAmount * (1 + $pct / 100);
+        for ($attempt = 0; $attempt < $totalTiers; $attempt++) {
+            $tierIndex = ($currentTier + $attempt) % $totalTiers;
+            $tier = $tiers[$tierIndex];
 
-            $filteredProducts = $allProducts->filter(function ($product) use ($minPrice, $maxPrice) {
-                return $product->price >= $minPrice && $product->price <= $maxPrice;
-            })->sortBy('price'); // Pick cheapest first to minimize discount
+            if ($tier['exact']) {
+                $candidates = $allProducts->filter(function ($product) use ($invoiceAmount) {
+                    return abs($product->price - $invoiceAmount) < 0.01;
+                });
+            } else {
+                $minPrice = $invoiceAmount + ($invoiceAmount * $tier['min']);
+                $maxPrice = $invoiceAmount + ($invoiceAmount * $tier['max']);
+                $candidates = $allProducts->filter(function ($product) use ($minPrice, $maxPrice) {
+                    return $product->price > $minPrice && $product->price <= $maxPrice;
+                });
+            }
 
-            if ($filteredProducts->isNotEmpty()) {
-                $matchedAtPercentage = $pct;
+            // Remove last used products from candidates
+            $preferred = $candidates->filter(function ($product) use ($lastUsedIds) {
+                return !in_array($product->id, $lastUsedIds);
+            });
+
+            $pool = $preferred->isNotEmpty() ? $preferred : $candidates;
+
+            if ($pool->isNotEmpty()) {
+                $chosenProduct = $pool->random();
+                $filteredProducts = collect([$chosenProduct]);
+                $matchedAtPercentage = $tier['exact'] ? 0 : round($tier['min'] * 100);
+                session(['current_tier_index' => ($tierIndex + 1) % $totalTiers]);
                 break;
             }
         }
@@ -79,11 +105,11 @@ class LaravelController extends Controller
                 'tableRows' => '
                     <tr>
                         <td colspan="6" class="text-center text-muted py-3">
-                            No products found within ' . $maxPercentage . '% of invoice amount 
+                            No products found within 50% of invoice amount
                             (<strong>' . site_currency() . number_format($invoiceAmount, 2) . '</strong>).<br>
-                            <button class="btn btn-primary btn-sm mt-2" 
-                                data-bs-toggle="modal" 
-                                data-bs-target="#addmoreproducts" 
+                            <button class="btn btn-primary btn-sm mt-2"
+                                data-bs-toggle="modal"
+                                data-bs-target="#addmoreproducts"
                                 onclick="customizeProducts(\'onload\')">
                                 Add Custom Pack
                             </button>
@@ -94,29 +120,32 @@ class LaravelController extends Controller
             ], 200);
         }
 
-        // Take the cheapest matching product (sorted above)
-        $randomProducts = $filteredProducts->take(1);
+        $chosenId = $filteredProducts->first()->id;
+        $lastUsedIds[] = $chosenId;
+        if (count($lastUsedIds) > $trackLastN) {
+            $lastUsedIds = array_slice($lastUsedIds, -$trackLastN);
+        }
+        session(['last_used_product_ids' => $lastUsedIds]);
 
-        $readyProducts = $randomProducts->values()->toArray();
+        $readyProducts = json_decode(json_encode($filteredProducts->values()), true);
         session()->put('ready_products', $readyProducts);
 
         $modelType = $site->businessModel->model_type;
-        $total = collect($readyProducts)->sum('price');
+        $total = $filteredProducts->sum('price');
         session(['current_amount' => $total]);
 
         $tableRows = view("invoice.{$modelType}.random_product_rows", [
-            'products' => collect($readyProducts),
+            'products' => $filteredProducts->values(),
             'site'     => $site,
             'total'    => $total
         ])->render();
 
         return response()->json([
-            'tableRows'          => $tableRows,
-            'total'              => $total,
-            'matchedAtPercentage' => $matchedAtPercentage  // optional, useful for JS feedback
+            'tableRows'           => $tableRows,
+            'total'               => $total,
+            'matchedAtPercentage' => $matchedAtPercentage
         ]);
     }
-
     public function addProducts(Request $request)
     {
         $site_id = $request->get('site_id');
@@ -643,7 +672,12 @@ class LaravelController extends Controller
                     'id' => '0',
                     'name' => 'Custom Pack',
                     'price' => floatval($data['price']),
-                    'credits' => round(floatval($data['price']) / 5.75)
+                    'credits' => (float) number_format(
+                        round((floatval($data['price']) / 5.75) * 2) / 2,
+                        1,
+                        '.',
+                        ''
+                    )
                 ];
             } else {
                 // Handle regular products

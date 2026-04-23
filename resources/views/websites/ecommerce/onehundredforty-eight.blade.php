@@ -171,7 +171,7 @@
                                     <td>
                                      <div style="display: flex; justify-content: center; align-items: center;">
                                         
-                                         <div class="add-h6" style="width: 200px;">
+                                         <div class="add-h6" style="width: 300px;">
                                             <div class="linement">
                                                 <div class="box">
                                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path fill="#D2B76A" d="M160.2 25C152.3 6.1 131.7-3.9 112.1 1.4l-5.5 1.5c-64.6 17.6-119.8 80.2-103.7 156.4 37.1 175 174.8 312.7 349.8 349.8 76.3 16.2 138.8-39.1 156.4-103.7l1.5-5.5c5.4-19.7-4.7-40.3-23.5-48.1l-97.3-40.5c-16.5-6.9-35.6-2.1-47 11.8l-38.6 47.2C233.9 335.4 177.3 277 144.8 205.3L189 169.3c13.9-11.3 18.6-30.4 11.8-47L160.2 25z"/></svg>
@@ -194,7 +194,7 @@
                                                 <div class="box">
                                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path fill="#D2B76A" d="M0 188.6C0 84.4 86 0 192 0S384 84.4 384 188.6c0 119.3-120.2 262.3-170.4 316.8-11.8 12.8-31.5 12.8-43.3 0-50.2-54.5-170.4-197.5-170.4-316.8zM192 256a64 64 0 1 0 0-128 64 64 0 1 0 0 128z"/></svg>
                                                 </div>
-                                               <h6 style="margin-bottom: 0px;margin-top:5px;">{!! $company_address !!}</h6>
+                                               <h6 style="margin-bottom: 0px;margin-top:5px;" >{!! $company_address !!}</h6>
                                            </div>
                                         </div>
                                      </div>
@@ -239,7 +239,7 @@
                                               </table>
                                             </div>  
                                           </td>
-                                          <td style="width: 30%;vertical-align: bottom;">
+                                          <td style="width: 70%;vertical-align: bottom;">
                                               <div class="invies-content invies-content-two">
                                                   <h3>INVOICE FROM</h3>
                                                   <table>
@@ -273,7 +273,7 @@
                                                             <td>
                                                                 <span> # </span>
                                                             </td>
-                                                            <td>
+                                                            <td >
                                                                 <p>{{ $company_name }} <br> {!! $company_address !!}</p>
                                                             </td>
                                                         </tr>
