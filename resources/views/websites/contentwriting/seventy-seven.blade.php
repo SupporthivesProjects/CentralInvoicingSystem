@@ -104,7 +104,7 @@
                                     </td>
                                 </tr>
                             </table>
-                            <div style="min-height:590px !important;">
+                            <div style="min-height:620px !important;">
                             <table width="100%" cellpadding="10" cellspacing="0"
                                 style="font-family: 'Montserrat'; border-collapse: collapse; font-size: 9px;">
                                 <!-- Header Row -->
