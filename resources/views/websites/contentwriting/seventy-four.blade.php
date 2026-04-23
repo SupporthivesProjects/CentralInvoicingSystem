@@ -40,8 +40,8 @@
                     </tr>
                     <tr>
                         <td
-                            style="padding:40px;padding-top:0px;background:#ffffff; background-repeat: no-repeat;background-position: center;background-size: cover;height:444px; font-family: 'Yu Gothic';">
-                            <div style="min-height:700px !important;">
+                            style="padding:40px ;padding-top:0px; padding-bottom:200px; background:#ffffff; background-repeat: no-repeat;background-position: center;background-size: cover;height:444px; font-family: 'Calibri';">
+                            <div style="min-height:900px !important;">
                             <table style="width: 100%; font-family: 'Calibri'; border-collapse: collapse;">
                                 <tr>
                                     <td>
