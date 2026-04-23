@@ -70,7 +70,7 @@
                     <!-- Content -->
                     <tr>
                         <td
-                            style="padding:40px;padding-top:0px;background:#ffffff; background-repeat: no-repeat;background-position: center;background-size: cover;height:444px; font-family: 'Yu Gothic';">
+                            style="padding:40px;padding-top:0px;background:#ffffff; background-repeat: no-repeat;background-position: center;background-size: cover;height:444px; font-family: 'Montserrat';">
                             <br>
                             <br>
                             <table width="100%" cellpadding="0" cellspacing="0"
@@ -104,7 +104,7 @@
                                     </td>
                                 </tr>
                             </table>
-                            <div style="min-height:550px !important;">
+                            <div style="min-height:590px !important;">
                             <table width="100%" cellpadding="10" cellspacing="0"
                                 style="font-family: 'Montserrat'; border-collapse: collapse; font-size: 9px;">
                                 <!-- Header Row -->
