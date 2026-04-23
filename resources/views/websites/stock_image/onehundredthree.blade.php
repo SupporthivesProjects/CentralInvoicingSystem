@@ -66,6 +66,7 @@
                     <p style="margin: 0;">{{ $customer_name }}<br>
                       {{ $customer_email }}<br>
                       {{ $customer_mobile }}<br>
+                      <br>
                     </p>
                   </td>
 
