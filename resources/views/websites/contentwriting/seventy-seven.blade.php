@@ -6,7 +6,11 @@
     <style>
         tr.myrow:nth-of-type(odd) {
             background-color: #EDEAE4 !important;
-            }
+        }
+        body{
+            margin: 0px;
+            padding: 0px
+        }
 
         </style>
 </head>
@@ -89,7 +93,7 @@
                                         <p style="font-size: 8px;">
                                             {!! $company_address !!}<br>
                                             {{ $company_mobile }}<br>
-                                            {{ $site->site_link }}
+                                            <b>{{ $site->site_link }}</b>
                                         </p>
                                     </td>
 
@@ -100,7 +104,7 @@
                                     </td>
                                 </tr>
                             </table>
-                            <div style="min-height:450px !important;">
+                            <div style="min-height:550px !important;">
                             <table width="100%" cellpadding="10" cellspacing="0"
                                 style="font-family: 'Montserrat'; border-collapse: collapse; font-size: 9px;">
                                 <!-- Header Row -->
@@ -144,15 +148,15 @@
                                 style="font-family: 'Montserrat'; font-size: 8px;">
                                 <tr>
                                     <td valign="top" style="padding: 13px 10px 10px 10px;">
-                                        <img src="{{ $invoice_image1 }}" alt="" style="width: 7px;">
+                                        <!-- <img src="{{ $invoice_image1 }}" alt="" style="width: 7px;"> -->
                                     </td>
                                     <td width="60%" valign="top" style="padding: 10px 10px 10px 0px;">
-                                        <p style="margin: 0; color: black; font-weight: bold; font-size: 9px;">
+                                        <!-- <p style="margin: 0; color: black; font-weight: bold; font-size: 9px;">
                                             Note :
                                         </p>
                                         <p style="margin-top: 5px; color: #333;">
                                            {{ $site->site_description }}
-                                        </p>
+                                        </p> -->
                                     </td>
 
                                     <!-- Totals Section -->
@@ -185,7 +189,7 @@
                         <td>
                             <!-- Invoice Footer -->
                             <table align="left"
-                                style="width: 60%; max-width: 800px; margin: 0 auto;
+                                style="width: 60%; max-width: 100%; width: 100%; margin: 0 auto;
                                         background-image: url('{{ $invoice_footer_image }}');
                                         background-size: cover; background-repeat: no-repeat;
                                         background-position: center; padding: 30px; color: #333; font-family: 'Montserrat'; font-size: 7px;">
