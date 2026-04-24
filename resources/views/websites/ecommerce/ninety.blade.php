@@ -16,7 +16,7 @@
                         <td style="padding: 0; height: 130px;">
                             <!-- Invoice Header -->
                             <table
-                                style="width: 100%; max-width: 800px; margin: 0 auto; padding: 40px; font-family: 'Montserrat'; border-bottom: 1px solid gray;">
+                                style="width: 100%; max-width: 800px; margin: 0 auto; padding: 40px; font-family: ' Montserrat - Google Fonts'; border-bottom: 1px solid gray;">
                                 <tr>
 
                                     <td style="width: 50%; vertical-align: top;">
@@ -48,8 +48,8 @@
                     <!-- Content -->
                     <tr>
                         <td
-                            style="padding:40px;padding-top:0px;background:#ffffff; background-repeat: no-repeat;background-position: center;background-size: cover;height:444px; font-family: 'Montserrat';">
-                            <table style="width: 100%; max-width: 1000px; margin: 20px auto; border-collapse: collapse;">
+                            style="padding:40px;padding-top:0px;background:#ffffff; background-repeat: no-repeat;background-position: center;background-size: cover;height:444px; font-family: ' Montserrat - Google Fonts';">
+                            <table style="width: 100%; max-width: 800px; margin: 20px auto; border-collapse: collapse;">
                                 <tr style="background-color: #e8eff7;">
                                     <td style="padding: 10px;">
                                         <span style="font-size: 10px; font-weight: normal;">INVOICE No.</span><br>
@@ -59,10 +59,10 @@
                                         <span style="font-size: 10px; font-weight: normal;">INVOICE DATE</span><br>
                                         <span style="font-weight: bold; font-size: 10px;">{{ $invoice_date }}</span>
                                     </td>
-                                    <td style="padding: 10px;">
+                                    <!--<td style="padding: 10px;">
                                         <span style="font-size: 10px; font-weight: normal;">INVOICE EXPORT</span><br>
                                         <span style="font-weight: bold; font-size: 10px;">{{ $invoice_date }}</span>
-                                    </td>
+                                    </td>-->
                                 </tr>
                             </table>
 
@@ -83,13 +83,13 @@
                                                    {{ $customer_name }} </td>
                                             </tr>
 
-                                            <tr>
+                                            <!--<tr>
                                                 <td style="color: #888; font-size: 10px; vertical-align: top;">CUSTOMER
                                                     EMAIL</td>
                                                 <td style="font-weight: bold; vertical-align: top; font-size: 10px;">
                                                   {{ $customer_email }}
                                                 </td>
-                                            </tr>
+                                            </tr>-->
 
                                         </table>
                                     </td>
