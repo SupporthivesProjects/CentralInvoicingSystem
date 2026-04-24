@@ -3,6 +3,17 @@
 
 <head>
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
+    <style>
+        .footer_bottom {
+            position: fixed;
+            bottom: 0px;
+            left: 0px;
+            right: 0px;
+            width: 100%;
+            
+            
+        }
+        </style>
 </head>
 
 <body>
@@ -161,7 +172,8 @@
                             </div>
                         </td>
                     </tr>
-                   
+                    <table class="footer_bottom">
+
                     <tr>
                         <td>
                             <table width="100%" cellspacing="0" cellpadding="" border="0px"
@@ -189,6 +201,7 @@
                             </table>
                         </td>
                     </tr>
+</table >
                     <!-----------Footer End----------->
                 </table>
             </td>
