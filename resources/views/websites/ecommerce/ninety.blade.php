@@ -67,7 +67,7 @@
                             </table>
 
                             <!-- Billed To / From Section -->
-                            <table style="width: 100%; max-width: 1000px; margin: 20px auto;">
+                            <table style="width: 100%; max-width: 800px; margin: 20px auto;">
                                 <tr>
                                     <!-- Billed To -->
                                     <td style="width: 50%; vertical-align: top; padding-right: 20px;">
@@ -164,7 +164,7 @@
                     <tr>
                         <td>
                             <table width="100%" cellspacing="0" cellpadding="" border="0px"
-                                style="border-collapse: collapse;">
+                                style="border-collapse: collapse; width: 100%; max-width: 800px;">
                                 <tr
                                     style="background: url('{{ $invoice_footer_image }}') no-repeat;background-position: center; font-family: 'Montserrat'; color: white;background-size: cover;height:141px;padding:50px;background-size:cover;width: 100%;">
                                     <td style="padding: 30px; width: 60%;">
