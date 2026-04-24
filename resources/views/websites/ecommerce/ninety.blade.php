@@ -114,7 +114,7 @@
                             </table>
                             <div style="min-height: 470px !important;">
                             <table
-                                style="width: 100%; max-width: 800px; margin: 0 auto; font-size: 10px; border-collapse: collapse; margin-top: 30px;">
+                                style="width: 100%; max-width: 800px; margin: 0 auto; font-size: 14px; border-collapse: collapse; margin-top: 30px;">
                                 <tr style="background-color: #002b6c; color: white; text-align: left;">
                                     <th style="padding: 10px;">Product</th>
                                     <th style="padding: 10px;">Qty</th>
@@ -124,8 +124,8 @@
                                 @foreach($products as $product)
                                 <tr>
                                     <td style="padding: 10px;">
-                                        <span style="font-size: 8px; color: #386BDC;">{{ $product->category_name }}</span><br>
-                                        <span style=" font-size: 10px;">{{ $product->name }}</span>
+                                        <span style="font-size: 12px; color: #386BDC;">{{ $product->category_name }}</span><br>
+                                        <span style=" font-size: 14px;">{{ $product->name }}</span>
                                     </td>
                                     <td style="padding: 10px; color: #405F8E;">1</td>
                                     <td style="padding: 10px; color: #405F8E;">{{ site_currency() }} {{  number_format($product->unit_price, 2) }}</td>
@@ -136,7 +136,7 @@
 
                             <!-- Total Calculation Table -->
                             <table
-                                style="width: 100%; max-width: 800px; margin: 20px auto; border-collapse: collapse; font-size: 10px;">
+                                style="width: 100%; max-width: 800px; margin: 20px auto; border-collapse: collapse; font-size: 14px;">
                                 <tr>
                                     <td style="width: 60%;"></td>
                                     <td style="padding: 8px; color: #666666; border-top: 1px solid #D8D8D8;">SUB TOTAL
@@ -151,7 +151,7 @@
                                     <td style="padding: 8px; font-weight: bold; color: #405F8E;">{{ site_currency() }} {{ number_format($discount_amount, 2) }}</td>
                                 </tr>
                                 
-                                <tr style="border-top: 1px solid #132A68; font-size: 12px;">
+                                <tr style="border-top: 1px solid #132A68; font-size: 16px;">
                                     <td></td>
                                     <td style="padding: 10px; font-weight: bold; color: #405F8E;">TOTAL VALUE</td>
                                     <td style="padding: 10px; font-weight: bold; color: #405F8E;">{{ site_currency() }} {{ number_format($invoice_amount, 2) }}</td>
