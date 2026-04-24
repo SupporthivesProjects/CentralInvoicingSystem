@@ -49,7 +49,7 @@
                     <tr>
                         <td
                             style="padding:40px;padding-top:0px;background:#ffffff; background-repeat: no-repeat;background-position: center;background-size: cover;height:444px; font-family: 'Montserrat';">
-                            <table style="width: 100%; max-width: 800px; margin: 20px auto; border-collapse: collapse;">
+                            <table style="width: 100%; max-width: 1000px; margin: 20px auto; border-collapse: collapse;">
                                 <tr style="background-color: #e8eff7;">
                                     <td style="padding: 10px;">
                                         <span style="font-size: 10px; font-weight: normal;">INVOICE No.</span><br>
