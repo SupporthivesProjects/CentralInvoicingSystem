@@ -77,10 +77,10 @@
                                                     TO</td>
                                             </tr>
                                             <tr>
-                                                <td style="color: #888; font-size: 10px; vertical-align: top;">CUSTOMER
-                                                    NAME</td>
+                                                <td style="color: #888; font-size: 10px; vertical-align: top;"><!--CUSTOMER
+                                                    NAME--> {{ $customer_name }} </td>
                                                 <td style="font-weight: bold; font-size: 10px; vertical-align: top;">
-                                                   {{ $customer_name }} </td>
+                                                   </td>
                                             </tr>
 
                                             <!--<tr>
@@ -102,10 +102,11 @@
                                                     FROM</td>
                                             </tr>
                                             <tr>
-                                                <td style="color: #888; font-size: 10px; vertical-align: top;">ADDRESS
+                                                <td style="color: #888; font-size: 10px; vertical-align: top;"><!--ADDRESS-->
+                                                    {!! $company_address !!}
                                                 </td>
                                                 <td style="font-weight: bold; vertical-align: top; font-size: 10px;">
-                                                    {!! $company_address !!}
+                                                    
                                                 </td>
                                             </tr>
                                         </table>
