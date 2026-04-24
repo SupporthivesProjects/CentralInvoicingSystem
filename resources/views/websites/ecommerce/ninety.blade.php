@@ -67,7 +67,7 @@
                             </table>
 
                             <!-- Billed To / From Section -->
-                            <table style="width: 100%; max-width: 800px; margin: 20px auto;">
+                            <table style="width: 100%; max-width: 1000px; margin: 20px auto;">
                                 <tr>
                                     <!-- Billed To -->
                                     <td style="width: 50%; vertical-align: top; padding-right: 20px;">
@@ -168,13 +168,13 @@
                                 <tr
                                     style="background: url('{{ $invoice_footer_image }}') no-repeat;background-position: center; font-family: 'Montserrat'; color: white;background-size: cover;height:141px;padding:50px;background-size:cover;width: 100%;">
                                     <td style="padding: 30px; width: 60%;">
-                                        <strong
+                                       <!-- <strong
                                             style="display: block; font-size: 10px; margin-bottom: 10px;">NOTES</strong>
                                         <p style="margin: 0; font-size: 9px; line-height: 1.6;">
                                         Please review the invoice details carefully. <br>
                                         If there are any discrepancies or questions, <br>
                                         contact support at {{ $company_email }}.
-                                        </p>
+                                        </p>-->
                                     </td>
 
                                     <!-- Right: Contact Info -->
