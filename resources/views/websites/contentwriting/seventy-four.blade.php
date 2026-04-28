@@ -3,6 +3,17 @@
 
 <head>
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
+    <style>
+      .footer-fixed {
+        position: fixed;
+        bottom: -1px;
+        left: 0;
+        right: 0;
+        width: 100%;
+        /* background: url('{{ $invoice_footer_image }}') center center no-repeat; */
+        /* background-size: cover; */
+      }
+    </style>
 </head>
 
 <body style="margin: 0px; padding: 0;">
@@ -157,6 +168,7 @@
                     <!-- Footer -->
                     <tr style="height:100%;">
                         <td>
+                            <div class="footer-fixed">
                             <table width="100%" cellspacing="0" cellpadding="0" border="0"
                                 style="border-collapse: collapse; background: url('{{ $invoice_footer_image }}') no-repeat center; background-size: cover; height: 100px; font-family: Calibri, sans-serif;">
                                 <tr>
@@ -180,6 +192,7 @@
                                     </td>
                                 </tr>
                             </table>
+                            </div>
                         </td>
                     </tr>
                     <!-- Footer End -->
