@@ -172,10 +172,9 @@
                             </div>
                         </td>
                     </tr>
-                    
+                    <table class="footer_bottom">
 
                         <tr>
-                            <table class="footer_bottom">
                             <td>
                                 <table width="100%" cellspacing="0" cellpadding="" border="0px"
                                     style="border-collapse: collapse; width: 100%; max-width: 800px;">
@@ -201,9 +200,8 @@
 
                                 </table>
                             </td>
-                            </table >
                         </tr>
-                    
+                    </table >
                     <!-----------Footer End----------->
                 </table>
             </td>
