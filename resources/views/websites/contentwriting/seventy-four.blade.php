@@ -177,7 +177,7 @@
                             font-family: Calibri, sans-serif;
                         ">
                         <div style="
-                        margin-top: -20px;
+                        margin-top: -15px;
                         margin-left: 35%;
                                 min-width: 55%;
                                 display: flex;
