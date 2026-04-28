@@ -166,7 +166,7 @@
                     </tr>
 
                     <!-- Footer -->
-                    <tr style="height:100%;">
+                    <tr >
                         <td>
                             <div class="footer-fixed">
                             <table width="100%" cellspacing="0" cellpadding="0" border="0"
