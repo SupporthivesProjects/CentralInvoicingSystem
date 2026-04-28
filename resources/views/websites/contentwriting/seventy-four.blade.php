@@ -178,7 +178,7 @@
                         ">
                         <div style="
                         margin-left: 35%;
-                                max-width: 80%;
+                                min-width: 45%;
                                 display: flex;
                                 flex-direction: row;
                                 justify-content: space-between;
