@@ -6,9 +6,9 @@
     <style>
         .footer_bottom {
             position: fixed;
-            bottom: 0px;
+            bottom: -1px;
             left: -1px;
-            right: 0px;
+            right: -1px;
             width: 102%;
             margin: 0px;
             padding: 0px;
