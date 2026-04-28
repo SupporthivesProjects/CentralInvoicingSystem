@@ -7,9 +7,9 @@
         .footer_bottom {
             position: fixed;
             bottom: 0px;
-            left: 0px;
+            left: -1px;
             right: 0px;
-            width: 100%;
+            width: 102%;
             margin: 0px;
             padding: 0px;
         }
