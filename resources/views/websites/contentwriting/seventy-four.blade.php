@@ -176,6 +176,13 @@
                             height: 100px;
                             font-family: Calibri, sans-serif;
                         ">
+                        <div style="
+                        margin-left: 35%;
+                                max-width: 60%;
+                                display: flex;
+                                flex-direction: row;
+                                justify-content: flex-start;
+                            ">
 
                             <div style="
                                 flex: 1;
@@ -224,7 +231,7 @@
                                     </span>
                                 </p>
                             </div>
-
+</div>
                         </div>
                     </div>
 
