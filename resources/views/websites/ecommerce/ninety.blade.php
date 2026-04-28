@@ -10,7 +10,7 @@
             left: 0px;
             right: 0px;
             width: 100%;
-            
+            margin:0;
             
         }
         </style>
@@ -178,24 +178,30 @@
                             <td>
                                 <table width="100%" cellspacing="0" cellpadding="" border="0px"
                                     style="border-collapse: collapse; width: 100%; max-width: 800px;">
-                                    <tr
-                                        style="background: url('{{ $invoice_footer_image }}') no-repeat;background-position: center; font-family: 'Montserrat'; color: white;background-size: cover;height:141px;padding:50px;background-size:cover;width: 100%; margin:0px;">
-                                        <td style="padding: 30px; width: 60%;">
-                                        <!-- <strong
-                                                style="display: block; font-size: 10px; margin-bottom: 10px;">NOTES</strong>
-                                            <p style="margin: 0; font-size: 9px; line-height: 1.6;">
-                                            Please review the invoice details carefully. <br>
-                                            If there are any discrepancies or questions, <br>
-                                            contact support at {{ $company_email }}.
-                                            </p>-->
-                                        </td>
+                                    <tr>
+                                        <td style="background: url('{{ $invoice_footer_image }}') no-repeat;background-position: center; font-family: 'Montserrat'; color: white;background-size: cover;height:141px;padding:50px;background-size:cover;width: 100%; margin:0px;">
+                                            <table width="100%" cellspacing="0" cellpadding="0" border="0">
+                                                <tr>    
+                                                    <td style="padding: 30px; width: 60%;">
+                                                        <!-- <strong
+                                                                style="display: block; font-size: 10px; margin-bottom: 10px;">NOTES</strong>
+                                                            <p style="margin: 0; font-size: 9px; line-height: 1.6;">
+                                                            Please review the invoice details carefully. <br>
+                                                            If there are any discrepancies or questions, <br>
+                                                            contact support at {{ $company_email }}.
+                                                            </p>-->
+                                                        </td>
 
-                                        <!-- Right: Contact Info -->
-                                        <td style="padding: 30px; text-align: right; font-size: 10px; width: 40%;">
-                                            <div style="margin-bottom: 8px; font-size: 10px;">{{ $company_mobile  }}</div>
-                                            <div style="margin-bottom: 8px; font-size: 10px;">{{ $site_name }}</div>
-                                            <div> {!! $company_address !!}</div>
-                                        </td>
+                                                        <!-- Right: Contact Info -->
+                                                        <td style="padding: 30px; text-align: right; font-size: 10px; width: 40%;">
+                                                            <div style="margin-bottom: 8px; font-size: 10px;">{{ $company_mobile  }}</div>
+                                                            <div style="margin-bottom: 8px; font-size: 10px;">{{ $site_name }}</div>
+                                                            <div> {!! $company_address !!}</div>
+                                                        </td>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>        
                                     </tr>
 
                                 </table>
