@@ -166,7 +166,70 @@
                     </tr>
 
                     <!-- Footer -->
-                    <tr >
+
+                    <div class="footer-fixed">
+                        <div style="
+                            width: 100%;
+                            display: flex;
+                            background: url('{{ $invoice_footer_image }}') no-repeat center;
+                            background-size: cover;
+                            height: 100px;
+                            font-family: Calibri, sans-serif;
+                        ">
+
+                            <div style="
+                                flex: 1;
+                                text-align: center;
+                                padding: 20px 10px;
+                                display: flex;
+                                flex-direction: column;
+                                justify-content: flex-start;
+                            ">
+                                <p style="font-size: 10px; font-weight: bold; margin: 0;">
+                                    PHONE<br>
+                                    <span style="font-size: 8px; font-weight: normal;">
+                                        {{ $company_mobile }}
+                                    </span>
+                                </p>
+                            </div>
+
+                            <div style="
+                                flex: 1;
+                                text-align: center;
+                                padding: 20px 10px;
+                                display: flex;
+                                flex-direction: column;
+                                justify-content: flex-start;
+                            ">
+                                <p style="font-size: 10px; font-weight: bold; margin: 0;">
+                                    EMAIL<br>
+                                    <span style="font-size: 8px; font-weight: normal;">
+                                        {{ $company_email }}
+                                    </span>
+                                </p>
+                            </div>
+
+                            <div style="
+                                flex: 1;
+                                text-align: center;
+                                padding: 20px 10px;
+                                display: flex;
+                                flex-direction: column;
+                                justify-content: flex-start;
+                            ">
+                                <p style="font-size: 10px; font-weight: bold; margin: 0;">
+                                    ADDRESS<br>
+                                    <span style="font-size: 8px; font-weight: normal;">
+                                        {!! $company_address !!}
+                                    </span>
+                                </p>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                    <!-- <tr >
                         <td>
                             <div class="footer-fixed">
                             <table width="100%" cellspacing="0" cellpadding="0" border="0"
@@ -194,7 +257,7 @@
                             </table>
                             </div>
                         </td>
-                    </tr>
+                    </tr> -->
                     <!-- Footer End -->
 
                 </table>
