@@ -21,7 +21,7 @@
         <tr>
             <td align="center" bgcolor="#f2f2f2" style="padding: 0;">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
-                    style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
+                    style="border-collapse: collapse;">
 
                     <!-- Header -->
                     <tr>
@@ -50,7 +50,7 @@
 
                     <!-- Content -->
                     <tr>
-                        <td style="padding: 40px; padding-top: 0; background: #ffffff; font-family: Calibri, sans-serif; vertical-align: top; height:100vh;">
+                        <td style="padding: 40px; padding-top: 0; background: #ffffff; font-family: Calibri, sans-serif; vertical-align: top;">
                             <table style="width: 100%; font-family: Calibri, sans-serif; border-collapse: collapse;" cellspacing="0" cellpadding="0" border="0">
                                 <tr>
                                     <td></td>
