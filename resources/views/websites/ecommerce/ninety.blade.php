@@ -9,7 +9,7 @@
             bottom: -1px;
             left: -1px;
             right: -1px;
-            width: 102%;
+            width: 101%;
             margin: 0px;
             padding: 0px;
         }
@@ -172,7 +172,7 @@
                             </div>
                         </td>
                     </tr>
-                    <table class="footer_bottom">
+                    <table class="footer_bottom" cellspacing="0" cellpadding="0" border="0">
 
                         <tr>
                             <td>
