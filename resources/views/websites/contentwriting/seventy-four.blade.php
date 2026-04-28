@@ -178,10 +178,10 @@
                         ">
                         <div style="
                         margin-left: 35%;
-                                max-width: 70%;
+                                max-width: 60%;
                                 display: flex;
                                 flex-direction: row;
-                                justify-content: flex-start;
+                                justify-content: space-between;
                             ">
 
                             <div style="
