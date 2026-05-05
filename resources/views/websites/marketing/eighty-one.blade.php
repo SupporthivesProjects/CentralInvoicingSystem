@@ -28,7 +28,7 @@
                                   <p style="text-align: center; color: #2E75B5; font-size: 20px; margin: 0;"><b>Invoice</b><b> #{{ $invoice_number }}</b></p>
                                 </td>
                                 <td>
-                                  <p style="text-align: center; color: #2E75B5; font-size: 20px; margin: 0;"><b>Invoice Date:</b><b> #{{ $invoice_date }}</b></p>
+                                  <p style="text-align: center; color: #2E75B5; font-size: 20px; margin: 0;"><b>Invoice Date:</b><b> {{ $invoice_date }}</b></p>
                                 </td>
                               </tr>
                             </table>
@@ -55,7 +55,7 @@
                                   </td>
                                 </tr>
                               </table>
-                              <div style="min-height: 500px !important;">
+                              <div style="min-height: 530px !important;">
                               <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; border: 1px solid #0074d9; font-size: 10px; margin-top: 20px;">
                                 <thead>
                                   <tr style="background-color: #DEEBF6;">

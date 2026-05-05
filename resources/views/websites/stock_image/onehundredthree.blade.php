@@ -66,6 +66,7 @@
                     <p style="margin: 0;">{{ $customer_name }}<br>
                       {{ $customer_email }}<br>
                       {{ $customer_mobile }}<br>
+                      <br>
                     </p>
                   </td>
 
@@ -99,7 +100,7 @@
                       <th style="padding: 6px 12px; border: 1px solid #999;">PACK</th>
                       <th style="padding: 6px 12px; border: 1px solid #999; text-align: center;">CREDITS</th>
                       <th style="padding: 6px 12px; border: 1px solid #999;text-align: center;">UNIT PRICE</th>
-                      <th style="padding: 6px 12px; border: 1px solid #999;text-align: right;">Total</th>
+                      <th style="padding: 6px 12px; border: 1px solid #999;text-align: right;">TOTAL</th>
                     </tr>
                   </thead>
                   <tbody>

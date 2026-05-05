@@ -1277,32 +1277,50 @@ class LaravelController extends Controller
                     ->first();
 
                 if (!$lastUpdate) {
-                    DB::connection($this->connectionType)
-                        ->table($this->productTable)
-                        ->where('id', $product_id)
-                        ->update(['unit_price' => $new_price]);
+                    // Added by Rishav Mandal | 27 April 2026
+                    // Only create history record if the remote DB update actually affected a row,
+                    // preventing a phantom lock where history is recorded but price was never updated.
+                    try {
+                        $affected = DB::connection($this->connectionType)
+                            ->table($this->productTable)
+                            ->where('id', $product_id)
+                            ->update(['unit_price' => $new_price]);
 
-                    ProductPriceHistory::create([
-                        'site_id' => $site_id,
-                        'product_id' => $product_id,
-                        'unit_price' => $new_price,
-                        'last_price_changed' => now(),
-                    ]);
+                        if ($affected > 0) {
+                            ProductPriceHistory::create([
+                                'site_id' => $site_id,
+                                'product_id' => $product_id,
+                                'unit_price' => $new_price,
+                                'last_price_changed' => now(),
+                            ]);
+                        }
+                    } catch (\Exception $e) {
+                        Log::error("LaravelController@updateProductPrice failed for product_id={$product_id}: " . $e->getMessage());
+                    }
                     continue;
                 }
 
                 if (Carbon::parse($lastUpdate->last_price_changed)->diffInMonths(now()) >= 3) {
-                    DB::connection($this->connectionType)
-                        ->table($this->productTable)
-                        ->where('id', $product_id)
-                        ->update(['unit_price' => $new_price]);
+                    // Added by Rishav Mandal | 27 April 2026
+                    // Only create history record if the remote DB update actually affected a row,
+                    // preventing a phantom lock where history is recorded but price was never updated.
+                    try {
+                        $affected = DB::connection($this->connectionType)
+                            ->table($this->productTable)
+                            ->where('id', $product_id)
+                            ->update(['unit_price' => $new_price]);
 
-                    ProductPriceHistory::create([
-                        'site_id' => $site_id,
-                        'product_id' => $product_id,
-                        'unit_price' => $new_price,
-                        'last_price_changed' => now(),
-                    ]);
+                        if ($affected > 0) {
+                            ProductPriceHistory::create([
+                                'site_id' => $site_id,
+                                'product_id' => $product_id,
+                                'unit_price' => $new_price,
+                                'last_price_changed' => now(),
+                            ]);
+                        }
+                    } catch (\Exception $e) {
+                        Log::error("LaravelController@updateProductPrice failed for product_id={$product_id}: " . $e->getMessage());
+                    }
                 }
             }
         }
