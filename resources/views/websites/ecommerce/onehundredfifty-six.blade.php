@@ -230,7 +230,7 @@
                             <div style="font-size:10px; color:#222; font-weight:bold; margin-bottom:4px;">Address:</div>
                             <div
                                 style="background:#e5e5e5; font-size:8px; color:#222; padding:8px 10px; border-radius:2px; min-width:120px;">
-                                {{ $company_address }}
+                                {{ $company_address }} 
                             </div>
                         </td>
                     </tr>
