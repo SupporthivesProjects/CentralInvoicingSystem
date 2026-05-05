@@ -214,13 +214,14 @@
                             <div style="font-size:14px; color:#222; font-weight:bold; margin-bottom:4px;">Email:</div>
                             <div
                                 style="background:#e5e5e5; font-size:12px; color:#222; padding:8px 10px; border-radius:2px; min-width:100px;">
+
                                 {{ $company_email }}
                             </div>
                         </td>
                         <!-- Phone -->
                         <td style="padding-left:10px; vertical-align:middle;">
                             <div style="font-size:14px; color:#222; font-weight:bold; margin-bottom:4px;">Phone:</div>
-                            <div
+                            <div 
                                 style="background:#e5e5e5; font-size:12px; color:#222; padding:8px 10px; border-radius:2px; min-width:80px;">
                                 {{ $company_mobile }}
                             </div>
@@ -228,7 +229,7 @@
                         <!-- Address -->
                         <td style="padding-left:10px; padding-right:20px; vertical-align:middle;">
                             <div style="font-size:14px; color:#222; font-weight:bold; margin-bottom:4px;">Address:</div>
-                            <div
+                            <div 
                                 style="background:#e5e5e5; font-size:12px; color:#222; padding:8px 10px; border-radius:2px; min-width:120px;">
                                 {{ $company_address }}
                             </div>
