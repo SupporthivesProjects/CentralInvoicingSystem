@@ -62,7 +62,7 @@
 
                 <tr>
                   <td style="font-size: 10px;font-family: Arial, sans-serif;">
-                    <p style="margin: 0;">Billed to</p>
+                    <p style="margin: 0;">Billed To</p>
                     <p style="margin: 0;">{{ $customer_name }}<br>
                       {{ $customer_email }}<br>
                       {{ $customer_mobile }}<br>
