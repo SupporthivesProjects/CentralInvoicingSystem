@@ -229,10 +229,10 @@
                 <td width=420 valign=top style='width:314.75pt;padding:0in 5.4pt 0in 5.4pt;
                         height:99.95pt'>
                     <h1><span style='color:#D5DCE4'>DATE: </span></h1>
-                    <p class=MsoNormal><span style='color:white'>{{ $invoice_date }} </span></p>
+                    <p class=MsoNormal><span style='color:black'>{{ $invoice_date }} </span></p>
                     <p class=MsoNormal><span style='color:#C4D4EA'>&nbsp;</span></p>
                     <h1><span style='color:#D5DCE4'>INVOICE # </span></h1>
-                    <p class=MsoNormal><span style='color:white'>{{ $invoice_number }} </span><span style='color:#D5DCE4'> </span></p>
+                    <p class=MsoNormal><span style='color:black'>{{ $invoice_number }} </span><span style='color:#D5DCE4'> </span></p>
                     <p class=MsoNormal>&nbsp;</p>
                 </td>
                 <td width=42 valign=top style='width:31.5pt;padding:0in 5.4pt 0in 5.4pt;
