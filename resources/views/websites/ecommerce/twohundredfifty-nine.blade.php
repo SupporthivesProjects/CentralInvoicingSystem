@@ -219,48 +219,77 @@
                     <p class=MsoTitle>Invoice </p>
                 </td>
             </tr> -->
-            <tr style='height:180px'>
-                <td width="672" colspan="3" valign="top"
-                    style="
-                        width:503.75pt;
-                        border:none;
-                        padding:30px;
-                        height:180px;
-                        background-image: url('{{ $invoice_header_image }}');
-                        background-size: cover;
-                        background-position: center;
-                        background-repeat: no-repeat;
-                    ">
+            <tr>
+                <td colspan="3" style="padding:0; border:none;">
 
-                    <table width="100%" cellpadding="0" cellspacing="0">
+                    <div style="position:relative; width:100%; height:180px; overflow:hidden;">
 
-                        <!-- LOGO -->
-                        <tr>
-                            <td align="center">
-                                <img src="{{ $company_logo }}" alt="Logo" style="height:40px;">
-                            </td>
-                        </tr>
+                        <!-- Background Image -->
+                        <img src="{{ $invoice_header_image }}"
+                            style="
+                                position:absolute;
+                                top:0;
+                                left:0;
+                                width:100%;
+                                height:180px;
+                                object-fit:cover;
+                                z-index:1;
+                            ">
 
-                        <!-- SPACE -->
-                        <tr>
-                            <td height="15"></td>
-                        </tr>
+                        <!-- Overlay Content -->
+                        <div style="
+                                position:relative;
+                                z-index:2;
+                                padding:30px;
+                                height:180px;
+                                color:#ffffff;
+                            ">
 
-                        <!-- TITLE -->
-                        <tr>
-                            <td align="center" style="padding-top:10px;">
-                                <p class="MsoTitle">Invoice</p>
-                            </td>
-                        </tr>
+                            <table width="100%" cellpadding="0" cellspacing="0">
 
-                        <!-- LINE -->
-                        <tr>
-                            <td style="padding:15px 0;">
-                                <hr style="border:0; border-top:1px solid rgba(255,255,255,0.6);">
-                            </td>
-                        </tr>
+                                <!-- LOGO -->
+                                <tr>
+                                    <td align="center">
+                                        <img src="{{ $company_logo }}"
+                                            alt="Logo"
+                                            style="height:40px;">
+                                    </td>
+                                </tr>
 
-                    </table>
+                                <!-- SPACE -->
+                                <tr>
+                                    <td height="15"></td>
+                                </tr>
+
+                                <!-- TITLE -->
+                                <tr>
+                                    <td align="center" style="padding-top:10px;">
+                                        <div style="
+                                            font-size:34px;
+                                            font-weight:700;
+                                            letter-spacing:2px;
+                                            color:#ffffff;
+                                        ">
+                                            INVOICE
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <!-- LINE -->
+                                <tr>
+                                    <td style="padding:15px 0;">
+                                        <hr style="
+                                            border:0;
+                                            border-top:1px solid rgba(255,255,255,0.6);
+                                        ">
+                                    </td>
+                                </tr>
+
+                            </table>
+
+                        </div>
+
+                    </div>
 
                 </td>
             </tr>
