@@ -226,7 +226,7 @@
                         border:none;
                         padding:30px;
                         height:180px;
-                        background-image: url('{{ $invoice_image1 }}');
+                        background-image: url('{{ $invoice_header_image }}');
                         background-size: cover;
                         background-position: center;
                         background-repeat: no-repeat;
