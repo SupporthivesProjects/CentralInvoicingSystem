@@ -5,6 +5,10 @@
     <meta http-equiv=Content-Type content="text/html; charset=utf-8">
     <meta name=Generator content="Microsoft Word 15 (filtered)">
     <style>
+         body, table, td {
+            margin: 0;
+            padding: 0;
+        }
         /* Font Definitions */
         @font-face {
             font-family: "Cambria Math";
