@@ -213,10 +213,55 @@
 
         <table class=MsoTableGrid border=0 cellspacing=0 cellpadding=0 width=672
             style='border-collapse:collapse;border:none'>
-            <tr style='height:54.5pt'>
+            <!-- <tr style='height:54.5pt'>
                 <td width=672 colspan=3 valign=top style='width:503.75pt;border:none;
                     border-bottom:solid #C4D4EA 1.0pt;padding:0in 5.4pt 0in 5.4pt;height:54.5pt'>
                     <p class=MsoTitle>Invoice </p>
+                </td>
+            </tr> -->
+            <tr style='height:180px'>
+                <td width="672" colspan="3" valign="top"
+                    style="
+                        width:503.75pt;
+                        border:none;
+                        padding:30px;
+                        height:180px;
+                        background-image: url('{{ $invoice_image1 }}');
+                        background-size: cover;
+                        background-position: center;
+                        background-repeat: no-repeat;
+                    ">
+
+                    <table width="100%" cellpadding="0" cellspacing="0">
+
+                        <!-- LOGO -->
+                        <tr>
+                            <td align="center">
+                                <img src="{{ $company_logo }}" alt="Logo" style="height:40px;">
+                            </td>
+                        </tr>
+
+                        <!-- SPACE -->
+                        <tr>
+                            <td height="15"></td>
+                        </tr>
+
+                        <!-- TITLE -->
+                        <tr>
+                            <td align="center" style="padding-top:10px;">
+                                <p class="MsoTitle">Invoice</p>
+                            </td>
+                        </tr>
+
+                        <!-- LINE -->
+                        <tr>
+                            <td style="padding:15px 0;">
+                                <hr style="border:0; border-top:1px solid rgba(255,255,255,0.6);">
+                            </td>
+                        </tr>
+
+                    </table>
+
                 </td>
             </tr>
             <tr style='height:15.35pt'>
