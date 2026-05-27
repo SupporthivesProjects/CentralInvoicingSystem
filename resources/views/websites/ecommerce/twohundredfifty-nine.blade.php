@@ -203,25 +203,23 @@
 <body lang=EN-US link="#0563C1" vlink="#954F72" style='word-wrap:break-word'>
 
     <div class=WordSection1>
-        <table class=MsoTableGrid border=0 cellspacing=0 cellpadding=0 width=672
-            style='border-collapse:collapse;border:none'>
+    <table class=MsoTableGrid border=0 cellspacing=0 cellpadding=0 width=672
+        style="
+            border-collapse:collapse;
+            border:none;
+            background-image:url('{{ $invoice_header_image }}');
+            background-size:cover;
+            background-position:center;
+            background-repeat:no-repeat;
+            height:180px;
+        ">
             <tr>
                 <td colspan="3" style="padding:0; border:none;">
 
                     <div style="position:relative; width:100%; height:180px; overflow:hidden;">
 
-                        <!-- Background Image -->
-                        <img src="{{ $invoice_header_image }}"
-                            style="
-                                position:absolute;
-                                top:0;
-                                left:0;
-                                width:100%;
-                                height:180px;
-                                object-fit:cover;
-                                z-index:1;
-                            ">
-
+                       
+                       
                         <!-- Overlay Content -->
                         <div style="
                                 position:relative;
