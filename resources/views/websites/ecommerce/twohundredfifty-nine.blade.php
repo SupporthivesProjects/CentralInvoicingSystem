@@ -206,18 +206,26 @@
 <tr>
 <td align="center" style="padding:20px 0;">
 
-<table width="600" cellspacing="0" cellpadding="0" border="0"
-style="background:#ffffff; border-collapse:collapse;">
+<table width="100%" cellspacing="0" cellpadding="0" border="0"
+style="
+    background:#ffffff;
+    border-collapse:collapse;
+    width:100%;
+">
 
 <!-- HEADER -->
 <tr>
 <td style="padding:0;">
 
-    <div style="position:relative; width:600px; height:180px;">
+<div style="position:relative; width:100%; height:220px;">
 
         <!-- HEADER IMAGE -->
         <img src="{{ $invoice_header_image }}"
-             style="width:600px; height:180px; display:block;">
+style="
+    width:100%;
+    height:220px;
+    display:block;
+">
 
         <!-- CONTENT -->
         <div style="
