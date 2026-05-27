@@ -203,14 +203,6 @@
 <body lang=EN-US link="#0563C1" vlink="#954F72" style='word-wrap:break-word'>
 
     <div class=WordSection1>
-
-        <p class=ContactInfo align=left style='text-align:left'><span style='position:
-                        relative;z-index:-1895825408'><span style='position:absolute;left:0px;
-                        top:-26px;width:291px;height:52px'><img width=291 height=52
-                        src="{{ $company_logo }}"></span></span></p>
-
-        <p class=MsoNormal>&nbsp;</p>
-
         <table class=MsoTableGrid border=0 cellspacing=0 cellpadding=0 width=672
             style='border-collapse:collapse;border:none'>
             <tr>
