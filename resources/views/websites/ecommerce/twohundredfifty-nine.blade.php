@@ -5,7 +5,6 @@
     <meta http-equiv=Content-Type content="text/html; charset=utf-8">
     <meta name=Generator content="Microsoft Word 15 (filtered)">
     <style>
-
         /* Font Definitions */
         @font-face {
             font-family: "Cambria Math";
@@ -203,8 +202,7 @@
 <body lang=EN-US link="#0563C1" vlink="#954F72" style='word-wrap:break-word'>
 
     <div class=WordSection1>
-    <table class=MsoTableGrid border=0 cellspacing=0 cellpadding=0 width=672
-        style="
+        <table class=MsoTableGrid border=0 cellspacing=0 cellpadding=0 width=672 style="
             border-collapse:collapse;
             border:none;
             background-image:url('{{ $invoice_header_image }}');
@@ -218,8 +216,8 @@
 
                     <div style="position:relative; width:100%; height:180px; overflow:hidden;">
 
-                       
-                       
+
+
                         <!-- Overlay Content -->
                         <div style="
                                 position:relative;
@@ -234,9 +232,7 @@
                                 <!-- LOGO -->
                                 <tr>
                                     <td align="center">
-                                        <img src="{{ $company_logo }}"
-                                            alt="Logo"
-                                            style="height:40px;">
+                                        <img src="{{ $company_logo }}" alt="Logo" style="height:40px;">
                                     </td>
                                 </tr>
 
@@ -328,28 +324,28 @@
             </tr>
 
             @foreach ($products as $product)
-                <tr style='height:19.85pt'>
-                    <td width=72 style='width:53.75pt;border:solid #4E80BF 1.0pt;border-top:none;
+            <tr style='height:19.85pt'>
+                <td width=72 style='width:53.75pt;border:solid #4E80BF 1.0pt;border-top:none;
                         padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
-                        <p class=MsoNormal>1 </p>
-                    </td>
-                    <td width=408 style='width:4.25in;border-top:none;border-left:none;
+                    <p class=MsoNormal>1 </p>
+                </td>
+                <td width=408 style='width:4.25in;border-top:none;border-left:none;
                         border-bottom:solid #4E80BF 1.0pt;border-right:solid #4E80BF 1.0pt;
                         padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
-                        <p class=MsoNormal>{{ $product->name }}</p>
-                    </td>
-                    <td width=96 style='width:71.85pt;border-top:none;border-left:none;
+                    <p class=MsoNormal>{{ $product->name }}</p>
+                </td>
+                <td width=96 style='width:71.85pt;border-top:none;border-left:none;
                         border-bottom:solid #4E80BF 1.0pt;border-right:solid #4E80BF 1.0pt;
                         padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
-                        <p class=MsoNormal align=right style='text-align:right'>{{ site_currency() . number_format($product->unit_price, 2)}} </p>
-                    </td>
-                    <td width=96 style='width:71.9pt;border-top:none;border-left:none;border-bottom:
+                    <p class=MsoNormal align=right style='text-align:right'>{{ site_currency() . number_format($product->unit_price, 2)}} </p>
+                </td>
+                <td width=96 style='width:71.9pt;border-top:none;border-left:none;border-bottom:
                         solid #4E80BF 1.0pt;border-right:solid #4E80BF 1.0pt;padding:0in 5.4pt 0in 5.4pt;
                         height:19.85pt'>
-                        <p class=MsoNormal align=right style='text-align:right'>{{ site_currency() . number_format($product->unit_price, 2)}}</p>
-                    </td>
-                </tr>
-             @endforeach
+                    <p class=MsoNormal align=right style='text-align:right'>{{ site_currency() . number_format($product->unit_price, 2)}}</p>
+                </td>
+            </tr>
+            @endforeach
             <tr style='height:19.85pt'>
                 <td width=72 style='width:53.75pt;border:none;padding:0in 5.4pt 0in 5.4pt; height:19.85pt'>
                     <p class=MsoNormal>&nbsp;</p>
@@ -407,9 +403,9 @@
         <p class=Thankyou><span style='color:#4E80BF'>Thank you for your business!</span>
         </p>
 
-        <p class=ContactInfo>{{ $company_name }} {!! $company_address !!} | {{ $company_mobile }}</p>
+        <p class=ContactInfo>{{ $company_name }} {!! $company_address !!}  {{ $company_mobile }}</p>
 
-        <p class=ContactInfo style='margin-top:0in'>| Email:  {{ $company_email }}</p>
+        <p class=ContactInfo style='margin-top:0in'>| Email: {{ $company_email }} |</p>
 
     </div>
 
