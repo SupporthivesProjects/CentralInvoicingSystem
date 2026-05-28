@@ -122,7 +122,7 @@ class ReportController extends Controller
 
     public function testblade(Request $request)
     {
-        return view ('websites/ecommerce/twohundredfifty-nine');
+        return view('websites.ecommerce.twohundredfifty-nine');
     }
 
 }
