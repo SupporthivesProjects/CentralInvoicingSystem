@@ -6,8 +6,8 @@
     <meta name=Generator content="Microsoft Word 15 (filtered)">
     <style>
          body, table, td {
-            margin: 0;
-            padding: 0;
+            margin: 0 !important;
+            padding: 0 !important;
         }
         /* Font Definitions */
         @font-face {
