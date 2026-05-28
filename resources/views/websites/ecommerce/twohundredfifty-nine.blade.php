@@ -206,6 +206,10 @@
             padding: 0 !important;
             width: 100%;
         }
+
+        .content-wrap {
+            padding: 0 40px;
+        }
     </style>
 
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
@@ -313,111 +317,115 @@
             </tr>
         </table>
 
-        <p class=MsoNormal>&nbsp;</p>
+        <div class="content-wrap">
 
-        <table class=MsoTableGrid border=0 cellspacing=0 cellpadding=0 width=100% style='border-collapse:collapse;border:none'>
-            <tr style='height:19.85pt'>
-                <td width=72 style='width:53.75pt;border:none;border-bottom:solid #4E80BF 1.0pt;
-                    padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
-                    <h1>QTY</h1>
-                </td>
-                <td style='border:none;border-bottom:solid #4E80BF 1.0pt;
-                    padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
-                    <h1>ITem description </h1>
-                </td>
-                <td width=96 style='width:71.85pt;border:none;border-bottom:solid #4E80BF 1.0pt;
-                    padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
-                    <h1 align=right style='text-align:right'>Unit Price </h1>
-                </td>
-                <td width=96 style='width:71.9pt;border:none;border-bottom:solid #4E80BF 1.0pt;
-                        padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
-                    <h1 align=right style='text-align:right'>Line Total </h1>
-                </td>
-            </tr>
+            <p class=MsoNormal>&nbsp;</p>
 
-            @foreach ($products as $product)
-            <tr style='height:19.85pt'>
-                <td width=72 style='width:53.75pt;border:solid #4E80BF 1.0pt;border-top:none;
+            <table class=MsoTableGrid border=0 cellspacing=0 cellpadding=0 width=100% style='border-collapse:collapse;border:none;margin:0 auto!important;'>
+                <tr style='height:19.85pt'>
+                    <td width=72 style='width:53.75pt;border:none;border-bottom:solid #4E80BF 1.0pt;
                         padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
-                    <p class=MsoNormal>1 </p>
-                </td>
-                <td style='border-top:none;border-left:none;
-                        border-bottom:solid #4E80BF 1.0pt;border-right:solid #4E80BF 1.0pt;
+                        <h1>QTY</h1>
+                    </td>
+                    <td style='border:none;border-bottom:solid #4E80BF 1.0pt;
                         padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
-                    <p class=MsoNormal>{{ $product->name }}</p>
-                </td>
-                <td width=96 style='width:71.85pt;border-top:none;border-left:none;
-                        border-bottom:solid #4E80BF 1.0pt;border-right:solid #4E80BF 1.0pt;
+                        <h1>ITem description </h1>
+                    </td>
+                    <td width=96 style='width:71.85pt;border:none;border-bottom:solid #4E80BF 1.0pt;
                         padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
-                    <p class=MsoNormal align=right style='text-align:right'>{{ site_currency() . number_format($product->unit_price, 2)}} </p>
-                </td>
-                <td width=96 style='width:71.9pt;border-top:none;border-left:none;border-bottom:
-                        solid #4E80BF 1.0pt;border-right:solid #4E80BF 1.0pt;padding:0in 5.4pt 0in 5.4pt;
-                        height:19.85pt'>
-                    <p class=MsoNormal align=right style='text-align:right'>{{ site_currency() . number_format($product->unit_price, 2)}}</p>
-                </td>
-            </tr>
-            @endforeach
-            <tr style='height:19.85pt'>
-                <td width=72 style='width:53.75pt;border:none;padding:0in 5.4pt 0in 5.4pt; height:19.85pt'>
-                    <p class=MsoNormal>&nbsp;</p>
-                </td>
-                <td style='border:none;padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
-                    <p class=MsoNormal>&nbsp;</p>
-                </td>
-                <td width=96 style='width:71.85pt;border:none;border-right:solid #4E80BF 1.0pt;padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
-                    <h1>Subtotal </h1>
-                </td>
-                <td width=96 style='width:71.9pt;border-top:none;border-left:none;border-bottom:
-                    solid #4E80BF 1.0pt;border-right:solid #4E80BF 1.0pt;background:#C4D4EA;
-                    padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
-                    <p class=Totals>{{ site_currency() .number_format(($invoice_amount + $discount_amount), 2) }} </p>
-                </td>
-            </tr>
-            <tr style='height:19.85pt'>
-                <td width=72 style='width:53.75pt;padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
-                    <p class=MsoNormal>&nbsp;</p>
-                </td>
-                <td style='padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
-                    <p class=MsoNormal>&nbsp;</p>
-                </td>
-                <td width=96 style='width:71.85pt;border:none;border-right:solid #4E80BF 1.0pt;
-                    padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
-                    <h1>Discount </h1>
-                </td>
-                <td width=96 style='width:71.9pt;border-top:none;border-left:none;border-bottom:
+                        <h1 align=right style='text-align:right'>Unit Price </h1>
+                    </td>
+                    <td width=96 style='width:71.9pt;border:none;border-bottom:solid #4E80BF 1.0pt;
+                            padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
+                        <h1 align=right style='text-align:right'>Line Total </h1>
+                    </td>
+                </tr>
+
+                @foreach ($products as $product)
+                <tr style='height:19.85pt'>
+                    <td width=72 style='width:53.75pt;border:solid #4E80BF 1.0pt;border-top:none;
+                            padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
+                        <p class=MsoNormal>1 </p>
+                    </td>
+                    <td style='border-top:none;border-left:none;
+                            border-bottom:solid #4E80BF 1.0pt;border-right:solid #4E80BF 1.0pt;
+                            padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
+                        <p class=MsoNormal>{{ $product->name }}</p>
+                    </td>
+                    <td width=96 style='width:71.85pt;border-top:none;border-left:none;
+                            border-bottom:solid #4E80BF 1.0pt;border-right:solid #4E80BF 1.0pt;
+                            padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
+                        <p class=MsoNormal align=right style='text-align:right'>{{ site_currency() . number_format($product->unit_price, 2)}} </p>
+                    </td>
+                    <td width=96 style='width:71.9pt;border-top:none;border-left:none;border-bottom:
+                            solid #4E80BF 1.0pt;border-right:solid #4E80BF 1.0pt;padding:0in 5.4pt 0in 5.4pt;
+                            height:19.85pt'>
+                        <p class=MsoNormal align=right style='text-align:right'>{{ site_currency() . number_format($product->unit_price, 2)}}</p>
+                    </td>
+                </tr>
+                @endforeach
+                <tr style='height:19.85pt'>
+                    <td width=72 style='width:53.75pt;border:none;padding:0in 5.4pt 0in 5.4pt; height:19.85pt'>
+                        <p class=MsoNormal>&nbsp;</p>
+                    </td>
+                    <td style='border:none;padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
+                        <p class=MsoNormal>&nbsp;</p>
+                    </td>
+                    <td width=96 style='width:71.85pt;border:none;border-right:solid #4E80BF 1.0pt;padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
+                        <h1>Subtotal </h1>
+                    </td>
+                    <td width=96 style='width:71.9pt;border-top:none;border-left:none;border-bottom:
                         solid #4E80BF 1.0pt;border-right:solid #4E80BF 1.0pt;background:#C4D4EA;
                         padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
-                    <p class=Totals>{{ site_currency() .number_format(($discount_amount), 2) }} </p>
-                </td>
-            </tr>
-            <tr style='height:19.85pt'>
-                <td width=72 style='width:53.75pt;padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
-                    <p class=MsoNormal>&nbsp;</p>
-                </td>
-                <td style='padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
-                    <p class=MsoNormal>&nbsp;</p>
-                </td>
-                <td width=96 style='width:71.85pt;border:none;border-right:solid #4E80BF 1.0pt;
-                    padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
-                    <h1>Total</h1>
-                </td>
-                <td width=96 style='width:71.9pt;border-top:none;border-left:none;border-bottom:
-                        solid #4E80BF 1.0pt;border-right:solid #4E80BF 1.0pt;background:#C4D4EA;
+                        <p class=Totals>{{ site_currency() .number_format(($invoice_amount + $discount_amount), 2) }} </p>
+                    </td>
+                </tr>
+                <tr style='height:19.85pt'>
+                    <td width=72 style='width:53.75pt;padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
+                        <p class=MsoNormal>&nbsp;</p>
+                    </td>
+                    <td style='padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
+                        <p class=MsoNormal>&nbsp;</p>
+                    </td>
+                    <td width=96 style='width:71.85pt;border:none;border-right:solid #4E80BF 1.0pt;
                         padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
-                    <p class=Totals>{{ site_currency() .number_format(($invoice_amount), 2) }}</p>
-                </td>
-            </tr>
-        </table>
+                        <h1>Discount </h1>
+                    </td>
+                    <td width=96 style='width:71.9pt;border-top:none;border-left:none;border-bottom:
+                            solid #4E80BF 1.0pt;border-right:solid #4E80BF 1.0pt;background:#C4D4EA;
+                            padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
+                        <p class=Totals>{{ site_currency() .number_format(($discount_amount), 2) }} </p>
+                    </td>
+                </tr>
+                <tr style='height:19.85pt'>
+                    <td width=72 style='width:53.75pt;padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
+                        <p class=MsoNormal>&nbsp;</p>
+                    </td>
+                    <td style='padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
+                        <p class=MsoNormal>&nbsp;</p>
+                    </td>
+                    <td width=96 style='width:71.85pt;border:none;border-right:solid #4E80BF 1.0pt;
+                        padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
+                        <h1>Total</h1>
+                    </td>
+                    <td width=96 style='width:71.9pt;border-top:none;border-left:none;border-bottom:
+                            solid #4E80BF 1.0pt;border-right:solid #4E80BF 1.0pt;background:#C4D4EA;
+                            padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
+                        <p class=Totals>{{ site_currency() .number_format(($invoice_amount), 2) }}</p>
+                    </td>
+                </tr>
+            </table>
 
-        <p class=ContactInfo align=left style='text-align:left'>&nbsp;</p>
+            <p class=ContactInfo align=left style='text-align:left'>&nbsp;</p>
 
-        <p class=Thankyou><span style='color:#4E80BF'>Thank you for your business!</span>
-        </p>
+            <p class=Thankyou><span style='color:#4E80BF'>Thank you for your business!</span>
+            </p>
 
-        <p class=ContactInfo>{{ $company_name }} {!! $company_address !!}  {{ $company_mobile }}</p>
+            <p class=ContactInfo>{{ $company_name }} {!! $company_address !!}  {{ $company_mobile }}</p>
 
-        <p class=ContactInfo style='margin-top:0in'>| Email: {{ $company_email }} |</p>
+            <p class=ContactInfo style='margin-top:0in'>| Email: {{ $company_email }} |</p>
+
+        </div>
 
     </div>
 
