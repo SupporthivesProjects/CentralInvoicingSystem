@@ -210,6 +210,10 @@
         .content-wrap {
             padding: 0 40px;
         }
+
+        .content-wrap p.MsoNormal:first-child {
+            display: none;
+        }
     </style>
 
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
@@ -318,8 +322,6 @@
         </table>
 
         <div class="content-wrap">
-
-            <p class=MsoNormal>&nbsp;</p>
 
             <table class=MsoTableGrid border=0 cellspacing=0 cellpadding=0 width=100% style='border-collapse:collapse;border:none;margin:0 auto!important;'>
                 <tr style='height:19.85pt'>
