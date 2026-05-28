@@ -192,18 +192,26 @@
         /* Page Definitions */
         @page WordSection1 {
             size: 8.5in 11.0in;
-            margin: 10.75pt .75in 24.4pt .75in;
+            margin: 0 !important;
         }
 
         div.WordSection1 {
             page: WordSection1;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        html, body {
+            margin: 0 !important;
+            padding: 0 !important;
+            width: 100%;
         }
     </style>
 
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
 </head>
 
-<body lang=EN-US link="#0563C1" vlink="#954F72" style='word-wrap:break-word'>
+<body lang=EN-US link="#0563C1" vlink="#954F72" style='word-wrap:break-word;margin:0!important;padding:0!important;'>
 
     <div class=WordSection1>
         <table class=MsoTableGrid border=0 cellspacing=0 cellpadding=0 width=100% style="
@@ -290,7 +298,7 @@
                     <p class=MsoNormal><span style='color:white'>{{ $invoice_date }} </span></p>
                     <p class=MsoNormal><span style='color:white'>&nbsp;</span></p>
                     <h1><span style='color:#D5DCE4'>INVOICE # </span></h1>
-                    <p class=MsoNormal><span style='color:white'>{{ $invoice_number }} </span><span style='color:#D5DCE4'> </span></p>
+                    <p class=MsoNormal><span style='color:white'>{{ $invoice_number }} </span><span style='color:#D5DCE4'> </span></p>
                     <p class=MsoNormal>&nbsp;</p>
                 </td>
                 <td width=42 valign=top style='width:31.5pt;padding:0in 5.4pt 0in 5.4pt;
