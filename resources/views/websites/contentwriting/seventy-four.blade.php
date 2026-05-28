@@ -67,7 +67,7 @@
                                         <br><br><br>
 
                                         <p style="margin: 0; font-weight: bold; text-align: start; font-size: 10px;">DATE</p>
-                                        <p style="margin: 0 0 20px 0; font-size: 8px;">{{ $invoice_date }}</p>
+                                        <p style="margin: 0 0 5px 0; font-size: 8px;">{{ $invoice_date }}</p>
 
                                         <p style="margin: 0; font-weight: bold; border-bottom: 1px solid #ccc; font-size: 10px;">BILLED TO</p>
                                         <p style="margin: 5px 0; font-size: 8px;">
