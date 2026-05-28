@@ -57,7 +57,7 @@
 
             <!-- SPACER ROW -->
             <tr style="height:15.35pt;">
-                <td colspan="3" valign="top" style="border:none; padding:0in 5.4pt 0in 5.4pt; height:15.35pt;">
+                <td colspan="3" valign="top" style="border:none; padding:0in 5.4pt 0in 0; height:15.35pt;">
                     <p style="margin:0; font-size:9pt; font-family:'Helvetica Neue', Helvetica, Arial, sans-serif; color:#1D3451; letter-spacing:.5pt;">&nbsp;</p>
                 </td>
             </tr>
@@ -66,7 +66,7 @@
             <tr style="height:99.95pt;">
 
                 <!-- LEFT: DATE & INVOICE# -->
-                <td width="420" valign="top" style="width:314.75pt; padding:0in 40px 0in 40px; height:99.95pt; vertical-align:top;">
+                <td width="420" valign="top" style="width:314.75pt; padding:0in 40px 0in 0; height:99.95pt; vertical-align:top;">
                     <h1 style="margin:0; font-size:9pt; font-family:'Helvetica Neue', Helvetica, Arial, sans-serif; color:white; text-transform:uppercase; letter-spacing:.5pt; font-weight:bold;">DATE:</h1>
                     <p style="margin:0; font-size:9pt; font-family:'Helvetica Neue', Helvetica, Arial, sans-serif; color:white; letter-spacing:.5pt;">{{ $invoice_date }}</p>
                     <p style="margin:0; font-size:9pt; font-family:'Helvetica Neue', Helvetica, Arial, sans-serif; color:white; letter-spacing:.5pt;">&nbsp;</p>
@@ -90,7 +90,7 @@
         </table>
 
         <!-- CONTENT WRAP -->
-        <div style="padding:0 40px;">
+        <div style="padding:0 40px 0 0;">
 
             <!-- ITEMS TABLE -->
             <table border="0" cellspacing="0" cellpadding="0" width="100%" style="border-collapse:collapse; border:none; margin:0 auto;">
