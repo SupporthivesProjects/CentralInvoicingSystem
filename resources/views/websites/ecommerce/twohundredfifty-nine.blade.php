@@ -315,13 +315,13 @@
 
         <p class=MsoNormal>&nbsp;</p>
 
-        <table class=MsoTableGrid border=0 cellspacing=0 cellpadding=0 style='border-collapse:collapse;border:none'>
+        <table class=MsoTableGrid border=0 cellspacing=0 cellpadding=0 width=100% style='border-collapse:collapse;border:none'>
             <tr style='height:19.85pt'>
                 <td width=72 style='width:53.75pt;border:none;border-bottom:solid #4E80BF 1.0pt;
                     padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
                     <h1>QTY</h1>
                 </td>
-                <td width=408 style='width:4.25in;border:none;border-bottom:solid #4E80BF 1.0pt;
+                <td style='border:none;border-bottom:solid #4E80BF 1.0pt;
                     padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
                     <h1>ITem description </h1>
                 </td>
@@ -341,7 +341,7 @@
                         padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
                     <p class=MsoNormal>1 </p>
                 </td>
-                <td width=408 style='width:4.25in;border-top:none;border-left:none;
+                <td style='border-top:none;border-left:none;
                         border-bottom:solid #4E80BF 1.0pt;border-right:solid #4E80BF 1.0pt;
                         padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
                     <p class=MsoNormal>{{ $product->name }}</p>
@@ -362,7 +362,7 @@
                 <td width=72 style='width:53.75pt;border:none;padding:0in 5.4pt 0in 5.4pt; height:19.85pt'>
                     <p class=MsoNormal>&nbsp;</p>
                 </td>
-                <td width=408 style='width:4.25in;border:none;padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
+                <td style='border:none;padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
                     <p class=MsoNormal>&nbsp;</p>
                 </td>
                 <td width=96 style='width:71.85pt;border:none;border-right:solid #4E80BF 1.0pt;padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
@@ -378,7 +378,7 @@
                 <td width=72 style='width:53.75pt;padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
                     <p class=MsoNormal>&nbsp;</p>
                 </td>
-                <td width=408 style='width:4.25in;padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
+                <td style='padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
                     <p class=MsoNormal>&nbsp;</p>
                 </td>
                 <td width=96 style='width:71.85pt;border:none;border-right:solid #4E80BF 1.0pt;
@@ -395,7 +395,7 @@
                 <td width=72 style='width:53.75pt;padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
                     <p class=MsoNormal>&nbsp;</p>
                 </td>
-                <td width=408 style='width:4.25in;padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
+                <td style='padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
                     <p class=MsoNormal>&nbsp;</p>
                 </td>
                 <td width=96 style='width:71.85pt;border:none;border-right:solid #4E80BF 1.0pt;
