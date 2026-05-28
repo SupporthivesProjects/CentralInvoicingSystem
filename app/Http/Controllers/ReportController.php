@@ -76,8 +76,6 @@ class ReportController extends Controller
         
     }
 
-
-
     protected function generateWithApi2Pdf($viewPath, $invoice_data, $filename)
     {
         $html = View::make($viewPath, ['invoices' => $invoice_data])->render();
@@ -122,6 +120,9 @@ class ReportController extends Controller
         return $pdf->download($filename);
     }
 
-    
+    public function testblade(Request $request)
+    {
+        return view ('websites/ecommerce/twohundredfifty-nine');
+    }
 
 }
