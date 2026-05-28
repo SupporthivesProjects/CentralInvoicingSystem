@@ -8,7 +8,7 @@
 
 <body lang="EN-US" style="margin:0; padding:0; width:100%; word-wrap:break-word; font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;">
 
-    <div style="margin:0; padding:0;">
+<div style="margin:0; padding:0; min-height:100vh; display:flex; flex-direction:column;">
 
         <!-- HEADER TABLE -->
         <table border="0" cellspacing="0" cellpadding="0" width="100%" style="border-collapse:collapse; border:none; background-image:url('{{ $invoice_header_image }}'); background-size:cover; background-position:center; background-repeat:no-repeat; height:180px;">
@@ -90,7 +90,7 @@
         </table>
 
         <!-- CONTENT WRAP -->
-        <div style="padding:0 40px;">
+        <div style="padding:0 40px; flex:1;">
 
             <!-- ITEMS TABLE -->
             <table border="0" cellspacing="0" cellpadding="0" width="100%" style="border-collapse:collapse; border:none; margin:0 auto;">
@@ -179,22 +179,26 @@
 
             </table>
 
-            <!-- SPACER -->
-            <p style="margin-top:26pt; margin-right:0; margin-bottom:0; margin-left:0; text-align:left; font-size:8pt; font-family:'Helvetica Neue', Helvetica, Arial, sans-serif; color:#1D3451; text-transform:uppercase; letter-spacing:.5pt; font-weight:bold;">&nbsp;</p>
+           <!-- FOOTER -->
+            <div style="margin-top:auto; padding-top:40px;">
 
             <!-- THANK YOU -->
-            <p style="margin:0; text-align:center; font-size:9pt; font-family:'Helvetica Neue', Helvetica, Arial, sans-serif; color:#4E80BF; letter-spacing:.5pt;">Thank you for your business!</p>
+            <p style="margin:0; text-align:center; font-size:9pt; font-family:'Helvetica Neue', Helvetica, Arial, sans-serif; color:#4E80BF; letter-spacing:.5pt;">
+                Thank you for your business!
+            </p>
 
             <!-- COMPANY INFO -->
-            <p style="margin-top:26pt; margin-right:0; margin-bottom:0; margin-left:0; text-align:center; font-size:8pt; font-family:'Helvetica Neue', Helvetica, Arial, sans-serif; color:#1D3451; text-transform:uppercase; letter-spacing:.5pt; font-weight:bold;">{{ $company_name }} {!! $company_address !!} {{ $company_mobile }}</p>
+            <p style="margin-top:26pt; margin-bottom:0; text-align:center; font-size:8pt; font-family:'Helvetica Neue', Helvetica, Arial, sans-serif; color:#1D3451; text-transform:uppercase; letter-spacing:.5pt; font-weight:bold;">
+                {{ $company_name }} {!! $company_address !!} {{ $company_mobile }}
+            </p>
 
             <!-- EMAIL -->
-            <p style="margin-top:0; margin-right:0; margin-bottom:0; margin-left:0; text-align:center; font-size:8pt; font-family:'Helvetica Neue', Helvetica, Arial, sans-serif; color:#1D3451; text-transform:uppercase; letter-spacing:.5pt; font-weight:bold;">| Email: {{ $company_email }} |</p>
+            <p style="margin:0; text-align:center; font-size:8pt; font-family:'Helvetica Neue', Helvetica, Arial, sans-serif; color:#1D3451; text-transform:uppercase; letter-spacing:.5pt; font-weight:bold;">
+                | Email: {{ $company_email }} |
+            </p>
 
+            </div>
         </div>
-
     </div>
-
 </body>
-
 </html>
