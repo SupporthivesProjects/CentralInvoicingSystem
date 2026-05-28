@@ -207,65 +207,263 @@
             width: 100%;
         }
 
+        /* Header banner table */
+        .header-table {
+            border-collapse: collapse;
+            border: none;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 180px;
+            width: 100%;
+        }
+
+        /* Overlay content wrapper inside header */
+        .header-overlay-outer {
+            position: relative;
+            width: 100%;
+            height: 180px;
+            overflow: hidden;
+        }
+
+        .header-overlay-inner {
+            position: relative;
+            z-index: 2;
+            padding: 30px;
+            height: 180px;
+            color: #ffffff;
+        }
+
+        /* Logo cell */
+        .header-logo-cell {
+            text-align: center;
+        }
+
+        .header-logo-cell img {
+            height: 40px;
+        }
+
+        /* Space row */
+        .header-space-cell {
+            height: 15px;
+        }
+
+        /* Title cell */
+        .header-title-cell {
+            text-align: center;
+            padding-top: 10px;
+        }
+
+        .header-title-div {
+            font-size: 34px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: #ffffff;
+        }
+
+        /* HR line cell */
+        .header-line-cell {
+            padding: 15px 0;
+        }
+
+        .header-line-cell hr {
+            border: 0;
+            border-top: 1px solid rgba(255,255,255,0.6);
+        }
+
+        /* Spacer row in header */
+        .header-spacer-td {
+            width: 503.75pt;
+            border: none;
+            padding: 0in 5.4pt 0in 5.4pt;
+            height: 15.35pt;
+        }
+
+        /* Date/Invoice/To row */
+        .header-info-row-date {
+            width: 314.75pt;
+            padding: 0in 40px 0in 40px;
+            height: 99.95pt;
+            vertical-align: top;
+        }
+
+        .header-info-row-to-label {
+            width: 31.5pt;
+            padding: 0in 5.4pt 0in 5.4pt;
+            height: 99.95pt;
+            vertical-align: top;
+        }
+
+        .header-info-row-to-value {
+            width: 157.5pt;
+            padding: 0in 40px 0in 5.4pt;
+            height: 99.95pt;
+            vertical-align: top;
+        }
+
+        /* Content wrap with matching side padding */
         .content-wrap {
             padding: 0 40px;
+        }
+
+        /* Items table */
+        .items-table {
+            border-collapse: collapse;
+            border: none;
+            margin: 0 auto !important;
+            width: 100%;
+        }
+
+        /* Header row cells */
+        .th-qty {
+            width: 53.75pt;
+            border: none;
+            border-bottom: solid #4E80BF 1.0pt;
+            padding: 0in 5.4pt 0in 5.4pt;
+            height: 19.85pt;
+        }
+
+        .th-desc {
+            border: none;
+            border-bottom: solid #4E80BF 1.0pt;
+            padding: 0in 5.4pt 0in 5.4pt;
+            height: 19.85pt;
+        }
+
+        .th-price {
+            width: 71.85pt;
+            border: none;
+            border-bottom: solid #4E80BF 1.0pt;
+            padding: 0in 5.4pt 0in 5.4pt;
+            height: 19.85pt;
+        }
+
+        .th-total {
+            width: 71.9pt;
+            border: none;
+            border-bottom: solid #4E80BF 1.0pt;
+            padding: 0in 5.4pt 0in 5.4pt;
+            height: 19.85pt;
+        }
+
+        /* Product row cells */
+        .td-qty {
+            width: 53.75pt;
+            border: solid #4E80BF 1.0pt;
+            border-top: none;
+            padding: 0in 5.4pt 0in 5.4pt;
+            height: 19.85pt;
+        }
+
+        .td-desc {
+            border-top: none;
+            border-left: none;
+            border-bottom: solid #4E80BF 1.0pt;
+            border-right: solid #4E80BF 1.0pt;
+            padding: 0in 5.4pt 0in 5.4pt;
+            height: 19.85pt;
+        }
+
+        .td-price {
+            width: 71.85pt;
+            border-top: none;
+            border-left: none;
+            border-bottom: solid #4E80BF 1.0pt;
+            border-right: solid #4E80BF 1.0pt;
+            padding: 0in 5.4pt 0in 5.4pt;
+            height: 19.85pt;
+        }
+
+        .td-linetotal {
+            width: 71.9pt;
+            border-top: none;
+            border-left: none;
+            border-bottom: solid #4E80BF 1.0pt;
+            border-right: solid #4E80BF 1.0pt;
+            padding: 0in 5.4pt 0in 5.4pt;
+            height: 19.85pt;
+        }
+
+        /* Subtotal/Discount/Total rows */
+        .td-empty-qty {
+            width: 53.75pt;
+            border: none;
+            padding: 0in 5.4pt 0in 5.4pt;
+            height: 19.85pt;
+        }
+
+        .td-empty-desc {
+            border: none;
+            padding: 0in 5.4pt 0in 5.4pt;
+            height: 19.85pt;
+        }
+
+        .td-label {
+            width: 71.85pt;
+            border: none;
+            border-right: solid #4E80BF 1.0pt;
+            padding: 0in 5.4pt 0in 5.4pt;
+            height: 19.85pt;
+        }
+
+        .td-value {
+            width: 71.9pt;
+            border-top: none;
+            border-left: none;
+            border-bottom: solid #4E80BF 1.0pt;
+            border-right: solid #4E80BF 1.0pt;
+            background: #C4D4EA;
+            padding: 0in 5.4pt 0in 5.4pt;
+            height: 19.85pt;
+        }
+
+        .td-empty-qty-plain {
+            width: 53.75pt;
+            padding: 0in 5.4pt 0in 5.4pt;
+            height: 19.85pt;
+        }
+
+        .td-empty-desc-plain {
+            padding: 0in 5.4pt 0in 5.4pt;
+            height: 19.85pt;
         }
     </style>
 
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
 </head>
 
-<body lang=EN-US link="#0563C1" vlink="#954F72" style='word-wrap:break-word;margin:0!important;padding:0!important;'>
+<body lang=EN-US link="#0563C1" vlink="#954F72" style='word-wrap:break-word;'>
 
     <div class=WordSection1>
-        <table class=MsoTableGrid border=0 cellspacing=0 cellpadding=0 width=100% style="
-            border-collapse:collapse;
-            border:none;
-            background-image:url('{{ $invoice_header_image }}');
-            background-size:cover;
-            background-position:center;
-            background-repeat:no-repeat;
-            height:180px;
-        ">
+        <table class="MsoTableGrid header-table" border=0 cellspacing=0 cellpadding=0 style="background-image:url('{{ $invoice_header_image }}');">
             <tr>
                 <td colspan="3" style="padding:0; border:none;">
 
-                    <div style="position:relative; width:100%; height:180px; overflow:hidden;">
+                    <div class="header-overlay-outer">
 
 
 
                         <!-- Overlay Content -->
-                        <div style="
-                                position:relative;
-                                z-index:2;
-                                padding:30px;
-                                height:180px;
-                                color:#ffffff;
-                            ">
+                        <div class="header-overlay-inner">
 
                             <table width="100%" cellpadding="0" cellspacing="0">
 
                                 <!-- LOGO -->
                                 <tr>
-                                    <td align="center">
-                                        <img src="{{ $company_logo }}" alt="Logo" style="height:40px;">
+                                    <td class="header-logo-cell">
+                                        <img src="{{ $company_logo }}" alt="Logo">
                                     </td>
                                 </tr>
 
                                 <!-- SPACE -->
                                 <tr>
-                                    <td height="15"></td>
+                                    <td class="header-space-cell"></td>
                                 </tr>
 
                                 <!-- TITLE -->
                                 <tr>
-                                    <td align="center" style="padding-top:10px;">
-                                        <div style="
-                                            font-size:34px;
-                                            font-weight:700;
-                                            letter-spacing:2px;
-                                            color:#ffffff;
-                                        ">
+                                    <td class="header-title-cell">
+                                        <div class="header-title-div">
                                             INVOICE
                                         </div>
                                     </td>
@@ -273,11 +471,8 @@
 
                                 <!-- LINE -->
                                 <tr>
-                                    <td style="padding:15px 0;">
-                                        <hr style="
-                                            border:0;
-                                            border-top:1px solid rgba(255,255,255,0.6);
-                                        ">
+                                    <td class="header-line-cell">
+                                        <hr>
                                     </td>
                                 </tr>
 
@@ -290,14 +485,12 @@
                 </td>
             </tr>
             <tr style='height:15.35pt'>
-                <td width=672 colspan=3 valign=top style='width:503.75pt;border:none;
-                    padding:0in 5.4pt 0in 5.4pt;height:15.35pt'>
+                <td colspan=3 valign=top class="header-spacer-td">
                     <p class=MsoNormal>&nbsp;</p>
                 </td>
             </tr>
             <tr style='height:99.95pt'>
-                <td width=420 valign=top style='width:314.75pt;padding:0in 5.4pt 0in 5.4pt;
-                        height:99.95pt'>
+                <td width=420 valign=top class="header-info-row-date">
                     <h1><span style='color:white'>DATE: </span></h1>
                     <p class=MsoNormal><span style='color:white'>{{ $invoice_date }} </span></p>
                     <p class=MsoNormal><span style='color:white'>&nbsp;</span></p>
@@ -305,116 +498,95 @@
                     <p class=MsoNormal><span style='color:white'>{{ $invoice_number }} </span><span style='color:#D5DCE4'> </span></p>
                     <p class=MsoNormal>&nbsp;</p>
                 </td>
-                <td width=42 valign=top style='width:31.5pt;padding:0in 5.4pt 0in 5.4pt;
-                    height:99.95pt'>
+                <td width=42 valign=top class="header-info-row-to-label">
                     <h1><span style='color:#D5DCE4'>To:</span> </h1>
                 </td>
-                <td width=210 valign=top style='width:157.5pt;padding:0in 5.4pt 0in 5.4pt;
-                        height:99.95pt'>
+                <td width=210 valign=top class="header-info-row-to-value">
                     <p class=Right-alignedtext><span style='color:white'>{{ $customer_name }} </span></p>
-                    <p class=MsoNormal align=right style='text-align:right'><span style='color:white'>&nbsp;</span></p>
+                    <p class=MsoNormal style='text-align:right'><span style='color:white'>&nbsp;</span></p>
                 </td>
             </tr>
         </table>
 
         <div class="content-wrap">
 
-            <table class=MsoTableGrid border=0 cellspacing=0 cellpadding=0 width=100% style='border-collapse:collapse;border:none;margin:0 auto!important;'>
+            <table class="MsoTableGrid items-table" border=0 cellspacing=0 cellpadding=0>
                 <tr style='height:19.85pt'>
-                    <td width=72 style='width:53.75pt;border:none;border-bottom:solid #4E80BF 1.0pt;
-                        padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
+                    <td class="th-qty">
                         <h1>QTY</h1>
                     </td>
-                    <td style='border:none;border-bottom:solid #4E80BF 1.0pt;
-                        padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
+                    <td class="th-desc">
                         <h1>ITem description </h1>
                     </td>
-                    <td width=96 style='width:71.85pt;border:none;border-bottom:solid #4E80BF 1.0pt;
-                        padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
-                        <h1 align=right style='text-align:right'>Unit Price </h1>
+                    <td class="th-price">
+                        <h1 style='text-align:right'>Unit Price </h1>
                     </td>
-                    <td width=96 style='width:71.9pt;border:none;border-bottom:solid #4E80BF 1.0pt;
-                            padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
-                        <h1 align=right style='text-align:right'>Line Total </h1>
+                    <td class="th-total">
+                        <h1 style='text-align:right'>Line Total </h1>
                     </td>
                 </tr>
 
                 @foreach ($products as $product)
                 <tr style='height:19.85pt'>
-                    <td width=72 style='width:53.75pt;border:solid #4E80BF 1.0pt;border-top:none;
-                            padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
+                    <td class="td-qty">
                         <p class=MsoNormal>1 </p>
                     </td>
-                    <td style='border-top:none;border-left:none;
-                            border-bottom:solid #4E80BF 1.0pt;border-right:solid #4E80BF 1.0pt;
-                            padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
+                    <td class="td-desc">
                         <p class=MsoNormal>{{ $product->name }}</p>
                     </td>
-                    <td width=96 style='width:71.85pt;border-top:none;border-left:none;
-                            border-bottom:solid #4E80BF 1.0pt;border-right:solid #4E80BF 1.0pt;
-                            padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
-                        <p class=MsoNormal align=right style='text-align:right'>{{ site_currency() . number_format($product->unit_price, 2)}} </p>
+                    <td class="td-price">
+                        <p class=MsoNormal style='text-align:right'>{{ site_currency() . number_format($product->unit_price, 2)}} </p>
                     </td>
-                    <td width=96 style='width:71.9pt;border-top:none;border-left:none;border-bottom:
-                            solid #4E80BF 1.0pt;border-right:solid #4E80BF 1.0pt;padding:0in 5.4pt 0in 5.4pt;
-                            height:19.85pt'>
-                        <p class=MsoNormal align=right style='text-align:right'>{{ site_currency() . number_format($product->unit_price, 2)}}</p>
+                    <td class="td-linetotal">
+                        <p class=MsoNormal style='text-align:right'>{{ site_currency() . number_format($product->unit_price, 2)}}</p>
                     </td>
                 </tr>
                 @endforeach
                 <tr style='height:19.85pt'>
-                    <td width=72 style='width:53.75pt;border:none;padding:0in 5.4pt 0in 5.4pt; height:19.85pt'>
+                    <td class="td-empty-qty">
                         <p class=MsoNormal>&nbsp;</p>
                     </td>
-                    <td style='border:none;padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
+                    <td class="td-empty-desc">
                         <p class=MsoNormal>&nbsp;</p>
                     </td>
-                    <td width=96 style='width:71.85pt;border:none;border-right:solid #4E80BF 1.0pt;padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
+                    <td class="td-label">
                         <h1>Subtotal </h1>
                     </td>
-                    <td width=96 style='width:71.9pt;border-top:none;border-left:none;border-bottom:
-                        solid #4E80BF 1.0pt;border-right:solid #4E80BF 1.0pt;background:#C4D4EA;
-                        padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
+                    <td class="td-value">
                         <p class=Totals>{{ site_currency() .number_format(($invoice_amount + $discount_amount), 2) }} </p>
                     </td>
                 </tr>
                 <tr style='height:19.85pt'>
-                    <td width=72 style='width:53.75pt;padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
+                    <td class="td-empty-qty-plain">
                         <p class=MsoNormal>&nbsp;</p>
                     </td>
-                    <td style='padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
+                    <td class="td-empty-desc-plain">
                         <p class=MsoNormal>&nbsp;</p>
                     </td>
-                    <td width=96 style='width:71.85pt;border:none;border-right:solid #4E80BF 1.0pt;
-                        padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
+                    <td class="td-label">
                         <h1>Discount </h1>
                     </td>
-                    <td width=96 style='width:71.9pt;border-top:none;border-left:none;border-bottom:
-                            solid #4E80BF 1.0pt;border-right:solid #4E80BF 1.0pt;background:#C4D4EA;
-                            padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
+                    <td class="td-value">
                         <p class=Totals>{{ site_currency() .number_format(($discount_amount), 2) }} </p>
                     </td>
                 </tr>
                 <tr style='height:19.85pt'>
-                    <td width=72 style='width:53.75pt;padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
+                    <td class="td-empty-qty-plain">
                         <p class=MsoNormal>&nbsp;</p>
                     </td>
-                    <td style='padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
+                    <td class="td-empty-desc-plain">
                         <p class=MsoNormal>&nbsp;</p>
                     </td>
-                    <td width=96 style='width:71.85pt;border:none;border-right:solid #4E80BF 1.0pt;
-                        padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
+                    <td class="td-label">
                         <h1>Total</h1>
                     </td>
-                    <td width=96 style='width:71.9pt;border-top:none;border-left:none;border-bottom:
-                            solid #4E80BF 1.0pt;border-right:solid #4E80BF 1.0pt;background:#C4D4EA;
-                            padding:0in 5.4pt 0in 5.4pt;height:19.85pt'>
+                    <td class="td-value">
                         <p class=Totals>{{ site_currency() .number_format(($invoice_amount), 2) }}</p>
                     </td>
                 </tr>
             </table>
 
-            <p class=ContactInfo align=left style='text-align:left'>&nbsp;</p>
+            <p class=ContactInfo style='text-align:left'>&nbsp;</p>
 
             <p class=Thankyou><span style='color:#4E80BF'>Thank you for your business!</span>
             </p>
