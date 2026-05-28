@@ -190,14 +190,14 @@
         }
 
         /* Page Definitions */
-        @page WordSection1 {
+        /* @page WordSection1 {
             size: 8.5in 11.0in;
             margin: 10.75pt .75in 24.4pt .75in;
         }
 
         div.WordSection1 {
             page: WordSection1;
-        }
+        } */
     </style>
 
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
