@@ -210,10 +210,6 @@
         .content-wrap {
             padding: 0 40px;
         }
-
-        .content-wrap p.MsoNormal:first-child {
-            display: none;
-        }
     </style>
 
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
