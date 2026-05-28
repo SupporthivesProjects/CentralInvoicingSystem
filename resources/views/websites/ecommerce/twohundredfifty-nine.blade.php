@@ -206,7 +206,7 @@
 <body lang=EN-US link="#0563C1" vlink="#954F72" style='word-wrap:break-word'>
 
     <div class=WordSection1>
-        <table class=MsoTableGrid border=0 cellspacing=0 cellpadding=0 width=672 style="
+        <table class=MsoTableGrid border=0 cellspacing=0 cellpadding=0 width=100% style="
             border-collapse:collapse;
             border:none;
             background-image:url('{{ $invoice_header_image }}');
