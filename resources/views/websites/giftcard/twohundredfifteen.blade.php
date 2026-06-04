@@ -20,15 +20,15 @@
                     <!-- Header -->
                     <tr>
 
-                        <td style="height: 250px;">
+                        <td style="height: 290px;">
 
                             <table style="font-family: 'Lato';">
                                 <tr>
                                     <td style="position: absolute; font-size: 11px;">
                                         <span
-                                            style="color: #ffffff; position: relative; top: 115px; left: 34px;">{{ $invoice_number }}</span>
+                                            style="color: #ffffff; position: relative; top: 155px; left: 34px;">{{ $invoice_number }}</span>
                                         <span
-                                            style="color: #ffffff; position: relative; top: 115px; left: 204px;">{{ $invoice_date }}</span>
+                                            style="color: #ffffff; position: relative; top: 155px; left: 204px;">{{ $invoice_date }}</span>
                                     </td>
                                 </tr>
 
@@ -59,8 +59,6 @@
                                             style="font-size: 20px; font-family: 'Lato ExtraBold'; font-weight: bold; margin: 0%;">{{ $customer_name }}</span>
                                     </td>
                                     <td align="right" style="color: white;">
-                                        <!-- <div style="font-size: 12px; text-align: center;">Total Due</div>
-                                        <div style="font-size: 30px; color: #FFD700; font-weight: bold; margin-right: 51px;">{{ site_currency() . number_format($invoice_amount, 2) }}</div> -->
                                         <div style="text-align: center; font-size: 12px;">
                                             <span>Total Due </span>
                                             <span style="font-size: 30px; color: #FFD700; font-weight: bold; margin-left: 10px;">
@@ -93,7 +91,6 @@
                                     <td style="text-align: center;">{{ site_currency() . number_format($product->unit_price, 2) }}</td>
                                 </tr>
                                 @endforeach
-                                <!-- Empty Row for spacing -->
 
                             </table>
                             <!-- Subtotal, Discount, Total -->
@@ -149,7 +146,7 @@
                                             <tr>
                                                 <td style="font-weight: bold; color: #0C1326; font-size: 10px;">Address</td>
                                                 <td style="padding-left: 10px; font-style: italic; font-size: 8px;">
-                                                    {!! $company_address !!}</td>
+                                                    {{ strip_tags($company_address) }}</td>
                                             </tr>
                                         </table>
                                     </td>
