@@ -146,7 +146,7 @@
                                             <tr>
                                                 <td style="font-weight: bold; color: #0C1326; font-size: 10px;">Address</td>
                                                 <td style="padding-left: 10px; font-style: italic; font-size: 8px;">
-                                                    {{-- {{ strip_tags($company_address) }} --}}</td>
+                                                    {{ strip_tags($company_address) }}</td>
                                             </tr>
                                         </table>
                                     </td>
