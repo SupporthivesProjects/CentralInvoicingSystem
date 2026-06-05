@@ -124,27 +124,25 @@
 
                     <!-----------Footer----------->
                     <tr>
-                        <td>
-                            <table width="100%" cellspacing="0" cellpadding="" border="0px"
-                                style="border-collapse: collapse;">
-                                <tr style="position: absolute; font-family: 'Lato';">
-                                    <td style="vertical-align: top; width: 60%; position: relative; top: -116px; padding-left: 40px;">
-                                        <div style="font-size: 12px; font-weight: bold; color: #0C1326;">Invoice From
-                                        </div>
-                                        <table style="margin-top: 10px;">
+                        <td style="padding: 20px 40px 20px 40px;">
+                            <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse; font-family: 'Lato';">
+                                <tr>
+                                    <td style="vertical-align: top; width: 60%;">
+                                        <div style="font-size: 12px; font-weight: bold; color: #0C1326;">Invoice From</div>
+                                        <table style="margin-top: 10px;" cellpadding="0" cellspacing="0">
                                             <tr>
                                                 <td style="font-weight: bold; font-size: 10px; color: #0C1326;">Company Name</td>
-                                                <td style="padding-left: 10px; font-style: italic; font-size: 8px;">
+                                                <td style="padding-left: 10px; font-style: italic; font-size: 8px; color: #0C1326;">
                                                     {{ $company_name }}</td>
                                             </tr>
                                             <tr>
                                                 <td style="font-weight: bold; color: #0C1326; font-size: 10px;">Address</td>
-                                                <td style="padding-left: 10px; font-style: italic; font-size: 8px;">
+                                                <td style="padding-left: 10px; font-style: italic; font-size: 8px; color: #0C1326;">
                                                     {{ strip_tags($company_address) }}</td>
                                             </tr>
                                         </table>
                                     </td>
-                                    <td align="right" style="vertical-align: bottom; width: 40%; position: absolute; top: -80px; right: -232px;">
+                                    <td align="right" style="vertical-align: bottom; width: 40%;">
                                         <div style="color: #0C1326; font-size: 9px;">{{ $company_email }}</div>
                                     </td>
                                 </tr>
