@@ -16,32 +16,29 @@
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse; width: 100%; height: 1122px; table-layout: fixed; background-image: url('{{ $invoice_image1 }}'); background-position: top left; background-repeat: no-repeat; background-size: 100% 100%;">
 
                     <tr>
-                        <td style="height: 370px; vertical-align: bottom; padding: 0 34px 14px 34px; font-family: 'Lato'; font-size: 11px;">
-                            <table width="100%" cellspacing="0" cellpadding="0">
-                                <tr>
-                                    <td style="color: #ffffff; font-size: 11px;">{{ $invoice_number }}</td>
-                                    <td style="color: #ffffff; font-size: 11px; text-align: left; padding-left: 60px;">{{ $invoice_date }}</td>
-                                    <td></td>
-                                </tr>
-                            </table>
+                        <td style="height: 370px; vertical-align: bottom; padding: 0 34px 14px 34px; font-family: 'Lato'; font-size: 11px; color: #ffffff;">
+                            <span>{{ $invoice_number }}</span>
+                            <span style="padding-left: 60px;">{{ $invoice_date }}</span>
                         </td>
                     </tr>
 
                     <tr>
-                        <td style="vertical-align: top; padding: 25px 35px 10px 35px; font-family: 'Lato'; font-size: 9px;">
+                        <td style="vertical-align: top; padding: 20px 35px 10px 35px; font-family: 'Lato'; font-size: 9px;">
 
-                            <table width="100%" cellspacing="0" cellpadding="0" style="margin-bottom: 8px;">
+                            <table width="100%" cellspacing="0" cellpadding="0" style="margin-bottom: 6px;">
                                 <tr>
-                                    <td style="color: #ffffff; font-size: 14px; padding-bottom: 4px;">Invoice To :</td>
-                                    <td align="right" style="color: white; vertical-align: top; padding-top: 2px;">
+                                    <td style="color: #ffffff; font-size: 14px; padding-bottom: 6px; vertical-align: bottom;">
+                                        Invoice To :
+                                    </td>
+                                    <td align="right" style="vertical-align: bottom; padding-bottom: 6px;">
                                         <span style="font-size: 12px; color: #ffffff;">Total Due</span>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td style="color: #ffffff; vertical-align: top;">
-                                        <span style="font-size: 20px; font-family: 'Lato ExtraBold'; font-weight: bold;">{{ $customer_name }}</span>
+                                    <td style="color: #ffffff; vertical-align: middle;">
+                                        <span style="font-size: 20px; font-weight: bold; font-family: 'Lato ExtraBold';">{{ $customer_name }}</span>
                                     </td>
-                                    <td align="right" style="vertical-align: top;">
+                                    <td align="right" style="vertical-align: middle;">
                                         <span style="font-size: 30px; color: #FFD700; font-weight: bold;">{{ site_currency() . number_format($invoice_amount, 2) }}</span>
                                     </td>
                                 </tr>
