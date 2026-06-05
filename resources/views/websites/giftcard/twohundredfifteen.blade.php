@@ -93,16 +93,16 @@
                                         <table style="margin-top: 8px;" cellpadding="0" cellspacing="0">
                                             <tr>
                                                 <td style="font-weight: bold; font-size: 10px; color: #0C1326; white-space: nowrap;">Company Name</td>
-                                                <td style="padding-left: 8px; font-style: italic; font-size: 8px; color: #444444;">{{{{ $company_name }}}}</td>
+                                                <td style="padding-left: 8px; font-style: italic; font-size: 8px; color: #444444;">{{-- {{ $company_name }} --}}</td>
                                             </tr>
                                             <tr>
                                                 <td style="font-weight: bold; font-size: 10px; color: #0C1326; white-space: nowrap;">Address</td>
-                                                <td style="padding-left: 8px; font-style: italic; font-size: 8px; color: #444444;">{{ strip_tags($company_address) }}</td>
+                                                <td style="padding-left: 8px; font-style: italic; font-size: 8px; color: #444444;">{{-- {{ strip_tags($company_address) }} --}}</td>
                                             </tr>
                                         </table>
                                     </td>
                                     <td align="right" style="vertical-align: bottom; width: 45%; padding-bottom: 8px;">
-                                        <div style="color: #0C1326; font-size: 9px;">{{ $company_email }}</div>
+                                        <div style="color: #0C1326; font-size: 9px;">{{-- {{ $company_email }} --}}</div>
                                     </td>
                                 </tr>
                             </table>
