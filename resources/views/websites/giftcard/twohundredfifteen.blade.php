@@ -22,7 +22,7 @@
                     <!-- LEFT -->
                     <td valign="top" style="padding: 24px;">
 
-                        <img src="{{ $invoice_logo }}"
+                        <img src="{{ $company_logo }}"
                              width="230"
                              alt="HoneyBee"
                              style="display:block;">
