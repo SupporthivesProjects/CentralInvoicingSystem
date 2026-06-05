@@ -120,7 +120,7 @@
     <!-- TABLE SECTION -->
     <tr>
         <td>
-        <div style="min-height:626px;padding:25px 20px;vertical-align:top;">
+        <div style="min-height:628px;padding:25px 20px;vertical-align:top;">
 
             <table width="100%" cellpadding="0" cellspacing="0" border="0">
 
