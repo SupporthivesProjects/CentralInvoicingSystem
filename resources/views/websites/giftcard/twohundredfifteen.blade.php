@@ -16,7 +16,7 @@
         <tr>
             <td align="center" bgcolor="#0E162D" style="padding: 0px 0;">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#0E162D"
-                    style="border-collapse: collapse; background-image: url('{{ $invoice_image1 }}'); background-position: top left; background-repeat: no-repeat; background-size: 100% auto;">
+                    style="border-collapse: collapse; background-image: url('{{ $invoice_image1 }}'); background-position: top left; background-repeat: no-repeat; background-size: 100% 100%;">
 
                     <!-- Header -->
                     <tr>
@@ -105,9 +105,14 @@
                     </tr>
                     <!-- Content End -->
 
-                    <!-----------Footer----------->
+                    <!-- Spacer to push footer into white area of bg image -->
                     <tr>
-                        <td bgcolor="#ffffff" style="padding: 20px 40px 25px 40px; background-color: #ffffff;">
+                        <td style="height: 40px;"></td>
+                    </tr>
+
+                    <!-----------Footer — sits inside bg image's built-in white section ----------->
+                    <tr>
+                        <td style="padding: 18px 40px 30px 40px;">
                             <table width="100%" cellspacing="0" cellpadding="0" border="0"
                                 style="border-collapse: collapse; font-family: 'Lato';">
                                 <tr>
@@ -116,11 +121,11 @@
                                         <table style="margin-top: 10px;" cellpadding="0" cellspacing="0">
                                             <tr>
                                                 <td style="font-weight: bold; font-size: 10px; color: #0C1326;">Company Name</td>
-                                                <td style="padding-left: 10px; font-style: italic; font-size: 8px; color: #333333;">{{ $company_name }}</td>
+                                                <td style="padding-left: 10px; font-style: italic; font-size: 8px; color: #444444;">{{ $company_name }}</td>
                                             </tr>
                                             <tr>
                                                 <td style="font-weight: bold; font-size: 10px; color: #0C1326;">Address</td>
-                                                <td style="padding-left: 10px; font-style: italic; font-size: 8px; color: #333333;">{{ strip_tags($company_address) }}</td>
+                                                <td style="padding-left: 10px; font-style: italic; font-size: 8px; color: #444444;">{{ strip_tags($company_address) }}</td>
                                             </tr>
                                         </table>
                                     </td>
