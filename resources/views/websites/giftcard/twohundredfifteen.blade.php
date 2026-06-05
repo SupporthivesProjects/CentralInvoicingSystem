@@ -15,8 +15,10 @@
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
             <td align="center" bgcolor="#0E162D" style="padding: 0px 0;">
+
+                <!-- ===== MAIN DARK SECTION WITH BG IMAGE ===== -->
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#0E162D"
-                    style="border-collapse: collapse; background-image: url('{{ $invoice_image1 }}'); background-position: top left; background-repeat: no-repeat; background-size: 100% 100%;">
+                    style="border-collapse: collapse; background-image: url('{{ $invoice_image1 }}'); background-position: top left; background-repeat: no-repeat; background-size: 100% auto;">
 
                     <!-- Header -->
                     <tr>
@@ -101,20 +103,23 @@
                                 </tr>
                             </table>
 
+                            <!-- Bottom padding inside dark section -->
+                            <br><br><br>
+
                         </td>
                     </tr>
                     <!-- Content End -->
 
-                    <!-- Spacer to push footer into white area of bg image -->
-                    <tr>
-                        <td style="height: 40px;"></td>
-                    </tr>
+                </table>
+                <!-- ===== END MAIN DARK SECTION ===== -->
 
-                    <!-----------Footer — sits inside bg image's built-in white section ----------->
+                <!-- ===== FOOTER — SEPARATE WHITE TABLE ===== -->
+                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
+                    style="border-collapse: collapse; background-color: #ffffff;">
                     <tr>
-                        <td style="padding: 18px 40px 30px 40px;">
+                        <td style="padding: 22px 40px 30px 40px; font-family: 'Lato';">
                             <table width="100%" cellspacing="0" cellpadding="0" border="0"
-                                style="border-collapse: collapse; font-family: 'Lato';">
+                                style="border-collapse: collapse;">
                                 <tr>
                                     <td style="vertical-align: top; width: 60%;">
                                         <div style="font-size: 12px; font-weight: bold; color: #0C1326;">Invoice From</div>
@@ -136,9 +141,9 @@
                             </table>
                         </td>
                     </tr>
-                    <!-----------Footer End----------->
-
                 </table>
+                <!-- ===== END FOOTER ===== -->
+
             </td>
         </tr>
     </table>
