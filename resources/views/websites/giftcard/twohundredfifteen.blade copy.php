@@ -93,7 +93,7 @@
                                         <table style="margin-top: 8px;" cellpadding="0" cellspacing="0">
                                             <tr>
                                                 <td style="font-weight: bold; font-size: 10px; color: #0C1326; white-space: nowrap;">Company Name</td>
-                                                <td style="padding-left: 8px; font-style: italic; font-size: 8px; color: #444444;">{{{{ $company_name }}}}</td>
+                                                <td style="padding-left: 8px; font-style: italic; font-size: 8px; color: #444444;">{{ $company_name }}</td>
                                             </tr>
                                             <tr>
                                                 <td style="font-weight: bold; font-size: 10px; color: #0C1326; white-space: nowrap;">Address</td>
