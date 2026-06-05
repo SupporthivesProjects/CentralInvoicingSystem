@@ -10,7 +10,7 @@
 <tr>
 <td align="center">
 
-<table width="600" cellpadding="0" cellspacing="0" border="0" style="background:#0E162D;">
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#0E162D;">
 
     <!-- HEADER -->
     <tr>
