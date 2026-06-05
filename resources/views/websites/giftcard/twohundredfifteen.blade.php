@@ -119,7 +119,8 @@
 
     <!-- TABLE SECTION -->
     <tr>
-        <td style="padding:25px 20px;min-height:900px;vertical-align:top;">
+        <td>
+        <div style="min-height:900px;padding:25px 20px;vertical-align:top;">
 
             <table width="100%" cellpadding="0" cellspacing="0" border="0">
 
@@ -213,6 +214,7 @@
 
             </table>
 
+        </div>
         </td>
     </tr>
 
