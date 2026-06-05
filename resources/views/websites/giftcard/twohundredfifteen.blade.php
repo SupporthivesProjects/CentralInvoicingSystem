@@ -119,7 +119,7 @@
 
     <!-- TABLE SECTION -->
     <tr>
-        <td style="padding:25px 20px;min-height:400px;height:400px;vertical-align:top;">
+        <td style="padding:25px 20px;min-height:600px;vertical-align:top;">
 
             <table width="100%" cellpadding="0" cellspacing="0" border="0">
 
