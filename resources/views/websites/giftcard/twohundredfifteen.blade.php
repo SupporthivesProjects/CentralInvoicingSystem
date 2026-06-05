@@ -65,7 +65,6 @@
 
                             <table width="100%" cellpadding="15" cellspacing="0"
                                 style="border-collapse: collapse; color: white;">
-                                <!-- Table Header -->
                                 <tr style="color: #FFD700; font-weight: bold; text-align: left; border-bottom: 2px solid #FFD700; font-size: 15px;">
                                     <td>ITEM DESCRIPTION</td>
                                     <td style="text-align: right; width: 90px;">UNIT PRICE</td>
@@ -73,7 +72,6 @@
                                     <td style="text-align: center; width: 40px;">TOTAL</td>
                                 </tr>
 
-                                <!-- Table Rows -->
                                 @foreach($products as $product)
                                 <tr style="font-size: 14px;">
                                     <td>{{ $product->name }}</td>
@@ -109,7 +107,7 @@
 
                     <!-----------Footer----------->
                     <tr>
-                        <td style="padding: 20px 40px 25px 40px;">
+                        <td bgcolor="#ffffff" style="padding: 20px 40px 25px 40px; background-color: #ffffff;">
                             <table width="100%" cellspacing="0" cellpadding="0" border="0"
                                 style="border-collapse: collapse; font-family: 'Lato';">
                                 <tr>
@@ -118,11 +116,11 @@
                                         <table style="margin-top: 10px;" cellpadding="0" cellspacing="0">
                                             <tr>
                                                 <td style="font-weight: bold; font-size: 10px; color: #0C1326;">Company Name</td>
-                                                <td style="padding-left: 10px; font-style: italic; font-size: 8px; color: #333;">{{ $company_name }}</td>
+                                                <td style="padding-left: 10px; font-style: italic; font-size: 8px; color: #333333;">{{ $company_name }}</td>
                                             </tr>
                                             <tr>
                                                 <td style="font-weight: bold; font-size: 10px; color: #0C1326;">Address</td>
-                                                <td style="padding-left: 10px; font-style: italic; font-size: 8px; color: #333;">{{ strip_tags($company_address) }}</td>
+                                                <td style="padding-left: 10px; font-style: italic; font-size: 8px; color: #333333;">{{ strip_tags($company_address) }}</td>
                                             </tr>
                                         </table>
                                     </td>
