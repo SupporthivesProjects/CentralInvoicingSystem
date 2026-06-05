@@ -258,7 +258,7 @@
                     <td align="right" valign="bottom">
 
                         <span style="font-size:9px;color:#333;">
-                            {{ $company_email ?? 'support@honeybeecard.com' }} }}
+                            {{ $company_email ?? 'support@honeybeegiftcards.com' }}
                         </span>
 
                     </td>
