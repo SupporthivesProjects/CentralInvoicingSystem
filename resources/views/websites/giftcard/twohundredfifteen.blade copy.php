@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
     <style>
@@ -10,158 +9,113 @@
         }
     </style>
 </head>
-
-<body style="background: #0E162D">
-    <table width="100%" cellspacing="0" cellpadding="0" border="0">
+<body style="margin: 0; padding: 0; background: #0E162D;">
+    <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse; width: 100%; height: 1122px;">
         <tr>
-            <td align="center" bgcolor="#0E162D" style="padding: 0px 0;">
-                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#0E162D"
-                    style="border-collapse: collapse;background-image: url('{{ $invoice_image1 }}'); background-position: top left; background-repeat: no-repeat; background-size: 100% auto;">
-                    <!-- Header -->
+            <td style="padding: 0; vertical-align: top;">
+                <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse; width: 100%; height: 1122px; table-layout: fixed; background-image: url('{{ $invoice_image1 }}'); background-position: top left; background-repeat: no-repeat; background-size: 100% 100%;">
+
                     <tr>
-
-                        <td style="height: 290px;">
-
-                            <table style="font-family: 'Lato';">
+                        <td style="height: 370px; vertical-align: bottom; padding: 0 34px 14px 34px; font-family: 'Lato'; font-size: 11px;">
+                            <table width="100%" cellspacing="0" cellpadding="0">
                                 <tr>
-                                    <td style="position: absolute; font-size: 11px;">
-                                        <span
-                                            style="color: #ffffff; position: relative; top: 155px; left: 34px;">{{ $invoice_number }}</span>
-                                        <span
-                                            style="color: #ffffff; position: relative; top: 155px; left: 204px;">{{ $invoice_date }}</span>
-                                    </td>
+                                    <td style="color: #ffffff; font-size: 11px;">{{ $invoice_number }}</td>
+                                    <td style="color: #ffffff; font-size: 11px; text-align: left; padding-left: 60px;">{{ $invoice_date }}</td>
+                                    <td></td>
                                 </tr>
-
                             </table>
                         </td>
                     </tr>
-                    <!-- Header End -->
 
-
-                    <!-- Content -->
                     <tr>
+                        <td style="vertical-align: top; padding: 25px 35px 10px 35px; font-family: 'Lato'; font-size: 9px;">
 
-                        <td
-                            style="padding:35px; padding-top: 110px; font-family: 'Lato'; font-size: 9px; vertical-align: top;">
-
-                            <table width="100%">
+                            <table width="100%" cellspacing="0" cellpadding="0" style="margin-bottom: 8px;">
                                 <tr>
-                                    <td style="color: #ffffff;">
-                                        <span style="font-size: 14px;">Invoice To :</span><br>
-                                    </td>
-                                    <td align="right" style="color: white;">
-                                        <p>&nbsp;</p>
+                                    <td style="color: #ffffff; font-size: 14px; padding-bottom: 4px;">Invoice To :</td>
+                                    <td align="right" style="color: white; vertical-align: top; padding-top: 2px;">
+                                        <span style="font-size: 12px; color: #ffffff;">Total Due</span>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td style="color: #ffffff; vertical-align: top;">
-                                        <span
-                                            style="font-size: 20px; font-family: 'Lato ExtraBold'; font-weight: bold; margin: 0%;">{{ $customer_name }}</span>
+                                        <span style="font-size: 20px; font-family: 'Lato ExtraBold'; font-weight: bold;">{{ $customer_name }}</span>
                                     </td>
-                                    <td align="right" style="color: white;">
-                                        <div style="text-align: center; font-size: 12px;">
-                                            <span>Total Due </span>
-                                            <span style="font-size: 30px; color: #FFD700; font-weight: bold; margin-left: 10px;">
-                                                {{ site_currency() . number_format($invoice_amount, 2) }}
-                                            </span>
-                                        </div>
-
+                                    <td align="right" style="vertical-align: top;">
+                                        <span style="font-size: 30px; color: #FFD700; font-weight: bold;">{{ site_currency() . number_format($invoice_amount, 2) }}</span>
                                     </td>
                                 </tr>
                             </table>
-                            <br>
-                            <br>
-                            <table width="100%" cellpadding="15" cellspacing="0"
-                                style="border-collapse: collapse; color: white;">
-                                <!-- Table Header -->
-                                <tr
-                                    style="color: #FFD700; font-weight: bold; text-align: left; border-bottom: 2px solid #FFD700; font-size: 15px;">
-                                    <td>ITEM DESCRIPTION</td>
-                                    <td style="text-align: right; width: 90px;">UNIT PRICE</td>
-                                    <td style="text-align: center;">QTY</td>
-                                    <td style="text-align: center; width: 40px;">TOTAL</td>
-                                </tr>
 
-                                <!-- Table Rows -->
+                            <br>
+
+                            <table width="100%" cellpadding="10" cellspacing="0" style="border-collapse: collapse; color: white;">
+                                <tr style="color: #FFD700; font-weight: bold; text-align: left; border-bottom: 2px solid #FFD700; font-size: 13px;">
+                                    <td>ITEM DESCRIPTION</td>
+                                    <td style="text-align: right; width: 100px;">UNIT PRICE</td>
+                                    <td style="text-align: center; width: 60px;">QTY</td>
+                                    <td style="text-align: center; width: 80px;">TOTAL</td>
+                                </tr>
                                 @foreach($products as $product)
-                                <tr style="font-size: 14px;">
+                                <tr style="font-size: 12px;">
                                     <td>{{ $product->name }}</td>
-                                    <td style="text-align: right;">{{ site_currency() . number_format($product->unit_price, 2) }}</td>
-                                    <td style="text-align: center;">1</td>
-                                    <td style="text-align: center;">{{ site_currency() . number_format($product->unit_price, 2) }}</td>
+                                    <td style="text-align: right;">{{ site_currency() . number_format($product->price ?? $product->unit_price ?? 0, 2) }}</td>
+                                    <td style="text-align: center;">{{ $product->quantity ?? 1 }}</td>
+                                    <td style="text-align: center;">{{ site_currency() . number_format($product->total ?? $product->unit_price ?? 0, 2) }}</td>
                                 </tr>
                                 @endforeach
-
-                            </table>
-                            <!-- Subtotal, Discount, Total -->
-                            <table width="30%" align="right" cellspacing="0" cellpadding="2"
-                                style="color: #ffffff; font-size: 14px;">
-
-                                <tr>
-                                    <td
-                                        style="text-align: left; padding-left: 30px; padding-top: 15px; font-weight: bold; color: #FFD700; border-top: 2px solid #FFD700;">
-                                        SUBTOTAL</td>
-                                    <td
-                                        style="text-align: right; padding-right: 10px; padding-top: 15px; border-top: 2px solid #FFD700;">
-                                        {{ site_currency() . number_format($invoice_amount + $discount_amount, 2) }}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td
-                                        style="text-align: left; padding-left: 30px; font-weight: bold; color: #FFD700; ">
-                                        DISCOUNT</td>
-                                    <td style="text-align: right; padding-right: 10px;">{{ site_currency() . number_format($discount_amount, 2) }}</td>
-                                </tr>
-                                <tr>
-                                    <td
-                                        style="text-align: left; padding-left: 30px; font-weight: bold; color: #FFD700; ">
-                                        TOTAL
-                                    </td>
-                                    <td style="text-align: right; padding-right: 10px;">{{ site_currency() . number_format($invoice_amount, 2) }}</td>
-                                </tr>
                             </table>
 
-
+                            <table width="32%" align="right" cellspacing="0" cellpadding="3" style="color: #ffffff; font-size: 12px; margin-top: 4px;">
+                                <tr>
+                                    <td style="padding-left: 20px; padding-top: 10px; font-weight: bold; color: #FFD700; border-top: 2px solid #FFD700; text-align: left;">SUBTOTAL</td>
+                                    <td style="padding-right: 10px; padding-top: 10px; border-top: 2px solid #FFD700; text-align: right;">{{ site_currency() . number_format($invoice_amount + $discount_amount, 2) }}</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding-left: 20px; font-weight: bold; color: #FFD700; text-align: left;">DISCOUNT</td>
+                                    <td style="padding-right: 10px; text-align: right;">{{ site_currency() . number_format($discount_amount, 2) }}</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding-left: 20px; font-weight: bold; color: #FFD700; text-align: left;">TOTAL</td>
+                                    <td style="padding-right: 10px; text-align: right;">{{ site_currency() . number_format($invoice_amount, 2) }}</td>
+                                </tr>
+                            </table>
 
                         </td>
                     </tr>
-                    <!-- Content End-->
 
-
-                    <!-----------Footer----------->
                     <tr>
-                        <td>
-                            <table width="100%" cellspacing="0" cellpadding="" border="0px"
-                                style="border-collapse: collapse;">
-                                <tr style="position: absolute; font-family: 'Lato';">
-                                    <td style="vertical-align: top; width: 60%; position: relative; top: -116px; padding-left: 40px;">
-                                        <div style="font-size: 12px; font-weight: bold; color: #0C1326;">Invoice From
-                                        </div>
-                                        <table style="margin-top: 10px;">
+                        <td style="height: 130px; vertical-align: middle; padding: 0 40px;">
+                            <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse; font-family: 'Lato';">
+                                <tr>
+                                    <td style="vertical-align: top; width: 55%;">
+                                        <div style="font-size: 12px; font-weight: bold; color: #0C1326;">Invoice From</div>
+                                        <table style="margin-top: 8px;" cellpadding="0" cellspacing="0">
                                             <tr>
-                                                <td style="font-weight: bold; font-size: 10px; color: #0C1326;">Company Name</td>
-                                                <td style="padding-left: 10px; font-style: italic; font-size: 8px;">
-                                                    {{ $company_name }}</td>
+                                                <td style="font-weight: bold; font-size: 10px; color: #0C1326; white-space: nowrap;">Company Name</td>
+                                                <td style="padding-left: 8px; font-style: italic; font-size: 8px; color: #444444;">{{ $company_name }}</td>
                                             </tr>
                                             <tr>
-                                                <td style="font-weight: bold; color: #0C1326; font-size: 10px;">Address</td>
-                                                <td style="padding-left: 10px; font-style: italic; font-size: 8px;">
-                                                    {{ strip_tags($company_address) }}</td>
+                                                <td style="font-weight: bold; font-size: 10px; color: #0C1326; white-space: nowrap;">Address</td>
+                                                <td style="padding-left: 8px; font-style: italic; font-size: 8px; color: #444444;">{{ strip_tags($company_address) }}</td>
                                             </tr>
                                         </table>
                                     </td>
-                                    <td align="right" style="vertical-align: bottom; width: 40%; position: absolute; top: -80px; right: -232px;">
+                                    <td align="right" style="vertical-align: bottom; width: 45%; padding-bottom: 8px;">
                                         <div style="color: #0C1326; font-size: 9px;">{{ $company_email }}</div>
                                     </td>
                                 </tr>
                             </table>
                         </td>
                     </tr>
-                    <!-----------Footer End----------->
+
+                    <tr>
+                        <td style="height: 40px;">&nbsp;</td>
+                    </tr>
+
                 </table>
             </td>
         </tr>
     </table>
 </body>
-
 </html>
