@@ -17,12 +17,11 @@
             <td align="center" bgcolor="#0E162D" style="padding: 0px 0;">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#0E162D"
                     style="border-collapse: collapse;background-image: url('{{ $invoice_image1 }}'); background-position: top left; background-repeat: no-repeat; background-size: 100% auto;">
+
                     <!-- Header -->
                     <tr>
-
                         <td style="height: 290px;">
-
-                            <table style="font-family: 'Lato';">
+                            <table style="font-family: 'Lato'; width: 100%;">
                                 <tr>
                                     <td style="position: absolute; font-size: 11px;">
                                         <span
@@ -31,7 +30,6 @@
                                             style="color: #ffffff; position: relative; top: 155px; left: 204px;">{{ $invoice_date }}</span>
                                     </td>
                                 </tr>
-
                             </table>
                         </td>
                     </tr>
@@ -40,9 +38,7 @@
 
                     <!-- Content -->
                     <tr>
-
-                        <td
-                            style="padding:35px; padding-top: 110px; font-family: 'Lato'; font-size: 9px; vertical-align: top;">
+                        <td style="padding: 35px; padding-top: 20px; font-family: 'Lato'; font-size: 9px; vertical-align: top;">
 
                             <table width="100%">
                                 <tr>
@@ -65,7 +61,6 @@
                                                 {{ site_currency() . number_format($invoice_amount, 2) }}
                                             </span>
                                         </div>
-
                                     </td>
                                 </tr>
                             </table>
@@ -91,12 +86,11 @@
                                     <td style="text-align: center;">{{ site_currency() . number_format($product->unit_price, 2) }}</td>
                                 </tr>
                                 @endforeach
-
                             </table>
+
                             <!-- Subtotal, Discount, Total -->
                             <table width="30%" align="right" cellspacing="0" cellpadding="2"
                                 style="color: #ffffff; font-size: 14px;">
-
                                 <tr>
                                     <td
                                         style="text-align: left; padding-left: 30px; padding-top: 15px; font-weight: bold; color: #FFD700; border-top: 2px solid #FFD700;">
@@ -108,20 +102,18 @@
                                 </tr>
                                 <tr>
                                     <td
-                                        style="text-align: left; padding-left: 30px; font-weight: bold; color: #FFD700; ">
+                                        style="text-align: left; padding-left: 30px; font-weight: bold; color: #FFD700;">
                                         DISCOUNT</td>
                                     <td style="text-align: right; padding-right: 10px;">{{ site_currency() . number_format($discount_amount, 2) }}</td>
                                 </tr>
                                 <tr>
                                     <td
-                                        style="text-align: left; padding-left: 30px; font-weight: bold; color: #FFD700; ">
+                                        style="text-align: left; padding-left: 30px; font-weight: bold; color: #FFD700;">
                                         TOTAL
                                     </td>
                                     <td style="text-align: right; padding-right: 10px;">{{ site_currency() . number_format($invoice_amount, 2) }}</td>
                                 </tr>
                             </table>
-
-
 
                         </td>
                     </tr>
@@ -131,10 +123,10 @@
                     <!-----------Footer----------->
                     <tr>
                         <td>
-                            <table width="100%" cellspacing="0" cellpadding="" border="0px"
+                            <table width="100%" cellspacing="0" cellpadding="0" border="0"
                                 style="border-collapse: collapse;">
-                                <tr style="position: absolute; font-family: 'Lato';">
-                                    <td style="vertical-align: top; width: 60%; position: relative; top: -116px; padding-left: 40px;">
+                                <tr style="font-family: 'Lato';">
+                                    <td style="vertical-align: top; width: 60%; padding: 20px 40px;">
                                         <div style="font-size: 12px; font-weight: bold; color: #0C1326;">Invoice From
                                         </div>
                                         <table style="margin-top: 10px;">
@@ -150,7 +142,7 @@
                                             </tr>
                                         </table>
                                     </td>
-                                    <td align="right" style="vertical-align: bottom; width: 40%; position: absolute; top: -80px; right: -232px;">
+                                    <td align="right" style="vertical-align: middle; width: 40%; padding: 20px 40px 20px 0;">
                                         <div style="color: #0C1326; font-size: 9px;">{{-- {{ $company_email }} --}}</div>
                                     </td>
                                 </tr>
@@ -158,6 +150,7 @@
                         </td>
                     </tr>
                     <!-----------Footer End----------->
+
                 </table>
             </td>
         </tr>
