@@ -10,7 +10,7 @@
 <tr>
 <td align="center">
 
-<table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#0E162D;">
+<table width="600" cellpadding="0" cellspacing="0" border="0" style="background:#0E162D;">
 
     <!-- HEADER -->
     <tr>
@@ -119,7 +119,7 @@
 
     <!-- TABLE SECTION -->
     <tr>
-        <td style="padding:25px 20px;min-height:600px;vertical-align:top;">
+        <td style="padding:25px 20px;min-height:900px;vertical-align:top;">
 
             <table width="100%" cellpadding="0" cellspacing="0" border="0">
 
