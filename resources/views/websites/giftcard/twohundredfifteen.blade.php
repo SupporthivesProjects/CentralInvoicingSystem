@@ -11,48 +11,65 @@
     </style>
 </head>
 
-<body style="background: #0E162D">
-    <table width="100%" cellspacing="0" cellpadding="0" border="0">
+<body style="margin: 0; padding: 0; background: #0E162D;">
+
+    <!--
+        bg.png natural ratio is approx 1412 x 1832px (portrait A4-ish).
+        We pin the outer wrapper to exactly that aspect ratio so the
+        background image fills 100% width AND 100% height perfectly.
+        DomPDF default paper = A4 = 794px wide at 96dpi.
+        Height locked to match bg.png ratio: 794 * (1832/1412) ≈ 1030px.
+        Adjust $page_height below if your bg.png ratio differs.
+    -->
+
+    <table width="100%" cellspacing="0" cellpadding="0" border="0"
+        style="border-collapse: collapse; width: 100%; height: 1030px;">
         <tr>
-            <td align="center" bgcolor="#0E162D" style="padding: 0px 0;">
+            <td style="padding: 0; vertical-align: top;">
 
-                <!-- ===== MAIN DARK SECTION WITH BG IMAGE ===== -->
-                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#0E162D"
-                    style="border-collapse: collapse; background-image: url('{{ $invoice_image1 }}'); background-position: top left; background-repeat: no-repeat; background-size: 100% auto;">
+                <!-- FULL PAGE TABLE WITH BG IMAGE -->
+                <table width="100%" cellspacing="0" cellpadding="0" border="0"
+                    style="border-collapse: collapse;
+                           width: 100%;
+                           height: 1030px;
+                           background-image: url('{{ $invoice_image1 }}');
+                           background-position: top left;
+                           background-repeat: no-repeat;
+                           background-size: 100% 100%;">
 
-                    <!-- Header -->
+                    <!-- ====== HEADER ZONE (top ~28% of image = ~288px) ====== -->
                     <tr>
-                        <td style="height: 290px;">
-                            <table style="font-family: 'Lato';">
+                        <td style="height: 288px; vertical-align: bottom; padding: 0;">
+                            <table width="100%" style="font-family: 'Lato';">
                                 <tr>
-                                    <td style="position: absolute; font-size: 11px;">
-                                        <span style="color: #ffffff; position: relative; top: 155px; left: 34px;">{{ $invoice_number }}</span>
-                                        <span style="color: #ffffff; position: relative; top: 155px; left: 204px;">{{ $invoice_date }}</span>
+                                    <td style="font-size: 11px; padding-left: 34px; padding-bottom: 10px;">
+                                        <span style="color: #ffffff;">{{ $invoice_number }}</span>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <span style="color: #ffffff;">{{ $invoice_date }}</span>
                                     </td>
                                 </tr>
                             </table>
                         </td>
                     </tr>
-                    <!-- Header End -->
+                    <!-- ====== HEADER ZONE END ====== -->
 
-                    <!-- Content -->
+                    <!-- ====== CONTENT ZONE (middle ~56% of image = ~577px) ====== -->
                     <tr>
-                        <td style="padding: 35px; padding-top: 110px; font-family: 'Lato'; font-size: 9px; vertical-align: top;">
+                        <td style="vertical-align: top; padding: 20px 35px 0px 35px; font-family: 'Lato'; font-size: 9px;">
 
+                            <!-- Invoice To + Total Due -->
                             <table width="100%">
                                 <tr>
                                     <td style="color: #ffffff;">
-                                        <span style="font-size: 14px;">Invoice To :</span><br>
+                                        <span style="font-size: 14px;">Invoice To :</span>
                                     </td>
-                                    <td align="right" style="color: white;">
-                                        <p>&nbsp;</p>
-                                    </td>
+                                    <td align="right" style="color: white;">&nbsp;</td>
                                 </tr>
                                 <tr>
                                     <td style="color: #ffffff; vertical-align: top;">
-                                        <span style="font-size: 20px; font-family: 'Lato ExtraBold'; font-weight: bold; margin: 0%;">{{ $customer_name }}</span>
+                                        <span style="font-size: 20px; font-family: 'Lato ExtraBold'; font-weight: bold;">{{ $customer_name }}</span>
                                     </td>
-                                    <td align="right" style="color: white;">
+                                    <td align="right" style="color: white; vertical-align: middle;">
                                         <div style="text-align: center; font-size: 12px;">
                                             <span>Total Due </span>
                                             <span style="font-size: 30px; color: #FFD700; font-weight: bold; margin-left: 10px;">
@@ -63,11 +80,12 @@
                                 </tr>
                             </table>
 
-                            <br><br>
+                            <br>
 
-                            <table width="100%" cellpadding="15" cellspacing="0"
+                            <!-- Items Table -->
+                            <table width="100%" cellpadding="10" cellspacing="0"
                                 style="border-collapse: collapse; color: white;">
-                                <tr style="color: #FFD700; font-weight: bold; text-align: left; border-bottom: 2px solid #FFD700; font-size: 15px;">
+                                <tr style="color: #FFD700; font-weight: bold; text-align: left; border-bottom: 2px solid #FFD700; font-size: 13px;">
                                     <td>ITEM DESCRIPTION</td>
                                     <td style="text-align: right; width: 90px;">UNIT PRICE</td>
                                     <td style="text-align: center;">QTY</td>
@@ -75,7 +93,7 @@
                                 </tr>
 
                                 @foreach($products as $product)
-                                <tr style="font-size: 14px;">
+                                <tr style="font-size: 12px;">
                                     <td>{{ $product->name }}</td>
                                     <td style="text-align: right;">{{ site_currency() . number_format($product->price ?? $product->unit_price ?? 0, 2) }}</td>
                                     <td style="text-align: center;">{{ $product->quantity ?? 1 }}</td>
@@ -84,46 +102,38 @@
                                 @endforeach
                             </table>
 
-                            <!-- Subtotal, Discount, Total -->
-                            <table width="30%" align="right" cellspacing="0" cellpadding="2"
-                                style="color: #ffffff; font-size: 14px;">
+                            <!-- Subtotal / Discount / Total -->
+                            <table width="32%" align="right" cellspacing="0" cellpadding="2"
+                                style="color: #ffffff; font-size: 12px; margin-top: 4px;">
                                 <tr>
-                                    <td style="text-align: left; padding-left: 30px; padding-top: 15px; font-weight: bold; color: #FFD700; border-top: 2px solid #FFD700;">SUBTOTAL</td>
-                                    <td style="text-align: right; padding-right: 10px; padding-top: 15px; border-top: 2px solid #FFD700;">
+                                    <td style="text-align: left; padding-left: 20px; padding-top: 10px; font-weight: bold; color: #FFD700; border-top: 2px solid #FFD700;">SUBTOTAL</td>
+                                    <td style="text-align: right; padding-right: 10px; padding-top: 10px; border-top: 2px solid #FFD700;">
                                         {{ site_currency() . number_format($invoice_amount + $discount_amount, 2) }}
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td style="text-align: left; padding-left: 30px; font-weight: bold; color: #FFD700;">DISCOUNT</td>
+                                    <td style="text-align: left; padding-left: 20px; font-weight: bold; color: #FFD700;">DISCOUNT</td>
                                     <td style="text-align: right; padding-right: 10px;">{{ site_currency() . number_format($discount_amount, 2) }}</td>
                                 </tr>
                                 <tr>
-                                    <td style="text-align: left; padding-left: 30px; font-weight: bold; color: #FFD700;">TOTAL</td>
+                                    <td style="text-align: left; padding-left: 20px; font-weight: bold; color: #FFD700;">TOTAL</td>
                                     <td style="text-align: right; padding-right: 10px;">{{ site_currency() . number_format($invoice_amount, 2) }}</td>
                                 </tr>
                             </table>
 
-                            <!-- Bottom padding inside dark section -->
-                            <br><br><br>
-
                         </td>
                     </tr>
-                    <!-- Content End -->
+                    <!-- ====== CONTENT ZONE END ====== -->
 
-                </table>
-                <!-- ===== END MAIN DARK SECTION ===== -->
-
-                <!-- ===== FOOTER — SEPARATE WHITE TABLE ===== -->
-                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
-                    style="border-collapse: collapse; background-color: #ffffff;">
+                    <!-- ====== FOOTER ZONE (bottom ~16% of image = ~165px) ====== -->
                     <tr>
-                        <td style="padding: 22px 40px 30px 40px; font-family: 'Lato';">
+                        <td style="height: 165px; vertical-align: middle; padding: 0 40px;">
                             <table width="100%" cellspacing="0" cellpadding="0" border="0"
-                                style="border-collapse: collapse;">
+                                style="border-collapse: collapse; font-family: 'Lato';">
                                 <tr>
                                     <td style="vertical-align: top; width: 60%;">
                                         <div style="font-size: 12px; font-weight: bold; color: #0C1326;">Invoice From</div>
-                                        <table style="margin-top: 10px;" cellpadding="0" cellspacing="0">
+                                        <table style="margin-top: 8px;" cellpadding="0" cellspacing="0">
                                             <tr>
                                                 <td style="font-weight: bold; font-size: 10px; color: #0C1326;">Company Name</td>
                                                 <td style="padding-left: 10px; font-style: italic; font-size: 8px; color: #444444;">{{ $company_name }}</td>
@@ -135,18 +145,20 @@
                                         </table>
                                     </td>
                                     <td align="right" style="vertical-align: bottom; width: 40%;">
-                                        <div style="color: #0C1326; font-size: 9px;">{{ $company_email }}</div>
+                                        <div style="color: #0C1326; font-size: 9px; padding-bottom: 5px;">{{ $company_email }}</div>
                                     </td>
                                 </tr>
                             </table>
                         </td>
                     </tr>
+                    <!-- ====== FOOTER ZONE END ====== -->
+
                 </table>
-                <!-- ===== END FOOTER ===== -->
+                <!-- END FULL PAGE TABLE -->
 
             </td>
         </tr>
     </table>
-</body>
 
+</body>
 </html>
