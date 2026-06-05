@@ -4,13 +4,13 @@
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
 </head>
 
-<body style="margin:0;padding:20px;background:#f5f5f5;font-family:'Lato';">
+<body style="margin:0;padding:0;background:#f5f5f5;font-family:'Lato';">
 
 <table width="100%" cellpadding="0" cellspacing="0" border="0">
 <tr>
 <td align="center">
 
-<table width="600" cellpadding="0" cellspacing="0" border="0" style="background:#0E162D;">
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#0E162D;">
 
     <!-- HEADER -->
     <tr>
