@@ -1202,7 +1202,7 @@ class LaravelController extends Controller
         $site      = Website::findOrFail($site_id);
         DynamicDatabaseService::connect($site);
 
-        if ($site->businessModel && strtolower(trim($site->businessModel->model_type)) !== 'giftcard' && strtolower(trim($site->technology)) !== 'laravel') {
+        if ($site->businessModel && (strtolower(trim($site->businessModel->model_type)) !== 'giftcard' || strtolower(trim($site->technology)) !== 'laravel')) {
             return response()->json(['success' => true]);
         }
 
