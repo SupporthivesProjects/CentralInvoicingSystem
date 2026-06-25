@@ -20,21 +20,13 @@
 
                 <!-- MAIN CONTAINER -->
                 <table width="100%" cellpadding="0" cellspacing="0"
-<<<<<<< HEAD
-                    style="background:#FFFCF8; border-radius:6px; overflow:hidden;">
-=======
                     style="background:red;border-collapse: collapse; ">
->>>>>>> devteam
 
                     <!-- HEADER -->
                     <tr>
                         <td>
                             <table width="100%" cellpadding="0" cellspacing="0"
-<<<<<<< HEAD
-                                style="padding:60px 50px 10px 50px;position: relative;">
-=======
                                 style="border-collapse: collapse;padding:60px 50px 10px 50px;">
->>>>>>> devteam
                                 <tr>
                                     <!-- LEFT SIDE -->
                                     <td width="60%" valign="top">
