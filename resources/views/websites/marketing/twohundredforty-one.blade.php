@@ -82,13 +82,12 @@
 
                     <!-- BILL TO -->
                     <tr>
-                        <td>
-                            <table width="100%" cellpadding="0" cellspacing="0"
-                                style="border-collapse: collapse;padding:10px 50px 5px 50px; position: relative;">
+                        <td style="padding:10px 50px 5px 50px; position: relative;">
+                            <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse: collapse;">
                                 <tr>
-                                    <td style="font-size:14px; line-height:18px;">
+                                    <td style="font-size:14px; line-height:18px; position: relative;">
                                         <img src="{{ $invoice_image3 }}" alt=""
-                                            style="position: absolute ;   width: 30px;top: -47px;left: 10px;">
+                                            style="position: absolute; width: 30px; top: -47px; left: 10px;">
                                         <strong>To:</strong><br>
                                         {{ $customer_name ? $customer_name : '' }}<br>
                                         {{ $customer_email ? $customer_email : '' }}<br>
@@ -98,7 +97,6 @@
                             </table>
                         </td>
                     </tr>
-
                     <!-- INVOICE TABLE -->
                     <tr>
                         <td align="center">
