@@ -20,13 +20,13 @@
 
                 <!-- MAIN CONTAINER -->
                 <table width="100%" cellpadding="0" cellspacing="0"
-                    style="background:red;border-collapse: collapse; ">
+                    style="background:#FFFCF8; border-radius:6px; overflow:hidden;">
 
                     <!-- HEADER -->
                     <tr>
                         <td>
                             <table width="100%" cellpadding="0" cellspacing="0"
-                                style="border-collapse: collapse;padding:60px 50px 10px 50px;">
+                                style="padding:60px 50px 10px 50px;position: relative;">
                                 <tr>
                                     <!-- LEFT SIDE -->
                                     <td width="60%" valign="top">
@@ -109,7 +109,7 @@
                                 <tr>
                                     <th
                                         style="padding:10px 5px; text-align:left; border-bottom:1px solid #3C8F89; color:#3C8F89; font-weight:bold;">
-                                        DESCRIPTIONnnnnnnn
+                                        DESCRIPTION
                                     <!-- </th>
                                     <th
                                         style="padding:10px 5px; text-align:center; border-bottom:2px solid #3C8F89; color:#3C8F89; font-weight:bold;">
