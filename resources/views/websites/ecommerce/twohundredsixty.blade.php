@@ -100,7 +100,7 @@
                                        <p style="color: #F9BE02;margin:0px;font-family:Heebo;font-size:11px;font-weight: 500;">Total</p>
                                      </td>
                                      <td align="right">
-                                       <p style="color: #F9BE02;margin:0px;font-family:Heebo;font-size:11px;font-weight: 500;">{{ number_format($invoice_amount, 2) }}</p>
+                                       <p style="color: #F9BE02;margin:0px;font-family:Heebo;font-size:11px;font-weight: 500;">{{ site_currency() }}{{ number_format($invoice_amount, 2) }}</p>
                                      </td>
                                     </tr>
                                 </table>
