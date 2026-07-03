@@ -3,7 +3,7 @@
 <head>
     <title>{{ $site_name }}</title>
 </head>
-<body>
+<body style="background-color: #19144C;">
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
             <td align="center" bgcolor="#19144C" style="padding:0px;">
