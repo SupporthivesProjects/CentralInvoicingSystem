@@ -195,7 +195,7 @@
                                         background-position: center; padding: 30px; color: #333; font-family: 'Montserrat'; font-size: 7px;">
                                 <tr>
                                     <td style="width: 40%; vertical-align: top;">
-                                        <strong style="font-size: 10px; display: block; margin-bottom: 10px; text-decoration: underline white;">More
+                                        <strong style="font-size: 14px; display: block; margin-bottom: 10px; text-decoration: underline white;">More
                                             Information</strong>{!! $company_address !!}<br>
                                         {{ $company_mobile }}
                                     </td>
