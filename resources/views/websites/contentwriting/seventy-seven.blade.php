@@ -93,7 +93,7 @@
                                         <p style="font-size: 8px;">
                                             {!! $company_address !!}<br>
                                             {{ $company_mobile }}<br>
-                                            <b>{{ $site_name }}</b>
+                                            <b>skyrocketcontent.co</b>
                                         </p>
                                     </td>
 
