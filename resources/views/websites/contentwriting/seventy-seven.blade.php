@@ -91,9 +91,9 @@
                                         <strong style="font-size: 13px;">Invoice From :</strong><br>
                                         <span style="color: #397872; font-weight: bold; font-size: 17px;">{{ $site_name }}</span><br>
                                         <p style="font-size: 8px;">
-                                            {!! $company_address !!}<br>
-                                            {{ $company_mobile }}<br>
-                                            <b>skyrocketcontent.co</b>
+                                            {!! $company_address !!}<br><br>
+                                            {{ $company_mobile }}<br><br>
+                                            skyrocketcontent.co
                                         </p>
                                     </td>
 
