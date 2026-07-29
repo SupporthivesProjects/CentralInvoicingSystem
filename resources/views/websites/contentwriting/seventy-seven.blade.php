@@ -93,7 +93,7 @@
                                         <p style="font-size: 8px;">
                                             {!! $company_address !!}<br>
                                             {{ $company_mobile }}<br>
-                                            <b>{{ $site->site_link }}</b>
+                                            <b>{{ $site_name }}</b>
                                         </p>
                                     </td>
 
