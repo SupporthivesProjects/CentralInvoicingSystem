@@ -104,7 +104,7 @@
                                     </td>
                                 </tr>
                             </table>
-                            <div style="min-height:625px !important;">
+                            <div style="min-height:600px !important;">
                             <table width="100%" cellpadding="10" cellspacing="0"
                                 style="font-family: 'Montserrat'; border-collapse: collapse; font-size: 9px;">
                                 <!-- Header Row -->
@@ -196,7 +196,7 @@
                                 <tr>
                                     <td style="width: 40%; vertical-align: top;">
                                         <strong style="font-size: 14px; display: block; margin-bottom: 10px; text-decoration: underline white;">More
-                                            Information</strong>{!! $company_address !!}<br>
+                                            Information</strong>{!! $company_address !!}<br><br>
                                         {{ $company_mobile }}
                                     </td>
                                     <td style="width: 30%; vertical-align: top;"></td>
