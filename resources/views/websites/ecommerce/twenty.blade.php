@@ -61,7 +61,7 @@
                     <!-- Content -->
                     <tr class="invoice_image1" >
                         <td style="padding:40px;display: flex;flex-direction: column;">
-                            
+
                         <table width="100%" style="margin-top: 40px; border-collapse: collapse;">
                             <tr>
                                 <td style="width: 50%; vertical-align: middle;">
@@ -224,7 +224,7 @@
                     <!-----------Footer----------->
                     <tr>
                         <td align="center" class="invoice_footer_image">
-                            <table width="100%" cellspacing="0" cellpadding="" border="0" style="border-collapse: collapse;"> 
+                            <table width="100%" cellspacing="0" cellpadding="" border="0" style="border-collapse: collapse;">
                                 <tr>
                                 <td style="padding-left: 40px;">
                                     <table style="margin-bottom: 10px;">
@@ -253,11 +253,11 @@
                                     </table>
                                 </td>
 
-                                </tr>              
+                                </tr>
                             </table>
                         </td>
-                    </tr> 
-                    <!-----------Footer End----------->    
+                    </tr>
+                    <!-----------Footer End----------->
                 </table>
             </td>
         </tr>

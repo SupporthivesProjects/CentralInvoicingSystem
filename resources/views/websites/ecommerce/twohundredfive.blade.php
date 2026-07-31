@@ -67,7 +67,6 @@
                                     </thead>
                                     <tbody style="color: white;">
                                         @foreach ($products as $product)
-                                        @foreach ($products as $product)
                                         <tr>
                                             <td style="padding: 12px; border-bottom: 1px solid #ccc;">{{ $product->name }}</td>
                                             <td style="padding: 12px; text-align: right; border-bottom: 1px solid #ccc;">
@@ -79,8 +78,6 @@
                                                 
                                             </td>
                                         </tr>
-                                        @endforeach
-
                                         @endforeach
                                         {{-- <tr>
                                             <td style="padding: 12px; border-bottom: 1px solid #ccc;">Item Name</td>
