@@ -338,13 +338,7 @@
                         </div>
 
                         <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
-                            {{-- <button type="button" class="btn btn-outline-primary d-flex align-items-center gap-1 me-1"
-                                data-bs-toggle="modal" data-bs-target="#addmoreproducts"
-                                onclick="customizeProducts('onload')" disabled style="cursor: not-allowed;">
-                                <i class="fas fa-plus-square"></i> Add Products
-                            </button> --}}
-
-                            <button type="button" class="btn btn-outline-success d-flex align-items-center gap-1"
+                            <button type="button" class="btn btn-outline-success d-flex align-items-center gap-1 me-1"
                                 onclick="randomizeProducts('semi_random')">
                                 <i class="fas fa-random"></i> Randomize
                             </button>
@@ -364,36 +358,6 @@
                     <div class="card-body">
                         <div class="container">
                             <div class="row g-3 justify-content-center mb-3">
-                                {{--
-                                <div class="col-md-3">
-                                    <div class="d-flex flex-column align-items-center h-100">
-                                        <small class="text-muted fw-semibold mb-2">No. of Products</small>
-                                        <div class="input-group shadow-sm bg-white w-100">
-                                            <button class="btn btn-outline-primary" type="button"
-                                                onclick="adjustNoOfProducts('noOfProducts', -1)">−</button>
-                                            <input type="text" class="form-control text-center" name="noOfProducts"
-                                                id="noOfProducts" min="1" max="2" placeholder="Auto"
-                                                onfocus="this.placeholder = ''" onblur="this.placeholder = 'Auto'"
-                                                readonly>
-                                            <button class="btn btn-outline-primary" type="button"
-                                                onclick="adjustNoOfProducts('noOfProducts', 1)">+</button>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <div class="d-flex flex-column align-items-center h-100 ms-3">
-                                        <small class="text-muted fw-semibold mb-2">Price Range</small>
-                                        <div class="w-100 h-100">
-                                            <div id="randomize-price-slider" class="w-100"></div>
-                                            <input type="hidden" name="price_from"
-                                                id="hidden_randomize_price_from_input_id">
-                                            <input type="hidden" name="price_to"
-                                                id="hidden_randomize_price_to_input_id">
-                                        </div>
-                                    </div>
-                                </div>--}}
-
                                 <div class="col-md-3">
                                     <div class="d-flex flex-column align-items-center h-100">
                                         <small class="text-muted fw-semibold mb-2">Product Category</small>
@@ -417,9 +381,9 @@
                                         <th class="text-center" style="width: 12%;">Translation</th>
                                         <th class="text-center" style="width: 16%;">From Language</th>
                                         <th class="text-center" style="width: 16%;">To Language</th>
-                                        <th class="text-center" style="width: 22%;">Editable Price</th>
-                                        <th class="text-center" style="width: 17%;">Pages/Words</th>
-                                        <th class="text-center" style="width: 6%;">Hurry</th>
+                                        <th class="text-center" style="width: 20%;">Editable Price</th>
+                                        <th class="text-center" style="width: 16%;">Pages/Words</th>
+                                        <th class="text-center" style="width: 9%;">Urgency</th>
                                         <th class="text-center" style="width: 12%;">Total</th>
                                         <th class="text-center" style="width: 6%;">Remove</th>
                                     </tr>
@@ -597,8 +561,6 @@
 
 @endsection
 @push('scripts')
-<!-- Include Select2 JS -->
-
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
     <script src="https://unpkg.com/feather-icons"></script>
     <script>
@@ -607,19 +569,38 @@
     
     <script>
         $(document).ready(function() {
-            $('html, body').animate({
-                scrollTop: 200
-            }, 500);
+            $('html, body').animate({ scrollTop: 200 }, 500);
             $('#current_amount').val('loading...');
             $('#discount_amount').prop('type', 'text').val('loading...').prop('readonly', true);
         });
     </script>
+
+    <script>
+        function ensureHiddenInputs() {
+            $('.line-total').each(function() {
+                var $cell = $(this);
+                var productId = $cell.data('product-id');
+                var lineTotal = parseFloat($cell.text().replace(siteCurrency, '').replace(/,/g, '')) || 0;
+                var $hiddenInput = $cell.find('input[type="hidden"]');
+                if ($hiddenInput.length === 0) {
+                    $hiddenInput = $('<input>')
+                        .attr('type', 'hidden')
+                        .attr('form', 'generate-invoice-form')
+                        .attr('name', 'products[' + productId + '][line_total]')
+                        .val(lineTotal.toFixed(2));
+                    $cell.append($hiddenInput);
+                } else {
+                    $hiddenInput.val(lineTotal.toFixed(2));
+                }
+            });
+        }
+    </script>
+
     <script>
         function adjustNoOfProducts(id, step) {
             const input = document.getElementById(id);
             let val = input.value === 'Auto' || input.value === '' ? 1 : parseInt(input.value) || 1;
             val = Math.max(1, Math.min(2, val + step));
-
             if (val === 1) {
                 input.value = '';
                 input.placeholder = 'Auto';
@@ -627,20 +608,16 @@
                 input.value = val;
                 input.placeholder = '';
             }
-
             triggerRandomizeProducts();
         }
 
         let randomizeTimeout;
-
         function triggerRandomizeProducts() {
             clearTimeout(randomizeTimeout);
-            randomizeTimeout = setTimeout(() => {
-                randomizeProducts('semi_random');
-            }, 1500);
+            randomizeTimeout = setTimeout(() => { randomizeProducts('semi_random'); }, 1500);
         }
 
-        document.getElementById('noOfProducts').addEventListener('change', triggerRandomizeProducts);
+        document.getElementById('noOfProducts') && document.getElementById('noOfProducts').addEventListener('change', triggerRandomizeProducts);
     </script>
 
     <script>
@@ -660,40 +637,29 @@
             }
         };
 
-        noUiSlider.create(randomizePriceSlider, {
-            start: [minUnitPrice, maxUnitPrice],
-            connect: true,
-            step: 5,
-            range: {
-                min: minUnitPrice,
-                max: maxUnitPrice
-            },
-            tooltips: [true, true],
-            format: {
-                to: v => `${currency}${Math.round(v)}`,
-                from: v => Number(v.replace(currency, ''))
-            }
-        });
+        if (randomizePriceSlider) {
+            noUiSlider.create(randomizePriceSlider, {
+                start: [minUnitPrice, maxUnitPrice],
+                connect: true,
+                step: 5,
+                range: { min: minUnitPrice, max: maxUnitPrice },
+                tooltips: [true, true],
+                format: { to: v => `${currency}${Math.round(v)}`, from: v => Number(v.replace(currency, '')) }
+            });
+        }
 
         noUiSlider.create(customizePriceSlider, {
             start: [minUnitPrice, maxUnitPrice],
             connect: true,
             step: 5,
-            range: {
-                min: minUnitPrice,
-                max: maxUnitPrice
-            },
+            range: { min: minUnitPrice, max: maxUnitPrice },
             tooltips: [true, true],
-            format: {
-                to: v => `${currency}${Math.round(v)}`,
-                from: v => Number(v.replace(currency, ''))
-            }
+            format: { to: v => `${currency}${Math.round(v)}`, from: v => Number(v.replace(currency, '')) }
         });
 
         updateHiddenInputs(minUnitPrice, maxUnitPrice, 'randomize');
         updateHiddenInputs(minUnitPrice, maxUnitPrice, 'customize');
     </script>
-
 
     <script>
         let customizeSliderTimer;
@@ -708,7 +674,7 @@
             }, 1500);
         });
 
-        randomizePriceSlider.noUiSlider.on('change', function(values) {
+        randomizePriceSlider && randomizePriceSlider.noUiSlider.on('change', function(values) {
             clearTimeout(randomizeSliderTimer);
             randomizeSliderTimer = setTimeout(() => {
                 const [min, max] = values.map(v => Math.round(parseFloat(v.replace(currency, ''))));
@@ -756,7 +722,6 @@
                     price_from: $('#hidden_randomize_price_from_input_id').val(),
                     price_to: $('#hidden_randomize_price_to_input_id').val(),
                     filter_type: $('#filter_type').val(),
-                    //category_id: $('#category_id').val().trim(),
                     noOfProducts: $('#noOfProducts').val()
                 },
                 beforeSend: function() {
@@ -772,7 +737,7 @@
                     $('#discount_amount').val(0.00);
                     if (response.total === 0) {
                         $('#randomize-product-table-body').html(getErrorRowHTML(
-                            'No results found. Try randomizing or use a different keyword.',10));
+                            'No results found. Try randomizing or use a different keyword.', 10));
                         return;
                     } else {
                         const invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
@@ -797,31 +762,19 @@
         }
 
         $(document).ready(function() {
-            //alert(1);
             randomizeProducts('smart_random');
         });
     </script>
-
 
     <script>
         customizeRequest = null;
 
         function customizeProducts(search_type = 'search', page = 1) {
-            console.log("Triggered with type:", search_type);
-            console.log("customizeRequest:", customizeRequest);
-
-            if (search_type === 'onload' && customizeRequest !== null) {
-                console.log("Blocked onload request because a request is ongoing");
-                return;
-            }
-
+            if (search_type === 'onload' && customizeRequest !== null) return;
             if (search_type !== 'onload' && customizeRequest !== null) {
-                console.log("Aborting previous request...");
                 customizeRequest.abort();
                 customizeRequest = null;
             }
-
-
 
             let btn = $('#add-custom-products');
             btn.prop('disabled', false).html('Add Selected to Cart');
@@ -831,7 +784,6 @@
             const customizeKeywordInput = $('#customizeKeywordInput').val();
             let invoice_amount = parseFloat($('#invoice_amount').val()) || 0;
             let current_amount = parseFloat($('#current_amount').val()) || 0;
-
             let discountAmount = Math.max(current_amount - invoice_amount, 0);
 
             $('#temp_current_amount_text').text(current_amount.toFixed(2));
@@ -839,10 +791,7 @@
             $('#temp_discount_amount_text').text(discountAmount.toFixed(2));
 
             if (!priceFrom && !priceTo) {
-                $('#customize-product-table-body').html(
-                    getErrorRowHTML(
-                        'No products found for your keyword. Try a different keyword or adjust the range filter.',10)
-                );
+                $('#customize-product-table-body').html(getErrorRowHTML('No products found for your keyword. Try a different keyword or adjust the range filter.', 10));
                 $('#error-row').fadeIn(300).delay(3000).fadeOut(500);
                 return;
             }
@@ -851,97 +800,68 @@
                 return;
             }
 
-
             $('#customize-product-table-body').html(getProductsSearchRowHTML());
 
             customizeRequest = $.ajax({
                 url: "{{ route('filter.products') }}",
                 type: 'GET',
-                data: {
-                    price_from: priceFrom,
-                    price_to: priceTo,
-                    search_type: search_type,
-                    keyword: customizeKeywordInput,
-                    page: page
-                },
+                data: { price_from: priceFrom, price_to: priceTo, search_type: search_type, keyword: customizeKeywordInput, page: page },
                 success: function(response) {
                     if (!response.tableRows) {
-                        $('#customize-product-table-body').html(
-                            getErrorRowHTML(
-                                'No products found for your keyword. Try a different keyword or adjust the range filter.'
-                            ,10)
-                        );
+                        $('#customize-product-table-body').html(getErrorRowHTML('No products found for your keyword. Try a different keyword or adjust the range filter.', 10));
                         return;
                     }
-
                     $('#customize-product-table-body').html(response.tableRows);
                     $('#customize-pagination').html(response.paginationHtml);
                     calculateTotalPrice();
                 },
                 error: function(xhr, textStatus) {
                     if (textStatus !== 'abort') {
-                        console.error('AJAX Error:', textStatus);
-                        $('#customize-product-table-body').html(getErrorRowHTML(
-                            'Something went wrong while filtering.',10));
+                        $('#customize-product-table-body').html(getErrorRowHTML('Something went wrong while filtering.', 10));
                         toastr.error('Something went wrong while filtering.', 'Oops!');
                     }
                 },
                 complete: function() {
-                    console.log("Request complete");
                     customizeRequest = null;
                 }
             });
         }
     </script>
 
-
     <script>
         function clearRandomizedFilter(button) {
-        const icon = $(button).find('i');
-        const originalIconClass = 'fa-filter-circle-xmark';
+            const icon = $(button).find('i');
+            const originalIconClass = 'fa-filter-circle-xmark';
+            icon.removeClass(originalIconClass).addClass('fa-spinner fa-spin');
 
-        // Show spinner while processing
-        icon.removeClass(originalIconClass).addClass('fa-spinner fa-spin');
-
-        $.ajax({
-            url: "{{ route('clear.products') }}",
-            type: 'GET',
-            success: function(response) {
-                if (response.success) {
-                    // Clear input values
-                    $('.product-price').val('');
-                    $('#current_amount').val('0.00');
-                    $('#discount_amount').val('0.00');
-
-                    // Update display fields
-                    $('#temp_current_amount_text').text('0.00');
-                    $('#temp_discount_amount_text').text('0.00');
-                    $('#temp_invoice_amount_text').text($('#invoice_amount').val());
-
-                    // Clear table body
-                    $('#randomize-product-table-body').html(getErrorRowHTML(
-                        'Randomize filter cleared. You can now randomize products again or add custom products.',10
-                    ));
-
-                    // Show toast
-                    toastr.success(response.message || 'Randomized products filter has been reset');
-
-                    // Recalculate amounts
-                    calculateTotalPrice();
-                } else {
-                    toastr.error(response.message || 'Failed to clear randomized products.');
+            $.ajax({
+                url: "{{ route('clear.products') }}",
+                type: 'GET',
+                success: function(response) {
+                    if (response.success) {
+                        $('.product-price').val('');
+                        $('#current_amount').val('0.00');
+                        $('#discount_amount').val('0.00');
+                        $('#temp_current_amount_text').text('0.00');
+                        $('#temp_discount_amount_text').text('0.00');
+                        $('#temp_invoice_amount_text').text($('#invoice_amount').val());
+                        $('#randomize-product-table-body').html(getErrorRowHTML(
+                            'Randomize filter cleared. You can now randomize products again or add custom products.', 10
+                        ));
+                        toastr.success(response.message || 'Randomized products filter has been reset');
+                        calculateTotalPrice();
+                    } else {
+                        toastr.error(response.message || 'Failed to clear randomized products.');
+                    }
+                },
+                error: function() {
+                    toastr.error('An error occurred while clearing randomized products. Please try again.');
+                },
+                complete: function() {
+                    icon.removeClass('fa-spinner fa-spin').addClass(originalIconClass);
                 }
-            },
-            error: function() {
-                toastr.error('An error occurred while clearing randomized products. Please try again.');
-            },
-            complete: function() {
-                // Restore original icon
-                icon.removeClass('fa-spinner fa-spin').addClass(originalIconClass);
-            }
-        });
-    }
-
+            });
+        }
     </script>
 
     <script>
@@ -950,9 +870,7 @@
 
             const customer_name = $('input[name="customer_name"]');
             const invoice_date = $('input[name="invoice_date"]');
-            const selectedProducts = $('input[name="product_ids[]"]:checked');
             const invoiceNumber = $('input[name="invoice_number"]').val();
-
             const invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
             const currentAmount = parseFloat($('#current_amount').val()) || 0;
             const discountAmount = parseFloat($('#discount_amount').val()) || 0;
@@ -963,36 +881,24 @@
                 const row = $(this);
                 const from_language = row.find('.from-language-dropdown');
                 const to_language = row.find('.to-language-dropdown');
-
                 const from_language_value = from_language.val();
                 const to_language_value = to_language.val();
 
                 if (!from_language_value || !to_language_value) {
                     toastr.error('Please select both From and To languages.', 'Language Missing');
                     hasError = true;
-                    return false; // break loop early
+                    return false;
                 }
 
                 if (from_language_value === to_language_value) {
                     toastr.error('From and To languages cannot be the same.', 'Language Mismatch');
                     hasError = true;
-                    return false; // break loop early
+                    return false;
                 }
             });
 
-            if (hasError) {
-                return; // stop further processing
-            }
+            if (hasError) return;
 
-// Continue with form submission or processing...
-
-
-
-
-            // if (selectedProducts.length === 0) {
-            //     toastr.error('Please select your products combo...', 'No Product Selected');
-            //     return;
-            // }
             if ($.trim(customer_name.val()) === '') {
                 toastr.error('Customer name cannot be empty.', 'Missing Customer Name');
                 return;
@@ -1005,9 +911,7 @@
 
             if (currentAmount < invoiceAmount) {
                 $('#current_amount').addClass('border border-danger');
-                setTimeout(() => {
-                    $('#current_amount').removeClass('border border-danger');
-                }, 2000);
+                setTimeout(() => { $('#current_amount').removeClass('border border-danger'); }, 2000);
                 toastr.error('Total is less than invoice amount.', 'Mismatch');
                 return;
             }
@@ -1018,16 +922,10 @@
             if (Math.abs(expectedAmount - invoiceAmount) > epsilon) {
                 const diff = currentAmount - invoiceAmount;
                 const diffFixed = diff.toFixed(2);
-
                 $('#discount_amount').addClass('border border-danger');
-                setTimeout(() => {
-                    $('#discount_amount').removeClass('border border-danger');
-                }, 2000);
-
+                setTimeout(() => { $('#discount_amount').removeClass('border border-danger'); }, 2000);
                 if (discountAmount > diff) {
-                    toastr.error(
-                        `The discount amount of $${discountAmount} exceeds the expected discount of $${diffFixed}.`,
-                        'Discount Too High');
+                    toastr.error(`The discount amount of $${discountAmount} exceeds the expected discount of $${diffFixed}.`, 'Discount Too High');
                 } else {
                     toastr.error(`Please apply a discount of $${diffFixed} to match the invoice amount.`, 'Give Discount');
                 }
@@ -1036,39 +934,12 @@
 
             if (!invoiceNumber) {
                 toastr.error('Please enter your invoice number or generate one randomly.', 'Invoice Number Missing');
-                let blinkCount = 0;
-                const interval = setInterval(() => {
-                    invoiceNumber.toggleClass('border border-danger');
-                    blinkCount++;
-                    if (blinkCount >= 10) {
-                        clearInterval(interval);
-                        invoiceNumber.removeClass('border border-danger');
-                    }
-                }, 200);
                 return;
             }
-
-            $('#generate-invoice-form').find('input[name="product_data[]"]').remove();
-
-            selectedProducts.each(function() {
-                const productId = $(this).val();
-                const unitPrice = $(`input[data-product-id="${productId}"]`).val();
-
-                $('#generate-invoice-form').append($('<input>', {
-                    type: 'hidden',
-                    name: 'product_data[]',
-                    value: JSON.stringify({
-                        product_id: productId,
-                        unit_price: unitPrice
-                    })
-                }));
-            });
-
 
             let blinkCount = 0;
             const maxBlinkCount = 30;
             const blinkInterval = 500;
-
             $('#discount_amount, #current_amount, #invoice_amount').css('transition', 'border-color 0.3s ease');
 
             (function blinkBorder() {
@@ -1090,10 +961,7 @@
                 width: '334px',
                 height: '280px',
                 background: 'rgba(0, 0, 0, 0.1)',
-                customClass: {
-                    popup: 'p-2 text-center',
-                    title: 'text-white'
-                }
+                customClass: { popup: 'p-2 text-center', title: 'text-white' }
             });
 
             $('#generate-invoice-form')[0].submit();
@@ -1105,7 +973,6 @@
         }
     </script>
 
-
     <script>
         $(document).ready(function() {
             $('#generateInvoiceNumber').on('click', function() {
@@ -1113,9 +980,7 @@
                 $.ajax({
                     url: "{{ route('generate.invoice.number') }}",
                     method: 'GET',
-                    data: {
-                        site_name: "{{ $customer['site_name'] }}",
-                    },
+                    data: { site_name: "{{ $customer['site_name'] }}" },
                     success: function(response) {
                         if (response.success && response.new_invoice_number) {
                             $('#invoice_number').val(response.new_invoice_number);
@@ -1125,13 +990,13 @@
                         }
                     },
                     error: function() {
-                        toastr.error('There was an error generating the invoice number.',
-                            'Error');
+                        toastr.error('There was an error generating the invoice number.', 'Error');
                     }
                 });
             });
         });
     </script>
+
     <script>
         $('#sitechangemodel').on('shown.bs.modal', function() {
             $('#new_site_id').select2({
@@ -1140,51 +1005,39 @@
                 allowClear: true,
                 width: '100%'
             });
-
         });
     </script>
+
     <script>
         $(document).ready(function() {
             let sessionAmount = parseFloat("{{ session('invoice_amount') ?? 0 }}");
+            let isUpdating = false;
 
             function setEditIcon() {
-                $('#update_invoice_amount')
-                    .removeClass('bg-warning bg-success')
-                    .addClass('bg-light')
+                $('#update_invoice_amount').removeClass('bg-warning bg-success').addClass('bg-light')
                     .html('<i data-feather="edit" id="icon" style="color: black;width:20px;"></i>');
                 feather.replace();
             }
 
             function setUploadIcon() {
-                $('#update_invoice_amount')
-                    .removeClass('bg-light bg-success')
-                    .addClass('bg-warning')
+                $('#update_invoice_amount').removeClass('bg-light bg-success').addClass('bg-warning')
                     .html('<i data-feather="upload-cloud" id="icon" style="color: black;width:20px;"></i>');
                 feather.replace();
             }
 
             function setLoader() {
-                $('#update_invoice_amount')
-                    .removeClass('bg-warning bg-light bg-success')
-                    .addClass('bg-warning')
-                    .html(
-                        '<div class="d-flex align-items-center justify-content-center" style="width:20px;">' +
-                        '<div class="spinner-border text-dark" style="width: 18px; height: 18px;" role="status">' +
-                        '<span class="visually-hidden">Loading...</span>' +
-                        '</div>' +
-                        '</div>'
-                    );
+                $('#update_invoice_amount').removeClass('bg-warning bg-light bg-success').addClass('bg-warning')
+                    .html('<div class="d-flex align-items-center justify-content-center" style="width:20px;"><div class="spinner-border text-dark" style="width: 18px; height: 18px;" role="status"><span class="visually-hidden">Loading...</span></div></div>');
             }
 
             function setSuccessIcon() {
-                $('#update_invoice_amount')
-                    .removeClass('bg-warning')
-                    .addClass('bg-success')
+                $('#update_invoice_amount').removeClass('bg-warning').addClass('bg-success')
                     .html('<i data-feather="check-circle" id="icon" style="color: white;width:20px;"></i>');
                 feather.replace();
             }
 
             $('#invoice_amount').on('input', function() {
+                if (isUpdating) return;
                 let currentVal = parseFloat($(this).val());
                 if (!isNaN(currentVal) && currentVal !== sessionAmount) {
                     setUploadIcon();
@@ -1195,52 +1048,46 @@
 
             $(document).on('click', '#update_invoice_amount', function() {
                 let currentVal = parseFloat($('#invoice_amount').val());
-                if (isNaN(currentVal) || currentVal === sessionAmount) {
-                    return;
-                }
+                if (isNaN(currentVal) || currentVal === sessionAmount) return;
 
+                isUpdating = true;
                 setLoader();
-
-                let invoice_amount = $('#invoice_amount').val();
-                let invoice_date = $('#invoice_date').val();
-                let customer_name = $('#customer_name').val();
-                let customer_email = $('#customer_email').val();
-                let customer_mobile = $('#customer_mobile').val();
 
                 $.ajax({
                     url: "{{ route('update.invoice.amount') }}",
                     type: 'POST',
                     data: {
-                        invoice_amount,
-                        invoice_date,
-                        customer_name,
-                        customer_email,
-                        customer_mobile,
+                        invoice_amount: $('#invoice_amount').val(),
+                        invoice_date: $('#invoice_date').val(),
+                        customer_name: $('#customer_name').val(),
+                        customer_email: $('#customer_email').val(),
+                        customer_mobile: $('#customer_mobile').val(),
                         _token: '{{ csrf_token() }}'
                     },
                     success: function(response) {
                         if (response.success) {
-                            sessionAmount = parseFloat(invoice_amount);
+                            sessionAmount = parseFloat($('#invoice_amount').val());
                             setSuccessIcon();
-
-                            $('#invoice_amount').val(response.updated.invoice_amount);
                             $('#invoice_date').val(response.updated.invoice_date);
                             $('#customer_name').val(response.updated.customer_name);
                             $('#customer_email').val(response.updated.customer_email);
                             $('#customer_mobile').val(response.updated.customer_mobile);
-                            randomizeProducts();
-                            setTimeout(() => {
-                                setEditIcon();
-                            }, 4000);
+                            if (typeof calculateTotalPrice === 'function') calculateTotalPrice();
+                            setTimeout(() => { setEditIcon(); isUpdating = false; }, 4000);
                         }
                     },
                     error: function() {
                         setEditIcon();
+                        isUpdating = false;
+                    },
+                    complete: function() {
+                        setTimeout(function() { isUpdating = false; }, 100);
                     }
                 });
             });
         });
     </script>
+
     <script>
         $(document).ready(function() {
             $('.unit-price-header').click(function() {
@@ -1252,25 +1099,105 @@
                 var order = $header.data('order');
 
                 $rows.sort(function(a, b) {
-                    var A = $(a).find('td').eq(column).text().trim();
-                    var B = $(b).find('td').eq(column).text().trim();
-
-                    A = parseFloat(A.replace(/[^\d.-]/g, '')) || 0;
-                    B = parseFloat(B.replace(/[^\d.-]/g, '')) || 0;
-
+                    var A = parseFloat($(a).find('td').eq(column).text().trim().replace(/[^\d.-]/g, '')) || 0;
+                    var B = parseFloat($(b).find('td').eq(column).text().trim().replace(/[^\d.-]/g, '')) || 0;
                     return (order === 'asc') ? (A - B) : (B - A);
                 });
 
-                $.each($rows, function(index, row) {
-                    $tbody.append(row);
-                });
+                $.each($rows, function(index, row) { $tbody.append(row); });
 
                 var newOrder = (order === 'asc') ? 'desc' : 'asc';
                 $header.data('order', newOrder);
-
-                $header.find('i')
-                    .removeClass('bi-caret-down-fill bi-caret-up-fill')
+                $header.find('i').removeClass('bi-caret-down-fill bi-caret-up-fill')
                     .addClass(newOrder === 'asc' ? 'bi-caret-up-fill' : 'bi-caret-down-fill');
+            });
+        });
+    </script>
+
+    <script>
+        let discountManuallyChanged = false;
+
+        $(document).on('input', '.product-price', function() {
+            discountManuallyChanged = true;
+            calculateTotalPrice();
+        });
+
+        $(document).on('input', '#discount_amount', function() {
+            discountManuallyChanged = true;
+            calculateTotalPrice();
+        });
+
+        $(document).on('blur', '#discount_amount', function() {
+            calculateTotalPrice();
+        });
+
+        function calculateTotalPrice() {
+            var total = 0;
+
+            $('.product-row').each(function () {
+                var $row      = $(this);
+                var unitPrice = parseFloat($row.find('.product-price').val()) || 0;
+                var pages     = parseInt($row.find('.product-pages').val()) || 1;
+                var urgencyAdd = 0;
+
+                var $group = $row.find('.urgency-radio-group');
+                if ($group.length) {
+                    var $checked    = $group.find('.urgency-radio:checked');
+                    var urgencyType = $checked.length ? $checked.val() : 'none';
+                    if (urgencyType && urgencyType !== 'none') {
+                        var rate = parseFloat($checked.data('rate')) || 0;
+                        urgencyAdd = (urgencyType === 'flat') ? rate : (rate * pages);
+                    }
+                }
+
+                var rowTotal = (unitPrice * pages) + urgencyAdd;
+                total += rowTotal;
+
+                var $totalCell   = $row.find('.line-total');
+                var $hiddenTotal = $totalCell.find('input[type="hidden"]');
+                $totalCell.text(typeof siteCurrency !== 'undefined' ? siteCurrency + rowTotal.toFixed(2) : '$' + rowTotal.toFixed(2));
+                $hiddenTotal.val(rowTotal.toFixed(2));
+
+                $row.find('.urgency-add-hidden').val(urgencyAdd.toFixed(2));
+                $row.find('input[name*="[urgent_amount]"]').val(urgencyAdd.toFixed(2));
+            });
+
+            $('#products-total').text('$' + total.toFixed(2));
+            $('#current_amount').val(total.toFixed(2));
+
+            var invoiceAmount   = parseFloat($('#invoice_amount').val()) || 0;
+            var discountAmount  = total - invoiceAmount;
+            if (discountAmount < 0) discountAmount = 0;
+
+            $('#discount_amount').val(discountAmount.toFixed(2));
+
+            var enteredDiscount = parseFloat($('#discount_amount').val()) || 0;
+            var sum             = total - enteredDiscount;
+            var isMatching      = Math.abs(sum - invoiceAmount) < 0.01;
+
+            if (isMatching) {
+                $('#current_amount, #discount_amount, #invoice_amount').removeClass('text-danger').addClass('text-success');
+            } else {
+                $('#current_amount, #discount_amount').removeClass('text-success').addClass('text-danger');
+                var difference  = Math.abs(total - invoiceAmount);
+                var percentDiff = invoiceAmount > 0 ? (difference / invoiceAmount) * 100 : 100;
+                if (percentDiff <= 5) {
+                    $('#invoice_amount').removeClass('text-danger').addClass('text-success');
+                } else {
+                    $('#invoice_amount').removeClass('text-success').addClass('text-danger');
+                }
+            }
+        }
+
+        $(document).ready(function() {
+            calculateTotalPrice();
+
+            $(document).on('input', '.product-pages', function() {
+                calculateTotalPrice();
+            });
+
+            $(document).on('change', '.urgency-radio', function() {
+                calculateTotalPrice();
             });
         });
     </script>
@@ -1286,8 +1213,7 @@
             inputField.placeholder = "Please speak product name or category";
 
             if (!('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
-                toastr.error(
-                    "Your browser does not support voice recognition. Please try using a modern browser like Chrome.");
+                toastr.error("Your browser does not support voice recognition. Please try using a modern browser like Chrome.");
                 return;
             }
 
@@ -1299,13 +1225,11 @@
             const recognition = new(window.SpeechRecognition || window.webkitSpeechRecognition)();
             recognition.lang = "en-US";
             recognition.interimResults = false;
-
             recognition.start();
 
             recognition.onresult = function(event) {
-                const transcript = event.results[0][0].transcript;
                 inputField.style.color = "blue";
-                inputField.value = transcript;
+                inputField.value = event.results[0][0].transcript;
             };
 
             recognition.onerror = function(event) {
@@ -1324,161 +1248,5 @@
                 inputField.placeholder = "Enter or Speak product or category name...";
             };
         }
-    </script>
-
-
-    <script>
-        let discountManuallyChanged = false;
-
-        $(document).on('input', '.product-price, input[name="product_ids[]"]', function() {
-            discountManuallyChanged = true;
-            calculateTotalPrice();
-        });
-
-        $(document).on('input', '#discount_amount', function() {
-            discountManuallyChanged = true;
-            calculateTotalPrice();
-        });
-
-        $(document).on('blur', '#discount_amount', function() {
-            calculateTotalPrice();
-        });
-
-        function calculateTotalPrice() {
-    var total = 0;
-
-    $('.product-row').each(function () {
-        var $row = $(this);
-
-        var unitPrice = parseFloat($row.find('.product-price').val()) || 0;
-        var pages = parseInt($row.find('.product-pages').val()) || 1;
-        var urgentAmount = 0;
-
-        var $urgentCheckbox = $row.find('.urgency-checkbox');
-        if ($urgentCheckbox.length && $urgentCheckbox.is(':checked')) {
-            urgentAmount = parseFloat($urgentCheckbox.data('urgent_amount')) || 0;
-        }
-
-        total += (unitPrice * pages) + urgentAmount;
-
-        // Update per-row total
-        var rowTotal = (unitPrice * pages + urgentAmount).toFixed(2);
-        $row.find('.product-total').text('$' + rowTotal);
-    });
-
-    $('#products-total').text('$' + total.toFixed(2));
-    $('#current_amount').val(total.toFixed(2));
-
-    var invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
-    var discountAmount = total - invoiceAmount;
-    if (discountAmount < 0) discountAmount = 0;
-
-    $('#discount_amount').val(discountAmount.toFixed(2));
-    $('#invoice_amount').val(invoiceAmount.toFixed(2));
-
-    var currentAmount = total;
-    var enteredDiscount = parseFloat($('#discount_amount').val()) || 0;
-    var sum = currentAmount - enteredDiscount;
-
-    var isMatching = Math.abs(sum - invoiceAmount) < 0.01;
-
-    if (isMatching) {
-        $('#current_amount, #discount_amount, #invoice_amount').removeClass('text-danger').addClass('text-success');
-    } else {
-        $('#current_amount, #discount_amount').removeClass('text-success').addClass('text-danger');
-
-        var difference = Math.abs(currentAmount - invoiceAmount);
-        var percentDiff = (difference / invoiceAmount) * 100;
-
-        if (percentDiff <= 5) {
-            $('#invoice_amount').removeClass('text-danger').addClass('text-success');
-        } else {
-            $('#invoice_amount').removeClass('text-success').addClass('text-danger');
-        }
-    }
-}
-
-// Run when document is ready
-$(document).ready(function() {
-    console.log("Setting up event handlers for price changes");
-
-    // Initial calculation
-    calculateTotalPrice();
-
-    // IMPORTANT: Listen for input changes in edit price column
-    // Note: This targets ALL inputs in the EDIT PRICE column based on your screenshot
-    $(document).on('input', 'input[type="text"]', function() {
-        console.log("Input detected on text field:", $(this).val());
-        calculateTotalPrice();
-    });
-
-    // Standard listeners for other fields
-    $(document).on('input', '.product-pages', function() {
-        calculateTotalPrice();
-    });
-
-    $(document).on('change', '.urgency-checkbox', function() {
-        calculateTotalPrice();
-    });
-
-    // For the specific edit price field in your screenshot
-    $(document).on('input', '.edit-price-field', function() {
-        console.log("Edit price changed:", $(this).val());
-        calculateTotalPrice();
-    });
-
-    // Alternative selector in case the above doesn't match
-    $('td:contains("EDIT PRICE")').parent().find('input').on('input', function() {
-        console.log("Edit price field changed via column selector");
-        calculateTotalPrice();
-    });
-
-    // More general approach as fallback
-    $('input').on('input', function() {
-        console.log("Any input changed:", $(this).attr('class'), $(this).val());
-        calculateTotalPrice();
-    });
-});
-
-// Function to inspect the DOM and log all input elements
-function inspectInputFields() {
-    console.log("Inspecting all inputs on the page:");
-
-    $('input').each(function(i) {
-        var $input = $(this);
-        console.log(
-            "Input #" + (i+1),
-            "Type:", $input.attr('type'),
-            "Class:", $input.attr('class'),
-            "ID:", $input.attr('id'),
-            "Name:", $input.attr('name'),
-            "Value:", $input.val()
-        );
-    });
-
-    console.log("Inspecting table structure:");
-    $('table tr').each(function(i) {
-        console.log("Row #" + (i+1), "Classes:", $(this).attr('class'));
-        $(this).find('td').each(function(j) {
-            console.log("  Cell #" + (j+1), "Text:", $(this).text().trim(), "Input classes:", $(this).find('input').attr('class'));
-        });
-    });
-}
-
-// Run inspection on page load with a slight delay to ensure everything is loaded
-$(document).ready(function() {
-    setTimeout(inspectInputFields, 500);
-});
-
-
-
-
-
-        // Re-run calculations when the document is ready
-        $(document).ready(function() {
-            calculateTotalPrice();
-        //     $(document).on('keyup', '.product-price', function() {
-        // calculateTotalPrice();
-    });
     </script>
 @endpush

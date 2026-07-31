@@ -1,6 +1,17 @@
 <!DOCTYPE html>
 <head>
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
+    <style>
+        .footer-fixed {
+            position: fixed;
+            bottom: 0px;
+            left: 0;
+            right: 0;
+            width: 100%;
+            /* background: url('{{ $invoice_footer_image }}') center center no-repeat; */
+            /* background-size: cover; */
+        }
+    </style>
 </head>
 <html>
   <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #ffffff;">
@@ -47,7 +58,7 @@
           <tr style="background-color: #0D6966; color: #ffffff;">
             <th align="left">QUANTITY</th>
             <th align="left">DESCRIPTION</th>
-            <th align="right">No of Pages/Words</th>
+            <th align="right">NO OF PAGES/WORDS</th>
             <th align="right">TOTAL</th>
           </tr>
           @foreach($products as $product)
@@ -86,10 +97,14 @@
       </div>
       </td>
     </tr>
-      <tr style=" background: url('{{ $invoice_footer_image }}');background-repeat: no-repeat;background-size: cover;background-position: center;height: 115px;">
-        <td style="padding: 0px; color: #ffffff; font-size: 12px; text-align: center;">
-         {{ $company_email}} |{{  $site_name }}| {{ $company_mobile }}<br/><br>
-        {!! $company_address !!}
+      <tr>
+        <td>
+          <div class="footer-fixed" style="background: url('{{ $invoice_footer_image }}');background-repeat: no-repeat;background-size: cover;background-position: center;color: #ffffff; font-size: 12px; text-align: center;padding: 40px;">
+            
+            {{ $company_email}} |{{  $site_name }}| {{ $company_mobile }}<br/><br>
+            {!! $company_address !!}
+            
+          </div>
         </td>
       </tr>
     </table>

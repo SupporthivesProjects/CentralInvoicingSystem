@@ -34,7 +34,7 @@
 
                      <!-- Content -->
                     <tr style="background: url('{{ $invoice_image4 }}') no-repeat;background-position: center;background-size: cover;">
-                        <td style="padding: 70px;padding-top:80px;">
+                        <td style="padding: 70px;padding-top:28px;">
                             <table>
                                 <br>
                                 <tr>
@@ -70,7 +70,7 @@
                                  
                             </table>
                             
-                            <div style="min-height: 792px !important;">
+                            <div style="min-height: 750px !important;">
                             <table style="border-collapse: collapse;border-bottom: 0px;border: 0px;">
                                 <tr style="border-collapse: collapse;height: 30px;background-color: #0078D7; color: white;border-bottom: 0px;border: 0px;">
                                     <td style="width: 200px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 600;border-collapse: collapse;padding-left: 5px;">
@@ -118,10 +118,10 @@
                                         1
                                     </td>
                                     <td style="width:100px;text-align:left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;">
-                                        {{ site_currency() . number_format($product->unit_price, 2) }}
+                                        {{ site_currency() . ' ' . number_format($product->unit_price, 2) }}
                                     </td>
                                     <td style="width:100px;text-align:right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;">
-                                        {{ site_currency() . number_format($product->unit_price, 2) }}
+                                        {{ site_currency() . ' ' . number_format($product->unit_price, 2) }}
                                     </td>
                                 </tr>
                                 @endforeach
@@ -176,7 +176,7 @@
                                        SUBTOTAL
                                     </td>
                                     <td style="width:100px;text-align:right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;border-bottom: 1px solid black;">
-                                     {{ site_currency() . number_format(($invoice_amount + $discount_amount), 2) }}
+                                     {{ site_currency() . ' ' . number_format(($invoice_amount + $discount_amount), 2) }}
                                     </td>
                                 </tr>
                                   <tr style="border-collapse: collapse;height: 30px;border-bottom: 0px;border: 0px;">
@@ -193,7 +193,7 @@
                                        DISCOUNT
                                     </td>
                                     <td style="width:100px;text-align:right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse;border-bottom: 1px solid black;">
-                                        {{ site_currency() . number_format($discount_amount, 2) }}
+                                        {{ site_currency() . ' ' . number_format($discount_amount, 2) }}
                                     </td>
                                 </tr>
                                  <tr style="border-collapse: collapse;height: 30px;border-bottom: 0px;border: 0px;">
@@ -210,7 +210,7 @@
                                        <b>GRAND TOTAL</b>
                                     </td>
                                     <td style="width:100px;text-align:right;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400; border-collapse: collapse; background-color: #0078D7; color: white;">
-                                        {{ site_currency() . number_format($invoice_amount, 2) }}
+                                        {{ site_currency() . ' ' . number_format($invoice_amount, 2) }}
                                     </td>
                                 </tr>
                                 <br><br>

@@ -8,14 +8,24 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
         rel="stylesheet">
+        <style>
+        *{
+            margin:0px;
+            padding:0px;
+        }
+        a {
+  text-decoration: none;
+  color: #58595B;
+}
+        </style>
 </head>
 
 <body>
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
-            <td align="center" bgcolor="#f2f2f2" style="padding: 20px 0;">
+            <td align="center" bgcolor="#f2f2f2" style="">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
-                    style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
+                    style="border-collapse: collapse; ">
                     <!---header---->
                     <tr style="vertical-align: top;">
                         <td align="left" style="height:50px;padding:0px 40px 0px 20px;">
@@ -36,7 +46,9 @@
                                                         Website</h2>
                                                     <p
                                                         style="margin: 0px;color: #58595B;font-family: Arial;font-size:8px;">
-                                                        {{ $site->site_link }}</p>
+                                                        <a href="https://thewebdesigncrowd.com/">thewebdesigncrowd.com</a>
+                                                        </p>
+                                                        <!-- {{ $site->site_link }} -->
                                                 </td>
                                             </tr>
                                             <tr>
@@ -98,10 +110,10 @@
                     <!---header End---->
                     <!-- Content -->
                     <tr style="background:#ffff ;">
-                        <td style="padding: 40px 20px;padding-bottom: 0px;">
-                            <table border="0" style="border-collapse: collapse;width: 100%;">
+                        <td style="padding: 40px 20px;padding-bottom: 0px;min-height: 945px;">
+                            <table border="0" style="border-collapse: collapse;width: 100%;min-height: 945px;">
                                 <tr>
-                                    <td style="width: 30%;background: url('{{ $invoice_image3 }}');background-repeat:no-repeat;background-size: cover;height: 100%;padding: 20px 20px 20px 10px;vertical-align: top;"
+                                    <td style="min-height: 945px;width: 30%;background: url('{{ $invoice_image3 }}');background-repeat:no-repeat;background-size: cover;padding: 20px 20px 20px 10px;vertical-align: top;"
                                         align="center">
                                         <img src="{{ $company_logo }}" alt="" style="width:40px">
                                         <br>
@@ -136,7 +148,7 @@
                                                 </td>
                                             </tr>
                                         </table>
-                                        <img src="{{ $invoice_footer_image }}" alt="" style="height:30px;">
+                                        <img src="{{ $invoice_footer_image }}" alt="" style="height:30px;position: fixed; bottom: 30px;left: 75px;">
                                     </td>
                                     <td style="padding-left: 20px;vertical-align: top;">
                                         <table border="0"
@@ -146,7 +158,7 @@
                                                 <td>
                                                     <p
                                                         style="margin: 0px;color: #58595B;font-family: Arial;font-size:12px;font-weight:700;">
-                                                        Category
+                                                        Product Names
                                                     </p>
                                                 </td>
                                                 <td>

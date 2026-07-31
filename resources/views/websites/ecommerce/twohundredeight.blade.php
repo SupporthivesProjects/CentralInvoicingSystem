@@ -40,7 +40,7 @@
                                     </td> 
                                   </tr>
                                   <tr style="height:40px;"></tr>
-                                  <tr style="height:585px;vertical-align:top;">
+                                  <tr style="height:569px;vertical-align:top;">
                                     <td style="width:70%;vertical-align:top;">
                                       <table style="border-collapse: collapse;width:100%;">
                                         <tr style="border-top: 1px solid #ffffff;border-bottom: 1px solid #ffffff;">
@@ -155,9 +155,10 @@
                                             {{ $company_name }}
                                         </h2>
                                         <p style="margin:0px;color:#ffffff;font-size:14px;font-family: DM Sans;line-height: 16px;">
-                                            {{ $company_email }}<br>
                                             {!! $company_address !!}<br>
+                                            {{ $company_email }}<br>
                                             {{ $company_mobile }}
+
                                         </p>
                                     </td>
                                 </tr>         

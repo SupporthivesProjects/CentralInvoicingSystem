@@ -272,6 +272,54 @@
             }
     </script>
 
+    <script>
+        function playTak() {
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            const buf = ctx.createBuffer(1, ctx.sampleRate * 0.04, ctx.sampleRate);
+            const data = buf.getChannelData(0);
+            for (let i = 0; i < data.length; i++) {
+                data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / data.length, 8);
+            }
+            const src = ctx.createBufferSource();
+            src.buffer = buf;
+            const gain = ctx.createGain();
+            gain.gain.setValueAtTime(0.10, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.04);
+            src.connect(gain);
+            gain.connect(ctx.destination);
+            src.start();
+        }
+
+        $(document).on('click', 'button, a, .btn, input, select, textarea, label, td, th, .nav-link, .dropdown-item, .form-check-input, .form-select, .card, .list-group-item, .badge, .close, .alert, [data-bs-toggle], [role="button"], [tabindex]', function () {
+            playTak();
+        });
+    </script>
+    <script>
+    function spawnParticles(x, y) {
+        const colors = ['#6366f1','#ec4899','#f59e0b','#10b981','#3b82f6'];
+        for (let i = 0; i < 12; i++) {
+            const p = document.createElement('div');
+            const angle = (i / 12) * Math.PI * 2;
+            const speed = 40 + Math.random() * 40;
+            p.style.cssText = `
+                position:fixed; width:6px; height:6px; border-radius:50%;
+                background:${colors[i % colors.length]};
+                left:${x}px; top:${y}px; pointer-events:none; z-index:99999;
+                transition: all 0.6s ease-out; opacity:1;
+            `;
+            document.body.appendChild(p);
+            requestAnimationFrame(() => {
+                p.style.transform = `translate(${Math.cos(angle)*speed}px, ${Math.sin(angle)*speed}px)`;
+                p.style.opacity = '0';
+            });
+            setTimeout(() => p.remove(), 700);
+        }
+    }
+    $(document).on('click', 'button, .btn, a', function(e) {
+        spawnParticles(e.clientX, e.clientY);
+    });
+</script>
+
 
     @stack('scripts')
     

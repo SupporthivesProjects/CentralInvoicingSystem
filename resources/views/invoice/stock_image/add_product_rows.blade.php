@@ -8,7 +8,6 @@
         @endif
     </td>
     <td>
-        {{-- Show credits --}}
         @if($product->credits > 0)
             <span class="badge bg-success">{{ $product->credits }} Credits</span>
         @else
@@ -57,19 +56,18 @@
 <script>
     $(document).ready(function () {
         $('#add-custom-products').off('click').on('click', function () {
-            let selectedProducts = [];
+            let selectedProduct = null;
 
             $('input[name="add_product_ids[]"]:checked').each(function () {
                 let productId = $(this).val();
                 let unitPrice = parseFloat($('.add-product-price[data-product-id="' + productId + '"]').val()) || 0;
-
-                selectedProducts.push({
+                selectedProduct = {
                     product_id: productId,
                     unit_price: unitPrice
-                });
+                };
             });
 
-            if (selectedProducts.length > 0) {
+            if (selectedProduct !== null) {
                 let btn = $('#add-custom-products');
                 btn.prop('disabled', true);
                 btn.html('<i class="fas fa-spinner fa-spin"></i> Adding to Cart...');
@@ -84,23 +82,14 @@
                     type: 'POST',
                     data: {
                         _token: '{{ csrf_token() }}',
-                        products: selectedProducts,
+                        products: [selectedProduct],
                         site_id : "{{ session('customer.site_id') }}",
                     },
                     success: function(response) {
-                        selectedProducts.forEach(function (product) {
-                            $('#customize-product-row-' + product.product_id).remove();
-                        });
-
-                        let discountAmount = 0;
-                        let current_amount = response.total;
-                        let invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
-                        if (current_amount > invoiceAmount) {
-                            discountAmount = current_amount - invoiceAmount;
-                        }
+                        $('#customize-product-row-' + selectedProduct.product_id).remove();
 
                         $('#addmoreproducts').modal('hide');
-                        $('#discount_amount').prop('readonly', false).prop('type', 'number')
+                        $('#discount_amount').prop('readonly', false).prop('type', 'number');
                         $('#randomize-product-table-body').html(response.tableRows);
                         calculateTotalPrice();
                     },
@@ -113,7 +102,7 @@
                     }
                 });
             } else {
-                toastr.error('Please select product(s) to add.');
+                toastr.error('Please select a product to add.');
             }
         });
     });
@@ -121,81 +110,31 @@
 
 <script>
     function updateTempTotal() {
-        let originalAmount = parseFloat(@json(session('current_amount', 0)));
-        let selectedTotal = 0;
-
-        $('input[name="add_product_ids[]"]:checked').each(function () {
-            let productId = $(this).val();
-            let priceInput = $('.add-product-price[data-product-id="' + productId + '"]');
-            let price = parseFloat(priceInput.val()) || 0;
-            selectedTotal += price;
-        });
-
-        let tempTotal = originalAmount + selectedTotal;
         let invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
-        let discountAmount = 0;
+        let selectedTotal = 0;
+        let checkedRadio = $('input[name="add_product_ids[]"]:checked');
 
-        if (tempTotal > invoiceAmount) {
-            discountAmount = tempTotal - invoiceAmount;
+        if (checkedRadio.length > 0) {
+            let productId = checkedRadio.val();
+            let priceInput = $('.add-product-price[data-product-id="' + productId + '"]');
+            selectedTotal = parseFloat(priceInput.val()) || 0;
+        } else {
+            selectedTotal = parseFloat($('#current_amount').val()) || 0;
         }
 
-        $('#temp_current_amount_text').text(tempTotal.toFixed(2));
+        let discountAmount = 0;
+        if (selectedTotal > invoiceAmount) {
+            discountAmount = selectedTotal - invoiceAmount;
+        }
+
+        $('#temp_current_amount_text').text(selectedTotal.toFixed(2));
         $('#temp_discount_amount_text').text(discountAmount.toFixed(2));
         $('#temp_invoice_amount_text').text(invoiceAmount.toFixed(2));
     }
 
     $(document).ready(function () {
-        $(document).on('input change', 'input[name="add_product_ids[]"], .add-product-price, #invoice_amount', function () {
+        $(document).on('change', 'input[name="add_product_ids[]"]', function () {
             updateTempTotal();
         });
     });
-</script>
-
-
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-    // Select all radio buttons for product selection
-    const productRadios = document.querySelectorAll('input[name="add_product_ids[]"]');
-
-    productRadios.forEach(radio => {
-        radio.addEventListener("change", function () {
-            // When a radio is selected
-            if (this.checked) {
-                const productId = this.getAttribute("data-product-id");
-
-                // Find the corresponding price input
-                const priceInput = document.querySelector(`input.add-product-price[data-product-id="${productId}"]`);
-
-                if (priceInput) {
-                    const unitPrice = parseFloat(priceInput.value).toFixed(2);
-
-                    // Update the Current Amount box with ONLY the unit price
-                    const currentAmountElement = document.getElementById("modal_current_amount");
-                    if (currentAmountElement) {
-                        // Force set the value to only show unit price
-                        currentAmountElement.textContent = `€${unitPrice}`;
-                        currentAmountElement.innerHTML = `€${unitPrice}`;
-
-                        // Also check if there's a value attribute and update it
-                        if (currentAmountElement.hasAttribute('value')) {
-                            currentAmountElement.setAttribute('value', unitPrice);
-                        }
-                    }
-
-                    // If there's a hidden input for current amount, update it too
-                    const hiddenCurrentAmount = document.querySelector('input[name="current_amount"], #current_amount_input');
-                    if (hiddenCurrentAmount) {
-                        hiddenCurrentAmount.value = unitPrice;
-                    }
-                }
-            }
-        });
-    });
-
-    // Also trigger the change event for any pre-selected radio button on page load
-    const checkedRadio = document.querySelector('input[name="add_product_ids[]"]:checked');
-    if (checkedRadio) {
-        checkedRadio.dispatchEvent(new Event('change'));
-    }
-});
 </script>

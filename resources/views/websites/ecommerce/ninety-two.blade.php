@@ -3,7 +3,7 @@
 <head>
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
 </head>
-<body>
+<body style="margin: 0px; padding: 0px;">
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
             <td align="center" bgcolor="#f2f2f2" style="padding: 0px 0px 0;">
@@ -32,7 +32,7 @@
                                   <!-- TO Section -->
                                   <td style="width: 35%; vertical-align: top; padding: 10px;">
                                     <p style="font-weight: bold; font-size: 12px;">To: {{ $customer_name }} </p>
-                                    <p style="margin: 5px 0;"><strong>Email:</strong> {{ $customer_email }} </p>
+                                    <!-- <p style="margin: 5px 0;"><strong>Email:</strong> {{ $customer_email }} </p> -->
                                   </td>
                               
                                   <!-- Vertical Divider -->
@@ -43,7 +43,11 @@
                                     <p style="font-weight: bold; font-size: 12px;">From: {{ $site_name }}</p>
                                     <p style="margin: 5px 0;"> {!! $company_address !!} </p>
                                     <p style="margin: 5px 0;"><strong>Email:</strong> {{ $company_email }} </p>
-                                    <p style="margin: 5px 0;"><strong>Phone:</strong> {{ $company_mobile }} </p>
+                                    @if(isset($company_mobile) && trim($company_mobile) !== '')
+                                        <p style="margin: 5px 0;">
+                                            <strong>Phone:</strong> {{ $company_mobile }}
+                                        </p>
+                                    @endif
                                   </td>
                               
                                   <!-- Invoice Details Section -->
@@ -56,8 +60,8 @@
                                   </td>
                                 </tr>
                               </table>
-                          <div style="min-height: 400px !important;">
-                            <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 8px;">
+                          <div style="min-height: 545px !important;">
+                             <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 8px;">
                                 <tr style="background-color: #A9BF2B;">
                                   <th style="text-align: left; padding: 8px 20px; font-size: 12px;">DESCRIPTION</th>
                                   <th style="text-align: center; padding: 8px 20px; font-size: 12px;">QTY</th>
@@ -66,11 +70,11 @@
                                 @foreach($products as $product)
                                 <tr>
                                   <td style="padding: 16px 20px;">
-                                    <strong>{{ $product->category_name }}</strong><br>
-                                    <span style="color: #333;">{{ $product->name }}</span>
+                                    <strong style=" font-size: 12px;">{{ $product->category_name }}</strong><br>
+                                    <span style="color: #333; font-size: 10px;">{{ $product->name }}</span>
                                   </td>
-                                  <td style="text-align: center; padding: 16px 20px;">01</td>
-                                  <td style="text-align: right; padding: 16px 20px;">{{ site_currency() }} {{  number_format($product->unit_price, 2) }}</td>
+                                  <td style="text-align: center; padding: 16px 20px; font-size: 12px;">01</td>
+                                  <td style="text-align: right; padding: 16px 20px; font-size: 12px;">{{ site_currency() }} {{  number_format($product->unit_price, 2) }}</td>
                                 </tr>
                                 @endforeach
                                 
@@ -80,11 +84,11 @@
                               <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; margin-top: 24px; font-size: 12px;">
                                 <tr>
                                   <!-- Notes Section -->
-                                  <td style="width: 65%; background-color: #f7f9e5; padding: 20px; vertical-align: top;">
-                                    <strong style="font-size: 12px; color: #333;">Notes</strong>
+                                  <td style="width: 65%; background-color: #FFFFFF; padding: 20px; vertical-align: top;">
+                                    <!-- <strong style="font-size: 12px; color: #333;">Notes</strong>
                                     <p style="color: #333; font-size: 12px; margin-top: 8px;">
                                     Thank you for your business. Please note that payment is due within 15 days from the invoice date. A late fee of 2% per month may be applied to overdue balances. If you have any questions regarding this invoice, feel free to contact our billing department at {{ $company_email }}.
-                                    </p>
+                                    </p> -->
                                   </td>
                               
                                   <!-- Totals Section -->

@@ -7,7 +7,6 @@
     <div class="page">
         <div class="main-content app-content">
             <div class="container-fluid">
-                <!-- Page Header -->
                 <div class="d-md-flex d-block align-items-center justify-content-between page-header-breadcrumb">
                     <div>
                         <h2 class="main-content-title fs-24 mb-3">Choose Products and Generate Invoice</h2>
@@ -24,8 +23,6 @@
                         </a>
                     </div>
                 </div>
-
-                <!-- Page Header Close -->
 
                 <div class="card custom-card">
                     <div class="card-body shadow rounded">
@@ -99,18 +96,19 @@
                                     </div>
                                 </div>
 
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">Customer Phone</label>
-                                <div class="input-group">
-                                    <span class="input-group-text"><i class="fas fa-phone"></i></span>
-                                    <input type="text" form="generate-invoice-form" class="form-control" id="customer_mobile" name="customer_mobile" value="{{ $customer['customer_mobile'] ?? '' }}"  placeholder="Enter customer Mobile">
-                                    <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Customer Phone</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                                        <input type="text" form="generate-invoice-form" class="form-control" id="customer_mobile" name="customer_mobile" value="{{ $customer['customer_mobile'] ?? '' }}"  placeholder="Enter customer Mobile">
+                                        <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
                 </div>
-            </div>
+
             <div class="accordion mt-3 shadow-sm rounded" id="companyDetailsAccordion">
                 <div class="accordion-item border-0 rounded">
                     <h2 class="accordion-header" id="companyDetailsHeading">
@@ -147,8 +145,6 @@
                                 </div>
                                 <div class="col-md-11">
                                     <div class="tab-content">
-
-                                        {{-- Website Details Tab --}}
                                         <div class="tab-pane p-0 fade" id="websiteDetails" role="tabpanel">
                                             <div class="p-2 bg-white">
                                                 <div class="row g-1 mb-2">
@@ -177,7 +173,6 @@
                                                         </div>
                                                     </div>
                                                 </div>
-
                                                 <div class="row g-1 mb-2">
                                                     <div class="col-3">
                                                         <div class="input-group input-group-sm">
@@ -201,7 +196,6 @@
                                             </div>
                                         </div>
 
-                                        {{-- Custom Details Tab --}}
                                         <div class="tab-pane p-0 fade show active" id="customDetails" role="tabpanel">
                                             <div class="p-2 bg-white">
                                                 <div class="row g-1 mb-2">
@@ -230,7 +224,6 @@
                                                         </div>
                                                     </div>
                                                 </div>
-
                                                 <div class="row g-1 mb-2">
                                                     <div class="col-3">
                                                         <div class="input-group input-group-sm">
@@ -253,11 +246,10 @@
                                                 </div>
                                             </div>
                                         </div>
-
-                                    </div> 
-                                </div> 
+                                    </div>
+                                </div>
                             </div>
-                        </div> 
+                        </div>
                     </div>
                 </div>
             </div>
@@ -301,8 +293,6 @@
                                 </div>
                             </div>
                         </div>
-
-
                     </div>
                 </div>
 
@@ -313,105 +303,86 @@
                         <button type="button" class="btn btn-outline-success me-1" data-bs-toggle="modal" data-bs-target="#addgames" onclick="customizeProducts('onload')">
                             <i class="bi bi-plus-circle"></i> Add Games
                         </button>
-                        {{-- <button type="button" class="btn btn-outline-info me-1" onclick="setCustomOnly()">
-                            <i class="bi bi-pencil-square"></i> Custom
-                        </button> --}}
-                            <button type="button" class="btn btn-outline-secondary d-flex align-items-center gap-1 me-1"
-                                onclick="clearAllProducts(this)">
-                                <i class="fa-solid fa-filter-circle-xmark"></i>Clear All
-                            </button>
-                            <button type="button" class="btn btn-outline-warning me-1"
-                                onclick="generateRandomProducts('random')">
-                                <i class="bi bi-shuffle"></i> Randomize
-                            </button>
-                            <button type="button" class="btn btn-outline-primary" onclick="generateInvoice(event)">
-                                <i class="bi bi-receipt"></i> Generate Invoice
-                            </button>
-                        </div>
-
-                    </div>
-
-
-                    <div class="card-body mt-1">
-                        <!-- Search Filters -->
-                        <form method="GET" action="#" class="mb-4">
-                            <div class="row align-items-end g-3">
-                                <!-- Number of Products -->
-                                <div class="col-md-4 text-center">
-                                    <label for="productCountInput" class="form-label">Number of Products</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text"><i class="fas fa-list-ol"></i></span>
-                                        <input type="number" name="product_count" id="productCountInput"
-                                            class="form-control" placeholder="Enter number of products" min="1">
-                                    </div>
-                                </div>
-
-                                <!-- Keyword Search -->
-                                <div class="col-md-4 text-center">
-                                    <label for="keywordInput" class="form-label">Search for Products</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text"><i class="fas fa-search"></i></span>
-                                        <input type="text" name="manual_keyword" id="keywordInput"
-                                            class="form-control"
-                                            placeholder="Type a keyword and wait for 1.5 seconds to apply the filter.">
-                                        <span class="input-group-text"><i class="fas fa-filter"></i></span>
-                                    </div>
-                                </div>
-
-                                <!-- Price Range -->
-                                <div class="col-md-4 text-center">
-                                    <label class="form-label d-block">Price Range</label>
-                                    <div id="price-slider" class="w-100 mx-auto"></div>
-                                    <input type="hidden" name="price_from" id="hidden_price_from_input_id">
-                                    <input type="hidden" name="price_to" id="hidden_price_to_input_id">
-                                </div>
-                            </div>
-                        </form>
-
-
-                        <!-- Combined Table -->
-                        <div class="table-responsive border rounded">
-                            <div id="product-table-wrapper" style="position: relative;">
-                                <div id="table-blocker"
-                                    style="display: none; position: absolute; inset: 0; background: rgba(255,255,255,0.6); z-index: 5; cursor: not-allowed;">
-                                </div>
-                                <table class="table table-hover table-bordered align-middle shadow-sm rounded"
-                                    id="productTable">
-                                    <thead class="table-dark">
-                                        <tr>
-                                            <th>SELECT</th>
-                                            <th>SR. NO.</th>
-                                            <th>GAME NAME</th>
-                                            <th>GAME CURRENCY</th>
-                                            <th>GAME CURRENCY AMOUNT</th>
-                                            <th>UNIT PRICE</th>
-                                            <th>EDIT PRICE</th>
-                                            <th>REMOVE</th>
-                                            {{-- <th>MODIFY PRICE</th> --}}
-                                        </tr>
-                                    </thead>
-                                    <tbody id="product-table-body">
-                                        <!-- Injected by AJAX -->
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+                        <button type="button" class="btn btn-outline-secondary d-flex align-items-center gap-1 me-1"
+                            onclick="clearAllProducts(this)">
+                            <i class="fa-solid fa-filter-circle-xmark"></i>Clear All
+                        </button>
+                        <button type="button" class="btn btn-outline-warning me-1"
+                            onclick="generateRandomProducts('random')">
+                            <i class="bi bi-shuffle"></i> Randomize
+                        </button>
+                        <button type="button" class="btn btn-outline-primary" onclick="generateInvoice(event)">
+                            <i class="bi bi-receipt"></i> Generate Invoice
+                        </button>
                     </div>
                 </div>
 
+                <div class="card-body mt-1">
+                    <form method="GET" action="#" class="mb-4">
+                        <div class="row align-items-end g-3">
+                            <div class="col-md-4 text-center">
+                                <label for="productCountInput" class="form-label">Number of Products</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-list-ol"></i></span>
+                                    <input type="number" name="product_count" id="productCountInput"
+                                        class="form-control" placeholder="Enter number of products" min="1">
+                                </div>
+                            </div>
+
+                            <div class="col-md-4 text-center">
+                                <label for="keywordInput" class="form-label">Search for Products</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-search"></i></span>
+                                    <input type="text" name="manual_keyword" id="keywordInput"
+                                        class="form-control"
+                                        placeholder="Type a keyword and wait for 1.5 seconds to apply the filter.">
+                                    <span class="input-group-text"><i class="fas fa-filter"></i></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4 text-center">
+                                <label class="form-label d-block">Price Range</label>
+                                <div id="price-slider" class="w-100 mx-auto"></div>
+                                <input type="hidden" name="price_from" id="hidden_price_from_input_id">
+                                <input type="hidden" name="price_to" id="hidden_price_to_input_id">
+                            </div>
+                        </div>
+                    </form>
+
+                    <div class="table-responsive border rounded">
+                        <div id="product-table-wrapper" style="position: relative;">
+                            <div id="table-blocker"
+                                style="display: none; position: absolute; inset: 0; background: rgba(255,255,255,0.6); z-index: 5; cursor: not-allowed;">
+                            </div>
+                            <table class="table table-hover table-bordered align-middle shadow-sm rounded"
+                                id="productTable">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>SR. NO.</th>
+                                        <th>GAME NAME</th>
+                                        <th>GAME CURRENCY</th>
+                                        <th>GAME CURRENCY AMOUNT</th>
+                                        <th>UNIT PRICE</th>
+                                        <th>EDIT PRICE</th>
+                                        <th>REMOVE</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="product-table-body">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    {{-- Modal for Custom Game Selection --}}
 
     <div class="modal fade" id="addgames" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
         aria-labelledby="addGamesLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-scrollable">
             <div class="modal-content">
 
-                <!-- Modal Header -->
-                <div
-                    class="modal-header bg-white shadow-sm rounded-3 p-3 d-flex align-items-center justify-content-between">
+                <div class="modal-header bg-white shadow-sm rounded-3 p-3 d-flex align-items-center justify-content-between">
                     <div class="d-flex align-items-center">
                         <i class="fas fa-sliders-h text-primary fs-4 me-2"></i>
                         <h5 class="modal-title fw-semibold text-dark mb-0" id="addGamesLabel">
@@ -421,15 +392,12 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
-                <!-- Modal Body -->
                 <div class="modal-body bg-white">
                     <div class="container-fluid">
 
-                        <!-- Search Section -->
                         <div class="row g-3 mb-4 justify-content-center">
                             <div class="col-md-6">
-                                <label for="keywordInput" class="form-label text-center fw-semibold mb-2">Search by
-                                    Keyword</label>
+                                <label for="keywordInput" class="form-label text-center fw-semibold mb-2">Search by Keyword</label>
                                 <div class="input-group">
                                     <span class="input-group-text bg-light"><i class="fas fa-search"></i></span>
                                     <input type="text" class="form-control" id="modalkeywordInput"
@@ -444,7 +412,6 @@
                             </div>
                         </div>
 
-                        <!-- Amount Summary Section -->
                         <div class="row g-3 mb-4">
                             <div class="col-md-4">
                                 <div class="bg-light rounded border shadow-sm p-3 text-center">
@@ -471,7 +438,6 @@
                             </div>
                         </div>
 
-                        <!-- Products Table Section -->
                         <div class="table-responsive border rounded shadow-sm">
                             <table class="table table-bordered table-hover align-middle mb-0"
                                 id="customize-products-table" style="width: 100%;">
@@ -485,16 +451,13 @@
                                         <th>SELECT</th>
                                     </tr>
                                 </thead>
-                                <tbody id="customize-product-table-body">
-                                    {{-- Injected by Ajax --}}
-                                </tbody>
+                                <tbody id="customize-product-table-body"></tbody>
                             </table>
                         </div>
 
                     </div>
                 </div>
 
-                <!-- Modal Footer -->
                 <div class="modal-footer bg-light border-top">
                     <div class="d-flex flex-wrap gap-2">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
@@ -514,147 +477,214 @@
         </div>
     </div>
 
-
-    {{-- Modal for Custom Game Selection --}}
 @endsection
 @push('scripts')
     <script>
-        $(document).ready(function() {
-            let sessionAmount = parseFloat("{{ session('invoice_amount') ?? 0 }}");
+        const SITE_ID = {{ session('customer.site_id') ?? 0 }};
+    </script>
 
-            function setEditIcon() {
-                $('#update_invoice_amount')
-                    .removeClass('bg-warning bg-success')
-                    .addClass('bg-light')
-                    .html('<i data-feather="edit" id="icon" style="color: black;width:20px;"></i>');
-                feather.replace();
-            }
+    <script>
+        let filterTimer;
 
-            function setUploadIcon() {
-                $('#update_invoice_amount')
-                    .removeClass('bg-light bg-success')
-                    .addClass('bg-warning')
-                    .html('<i data-feather="upload-cloud" id="icon" style="color: black;width:20px;"></i>');
-                feather.replace();
-            }
-
-            function setLoader() {
-                $('#update_invoice_amount')
-                    .removeClass('bg-warning bg-light bg-success')
-                    .addClass('bg-warning')
-                    .html(
-                        '<div class="d-flex align-items-center justify-content-center" style="width:20px;">' +
-                        '<div class="spinner-border text-dark" style="width: 18px; height: 18px;" role="status">' +
-                        '<span class="visually-hidden">Loading...</span>' +
-                        '</div>' +
-                        '</div>'
-                    );
-            }
-
-            function setSuccessIcon() {
-                $('#update_invoice_amount')
-                    .removeClass('bg-warning')
-                    .addClass('bg-success')
-                    .html('<i data-feather="check-circle" id="icon" style="color: white;width:20px;"></i>');
-                feather.replace();
-            }
-
-            $('#invoice_amount').on('input', function() {
-                let currentVal = parseFloat($(this).val());
-                if (!isNaN(currentVal) && currentVal !== sessionAmount) {
-                    setUploadIcon();
-                } else {
-                    setEditIcon();
-                }
-            });
-
-            $(document).on('click', '#update_invoice_amount', function() {
-                let currentVal = parseFloat($('#invoice_amount').val());
-                if (isNaN(currentVal) || currentVal === sessionAmount) {
-                    return;
-                }
-
-                setLoader();
-
-                let invoice_amount = $('#invoice_amount').val();
-                let invoice_date = $('#invoice_date').val();
-                let customer_name = $('#customer_name').val();
-                let customer_email = $('#customer_email').val();
-                let customer_mobile = $('#customer_mobile').val();
-
-                $.ajax({
-                    url: "{{ route('update.invoice.amount') }}",
-                    type: 'POST',
-                    data: {
-                        invoice_amount,
-                        invoice_date,
-                        customer_name,
-                        customer_email,
-                        customer_mobile,
-                        _token: '{{ csrf_token() }}'
-                    },
-                    success: function(response) {
-                        if (response.success) {
-                            sessionAmount = parseFloat(invoice_amount);
-                            setSuccessIcon();
-
-                            $('#invoice_amount').val(response.updated.invoice_amount);
-                            $('#invoice_date').val(response.updated.invoice_date);
-                            $('#customer_name').val(response.updated.customer_name);
-                            $('#customer_email').val(response.updated.customer_email);
-                            $('#customer_mobile').val(response.updated.customer_mobile);
-                            generateRandomProducts();
-
-                            setTimeout(() => {
-                                setEditIcon();
-                            }, 4000);
-                        }
-                    },
-                    error: function() {
-                        setEditIcon();
-                    }
-                });
-            });
+        $('#keywordInput, #hidden_price_from_input_id, #hidden_price_to_input_id').on('input change', function() {
+            clearTimeout(filterTimer);
+            filterTimer = setTimeout(() => {
+                generateRandomProducts('random');
+            }, 1500);
         });
     </script>
 
     <script>
-        const priceSlider = document.getElementById('price-slider');
-        const defaultMin = 10,
-            defaultMax = 1000;
-        const currency = "{{ site_currency() }}";
+        function syncAllAmountDisplays(currentAmount, invoiceAmount) {
+            currentAmount = parseFloat(currentAmount) || 0;
+            invoiceAmount = parseFloat(invoiceAmount) || parseFloat($('#invoice_amount').val()) || 0;
+            const discountAmount = currentAmount > invoiceAmount ? parseFloat((currentAmount - invoiceAmount).toFixed(2)) : 0;
 
-        noUiSlider.create(priceSlider, {
-            start: [defaultMin, defaultMax],
-            connect: true,
-            step: 0.1,
-            range: {
-                min: defaultMin,
-                max: defaultMax
-            },
-            tooltips: [true, true],
-            format: {
-                to: v => `${currency}${Math.round(v)}`,
-                from: v => Number(v.replace(currency, ''))
+            $('#current_amount').val(currentAmount.toFixed(2));
+            $('#discount_amount').val(discountAmount.toFixed(2));
+
+            $('#temp_current_amount_text').text(currentAmount.toFixed(2));
+            $('#temp_discount_amount_text').text(discountAmount.toFixed(2));
+            $('#temp_invoice_amount_text').text(invoiceAmount.toFixed(2));
+
+            $('#modal_current_amount').val(currentAmount.toFixed(2));
+            $('#modal_discount_amount').val(discountAmount.toFixed(2));
+
+            validateAmounts();
+        }
+    </script>
+
+    <script>
+       $(document).ready(function() {
+        let sessionAmount = parseFloat("{{ session('invoice_amount') ?? 0 }}");
+
+        function setEditIcon() {
+            $('#update_invoice_amount')
+                .removeClass('bg-warning bg-success')
+                .addClass('bg-light')
+                .html('<i data-feather="edit" id="icon" style="color: black;width:20px;"></i>');
+            feather.replace();
+        }
+
+        function setUploadIcon() {
+            $('#update_invoice_amount')
+                .removeClass('bg-light bg-success')
+                .addClass('bg-warning')
+                .html('<i data-feather="upload-cloud" id="icon" style="color: black;width:20px;"></i>');
+            feather.replace();
+        }
+
+        function setLoader() {
+            $('#update_invoice_amount')
+                .removeClass('bg-warning bg-light bg-success')
+                .addClass('bg-warning')
+                .html(
+                    '<div class="d-flex align-items-center justify-content-center" style="width:20px;">' +
+                    '<div class="spinner-border text-dark" style="width: 18px; height: 18px;" role="status">' +
+                    '<span class="visually-hidden">Loading...</span>' +
+                    '</div>' +
+                    '</div>'
+                );
+        }
+
+        function setSuccessIcon() {
+            $('#update_invoice_amount')
+                .removeClass('bg-warning')
+                .addClass('bg-success')
+                .html('<i data-feather="check-circle" id="icon" style="color: white;width:20px;"></i>');
+            feather.replace();
+        }
+
+        $('#invoice_amount').on('input', function() {
+            let currentVal = parseFloat($(this).val());
+            if (!isNaN(currentVal) && currentVal !== sessionAmount) {
+                setUploadIcon();
+            } else {
+                setEditIcon();
             }
         });
 
-        const updateHiddenInputs = (min, max) => {
-            $('#hidden_price_from_input_id').val(min).trigger('input');
-            $('#hidden_price_to_input_id').val(max).trigger('input');
-        };
+        $(document).on('click', '#update_invoice_amount', function() {
+            let currentVal = parseFloat($('#invoice_amount').val());
+            if (isNaN(currentVal) || currentVal === sessionAmount) {
+                return;
+            }
 
-        updateHiddenInputs(defaultMin, defaultMax);
+            setLoader();
 
-        priceSlider.noUiSlider.on('update', function(values) {
-            const [min, max] = values.map(v => Math.round(parseFloat(v.replace('$', ''))));
-            updateHiddenInputs(min, max);
+            let invoice_amount = $('#invoice_amount').val();
+            let invoice_date = $('#invoice_date').val();
+            let customer_name = $('#customer_name').val();
+            let customer_email = $('#customer_email').val();
+            let customer_mobile = $('#customer_mobile').val();
+
+            $.ajax({
+                url: "{{ route('update.invoice.amount') }}",
+                type: 'POST',
+                data: {
+                    invoice_amount,
+                    invoice_date,
+                    customer_name,
+                    customer_email,
+                    customer_mobile,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    if (response.success) {
+                        sessionAmount = parseFloat(invoice_amount);
+                        setSuccessIcon();
+
+                        $('#invoice_amount').val(response.updated.invoice_amount);
+                        $('#invoice_date').val(response.updated.invoice_date);
+                        $('#customer_name').val(response.updated.customer_name);
+                        $('#customer_email').val(response.updated.customer_email);
+                        $('#customer_mobile').val(response.updated.customer_mobile);
+                        generateRandomProducts();
+
+                        setTimeout(() => {
+                            setEditIcon();
+                        }, 4000);
+                    }
+                },
+                error: function() {
+                    setEditIcon();
+                }
+            });
         });
+
+        const priceSlider = document.getElementById('price-slider');
+
+        if (priceSlider) {
+            const defaultMin = 10, defaultMax = 1000;
+            const currency = "{{ site_currency() }}";
+
+            noUiSlider.create(priceSlider, {
+                start: [defaultMin, defaultMax],
+                connect: true,
+                step: 1,
+                range: {
+                    min: defaultMin,
+                    max: defaultMax
+                },
+                tooltips: [true, true],
+                format: {
+                    to: v => `${currency}${Math.round(v)}`,
+                    from: v => Number(v.replace(currency, ''))
+                }
+            });
+
+            const updateHiddenInputs = (values) => {
+                let min, max;
+
+                if (typeof values[0] === 'string') {
+                    min = Math.round(parseFloat(values[0].replace(/[^\d.-]/g, '')));
+                    max = Math.round(parseFloat(values[1].replace(/[^\d.-]/g, '')));
+                } else {
+                    min = Math.round(values[0]);
+                    max = Math.round(values[1]);
+                }
+
+                $('#hidden_price_from_input_id').val(min);
+                $('#hidden_price_to_input_id').val(max);
+            };
+
+            updateHiddenInputs([defaultMin, defaultMax]);
+
+            priceSlider.noUiSlider.on('update', function(values) {
+                updateHiddenInputs(values);
+            });
+
+            priceSlider.noUiSlider.on('change', function(values) {
+                updateHiddenInputs(values);
+                generateRandomProducts('random');
+            });
+        }
+
+        const slider = document.getElementById('customize-price-slider');
+
+        if (slider) {
+            noUiSlider.create(slider, {
+                start: [0, 500],
+                connect: true,
+                range: {
+                    'min': 10,
+                    'max': 1000
+                }
+            });
+
+            slider.noUiSlider.on('update', function(values, handle) {
+                $('#hidden_customize_price_from_input_id_modal').val(parseFloat(values[0]));
+                $('#hidden_customize_price_to_input_id_modal').val(parseFloat(values[1]));
+            });
+        }
+    });
+
+    $(document).ready(function() {
+        generateRandomProducts('initial');
+    });
     </script>
 
-
     <style>
-        /* Pacman Loader Styles */
         .pacman-loader {
             position: relative;
             width: 100px;
@@ -679,13 +709,8 @@
         }
 
         @keyframes pacman-chomp {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(-20deg);
-            }
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(-20deg); }
         }
 
         .dots {
@@ -703,36 +728,15 @@
             animation: move-dot 1.5s linear infinite;
         }
 
-        .dot:nth-child(1) {
-            animation-delay: 0s;
-        }
-
-        .dot:nth-child(2) {
-            animation-delay: 0.3s;
-        }
-
-        .dot:nth-child(3) {
-            animation-delay: 0.6s;
-        }
-
-        .dot:nth-child(4) {
-            animation-delay: 0.9s;
-        }
-
-        .dot:nth-child(5) {
-            animation-delay: 1.2s;
-        }
+        .dot:nth-child(1) { animation-delay: 0s; }
+        .dot:nth-child(2) { animation-delay: 0.3s; }
+        .dot:nth-child(3) { animation-delay: 0.6s; }
+        .dot:nth-child(4) { animation-delay: 0.9s; }
+        .dot:nth-child(5) { animation-delay: 1.2s; }
 
         @keyframes move-dot {
-            0% {
-                transform: translateX(0);
-                opacity: 1;
-            }
-
-            100% {
-                transform: translateX(-100px);
-                opacity: 0;
-            }
+            0% { transform: translateX(0); opacity: 1; }
+            100% { transform: translateX(-100px); opacity: 0; }
         }
     </style>
 
@@ -740,38 +744,20 @@
         $(document).ready(function() {
             customMode = false;
             $('input[name="products[]"]').prop('disabled', true);
-            //$('input[name="manual_keyword"]').prop('disabled', true);
             $('.product-price').prop('readonly', true);
             $('#discount_amount').val(0.00);
-            generateRandomProducts();
         });
 
         function generateRandomProducts(mode = 'initial') {
             customMode = false;
             $('input[name="products[]"]').prop('disabled', true);
-            //$('input[name="manual_keyword"]').prop('disabled', true);
             $('.product-price').prop('readonly', true);
 
-            $('#product-table-body').html(`
-        <tr>
-            <td colspan="8" class="text-center py-5">
-                <div class="pacman-loader">
-                    <div class="pacman"></div>
-                    <div class="dots">
-                        <div class="dot"></div>
-                        <div class="dot"></div>
-                        <div class="dot"></div>
-                        <div class="dot"></div>
-                        <div class="dot"></div>
-                    </div>
-                </div>
-            </td>
-        </tr>
-    `);
+            $('#product-table-body').html(getLoaderRowHTML(10));
 
             const priceFrom = $('#hidden_price_from_input_id').val();
             const priceTo = $('#hidden_price_to_input_id').val();
-            const productCount = $('input[name="product_count"]').val(); // 🔥 New line
+            const productCount = $('input[name="product_count"]').val();
             const keyword = $('#keywordInput').val().trim();
 
             if (!customMode) {
@@ -780,56 +766,35 @@
                     type: 'GET',
                     data: {
                         site_id: SITE_ID,
-                        //invoice_amount: "{{ $invoice['invoice_amount'] ?? '' }}",
                         invoice_amount: parseFloat($('#invoice_amount').val()) || 0,
                         price_from: priceFrom,
                         price_to: priceTo,
-                        product_count: productCount, // 🔥 New line
+                        product_count: productCount,
                         search_query: keyword,
-
                     },
                     success: function(response) {
-                        $('#discount_amount').val(0.00);
-
                         if (response.total === 0) {
                             $('#product-table-body').html(
-                                '<tr><td colspan="8" class="text-center text-muted py-5">No results found. Try randomizing or use a different keyword.</td></tr>'
+                                '<tr><td colspan="8" class="text-center text-muted py-5">No results found. use a different keyword.</td></tr>'
                             );
                             toastr.info("Oops! No magic combo this time. Try another spin or go custom!");
+                            syncAllAmountDisplays(0, parseFloat($('#invoice_amount').val()));
                             return;
-                        } else {
-
-
-
-                            // const invoiceAmount = parseFloat("{{ $invoice['invoice_amount'] ?? 0 }}");
-                            const invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
-                            const currentAmount = parseFloat(response.total.toFixed(2));
-                            const discountAmount = currentAmount - invoiceAmount;
-
-
-                            //const modalCurrentAmount = parseFloat()
-
-                            $('#product-table-body').html(response.tableRows);
-                            $('#current_amount').val(currentAmount.toFixed(2));
-                            $('#modal_current_amount').val(currentAmount.toFixed(2));
-
-                            // 💥 Update Discount Amount also
-                            if (discountAmount > 0) {
-                                $('#discount_amount').val(discountAmount.toFixed(2));
-                                $('#modal_discount_amount').val(discountAmount.toFixed(2));
-                            } else {
-                                $('#discount_amount').val(0.00);
-                            }
-
-                            if (response.is_random) {
-                                $('.narayan-checkbox').prop('checked', true).prop('disabled', true);
-                            } else {
-                                $('.narayan-checkbox').prop('disabled', false);
-                            }
-
-                            validateAmounts();
-
                         }
+
+                        const invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
+                        const currentAmount = parseFloat(response.total.toFixed(2));
+
+                        $('#product-table-body').html(response.tableRows);
+                        syncAllAmountDisplays(currentAmount, invoiceAmount);
+
+                        if (response.is_random) {
+                            $('.narayan-checkbox').prop('checked', true).prop('disabled', true);
+                        } else {
+                            $('.narayan-checkbox').prop('disabled', false);
+                        }
+
+                        validateAmounts();
                     },
                     error: function() {
                         toastr.error("Could not fetch random products.");
@@ -842,15 +807,11 @@
         }
     </script>
 
-
-
     <script>
         let selectedTotal = 0;
         let customMode = false;
         const invoiceAmount = parseFloat('{{ $invoice['invoice_amount'] ?? 0 }}');
-        const SITE_ID = {{ session('customer.site_id') ?? 0 }};
 
-        // Triggered when custom button is clicked
         function setCustomOnly() {
             customMode = true;
             $('input[name="products[]"]').prop('disabled', false);
@@ -861,92 +822,82 @@
             updateTotalDisplay();
             attachCheckboxHandlers();
             $('#discount_amount').val(0.00);
-            toastr.info('Now filter and pick your custom products.', 'Let’s begin!');
-
+            toastr.info('Now filter and pick your custom products.', 'Let`s begin!');
         }
 
+        function filterProducts() {
+            const keyword = $('#keywordInput').val().trim();
+            const priceFrom = $('#hidden_price_from_input_id').val();
+            const priceTo = $('#hidden_price_to_input_id').val();
 
-        // function filterProducts() {
-        //     const keyword = $('#keywordInput').val().trim();
-        //     const priceFrom = $('#hidden_price_from_input_id').val();
-        //     const priceTo = $('#hidden_price_to_input_id').val();
+            if (!keyword && !priceFrom && !priceTo) {
+                $('#product-table-body').html(
+                    '<tr><td colspan="7" class="text-center text-muted">Please enter a keyword or price range to search.</td></tr>'
+                );
+                return;
+            }
 
-        //     // Don't fetch anything if both fields are empty
-        //     if (!keyword && !priceFrom && !priceTo) {
-        //         $('#product-table-body').html(
-        //             '<tr><td colspan="7" class="text-center text-muted">Please enter a keyword or price range to search.</td></tr>'
-        //         );
-        //         return;
-        //     }
+            $('#product-table-body').html(`
+                <tr>
+                    <td colspan="7" class="text-center py-5">
+                        <div class="pacman-loader">
+                            <div class="pacman"></div>
+                            <div class="dots">
+                                <div class="dot"></div>
+                                <div class="dot"></div>
+                                <div class="dot"></div>
+                                <div class="dot"></div>
+                                <div class="dot"></div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            `);
 
-        //     // Insert the Pacman loader inside the table body
-        //     $('#product-table-body').html(`
-    //         <tr>
-    //             <td colspan="7" class="text-center py-5">
-    //                 <div class="pacman-loader">
-    //                     <div class="pacman"></div>
-    //                     <div class="dots">
-    //                         <div class="dot"></div>
-    //                         <div class="dot"></div>
-    //                         <div class="dot"></div>
-    //                         <div class="dot"></div>
-    //                         <div class="dot"></div>
-    //                     </div>
-    //                 </div>
-    //             </td>
-    //         </tr>
-    //     `);
+            $.ajax({
+                url: "{{ route('filter.products') }}",
+                type: 'GET',
+                data: {
+                    keyword: keyword,
+                    price_from: priceFrom,
+                    price_to: priceTo
+                },
+                success: function(response) {
+                    $('#customize-product-table-body').html(response.tableRows);
+                    selectedTotal = 0;
+                    updateTotalDisplay();
+                    attachCheckboxHandlers();
 
-        //     $.ajax({
-        //         url: "{{ route('filter.products') }}",
-        //         type: 'GET',
-        //         data: {
-        //             keyword: keyword,
-        //             price_from: priceFrom,
-        //             price_to: priceTo
-        //         },
-        //         success: function (response) {
-        //             //alert(1);
-        //             $('#customize-product-table-body').html(response.tableRows);
-        //             selectedTotal = 0;
-        //             updateTotalDisplay();
-        //             attachCheckboxHandlers();
+                    if ($.fn.DataTable.isDataTable('#customize-products-table')) {
+                        $('#customize-products-table').DataTable().clear().destroy();
+                        $('#customize-products-table').empty();
+                    }
 
-        //             //==
-        //             if ($.fn.DataTable.isDataTable('#customize-products-table')) {
-        //                 $('#customize-products-table').DataTable().clear().destroy();
-        //                 $('#customize-products-table').empty(); // optional cleanup
-        //             }
+                    const customizeTable = $('#customize-products-table').DataTable({
+                        responsive: true,
+                        searchHighlight: true,
+                        dom: 'lrtip',
+                        language: {
+                            search: "",
+                            searchPlaceholder: "Search..."
+                        },
+                        columnDefs: [
+                            { orderable: false, targets: [4, 5] }
+                        ]
+                    });
 
-        //             const customizeTable = $('#customize-products-table').DataTable({
-        //                 responsive: true,
-        //                 searchHighlight: true,
-        //                 dom: 'lrtip', // removes built-in search bar
-        //                 language: {
-        //                     search: "",
-        //                     searchPlaceholder: "Search..."
-        //                 },
-        //                 columnDefs: [
-        //                     { orderable: false, targets: [4, 5] }
-        //                 ]
-        //             });
-
-        //             // 🔍 Custom search input functionality
-        //             $('#keywordInput').on('input', function () {
-        //                 customizeTable.search(this.value).draw();
-        //             });
-
-        //             //==
-        //         },
-        //         error: function () {
-        //             toastr.error('Something went wrong while filtering.', 'Oops!');
-        //             $('#product-table-body').html(
-        //                 '<tr><td colspan="7" class="text-center text-danger py-5">Failed to load products. Please try again.</td></tr>'
-        //             );
-        //         }
-        //     });
-        // }
-
+                    $('#keywordInput').on('input', function() {
+                        customizeTable.search(this.value).draw();
+                    });
+                },
+                error: function() {
+                    toastr.error('Something went wrong while filtering.', 'Oops!');
+                    $('#product-table-body').html(
+                        '<tr><td colspan="7" class="text-center text-danger py-5">Failed to load products. Please try again.</td></tr>'
+                    );
+                }
+            });
+        }
 
         function attachCheckboxHandlers() {
             function calculateTotal() {
@@ -957,53 +908,34 @@
                     const unitPrice = parseFloat(price) || 0;
                     tempTotal += unitPrice;
                 });
-
                 return tempTotal;
             }
 
-
             $('input[name="product_ids[]"]').off('change').on('change', function() {
                 const tempTotal = calculateTotal();
-
                 if (tempTotal > invoiceAmount) {
-                    toastr.error(`Product total exceeds your invoice amount of $${invoiceAmount.toFixed(2)}`,
-                        'Limit Reached');
+                    toastr.error(`Product total exceeds your invoice amount of $${invoiceAmount.toFixed(2)}`, 'Limit Reached');
                 }
-
                 selectedTotal = tempTotal;
                 updateTotalDisplay();
             });
 
             $('.product-price').on('input', function() {
                 const tempTotal = calculateTotal();
-
                 if (tempTotal > invoiceAmount) {
-                    toastr.error(`Product total exceeds your invoice amount of $${invoiceAmount.toFixed(2)}`,
-                        'Limit Reached');
+                    toastr.error(`Product total exceeds your invoice amount of $${invoiceAmount.toFixed(2)}`, 'Limit Reached');
                 }
-
                 selectedTotal = tempTotal;
                 updateTotalDisplay();
             });
         }
-
 
         function updateTotalDisplay() {
             $('#current_amount').val(selectedTotal.toFixed(2));
         }
     </script>
 
-
     <script>
-        // function clearAllProducts() {
-        //     $('#product-table-body').empty();
-        //     $('input[name="manual_keyword"]').val('');
-        //     $('#discount_amount').val('');
-        //     $('#current_amount').val('');
-        //     selectedTotal = 0;
-        //     updateTotalDisplay();
-        //     toastr.success('Your filter has been reset now', 'Filter Cleared');
-        // }
         function clearAllProducts(button) {
             const icon = $(button).find('i');
             const originalIconClass = 'fa-filter-circle-xmark';
@@ -1015,18 +947,10 @@
                 success: function(response) {
                     $('#product-table-body').empty();
                     $('input[name="manual_keyword"]').val('');
-                    $('#discount_amount').val('');
-                    $('#current_amount').val('');
-                    $('#temp_current_amount_text').text('0.00');
-                    $('#temp_discount_amount_text').text('0.00');
-                    $('#temp_invoice_amount_text').text($('#invoice_amount').val());
                     $('#product-table-body').html(getErrorRowHTML(
-                        'Randomize filter cleared. You can now randomize products again or add custom products.',
-                        9));
+                        'Randomize filter cleared. You can now randomize products again or add custom products.', 9));
+                    syncAllAmountDisplays(0, parseFloat($('#invoice_amount').val()));
                     toastr.success('Randomized products filter has been reset');
-                    updateTotalDisplay();
-
-
                 },
                 error: function(xhr, status, error) {
                     icon.removeClass('fa-spinner fa-spin').addClass(originalIconClass);
@@ -1038,34 +962,51 @@
             });
         }
     </script>
-    <script>
-        let filterTimer;
 
-        $('#keywordInput, #hidden_price_from_input_id, #hidden_price_to_input_id').on('input change', function() {
-            clearTimeout(filterTimer);
-            //const isKeyword = $(this).attr('id') === 'keywordInput';
-            filterTimer = setTimeout(() => {
-                generateRandomProducts('random');
-            }, 1500);
+    <script>
+        $(document).on('click', '.remove-product-btn', function() {
+            const productId = $(this).data('product-id');
+            const unitPrice = $(this).data('unit-price');
+            const siteId = SITE_ID;
+
+            $.ajax({
+                url: "{{ route('remove.product') }}",
+                type: 'GET',
+                data: {
+                    product_id: productId,
+                    unit_price: unitPrice,
+                    site_id: siteId
+                },
+                success: function(response) {
+                    if (response.total === 0 || response.tableRows === '') {
+                        $('#product-table-body').html(
+                            '<tr><td colspan="8" class="text-center text-muted py-5">No products remaining.</td></tr>'
+                        );
+                        syncAllAmountDisplays(0, parseFloat($('#invoice_amount').val()));
+                    } else {
+                        $('#product-table-body').html(response.tableRows);
+                        syncAllAmountDisplays(parseFloat(response.total), parseFloat($('#invoice_amount').val()));
+                    }
+                },
+                error: function() {
+                    toastr.error('Failed to remove product.');
+                }
+            });
         });
     </script>
-
 
     <script>
         function gatherGameCaptureData() {
             const gameCaptureData = [];
 
-            // Loop through all products and their respective platforms
             document.querySelectorAll('.platform-section').forEach(section => {
                 const productId = section.getAttribute('data-product-id');
                 const platform = section.getAttribute('data-platform');
-
-                // Check if the platform section is visible and if fields are entered
                 const fieldsData = {};
 
                 section.querySelectorAll('input[type="text"]').forEach(input => {
-                    const fieldName = input.name.split('[').pop().split(']')[0]; // Extract the field name
-                    fieldsData[fieldName] = input.value; // Store the input data
+                    const fieldName = input.name.split('[').pop().split(']')[0];
+                    fieldsData[fieldName] = input.value;
                 });
 
                 if (Object.keys(fieldsData).length > 0) {
@@ -1082,21 +1023,10 @@
 
         function generateInvoice(event) {
             event.preventDefault();
-            //const gameCaptureData = gatherGameCaptureData();
 
-            // Now you can send this data to the server or process it further
-            //console.log(gameCaptureData);
-
-            const visibleProducts = $('input[name="product_ids[]"]:visible');
-            const selectedProducts = $('input[name="product_ids[]"]:checked');
             const invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
             const current_amount = parseFloat($('#current_amount').val()) || 0;
             const discountAmount = parseFloat($('#discount_amount').val()) || 0;
-
-            // if (selectedProducts.length === 0) {
-            //     toastr.error('Please select your products combo...', 'No Product Selected');
-            //     return;
-            // }
 
             if (current_amount < invoiceAmount) {
                 $('#current_amount').addClass('border border-danger');
@@ -1144,8 +1074,10 @@
                     $('#discount_amount, #current_amount, #invoice_amount').removeClass('border border-success');
                 }
             })();
+
             toastr.options.timeOut = 5000;
             toastr.info('Preparing your invoice details...', 'Initializing');
+
             $.ajax({
                 url: "{{ route('generate.invoice.number') }}",
                 method: 'GET',
@@ -1154,51 +1086,30 @@
                 },
                 success: function(response) {
                     if (!response.success) {
-                        Swal.close();
                         toastr.error('Failed to generate new invoice number', 'Error');
                         return;
                     }
 
                     $('input[name="invoice_number"]').val(response.new_invoice_number);
                     $('#generate-invoice-form').find('input[name="product_data[]"]').remove();
-
-                    // selectedProducts.each(function () {
-                    //     const productId = $(this).val();
-                    //     const unitPrice = $(`input[data-product-id="${productId}"]`).val();
-
-                    //     $('#generate-invoice-form').append($('<input>', {
-                    //         type: 'hidden',
-                    //         name: 'product_data[]',
-                    //         value: JSON.stringify({ product_id: productId, unit_price: unitPrice })
-                    //     }));
-                    // });
-
                     $('#generate-invoice-form')[0].submit();
 
                     toastr.options = {
                         timeOut: 15000,
                         onHidden: function() {
-                            toastr.options = {
-                                timeOut: 4000
-                            };
+                            toastr.options = { timeOut: 4000 };
                             toastr.success('Invoice is ready and will download shortly.', 'Completed');
-
                         }
                     };
 
                     toastr.info('Generating invoice PDF file...', 'Processing');
-
                 },
                 error: function() {
-                    Swal.close();
                     toastr.error('There was an error generating the invoice number', 'Error');
                 }
             });
         }
     </script>
-
-
-
 
     <script>
         function handlePlatformChange(select) {
@@ -1217,7 +1128,6 @@
         }
     </script>
 
-    {{-- Remove Row Script --}}
     <script>
         function removeProductRow(index) {
             const mainRow = document.getElementById(`product-main-row-${index}`);
@@ -1229,124 +1139,45 @@
     </script>
 
     <script>
-        const slider = document.getElementById('customize-price-slider');
+        function customizeProducts(action = 'onload', page = 1) {
+            let keyword = $('#modalkeywordInput').val();
+            let siteId = {{ $site->id ?? 'null' }};
 
-        noUiSlider.create(slider, {
-            start: [0, 500],
-            connect: true,
-            range: {
-                'min': 10,
-                'max': 1000
-            }
-        });
-
-        slider.noUiSlider.on('update', function(values, handle) {
-            $('#hidden_customize_price_from_input_id_modal').val(parseFloat(values[0]));
-            $('#hidden_customize_price_to_input_id_modal').val(parseFloat(values[1]));
-        });
-    </script>
-
-    <script>
-        let customizeProductsTimeout; // ⏳ for debounce
-
-        function customizeProducts(search_type = 'search') {
-            //const keyword = $('#keywordInput').val().trim();
-            //const priceFrom = $('#hidden_customize_price_from_input_id_modal').val();
-            //const priceTo = $('#hidden_customize_price_to_input_id_modal').val();
-            const invoice_amount = parseFloat($('#invoice_amount').val()) || 0;
-            const current_amount = parseFloat($('#current_amount').val()) || 0;
-
-            const discountAmount = Math.max(0, current_amount - invoice_amount);
-
-            // $('#temp_current_amount_text').text(current_amount.toFixed(2));
-            // $('#temp_invoice_amount_text').text(invoice_amount.toFixed(2));
-            // $('#temp_discount_amount_text').text(discountAmount.toFixed(2));
-
-            if (!isNaN(current_amount) && current_amount > 0) {
-                $('#temp_current_amount_text').text(current_amount.toFixed(2));
-            }
-            if (!isNaN(invoice_amount) && invoice_amount > 0) {
-                $('#temp_invoice_amount_text').text(invoice_amount.toFixed(2));
-            }
-            if (!isNaN(discountAmount) && discountAmount > 0) {
-                $('#temp_discount_amount_text').text(discountAmount.toFixed(2));
+            if (!siteId) {
+                toastr.error('Site ID is missing.');
+                return;
             }
 
-            // Show temporary loading state in table
-            $('#customize-product-table-body').html(getProductsSearchRowHTML());
+            $('#customize-product-table-body').html(getProductsSearchRowHTML(7));
 
             $.ajax({
-                url: "{{ route('filter.products') }}",
+                url: '{{ route("filter.products") }}',
                 type: 'GET',
                 data: {
-                    //keyword: keyword,
-                    //price_from: priceFrom,
-                    //price_to: priceTo,
-                    search_type: search_type
+                    keyword: keyword,
+                    site_id: siteId
                 },
                 success: function(response) {
-                    if (response && response.tableRows && response.tableRows.trim() !== '') {
+                    if (response.tableRows) {
                         $('#customize-product-table-body').html(response.tableRows);
-
-                        // Wait for DOM update
-                        setTimeout(function() {
-                            let customizeTable;
-
-                            if ($.fn.DataTable.isDataTable('#customize-products-table')) {
-                                $('#customize-products-table').DataTable().clear().destroy();
-                            }
-
-                            customizeTable = $('#customize-products-table').DataTable({
-                                responsive: true,
-                                searchHighlight: true,
-                                dom: 'lrtip', // removes built-in search bar
-                                language: {
-                                    search: "",
-                                    searchPlaceholder: "Search..."
-                                },
-                                columnDefs: [{
-                                    orderable: false,
-                                    targets: [4, 5]
-                                }]
-                            });
-
-                            // ✅ Custom search input functionality
-                            $('#modalkeywordInput').off('keyup').on('keyup', function() {
-                                customizeTable.search(this.value).draw();
-                            });
-
-                            // Calculate totals
-                            if (typeof calculateTotalPrice === 'function') {
-                                calculateTotalPrice();
-                            }
-                        }, 0); // ⏳ Use timeout to ensure DOM is ready
                     } else {
-                        $('#customize-product-table-body').html(
-                            getErrorRowHTML(
-                                'No matching products found. Please try a different keyword or adjust your price range.'
-                                )
-                        );
+                        $('#customize-product-table-body').html('<tr><td colspan="6" class="text-center text-muted">No products found.</td></tr>');
                     }
                 },
                 error: function(xhr, status, error) {
-                    console.error('Ajax Error:', status, error);
-                    toastr.error('Failed to filter products. Please try again.', 'Error');
-                    $('#customize-product-table-body').html(
-                        getErrorRowHTML('Failed to load products. Please refresh or try again.')
-                    );
+                    $('#customize-product-table-body').html('<tr><td colspan="6" class="text-center text-danger">Failed to load products. Please try again.</td></tr>');
+                    toastr.error('Failed to load products.');
                 }
             });
         }
 
-        // 🚀 Call customizeProducts() once when modal opens
-
-
-        // 🚀 Debounce user typing to prevent too many Ajax requests
-        $('#keywordInput').on('input', function() {
-            clearTimeout(customizeProductsTimeout);
-            customizeProductsTimeout = setTimeout(function() {
-                generateRandomProducts();
-            }, 500); // 500ms delay after user stops typing
+        $(document).ready(function() {
+            $('#modalkeywordInput').on('keypress', function(e) {
+                if (e.which === 13) {
+                    e.preventDefault();
+                    customizeProducts('search', 1);
+                }
+            });
         });
     </script>
 
@@ -1355,11 +1186,14 @@
             if ($.fn.DataTable.isDataTable('#customize-products-table')) {
                 $('#customize-products-table').DataTable().clear().destroy();
             }
-
-            // Optional: Clear HTML rows to avoid leftover data
             $('#customize-product-table-body').empty();
+
+            let preservedAmount = parseFloat($('#current_amount').val()) || 0;
+            let invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
+            syncAllAmountDisplays(preservedAmount, invoiceAmount);
         });
     </script>
+
     <script>
         function validateAmounts() {
             const currentAmountInput = document.getElementById("current_amount");
@@ -1374,7 +1208,6 @@
             const currentTotal = currentAmount.toFixed(2);
 
             const isValid = expectedTotal === currentTotal;
-
             const color = isValid ? "green" : "red";
 
             currentAmountInput.style.color = color;
@@ -1383,13 +1216,31 @@
         }
 
         document.addEventListener("DOMContentLoaded", function() {
-            // Set up listeners
             document.getElementById("current_amount").addEventListener("input", validateAmounts);
             document.getElementById("discount_amount").addEventListener("input", validateAmounts);
             document.getElementById("invoice_amount").addEventListener("input", validateAmounts);
-
-            // Initial check
             validateAmounts();
         });
+    </script>
+
+    <script>
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.map(function(tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+
+        function closeFilters() {
+            $('input[name="add_product_ids[]"]').prop('checked', false);
+            $('.add-product-price').val('');
+            $('#modalkeywordInput').val('');
+        }
+
+        function clearFilters() {
+            $('input[name="add_product_ids[]"]').prop('checked', false);
+            $('.add-product-price').val('');
+            $('#modalkeywordInput').val('');
+            $('#customize-product-table-body').html(getErrorRowHTML('No results found. Try randomizing or use a different keyword.'));
+            toastr.info('Filters have been reset.');
+        }
     </script>
 @endpush

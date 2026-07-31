@@ -378,17 +378,18 @@
                         <table class="table table-bordered table-hover align-middle mb-0">
                             <thead class="">
                             <tr>
-                                <th class="w-10 text-center">PID</th>
-                                <th class="w-30">Package Name</th>
-                                <th class="w-20 text-center">Subscription</th>
-                                <th class="text-center unit-price-header" data-column="3" data-order="desc">
+                                <th style="width:10%; text-align:center;">PID</th>
+                                <th style="width:35%;">Package Name</th>
+                                <th style="width:20%; text-align:center;">Subscription</th>
+                                <th style="width:15%; text-align:center;" class="unit-price-header" data-column="3" data-order="desc">
                                     <span class="d-inline-flex align-items-center justify-content-center gap-1">
                                         Unit Price <i class="bi bi-caret-down-fill"></i>
                                     </span>
                                 </th>
-                                <th class="w-25 text-center">Editable Price</th>
-                                <th class="w-10 text-center">Remove</th>
+                                <th style="width:20%; text-align:center;">Editable Price</th>
+                                <th style="width:10%; text-align:center;">Remove</th>
                             </tr>
+
                             </thead>
                             <tbody id="randomize-product-table-body">
                                 
@@ -476,17 +477,18 @@
                         <table id="customize-products-table" class="table table-bordered table-hover align-middle mb-0 table-responsive" style="width:100% !important;">
                                 <thead class="text-center">
                                 <tr>
-                                    <th class="text-center" style="width: 10%;">PID</th>
-                                    <th class="text-center" style="width: 30%;">Package Name</th>
-                                    <th class="text-center" style="width: 20%;">Subscription</th>
-                                    <th class="text-center unit-price-header" style="width: 20%;"  data-column="3" data-order="desc">
-                                    <span class="d-inline-flex align-items-center justify-content-center gap-1">
-                                        Unit Price <i class="bi bi-caret-down-fill"></i>
-                                    </span>
-                                </th>
-                                    <th class="text-center" style="width: 25%;">Editable Price</th>
-                                    <th class="text-center" style="width: 10%;">Select</th>
+                                    <th class="text-center" style="width:10%;">PID</th>
+                                    <th style="width:35%;">Package Name</th>
+                                    <th class="text-center" style="width:20%;">Subscription</th>
+                                    <th class="text-center unit-price-header" style="width:15%;" data-column="3" data-order="desc">
+                                        <span class="d-inline-flex align-items-center justify-content-center gap-1">
+                                            Unit Price <i class="bi bi-caret-down-fill"></i>
+                                        </span>
+                                    </th>
+                                    <th class="text-center" style="width:20%;">Editable Price</th>
+                                    <th class="text-center" style="width:10%;">Select</th>
                                 </tr>
+
                                 </thead>
                                 <tbody id="customize-product-table-body">
                                 
@@ -657,7 +659,7 @@
         customizeSliderTimer = setTimeout(() => {
             const [min, max] = values.map(v => Math.round(parseFloat(v.replace(currency, ''))));
             updateHiddenInputs(min, max, 'customize');
-            customizeProducts('range', currentPageNumber);
+            customizeProducts('range', $('#current_page_number').val() || 1);
         }, 1500);
     });
 
@@ -680,9 +682,11 @@
         }
     });
 
-    if (search_type === 'reset') {
-        $('#customizeKeywordInput').val('');
-    }
+    // if (search_type === 'reset') {
+    //     $('#customizeKeywordInput').val('');
+    //     customizePriceSlider.noUiSlider.set([minUnitPrice, maxUnitPrice]);
+    //     updateHiddenInputs(minUnitPrice, maxUnitPrice, 'customize');
+    // }
 
 
     randomizePriceSlider.noUiSlider.on('change', function (values) {
@@ -798,7 +802,11 @@
             customizeRequest = null;
         }
         
-
+        if (search_type === 'reset') {
+            $('#customizeKeywordInput').val('');
+            customizePriceSlider.noUiSlider.set([minUnitPrice, maxUnitPrice]);
+            updateHiddenInputs(minUnitPrice, maxUnitPrice, 'customize');
+        }
 
         let btn = $('#add-custom-products');
         btn.prop('disabled', false).html('Add Selected to Cart');
@@ -1302,6 +1310,7 @@ $(document).ready(function() {
     }
 </script>
 
+
 <script>
     function initTooltips() {
         const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
@@ -1324,5 +1333,6 @@ $(document).ready(function() {
         }
     });
 </script>
+
 
 @endpush

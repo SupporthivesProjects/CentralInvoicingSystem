@@ -14,7 +14,7 @@
                     <!-- Header -->
                     <tr style="height:15vh">
                         <td style="padding: 0px;">
-                            <img src="{{ $invoice_header_image }}" alt=""
+                            <img src="{{ $invoice_header_image }}" alt="image"
                                 style="display: block;max-width: 100%;">
                         </td>
                     </tr>

@@ -5,16 +5,16 @@
     <title>Your Email Title</title>
 </head>
 
-<body>
+<body style="margin: 0px; padding: 0px;">
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
-            <td align="center" bgcolor="#f2f2f2" style="padding: 20px 0;">
+            <td align="center" bgcolor="#FFFFFF" style="padding: 0px;">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
                     style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
                     <!-- Header -->
                     <tr>
                         <td style="padding: 0px;max-height: 130px;">
-                            <table>
+                            <table style="border-spacing: 0px;">
                                 <tr>
                                     <td
                                         style="height: 100px; background: url({{ $invoice_header_image }}) no-repeat;background-position:center;background-size:cover;width: 1000px;">
@@ -59,12 +59,12 @@
                                         </p>
                                         <p
                                             style="font-family: arial;font-size: 10px;margin-bottom: 5px;font-weight: 400;">
-                                            <b>Website:</b> {{ $site->site_link }}
+                                            <b>Website:</b> www.thedevilzz.com
                                         </p>
                                         <p style="font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;">
                                             <b>Phone:</b> {{ $company_mobile }}
                                         </p>
-                                        <p style="font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;">
+                                        <p style="font-family: arial;font-size: 10px;margin: 0px;font-weight: 400; min-height: 40px;">
                                             <b>Address:</b> {{ $company_address }}
                                         </p>
                                     </td>
@@ -89,7 +89,7 @@
                                 </tr>
                             </table>
 
-                            <div style="min-height: 650px !important;">
+                            <div style="min-height: 745px !important;">
                             <table style="border-collapse: collapse;border-bottom: 0px;border: 0px;">
                                 <tr
                                     style="border-collapse: collapse;height: 30px;background-color:#F8F0E3; border-bottom: 0px;border: 0px;">

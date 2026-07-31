@@ -85,6 +85,13 @@ if (!function_exists('getAllWebsites')) {
     }
 }
 
+if (!function_exists('getLiveWebsites')) {
+    function getLiveWebsites()
+    {
+        return Website::where('site_status', 'live')->count();
+    }
+}
+
 if (!function_exists('getallModels')) {
     function getallModels()
     {
@@ -131,7 +138,11 @@ if (!function_exists('currentUserName')) {
 if (!function_exists('numberToWords')) {
     function numberToWords($number)
     {
+        if (!class_exists(\NumberFormatter::class)) {
+            return $number;
+        }
         $formatter = new \NumberFormatter('en', \NumberFormatter::SPELLOUT);
+        
         $words = $formatter->format($number);
         return strtolower(str_replace(' ', '', $words));
     }
@@ -165,14 +176,40 @@ if (!function_exists('site_currency')) {
             \App\Services\DynamicDatabaseService::connect($site);
 
             if ($site->technology === 'wordpress') {
+
                 $currencyTable = $site->currency_table ?? 'wp_options';
-            
+
                 $currencyRow = DB::connection('dynamic')
                     ->table($currencyTable)
                     ->where('option_name', 'woocommerce_currency')
                     ->first();
-            
-                return $currencyRow?->option_value ?? 'USD';
+
+                $currencyCode = $currencyRow?->option_value ?? 'USD';
+
+                $symbols = [
+                    'USD' => '$',   // US Dollar
+                    'EUR' => '€',   // Euro
+                    'INR' => '₹',   // Indian Rupee
+                    'GBP' => '£',   // British Pound
+                    'AED' => 'د.إ', // UAE Dirham
+                    'NGN' => '₦',   // Nigerian Naira
+                    'AUD' => 'A$',  // Australian Dollar
+                    'CAD' => 'C$',  // Canadian Dollar
+                    'SGD' => 'S$',  // Singapore Dollar
+                    'JPY' => '¥',   // Japanese Yen
+                    'CNY' => '¥',   // Chinese Yuan
+                    'ZAR' => 'R',   // South African Rand
+                    'CHF' => 'CHF', // Swiss Franc
+                    'MYR' => 'RM',  // Malaysian Ringgit
+                    'THB' => '฿',   // Thai Baht
+                    'PKR' => '₨',   // Pakistani Rupee
+                    'BDT' => '৳',   // Bangladeshi Taka
+                    'LKR' => 'Rs',  // Sri Lankan Rupee
+                    'KWD' => 'KD',  // Kuwaiti Dinar
+                    'QAR' => 'QR',  // Qatari Riyal
+                ];
+
+                return $symbols[$currencyCode] ?? $currencyCode;
             }
             
             $site_currency = DB::connection('dynamic')->table('business_settings')->where('type', 'system_default_currency')->first()
@@ -183,6 +220,71 @@ if (!function_exists('site_currency')) {
             return $currency->symbol ?? '$';
         } catch (\Exception $e) {
             Log::error('Exception caught: '.$e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            return '$';
+        }
+    }
+}
+
+if (!function_exists('get_site_currency_by_id')) {
+    function get_site_currency_by_id($site_id)
+    {
+        if (!$site_id) {
+            return '$';
+        }
+
+        try {
+            $site = \App\Models\Website::findOrFail($site_id);
+            \App\Services\DynamicDatabaseService::connect($site);
+
+            $currencySymbols = [
+                'USD' => '$',
+                'EUR' => '€',
+                'INR' => '₹',
+                'GBP' => '£',
+                'AED' => 'د.إ',
+                'NGN' => '₦',
+                'AUD' => 'A$',
+                'CAD' => 'C$',
+                'SGD' => 'S$',
+                'JPY' => '¥',
+                'CNY' => '¥',
+                'ZAR' => 'R',
+                'CHF' => 'CHF',
+                'MYR' => 'RM',
+                'THB' => '฿',
+                'PKR' => '₨',
+                'BDT' => '৳',
+                'LKR' => 'Rs',
+                'KWD' => 'KD',
+                'QAR' => 'QR',
+            ];
+
+            if ($site->technology === 'wordpress') {
+                $currencyTable = $site->currency_table ?? 'wp_options';
+
+                $currencyRow = DB::connection('dynamic')
+                    ->table($currencyTable)
+                    ->where('option_name', 'woocommerce_currency')
+                    ->first();
+
+                $currencyCode = $currencyRow?->option_value ?? 'USD';
+
+                return $currencySymbols[$currencyCode] ?? $currencyCode;
+            }
+
+            $site_currency = DB::connection('dynamic')->table('business_settings')->where('type', 'system_default_currency')->first()
+                ?? DB::connection('dynamic')->table('business_settings')->where('type', 'home_default_currency')->first();
+
+            $currency = DB::connection('dynamic')->table('currencies')->where('id', $site_currency->value ?? null)->first();
+
+            return $currency->symbol ?? '$';
+        } catch (\Exception $e) {
+            \Log::error('Exception caught: '.$e->getMessage(), [
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),
                 'trace' => $e->getTraceAsString(),
@@ -212,8 +314,34 @@ if (!function_exists('site_currency_code')) {
                     ->table($currencyTable)
                     ->where('option_name', 'woocommerce_currency')
                     ->first();
+                
 
-                return $currencyRow?->option_value ?? 'USD';
+                    $currencyCode = $currencyRow?->option_value ?? 'USD';
+
+                    $symbols = [
+                        'USD' => '$',   // US Dollar
+                        'EUR' => '€',   // Euro
+                        'INR' => '₹',   // Indian Rupee
+                        'GBP' => '£',   // British Pound
+                        'AED' => 'د.إ', // UAE Dirham
+                        'NGN' => '₦',   // Nigerian Naira
+                        'AUD' => 'A$',  // Australian Dollar
+                        'CAD' => 'C$',  // Canadian Dollar
+                        'SGD' => 'S$',  // Singapore Dollar
+                        'JPY' => '¥',   // Japanese Yen
+                        'CNY' => '¥',   // Chinese Yuan
+                        'ZAR' => 'R',   // South African Rand
+                        'CHF' => 'CHF', // Swiss Franc
+                        'MYR' => 'RM',  // Malaysian Ringgit
+                        'THB' => '฿',   // Thai Baht
+                        'PKR' => '₨',   // Pakistani Rupee
+                        'BDT' => '৳',   // Bangladeshi Taka
+                        'LKR' => 'Rs',  // Sri Lankan Rupee
+                        'KWD' => 'KD',  // Kuwaiti Dinar
+                        'QAR' => 'QR',  // Qatari Riyal
+                    ];
+    
+                    return $symbols[$currencyCode] ?? $currencyCode;
             }
 
             $site_currency = DB::connection('dynamic')->table('business_settings')
@@ -405,4 +533,23 @@ if (!function_exists('compact_number')) {
 }
 
 
+// For Wordpress currency symbols | Rishav Mandal | 22/10/2025
+if (!function_exists('wp_currency_symbol')) {
+    /**
+     * Get currency symbol from currency code
+     *
+     * @param string|null $currencyCode
+     * @return string
+     */
+    function wp_currency_symbol($currencyCode = null)
+    {
+        $currencyCode = $currencyCode ?? site_currency();
+        
+        $symbols = [
+            'USD' => '$',
+            'GHS' => '₵',
+        ];
 
+        return $symbols[strtoupper($currencyCode)] ?? $currencyCode;
+    }
+}

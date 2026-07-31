@@ -42,199 +42,241 @@ class LaravelController extends Controller
         $site_id = $request->get('site_id');
         $invoiceAmount = floatval($request->get('invoice_amount'));
 
+        $trackLastN = 2;
+        
 
+        $tiers = [
+            ['label' => 'exact', 'exact' => true],
+            ['label' => 'low',   'exact' => false, 'min' => 0.001, 'max' => 0.20],
+            ['label' => 'mid',   'exact' => false, 'min' => 0.20,  'max' => 0.35],
+            ['label' => 'high',  'exact' => false, 'min' => 0.35,  'max' => 0.50],
+        ];
 
         $site = Website::findOrFail($site_id);
-        $productstable = getProductTable($site->technology);
         DynamicDatabaseService::connect($site);
-        //Clear ready products session
         session()->forget('ready_products');
 
         $allProducts = DB::connection($this->connectionType)->table($this->productTable)
             ->select('id', 'name', 'credits', 'price')->get();
 
+        $lastUsedIds = session('last_used_product_ids', []);
+        $currentTier = session('current_tier_index', 0);
 
-        $minTotal = $invoiceAmount;
-        $maxTotal = $invoiceAmount;
+        $filteredProducts = collect();
+        $matchedAtPercentage = 0;
+        $totalTiers = count($tiers);
 
-        // Write code as user entered invoice amount must be matched with any one product which is availeable in db, can use where clause to get exact amount, if no products are found then return empty response with button to add custom packs
-        $filteredProducts = $allProducts->filter(function ($product) use ($minTotal, $maxTotal) {
-            return $product->price >= $minTotal && $product->price <= $maxTotal;
-        });
+        for ($attempt = 0; $attempt < $totalTiers; $attempt++) {
+            $tierIndex = ($currentTier + $attempt) % $totalTiers;
+            $tier = $tiers[$tierIndex];
+
+            if ($tier['exact']) {
+                $candidates = $allProducts->filter(function ($product) use ($invoiceAmount) {
+                    return abs($product->price - $invoiceAmount) < 0.01;
+                });
+            } else {
+                $minPrice = $invoiceAmount + ($invoiceAmount * $tier['min']);
+                $maxPrice = $invoiceAmount + ($invoiceAmount * $tier['max']);
+                $candidates = $allProducts->filter(function ($product) use ($minPrice, $maxPrice) {
+                    return $product->price > $minPrice && $product->price <= $maxPrice;
+                });
+            }
+
+            // Remove last used products from candidates
+            $preferred = $candidates->filter(function ($product) use ($lastUsedIds) {
+                return !in_array($product->id, $lastUsedIds);
+            });
+
+            $pool = $preferred->isNotEmpty() ? $preferred : $candidates;
+
+            if ($pool->isNotEmpty()) {
+                $chosenProduct = $pool->random();
+                $filteredProducts = collect([$chosenProduct]);
+                $matchedAtPercentage = $tier['exact'] ? 0 : round($tier['min'] * 100);
+                session(['current_tier_index' => ($tierIndex + 1) % $totalTiers]);
+                break;
+            }
+        }
+
         if ($filteredProducts->isEmpty()) {
             session()->forget('ready_products');
             session()->forget('current_amount');
             return response()->json([
-            'tableRows' => '<tr><td colspan="6" class="text-center text-muted">No products found matching the invoice amount. <br><button class="btn btn-primary mt-2" onclick="addCustomPacks()">Add Custom Packs</button></td></tr>',
-            'success' => false,
-            'total' => 0
+                'tableRows' => '
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-3">
+                            No products found within 50% of invoice amount
+                            (<strong>' . site_currency() . number_format($invoiceAmount, 2) . '</strong>).<br>
+                            <button class="btn btn-primary btn-sm mt-2"
+                                data-bs-toggle="modal"
+                                data-bs-target="#addmoreproducts"
+                                onclick="customizeProducts(\'onload\')">
+                                Add Custom Pack
+                            </button>
+                        </td>
+                    </tr>',
+                'success' => false,
+                'total'   => 0
             ], 200);
         }
-        $readyProducts = session()->get('ready_products', []);
-        $randomProducts = $filteredProducts->shuffle()->take(1)->map(function ($product) use ($readyProducts) {
-            $exists = collect($readyProducts)->firstWhere('id', $product->id);
-            if ($exists) {
-                $product->price = $exists->price;
-            } else {
-                $product->price = $product->price;
-            }
-            return $product;
-        });
-        // Put the selected products into session
-        $readyProducts = collect($readyProducts)->keyBy('id')->merge($randomProducts->keyBy('id'))->values()->toArray();
+
+        $chosenId = $filteredProducts->first()->id;
+        $lastUsedIds[] = $chosenId;
+        if (count($lastUsedIds) > $trackLastN) {
+            $lastUsedIds = array_slice($lastUsedIds, -$trackLastN);
+        }
+        session(['last_used_product_ids' => $lastUsedIds]);
+
+        $readyProducts = json_decode(json_encode($filteredProducts->values()), true);
         session()->put('ready_products', $readyProducts);
-        //dd($readyProducts);
+
         $modelType = $site->businessModel->model_type;
-        session(['current_amount' => $randomProducts->sum('price')]);
-        //$current_amount = session('current_amount', 0);
-        //dd($current_amount);
+        $total = $filteredProducts->sum('price');
+        session(['current_amount' => $total]);
+
         $tableRows = view("invoice.{$modelType}.random_product_rows", [
-            'products' => collect($readyProducts),
-            'site' => $site,
-            'total' => collect($readyProducts)->sum('price')
+            'products' => $filteredProducts->values(),
+            'site'     => $site,
+            'total'    => $total
         ])->render();
+
         return response()->json([
-            'tableRows' => $tableRows,
-            'total' => collect($readyProducts)->sum('price')
+            'tableRows'           => $tableRows,
+            'total'               => $total,
+            'matchedAtPercentage' => $matchedAtPercentage
         ]);
-
     }
-
-
-
-
-
     public function addProducts(Request $request)
-{
-    $site_id = $request->get('site_id');
-    $productsData = $request->get('products');
+    {
+        $site_id = $request->get('site_id');
+        $productsData = $request->get('products');
 
-    $site = Website::findOrFail($site_id);
-    $productstable = "pricing_packs";
-    DynamicDatabaseService::connect($site);
+        $site = Website::findOrFail($site_id);
+        $productstable = "pricing_packs";
+        DynamicDatabaseService::connect($site);
 
-    // Clear existing ready_products session - only new products will be there
-    $readyProducts = [];
+        // Clear existing ready_products session - only new products will be there
+        $readyProducts = [];
 
-    foreach ($productsData as $productData) {
-        $productId = $productData['product_id'];
-        $unitPrice = floatval($productData['unit_price']); // Changed from 'price' to 'unit_price'
-        //dd($unitPrice);
+        foreach ($productsData as $productData) {
+            $productId = $productData['product_id'];
+            $unitPrice = floatval($productData['unit_price']); // Changed from 'price' to 'unit_price'
+            //dd($unitPrice);
 
-        // Handle custom pack (ID = 0) separately
-        if ($productId == '0') {
-            // Add custom pack to ready products
-            $readyProducts[] = [
-                'id' => $productId,
-                'price' => $unitPrice,
-                'is_custom' => true
-            ];
-        } else {
-            // Handle regular products
-            // Get current product price
-            $currentProduct = DB::connection($this->connectionType)
-                ->table($this->productTable)
-                ->where('id', $productId)
-                ->first();
-
-            // If price changed, update price history
-            if ($currentProduct && $currentProduct->price != $unitPrice) {
-                ProductPriceHistory::create([
-                    'site_id' => $site_id,
-                    'product_id' => $productId,
+            // Handle custom pack (ID = 0) separately
+            if ($productId == '0') {
+                // Add custom pack to ready products
+                $readyProducts[] = [
+                    'id' => $productId,
                     'price' => $unitPrice,
-                    'last_price_changed' => now()
-                ]);
-
-                // Update product price in database
-                DB::connection($this->connectionType)
+                    'is_custom' => true
+                ];
+            } else {
+                // Handle regular products
+                // Get current product price
+                $currentProduct = DB::connection($this->connectionType)
                     ->table($this->productTable)
                     ->where('id', $productId)
-                    ->update(['price' => $unitPrice]);
+                    ->first();
+
+                // If price changed, update price history
+                if ($currentProduct && $currentProduct->price != $unitPrice) {
+                    ProductPriceHistory::create([
+                        'site_id' => $site_id,
+                        'product_id' => $productId,
+                        'price' => $unitPrice,
+                        'last_price_changed' => now()
+                    ]);
+
+                    // Update product price in database
+                    DB::connection($this->connectionType)
+                        ->table($this->productTable)
+                        ->where('id', $productId)
+                        ->update(['price' => $unitPrice]);
+                }
+
+                // Add to ready products
+                $readyProducts[] = [
+                    'id' => $productId,
+                    'price' => $unitPrice,
+                ];
+            }
+        }
+
+        // Replace session data completely
+        session()->put('ready_products', $readyProducts);
+
+        // Separate custom and regular products
+        $customProducts = collect($readyProducts)->where('is_custom', true);
+        $regularProductIds = collect($readyProducts)->where('is_custom', '!=', true)->pluck('id')->reverse()->values()->toArray();
+
+        $products = collect();
+
+        // Fetch regular products from database
+        if (!empty($regularProductIds)) {
+            $dbProducts = DB::connection($this->connectionType)->table($this->productTable)
+                ->select('id', 'name', 'price', 'credits')
+                ->whereIn('id', $regularProductIds)
+                ->get()
+                ->keyBy('id');
+
+            $regularProducts = collect($regularProductIds)->map(function ($id) use ($dbProducts) {
+                return $dbProducts[$id];
+            });
+
+            $products = $products->concat($regularProducts);
+        }
+
+        // Add custom products
+        foreach ($customProducts as $customProduct) {
+            $customPrice = $customProduct['price'];
+            $calculation = round(($customPrice / 5.75) * 10) / 10;
+            $calculation_2 = round($calculation * 2) / 2;
+            $calculatedCredits = (float)number_format($calculation_2, 1, '.', '');
+            //dd($calculation, $calculatedCredits);
+
+            $customProductObj = (object)[
+                'id' => 0,
+                'name' => 'Custom Pack',
+                'price' => $customPrice,
+                'credits' => (string)$calculatedCredits,
+                'is_custom' => true
+            ];
+            $products->push($customProductObj);
+        }
+
+        $products = $products->map(function ($product) use ($readyProducts, $site_id) {
+            // Skip custom products from additional processing
+            if (isset($product->is_custom) && $product->is_custom) {
+                return $product;
             }
 
-            // Add to ready products
-            $readyProducts[] = [
-                'id' => $productId,
-                'price' => $unitPrice,
-            ];
-        }
-    }
+            $sessionProduct = collect($readyProducts)->firstWhere('id', $product->id);
+            $product->price = $sessionProduct['price'] ?? $product->price;
 
-    // Replace session data completely
-    session()->put('ready_products', $readyProducts);
+            // if ($product->category_id) {
+            //     $product->category_name = DB::connection($this->connectionType)->table('categories')->where('id', $product->category_id)->value('name') ?? 'unknown';
+            // } else {
+            //     $product->category_name = 'unknown';
+            // }
 
-    // Separate custom and regular products
-    $customProducts = collect($readyProducts)->where('is_custom', true);
-    $regularProductIds = collect($readyProducts)->where('is_custom', '!=', true)->pluck('id')->reverse()->values()->toArray();
-
-    $products = collect();
-
-    // Fetch regular products from database
-    if (!empty($regularProductIds)) {
-        $dbProducts = DB::connection($this->connectionType)->table($this->productTable)
-            ->select('id', 'name', 'price', 'credits')
-            ->whereIn('id', $regularProductIds)
-            ->get()
-            ->keyBy('id');
-
-        $regularProducts = collect($regularProductIds)->map(function ($id) use ($dbProducts) {
-            return $dbProducts[$id];
+            return $product;
         });
 
-        $products = $products->concat($regularProducts);
+        $modelType = $site->businessModel->model_type;
+        session(['current_amount' => collect($products)->sum('price')]);
+
+        $tableRows = view("invoice.{$modelType}.random_product_rows", [
+            'products' => $products,
+            'site' => $site,
+            'total' => collect($products)->sum('price')
+        ])->render();
+
+        return response()->json([
+            'tableRows' => $tableRows,
+            'total' => collect($products)->sum('price')
+        ]);
     }
-
-    // Add custom products
-    foreach ($customProducts as $customProduct) {
-        $customPrice = $customProduct['price'];
-        $calculation = round(($customPrice / 5.75) * 10) / 10;
-        $calculation_2 = round($calculation * 2) / 2;
-        $calculatedCredits = (float)number_format($calculation_2, 1, '.', '');
-        //dd($calculation, $calculatedCredits);
-
-        $customProductObj = (object)[
-            'id' => 0,
-            'name' => 'Custom Pack',
-            'price' => $customPrice,
-            'credits' => (string)$calculatedCredits,
-            'is_custom' => true
-        ];
-        $products->push($customProductObj);
-    }
-
-    $products = $products->map(function ($product) use ($readyProducts, $site_id) {
-        // Skip custom products from additional processing
-        if (isset($product->is_custom) && $product->is_custom) {
-            return $product;
-        }
-
-        $sessionProduct = collect($readyProducts)->firstWhere('id', $product->id);
-        $product->price = $sessionProduct['price'] ?? $product->price;
-
-        // if ($product->category_id) {
-        //     $product->category_name = DB::connection($this->connectionType)->table('categories')->where('id', $product->category_id)->value('name') ?? 'unknown';
-        // } else {
-        //     $product->category_name = 'unknown';
-        // }
-
-        return $product;
-    });
-
-    $modelType = $site->businessModel->model_type;
-    session(['current_amount' => collect($products)->sum('price')]);
-
-    $tableRows = view("invoice.{$modelType}.random_product_rows", [
-        'products' => $products,
-        'site' => $site,
-        'total' => collect($products)->sum('price')
-    ])->render();
-
-    return response()->json([
-        'tableRows' => $tableRows,
-        'total' => collect($products)->sum('price')
-    ]);
-}
 
 
     public function removeProduct(Request $request)
@@ -258,6 +300,7 @@ class LaravelController extends Controller
 
         // If no products left, return empty response
         if (empty($readyProducts)) {
+            session()->forget('current_amount');
             return response()->json([
                 'tableRows' => '<tr><td colspan="6" class="text-center text-muted">All products removed. Please add random or custom products.<br><button class="btn btn-info mt-2 ms-2" data-bs-toggle="modal" data-bs-target="#addmoreproducts" onclick="customizeProducts(\'onload\')">Add Custom Pack</button></td></tr>',
                 'total' => 0
@@ -629,7 +672,12 @@ class LaravelController extends Controller
                     'id' => '0',
                     'name' => 'Custom Pack',
                     'price' => floatval($data['price']),
-                    'credits' => round(floatval($data['price']) / 5.75)
+                    'credits' => (float) number_format(
+                        round((floatval($data['price']) / 5.75) * 2) / 2,
+                        1,
+                        '.',
+                        ''
+                    )
                 ];
             } else {
                 // Handle regular products

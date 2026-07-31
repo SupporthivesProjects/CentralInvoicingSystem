@@ -11,8 +11,10 @@
         <tr>
             <td colspan="2" 
                 style="
-                    background: url('{{ $invoice_header_image }}') no-repeat center; 
+                    background: url('{{ $invoice_header_image }}'); 
                     background-size: contain; 
+                    background-repeat: no-repeat;
+                    background-position: top center;
                     height: 165px;">
             </td>
         </tr>
@@ -25,14 +27,14 @@
                         <td width="42%" valign="top"
                             style="padding: 50px 40px 30px; border-right: 1px solid #ccc; font-size: 14px; line-height: 1.6;">
                             <div style="margin-bottom: 28px;">
-                                <p style="margin: 0; font-size: 11px; color: #888; letter-spacing: 1px;">DATEee</p>
+                                <p style="margin: 0; font-size: 11px; color: #888; letter-spacing: 1px;">DATE</p>
                                 <p style="margin: 5px 0 0; color: #000;">{{ $invoice_date }}</p>
                             </div>
                             <div style="margin-bottom: 28px;">
                                 <p style="margin: 0; font-size: 11px; color: #888; letter-spacing: 1px;">BILLED TO</p>
                                 <p style="margin: 5px 0 0; color: #000;">
-                                    <strong>{{ $customer_name }}</strong><br>
-                                    {{ $customer_mobile }}<br>
+                                    <strong>{{ $customer_name }}</strong>
+                                    {{ $customer_mobile }}
                                     {{ $customer_email }}
                                 </p>
                             </div>

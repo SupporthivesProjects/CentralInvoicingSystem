@@ -69,7 +69,7 @@
                                         @endforeach
                                         <tr style="border-top: 1px solid grey;">
                                             <td style="width: 100px;color: #000000;text-align: start;font-family: Arial;font-size: 10px;margin: 0px;font-weight: 400;padding: 0px 16px;" colspan="1">
-                                                <p><b>Subtotal&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</b></p>
+                                                <p><b>Subtotal :</b></p>
                                             </td>
                                             <td style="width: 100px;text-align: right;font-family: Arial;font-size: 10px;margin: 0px;font-weight: 400;padding-right: 10px;" colspan="2">
                                             </td>
@@ -89,7 +89,7 @@
                                         </tr>
                                         <tr>
                                             <td style="width: 100px;color: #000000;text-align: start;font-family: Arial;font-size: 10px;margin: 0px;font-weight: 400;padding: 0px 16px;"  colspan="1">
-                                                <p><b>Discount&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</b></p>
+                                                <p><b>Discount :</b></p>
                                             </td>
                                             <td style="width: 100px;text-align: right;font-family: Arial;font-size: 10px;margin: 0px;font-weight: 400;padding-right: 10px; " colspan="2">
                                             </td>
@@ -99,7 +99,7 @@
                                         </tr>
                                         <tr>
                                             <td style="width: 100px;color: #000000;text-align: start;font-family: Arial;font-size: 10px;margin: 0px;font-weight: 400;padding: 0px 16px;"  colspan="1">
-                                                <p><b>Total&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</b></p>
+                                                <p><b>Total :</b></p>
                                             </td>
                                             <td style="width: 100px;text-align: right;font-family: Arial;font-size: 10px;margin: 0px;font-weight: 400;padding-right: 10px;" colspan="2">
                                             </td>
@@ -143,11 +143,11 @@
                                 <td style="background: linear-gradient(to right, #e03b42 35%, #202020 35%); padding: 60px 40px 60px 40px; display: flex; justify-content: space-between;">
                             <p style="font-family: Arial;font-size: 22px;margin: 0px;font-weight: 400; color: #FFFFFF;">Thank You for<br>Purchasing!</p>
                             <p style="font-family: Arial;font-size: 9px;margin: 0px;font-weight: 400; color: #FFFFFF; text-align: end; line-height: 15px;"><span style="color: #e03b42; font-size: 14px;">Contact</span><br>
-                                {{ $company_name }}<br>
-                                {{ $company_email }}<br>
+                                {!! $company_name !!}<br>
                                 {!! $company_address !!}<br>
-                                {{ $company_mobile }}<br>
-                                {{ $site_name }}                                
+                                {!! $company_email !!}<br>
+                                {!! $company_mobile !!}<br>
+                                {!! $site_name !!}                                
                             </p>
                         </td>
     </tr>

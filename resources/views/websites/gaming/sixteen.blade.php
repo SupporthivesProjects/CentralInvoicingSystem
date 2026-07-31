@@ -8,16 +8,17 @@
             margin: 0;
             padding: 0;
             font-size: 12px;
+            background: #f3f3f3;
         }
 
         .main-container {
             width: 100%;
-            background-color: #f2f2f2;
-            padding: 20px 0;
+            background: #f3f3f3;
+            padding: 0px 0;
         }
 
         .invoice-wrapper {
-            width: 600px;
+            width: 100%;
             margin: 0 auto;
             background: #f3f3f3;
         }
@@ -150,17 +151,18 @@
 
         .price-col {
             width: 20%;
-            text-align: right;
+            text-align: left;
         }
 
         .total-col {
             width: 20%;
-            text-align: right;
+            text-align: left;
         }
 
         .product-name {
             font-weight: bold;
             margin-bottom: 2px;
+            text-align: left;
         }
 
         .platform-info {
@@ -192,6 +194,11 @@
             padding: 20px;
             text-align: center;
             color: white;
+            position: fixed;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            width: 100%;
         }
 
         .footer-text {
@@ -227,7 +234,9 @@
                             <td class="billing-from">
                                 <span class="billing-label">BILLED FROM:</span>
                                 <div class="billing-info">{{ $site->site_name }}</div>
-                                <div class="billing-info">Website: {{ $site->site_link ?? 'N/A' }}</div>
+                                {{--<div class="billing-info">Website: <a href="{{ $site->site_link ?? 'N/A' }}" style="text-decoration: none; color: #000000;">www.goldforgamers.com</a></div>--}}
+                                <div class="billing-info">{{ $company_name }}</div>
+                                <div class="billing-info">Address: <a style="text-decoration: none; color: #000000;">{{ $company_address }}</a></div>
                                 <div class="billing-info">Email: {{ $company_email }}</div>
                             </td>
                             <td class="billing-to">
@@ -244,17 +253,17 @@
                 <table class="invoice-table">
                     <thead>
                         <tr>
-                            <th class="qty-col">Quantity</th>
-                            <th class="desc-col">Description</th>
-                            <th class="price-col">Unit Price</th>
-                            <th class="total-col">Total</th>
+                            <th class="qty-col" >Quantity</th>
+                            <th class="desc-col"  style="text-align: left">Description</th>
+                            <th class="price-col" style="text-align: left">Unit Price</th>
+                            <th class="total-col" style="text-align: left">Total</th>
                         </tr>
                     </thead>
                     <tbody>
                         @php $counter = 1; @endphp
                         @foreach($products as $product)
                         <tr>
-                            <td class="qty-col">{{ $counter++ }}</td>
+                            <td class="qty-col">1</td>
                             <td class="desc-col">
                                 <div class="product-name">{{ $product['name'] }}</div>
                                 @if(isset($product['platform_fields']) && isset($product['selected_platform']))

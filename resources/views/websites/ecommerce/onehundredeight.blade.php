@@ -3,25 +3,39 @@
 
 <head>
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
+    <style>
+        *{
+            margin:0px;
+            padding:0px;
+        }
+        a {
+  text-decoration: none;
+}
+
+.footer_bottom {
+            position: fixed;
+            bottom: 0px;
+            left: 0px;
+            right: 0px;
+            width: 100%;
+          
+            
+        }
+        </style>
 </head>
 
 <body>
-    <table width="100%" cellspacing="0" cellpadding="0" border="0">
+    <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse; ">
         <tr>
-            <td align="center" bgcolor="#f2f2f2" style="padding: 0px 0;">
+            <td align="center" bgcolor="#ffffff" style="padding: 0px; margin: 0px ">
                 <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
-                    style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
+                    style="border-collapse: collapse; {{ $site->site_link }}">
                     <!-- Header -->
                     <tr>
                         <td style="padding: 0px;max-height: 130px;">
-                            <table>
-                            <tr>
-                                <td>
+                            
                                     <img src="{{ $invoice_header_image }}" alt="" style="max-width: 100%; display: block;">
-                                </td>
-                            </tr>
-
-                            </table>
+                                
                         </td>
                     </tr>
                     <!-- Header End -->
@@ -32,13 +46,14 @@
                         <td style="padding:40px;padding-top:0px;background: url(img/body_bg.png) no-repeat;background-position: center;background-size: cover;height:444px;">
                             <h2 style="color: #901918; font-family: arial; font-size: 14px;">INVOICE #{{ $invoice_number }}</h2>
                             <h2 style="color: #901918; font-family: arial; font-size: 14px;">DATE {{ $invoice_date }}</h2>
+                            <br>
                             <table style="width: 100%; border: 1px solid red; border-collapse: collapse;">
                                 <tr style="background-color: #f9dede;">
                                     <td style="border: 1px solid red; padding: 8px; width: 50%; font-family: arial; font-size: 9px;">
-                                        <strong>Billto</strong>
+                                        <strong>Billed to</strong>
                                     </td>
                                     <td style="border: 1px solid red; padding: 8px; width: 50%; font-family: arial; font-size: 9px;">
-                                        <strong>Bill from</strong>
+                                        <strong>Billed from</strong>
                                     </td>
                                 </tr>
                                 <tr>
@@ -94,14 +109,14 @@
                             </table>
                             </div>
 
-                            <p style="margin-top: 20px; font-family: arial; font-size: 9px;"><strong>Many Thanks for Your Custom.</strong></p>
+                           <!-- <p style="margin-top: 20px; font-family: arial; font-size: 9px;"><strong>Many Thanks for Your Custom.</strong></p>-->
                         </td>
                     </tr>
                     <!-- Content End-->
 
 
                     <!-----------Footer----------->
-                    <tr>
+                    <tr class="footer_bottom">
                         <td style="padding: 0px;max-height: 130px;">
                             <table width="100%" cellspacing="0" cellpadding="" border="0px"
                                 style="border-collapse: collapse;">

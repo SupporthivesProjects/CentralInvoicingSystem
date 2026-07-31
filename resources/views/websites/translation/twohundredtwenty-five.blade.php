@@ -53,8 +53,8 @@
                                         style="padding: 10px; vertical-align: top; font-size: 13px; border-right: 1px solid #000000;">
                                         <table cellpadding="5" cellspacing="0" style="width: 100%; font-size: 9px;">
                                             <tr>
-                                                <td style="font-weight: bold;">Name</td>
-                                                <td>{{ $customer_name }}</td>
+                                                <td style="font-weight: bold;">Name&nbsp;&nbsp;&nbsp;&nbsp;{{ $customer_name }}</td>
+                                                <!-- <td>{{ $customer_name }}</td> -->
                                             </tr>
                                         </table>
                                     </td>
@@ -63,17 +63,18 @@
                                     <td style="padding: 10px; vertical-align: top; font-size: 13px;">
                                         <table cellpadding="5" cellspacing="0" style="width: 100%; font-size: 8px;">
                                             <tr>
-                                                <td style="font-weight: bold;">Name</td>
+                                                <!-- <td style="font-weight: bold;">Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ $company_name }}</td> -->
+                                                <td style="font-weight: bold;min-width: 50px;max-width: 80px;">Name</td>
                                                 <td>{{ $company_name }}</td>
                                             </tr>
                                             <tr>
-                                                <td style="font-weight: bold; vertical-align: top;">Address</td>
-                                                <td>
-                                                    {{ $company_address }}
-                                                </td>
+                                                <!-- <td style="font-weight: bold; vertical-align: top;">Address&nbsp;&nbsp;&nbsp;&nbsp;{{ $company_address }}</td> -->
+                                                <td style="font-weight: bold;min-width: 50px;max-width: 80px;vertical-align: top;">Address</td>
+                                                <td>{{ $company_address }}</td>
                                             </tr>
                                             <tr>
-                                                <td style="font-weight: bold;">Email</td>
+                                                <!-- <td style="font-weight: bold;">Email&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ $company_email }}</td> -->
+                                                <td style="font-weight: bold;min-width: 50px;max-width: 80px;">Email</td>
                                                 <td>{{ $company_email }}</td>
                                             </tr>
                                         </table>
@@ -93,8 +94,8 @@
                                 <tr style="background-color: #810000; color: #ffffff; border: 1px solid black;height:40px">
                                     <th style="padding: 8px;     text-align: left;">Qty.</th>
                                     <th style="padding: 8px;     text-align: left;">Service Type</th>
-                                    <th style="padding: 8px;     text-align: right;">Pages</th>
-                                    <th style="padding: 8px;     text-align: right;">Words</th>
+                                    <th style="padding: 8px;     text-align: right;">Quantity</th>
+                                    <th style="padding: 8px;     text-align: right;">Pages/Words</th>
                                     <th style="padding: 8px;     text-align: right;">Total</th>
                                 </tr>
                                 @foreach ($products as $product)
@@ -139,7 +140,7 @@
                                     <td colspan="1"
                                         style="text-align: right; padding: 8px;  border: 1px solid black;">
                                         Discount Total</td>
-                                    <td style="padding: 8px;   text-align: right; border: 1px solid black;">278.00</td>
+                                    <td style="padding: 8px;   text-align: right; border: 1px solid black;">{{ site_currency() . number_format($discount_amount ?? 0, 2) }}</td>
                                 </tr>
                                 <tr style="font-size: 11px; border: none;height:40px">
                                     <td colspan="1" style="text-align: right; padding: 8px;"></td>

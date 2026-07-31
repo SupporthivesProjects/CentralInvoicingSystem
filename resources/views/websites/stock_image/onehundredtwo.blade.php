@@ -3,11 +3,11 @@
 <head>
     <title>Lenzlibrary</title>
 </head>
-<body>
-    <table width="100%" cellspacing="0" cellpadding="0" border="0">
+<body style="margin: 0px;background: #FFFDF0;">
+    <table style="background: #FFFDF0;" width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
-            <td align="center" bgcolor="#f2f2f2" style="padding: 20px 0;">
-                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFDF0" style="border-collapse: collapse; box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
+            <td align="center" bgcolor="#FFFDF0" style="padding: 0px;">
+                <table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFDF0" style="border-collapse: collapse;">
                       <!-- Header -->
 
                       <tr style=" background: url('{{ $invoice_header_image }}');
@@ -41,7 +41,7 @@
                                         <p style="margin: 0; color: #ffffff; font-family: 'Times New Roman', Times, serif;">DATE: {{ $invoice_date }}</p>
                                        </div>
                                     </td>
-                                    <td>
+                                    <td style="vertical-align: top;">
                                         <p style="font-family: 'Times New Roman', Times, serif; font-size: 16px; margin: 0;margin-bottom: 16px;">
                                             Billed to:
                                         </p>
@@ -57,15 +57,26 @@
                                         </p>
                                     </td>
 
-                                    <td>
+                                    <td style="vertical-align: top;">
                                         <p style="font-family: 'Times New Roman', Times, serif; font-size: 16px; margin: 0;margin-bottom: 16px; text-align: right;">
                                             {{ $site_name }}
                                         </p>
 
-                                        <p style="font-family: Arial, Helvetica, sans-serif; font-size: 10px; margin: 0;margin-bottom: 12px;text-align: right;">{{ $company_address }}<br>
-
-
-                                            </p>
+                                        <p style="text-align:right;font-family: Arial, Helvetica, sans-serif; font-size: 10px; margin: 0;margin-bottom: 12px;">
+                                          @php
+                                          $parts = explode(',', $company_address);
+                                          @endphp
+                                        
+                                          @foreach($parts as $index => $part)
+                                              {{ trim($part) }}@if($index < count($parts) - 1),@endif
+                                              @if($index === 0 || $index === 2)
+                                                  <br><br>
+                                              @endif
+                                          @endforeach
+                                        </p>
+                                        {{-- <p style="font-family: Arial, Helvetica, sans-serif; font-size: 10px; margin: 0;margin-bottom: 12px;text-align: right; width: 150px;" >
+                                          {{ $company_address }}<br>
+                                            </p> --}}
 
                                         <p style="font-family: Arial, Helvetica, sans-serif; font-size: 10px; margin: 0;text-align: right;">
                                             {{ $company_email }}<br>
@@ -74,7 +85,7 @@
                                     </td>
                                 </tr>
                             </table>
-                            <div style="min-height: 500px !important;">
+                            <!-- <div style="min-height: 750px !important;"> -->
                             <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 10px; margin-top: 30px;">
                                 <tr style="background-color: #355C5B; color: white;">
                                   <th style="text-align: left; padding: 6px 12px;">PACK</th>
@@ -107,7 +118,7 @@
                                   </td>
                                 </tr>
                               </table>
-                            </div>
+                            <!-- </div> -->
                         </td>
                     </tr>
                      <!-- Content End-->
@@ -115,7 +126,7 @@
 
                     <!-----------Footer----------->
 
-                    <tr style=" background: url('{{ $invoice_footer_image }}');
+                    <!-- <tr style=" background: url('{{ $invoice_footer_image }}');
                     background-repeat: no-repeat;
                     background-size: cover;
                     background-position: center;
@@ -134,7 +145,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 
                             </td>
 
-                      </tr>
+                      </tr> -->
                     <!-----------Footer End----------->
                 </table>
             </td>

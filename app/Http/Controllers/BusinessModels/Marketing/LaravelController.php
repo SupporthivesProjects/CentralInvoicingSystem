@@ -27,6 +27,7 @@ class LaravelController extends Controller
 {
     private $productTable;
     private $connectionType;
+    private $lastCombinationsLimit = 5;
 
     public function __construct()
     {
@@ -39,7 +40,7 @@ class LaravelController extends Controller
     protected function generateSlug($categoryId)
     {
         static $categoryCache = [];
-        
+
         $categorySlugs = [
             'seo packages' => 'seo',
             'ppc packages' => 'ppc',
@@ -67,99 +68,123 @@ class LaravelController extends Controller
     }
 
 
-
     public function randomProducts(Request $request)
     {
         $site_id = $request->get('site_id');
         $invoiceAmount = floatval($request->get('invoice_amount'));
-
         $priceFrom = $request->get('price_from');
         $priceTo = $request->get('price_to');
-
         $categoryId = intval($request->get('category_id'));
         $noOfProducts = intval($request->get('noOfProducts'));
 
         $site = Website::findOrFail($site_id);
         DynamicDatabaseService::connect($site);
-        $allProducts = DB::connection($this->connectionType)->table($this->productTable)
+
+        $query = DB::connection($this->connectionType)->table($this->productTable)
             ->select('id', 'subscription', 'category_id', 'name', 'unit_price', 'slug')
-            ->when($categoryId, function ($query) use ($categoryId) {
-                return $query->where('category_id', $categoryId);
-            })
-            ->when($priceFrom && $priceTo, function ($query) use ($priceFrom, $priceTo) {
-                return $query->whereBetween('unit_price', [$priceFrom, $priceTo]);
-            })
-            ->inRandomOrder()
-            ->get();
+            ->where('published', 1);
 
-        if ($categoryId || $noOfProducts) {
-            $minTotal = $invoiceAmount * 0.6;
-            $allProducts = $allProducts->sortByDesc('unit_price');
-        } else {
-            $minTotal = $invoiceAmount;
-            $allProducts = $allProducts->sortBy('unit_price');
+        if ($priceFrom && $priceTo) {
+            $query->whereBetween('unit_price', [$priceFrom, $priceTo]);
         }
 
-        $maxTotal = $invoiceAmount * 1.10;
-
-        $bestMatch = null;
-        $bestTotal = 0;
-
-        for ($i = 0; $i < 20; $i++) {
-            $shuffled = $allProducts->shuffle();
-            $selected = [];
-            $currentTotal = 0;
-
-            foreach ($shuffled as $product) {
-                if ($noOfProducts && count($selected) >= $noOfProducts) {
-                    break;
-                }
-
-                $price = floatval($product->unit_price);
-
-                if (($currentTotal + $price) <= $maxTotal) {
-                    $selected[] = $product;
-                    $currentTotal += $price;
-
-                    if ($currentTotal >= $minTotal && $currentTotal <= $maxTotal) {
-                        if ($currentTotal > $bestTotal) {
-                            $bestMatch = $selected;
-                            $bestTotal = $currentTotal;
-                        }
-                    }
-                }
-            }
-
-            if ($bestMatch) {
-                break;
-            }
+        if ($categoryId) {
+            $query->where('category_id', $categoryId);
         }
 
-        if (!$bestMatch) {
+        $products = $query->get();
+
+        if ($products->isEmpty()) {
             session()->forget('ready_products');
             session()->forget('current_amount');
+            session()->forget('last_used_combinations');
+            session()->forget('randomize_step');
+            session()->forget('randomize_invoice_amount');
+
             return response()->json([
                 'tableRows' => '',
                 'total' => 0,
-                'message' => 'No matching combination found, try again please'
+                'message' => 'No products found in this range or category.'
             ]);
         }
 
-        $bestMatch = collect($bestMatch);
+        $lastInvoiceAmount = session()->get('randomize_invoice_amount');
+        if ($lastInvoiceAmount !== null && abs(floatval($lastInvoiceAmount) - $invoiceAmount) > 0.001) {
+            session()->forget('randomize_step');
+            session()->forget('last_used_combinations');
+        }
+        session()->put('randomize_invoice_amount', $invoiceAmount);
+
+        $lastUsedCombinations = session()->get('last_used_combinations', []);
+
+        $currentStep = intval(session()->get('randomize_step', 0));
+        $maxStep = 14;
+
+        $bestMatch = null;
+        $foundAtStep = $currentStep;
+
+        for ($step = $currentStep; $step <= $maxStep; $step++) {
+            $tolerance = $step * 0.02;
+            $searchTarget = $invoiceAmount * (1 + $tolerance);
+
+            for ($retry = 0; $retry < 5; $retry++) {
+                $candidate = $this->findBestProductCombination($products, $searchTarget, $noOfProducts, $lastUsedCombinations);
+
+                if (!$candidate || empty($candidate['products'])) {
+                    break;
+                }
+
+                $candidateKey = collect($candidate['products'])->pluck('id')->sort()->join('-');
+                if (in_array($candidateKey, $lastUsedCombinations)) {
+                    continue;
+                }
+
+                $bestMatch = $candidate;
+                $foundAtStep = $step;
+                break 2;
+            }
+        }
+
+        if (!$bestMatch || empty($bestMatch['products'])) {
+            session()->forget('randomize_step');
+            session()->forget('last_used_combinations');
+            $bestMatch = $this->findBestProductCombination($products, $invoiceAmount, $noOfProducts, []);
+
+            if (!$bestMatch || empty($bestMatch['products'])) {
+                return response()->json([
+                    'tableRows' => '',
+                    'total' => 0,
+                    'message' => 'No matching combination found, try again please'
+                ]);
+            }
+            $foundAtStep = 0;
+        }
+
+        $nextStep = ($foundAtStep >= $maxStep) ? 0 : $foundAtStep + 1;
+        session()->put('randomize_step', $nextStep);
+
+        $bestMatch = collect($bestMatch['products']);
+        $bestTotal = round($bestMatch->sum('unit_price'), 2);
+
+        $discountAmount = round(max($bestTotal - $invoiceAmount, 0), 2);
+
+        $combinationKey = $bestMatch->pluck('id')->sort()->join('-');
+        $lastUsedCombinations[] = $combinationKey;
+        $lastUsedCombinations = array_slice($lastUsedCombinations, -$this->lastCombinationsLimit);
+        session()->put('last_used_combinations', $lastUsedCombinations);
 
         $bestMatch->each(function ($product) use ($site_id) {
-
             $data = $this->generateSlug($product->category_id);
             $product->category_name = $data['category_name'];
             $product->slug = $data['slug'];
-        
+
             $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
                 ->where('product_id', $product->id)
                 ->orderByDesc('last_price_changed')
                 ->first();
-        
+
             if ($lastUpdate) {
-                $lastPriceChanged = \Carbon\Carbon::parse($lastUpdate->last_price_changed);
+                $lastPriceChanged = Carbon::parse($lastUpdate->last_price_changed);
                 $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
                 $remainingDays = now()->diffInDays($nextPriceChangeDate, false);
                 $product->remaining_days = round(max($remainingDays, 0));
@@ -169,7 +194,7 @@ class LaravelController extends Controller
                 $product->remaining_days = 0;
             }
         });
-        
+
         $productList = $bestMatch->map(function ($product) {
             return [
                 'id' => $product->id,
@@ -190,10 +215,518 @@ class LaravelController extends Controller
 
         return response()->json([
             'tableRows' => $tableRows,
-            'total' => $bestTotal
+            'total' => $bestTotal,
+            'discount_amount' => $discountAmount,
         ]);
     }
 
+    private function findBestProductCombination($products, $targetAmount, $requiredCount = null, $lastUsedCombinations = [])
+    {
+        $productArray = $products->shuffle()->values()->all();
+        $productCount = count($productArray);
+
+        if ($requiredCount) {
+            return $this->findExactCountOptimized($productArray, $targetAmount, $requiredCount, $productCount, $lastUsedCombinations);
+        } else {
+            return $this->findFlexibleOptimized($productArray, $targetAmount, $productCount, $lastUsedCombinations);
+        }
+    }
+
+    private function findExactCountOptimized($products, $target, $count, $totalProducts, $lastUsedCombinations = [])
+    {
+        shuffle($products);
+
+        if ($totalProducts < $count) {
+            return ['products' => $products, 'total' => array_sum(array_column($products, 'unit_price'))];
+        }
+
+        $priceMap = [];
+        foreach ($products as $idx => $product) {
+            $priceMap[$idx] = floatval($product->unit_price);
+        }
+
+        asort($priceMap);
+        $sortedIndices = array_keys($priceMap);
+
+        if ($count == 1) {
+            $candidates = [];
+            foreach ($sortedIndices as $idx) {
+                $price = $priceMap[$idx];
+                if ($price >= $target) {
+                    $candidates[] = ['idx' => $idx, 'diff' => abs($price - $target)];
+                }
+            }
+            if (!empty($candidates)) {
+                usort($candidates, fn($a, $b) => $a['diff'] <=> $b['diff']);
+                $best = $this->pickFromPool($candidates, $lastUsedCombinations, 'idx');
+                if (!$best) $best = $candidates[0];
+                return ['products' => [$products[$best['idx']]], 'total' => $priceMap[$best['idx']]];
+            }
+
+            return null;
+        }
+
+        if ($count == 2) {
+            $pairCandidates = [];
+            for ($i = 0; $i < $totalProducts - 1; $i++) {
+                for ($j = $i + 1; $j < $totalProducts; $j++) {
+                    $idx1 = $sortedIndices[$i];
+                    $idx2 = $sortedIndices[$j];
+                    $price1 = $priceMap[$idx1];
+                    $price2 = $priceMap[$idx2];
+
+                    if ($price1 == $price2) continue;
+
+                    $total = $price1 + $price2;
+                    if ($total >= $target) {
+                        $comboIds = [$products[$idx1]->id, $products[$idx2]->id];
+                        sort($comboIds);
+                        $pairCandidates[] = [
+                            'pair' => [$idx1, $idx2],
+                            'total' => $total,
+                            'diff' => abs($total - $target),
+                            'key' => implode('-', $comboIds),
+                        ];
+                    }
+                }
+            }
+            if (!empty($pairCandidates)) {
+                usort($pairCandidates, fn($a, $b) => $a['diff'] <=> $b['diff']);
+                $best = $this->pickFromPool($pairCandidates, $lastUsedCombinations);
+                if (!$best) $best = $pairCandidates[0];
+                return [
+                    'products' => [$products[$best['pair'][0]], $products[$best['pair'][1]]],
+                    'total' => $best['total']
+                ];
+            }
+
+            return null;
+        }
+
+        $percentages = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30];
+
+        foreach ($percentages as $percentage) {
+            $minTarget = $target;
+            $maxTarget = $target * (1 + $percentage / 100);
+            $result = $this->tryFindExactCount($products, $priceMap, $sortedIndices, $minTarget, $maxTarget, $count, $totalProducts, $lastUsedCombinations);
+
+            if ($result !== null && $result['total'] >= $target && count($result['products']) === $count) {
+                return $result;
+            }
+        }
+
+        $maxTotal = $target * 1.20;
+        $bestMatch = null;
+        $bestTotal = 0;
+        $bestDiff = PHP_INT_MAX;
+
+        for ($attempt = 0; $attempt < 200; $attempt++) {
+            $shuffledIndices = $sortedIndices;
+            shuffle($shuffledIndices);
+
+            $selected = [];
+            $usedPrices = [];
+            $total = 0;
+
+            $startIdx = rand(0, max(0, $totalProducts - $count * 3));
+            $searchWindow = array_slice($shuffledIndices, $startIdx, min($count * 5, $totalProducts));
+
+            foreach ($searchWindow as $idx) {
+                if (count($selected) >= $count) break;
+
+                $price = $priceMap[$idx];
+                if (isset($usedPrices[$price])) continue;
+
+                if ($total + $price <= $maxTotal) {
+                    $selected[] = $idx;
+                    $usedPrices[$price] = true;
+                    $total += $price;
+                }
+            }
+
+            if (count($selected) === $count && $total >= $target && $total <= $maxTotal) {
+                $diff = abs($total - $target);
+                if ($diff < $bestDiff) {
+                    $bestMatch = $selected;
+                    $bestTotal = $total;
+                    $bestDiff = $diff;
+
+                    if ($diff <= $target * 0.02) {
+                        break;
+                    }
+                }
+            }
+        }
+
+        if ($bestMatch && count($bestMatch) === $count && $bestTotal >= $target) {
+            $comboIds = array_map(fn($idx) => $products[$idx]->id, $bestMatch);
+            sort($comboIds);
+            $comboKey = implode('-', $comboIds);
+            if (!empty($lastUsedCombinations) && in_array($comboKey, $lastUsedCombinations)) {
+                $bestMatch = null;
+            }
+        }
+
+        if ($bestMatch && count($bestMatch) === $count && $bestTotal >= $target) {
+            $result = [];
+            foreach ($bestMatch as $idx) {
+                $result[] = $products[$idx];
+            }
+            return ['products' => $result, 'total' => $bestTotal];
+        }
+
+        $selected = [];
+        $usedPrices = [];
+        $remaining = $target;
+
+        for ($i = 0; $i < $count; $i++) {
+            $remainingSlots = $count - $i;
+            $idealPrice = $remaining / $remainingSlots;
+            $closestIdx = null;
+            $closestDiff = PHP_INT_MAX;
+
+            foreach ($sortedIndices as $idx) {
+                if (in_array($idx, $selected)) continue;
+
+                $price = $priceMap[$idx];
+                if (isset($usedPrices[$price])) continue;
+
+                $diff = abs($price - $idealPrice);
+                if ($diff < $closestDiff) {
+                    $closestDiff = $diff;
+                    $closestIdx = $idx;
+                }
+            }
+
+            if ($closestIdx !== null) {
+                $selected[] = $closestIdx;
+                $usedPrices[$priceMap[$closestIdx]] = true;
+                $remaining -= $priceMap[$closestIdx];
+            }
+        }
+
+        if (count($selected) === $count) {
+            $total = array_sum(array_map(fn($idx) => $priceMap[$idx], $selected));
+
+            if ($total < $target) {
+                $reverseIndices = array_reverse($sortedIndices);
+
+                foreach ($reverseIndices as $replaceIdx) {
+                    if (in_array($replaceIdx, $selected)) continue;
+
+                    $replacePrice = $priceMap[$replaceIdx];
+                    if (isset($usedPrices[$replacePrice])) continue;
+
+                    for ($i = 0; $i < $count; $i++) {
+                        $currentIdx = $selected[$i];
+                        $currentPrice = $priceMap[$currentIdx];
+                        $newTotal = $total - $currentPrice + $replacePrice;
+
+                        if ($newTotal >= $target && $newTotal <= $maxTotal) {
+                            $selected[$i] = $replaceIdx;
+                            unset($usedPrices[$currentPrice]);
+                            $usedPrices[$replacePrice] = true;
+                            $total = $newTotal;
+                            break 2;
+                        }
+                    }
+                }
+            }
+        }
+
+        $result = [];
+        foreach ($selected as $idx) {
+            $result[] = $products[$idx];
+        }
+
+        return ['products' => $result, 'total' => array_sum(array_column($result, 'unit_price'))];
+    }
+
+
+    private function pickFromPool(array $candidates, array $lastUsedCombinations, string $keyField = 'key'): ?array
+    {
+        $unused = array_values(array_filter($candidates, fn($c) => !in_array($c[$keyField], $lastUsedCombinations)));
+        $pool = !empty($unused) ? $unused : array_values($candidates);
+        if (empty($pool)) return null;
+        $bestDiff = $pool[0]['diff'];
+        $threshold = $bestDiff * 1.5 + 1.0;
+        $goodPool = array_values(array_filter($pool, fn($c) => $c['diff'] <= $threshold));
+        if (empty($goodPool)) $goodPool = $pool;
+        return $goodPool[array_rand($goodPool)];
+    }
+
+    private function tryFindExactCount($products, $priceMap, $sortedIndices, $minTarget, $maxTarget, $count, $totalProducts, $lastUsedCombinations = [])
+    {
+        $avgPrice = ($minTarget + $maxTarget) / 2 / $count;
+
+        $midPoint = 0;
+        foreach ($sortedIndices as $pos => $idx) {
+            if ($priceMap[$idx] >= $avgPrice) {
+                $midPoint = max(0, $pos - intval($count / 2));
+                break;
+            }
+        }
+
+        $windowSize = min(max($count * 8, 30), $totalProducts);
+        $searchWindow = array_slice($sortedIndices, $midPoint, $windowSize);
+
+        if (count($searchWindow) < $count) {
+            $searchWindow = $sortedIndices;
+        }
+
+        $attempts = min(200, max(100, count($searchWindow) * 5));
+        $allCandidates = [];
+
+        for ($i = 0; $i < $attempts; $i++) {
+            shuffle($searchWindow);
+            $candidatePool = array_slice($searchWindow, 0, min(count($searchWindow), $count * 3));
+
+            $selectedIndices = [];
+            $seenPrices = [];
+
+            foreach ($candidatePool as $idx) {
+                if (count($selectedIndices) >= $count) break;
+
+                $price = $priceMap[$idx];
+                if (!isset($seenPrices[$price])) {
+                    $selectedIndices[] = $idx;
+                    $seenPrices[$price] = true;
+                }
+            }
+
+            if (count($selectedIndices) !== $count) {
+                continue;
+            }
+
+            $total = array_sum(array_map(fn($idx) => $priceMap[$idx], $selectedIndices));
+
+            if ($total >= $minTarget && $total <= $maxTarget) {
+                $comboIds = array_map(fn($idx) => $products[$idx]->id, $selectedIndices);
+                sort($comboIds);
+                $comboKey = implode('-', $comboIds);
+
+                $allCandidates[$comboKey] = [
+                    'indices' => $selectedIndices,
+                    'total' => $total,
+                    'diff' => abs($total - $minTarget),
+                    'key' => $comboKey,
+                ];
+
+                if ($total <= $minTarget * 1.02) {
+                    break;
+                }
+            }
+        }
+
+        if (!empty($allCandidates)) {
+            usort($allCandidates, fn($a, $b) => $a['diff'] <=> $b['diff']);
+            $best = $this->pickFromPool($allCandidates, $lastUsedCombinations);
+            if (!$best) $best = $allCandidates[0];
+            $result = [];
+            foreach ($best['indices'] as $idx) {
+                $result[] = $products[$idx];
+            }
+            return ['products' => $result, 'total' => $best['total']];
+        }
+
+        $result = $this->greedySelection($products, $priceMap, $sortedIndices, $minTarget, $maxTarget, $count, $searchWindow);
+        if ($result !== null && count($result['products']) === $count) {
+            return $result;
+        }
+
+        return null;
+    }
+
+    private function greedySelection($products, $priceMap, $sortedIndices, $minTarget, $maxTarget, $count, $searchWindow)
+    {
+        $windowSize = min(count($searchWindow), $count * 5);
+        $expandedWindow = array_slice($sortedIndices, 0, max($windowSize, $count * 2));
+
+        $remaining = $minTarget;
+        $selected = [];
+        $usedIndices = [];
+        $usedPrices = [];
+
+        for ($i = 0; $i < $count; $i++) {
+            $remainingSlots = $count - $i;
+            $idealPrice = $remaining / $remainingSlots;
+            $closestIdx = null;
+            $closestDiff = PHP_INT_MAX;
+
+            foreach ($expandedWindow as $idx) {
+                if (isset($usedIndices[$idx])) continue;
+
+                $price = $priceMap[$idx];
+                if (isset($usedPrices[$price])) continue;
+
+                $diff = abs($price - $idealPrice);
+                if ($diff < $closestDiff) {
+                    $closestDiff = $diff;
+                    $closestIdx = $idx;
+                }
+            }
+
+            if ($closestIdx !== null) {
+                $selected[] = $closestIdx;
+                $usedIndices[$closestIdx] = true;
+                $usedPrices[$priceMap[$closestIdx]] = true;
+                $remaining -= $priceMap[$closestIdx];
+            } else {
+                break;
+            }
+        }
+
+        if (count($selected) === $count) {
+            $total = array_sum(array_map(fn($idx) => $priceMap[$idx], $selected));
+
+            if ($total >= $minTarget && $total <= $maxTarget) {
+                $result = [];
+                foreach ($selected as $idx) {
+                    $result[] = $products[$idx];
+                }
+                return ['products' => $result, 'total' => $total];
+            }
+        }
+
+        return null;
+    }
+
+    private function findFlexibleOptimized($products, $target, $totalProducts, $lastUsedCombinations = [])
+    {
+        $priceMap = [];
+        $exactMatch = null;
+        foreach ($products as $idx => $product) {
+            $price = floatval($product->unit_price);
+            $priceMap[$idx] = $price;
+
+            if (abs($price - $target) < 0.01 && $exactMatch === null) {
+                $comboKey = (string)$product->id;
+                if (empty($lastUsedCombinations) || !in_array($comboKey, $lastUsedCombinations)) {
+                    $exactMatch = ['products' => [$product], 'total' => $price];
+                }
+            }
+        }
+        if ($exactMatch !== null) {
+            return $exactMatch;
+        }
+
+        asort($priceMap);
+        $sortedIndices = array_keys($priceMap);
+
+        $percentages = [0, 2, 4, 6, 8, 10];
+
+        foreach ($percentages as $percentage) {
+            $currentMax = $target * (1 + $percentage / 100);
+            $result = $this->tryFindFlexible($products, $priceMap, $sortedIndices, $target, $currentMax, $totalProducts, $lastUsedCombinations);
+
+            if ($result !== null && $result['total'] >= $target) {
+                return $result;
+            }
+        }
+
+        $maxTotal = $target * 1.10;
+        $allCandidates = [];
+
+        for ($attempt = 0; $attempt < 60; $attempt++) {
+            $shuffledIndices = $sortedIndices;
+            shuffle($shuffledIndices);
+
+            $selected = [];
+            $total = 0;
+            $usedPrices = [];
+
+            foreach ($shuffledIndices as $idx) {
+                $price = $priceMap[$idx];
+
+                if (isset($usedPrices[$price])) continue;
+                if ($total + $price > $maxTotal) continue;
+
+                $selected[] = $idx;
+                $usedPrices[$price] = true;
+                $total += $price;
+
+                if ($total >= $target) break;
+            }
+
+            if ($total >= $target && $total <= $maxTotal) {
+                $comboIds = array_map(fn($i) => $products[$i]->id, $selected);
+                sort($comboIds);
+                $comboKey = implode('-', $comboIds);
+                $allCandidates[$comboKey] = ['indices' => $selected, 'total' => $total, 'key' => $comboKey];
+            }
+        }
+
+        if (!empty($allCandidates)) {
+            foreach ($allCandidates as &$c) { $c['diff'] = abs($c['total'] - $target); }
+            unset($c);
+            usort($allCandidates, fn($a, $b) => $a['diff'] <=> $b['diff']);
+            $best = $this->pickFromPool($allCandidates, $lastUsedCombinations);
+            if (!$best) $best = $allCandidates[0];
+            $result = [];
+            foreach ($best['indices'] as $idx) {
+                $result[] = $products[$idx];
+            }
+            return ['products' => $result, 'total' => $best['total']];
+        }
+
+        $best = [$sortedIndices[count($sortedIndices) - 1]];
+        $result = [];
+        foreach ($best as $idx) {
+            $result[] = $products[$idx];
+        }
+        return ['products' => $result, 'total' => $priceMap[$sortedIndices[count($sortedIndices) - 1]]];
+    }
+
+    private function tryFindFlexible($products, $priceMap, $sortedIndices, $minTarget, $maxTarget, $totalProducts, $lastUsedCombinations = [])
+    {
+        $allCandidates = [];
+
+        for ($attempt = 0; $attempt < 60; $attempt++) {
+            $shuffledIndices = $sortedIndices;
+            shuffle($shuffledIndices);
+            $subset = array_slice($shuffledIndices, 0, min(60, $totalProducts));
+
+            $selected = [];
+            $total = 0;
+            $usedPrices = [];
+
+            foreach ($subset as $idx) {
+                $price = $priceMap[$idx];
+
+                if (isset($usedPrices[$price])) continue;
+                if ($total + $price > $maxTarget) continue;
+
+                $selected[] = $idx;
+                $usedPrices[$price] = true;
+                $total += $price;
+            }
+
+            if ($total >= $minTarget && $total <= $maxTarget) {
+                $comboIds = array_map(fn($i) => $products[$i]->id, $selected);
+                sort($comboIds);
+                $comboKey = implode('-', $comboIds);
+                $allCandidates[$comboKey] = [
+                    'indices' => $selected,
+                    'total' => $total,
+                    'diff' => abs($total - $minTarget),
+                    'key' => $comboKey,
+                ];
+            }
+        }
+
+        if (empty($allCandidates)) {
+            return null;
+        }
+
+        usort($allCandidates, fn($a, $b) => $a['diff'] <=> $b['diff']);
+        $best = $this->pickFromPool($allCandidates, $lastUsedCombinations);
+        if (!$best) $best = $allCandidates[0];
+        $result = [];
+        foreach ($best['indices'] as $idx) {
+            $result[] = $products[$idx];
+        }
+        return ['products' => $result, 'total' => $best['total']];
+    }
 
     public function addProducts(Request $request)
     {
@@ -231,7 +764,7 @@ class LaravelController extends Controller
         $productIds = collect($readyProducts)->pluck('id')->reverse()->values()->toArray();
 
         $products = DB::connection($this->connectionType)->table($this->productTable)
-            ->select('id','subscription', 'category_id', 'name', 'unit_price', 'slug')
+            ->select('id', 'subscription', 'category_id', 'name', 'unit_price', 'slug')
             ->whereIn('id', $productIds)
             ->get()
             ->keyBy('id');
@@ -243,18 +776,18 @@ class LaravelController extends Controller
         $products = $products->map(function ($product) use ($readyProducts, $site_id) {
             $sessionProduct = collect($readyProducts)->firstWhere('id', $product->id);
             $product->unit_price = $sessionProduct['unit_price'] ?? $product->unit_price;
-        
+
             $data = $this->generateSlug($product->category_id);
             $product->category_name = $data['category_name'];
             $product->slug = $data['slug'];
-        
+
             $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
                 ->where('product_id', $product->id)
                 ->orderByDesc('last_price_changed')
                 ->first();
-        
+
             if ($lastUpdate) {
-                $lastPriceChanged = \Carbon\Carbon::parse($lastUpdate->last_price_changed);
+                $lastPriceChanged = Carbon::parse($lastUpdate->last_price_changed);
                 $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
                 $remainingDays = now()->diffInDays($nextPriceChangeDate, false);
                 $product->remaining_days = round(max($remainingDays, 0));
@@ -263,10 +796,9 @@ class LaravelController extends Controller
                 $product->can_edit_price = 1;
                 $product->remaining_days = 0;
             }
-        
+
             return $product;
         });
-        
 
         $modelType = $site->businessModel->model_type;
         session(['current_amount' => collect($products)->sum('unit_price')]);
@@ -297,7 +829,9 @@ class LaravelController extends Controller
         })->values()->toArray();
 
         session()->put('ready_products', $updatedProducts);
+
         if (empty($updatedProducts)) {
+            session()->forget('current_amount');
             return response()->json([
                 'tableRows' => '',
                 'currency' => null,
@@ -309,42 +843,40 @@ class LaravelController extends Controller
         $productIds = array_column($updatedProducts, 'id');
 
         $products = DB::connection($this->connectionType)->table($this->productTable)
-            ->select('id','subscription','category_id', 'name', 'unit_price', 'slug')
+            ->select('id', 'subscription', 'category_id', 'name', 'unit_price', 'slug')
             ->whereIn('id', $productIds)
             ->get();
 
-            $products = $products->map(function ($product) use ($updatedProducts, $site_id) {
+        $products = $products->map(function ($product) use ($updatedProducts, $site_id) {
+            $sessionProduct = collect($updatedProducts)->firstWhere('id', $product->id);
+            $product->unit_price = $sessionProduct['unit_price'] ?? $product->unit_price;
 
-                $sessionProduct = collect($updatedProducts)->firstWhere('id', $product->id);
-                $product->unit_price = $sessionProduct['unit_price'] ?? $product->unit_price;
-            
-                $data = $this->generateSlug($product->category_id);
-                $product->category_name = $data['category_name'];
-                $product->slug = $data['slug'];
-            
-                $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
-                    ->where('product_id', $product->id)
-                    ->orderByDesc('last_price_changed')
-                    ->first();
-            
-                if ($lastUpdate) {
-                    $lastPriceChanged = \Carbon\Carbon::parse($lastUpdate->last_price_changed);
-                    $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
-                    $remainingDays = now()->diffInDays($nextPriceChangeDate, false);
-                    $product->remaining_days = round(max($remainingDays, 0));
-                    $product->can_edit_price = now()->greaterThanOrEqualTo($nextPriceChangeDate) ? 1 : 0;
-                } else {
-                    $product->can_edit_price = 1;
-                    $product->remaining_days = 0;
-                }
-            
-                return $product;
-            });
-            
+            $data = $this->generateSlug($product->category_id);
+            $product->category_name = $data['category_name'];
+            $product->slug = $data['slug'];
+
+            $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
+                ->where('product_id', $product->id)
+                ->orderByDesc('last_price_changed')
+                ->first();
+
+            if ($lastUpdate) {
+                $lastPriceChanged = Carbon::parse($lastUpdate->last_price_changed);
+                $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
+                $remainingDays = now()->diffInDays($nextPriceChangeDate, false);
+                $product->remaining_days = round(max($remainingDays, 0));
+                $product->can_edit_price = now()->greaterThanOrEqualTo($nextPriceChangeDate) ? 1 : 0;
+            } else {
+                $product->can_edit_price = 1;
+                $product->remaining_days = 0;
+            }
+
+            return $product;
+        });
 
         $modelType = $site->businessModel->model_type;
         session(['current_amount' => collect($products)->sum('unit_price')]);
-        $no_of_products = count($products);
+
         $tableRows = view("invoice.{$modelType}.random_product_rows", [
             'products' => $products,
             'site' => $site,
@@ -362,6 +894,8 @@ class LaravelController extends Controller
         $category_id = $request->get('category_id');
         $productId = $request->get('product_id');
         $subscription = $request->get('subscription');
+        $productName = $request->get('product_name');
+        $published = $request->get('published');
         $site_id = session('customer.site_id');
 
         if (!$site_id) {
@@ -371,34 +905,140 @@ class LaravelController extends Controller
         $site = Website::findOrFail($site_id);
         DynamicDatabaseService::connect($site);
 
+        if ($productName !== null && trim($productName) !== '') {
+            $currentProduct = DB::connection($this->connectionType)
+                ->table($this->productTable)
+                ->where('id', $productId)
+                ->first();
+
+            if (!$currentProduct) {
+                return response()->json(['error' => 'Product not found.']);
+            }
+
+            $currentName = $currentProduct->name;
+            $updateData = ['name' => trim($productName)];
+
+            if ($published !== null) {
+                $updateData['published'] = $published;
+            }
+
+            DB::connection($this->connectionType)
+                ->table($this->productTable)
+                ->where('name', $currentName)
+                ->update($updateData);
+        }
+
+        if (!$subscription && !$category_id) {
+            $readyProducts = session()->get('ready_products', []);
+            $productIds = collect($readyProducts)->pluck('id')->toArray();
+
+            $products = DB::connection($this->connectionType)->table($this->productTable)
+                ->select('id', 'subscription', 'category_id', 'name', 'unit_price', 'slug', 'published')
+                ->whereIn('id', $productIds)
+                ->get()
+                ->keyBy('id');
+
+            $products = collect($productIds)->map(function ($id) use ($products) {
+                return $products[$id];
+            });
+
+            $products = $products->map(function ($product) use ($readyProducts, $site_id) {
+                $sessionProduct = collect($readyProducts)->firstWhere('id', $product->id);
+                $product->subscription = $sessionProduct['subscription'] ?? $product->subscription;
+
+                $data = $this->generateSlug($product->category_id);
+                $product->category_name = $data['category_name'];
+                $product->slug = $data['slug'];
+
+                $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
+                    ->where('product_id', $product->id)
+                    ->orderByDesc('last_price_changed')
+                    ->first();
+
+                if ($lastUpdate) {
+                    $lastPriceChanged = Carbon::parse($lastUpdate->last_price_changed);
+                    $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
+                    $remainingDays = now()->diffInDays($nextPriceChangeDate, false);
+                    $product->remaining_days = round(max($remainingDays, 0));
+                    $product->can_edit_price = now()->greaterThanOrEqualTo($nextPriceChangeDate) ? 1 : 0;
+                } else {
+                    $product->can_edit_price = 1;
+                    $product->remaining_days = 0;
+                }
+
+                return $product;
+            });
+
+            $totalAmount = collect($readyProducts)->sum('unit_price');
+            session(['current_amount' => $totalAmount]);
+
+            $modelType = $site->businessModel->model_type;
+            $tableRows = view("invoice.{$modelType}.random_product_rows", [
+                'products' => $products,
+                'site' => $site,
+                'total' => $totalAmount
+            ])->render();
+
+            return response()->json([
+                'tableRows' => $tableRows,
+                'total' => $totalAmount
+            ]);
+        }
+
         $readyProducts = session()->get('ready_products', []);
 
-        $readyProducts = array_filter($readyProducts, function ($product) use ($productId) {
-            return $product['id'] != $productId;
-        });
+        $productIndex = null;
+        foreach ($readyProducts as $index => $product) {
+            if ($product['id'] == $productId) {
+                $productIndex = $index;
+                break;
+            }
+        }
 
-        $newProduct = DB::connection($this->connectionType)->table($this->productTable)->where('subscription', $subscription)->where('category_id', $category_id) ->first();
+        $currentProduct = DB::connection($this->connectionType)
+            ->table($this->productTable)
+            ->where('id', $productId)
+            ->first();
+
+        if (!$currentProduct) {
+            return response()->json(['error' => 'Product not found.']);
+        }
+
+        $currentProductName = $currentProduct->name;
+
+        $newProduct = DB::connection($this->connectionType)
+            ->table($this->productTable)
+            ->where('subscription', $subscription)
+            ->where('category_id', $category_id)
+            ->where('name', 'like', "%{$currentProductName}%")
+            ->first();
 
         if (!$newProduct) {
             return response()->json(['error' => "The duration '{$subscription}' was not found in the same package."]);
         }
 
-        $readyProducts[] = [
-            'id' => $newProduct->id,
-            'subscription' => $newProduct->subscription,
-            'unit_price' => $newProduct->unit_price,
-        ];
+        if ($productIndex !== null) {
+            $readyProducts[$productIndex] = [
+                'id' => $newProduct->id,
+                'subscription' => $newProduct->subscription,
+                'unit_price' => $newProduct->unit_price,
+            ];
+        } else {
+            $readyProducts[] = [
+                'id' => $newProduct->id,
+                'subscription' => $newProduct->subscription,
+                'unit_price' => $newProduct->unit_price,
+            ];
+        }
 
         session()->put('ready_products', array_values($readyProducts));
 
-        $productIds = collect($readyProducts)->pluck('id')->reverse()->values()->toArray();
+        $productIds = collect($readyProducts)->pluck('id')->toArray();
         $products = DB::connection($this->connectionType)->table($this->productTable)
-            ->select('id', 'subscription', 'category_id', 'name', 'unit_price', 'slug')
+            ->select('id', 'subscription', 'category_id', 'name', 'unit_price', 'slug', 'published')
             ->whereIn('id', $productIds)
-            ->orderByRaw('FIELD(id, ' . implode(',', $productIds) . ')')
             ->get()
             ->keyBy('id');
-
 
         $products = collect($productIds)->map(function ($id) use ($products) {
             return $products[$id];
@@ -407,16 +1047,16 @@ class LaravelController extends Controller
         $products = $products->map(function ($product) use ($readyProducts, $site_id) {
             $sessionProduct = collect($readyProducts)->firstWhere('id', $product->id);
             $product->subscription = $sessionProduct['subscription'] ?? $product->subscription;
-        
+
             $data = $this->generateSlug($product->category_id);
             $product->category_name = $data['category_name'];
             $product->slug = $data['slug'];
-        
+
             $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
                 ->where('product_id', $product->id)
                 ->orderByDesc('last_price_changed')
                 ->first();
-        
+
             if ($lastUpdate) {
                 $lastPriceChanged = Carbon::parse($lastUpdate->last_price_changed);
                 $nextPriceChangeDate = $lastPriceChanged->copy()->addMonths(3);
@@ -427,10 +1067,9 @@ class LaravelController extends Controller
                 $product->can_edit_price = 1;
                 $product->remaining_days = 0;
             }
-        
+
             return $product;
         });
-        
 
         $totalAmount = collect($readyProducts)->sum('unit_price');
         session(['current_amount' => $totalAmount]);
@@ -453,6 +1092,9 @@ class LaravelController extends Controller
     {
         session()->forget('ready_products');
         session()->forget('current_amount');
+        session()->forget('last_used_combinations');
+        session()->forget('randomize_step');
+        session()->forget('randomize_invoice_amount');
         return response()->json([
             'success' => true,
             'tableRows' => '',
@@ -480,7 +1122,7 @@ class LaravelController extends Controller
 
         $query = DB::connection($this->connectionType)
             ->table($this->productTable)
-            ->select('products.id', 'products.subscription','products.category_id', 'products.name', 'products.unit_price', 'products.slug')
+            ->select('products.id', 'products.subscription', 'products.category_id', 'products.name', 'products.unit_price', 'products.slug')
             ->where('products.published', 1);
 
         if ($hasPriceRange) {
@@ -489,6 +1131,7 @@ class LaravelController extends Controller
                 (float) $request->price_to
             ]);
         }
+
         if (in_array($sortUnitPrice, ['asc', 'desc'])) {
             $query->orderBy('unit_price', $sortUnitPrice);
         }
@@ -507,13 +1150,13 @@ class LaravelController extends Controller
             });
         }
 
-
         $readyProducts = session('ready_products', []);
         $readyProductIds = collect($readyProducts)->pluck('id')->toArray();
 
         if (count($readyProductIds) > 0) {
             $query->whereNotIn('products.id', $readyProductIds);
         }
+
         $totalCount = $query->count();
         $page = $request->input('page', 1);
         $perPage = 10;
@@ -546,7 +1189,7 @@ class LaravelController extends Controller
             $data = $this->generateSlug($product->category_id);
             $product->category_name = $data['category_name'];
             $product->slug = $data['slug'];
-        
+
             $lastUpdate = $priceHistories[$product->id][0] ?? null;
             if ($lastUpdate) {
                 $lastPriceChanged = Carbon::parse($lastUpdate->last_price_changed);
@@ -559,17 +1202,14 @@ class LaravelController extends Controller
                 $product->remaining_days = 0;
             }
         });
-            
 
         $modelType = $site->businessModel->model_type;
         $random_amount = session('current_amount', 0);
-        $tableRows = view( "invoice.{$modelType}.add_product_rows", ['products' => $products, 'site' => $site,'random_amount' => $random_amount])->render();
-        $paginationHtml = view("invoice.{$modelType}.pagination", ['totalPages' => $totalPages,'paginationPages' => $paginationPages, 'currentPage' => $page ])->render();
+        $tableRows = view("invoice.{$modelType}.add_product_rows", ['products' => $products, 'site' => $site, 'random_amount' => $random_amount])->render();
+        $paginationHtml = view("invoice.{$modelType}.pagination", ['totalPages' => $totalPages, 'paginationPages' => $paginationPages, 'currentPage' => $page])->render();
 
-        return response()->json([ 'tableRows' => $tableRows,'paginationHtml' => $paginationHtml, 'random_amount' => $random_amount,'currentPage' => $page]);
+        return response()->json(['tableRows' => $tableRows, 'paginationHtml' => $paginationHtml, 'random_amount' => $random_amount, 'currentPage' => $page]);
     }
-
-
 
     private function smartPagination($currentPage, $totalPages)
     {
@@ -606,6 +1246,7 @@ class LaravelController extends Controller
         DynamicDatabaseService::connect($site);
 
         $invoice_data['site'] = $site;
+        $invoice_data['site_id'] = $site->id;
         $invoice_data['invoice_number'] = $request->input('invoice_number');
         $invoice_data['invoice_date'] = Carbon::parse($request->input('invoice_date'))->format('F d, Y');
         $invoice_data['customer_name'] = $request->input('customer_name');
@@ -614,72 +1255,69 @@ class LaravelController extends Controller
         $invoice_data['invoice_amount'] = $request->input('invoice_amount');
         $invoice_data['current_amount'] = $request->input('current_amount');
         $invoice_data['discount_amount'] = $request->input('discount_amount');
+        $invoice_data['currency'] = site_currency();
         $invoice_data['invoice_template'] = $site->invoice_template;
         $invoice_data['model_type'] = $site->businessModel->model_type;
-        $invoice_data['site_id'] = $site->id;
 
         $company_detail_type = $request->input('company_detail_type');
 
         if ($company_detail_type === 'remote') {
 
-            $invoice_data['site_name']          = $request->input('remote_site_name') ?? '';
-            $invoice_data['company_name']       = $request->input('remote_company_name') ?? '';
-            $invoice_data['company_email']      = $request->input('remote_company_email') ?? '';
-            $invoice_data['company_mobile']     = $request->input('remote_company_mobile') ?? '';
-            $invoice_data['company_address']    = $request->input('remote_company_address') ?? '';
+            $invoice_data['site_name']           = $request->input('remote_site_name') ?? '';
+            $invoice_data['company_name']        = $request->input('remote_company_name') ?? '';
+            $invoice_data['company_email']       = $request->input('remote_company_email') ?? '';
+            $invoice_data['company_mobile']      = $request->input('remote_company_mobile') ?? '';
+            $invoice_data['company_address']     = $request->input('remote_company_address') ?? '';
             $invoice_data['registration_number'] = $request->input('remote_registration_number') ?? '';
             $invoice_data['license_number']      = $request->input('remote_license_number') ?? '';
-        
+
             $remote_database = DB::connection($this->connectionType)->table('general_settings')->orderByDesc('updated_at')->first();
-        
+
             if ($remote_database) {
                 DB::connection($this->connectionType)->table('general_settings')->where('id', $remote_database->id)
                     ->update([
-                        'site_name'            => $request->input('remote_site_name') ?? '',
-                        //'company_name'        => $request->input('remote_company_name') ?? '',
-                        'email'                => $request->input('remote_company_email') ?? '',
-                        'phone'                => $request->input('remote_company_mobile') ?? '',
-                        'address'              => $request->input('remote_company_address') ?? '',
-                       // 'registration_number'  => $request->input('remote_registration_number') ?? '',
-                       // 'license_number'       => $request->input('remote_license_number') ?? '',
-                        'updated_at'           => now(),
+                        'site_name'  => $request->input('remote_site_name') ?? '',
+                        'email'      => $request->input('remote_company_email') ?? '',
+                        'phone'      => $request->input('remote_company_mobile') ?? '',
+                        'address'    => $request->input('remote_company_address') ?? '',
+                        'updated_at' => now(),
                     ]);
             }
-        
+
         } else {
-        
-            $invoice_data['site_name']          = $request->input('local_site_name') ?? '';
-            $invoice_data['company_name']       = $request->input('local_company_name') ?? '';
-            $invoice_data['company_email']      = $request->input('local_company_email') ?? '';
-            $invoice_data['company_mobile']     = $request->input('local_company_mobile') ?? '';
-            $invoice_data['company_address']    = $request->input('local_company_address') ?? '';
+
+            $invoice_data['site_name']           = $request->input('local_site_name') ?? '';
+            $invoice_data['company_name']        = $request->input('local_company_name') ?? '';
+            $invoice_data['company_email']       = $request->input('local_company_email') ?? '';
+            $invoice_data['company_mobile']      = $request->input('local_company_mobile') ?? '';
+            $invoice_data['company_address']     = $request->input('local_company_address') ?? '';
             $invoice_data['registration_number'] = $request->input('registration_number') ?? '';
             $invoice_data['license_number']      = $request->input('license_number') ?? '';
-        
-            $site->site_name          = $invoice_data['site_name'];
-            $site->company_name       = $invoice_data['company_name'];
-            $site->company_email      = $invoice_data['company_email'];
-            $site->company_mobile     = $invoice_data['company_mobile'];
-            $site->company_address    = $invoice_data['company_address'];
+
+            $site->site_name           = $invoice_data['site_name'];
+            $site->company_name        = $invoice_data['company_name'];
+            $site->company_email       = $invoice_data['company_email'];
+            $site->company_mobile      = $invoice_data['company_mobile'];
+            $site->company_address     = $invoice_data['company_address'];
             $site->registration_number = $invoice_data['registration_number'];
             $site->license_number      = $invoice_data['license_number'];
-        
+
             $site->save();
         }
 
         $invoice_data['invoice_header_image'] = base64EncodeImage($site->invoice_header_image);
         $invoice_data['invoice_footer_image'] = base64EncodeImage($site->invoice_footer_image);
-        $invoice_data['invoice_signature'] = base64EncodeImage($site->invoice_signature);
-        $invoice_data['company_logo'] = base64EncodeImage($site->company_logo);
-        $invoice_data['invoice_image1'] = base64EncodeImage($site->invoice_image1);
-        $invoice_data['invoice_image2'] = base64EncodeImage($site->invoice_image2);
-        $invoice_data['invoice_image3'] = base64EncodeImage($site->invoice_image3);
-        $invoice_data['invoice_image4'] = base64EncodeImage($site->invoice_image4);
-        $invoice_data['invoice_image5'] = base64EncodeImage($site->invoice_image5);
-        $invoice_data['invoice_image6'] = base64EncodeImage($site->invoice_image6);
-        $invoice_data['invoice_image7'] = base64EncodeImage($site->invoice_image7);
-        $invoice_data['invoice_image8'] = base64EncodeImage($site->invoice_image8);
-        $invoice_data['invoice_image9'] = base64EncodeImage($site->invoice_image9);
+        $invoice_data['invoice_signature']    = base64EncodeImage($site->invoice_signature);
+        $invoice_data['company_logo']         = base64EncodeImage($site->company_logo);
+        $invoice_data['invoice_image1']       = base64EncodeImage($site->invoice_image1);
+        $invoice_data['invoice_image2']       = base64EncodeImage($site->invoice_image2);
+        $invoice_data['invoice_image3']       = base64EncodeImage($site->invoice_image3);
+        $invoice_data['invoice_image4']       = base64EncodeImage($site->invoice_image4);
+        $invoice_data['invoice_image5']       = base64EncodeImage($site->invoice_image5);
+        $invoice_data['invoice_image6']       = base64EncodeImage($site->invoice_image6);
+        $invoice_data['invoice_image7']       = base64EncodeImage($site->invoice_image7);
+        $invoice_data['invoice_image8']       = base64EncodeImage($site->invoice_image8);
+        $invoice_data['invoice_image9']       = base64EncodeImage($site->invoice_image9);
 
         $productDataArray = $request->input('product_data', []);
         $productIds = [];
@@ -693,27 +1331,24 @@ class LaravelController extends Controller
             }
         }
 
-
         $products = DB::connection($this->connectionType)
-        ->table($this->productTable)
-        ->whereIn('id', $productIds)
-        ->select('id', 'subscription', 'category_id', 'name', 'unit_price')
-        ->get()
-        ->sortBy(function ($product) use ($productIds) {
-            return array_search($product->id, $productIds);
-        })
-        ->values()
-        ->map(function ($product) use ($customPrices) {
-            $product->unit_price = $customPrices[$product->id] ?? $product->unit_price;
-            
-            $data = $this->generateSlug($product->category_id);
-            $product->category_name = $data['category_name'];
-            $product->slug = $data['slug'];
-            return $product;
-        });
-    
-    
-        $invoice_data['currency'] = site_currency();
+            ->table($this->productTable)
+            ->whereIn('id', $productIds)
+            ->select('id', 'subscription', 'category_id', 'name', 'unit_price')
+            ->get()
+            ->sortBy(function ($product) use ($productIds) {
+                return array_search($product->id, $productIds);
+            })
+            ->values()
+            ->map(function ($product) use ($customPrices) {
+                $product->unit_price = $customPrices[$product->id] ?? $product->unit_price;
+
+                $data = $this->generateSlug($product->category_id);
+                $product->category_name = $data['category_name'];
+                $product->slug = $data['slug'];
+
+                return $product;
+            });
 
         $invoice_data['products'] = $products;
         $invoice_data['product_ids'] = $productIds;
@@ -724,25 +1359,17 @@ class LaravelController extends Controller
 
         $this->updateProductPrice($productDataArray);
         InvoiceController::createInvoiceHistory($invoice_data);
-        if ($request->filled('invoice_file_name')) {
-            $filename = $request->input('invoice_file_name') . '.pdf';
-        } else {
-            $filename = $invoice_data['invoice_number'] . '.pdf';
-        }
-
 
         $filename = $request->filled('invoice_file_name')
-        ? $request->input('invoice_file_name') . '.pdf'
-        : $invoice_data['invoice_number'] . '.pdf';
-            try {
-                return $this->generateWithApi2Pdf($site, $viewPath, $invoice_data, $filename);
+            ? $request->input('invoice_file_name') . '.pdf'
+            : $invoice_data['invoice_number'] . '.pdf';
 
-            } catch (\Exception $e) {
-                \Log::error('API2PDF failed: ' . $e->getMessage());
-                // Fallback to Dompdf if API2PDF fails
-                return $this->generateWithDompdf($site, $viewPath, $invoice_data, $filename);
-            }
-
+        try {
+            return $this->generateWithApi2Pdf($site, $viewPath, $invoice_data, $filename);
+        } catch (\Exception $e) {
+            \Log::error('API2PDF failed: ' . $e->getMessage());
+            return $this->generateWithDompdf($site, $viewPath, $invoice_data, $filename);
+        }
     }
 
     protected function generateWithApi2Pdf($site, $viewPath, $invoice_data, $filename)
@@ -814,16 +1441,13 @@ class LaravelController extends Controller
 
                 $current_price = floatval($product->unit_price);
 
-
                 if ($current_price == $new_price) continue;
-
 
                 $lastUpdate = ProductPriceHistory::where('site_id', $site_id)
                     ->where('product_id', $product_id)
                     ->orderByDesc('last_price_changed')
                     ->first();
 
-                // If no history, create once and update
                 if (!$lastUpdate) {
                     DB::connection($this->connectionType)
                         ->table($this->productTable)
@@ -839,7 +1463,6 @@ class LaravelController extends Controller
                     continue;
                 }
 
-                // If history exists, only allow update if 3+ months passed
                 if (Carbon::parse($lastUpdate->last_price_changed)->diffInMonths(now()) >= 3) {
                     DB::connection($this->connectionType)
                         ->table($this->productTable)

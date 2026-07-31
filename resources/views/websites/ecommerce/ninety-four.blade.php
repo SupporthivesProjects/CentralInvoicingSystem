@@ -2,10 +2,25 @@
 <html>
 <head>
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
+
+    <style>
+        body {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        .footer-fixed {
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            width: 100%;
+        }
+    </style>
 </head>
 <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #ffffff;">
   <table width="100%" cellpadding="0" cellspacing="0" border="0"
-    style="max-width: 90%; margin: 0 auto; border: 1px solid #ccc;">
+    style="max-width: 100%; margin: 0 auto; ">
     <!-- Header with Logo -->
     <tr style=" background: url('{{ $invoice_header_image }}');background-repeat: no-repeat;background-size: cover;background-position: center;height: 83px;">
       <td style="padding: 0px;">
@@ -29,11 +44,11 @@
                 <p style="margin: 0 0 8px 0;"><strong>Invoice #:</strong> {{ $invoice_number }}</p>
               </td>
               <td style="width: 10%; vertical-align: top;border-left: 1px solid #FFEEEE;">
-                <p style="margin: 0 0 8px 0;"><strong>To:</strong></p>
+                <p style="margin: 0 0 8px 0;"><strong>To:</strong> {{ $customer_name }} {{ $customer_email }}</p>
               </td>
-              <td style="width: 40%; vertical-align: top;border-left: 1px solid #FFEEEE;">
-                <p style="margin: 0 0 8px 0;">{{ $customer_name }},<br/>{{ $customer_email }}</p>
-              </td>
+              <!-- <td style="width: 40%; vertical-align: top;border-left: 1px solid #FFEEEE;">
+                <p style="margin: 0 0 8px 0;">{{ $customer_name }}<br/>{{ $customer_email }}</p>
+              </td> -->
             </tr>
           </table>
         </td>
@@ -87,26 +102,28 @@
       <!-- Footer Message -->
       <tr>
         <td style="padding: 20px 20px 0 20px; text-align: center; font-size: 14px;">
-          <p><strong>MAKE ALL CHECKS PAYABLE TO THEDEVKREW.COM</strong><br/>Thank you for your business!</p>
+          <p>Thank you for your business!</p>
         </td>
       </tr>
 
       <!-- Footer Details -->
       <tr>
         <td style="padding: 10px 20px 20px 20px; text-align: center; font-size: 10px; color: #333;font-weight: bold;">
-          {{ $company_name }} {!! $company_address !!} | PHONE: {{ $company_mobile }}
+          {{ $company_name }} {!! $company_address !!}
         </td>
       </tr>
 
     <!-- Footer -->
 
 
+    <div class="footer-fixed" style="background: url('{{ $invoice_footer_image }}');background-repeat: no-repeat;background-size: cover;background-position: center;height: 75px;">
+      
+        <!-- <tr style=" background: url('{{ $invoice_footer_image }}');background-repeat: no-repeat;background-size: cover;background-position: center;height: 75px;">
+          <td style=" padding: 0px; color: #ffffff; font-size: 12px; text-align: center;">
 
-    <tr style=" background: url('{{ $invoice_footer_image }}');background-repeat: no-repeat;background-size: cover;background-position: center;height: 75px;">
-      <td style=" padding: 0px; color: #ffffff; font-size: 12px; text-align: center;">
-
-      </td>
-    </tr>
+          </td>
+        </tr> -->
+    </div>
   </table>
 </body>
 

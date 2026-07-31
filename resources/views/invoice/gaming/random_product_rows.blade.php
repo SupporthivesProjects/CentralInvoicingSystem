@@ -2,37 +2,28 @@
     @php
         $captureFields = json_decode($product->game_need_to_capture ?? '{}', true);
         $platforms = array_keys($captureFields);
-
     @endphp
 
-
-    {{-- Main Row --}}
-    <!-- Add data-bs-toggle="collapse" for expand each list -->
     <tr class="product-row align-middle" id="product-main-row-{{ $index + 1 }}" data-bs-toggle=""
         data-bs-target="#collapse-{{ $index + 1 }}" aria-expanded="false" aria-controls="collapse-{{ $index + 1 }}"
         style="cursor: pointer;">
-        <td class="text-center">
-            <div class="form-check m-0 d-flex justify-content-center">
+            <div class="form-check m-0 d-flex justify-content-center d-none">
                 <input form="generate-invoice-form" class="form-check-input narayan-checkbox border-primary"
-                    type="checkbox" data-unit_price="{{ $product->unit_price }}"
-                    name="products[{{ $product->id }}][selected_checkbox]" value="1" checked disabled
-                    {{-- @if (request()->has('is_random') && request('is_random'))
-           disabled
-       @endif --}}>
+                    type="checkbox" data-unit_price="{{ number_format((float)$product->unit_price, 2, '.', '') }}"
+                    name="products[{{ $product->id }}][selected_checkbox]" value="1" checked>
                 <input type="hidden" name="products[{{ $product->id }}][selected]" value="1">
             </div>
-        </td>
-        <td>{{ $index + 1 }}</td>
+        <td class="text-center">{{ $index + 1 }}</td>
         <td>
             {{ $product->name }}
             @if ($product->slug)
-            {{--  --}}
                 <a href="{{ $site->site_link.'games/'.$product->slug }}" target="_blank"><i class="bi bi-box-arrow-up-right ms-1"></i></a>
             @endif
             <input form="generate-invoice-form" type="hidden" name="products[{{ $product->id }}][name]"
                 value="{{ $product->name }}">
         </td>
-        <td><span class="badge bg-secondary">{{ $product->game_currency ?? '-' }}</span>
+        <td>
+            <span class="badge bg-secondary">{{ $product->game_currency ?? '-' }}</span>
             <input form="generate-invoice-form" type="hidden" name="products[{{ $product->id }}][game_currency]"
                 value="{{ $product->game_currency }}">
         </td>
@@ -41,23 +32,14 @@
                 name="products[{{ $product->id }}][game_currency_amount]"
                 value="{{ $product->game_currency_amount }}">
         </td>
-        @if ($product->source == 'Random')
-            <td>{{ site_currency() }}{{ number_format($product->unit_price, 2) }}
-                <input form="generate-invoice-form" type="hidden" name="products[{{ $product->id }}][unit_price]"
-                    value="{{ $product->unit_price }}">
-                <input form="generate-invoice-form" type="hidden" name="products[{{ $product->id }}][bundle_id]"
-                    value="{{ $product->bundle_id }}">
-            </td>
-        @else
-            <td>{{ site_currency() }}{{ number_format($product->unit_price, 2) }}
-                <input form="generate-invoice-form" type="hidden" name="products[{{ $product->id }}][unit_price]"
-                    value="{{ $product->unit_price }}">
-            </td>
-        @endif
-
-        {{-- <td>
-            <input form="generate-invoice-form" type="number" class="form-control edit-price" name="products[{{ $product->id }}][unit_price]" value="{{ $product->unit_price }}">
-        </td> --}}
+        <td>{{ site_currency() }}{{ number_format($product->unit_price, 2) }}
+            <input form="generate-invoice-form" type="hidden"
+                name="products[{{ $product->id }}][original_price]"
+                value="{{ number_format((float)$product->unit_price, 2, '.', '') }}">
+            <input form="generate-invoice-form" type="hidden"
+                name="products[{{ $product->id }}][bundle_id]"
+                value="{{ $product->bundle_id }}">
+        </td>
         <td>
             @php
                 $lastUpdate = \App\Models\ProductPriceHistory::where('site_id', session('customer.site_id'))
@@ -66,13 +48,14 @@
                     ->latest('last_price_changed')
                     ->first();
 
-                $isLocked = $lastUpdate && Carbon\Carbon::parse($lastUpdate->last_price_changed)->gt(now()->subMonths(3));
+                $isLocked = $lastUpdate && Carbon\Carbon::parse($lastUpdate->last_price_changed)->gt(now()->subDays(90));
                 $daysRemaining = $isLocked
-                    ? now()->diffInDays(Carbon\Carbon::parse($lastUpdate->last_price_changed)->addMonths(3))
+                    ? now()->diffInDays(Carbon\Carbon::parse($lastUpdate->last_price_changed)->addDays(90))
                     : 0;
 
                 $lockStatus = $isLocked ? 'locked' : 'unlocked';
-                $iconClass = $isLocked ? 'fa-lock bg-warning' : 'fa-pencil bg-success';
+                $iconClass = $isLocked ? 'fa-lock text-white' : 'fa-pencil text-white';
+                $bgClass = $isLocked ? 'bg-warning' : 'bg-success';
                 $tooltip = $isLocked ? "Price locked for {$daysRemaining} more days" : 'Price can be edited';
                 $inputTooltip = $isLocked
                     ? 'This price was updated on ' .
@@ -82,35 +65,41 @@
             @endphp
 
             <div class="input-group">
-                <span class="input-group-text {{ $isLocked ? 'bg-warning' : 'bg-success' }}" data-bs-toggle="tooltip"
-                    title="{{ $tooltip }}">
+                <span class="input-group-text {{ $bgClass }}" data-bs-toggle="tooltip" title="{{ $tooltip }}">
                     <i class="fa {{ $iconClass }}"></i>
                 </span>
                 <input form="generate-invoice-form" type="number" step="0.01"
                     class="form-control edit-price {{ $isLocked ? 'bg-light' : '' }}"
-                    name="products[{{ $product->id }}][unit_price]" value="{{ $product->unit_price }}"
-                    {{ $isLocked ? 'readonly' : '' }} data-bs-toggle="tooltip" data-price-status="{{ $lockStatus }}"
+                    name="products[{{ $product->id }}][unit_price]"
+                    value="{{ number_format((float)$product->unit_price, 2, '.', '') }}"
+                    {{ $isLocked ? 'readonly' : '' }}
+                    data-bs-toggle="tooltip"
+                    data-price-status="{{ $lockStatus }}"
+                    data-original-price="{{ number_format((float)$product->unit_price, 2, '.', '') }}"
+                    data-product-id="{{ $product->id }}"
+                    data-bundle-id="{{ $product->bundle_id }}"
                     title="{{ $inputTooltip }}">
 
-                <!-- Hidden fields for bundle_id and game_currency_amount needed for update -->
-                <input form="generate-invoice-form" type="hidden" name="products[{{ $product->id }}][bundle_id]"
-                    value="{{ $product->bundle_id }}">
                 <input form="generate-invoice-form" type="hidden"
                     name="products[{{ $product->id }}][game_currency_amount]"
                     value="{{ $product->game_currency_amount }}">
             </div>
         </td>
 
-        <td>
-            <button type="button" class="btn btn-sm btn-outline-danger px-2 py-1 remove-product"
-                data-product-id="{{ $product->id }}" data-unit-price="{{ $product->unit_price }}"
-                data-product-name="{{ $product->name }}" title="Remove Row">
-                <i class="fa fa-trash"></i>
-            </button>
+        <td class="text-center align-middle">
+            <div class="d-flex justify-content-center">
+                <button type="button"
+                    class="btn btn-sm btn-outline-danger px-2 py-1 remove-product"
+                    data-product-id="{{ $product->id }}"
+                    data-unit-price="{{ number_format((float)$product->unit_price, 2, '.', '') }}"
+                    data-product-name="{{ $product->name }}"
+                    title="Remove Row">
+                    <i class="fa fa-trash"></i>
+                </button>
+            </div>
         </td>
     </tr>
 
-    {{-- Expandable Capture Row --}}
     <tr id="product-collapse-row-{{ $index + 1 }}">
         <td colspan="8" class="p-0 border-0">
             <div class="collapse bg-light" id="collapse-{{ $index + 1 }}" data-bs-parent="#product-table-body">
@@ -118,7 +107,6 @@
                     <h6 class="fw-bold mb-3">Game Account Details Required:</h6>
 
                     @if (!empty($captureFields))
-                        {{-- Platform Dropdown --}}
                         <div class="mb-3">
                             <label class="form-label">Select Platform:</label>
                             <select form="generate-invoice-form" class="form-select select-platform"
@@ -134,7 +122,6 @@
                             </select>
                         </div>
 
-                        {{-- Fields for each platform --}}
                         @foreach ($captureFields as $platform => $fields)
                             @php $slug = \Illuminate\Support\Str::slug($platform, '_'); @endphp
                             <div class="platform-section" data-product-id="{{ $product->id }}"
@@ -164,13 +151,8 @@
     </tr>
 @endforelse
 
-@php
-    //dd($products);
-@endphp
-
 <script>
     $(document).ready(function() {
-        // Remove product with confirmation
         $(document).off('click', '.remove-product').on('click', '.remove-product', function() {
             var $button = $(this);
             var productId = $button.data('product-id');
@@ -184,9 +166,7 @@
                 showCancelButton: true,
                 confirmButtonText: 'Yes, Remove',
                 cancelButtonText: 'Cancel',
-                customClass: {
-                    popup: 'p-2'
-                }
+                customClass: { popup: 'p-2' }
             }).then(function(result) {
                 if (result.isConfirmed) {
                     $('#table-blocker').show();
@@ -206,10 +186,8 @@
                         success: function(response) {
                             if (response.tableRows !== undefined) {
                                 $('#product-table-body').html(response.tableRows);
-
-                                // Update Current Amount
-                                $('#current_amount').val(response.total.toFixed(2));
-
+                                let invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
+                                syncAllAmountDisplays(parseFloat(response.total || 0), invoiceAmount);
                                 toastr.success('Product removed successfully!');
                             }
                         },
@@ -219,80 +197,94 @@
                         },
                         complete: function() {
                             $('#table-blocker').hide();
-                            $button.prop('disabled', false).html(
-                                '<i class="fa fa-trash"></i>');
+                            $button.prop('disabled', false).html('<i class="fa fa-trash"></i>');
                         }
                     });
                 }
             });
         });
 
-        // ✅ Recalculate when checkbox changes
         $(document).on('change', '.narayan-checkbox', function() {
             calculateTotalPrice();
+            updateSessionCurrentAmount();
         });
 
-        // ✅ Recalculate when Edit Price input changes
         let sessionAmountTimeout;
         $(document).on('input', '.edit-price', function() {
-            clearTimeout(sessionAmountTimeout);
+            calculateTotalPrice();
 
+            clearTimeout(sessionAmountTimeout);
             sessionAmountTimeout = setTimeout(function() {
                 updateSessionCurrentAmount();
             }, 1000);
-
-            calculateTotalPrice(); // still runs immediately
         });
 
-        // Main Calculation Function
         function calculateTotalPrice() {
             let currentAmount = 0;
 
-            // Loop through all selected products
-            $('.narayan-checkbox:checked').each(function() {
-                const productRow = $(this).closest('tr');
-                const editPriceInput = productRow.find('.edit-price');
-                let editPrice = parseFloat(editPriceInput.val());
+            $('#product-table-body tr.product-row').each(function() {
+                const $row = $(this);
+                const editPriceInput = $row.find('.edit-price');
 
-                if (isNaN(editPrice)) {
-                    editPrice = parseFloat($(this).data('unit_price')) || 0;
+                if (editPriceInput.length) {
+                    let editPrice = parseFloat(editPriceInput.val());
+
+                    if (isNaN(editPrice) || editPrice === '') {
+                        editPrice = parseFloat(editPriceInput.data('original-price')) || 0;
+                    }
+
+                    currentAmount += editPrice;
                 }
-
-                currentAmount += editPrice;
             });
-            const invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
-            let discountAmount = 0;
 
-            if (currentAmount > invoiceAmount) {
-                discountAmount = currentAmount - invoiceAmount;
-            }
+            let invoiceAmount = parseFloat($('#invoice_amount').val()) || 0;
+            syncAllAmountDisplays(currentAmount, invoiceAmount);
+        }
 
-            $('#current_amount').val(currentAmount.toFixed(2));
-            $('#discount_amount').val(discountAmount.toFixed(2));
+        function updateSessionCurrentAmount() {
+            let currentAmount = parseFloat($('#current_amount').val()) || 0;
 
+            let productsData = [];
+            $('#product-table-body tr.product-row').each(function() {
+                const $row = $(this);
+                const editPriceInput = $row.find('.edit-price');
 
+                if (editPriceInput.length) {
+                    const productId = editPriceInput.data('product-id');
+                    const originalPrice = parseFloat(editPriceInput.data('original-price')) || 0;
+                    const currentPrice = parseFloat(editPriceInput.val()) || 0;
+                    const bundleId = editPriceInput.data('bundle-id');
+                    const gameCurrencyAmount = $row.find('input[name="products[' + productId + '][game_currency_amount]"]').val();
 
+                    const priceChanged = Math.abs(originalPrice - currentPrice) > 0.01;
+
+                    productsData.push({
+                        product_id: productId,
+                        bundle_id: bundleId,
+                        original_price: originalPrice,
+                        unit_price: currentPrice,
+                        game_currency_amount: gameCurrencyAmount,
+                        price_changed: priceChanged,
+                        price_difference: (originalPrice - currentPrice).toFixed(2)
+                    });
+                }
+            });
+
+            $.ajax({
+                url: "{{ route('update.product') }}",
+                type: 'POST',
+                data: {
+                    products: productsData,
+                    current_amount: currentAmount,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    console.log('Session updated');
+                },
+                error: function() {
+                    toastr.error('Error updating session current amount.');
+                }
+            });
         }
     });
-</script>
-<script>
-    //Write a function to update session current amount
-    function updateSessionCurrentAmount() {
-        let currentAmount = parseFloat($('#current_amount').val()) || 0;
-        $.ajax({
-            url: "{{ route('update.product') }}",
-            type: 'POST',
-            data: {
-                current_amount: currentAmount,
-                _token: '{{ csrf_token() }}'
-            },
-            success: function(response) {
-
-            },
-            error: function() {
-                // Handle error in toastr
-                toastr.error('Error updating session current amount.');
-            }
-        });
-    }
 </script>

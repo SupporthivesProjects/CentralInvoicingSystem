@@ -52,6 +52,10 @@ Route::middleware(['auth', 'role:admin,staff,developer'])->group(function () {
     Route::patch('/businessmodel/{id}', [WebsiteController::class, 'updateBusinessModel'])->name('businessmodel.update');
     Route::delete('/businessmodel/{id}', [WebsiteController::class, 'deleteBusinessModel'])->name('businessmodel.delete');
 
+
+    Route::get('/game-api/{site_id}', [WebsiteController::class, 'gameSiteAPI'])->name('test.game.api');
+    Route::get('/giftcard-api/{site_id}', [WebsiteController::class, 'giftCardAPI'])->name('test.giftcard.api');
+
     Route::get('/website/create', [WebsiteController::class, 'addwebsite'])->name('website.create');
     Route::post('/website', [WebsiteController::class, 'createWebsite'])->name('website.store');
     Route::get('/available-websites', [WebsiteController::class, 'connectedwebsites'])->name('connectedwebsites');
@@ -94,6 +98,13 @@ Route::middleware(['auth', 'role:admin,staff,developer'])->group(function () {
     Route::get('/generate-new-invoice-number', [InvoiceController::class, 'generateInvoiceNumber'])->name('generate.invoice.number');
     Route::get('/invoice/chart', [HomeController::class, 'showInvoiceChart'])->name('invoice.chart');
     Route::get('/report/invoices', [ReportController::class, 'invoiceReport'])->name('invoice.report');
+
+    Route::get('/invoice/testblade', [ReportController::class, 'testblade'])->name('invoice.testblade');
+
+
+
+
+
 });
 
 

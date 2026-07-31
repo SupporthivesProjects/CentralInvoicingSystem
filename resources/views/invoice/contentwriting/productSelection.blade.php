@@ -897,6 +897,8 @@
         }
         if (search_type === 'reset') {
             $('#customizeKeywordInput').val('');
+            customizePriceSlider.noUiSlider.set([minUnitPrice, maxUnitPrice]);
+            updateHiddenInputs(minUnitPrice, maxUnitPrice, 'customize');
         }
         
         let btn = $('#add-custom-products');
@@ -1287,6 +1289,7 @@ $(document).ready(function() {
 
 <script>
     $(document).ready(function() {
+        //const wcStep = 10;
         const wcStep = 25;
         const wcStepLarge = 100;
         const imgStep = 1;

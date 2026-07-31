@@ -20,7 +20,8 @@
                 class="form-check-input border narayan-checkbox border-1 border-primary" 
                 type="checkbox" 
                 name="add_product_ids[]" 
-                data-unit_price="{{ $product->unit_price }}" 
+                data-unit_price="{{ $product->unit_price }}"
+                data-variation-id="{{ $product->variation_id ?? 0 }}"
                 value="{{ $product->id }}"
             >
         </div>    
@@ -38,7 +39,6 @@
     tooltipTriggerList.map(function (tooltipTriggerEl) {
         return new bootstrap.Tooltip(tooltipTriggerEl);
     });
-
 </script>
 
 <script>
@@ -47,12 +47,14 @@
         let selectedProducts = [];
        
         $('input[name="add_product_ids[]"]:checked').each(function () {
-            let productId = $(this).val();
-            let unitPrice = parseFloat($('.add-product-price[data-product-id="' + productId + '"]').val()) || 0;
+            let productId   = $(this).val();
+            let variationId = $(this).data('variation-id') || 0;
+            let unitPrice   = parseFloat($('.add-product-price[data-product-id="' + productId + '"]').val()) || 0;
 
             selectedProducts.push({
-                product_id: productId,
-                unit_price: unitPrice
+                product_id:   productId,
+                variation_id: variationId,
+                unit_price:   unitPrice
             });
         });
 
@@ -104,10 +106,9 @@
         }
     });
 });
-
 </script>
+
 <script>
-  
     function updateTempTotal() {
         let originalAmount = parseFloat(@json(session('current_amount', 0)));
         let selectedTotal = 0;

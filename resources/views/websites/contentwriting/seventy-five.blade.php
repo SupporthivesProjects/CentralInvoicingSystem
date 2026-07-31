@@ -2,11 +2,22 @@
 <html>
 <head>
     <title>{{ $site_name }} - Invoice #{{ $invoice_number }}</title>
+    <style>
+      .footer-fixed {
+        position: fixed;
+        bottom: -1px;
+        left: 0;
+        right: 0;
+        width: 100%;
+        /* background: url('{{ $invoice_footer_image }}') center center no-repeat; */
+        /* background-size: cover; */
+      }
+    </style>
 </head>
 <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #ffffff;">
   <table width="100%" cellpadding="0" cellspacing="0" border="0"
-    style="max-width: 90%; margin: 0 auto; background: url('{{ $invoice_image1 }}'); background-repeat: no-repeat;background-size: cover;background-position: center;">
-    <tr style="height: 100px;">
+    style="max-width: 100%; margin: 0 auto; background: url('{{ $invoice_image1 }}'); background-repeat: no-repeat;background-size: cover;background-position: center;">
+    <tr style="height: 200px;">
       <td style="padding: 16px 24px;" align="center">
         <img src="{{ $company_logo }}" width="50" alt=""><br>
         <h1 style="margin: 10px;color: #4A5E8C;font-size: 50px;font-weight: 400;">INVOICE</h1>
@@ -24,10 +35,12 @@
                 <p style="color: #1d2e5e;font-size: 12px;margin: 0 0 8px 0;">ADDRESS</p>
                 <p style="color: #58595B; margin: 0px;font-size: 14px;">{!! $company_address !!}</p>
               </td>
+              @if(!empty($company_mobile))
               <td valign="top" style="width: 33%;padding: 0 16px;" align="center">
-                <p style="color: #1d2e5e;font-size: 12px;margin: 0 0 8px 0;">PHONE</p>
-                <p style="color: #58595B; margin: 0px;font-size: 14px;">{{ $company_mobile }}</p>
+                  <p style="color: #1d2e5e;font-size: 12px;margin: 0 0 8px 0;">PHONE</p>
+                  <p style="color: #58595B; margin: 0px;font-size: 14px;">{{ $company_mobile }}</p>
               </td>
+              @endif
               <td valign="top" style="width: 33%;padding: 0 16px;" align="center">
                 <p style="color: #1d2e5e;font-size: 12px;margin: 0 0 8px 0;">E-MAIL</p>
                 <p style="color: #58595B; margin: 0px;font-size: 14px;">{{  $company_email }}</p>
@@ -52,9 +65,9 @@
                 <p style="color: #58595b;font-size: 12px;margin: 0 0 8px 0;">Invoice From</p>
                 <p style="color: #1d2e5e;margin: 0 0 8px 0;">{{ $site_name }}</p>
                 <hr style="background: #7F8082;margin: 0 0 8px 0;">
-                <p style="margin: 0px;color: #58595b;font-size: 14px;line-height: 20px;">{{ $company_mobile }}<br />
-                {{ $company_email }}<br />
-                {!! $company_address !!}</p>
+                {{-- <p style="margin: 0px;color: #58595b;font-size: 14px;line-height: 20px;">{{ $company_mobile }}<br />
+                {{-- {{ $company_email }}<br />
+                {!! $company_address !!}</p> --}} 
               </td>
               <td valign="center" align="right" style="width: 45%;padding: 0 0px;">
                 <table width="80%" cellpadding="5" cellspacing="0" style="margin-top: 10px;">
@@ -71,12 +84,12 @@
                       <p style="color: #58595b;font-size: 12px;margin: 0 0 0 0;">Invoice Date:</p>
                     </td>
                     <td style="text-align: right;">
-                      <p style="color: #58595b;font-size: 12px;margin: 0 0 0 0;">Issue Date:</p>
+                    
                     </td>
                   </tr>
                   <tr>
                     <td style="text-align: left;"><p style="margin: 0; font-size: 14px;">{{ $invoice_date }}</p></td>
-                    <td style="text-align: right;"><p style="margin: 0; font-size: 14px;">{{ $invoice_date }}</p></td>
+                    <td style="text-align: right;"></td>
                   </tr>
                 </table>
               </td>
@@ -90,7 +103,7 @@
 
     <!-- Table -->
       <tr>
-        <td style="padding: 16px 24px;" align="center">
+        <td style="padding: 16px 24px;" align="center" >
           <table width="100%" cellpadding="" cellspacing="0">
           <tr>
             <td style="padding-top: 20px;">
@@ -106,7 +119,7 @@
                 <tr style="border-bottom: 1px solid #ccc;">
                   <td>{{ $product->name }}<br />
                     <small> 
-                          @if($product->wordcount)<span class="me-2 badge bg-light text-dark"><strong>Words Count:</strong> {{ $product->wordcount }}</span>@endif
+                          @if($product->wordcount)<span class="me-2 badge bg-light text-dark"><strong>Word Count:</strong> {{ $product->wordcount }}</span>@endif
                           @if($product->quality)<span class="me-2 badge bg-light text-dark"><strong>Quality:</strong> {{ $product->quality }}</span>@endif
                           @if($product->imagecount)<span class="me-2 badge bg-light text-dark"><strong>Image Count:</strong> {{ $product->imagecount }}</span>@endif
                           <br />
@@ -162,9 +175,25 @@
         </td>
       </tr>
 
-    <tr style=" background: url('{{ $invoice_footer_image }}');background-repeat: no-repeat; background-size: cover;background-position: center;height: 104px;">
+    <!-- <tr class="footer-fixed" style=" background: url('{{ $invoice_footer_image }}');background-repeat: no-repeat; background-size: cover;background-position: center;height: 104px;">
         <td style=" padding: 0px; color: #ffffff; font-size: 12px; text-align: center;">
         </td>
+    </tr> -->
+    <tr>
+      <td>
+        <div
+          class="footer-fixed"
+          style="
+            background: url('{{ $invoice_footer_image }}');
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            height: 104px;
+          "
+        >
+        </div>
+
+      </td>
     </tr>
   </table>
 </body>

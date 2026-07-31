@@ -147,7 +147,7 @@
                     <tr>
                         <td style="padding:30px 60px 10px;">
                             <div>
-                                <h1>INVOICE</h1>
+                                <h1>Invoice</h1>
                                 <p style="font-family: 'Bahnschrift'; font-size: 11px; font-weight: normal; color: #132028;">Invoice no.{{ $invoice_number }}</p>
                             </div>
                         </td>
@@ -158,22 +158,34 @@
                                <tbody>
                                  
                                  <tr>
-                                 <td class="addrss" style="width: 40%; vertical-align: top;">
-                                        <h4>BILLED TO:</h4>
-                                        <p>{{ $customer_name }}</p>
-                                        <p>{{ $customer_email }}</p>
+                                 <td class="addrss" style="width:30%; vertical-align: top;">
+                                        <h4>Billed To:</h4>
+                                        <p style="font-size: 12px;">{{ $customer_name }}</p>
+                                        <p style="font-size: 12px;">{{ $customer_email }}</p>
                                     </td>
 
-                                    <td class="addrss">
+                                    @php
+                                        $parts = explode(',', $company_address);
+
+                                        $formattedAddress =
+                                            trim($parts[0]) . ',<br>' .
+                                            trim($parts[1]) . ', ' . trim($parts[2]) . ',<br>' .
+                                            implode(',', array_slice($parts, 3));
+                                    @endphp
+
+
+                                    <td class="addrss" style="width:40%;vertical-align: top;">
                                         <h4>Billed From:</h4>
-                                        <p>{{ $site_name }}</p>
-                                        <p>{!! $company_address !!}</p>
-                                        <p>{{ $company_email }}</p>
-                                        <p>{{ $company_mobile }}</p>
+                                        <p style="font-size: 12px;">{{ $site_name }}</p>
+                                        <p style="font-size: 12px;">{!! $formattedAddress !!}</p>
+                                        
+
+                                        <p style="font-size: 12px;">{{ $company_email }}</p>
+                                        <p style="font-size: 12px;">{{ $company_mobile }}</p>
                                     </td>
                                     <td class="addrss" style="display: flex; flex-direction: column; text-align: right; align-items: flex-end;">
                                         <h4>DATE</h4>
-                                        <p>{{ $invoice_date }}</p>
+                                        <p style="font-size: 12px;">{{ $invoice_date }}</p>
                                     </td>
                                  </tr>
                                </tbody>
@@ -185,11 +197,11 @@
                           <table class="table-list" style="width: 100%;"> 
                             <tbody>
                                 <tr>
-                                    <th>Service</th>
-                                    <th style="text-align: left;">Images</th>
-                                    <th>Qty of Words</th>
-                                    <th>Price</th>
-                                    <th>Amount</th>
+                                    <th style="text-align: left;font-size: 14px;">Service</th>
+                                    <th style="text-align: left;font-size: 14px;">Images</th>
+                                    <th style="font-size: 14px;">Qty of Words</th>
+                                    <th style="font-size: 14px;">Price</th>
+                                    <th style="font-size: 14px;">Amount</th>
                                 </tr>
                                 @php
                                     $totalRows = 10; 
@@ -202,21 +214,21 @@
                                         <tr>
                                             <td>
                                                 <div>
-                                                    <h6>{{ $product->name }}</h6>
+                                                    <h4 style="font-size: 13px;">{{ $product->name }}</h4>
                                                     <p>
-                                                        @if($product->quality)<span class="me-2 badge bg-light text-dark"><strong>Quality:</strong> {{ $product->quality }}</span>@endif
-                                                        @if($product->quantity)<span class="me-2 badge bg-light text-dark"><strong>Quantity:</strong> {{ $product->quantity }}</span>@endif
-                                                        @if($product->turnaround)<span class="me-2 badge bg-light text-dark"><strong>Turnaround:</strong> {{ $product->turnaround }}</span>@endif
-                                                        @if($product->delivery)<span class="me-2 badge bg-light text-dark"><strong>Delivery:</strong> {{ $product->delivery }}</span>@endif
-                                                        @if($product->project_title)<span class="me-2 badge bg-light text-dark"><strong>Project Title:</strong> {{ $product->project_title }}</span>@endif
-                                                        @if($product->note)<span class="badge bg-light text-dark"><strong>Note:</strong> {{ $product->note }}</span>@endif
+                                                        @if($product->quality)<span class="me-2 badge bg-light text-dark" style="font-size: 12px;"><strong>Quality:</strong> {{ $product->quality }}</span>@endif
+                                                        @if($product->quantity)<span class="me-2 badge bg-light text-dark" style="font-size: 12px;"><strong>Quantity:</strong> {{ $product->quantity }}</span>@endif
+                                                        @if($product->turnaround)<span class="me-2 badge bg-light text-dark" style="font-size: 12px;"><strong>Turnaround:</strong> {{ $product->turnaround }}</span>@endif
+                                                        @if($product->delivery)<span class="me-2 badge bg-light text-dark" style="font-size: 12px;"><strong>Delivery:</strong> {{ $product->delivery }}</span>@endif
+                                                        @if($product->project_title)<span class="me-2 badge bg-light text-dark" style="font-size: 12px;"><strong>Project Title:</strong> {{ $product->project_title }}</span>@endif
+                                                        @if($product->note)<span class="badge bg-light text-dark" style="font-size: 12px;"><strong>Note:</strong> {{ $product->note }}</span>@endif
                                                     </p>
                                                 </div>
                                             </td>
-                                            <td>{{ $product->imagecount }}</td>
-                                            <td>{{ $product->wordcount }}</td>
-                                            <td>{{ site_currency() }} {{ number_format($product->unit_price, 2) }}</td>
-                                            <td>{{ site_currency() }} {{ number_format($product->unit_price, 2) }}</td>
+                                            <td style="font-size: 12px;">{{ $product->imagecount }}</td>
+                                            <td style="font-size: 12px;">{{ $product->wordcount }}</td>
+                                            <td style="font-size: 12px;">{{ site_currency() }} {{ number_format($product->unit_price, 2) }}</td>
+                                            <td style="font-size: 12px;">{{ site_currency() }} {{ number_format($product->unit_price, 2) }}</td>
                                         </tr>
                                     @endif
                                 @endfor

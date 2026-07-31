@@ -19,7 +19,7 @@
                             <table  width="100%" cellspacing="0" cellpadding="0">
                                 <tr>
                                     <td style="height: 100px; background: url('{{ $invoice_header_image }}') no-repeat;background-position: 100% 100%;background-size:cover;width: 725px;">
-                                        <p style="color: white;padding-left: 215px;font-size: 10px;"> {{ $company_name }}<br>{{ $company_email }}</p>
+                                        <p style="color: white;padding-left: 275px;font-size: 10px; margin-top: -16px;"> {{ $company_name }}<br>{{ $company_email }}</p>
                                     </td>
                                     
                                 </tr>
@@ -45,7 +45,7 @@
                                                 font-weight: 800;
                                                 width: 119px;
                                                 border-radius: 5%;
-                                                margin-bottom: 8px;">
+                                                margin-bottom: 7px;">
                                            {{ $invoice_number }}
                                         </div>
                                     </div>
@@ -84,7 +84,7 @@
                             </table>
                            <br>
                         <br>
-                         <div style="min-height: 680px !important;">
+                         <div style="min-height: 691px !important;">
                             <table width="100%" cellspacing="0" cellpadding="" border="0px" style="border-collapse: collapse;border-bottom: 0px;border: 0px;">
                                 <tr style="border-collapse: collapse;height: 30px;border-bottom: 0px;border: 0px;border-bottom: 1px solid black;border-top: 1px solid black;" >
                                     <td style="width: 250px;text-align: left;font-family: arial;font-size: 10px;margin: 0px;font-weight: 400;border-collapse: collapse;">
