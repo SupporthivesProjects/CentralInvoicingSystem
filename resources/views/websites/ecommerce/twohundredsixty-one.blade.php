@@ -49,12 +49,12 @@
                     </tr>
                     <tr  style="padding: 12px 48px 24px 48px;">
                         <!-- Invoice Number -->
-                        <td width="20%" valign="bottom" style="padding: 12px 48px 24px 48px;">
+                        <td width="23%" valign="bottom" style="padding: 12px 48px 24px 48px;">
                             <p style="margin:0; color:#6d84bf; font-size:16px; font-weight:600;">Invoice No.</p>
                             <p style="margin:12px 0 0; color:#24345e; font-size:20px; font-weight:bold;">{{ $invoice_number }}</p>
                         </td>
                         <!-- Date -->
-                        <td width="60%" valign="bottom" style="padding: 12px 48px 24px 48px;">
+                        <td width="57%" valign="bottom" style="padding: 12px 48px 24px 48px;">
                             <p style="margin:0; color:#6d84bf; font-size:16px; font-weight:600;">Date</p>
                             <p style="margin:12px 0 0; color:#24345e; font-size:20px;font-weight:bold;">{{ $invoice_date }}</p>
                         </td>
@@ -73,8 +73,8 @@
         </tr>
         <!-- Table Header -->
         <tr>
-            <td>
-                <table cellpadding="0" cellspacing="0" style="min-height: 550px; margin: 0px 48px; width: fit-content;">
+            <td style="min-height: 550px;">
+                <table cellpadding="0" cellspacing="0" style="margin: 0px 48px; width: fit-content;">
                     <thead>
                         <tr style="background:#263b6b;">
                             <th align="left" style="padding:18px; color:#ffffff; font-size:18px;">NO.</th>
@@ -86,9 +86,9 @@
                     </thead>
                     <tbody>
                         <!-- Row 1 -->
-                         @foreach ($products as $product)
+                        @foreach ($products as $product)
                         <tr>
-                            <td style="padding:18px;font-size:16px;color:#000;">{{ $loop->iteration }}</td>
+                            <td style="padding:18px;font-size:16px;color:#000;">{{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}</td>
                             <td style="padding:18px;font-size:16px;color:#000;">{{ $product->name }}</td>
                             <td style="padding:18px;font-size:16px;color:#000;">{{ site_currency() . number_format($product->unit_price, 2) }}</td>
                             <td align="center" style="padding:18px;font-size:16px;color:#000;">1</td>
