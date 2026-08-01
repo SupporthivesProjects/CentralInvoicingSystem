@@ -49,19 +49,19 @@
                     </tr>
                     <tr  style="padding: 12px 36px 24px 36px;">
                         <!-- Invoice Number -->
-                        <td width="23%" valign="bottom" style="padding: 12px 36px 24px 36px;">
+                        <td width="25%" valign="bottom" style="padding: 12px 36px 24px 36px;">
                             <p style="margin:0; color:#6d84bf; font-size:16px; font-weight:600;">Invoice No.</p>
-                            <p style="margin:12px 0 0; color:#24345e; font-size:20px; font-weight:bold;">{{ $invoice_number }}</p>
+                            <p style="margin:12px 0 0; color:#24345e; font-size:18px; font-weight:bold;">{{ $invoice_number }}</p>
                         </td>
                         <!-- Date -->
-                        <td width="57%" valign="bottom" style="padding: 12px 36px 24px 36px;">
+                        <td width="55%" valign="bottom" style="padding: 12px 36px 24px 36px;">
                             <p style="margin:0; color:#6d84bf; font-size:16px; font-weight:600;">Date</p>
-                            <p style="margin:12px 0 0; color:#24345e; font-size:20px;font-weight:bold;">{{ $invoice_date }}</p>
+                            <p style="margin:12px 0 0; color:#24345e; font-size:18px;font-weight:bold;">{{ $invoice_date }}</p>
                         </td>
                         <!-- Total -->
                         <td width="20%" align="right" valign="bottom" style="padding: 12px 36px 24px 36px;">
                             <p style="margin:0; color:#6d84bf; font-size:16px; font-weight:600;">Total Due</p>
-                            <p style="margin:12px 0 0; color:#24345e; font-size:28px;font-weight:bold;">{{ site_currency() . number_format($invoice_amount ?? 0, 2) }}</p>
+                            <p style="margin:12px 0 0; color:#24345e; font-size:26px;font-weight:bold;">{{ site_currency() . number_format($invoice_amount ?? 0, 2) }}</p>
                         </td>
                     </tr>
                 </table>
@@ -73,7 +73,7 @@
         </tr>
         <!-- Table Header -->
         <tr>
-            <td style="min-height: 550px;">
+            <td style="min-height: 565px;">
                 <table cellpadding="0" cellspacing="0" style="margin: 0px 48px; width: fit-content;">
                     <thead>
                         <tr style="background:#263b6b;">
