@@ -10,7 +10,7 @@
         <tr>
             <td align="center" bgcolor="#f2f2f2" style="padding: 20px 0;">
                 <table width="600" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff"
-                    style="border-collapse: collapse; background: url('{{ $invoice_image_4 }}'); box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
+                    style="border-collapse: collapse; background: url('{{ $invoice_image4 }}'); box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
                     <!-- Header -->
                     <tr>
                         <td style="padding: 0; height: 90px;">
@@ -41,7 +41,7 @@
                     <!-- Content -->
                     <tr>
                         <td
-                            style="padding-top:0px;background: url('{{ $invoice_image_4 }}'); background-repeat: no-repeat;background-position: center;background-size: cover; font-family: 'Calibri';">
+                            style="padding-top:0px;background: url('{{ $invoice_image4 }}'); background-repeat: no-repeat;background-position: center;background-size: cover; font-family: 'Calibri';">
                             <table align="center" cellpadding="0" cellspacing="0" border="0" width="900" style="padding: 90px 80px 0px 80px;">
 
                                 <!-- Header -->
@@ -227,7 +227,7 @@
                                          <table cellpadding="0" cellspacing="0" border="0" style="margin-top: 40px;">
                                              <tr>
                                                  <td valign="middle" style="padding-right: 10px;">
-                                                     <img src="{{ $invoice_image_1 }}" alt="">
+                                                     <img src="{{ $invoice_image1 }}" alt="">
                                                  </td>
 
                                                  <td valign="middle">
@@ -244,7 +244,7 @@
                                          <table cellpadding="0" style="margin-top: 80px;" cellspacing="0" border="0">
                                              <tr>
                                                  <td valign="top" style="padding-right:10px;">
-                                                    <img src="{{ $invoice_image_2 }}" alt="" style="width: 38px;">
+                                                    <img src="{{ $invoice_image2 }}" alt="" style="width: 38px;">
                                                  </td>
 
                                                  <td style="color:#ffffff;font-size:10px;line-height:18px;">
