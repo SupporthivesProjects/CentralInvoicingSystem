@@ -73,7 +73,7 @@
         </tr>
         <!-- Table Header -->
         <tr>
-            <td style="min-height: 640px;">
+            <td style="min-height: 585px;">
                 <table cellpadding="0" cellspacing="0" style="margin: 0px 48px; width: fit-content;">
                     <thead>
                         <tr style="background:#263b6b;">
