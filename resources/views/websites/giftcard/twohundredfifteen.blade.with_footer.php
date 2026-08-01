@@ -120,7 +120,7 @@
     <!-- TABLE SECTION -->
     <tr>
         <td>
-        <div style="min-height:741px;padding:25px 20px;vertical-align:top;">
+        <div style="min-height:628px;padding:25px 20px;vertical-align:top;">
 
             <table width="100%" cellpadding="0" cellspacing="0" border="0">
 
@@ -219,7 +219,7 @@
     </tr>
 
     <!-- FOOTER -->
-    {{-- <tr>
+    <tr>
         <td style="background:url('{{ $invoice_footer_image }}');padding:30px; background-size: 100% 100%;">
 
             <table width="100%" cellpadding="0" cellspacing="0" border="0">
@@ -271,7 +271,7 @@
             </table>
 
         </td>
-    </tr> --}}
+    </tr>
 
 </table>
 

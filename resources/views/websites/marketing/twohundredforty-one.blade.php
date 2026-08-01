@@ -20,21 +20,13 @@
 
                 <!-- MAIN CONTAINER -->
                 <table width="100%" cellpadding="0" cellspacing="0"
-<<<<<<< HEAD
                     style="background:#FFFCF8; border-radius:6px; overflow:hidden;">
-=======
-                    style="background:red;border-collapse: collapse; ">
->>>>>>> devteam
 
                     <!-- HEADER -->
                     <tr>
                         <td>
                             <table width="100%" cellpadding="0" cellspacing="0"
-<<<<<<< HEAD
                                 style="padding:60px 50px 10px 50px;position: relative;">
-=======
-                                style="border-collapse: collapse;padding:60px 50px 10px 50px;">
->>>>>>> devteam
                                 <tr>
                                     <!-- LEFT SIDE -->
                                     <td width="60%" valign="top">
@@ -92,12 +84,12 @@
                     <tr>
                         <td>
                             <table width="100%" cellpadding="0" cellspacing="0"
-                                style="border-collapse: collapse;padding:10px 50px 5px 50px; position: relative;">
+                                style="border-collapse: collapse; position: relative;">
                                 <tr>
-                                    <td style="font-size:14px; line-height:18px;">
+                                    <td style="font-size:14px; line-height:18px; padding:10px 50px 5px 50px;">
                                         <img src="{{ $invoice_image3 }}" alt=""
                                             style="position: absolute ;   width: 30px;top: -47px;left: 10px;">
-                                        <strong>To:</strong><br>
+                                        <strong style="color:#3C8F89;font-weight:bold; ">To:</strong><br>
                                         {{ $customer_name ? $customer_name : '' }}<br>
                                         {{ $customer_email ? $customer_email : '' }}<br>
                                         {{ $customer_mobile ? $customer_mobile : '' }}
@@ -106,7 +98,6 @@
                             </table>
                         </td>
                     </tr>
-
                     <!-- INVOICE TABLE -->
                     <tr>
                         <td align="center">
@@ -117,7 +108,7 @@
                                 <tr>
                                     <th
                                         style="padding:10px 5px; text-align:left; border-bottom:1px solid #3C8F89; color:#3C8F89; font-weight:bold;">
-                                        DESCRIPTIONnnnnnnn
+                                        DESCRIPTION
                                     <!-- </th>
                                     <th
                                         style="padding:10px 5px; text-align:center; border-bottom:2px solid #3C8F89; color:#3C8F89; font-weight:bold;">
