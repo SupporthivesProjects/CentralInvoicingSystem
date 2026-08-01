@@ -10,6 +10,7 @@
             padding: 0px;
             background: #ececec;
             font-family: Arial, Helvetica, sans-serif;
+            height:100vh !important;
         }
         table {
             border-collapse: collapse;
@@ -22,7 +23,7 @@
         }
     </style>
 </head>
-<body style="height:80vh !important;">
+<body>
     <table class="invoice" >
         <!-- Logo -->
         <tr>
