@@ -23,7 +23,7 @@
     </style>
 </head>
 <body>
-    <table class="invoice">
+    <table class="invoice" style="height:90vh;">
         <!-- Logo -->
         <tr>
             <td align="center" style="padding: 36px 0px 28px 0px;">
@@ -72,7 +72,7 @@
             <td style="height:40px;"></td>
         </tr>
         <!-- Table Header -->
-        <tr style="min-height: 640px;">
+        <tr>
             <td style="min-height: 640px;">
                 <table cellpadding="0" cellspacing="0" style="margin: 0px 48px; width: fit-content;">
                     <thead>
