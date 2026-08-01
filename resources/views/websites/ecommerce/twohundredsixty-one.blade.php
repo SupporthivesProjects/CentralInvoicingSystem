@@ -26,7 +26,7 @@
     <table class="invoice">
         <!-- Logo -->
         <tr>
-            <td align="center" style="padding: 48px 0px 32px 0px;">
+            <td align="center" style="padding: 36px 0px 28px 0px;">
                 <img src="{{ $invoice_header_image }}" width="220">
             </td>
         </tr>
@@ -47,19 +47,19 @@
                         </td>
                         <td></td>
                     </tr>
-                    <tr  style="padding: 12px 48px 24px 48px;">
+                    <tr  style="padding: 12px 36px 24px 36px;">
                         <!-- Invoice Number -->
-                        <td width="23%" valign="bottom" style="padding: 12px 48px 24px 48px;">
+                        <td width="23%" valign="bottom" style="padding: 12px 36px 24px 36px;">
                             <p style="margin:0; color:#6d84bf; font-size:16px; font-weight:600;">Invoice No.</p>
                             <p style="margin:12px 0 0; color:#24345e; font-size:20px; font-weight:bold;">{{ $invoice_number }}</p>
                         </td>
                         <!-- Date -->
-                        <td width="57%" valign="bottom" style="padding: 12px 48px 24px 48px;">
+                        <td width="57%" valign="bottom" style="padding: 12px 36px 24px 36px;">
                             <p style="margin:0; color:#6d84bf; font-size:16px; font-weight:600;">Date</p>
                             <p style="margin:12px 0 0; color:#24345e; font-size:20px;font-weight:bold;">{{ $invoice_date }}</p>
                         </td>
                         <!-- Total -->
-                        <td width="20%" align="right" valign="bottom" style="padding: 12px 48px 24px 48px;">
+                        <td width="20%" align="right" valign="bottom" style="padding: 12px 36px 24px 36px;">
                             <p style="margin:0; color:#6d84bf; font-size:16px; font-weight:600;">Total Due</p>
                             <p style="margin:12px 0 0; color:#24345e; font-size:28px;font-weight:bold;">{{ site_currency() . number_format($invoice_amount ?? 0, 2) }}</p>
                         </td>
