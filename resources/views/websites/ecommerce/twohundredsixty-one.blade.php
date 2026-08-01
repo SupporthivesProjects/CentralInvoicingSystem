@@ -23,7 +23,7 @@
     </style>
 </head>
 <body>
-    <table class="invoice" style="max-height:70vh;">
+    <table class="invoice" style="max-height:72vh;">
         <!-- Logo -->
         <tr>
             <td align="center" style="padding: 36px 0px 28px 0px;">
