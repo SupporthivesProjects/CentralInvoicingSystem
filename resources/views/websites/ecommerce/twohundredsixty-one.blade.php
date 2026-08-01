@@ -10,7 +10,6 @@
             padding: 0px;
             background: #ececec;
             font-family: Arial, Helvetica, sans-serif;
-            height:60vh !important;
         }
         table {
             border-collapse: collapse;
