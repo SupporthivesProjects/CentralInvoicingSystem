@@ -73,7 +73,7 @@
         </tr>
         <!-- Table Header -->
         <tr>
-            <td style="min-height: 590px;">
+            <td style="min-height: 640px;">
                 <table cellpadding="0" cellspacing="0" style="margin: 0px 48px; width: fit-content;">
                     <thead>
                         <tr style="background:#263b6b;">
@@ -81,7 +81,7 @@
                             <th align="left" style="min-width: 360px; padding:18px; color:#ffffff; font-size:18px;">ITEM NAME</th>
                             <th align="left" style="padding:18px; color:#ffffff; font-size:18px;">PRICE</th>
                             <th align="center" style="padding:18px; color:#ffffff; font-size:18px;">QUANTITY</th>
-                            <th align="right" style="padding:18px; color:#ffffff; font-size:18px;">TOTAL</th>
+                            <th align="right" style="padding:18px; color:#ffffff; font-size:18px;">TOTALS</th>
                         </tr>
                     </thead>
                     <tbody>
