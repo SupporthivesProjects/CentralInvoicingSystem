@@ -23,7 +23,7 @@
     </style>
 </head>
 <body>
-    <table class="invoice" style="max-height:72vh;">
+    <table class="invoice" style="max-height:70vh;">
         <!-- Logo -->
         <tr>
             <td align="center" style="padding: 36px 0px 28px 0px;">
@@ -86,7 +86,7 @@
                     </thead>
                     <tbody>
                         <!-- Row 1 -->
-                        @foreach ($products as $product)
+                        <!-- @foreach ($products as $product)
                         <tr>
                             <td style="padding:18px;font-size:16px;color:#000;">{{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}</td>
                             <td style="padding:18px;font-size:16px;color:#000;">{{ $product->name }}</td>
@@ -94,7 +94,30 @@
                             <td align="center" style="padding:18px;font-size:16px;color:#000;">1</td>
                             <td align="right" style="padding:18px;font-size:16px;color:#000;">{{ site_currency() . number_format($product->unit_price, 2) }}</td>
                         </tr>
-                        @endforeach
+                        @endforeach -->
+                        @foreach ($products as $product)
+<tr style="background: {{ $loop->odd ? '#f5f7fb' : '#ffffff' }};">
+    <td style="padding:18px;font-size:16px;color:#000;">
+        {{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}
+    </td>
+
+    <td style="padding:18px;font-size:16px;color:#000;">
+        {{ $product->name }}
+    </td>
+
+    <td style="padding:18px;font-size:16px;color:#000;">
+        {{ site_currency() . number_format($product->unit_price, 2) }}
+    </td>
+
+    <td align="center" style="padding:18px;font-size:16px;color:#000;">
+        1
+    </td>
+
+    <td align="right" style="padding:18px;font-size:16px;color:#000;">
+        {{ site_currency() . number_format($product->unit_price, 2) }}
+    </td>
+</tr>
+@endforeach
                         <!-- Spacer -->
                         <tr>
                             <td colspan="5" style="height:20px;"></td>
