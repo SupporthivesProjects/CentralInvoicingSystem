@@ -210,7 +210,7 @@
                                          <table cellpadding="0" cellspacing="0" border="0" style="margin-top: 40px;">
                                              <tr>
                                                  <td valign="mmiddle" style="padding-right:10px;">
-                                                     <img src="{{ $company_logo }}" alt="">
+                                                     <img src="{{ $invoice_image1 }}" alt="">
                                                  </td>
 
                                                  <td valign="middle">
@@ -227,7 +227,7 @@
                                          <table cellpadding="0" cellspacing="0" border="0" style="margin-top: 40px;">
                                              <tr>
                                                  <td valign="middle" style="padding-right: 10px;">
-                                                     <img src="{{ $invoice_image1 }}" alt="">
+                                                     <img src="{{ $invoice_image2 }}" alt="">
                                                  </td>
 
                                                  <td valign="middle">
