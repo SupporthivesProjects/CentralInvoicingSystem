@@ -91,9 +91,9 @@
                                         <strong style="font-size: 13px;">Invoice From :</strong><br>
                                         <span style="color: #397872; font-weight: bold; font-size: 17px;">{{ $site_name }}</span><br>
                                         <p style="font-size: 8px;">
-                                            {!! $company_address !!}<br>
-                                            {{ $company_mobile }}<br>
-                                            <b>{{ $site->site_link }}</b>
+                                            {!! $company_address !!}<br><br>
+                                            {{ $company_mobile }}<br><br>
+                                            skyrocketcontent.co
                                         </p>
                                     </td>
 
@@ -104,7 +104,7 @@
                                     </td>
                                 </tr>
                             </table>
-                            <div style="min-height:625px !important;">
+                            <div style="min-height:505px !important;">
                             <table width="100%" cellpadding="10" cellspacing="0"
                                 style="font-family: 'Montserrat'; border-collapse: collapse; font-size: 9px;">
                                 <!-- Header Row -->
@@ -195,8 +195,8 @@
                                         background-position: center; padding: 30px; color: #333; font-family: 'Montserrat'; font-size: 7px;">
                                 <tr>
                                     <td style="width: 40%; vertical-align: top;">
-                                        <strong style="font-size: 10px; display: block; margin-bottom: 10px; text-decoration: underline white;">More
-                                            Information</strong>{!! $company_address !!}<br>
+                                        <strong style="font-size: 14px !important; display: block; margin-bottom: 10px; text-decoration: underline white;">More
+                                            Information</strong>{!! $company_address !!}<br><br>
                                         {{ $company_mobile }}
                                     </td>
                                     <td style="width: 30%; vertical-align: top;"></td>
