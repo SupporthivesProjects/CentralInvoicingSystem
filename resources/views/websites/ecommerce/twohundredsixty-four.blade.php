@@ -19,7 +19,7 @@
                                     <td style="
                                         background: url('{{ $invoice_header_image }}') no-repeat center;
                                         background-size: cover;
-                                        height: 198px;">
+                                        height: 198px;font-family:calibri;">
                                         <table style="margin-left: auto;
                                              margin-right: auto; margin-bottom: 28px;">
                                             <tr>
@@ -50,12 +50,12 @@
                                         <table width="100%" cellpadding="10" cellspacing="0" border="0"
                                             style="background:#385b4b;color:#ffffff;">
                                             <tr>
-                                                <td style="font-size:14px;font-weight:bold;text-transform:uppercase;">
+                                                <td style="font-size:14px;font-weight:bold;text-transform:uppercase;font-family:calibri;">
                                                     INVOICE NO. {{ $invoice_number }}
                                                 </td>
 
                                                 <td align="right"
-                                                    style="font-size:14px;font-weight:bold;text-transform:uppercase;">
+                                                    style="font-size:14px;font-weight:bold;text-transform:uppercase;font-family:calibri;">
                                                     DATE {{ $invoice_date }}
                                                 </td>
                                             </tr>
@@ -78,11 +78,11 @@
 
                                                 <td width="50%" align="center">
 
-                                                    <div style="font-size:10px;font-weight:bold;color:#385b4b;">
+                                                    <div style="font-size:10px;font-weight:bold;color:#385b4b;font-family:calibri;">
                                                         BILL TO
                                                     </div>
                                                     <div style="border-top:1px solid #385b4b;"></div>
-                                                    <div style="margin-top:6px;font-size:10px;color:#385b4b;">
+                                                    <div style="margin-top:6px;font-size:10px;color:#385b4b;font-family:calibri;">
                                                        {{ $customer_name ? $customer_name : '' }}
                                                     </div>
 
@@ -90,11 +90,11 @@
 
                                                 <td width="50%" align="center" >
 
-                                                    <div style="font-size:10px;font-weight:bold;color:#385b4b;">
+                                                    <div style="font-size:10px;font-weight:bold;color:#385b4b;font-family:calibri;">
                                                         BILLED FROM
                                                     </div>
                                                     <div style="border-top:1px solid #385b4b;"></div>
-                                                    <div style="margin-top:6px;font-size:10px;color:#385b4b; ">
+                                                    <div style="margin-top:6px;font-size:10px;color:#385b4b;font-family:calibri;">
                                                         {{ $company_name }}
                                                     </div>
 
@@ -118,7 +118,7 @@
 
                                         <table width="100%" cellpadding="8" cellspacing="0" border="0" style="font-size: 10px;">
 
-                                            <tr style="background:#385b4b;color:#ffffff;font-weight:bold; font-size: 10px;">
+                                            <tr style="background:#385b4b;color:#ffffff;font-weight:bold; font-size: 10px;font-family:calibri;">
 
                                                 <td width="15%">Quantity</td>
                                                 <td width="50%">Description</td>
@@ -127,14 +127,14 @@
 
                                             </tr>
                                             @foreach ($products as $product)
-                                                <tr style="font-family: 'Cambria';">
-                                                    <td style="border-bottom:1px solid #d9d9d9;color:#385b4b;">1</td>
-                                                    <td style="border-bottom:1px solid #d9d9d9;color:#385b4b;">
+                                                <tr style="font-family:calibri;">
+                                                    <td style="border-bottom:1px solid #d9d9d9;color:#385b4b;font-family:calibri;">1</td>
+                                                    <td style="border-bottom:1px solid #d9d9d9;color:#385b4b;font-family:calibri;">
                                                        {{ $product->name }}</td>
                                                     <td align="right"
-                                                        style="border-bottom:1px solid #d9d9d9;color:#385b4b;">{{ site_currency() . number_format($product->unit_price, 2) }}</td>
+                                                        style="border-bottom:1px solid #d9d9d9;color:#385b4b;font-family:calibri;">{{ site_currency() . number_format($product->unit_price, 2) }}</td>
                                                     <td align="right"
-                                                        style="border-bottom:1px solid #d9d9d9;color:#385b4b;">{{ site_currency() . number_format($product->unit_price, 2) }}</td>
+                                                        style="border-bottom:1px solid #d9d9d9;color:#385b4b;font-family:calibri;">{{ site_currency() . number_format($product->unit_price, 2) }}</td>
                                                 </tr>
                                             @endforeach
                                         </table>
@@ -154,23 +154,23 @@
                                         <table width="400" cellpadding="8" cellspacing="0" border="0">
 
                                             <tr>
-                                                <td style="border-bottom:1px solid #cccccc;color:#385b4b; font-size: 10px;">
+                                                <td style="border-bottom:1px solid #cccccc;color:#385b4b; font-size: 10px;font-family:calibri;">
                                                     SUBTOTAL
                                                 </td>
 
                                                 <td align="right"
-                                                    style="border-bottom:1px solid #cccccc;color:#385b4b; font-size: 10px;">
+                                                    style="border-bottom:1px solid #cccccc;color:#385b4b; font-size: 10px;font-family:calibri;">
                                                     {{ site_currency() . number_format(($invoice_amount + $discount_amount), 2) }}
                                                 </td>
                                             </tr>
 
                                             <tr>
-                                                <td style="border-bottom:1px solid #cccccc;color:#385b4b; font-size: 10px; background-color: #F2F2F2;">
+                                                <td style="border-bottom:1px solid #cccccc;color:#385b4b; font-size: 10px; background-color: #F2F2F2;font-family:calibri;">
                                                     DISCOUNT APPLIED
                                                 </td>
 
                                                 <td align="right"
-                                                    style="border-bottom:1px solid #cccccc;color:#385b4b; font-size: 10px; background-color: #F2F2F2;">
+                                                    style="border-bottom:1px solid #cccccc;color:#385b4b; font-size: 10px; background-color: #F2F2F2;font-family:calibri;">
                                                     {{ site_currency() . number_format(($discount_amount), 2) }}
                                                 </td>
                                             </tr>
@@ -178,12 +178,12 @@
                                             <tr>
 
                                                 <td
-                                                    style="border-bottom:1px solid #cccccc;font-size:14px;font-weight:bold;color:#385b4b;">
+                                                    style="border-bottom:1px solid #cccccc;font-size:14px;font-weight:bold;color:#385b4b;font-family:calibri;">
                                                     TOTAL
                                                 </td>
 
                                                 <td align="right"
-                                                    style="border-bottom:1px solid #cccccc;font-size:14px;font-weight:bold;color:#385b4b;">
+                                                    style="border-bottom:1px solid #cccccc;font-size:14px;font-weight:bold;color:#385b4b;font-family:calibri;">
                                                     {{ site_currency() . number_format(($invoice_amount), 2) }}
                                                 </td>
 
@@ -214,7 +214,7 @@
                                                  </td>
 
                                                  <td valign="middle">
-                                                     <span style="color:#ffffff;font-size:10px;font-weight:bold;">
+                                                     <span style="color:#ffffff;font-size:10px;font-weight:bold;font-family:calibri;">
                                                          {{ $company_mobile }}
                                                      </span>
                                                  </td>
@@ -231,7 +231,7 @@
                                                  </td>
 
                                                  <td valign="middle">
-                                                     <span style="color:#ffffff;font-size:10px;font-weight:bold;">
+                                                     <span style="color:#ffffff;font-size:10px;font-weight:bold;font-family:calibri;">
                                                          {{ $company_email }}
                                                      </span>
                                                  </td>
@@ -247,7 +247,7 @@
                                                     <img src="{{ $invoice_image2 }}" alt="" style="width: 38px;">
                                                  </td>
 
-                                                 <td style="color:#ffffff;font-size:10px;line-height:18px;">
+                                                 <td style="color:#ffffff;font-size:10px;line-height:18px;font-family:calibri;">
                                                      {!! $company_address !!}
                                                  </td>
                                              </tr>
