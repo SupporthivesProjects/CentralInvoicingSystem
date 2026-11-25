@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Contracts\Encryption\DecryptException;
 
 class WebsiteController extends Controller
 {
@@ -964,7 +966,10 @@ class WebsiteController extends Controller
                 return redirect()->back()->with('error', $errors[0] ?? 'Validation failed.');
             }
 
-            $exists = Website::where('db_host', $request->db_host)->where('db_password', $request->db_password)->exists();
+            $exists = Website::get(['id', 'db_host', 'db_password'])->contains(function ($existing) use ($request) {
+                return $existing->db_host === $request->db_host && $existing->db_password === $request->db_password;
+            });
+
             if ($exists) {
                 return redirect()->back()->withInput()->with('error', 'A website with the same host and password already exists.');
             }
@@ -1217,6 +1222,61 @@ class WebsiteController extends Controller
         $website->save();
 
         return response()->json(['success' => true, 'message' => 'Website updated successfully.']);
+    }
+
+
+    public function encryptAllCredentials()
+    {
+        if (!auth()->user()->roles->contains('name', 'developer')) {
+            abort(403);
+        }
+
+        $fields = ['db_host', 'db_name', 'db_username', 'db_password', 'consumer_key', 'consumer_secret'];
+        $encrypted = [];
+        $alreadySecure = [];
+
+        try {
+            DB::transaction(function () use ($fields, &$encrypted, &$alreadySecure) {
+                $rows = DB::table('websites')->orderBy('id')->get();
+
+                foreach ($rows as $row) {
+                    $update = [];
+
+                    foreach ($fields as $field) {
+                        $value = $row->{$field} ?? null;
+
+                        if ($value === null || $value === '') {
+                            continue;
+                        }
+
+                        try {
+                            Crypt::decryptString($value);
+                        } catch (DecryptException $e) {
+                            $update[$field] = Crypt::encryptString($value);
+                        }
+                    }
+
+                    $label = trim('#' . $row->id . ' ' . ($row->site_name ?? ''));
+
+                    if (!empty($update)) {
+                        DB::table('websites')->where('id', $row->id)->update($update);
+                        $encrypted[] = $label . ' (' . implode(', ', array_keys($update)) . ')';
+                    } else {
+                        $alreadySecure[] = $label;
+                    }
+                }
+            });
+        } catch (\Exception $e) {
+            Log::error('Encrypt all website credentials failed: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Encryption failed. No changes were made.');
+        }
+
+        return redirect()->back()
+            ->with('success', count($encrypted) . ' website(s) encrypted, ' . count($alreadySecure) . ' already secure.')
+            ->with('encrypt_report', [
+                'encrypted' => $encrypted,
+                'already_secure' => $alreadySecure,
+            ]);
     }
 
 
