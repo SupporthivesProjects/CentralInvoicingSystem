@@ -1231,7 +1231,7 @@ class WebsiteController extends Controller
             abort(403);
         }
 
-        $fields = ['db_host', 'db_name', 'db_username', 'db_password', 'consumer_key', 'consumer_secret'];
+        $fields = ['db_host', 'db_port', 'db_name', 'db_username', 'db_password', 'consumer_key', 'consumer_secret'];
         $encrypted = [];
         $alreadySecure = [];
 

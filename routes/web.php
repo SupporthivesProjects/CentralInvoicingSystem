@@ -5,6 +5,8 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\WebsiteController;
+use App\Http\Controllers\WebsiteConnectivityController;
+use App\Http\Controllers\WebsiteCredentialImportController;
 use App\Http\Middleware\RoleMiddleware;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\InvoiceController;
@@ -14,6 +16,7 @@ use App\Http\Controllers\BusinessModels\TranslationController;
 use App\Http\Controllers\BusinessModels\Translation\LaravelController;
 use App\Http\Controllers\BusinessModels\Translation\WordPressController;
 use App\Http\Controllers\BusinessModels\Translation\CorePHPController;
+use App\Http\Controllers\SiteConnectivityReportController;
 
 
 Route::middleware('guest')->group(function () {
@@ -60,6 +63,9 @@ Route::middleware(['auth', 'role:admin,staff,developer'])->group(function () {
     Route::post('/website', [WebsiteController::class, 'createWebsite'])->name('website.store');
     Route::get('/available-websites', [WebsiteController::class, 'connectedwebsites'])->name('connectedwebsites');
     Route::post('/websites/encrypt-all', [WebsiteController::class, 'encryptAllCredentials'])->name('website.encrypt.all');
+    Route::post('/websites/import-credentials/preview', [WebsiteCredentialImportController::class, 'preview'])->name('website.import.preview');
+    Route::post('/websites/import-credentials/apply', [WebsiteCredentialImportController::class, 'apply'])->name('website.import.apply');
+    Route::post('/websites/import-credentials/cancel', [WebsiteCredentialImportController::class, 'cancel'])->name('website.import.cancel');
     Route::get('/website/{id}/edit', [WebsiteController::class, 'editwebsite'])->name('website.edit');
     Route::patch('/website/{id}', [WebsiteController::class, 'updateWebsite'])->name('website.update');
     Route::post('/websites/{id}/update-status', [WebsiteController::class, 'updateStatusAjax'])->name('website.updateStatus.ajax');
@@ -69,7 +75,7 @@ Route::middleware(['auth', 'role:admin,staff,developer'])->group(function () {
     Route::get('/businessmodel/{id}/websites', [WebsiteController::class, 'websitesByBusinessModel'])->name('businessmodel.websites');
 
     Route::get('/website/connect/{site_id}', [InvoiceController::class, 'getCustomerDetails'])->name('site.connect.db');
-    Route::post('/site/connect/check-connectivity', [WebsiteController::class, 'checkRemoteDbConnectivity'])->name('check.db.connectivity');
+    Route::post('/site/connect/check-connectivity', [WebsiteConnectivityController::class, 'check'])->middleware('throttle:20,1')->name('check.db.connectivity');
     Route::post('/invoice/save-customerdetails', [InvoiceController::class, 'saveCustomerDetails'])->name('customerdetails.store');
     Route::get('/invoice/product-selection', [InvoiceController::class, 'productSelection'])->name('product.selection');
     Route::post('/invoice/update-invoice-amount', [InvoiceController::class, 'updateInvoiceAmount'])->name('update.invoice.amount');
@@ -101,6 +107,10 @@ Route::middleware(['auth', 'role:admin,staff,developer'])->group(function () {
     Route::get('/report/invoices', [ReportController::class, 'invoiceReport'])->name('invoice.report');
 
     Route::get('/invoice/testblade', [ReportController::class, 'testblade'])->name('invoice.testblade');
+
+    Route::get('/website-connectivity-report', [SiteConnectivityReportController::class, 'index'])->name('connectivity.report');
+    Route::get('/website-connectivity-report/sites', [SiteConnectivityReportController::class, 'sites'])->name('connectivity.report.sites');
+    Route::post('/website-connectivity-report/check', [SiteConnectivityReportController::class, 'check'])->name('connectivity.report.check');
 
 
 

@@ -82,6 +82,7 @@ class Website extends Model
 
     protected $casts = [
         'db_host'                 => SafeEncrypted::class,
+        'db_port'                 => SafeEncrypted::class,
         'db_name'                 => SafeEncrypted::class,
         'db_username'             => SafeEncrypted::class,
         'db_password'             => SafeEncrypted::class,

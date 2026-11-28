@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 namespace App\Services;
 
 use Illuminate\Support\Facades\DB;
@@ -9,11 +10,11 @@ class DynamicDatabaseService
     {
         $dynamicDbConfig = [
             'driver' => 'mysql',
-            'host' => trim($site->db_host),
-            'port' => trim($site->db_port),
-            'database' => trim($site->db_name),
-            'username' => trim($site->db_username),
-            'password' => trim($site->db_password),
+            'host' => trim((string) $site->db_host),
+            'port' => (int) ($site->db_port ?: 3306),
+            'database' => trim((string) $site->db_name),
+            'username' => trim((string) $site->db_username),
+            'password' => trim((string) $site->db_password),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
             'prefix' => '',
