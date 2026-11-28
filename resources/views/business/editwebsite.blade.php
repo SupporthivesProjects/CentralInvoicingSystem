@@ -87,12 +87,12 @@
 
                             <div class="col-md-6 mx-auto">
                                 <label class="form-label">Database Username @if($saved('db_username'))<span class="badge bg-success ms-1">Saved</span>@else<span style="color:red">*</span>@endif</label>
-                                <input type="text" name="db_username" id="db_username" class="form-control" autocomplete="off" data-saved="{{ $saved('db_username') ? '1' : '0' }}" placeholder="{{ $saved('db_username') ? '•••••••• Saved – leave blank to keep current' : 'Enter Database Username' }}" {{ $saved('db_username') ? '' : 'required' }}>
+                                <input type="text" name="db_username" id="db_username" class="form-control" autocomplete="off" readonly onfocus="this.removeAttribute('readonly')" data-saved="{{ $saved('db_username') ? '1' : '0' }}" placeholder="{{ $saved('db_username') ? '•••••••• Saved – leave blank to keep current' : 'Enter Database Username' }}" {{ $saved('db_username') ? '' : 'required' }}>
                             </div>
 
                             <div class="col-md-6 mx-auto">
                                 <label class="form-label">Database Password @if($saved('db_password'))<span class="badge bg-success ms-1">Saved</span>@else<span style="color:red">*</span>@endif</label>
-                                <input type="password" name="db_password" id="db_password" class="form-control" autocomplete="new-password" data-saved="{{ $saved('db_password') ? '1' : '0' }}" placeholder="{{ $saved('db_password') ? '•••••••• Saved – leave blank to keep current' : 'Enter Database Password' }}" {{ $saved('db_password') ? '' : 'required' }}>
+                                <input type="password" name="db_password" id="db_password" class="form-control" autocomplete="new-password" readonly onfocus="this.removeAttribute('readonly')" data-saved="{{ $saved('db_password') ? '1' : '0' }}" placeholder="{{ $saved('db_password') ? '•••••••• Saved – leave blank to keep current' : 'Enter Database Password' }}" {{ $saved('db_password') ? '' : 'required' }}>
                             </div>
 
                             <div class="col-md-6 mx-auto">
@@ -307,12 +307,12 @@
 
                             <div class="col-md-6">
                                 <label class="form-label">Consumer Key for WP site only @if($saved('consumer_key'))<span class="badge bg-success ms-1">Saved</span>@endif</label>
-                                <input type="text" name="consumer_key" id="consumer_key" class="form-control" autocomplete="off" placeholder="{{ $saved('consumer_key') ? '•••••••• Saved – leave blank to keep current' : 'Enter Consumer Key' }}">
+                                <input type="text" name="consumer_key" id="consumer_key" class="form-control" autocomplete="off" readonly onfocus="this.removeAttribute('readonly')" placeholder="{{ $saved('consumer_key') ? '•••••••• Saved – leave blank to keep current' : 'Enter Consumer Key' }}">
                             </div>
 
                             <div class="col-md-6">
                                 <label class="form-label">Consumer Secret for WP site only @if($saved('consumer_secret'))<span class="badge bg-success ms-1">Saved</span>@endif</label>
-                                <input type="password" name="consumer_secret" id="consumer_secret" class="form-control" autocomplete="new-password" placeholder="{{ $saved('consumer_secret') ? '•••••••• Saved – leave blank to keep current' : 'Enter Consumer Secret' }}">
+                                <input type="password" name="consumer_secret" id="consumer_secret" class="form-control" autocomplete="new-password" readonly onfocus="this.removeAttribute('readonly')" placeholder="{{ $saved('consumer_secret') ? '•••••••• Saved – leave blank to keep current' : 'Enter Consumer Secret' }}">
                             </div>
 
                             <div class="col-md-6 mx-auto">
@@ -479,59 +479,144 @@
 </script>
 
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
+        const $button = $('#check-remote-db');
+        const $message = $('#db-status-message');
+        const buttonLabel = $button.html();
+        let hideTimer = null;
+
+        const esc = function (value) {
+            return $('<div>').text(value === null || value === undefined ? '' : String(value)).html();
+        };
+
         const isMissing = function (id) {
             const $field = $('#' + id);
             return !$field.val() && $field.attr('data-saved') !== '1';
         };
 
-        $('#check-remote-db').click(function () {
-            $('#db-status-message')
-                .html(`<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span><span>Establishing connection...</span>`)
-                .css('color', '#6c757d')
-                .fadeIn(300);
-            $('.field-error').remove();
+        const stageTitles = {
+            config: 'Configuration problem',
+            network: 'Network problem',
+            auth: 'Authentication problem',
+            database: 'Database problem',
+            error: 'Connection failed'
+        };
 
-            var db_host = $('#db_host').val();
-            var db_port = $('#db_port').val();
-            var db_name = $('#db_name').val();
-            var db_username = $('#db_username').val();
-            var db_password = $('#db_password').val();
+        const show = function (html, autoHide) {
+            clearTimeout(hideTimer);
+            $message.stop(true, true).html(html).fadeIn(200);
 
-            if(isMissing('db_host')){ $('#db-status-message').html('<span class="field-error text-danger">Database Host is required</span>').fadeOut(1000); return; }
-            if(isMissing('db_port')){ $('#db-status-message').html('<span class="field-error text-danger">Database Port is required</span>').fadeOut(1000); return; }
-            if(isMissing('db_name')){ $('#db-status-message').html('<span class="field-error text-danger">Database Name is required</span>').fadeOut(1000); return; }
-            if(isMissing('db_username')){ $('#db-status-message').html('<span class="field-error text-danger">Database Username is required</span>').fadeOut(1000); return; }
-            if(isMissing('db_password')){ $('#db-status-message').html('<span class="field-error text-danger">Database Password is required</span>').fadeOut(1000); return; }
+            if (autoHide) {
+                hideTimer = setTimeout(function () {
+                    $message.fadeOut(500);
+                }, autoHide);
+            }
+        };
+
+        const showFailure = function (stage, text, details) {
+            show(
+                '<div class="alert alert-danger d-inline-block text-start mb-0" style="max-width:720px;">'
+                + '<div class="fw-semibold mb-1"><i class="fas fa-times-circle me-1"></i>' + esc(stageTitles[stage] || stageTitles.error) + '</div>'
+                + '<div>' + esc(text) + '</div>'
+                + (details ? '<div class="small text-muted mt-2">' + esc(details) + '</div>' : '')
+                + '</div>'
+            );
+        };
+
+        const showSuccess = function (text, details) {
+            show(
+                '<div class="checkmark-wrapper">'
+                + '<div class="checkmark-circle"><div class="checkmark"></div></div>'
+                + '<div>' + esc(text) + '</div>'
+                + (details ? '<div class="small text-muted mt-1">' + esc(details) + '</div>' : '')
+                + '</div>',
+                8000
+            );
+        };
+
+        const describe = function (response) {
+            const parts = [];
+
+            if (response.target) {
+                parts.push('Target: ' + response.target);
+            }
+
+            if (response.elapsed_ms !== undefined && response.elapsed_ms !== null) {
+                parts.push(response.elapsed_ms + ' ms');
+            }
+
+            if (response.client_ip) {
+                parts.push('The remote server sees this server as ' + response.client_ip);
+            }
+
+            return parts.join('  |  ');
+        };
+
+        const requiredFields = [
+            ['db_host', 'Database Host'],
+            ['db_port', 'Database Port'],
+            ['db_name', 'Database Name'],
+            ['db_username', 'Database Username'],
+            ['db_password', 'Database Password']
+        ];
+
+        $button.on('click', function () {
+            clearTimeout(hideTimer);
+
+            for (const [id, label] of requiredFields) {
+                if (isMissing(id)) {
+                    showFailure('config', label + ' is required.');
+                    return;
+                }
+            }
+
+            $button.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>Checking...');
+            show('<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span><span class="text-muted">Testing the network, then the credentials...</span>');
 
             $.ajax({
                 url: "{{ route('check.db.connectivity') }}",
                 type: 'POST',
+                dataType: 'json',
+                timeout: 30000,
                 data: {
                     website_id: {{ $website->id }},
-                    db_host: db_host,
-                    db_port: db_port,
-                    db_name: db_name,
-                    db_username: db_username,
-                    db_password: db_password,
+                    db_host: $('#db_host').val(),
+                    db_port: $('#db_port').val(),
+                    db_name: $('#db_name').val(),
+                    db_username: $('#db_username').val(),
+                    db_password: $('#db_password').val(),
                     _token: '{{ csrf_token() }}'
                 },
                 success: function (response) {
                     if (response.success) {
-                        $('#db-status-message').html(`
-                            <div class="checkmark-wrapper">
-                                <div class="checkmark-circle"><div class="checkmark"></div></div>
-                                <div>Connection successful!</div>
-                            </div>
-                        `).fadeIn(500);
+                        showSuccess(response.message, describe(response));
                     } else {
-                        $('#db-status-message').html('<span class="text-danger">' + response.message + '</span>');
+                        showFailure(response.stage, response.message, describe(response));
                     }
-                    setTimeout(function () { $('#db-status-message').fadeOut(500); }, 5000);
                 },
-                error: function () {
-                    $('#db-status-message').html('<span class="text-danger">Error occurred while connecting to the DB.</span>');
-                    setTimeout(function () { $('#db-status-message').fadeOut(500); }, 5000);
+                error: function (xhr, status) {
+                    let text = 'The connectivity check failed unexpectedly.';
+
+                    if (status === 'timeout') {
+                        text = 'The check took longer than 30 seconds and was stopped.';
+                    } else if (xhr.status === 419) {
+                        text = 'Your session expired. Reload the page and try again.';
+                    } else if (xhr.status === 403) {
+                        text = 'Only developers can run this check.';
+                    } else if (xhr.status === 429) {
+                        text = 'Too many checks. Wait a minute and try again.';
+                    } else if (xhr.status === 422 && xhr.responseJSON) {
+                        text = xhr.responseJSON.errors ? Object.values(xhr.responseJSON.errors)[0][0] : (xhr.responseJSON.message || text);
+                    } else if (xhr.responseJSON && xhr.responseJSON.message) {
+                        text = xhr.responseJSON.message;
+                    } else if (xhr.status) {
+                        text += ' (HTTP ' + xhr.status + ')';
+                    }
+
+                    showFailure('error', text);
+                },
+                complete: function () {
+                    $button.prop('disabled', false).html(buttonLabel);
                 }
             });
         });

@@ -170,9 +170,15 @@
                     </div>
                     <div class="modal-body">
                         <div class="alert alert-danger d-none" id="import-error"></div>
-
                         <div id="import-step-upload">
-                            <p class="text-muted mb-3">
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold" for="import-type">Import type</label>
+                                <select class="form-select" id="import-type">
+                                    <option value="db">DB Credentials</option>
+                                    <option value="wp">WordPress API Keys</option>
+                                </select>
+                            </div>
+                            <p class="text-muted mb-3" id="import-help">
                                 Upload a .csv or .xlsx file with the columns
                                 <code>domain</code>, <code>ipaddress</code>, <code>dbname</code>, <code>username</code>, <code>password</code>, <code>port</code>.
                                 Nothing is written until you confirm the preview. Values are saved encrypted and verified.
@@ -184,7 +190,6 @@
                                 </button>
                             </div>
                         </div>
-
                         <div id="import-step-preview" class="d-none">
                             <div class="d-flex flex-wrap gap-2 mb-3" id="import-summary"></div>
                             <div class="d-flex justify-content-between align-items-center mb-2">
@@ -490,6 +495,7 @@
 
             const form = new FormData();
             form.append('file', file);
+            form.append('type', el('import-type').value);
 
             buttons.analyze.disabled = true;
             buttons.analyze.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analyzing...';
@@ -617,6 +623,16 @@
             showError('');
             showStep('upload');
         }
+
+        const helpText = {
+            db: 'Upload a .csv or .xlsx file with the columns <code>domain</code>, <code>ipaddress</code>, <code>dbname</code>, <code>username</code>, <code>password</code>, <code>port</code>. Nothing is written until you confirm the preview. Values are saved encrypted and verified.',
+            wp: 'Upload a .csv or .xlsx file with the columns <code>domain</code>, <code>consumer_key</code>, <code>consumer_secret</code>. Only WordPress sites are matched. Keys must start with <code>ck_</code> and <code>cs_</code>. Nothing is written until you confirm the preview. Values are saved encrypted and verified.'
+        };
+
+        el('import-type').addEventListener('change', function () {
+            el('import-help').innerHTML = helpText[this.value];
+        });
+
 
         buttons.analyze.addEventListener('click', analyze);
         buttons.start.addEventListener('click', startImport);

@@ -18,7 +18,9 @@ class WebsiteCredentialImporter
 {
     public const FIELDS = ['db_host', 'db_name', 'db_username', 'db_password', 'db_port'];
 
-    public const ENCRYPTED_FIELDS = ['db_host', 'db_name', 'db_username', 'db_password', 'db_port'];
+    public const WP_FIELDS = ['consumer_key', 'consumer_secret'];
+
+    public const ENCRYPTED_FIELDS = ['db_host', 'db_name', 'db_username', 'db_password', 'db_port', 'consumer_key', 'consumer_secret'];
 
     private const MAX_ROWS = 2000;
 
@@ -31,7 +33,13 @@ class WebsiteCredentialImporter
         'db_port'     => ['port', 'dbport'],
     ];
 
-    public function parse(UploadedFile $file): array
+    private const WP_HEADERS = [
+        'domain'          => ['domain', 'domainname', 'website', 'site', 'sitelink', 'url', 'sitename'],
+        'consumer_key'    => ['consumerkey', 'ck', 'key', 'apikey', 'wckey', 'woocommercekey'],
+        'consumer_secret' => ['consumersecret', 'cs', 'secret', 'apisecret', 'wcsecret', 'woocommercesecret'],
+    ];
+
+    public function parse(UploadedFile $file, string $type = 'db'): array
     {
         $extension = strtolower($file->getClientOriginalExtension());
 
@@ -39,10 +47,10 @@ class WebsiteCredentialImporter
             ? $this->readSpreadsheet($file)
             : $this->readDelimited($file->getRealPath());
 
-        return $this->rowsFromMatrix($matrix);
+        return $this->rowsFromMatrix($matrix, $type);
     }
 
-    public function buildPlan(array $rows): array
+    public function buildPlan(array $rows, string $type = 'db'): array
     {
         $websites = Website::query()->get()->keyBy('id');
         $index = $this->indexWebsites($websites);
@@ -65,7 +73,7 @@ class WebsiteCredentialImporter
 
         foreach ($groups as $key => $group) {
             $lines = array_column($group, 'line');
-            $merged = $this->mergeGroup($group);
+            $merged = $this->mergeGroup($group, $type);
 
             if ($merged === null) {
                 $items[] = $this->item($lines, $key, 'conflict', null, null, [], 'Same domain appears on lines ' . implode(', ', $lines) . ' with different values.');
@@ -77,7 +85,7 @@ class WebsiteCredentialImporter
                 continue;
             }
 
-            $invalid = $this->validateValues($merged);
+            $invalid = $this->validateValues($merged, $type);
 
             if ($invalid !== null) {
                 $items[] = $this->item($lines, $key, 'invalid', null, null, [], $invalid);
@@ -86,8 +94,12 @@ class WebsiteCredentialImporter
 
             $ids = $this->matchWebsites($key, $index);
 
+            if ($type === 'wp') {
+                $ids = array_values(array_filter($ids, fn ($id) => $websites[$id]->technology === 'wordpress'));
+            }
+
             if (count($ids) === 0) {
-                $items[] = $this->item($lines, $key, 'not_found', null, null, [], 'No website matches this domain.');
+                $items[] = $this->item($lines, $key, 'not_found', null, null, [], $type === 'wp' ? 'No WordPress website matches this domain.' : 'No website matches this domain.');
                 continue;
             }
 
@@ -114,7 +126,7 @@ class WebsiteCredentialImporter
                 continue;
             }
 
-            [$changes, $reencrypt] = $this->computeChanges($website, $candidate['values']);
+            [$changes, $reencrypt] = $this->computeChanges($website, $candidate['values'], $type);
 
             $notes = [];
 
@@ -150,8 +162,10 @@ class WebsiteCredentialImporter
 
     public function applyChanges(int $websiteId, array $changes): array
     {
+        $allowed = array_merge(self::FIELDS, self::WP_FIELDS);
+
         try {
-            return DB::transaction(function () use ($websiteId, $changes) {
+            return DB::transaction(function () use ($websiteId, $changes, $allowed) {
                 $website = Website::lockForUpdate()->find($websiteId);
 
                 if (!$website) {
@@ -161,7 +175,7 @@ class WebsiteCredentialImporter
                 $applied = [];
 
                 foreach ($changes as $field => $value) {
-                    if (!in_array($field, self::FIELDS, true)) {
+                    if (!in_array($field, $allowed, true)) {
                         continue;
                     }
 
@@ -228,6 +242,16 @@ class WebsiteCredentialImporter
         return rtrim($value, '.');
     }
 
+    private function fieldsFor(string $type): array
+    {
+        return $type === 'wp' ? self::WP_FIELDS : self::FIELDS;
+    }
+
+    private function headersFor(string $type): array
+    {
+        return $type === 'wp' ? self::WP_HEADERS : self::HEADERS;
+    }
+
     private function readSpreadsheet(UploadedFile $file): array
     {
         $sheets = Excel::toArray(new RawSheetImport, $file);
@@ -285,7 +309,7 @@ class WebsiteCredentialImporter
         return $matrix;
     }
 
-    private function rowsFromMatrix(array $matrix): array
+    private function rowsFromMatrix(array $matrix, string $type): array
     {
         $headerIndex = null;
 
@@ -300,12 +324,13 @@ class WebsiteCredentialImporter
             throw new InvalidArgumentException('The file is empty.');
         }
 
+        $fields = $this->fieldsFor($type);
         $map = [];
 
         foreach ($matrix[$headerIndex] as $column => $heading) {
             $key = preg_replace('/[^a-z0-9]/', '', strtolower((string) $heading));
 
-            foreach (self::HEADERS as $field => $aliases) {
+            foreach ($this->headersFor($type) as $field => $aliases) {
                 if (in_array($key, $aliases, true) && !isset($map[$field])) {
                     $map[$field] = $column;
                 }
@@ -316,8 +341,10 @@ class WebsiteCredentialImporter
             throw new InvalidArgumentException('Column "domain" was not found in the header row.');
         }
 
-        if (!array_intersect_key($map, array_flip(self::FIELDS))) {
-            throw new InvalidArgumentException('No credential columns found. Expected: ipaddress, dbname, username, password, port.');
+        if (!array_intersect_key($map, array_flip($fields))) {
+            throw new InvalidArgumentException($type === 'wp'
+                ? 'No key columns found. Expected: consumer_key, consumer_secret.'
+                : 'No credential columns found. Expected: ipaddress, dbname, username, password, port.');
         }
 
         $rows = [];
@@ -331,7 +358,7 @@ class WebsiteCredentialImporter
 
             $entry = ['line' => $i + 1, 'domain' => trim((string) ($row[$map['domain']] ?? ''))];
 
-            foreach (self::FIELDS as $field) {
+            foreach ($fields as $field) {
                 $raw = isset($map[$field]) ? (string) ($row[$map[$field]] ?? '') : '';
                 $entry[$field] = $field === 'db_password' ? trim($raw, "\r\n") : trim($raw);
             }
@@ -395,11 +422,11 @@ class WebsiteCredentialImporter
         return array_values(array_unique($ids));
     }
 
-    private function mergeGroup(array $group): ?array
+    private function mergeGroup(array $group, string $type): ?array
     {
         $merged = [];
 
-        foreach (self::FIELDS as $field) {
+        foreach ($this->fieldsFor($type) as $field) {
             $values = array_values(array_unique(array_filter(array_column($group, $field), fn ($value) => $value !== '')));
 
             if (count($values) > 1) {
@@ -412,8 +439,34 @@ class WebsiteCredentialImporter
         return $merged;
     }
 
-    private function validateValues(array &$values): ?string
+    private function validateValues(array &$values, string $type): ?string
     {
+        if ($type === 'wp') {
+            foreach (self::WP_FIELDS as $field) {
+                if ($values[$field] === '') {
+                    continue;
+                }
+
+                if (strlen($values[$field]) > 1000) {
+                    return $field . ' is longer than 1000 characters.';
+                }
+
+                if (preg_match('/\s/', $values[$field])) {
+                    return $field . ' contains spaces.';
+                }
+            }
+
+            if ($values['consumer_key'] !== '' && !str_starts_with($values['consumer_key'], 'ck_')) {
+                return 'consumer_key must start with ck_.';
+            }
+
+            if ($values['consumer_secret'] !== '' && !str_starts_with($values['consumer_secret'], 'cs_')) {
+                return 'consumer_secret must start with cs_.';
+            }
+
+            return null;
+        }
+
         foreach (['db_host', 'db_name', 'db_username', 'db_password'] as $field) {
             if (strlen($values[$field]) > 255) {
                 return $field . ' is longer than 255 characters.';
@@ -435,12 +488,12 @@ class WebsiteCredentialImporter
         return null;
     }
 
-    private function computeChanges(Website $website, array $values): array
+    private function computeChanges(Website $website, array $values, string $type): array
     {
         $changes = [];
         $reencrypt = false;
 
-        foreach (self::FIELDS as $field) {
+        foreach ($this->fieldsFor($type) as $field) {
             $value = $values[$field];
             $raw = $website->getRawOriginal($field);
 
