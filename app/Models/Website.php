@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\SafeEncrypted;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -71,6 +72,12 @@ class Website extends Model
     ];
 
     protected $casts = [
+        'db_host'                 => SafeEncrypted::class,
+        'db_name'                 => SafeEncrypted::class,
+        'db_username'             => SafeEncrypted::class,
+        'db_password'             => SafeEncrypted::class,
+        'consumer_key'            => SafeEncrypted::class,
+        'consumer_secret'         => SafeEncrypted::class,
         'urgency_amount'          => 'decimal:4',
         'urgency_24h_per_page'    => 'decimal:4',
         'urgency_12h_per_page'    => 'decimal:4',

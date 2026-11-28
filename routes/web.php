@@ -59,6 +59,7 @@ Route::middleware(['auth', 'role:admin,staff,developer'])->group(function () {
     Route::get('/website/create', [WebsiteController::class, 'addwebsite'])->name('website.create');
     Route::post('/website', [WebsiteController::class, 'createWebsite'])->name('website.store');
     Route::get('/available-websites', [WebsiteController::class, 'connectedwebsites'])->name('connectedwebsites');
+    Route::post('/websites/encrypt-all', [WebsiteController::class, 'encryptAllCredentials'])->name('website.encrypt.all');
     Route::get('/website/{id}/edit', [WebsiteController::class, 'editwebsite'])->name('website.edit');
     Route::patch('/website/{id}', [WebsiteController::class, 'updateWebsite'])->name('website.update');
     Route::post('/websites/{id}/update-status', [WebsiteController::class, 'updateStatusAjax'])->name('website.updateStatus.ajax');
@@ -123,4 +124,3 @@ Route::get('/test-500', function () {
 });
 
 Route::get('/woocommerce-products', [HomeController::class, 'fetchWooCommerceProducts']);
-

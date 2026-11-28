@@ -25,17 +25,47 @@
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <div class="card-title mb-0">Available Websites</div>
                                 @if(auth()->user()->roles->contains('name', 'developer'))
-                                    <a href="{{ route('website.create') }}" class="btn btn-sm btn-primary d-flex align-items-center gap-1 group">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
-                                    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
-                                    </svg>
-                                    New Website
-                                    </a>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <form action="{{ route('website.encrypt.all') }}" method="POST" id="encrypt-all-form" class="d-inline">
+                                            @csrf
+                                            <button type="button" id="encrypt-all-btn" class="btn btn-sm btn-warning d-flex align-items-center gap-1">
+                                                <i class="fas fa-lock"></i> Encrypt All Credentials
+                                            </button>
+                                        </form>
+                                        <a href="{{ route('website.create') }}" class="btn btn-sm btn-primary d-flex align-items-center gap-1 group">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+                                        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                                        </svg>
+                                        New Website
+                                        </a>
+                                    </div>
                                 @endif
 
 
                               </div>
                             <div class="card-body">
+                                @if(session('encrypt_report') && auth()->user()->roles->contains('name', 'developer'))
+                                    <div class="alert alert-info alert-dismissible fade show" role="alert">
+                                        <strong>Encrypted now:</strong>
+                                        <ul class="mb-2">
+                                            @forelse(session('encrypt_report.encrypted') as $item)
+                                                <li>{{ $item }}</li>
+                                            @empty
+                                                <li>None</li>
+                                            @endforelse
+                                        </ul>
+                                        <strong>Already secure:</strong>
+                                        <ul class="mb-0">
+                                            @forelse(session('encrypt_report.already_secure') as $item)
+                                                <li>{{ $item }}</li>
+                                            @empty
+                                                <li>None</li>
+                                            @endforelse
+                                        </ul>
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>
+                                @endif
+
                                 <div class="table-responsive">
                                     <table id="websites-datatables" class="table table-bordered text-nowrap" style="width:100%">
                                     <thead>
@@ -135,6 +165,21 @@
 @endsection
 @push('scripts')
 <script>
+    $(document).on('click', '#encrypt-all-btn', function () {
+        Swal.fire({
+            title: 'Encrypt all credentials?',
+            text: 'Remote DB and API credentials of every website will be encrypted. Already encrypted ones are skipped.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, encrypt',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $(this).prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Encrypting...');
+                $('#encrypt-all-form').trigger('submit');
+            }
+        });
+    });
+
     $(document).on('click', '.delete-btn', function () {
         const id = $(this).data('id');
 
