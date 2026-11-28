@@ -32,12 +32,6 @@
                                         <button type="button" class="btn btn-sm btn-info d-flex align-items-center gap-1" data-bs-toggle="modal" data-bs-target="#import-credentials-modal">
                                             <i class="fas fa-file-import"></i> Import DB Credentials
                                         </button>
-                                        <form action="{{ route('website.encrypt.all') }}" method="POST" id="encrypt-all-form" class="d-inline">
-                                            @csrf
-                                            <button type="button" id="encrypt-all-btn" class="btn btn-sm btn-warning d-flex align-items-center gap-1">
-                                                <i class="fas fa-lock"></i> Encrypt All Credentials
-                                            </button>
-                                        </form>
                                         <a href="{{ route('website.create') }}" class="btn btn-sm btn-primary d-flex align-items-center gap-1 group">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
                                         <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
