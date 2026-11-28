@@ -165,11 +165,12 @@
             <div class="modal-dialog modal-xl modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Import DB Credentials</h5>
+                        <h5 class="modal-title">Import Credentials</h5>
                         <button type="button" class="btn-close" id="import-close-x" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <div class="alert alert-danger d-none" id="import-error"></div>
+
                         <div id="import-step-upload">
                             <div class="mb-3">
                                 <label class="form-label fw-semibold" for="import-type">Import type</label>
@@ -178,11 +179,22 @@
                                     <option value="wp">WordPress API Keys</option>
                                 </select>
                             </div>
-                            <p class="text-muted mb-3" id="import-help">
-                                Upload a .csv or .xlsx file with the columns
-                                <code>domain</code>, <code>ipaddress</code>, <code>dbname</code>, <code>username</code>, <code>password</code>, <code>port</code>.
-                                Nothing is written until you confirm the preview. Values are saved encrypted and verified.
-                            </p>
+
+                            <p class="text-muted mb-3" id="import-help"></p>
+
+                            <div class="border rounded mb-3">
+                                <div class="d-flex justify-content-between align-items-center px-3 py-2 bg-light border-bottom">
+                                    <strong class="small"><i class="fas fa-table me-1"></i> Your file should look like this</strong>
+                                    <button type="button" class="btn btn-sm btn-outline-primary" id="import-sample-btn">
+                                        <i class="fas fa-download"></i> Download sample CSV
+                                    </button>
+                                </div>
+                                <div class="table-responsive p-3">
+                                    <table class="table table-sm table-bordered mb-1 text-nowrap align-middle" id="import-sample-table"></table>
+                                    <div class="small text-muted" id="import-sample-note"></div>
+                                </div>
+                            </div>
+
                             <div class="input-group">
                                 <input type="file" class="form-control" id="import-file" accept=".csv,.txt,.xlsx,.xls">
                                 <button type="button" class="btn btn-primary" id="import-analyze-btn">
@@ -190,6 +202,7 @@
                                 </button>
                             </div>
                         </div>
+
                         <div id="import-step-preview" class="d-none">
                             <div class="d-flex flex-wrap gap-2 mb-3" id="import-summary"></div>
                             <div class="d-flex justify-content-between align-items-center mb-2">
@@ -351,6 +364,29 @@
             failed: ['danger', 'Failed']
         };
 
+        const samples = {
+            db: {
+                headers: ['domain', 'ipaddress', 'dbname', 'username', 'password', 'port'],
+                rows: [
+                    ['example.com', '203.0.113.10', 'example_db', 'example_user', 'Sample#Pass1', '3306'],
+                    ['shop.example.org', '203.0.113.25', 'shop_db', 'shop_user', 'Sample#Pass2', '6521']
+                ],
+                note: 'Fake values for illustration. The port column is optional and defaults to 3306. Each domain must match one website.',
+                file: 'sample-db-credentials.csv',
+                help: 'Upload a .csv or .xlsx file in the format below. Nothing is written until you confirm the preview. Values are saved encrypted and verified.'
+            },
+            wp: {
+                headers: ['domain', 'consumer_key', 'consumer_secret'],
+                rows: [
+                    ['example.com', 'ck_0123456789abcdef0123456789abcdef01234567', 'cs_0123456789abcdef0123456789abcdef01234567'],
+                    ['shop.example.org', 'ck_89abcdef0123456789abcdef0123456789abcdef', 'cs_89abcdef0123456789abcdef0123456789abcdef']
+                ],
+                note: 'Fake values for illustration. Only WordPress sites are matched. The key must start with ck_ and the secret with cs_.',
+                file: 'sample-wordpress-keys.csv',
+                help: 'Upload a .csv or .xlsx file in the format below. Nothing is written until you confirm the preview. Values are saved encrypted and verified.'
+            }
+        };
+
         const el = (id) => document.getElementById(id);
         const steps = { upload: el('import-step-upload'), preview: el('import-step-preview'), progress: el('import-step-progress') };
         const buttons = { back: el('import-back-btn'), start: el('import-start-btn'), report: el('import-report-btn'), close: el('import-close-btn'), closeX: el('import-close-x'), analyze: el('import-analyze-btn') };
@@ -362,6 +398,37 @@
             .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
         const badge = (label) => '<span class="badge bg-' + label[0] + '">' + esc(label[1]) + '</span>';
+
+        function renderSample(type) {
+            const sample = samples[type];
+            const head = '<thead><tr><th class="text-center bg-light" style="width:36px;"></th>'
+                + sample.headers.map((header) => '<th class="bg-success-transparent">' + esc(header) + '</th>').join('')
+                + '</tr></thead>';
+            const body = '<tbody>' + sample.rows.map((row, index) =>
+                '<tr><td class="text-center text-muted bg-light">' + (index + 2) + '</td>'
+                + row.map((cell) => '<td>' + esc(cell) + '</td>').join('')
+                + '</tr>'
+            ).join('') + '</tbody>';
+
+            el('import-sample-table').innerHTML = head + body;
+            el('import-sample-note').textContent = sample.note;
+            el('import-help').textContent = sample.help;
+        }
+
+        function downloadSample() {
+            const sample = samples[el('import-type').value];
+            const lines = [sample.headers].concat(sample.rows);
+            const csv = lines.map((line) => line.map((cell) => '"' + String(cell).replace(/"/g, '""') + '"').join(',')).join('\r\n');
+            const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+
+            link.href = URL.createObjectURL(blob);
+            link.download = sample.file;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(link.href);
+        }
 
         function showStep(name) {
             Object.keys(steps).forEach((key) => steps[key].classList.toggle('d-none', key !== name));
@@ -618,21 +685,13 @@
         function resetModal() {
             state = { token: null, rows: [], results: [], running: false, finished: false };
             el('import-file').value = '';
+            el('import-type').value = 'db';
             el('import-preview-body').innerHTML = '';
             el('import-result-body').innerHTML = '';
+            renderSample('db');
             showError('');
             showStep('upload');
         }
-
-        const helpText = {
-            db: 'Upload a .csv or .xlsx file with the columns <code>domain</code>, <code>ipaddress</code>, <code>dbname</code>, <code>username</code>, <code>password</code>, <code>port</code>. Nothing is written until you confirm the preview. Values are saved encrypted and verified.',
-            wp: 'Upload a .csv or .xlsx file with the columns <code>domain</code>, <code>consumer_key</code>, <code>consumer_secret</code>. Only WordPress sites are matched. Keys must start with <code>ck_</code> and <code>cs_</code>. Nothing is written until you confirm the preview. Values are saved encrypted and verified.'
-        };
-
-        el('import-type').addEventListener('change', function () {
-            el('import-help').innerHTML = helpText[this.value];
-        });
-
 
         buttons.analyze.addEventListener('click', analyze);
         buttons.start.addEventListener('click', startImport);
@@ -642,6 +701,10 @@
             showStep('upload');
         });
         el('import-filter').addEventListener('change', renderPreview);
+        el('import-type').addEventListener('change', function () {
+            renderSample(this.value);
+        });
+        el('import-sample-btn').addEventListener('click', downloadSample);
 
         modalEl.addEventListener('hidden.bs.modal', function () {
             const ranImport = state.results.length > 0;
@@ -661,6 +724,8 @@
                 location.reload();
             }
         });
+
+        renderSample('db');
     })();
 </script>
 @endif
