@@ -50,7 +50,7 @@
             <div class="col-xl-12">
                 <div class="card custom-card">
                     <div class="card-body">
-                    <form method="POST" id="addwebsite-form" action="{{ route('website.store') }}" enctype="multipart/form-data" class="row g-3 mt-0">
+                    <form method="POST" id="addwebsite-form" action="{{ route('website.store') }}" enctype="multipart/form-data" class="row g-3 mt-0" autocomplete="off">
                         @csrf
 
                         <div class="col-md-6 mx-auto">
@@ -72,27 +72,27 @@
                         </div>
                         <div class="col-md-6 mx-auto">
                             <label class="form-label">Database Host <span style="color:red">*</span></label>
-                            <input type="text" name="db_host" class="form-control" placeholder="Enter Database Host" required>
+                            <input type="text" name="db_host" id="db_host" class="form-control" placeholder="Enter Database Host" autocomplete="off" required>
                         </div>
 
                         <div class="col-md-6 mx-auto">
                             <label class="form-label">Database Port <span style="color:red">*</span></label>
-                            <input type="text" name="db_port" class="form-control" placeholder="Enter Database Port" value="3306" required>
+                            <input type="text" name="db_port" id="db_port" class="form-control" placeholder="Enter Database Port" value="3306" autocomplete="off" required>
                         </div>
 
                         <div class="col-md-6 mx-auto">
                             <label class="form-label">Database Name <span style="color:red">*</span></label>
-                            <input type="text" name="db_name" class="form-control" placeholder="Enter Database Name" required>
+                            <input type="text" name="db_name" id="db_name" class="form-control" placeholder="Enter Database Name" autocomplete="off" required>
                         </div>
 
                         <div class="col-md-6 mx-auto">
                             <label class="form-label">Database Username <span style="color:red">*</span></label>
-                            <input type="text" name="db_username" class="form-control" placeholder="Enter Database Username" required>
+                            <input type="text" name="db_username" id="db_username" class="form-control" placeholder="Enter Database Username" autocomplete="off" required>
                         </div>
 
                         <div class="col-md-6 mx-auto">
                             <label class="form-label">Database Password <span style="color:red">*</span></label>
-                            <input type="text" name="db_password" class="form-control" placeholder="Enter Database Password" required>
+                            <input type="password" name="db_password" id="db_password" class="form-control" placeholder="Enter Database Password" autocomplete="new-password" required>
                         </div>
 
                         <div class="col-md-6 mx-auto">
@@ -133,12 +133,12 @@
 
                         <div class="col-md-6">
                             <label class="form-label">Consumer Key for WP site only</label>
-                            <input type="text" name="consumer_key" class="form-control" placeholder="Enter Consumer Key">
+                            <input type="text" name="consumer_key" id="consumer_key" class="form-control" placeholder="Enter Consumer Key" autocomplete="off">
                         </div>
 
                         <div class="col-md-6">
                             <label class="form-label">Consumer Secret for WP site only</label>
-                            <input type="text" name="consumer_secret" class="form-control" placeholder="Enter Consumer Secret">
+                            <input type="password" name="consumer_secret" id="consumer_secret" class="form-control" placeholder="Enter Consumer Secret" autocomplete="new-password">
                         </div>
 
                         <div class="col-md-6 mx-auto">

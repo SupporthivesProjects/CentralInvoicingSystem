@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\BusinessModel;
@@ -7,10 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Contracts\Encryption\DecryptException;
@@ -117,7 +116,6 @@ class WebsiteController extends Controller
             $variations = $variationsMap[$product['id']] ?? [];
             $varCount   = count($variations);
 
-            // --- ATTRIBUTES ---
             $attributes = '';
             foreach ($product['attributes'] ?? [] as $attr) {
                 $attributes .= '<tr>
@@ -127,7 +125,6 @@ class WebsiteController extends Controller
                 </tr>';
             }
 
-            // --- META DATA ---
             $metaRows     = '';
             $rateMetaRows = '';
             foreach ($product['meta_data'] ?? [] as $meta) {
@@ -151,7 +148,6 @@ class WebsiteController extends Controller
                 }
             }
 
-            // --- VARIATIONS ---
             $varRows = '';
             foreach ($variations as $var) {
                 $varAttrs = collect($var['attributes'])->pluck('option', 'name')->toArray();
@@ -168,7 +164,6 @@ class WebsiteController extends Controller
                 </tr>';
             }
 
-            // --- RATE ANALYSIS ---
             $rateRows = '';
             foreach ($variations as $var) {
                 $price = floatval($var['price'] ?? 0);
@@ -208,7 +203,6 @@ class WebsiteController extends Controller
                 </tr>';
             }
 
-            // --- COPY TEXT (for sharing/debugging) ---
             $copyText = '=== ' . $product['name'] . ' ===
     ID: ' . $product['id'] . '
     Slug: ' . $product['slug'] . '
@@ -458,11 +452,11 @@ class WebsiteController extends Controller
 
             $varRows = '';
             foreach ($variations as $var) {
-                $varAttrs  = collect($var['attributes'])->pluck('option', 'name')->toArray();
-                $varPrice  = $var['price'] ?? '-';
+                $varAttrs   = collect($var['attributes'])->pluck('option', 'name')->toArray();
+                $varPrice   = $var['price'] ?? '-';
                 $varRegular = $var['regular_price'] ?? '-';
-                $varSale   = $var['sale_price'] ?? '';
-                $varName   = $var['name'] ?? '';
+                $varSale    = $var['sale_price'] ?? '';
+                $varName    = $var['name'] ?? '';
 
                 if (!empty($varSale)) {
                     $hasSalePrice = true;
@@ -618,10 +612,8 @@ class WebsiteController extends Controller
     }
 
 
-
     public function addBusinessModel()
     {
-
         return view('business.addmodel');
     }
 
@@ -681,7 +673,7 @@ class WebsiteController extends Controller
                 'message' => 'Business Model Deleted Successfully!'
             ]);
         } catch (\Exception $e) {
-            \Log::error('Error deleting business model: ' . $e->getMessage());
+            Log::error('Error deleting business model: ' . $e->getMessage());
 
             return response()->json([
                 'success' => false,
@@ -690,7 +682,7 @@ class WebsiteController extends Controller
         }
     }
 
- public function createBusinessModel(Request $request)
+    public function createBusinessModel(Request $request)
     {
         try {
             $request->validate([
@@ -720,7 +712,6 @@ class WebsiteController extends Controller
     }
 
 
-
     public function addwebsite()
     {
         $businessModels = BusinessModel::all();
@@ -740,17 +731,21 @@ class WebsiteController extends Controller
 
     public function updateWebsite(Request $request, $id)
     {
+        $website = Website::findOrFail($id);
+
+        $required = fn ($field) => blank($website->getRawOriginal($field)) ? 'required' : 'nullable';
+
         $validator = Validator::make($request->all(), [
             'site_connectivity'    => 'nullable|in:db,api',
             'business_model_id'    => 'required|exists:business_models,id',
             'technology'           => 'required|in:html,wordpress,corephp,laravel,django,other',
             'site_name'            => 'nullable|string|max:255',
             'site_description'     => 'nullable|string|max:500',
-            'db_host'              => 'required|string|max:255',
-            'db_port'              => 'required|numeric',
-            'db_name'              => 'required|string|max:255',
-            'db_username'          => 'required|string|max:255',
-            'db_password'          => 'required|string|max:255',
+            'db_host'              => $required('db_host') . '|string|max:255',
+            'db_port'              => $required('db_port') . '|numeric',
+            'db_name'              => $required('db_name') . '|string|max:255',
+            'db_username'          => $required('db_username') . '|string|max:255',
+            'db_password'          => $required('db_password') . '|string|max:255',
             'product_table'        => 'required|string|max:255',
             'product_price_table'  => 'required|string|max:255',
             'currency_table'       => 'required|string|max:255',
@@ -807,11 +802,9 @@ class WebsiteController extends Controller
         }
 
         try {
-            $website = Website::findOrFail($id);
-
-            $modelType     = strtolower($website->businessModel->model_type);
-            $siteId        = $website->id;
-            $siteIdInWords = numberToWords($siteId);
+            $modelType      = strtolower($website->businessModel->model_type);
+            $siteId         = $website->id;
+            $siteIdInWords  = numberToWords($siteId);
             $baseUploadPath = public_path("uploads/websites/{$modelType}/{$siteId}/");
 
             $uploadFile = function ($field, $subfolder, $prefix = null) use ($request, $website, $baseUploadPath, $modelType, $siteId) {
@@ -850,16 +843,19 @@ class WebsiteController extends Controller
                 $website->invoice_template = "views/websites/{$modelType}/{$siteIdInWords}.blade.php";
             }
 
-            $website->update([
+            $credentials = [];
+
+            foreach (['db_host', 'db_port', 'db_name', 'db_username', 'db_password', 'consumer_key', 'consumer_secret'] as $field) {
+                if ($request->filled($field)) {
+                    $credentials[$field] = $request->input($field);
+                }
+            }
+
+            $website->update(array_merge([
                 'business_model_id'    => $request->business_model_id,
                 'technology'           => $request->technology,
                 'site_name'            => $request->site_name,
                 'site_description'     => $request->site_description,
-                'db_host'              => $request->db_host,
-                'db_port'              => $request->db_port,
-                'db_name'              => $request->db_name,
-                'db_username'          => $request->db_username,
-                'db_password'          => $request->db_password,
                 'product_table'        => $request->product_table,
                 'product_price_table'  => $request->product_price_table,
                 'currency_table'       => $request->currency_table,
@@ -868,8 +864,6 @@ class WebsiteController extends Controller
                 'category_table'       => $request->category_table,
                 'tags_table'           => $request->tags_table,
                 'term_taxonomy_table'  => $request->term_taxonomy_table,
-                'consumer_key'         => $request->consumer_key,
-                'consumer_secret'      => $request->consumer_secret,
                 'site_link'            => rtrim($request->site_link, '/') . '/',
                 'std_trans_url'        => $request->std_trans_url,
                 'cert_trans_url'       => $request->cert_trans_url,
@@ -891,10 +885,7 @@ class WebsiteController extends Controller
                 'bank_code'            => $request->bank_code,
                 'pdf_size'             => $request->pdf_size,
                 'pdf_orientation'      => $request->pdf_orientation,
-                'updated_at'           => now(),
-            ]);
-
-            $website->save();
+            ], $credentials));
 
             return redirect()->back()->with('success', 'Website updated successfully!');
 
@@ -998,7 +989,7 @@ class WebsiteController extends Controller
                 'consumer_key'         => $request->consumer_key,
                 'consumer_secret'      => $request->consumer_secret,
                 'company_email'        => $request->company_email,
-                'company_mobile'       => $request->company_mobile, 
+                'company_mobile'       => $request->company_mobile,
                 'company_address'      => $request->company_address,
                 'registration_number'  => $request->registration_number,
                 'license_number'       => $request->license_number,
@@ -1119,8 +1110,8 @@ class WebsiteController extends Controller
     }
 
 
-
-    public function businessmodels(Request $request){
+    public function businessmodels(Request $request)
+    {
         try {
             $businessModels = BusinessModel::all();
             return view('business.models', compact('businessModels'));
@@ -1139,29 +1130,32 @@ class WebsiteController extends Controller
             return view('business.modelwebsites', compact('businessModel', 'websites'));
 
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            // Specific error if BusinessModel not found
             return redirect()->back()->with('error', 'Business Model not found.');
         } catch (\Exception $e) {
-            // Any other unexpected error
-            \Log::error('Error fetching websites by business model: ' . $e->getMessage());
+            Log::error('Error fetching websites by business model: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Something went wrong. Please try again.');
         }
     }
 
 
-
     public function checkRemoteDbConnectivity(Request $request)
     {
+        $connectionName = 'remote_site_check';
+
         try {
+            $website = $request->filled('website_id') ? Website::find($request->website_id) : null;
 
+            $value = fn ($field) => $request->filled($field)
+                ? $request->input($field)
+                : ($website ? $website->{$field} : null);
 
-            Config::set('database.connections.' . $this->connectionType, [
+            Config::set('database.connections.' . $connectionName, [
                 'driver' => 'mysql',
-                'host' => $request->db_host,
-                'port' => $request->db_port ?? '3306',
-                'database' => $request->db_name,
-                'username' => $request->db_username,
-                'password' => $request->db_password,
+                'host' => $value('db_host'),
+                'port' => $value('db_port') ?? '3306',
+                'database' => $value('db_name'),
+                'username' => $value('db_username'),
+                'password' => $value('db_password'),
                 'charset' => 'utf8mb4',
                 'collation' => 'utf8mb4_unicode_ci',
                 'prefix' => '',
@@ -1169,12 +1163,9 @@ class WebsiteController extends Controller
                 'engine' => null,
             ]);
 
+            DB::purge($connectionName);
 
-            $connection = DB::connection($this->connectionType);
-
-
-            $pdo = $connection->getPdo();
-
+            $pdo = DB::connection($connectionName)->getPdo();
 
             if ($pdo) {
                 return response()->json([
@@ -1189,14 +1180,23 @@ class WebsiteController extends Controller
             ]);
 
         } catch (\Exception $e) {
-            \Log::error('Error while connecting to remote DB', [
+            Log::error('Error while connecting to remote DB', [
                 'error_message' => $e->getMessage(),
                 'stack_trace' => $e->getTraceAsString(),
             ]);
 
+            preg_match('/\[(\d{4})\]/', $e->getMessage(), $matches);
+
+            $messages = [
+                '1045' => 'Access denied. The username or password is incorrect.',
+                '1049' => 'The database name was not found on the server.',
+                '2002' => 'The database server could not be reached. Check the host and port.',
+                '2006' => 'The database server closed the connection.',
+            ];
+
             return response()->json([
                 'success' => false,
-                'message' => 'Error occurred while connecting to the DB: ' . $e->getMessage(),
+                'message' => $messages[$matches[1] ?? ''] ?? 'Could not connect to the database. Please check the connection details.',
             ]);
         }
     }
@@ -1278,7 +1278,5 @@ class WebsiteController extends Controller
                 'already_secure' => $alreadySecure,
             ]);
     }
-
-
 
 }

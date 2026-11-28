@@ -31,7 +31,6 @@ class Website extends Model
         'term_taxonomy_table',
         'consumer_key',
         'consumer_secret',
-        'site_name',
         'site_link',
         'std_trans_url',
         'cert_trans_url',
@@ -69,6 +68,16 @@ class Website extends Model
         'invoice_image8',
         'invoice_image9',
         'invoice_template',
+    ];
+
+    protected $hidden = [
+        'db_host',
+        'db_port',
+        'db_name',
+        'db_username',
+        'db_password',
+        'consumer_key',
+        'consumer_secret',
     ];
 
     protected $casts = [

@@ -3,7 +3,11 @@
 @section('title', 'Edit Website | Central Invoice System')
 
 @section('content')
-   
+
+    @php
+        $saved = fn ($field) => filled($website->getRawOriginal($field));
+    @endphp
+
     <div class="page">
     <div class="main-content app-content">
         <div class="container-fluid">
@@ -43,7 +47,7 @@
             <div class="col-xl-12">
                 <div class="card custom-card">
                     <div class="card-body">
-                        <form id="editwebsite-form" method="POST" action="{{ route('website.update', $website->id) }}" enctype="multipart/form-data" class="row g-3 mt-0">
+                        <form id="editwebsite-form" method="POST" action="{{ route('website.update', $website->id) }}" enctype="multipart/form-data" class="row g-3 mt-0" autocomplete="off">
                             @csrf
                             @method('PATCH')
 
@@ -67,28 +71,28 @@
                             </div>
 
                             <div class="col-md-6 mx-auto">
-                                <label class="form-label">Database Host <span style="color:red">*</span></label>
-                                <input type="text" name="db_host" id="db_host" class="form-control" placeholder="Enter Database Host" required value="{{ $website->db_host }}">
+                                <label class="form-label">Database Host @if($saved('db_host'))<span class="badge bg-success ms-1">Saved</span>@else<span style="color:red">*</span>@endif</label>
+                                <input type="text" name="db_host" id="db_host" class="form-control" autocomplete="off" data-saved="{{ $saved('db_host') ? '1' : '0' }}" placeholder="{{ $saved('db_host') ? '•••••••• Saved – leave blank to keep current' : 'Enter Database Host' }}" {{ $saved('db_host') ? '' : 'required' }}>
                             </div>
 
                             <div class="col-md-6 mx-auto">
-                                <label class="form-label">Database Port <span style="color:red">*</span></label>
-                                <input type="text" name="db_port" id="db_port" class="form-control" placeholder="Enter Database Port" required value="{{ $website->db_port }}">
+                                <label class="form-label">Database Port @if($saved('db_port'))<span class="badge bg-success ms-1">Saved</span>@else<span style="color:red">*</span>@endif</label>
+                                <input type="text" name="db_port" id="db_port" class="form-control" autocomplete="off" data-saved="{{ $saved('db_port') ? '1' : '0' }}" placeholder="{{ $saved('db_port') ? '•••••••• Saved – leave blank to keep current' : 'Enter Database Port' }}" {{ $saved('db_port') ? '' : 'required' }}>
                             </div>
 
                             <div class="col-md-6 mx-auto">
-                                <label class="form-label">Database Name <span style="color:red">*</span></label>
-                                <input type="text" name="db_name" id="db_name" class="form-control" placeholder="Enter Database Name" required value="{{ $website->db_name }}">
+                                <label class="form-label">Database Name @if($saved('db_name'))<span class="badge bg-success ms-1">Saved</span>@else<span style="color:red">*</span>@endif</label>
+                                <input type="text" name="db_name" id="db_name" class="form-control" autocomplete="off" data-saved="{{ $saved('db_name') ? '1' : '0' }}" placeholder="{{ $saved('db_name') ? '•••••••• Saved – leave blank to keep current' : 'Enter Database Name' }}" {{ $saved('db_name') ? '' : 'required' }}>
                             </div>
 
                             <div class="col-md-6 mx-auto">
-                                <label class="form-label">Database Username <span style="color:red">*</span></label>
-                                <input type="text" name="db_username" id="db_username" class="form-control" placeholder="Enter Database Username" required value="{{ $website->db_username }}">
+                                <label class="form-label">Database Username @if($saved('db_username'))<span class="badge bg-success ms-1">Saved</span>@else<span style="color:red">*</span>@endif</label>
+                                <input type="text" name="db_username" id="db_username" class="form-control" autocomplete="off" data-saved="{{ $saved('db_username') ? '1' : '0' }}" placeholder="{{ $saved('db_username') ? '•••••••• Saved – leave blank to keep current' : 'Enter Database Username' }}" {{ $saved('db_username') ? '' : 'required' }}>
                             </div>
 
                             <div class="col-md-6 mx-auto">
-                                <label class="form-label">Database Password <span style="color:red">*</span></label>
-                                <input type="text" name="db_password" id="db_password" class="form-control" placeholder="Enter Database Password" required value="{{ $website->db_password }}">
+                                <label class="form-label">Database Password @if($saved('db_password'))<span class="badge bg-success ms-1">Saved</span>@else<span style="color:red">*</span>@endif</label>
+                                <input type="password" name="db_password" id="db_password" class="form-control" autocomplete="new-password" data-saved="{{ $saved('db_password') ? '1' : '0' }}" placeholder="{{ $saved('db_password') ? '•••••••• Saved – leave blank to keep current' : 'Enter Database Password' }}" {{ $saved('db_password') ? '' : 'required' }}>
                             </div>
 
                             <div class="col-md-6 mx-auto">
@@ -302,13 +306,13 @@
                             </div>
 
                             <div class="col-md-6">
-                                <label class="form-label">Consumer Key for WP site only</label>
-                                <input type="text" name="consumer_key" class="form-control" placeholder="Enter Consumer Key" value="{{ old('consumer_key', $website->consumer_key) }}">
+                                <label class="form-label">Consumer Key for WP site only @if($saved('consumer_key'))<span class="badge bg-success ms-1">Saved</span>@endif</label>
+                                <input type="text" name="consumer_key" id="consumer_key" class="form-control" autocomplete="off" placeholder="{{ $saved('consumer_key') ? '•••••••• Saved – leave blank to keep current' : 'Enter Consumer Key' }}">
                             </div>
 
                             <div class="col-md-6">
-                                <label class="form-label">Consumer Secret for WP site only</label>
-                                <input type="text" name="consumer_secret" class="form-control" placeholder="Enter Consumer Secret" value="{{ old('consumer_secret', $website->consumer_secret) }}">
+                                <label class="form-label">Consumer Secret for WP site only @if($saved('consumer_secret'))<span class="badge bg-success ms-1">Saved</span>@endif</label>
+                                <input type="password" name="consumer_secret" id="consumer_secret" class="form-control" autocomplete="new-password" placeholder="{{ $saved('consumer_secret') ? '•••••••• Saved – leave blank to keep current' : 'Enter Consumer Secret' }}">
                             </div>
 
                             <div class="col-md-6 mx-auto">
@@ -476,6 +480,11 @@
 
 <script>
     $(document).ready(function() {
+        const isMissing = function (id) {
+            const $field = $('#' + id);
+            return !$field.val() && $field.attr('data-saved') !== '1';
+        };
+
         $('#check-remote-db').click(function () {
             $('#db-status-message')
                 .html(`<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span><span>Establishing connection...</span>`)
@@ -489,16 +498,17 @@
             var db_username = $('#db_username').val();
             var db_password = $('#db_password').val();
 
-            if(!db_host){ $('#db-status-message').html('<span class="field-error text-danger">Database Host is required</span>').fadeOut(1000); return; }
-            if(!db_port){ $('#db-status-message').html('<span class="field-error text-danger">Database Port is required</span>').fadeOut(1000); return; }
-            if(!db_name){ $('#db-status-message').html('<span class="field-error text-danger">Database Name is required</span>').fadeOut(1000); return; }
-            if(!db_username){ $('#db-status-message').html('<span class="field-error text-danger">Database Username is required</span>').fadeOut(1000); return; }
-            if(!db_password){ $('#db-status-message').html('<span class="field-error text-danger">Database Password is required</span>').fadeOut(1000); return; }
+            if(isMissing('db_host')){ $('#db-status-message').html('<span class="field-error text-danger">Database Host is required</span>').fadeOut(1000); return; }
+            if(isMissing('db_port')){ $('#db-status-message').html('<span class="field-error text-danger">Database Port is required</span>').fadeOut(1000); return; }
+            if(isMissing('db_name')){ $('#db-status-message').html('<span class="field-error text-danger">Database Name is required</span>').fadeOut(1000); return; }
+            if(isMissing('db_username')){ $('#db-status-message').html('<span class="field-error text-danger">Database Username is required</span>').fadeOut(1000); return; }
+            if(isMissing('db_password')){ $('#db-status-message').html('<span class="field-error text-danger">Database Password is required</span>').fadeOut(1000); return; }
 
             $.ajax({
                 url: "{{ route('check.db.connectivity') }}",
                 type: 'POST',
                 data: {
+                    website_id: {{ $website->id }},
                     db_host: db_host,
                     db_port: db_port,
                     db_name: db_name,
